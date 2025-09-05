@@ -10,10 +10,13 @@
   <div class="container-wide">
     <div class="project-layout">
       <!-- Filters Sidebar -->
-      <aside class="filters-sidebar">
+      <aside class="filters-sidebar" id="filtersSidebar" aria-hidden="true">
         <div class="filters-header">
           <h3><%= t('projects.list.filters.title','Filters') %></h3>
-          <button class="clear-filters" onclick="clearAllFilters()"><%= t('common.clearAll','Clear All') %></button>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button class="clear-filters" onclick="clearAllFilters()"><%= t('common.clearAll','Clear All') %></button>
+            <button type="button" class="filters-close" aria-label="<%= t('common.close','Close') %>">×</button>
+          </div>
         </div>
         
         <form id="filtersForm" class="filters-form">
@@ -154,6 +157,7 @@
                 <option value="completion_date" <%= locals.sort === 'completion_date' ? 'selected' : '' %>><%= t('projects.list.sort.completion','Completion Date') %></option>
               </select>
             </div>
+            <button class="mobile-filters-trigger"><%= t('projects.list.filters.title','Filters') %></button>
           </div>
         </div>
 
@@ -299,6 +303,7 @@
       </main>
     </div>
   </div>
+  <div id="filtersOverlay" class="filters-overlay"></div>
 </div>
 
 <script src="/js/project-list.js"></script>

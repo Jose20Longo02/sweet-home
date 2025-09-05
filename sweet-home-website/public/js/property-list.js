@@ -1082,6 +1082,26 @@ document.addEventListener('DOMContentLoaded', function() {
       closeComparisonModal();
     });
   }
+
+  // Mobile filters open/close (CSP-safe: no inline handlers)
+  const openFiltersBtn = document.querySelector('.mobile-filters-trigger');
+  if (openFiltersBtn) {
+    openFiltersBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleMobileFilters(true);
+    });
+  }
+  const closeFiltersBtn = document.querySelector('.filters-close');
+  if (closeFiltersBtn) {
+    closeFiltersBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleMobileFilters(false);
+    });
+  }
+  const filtersOverlay = document.getElementById('filtersOverlay');
+  if (filtersOverlay) {
+    filtersOverlay.addEventListener('click', () => toggleMobileFilters(false));
+  }
 });
 
 // Function to update filters from form inputs

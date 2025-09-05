@@ -182,8 +182,39 @@ exports.register = async (req, res, next) => {
       );
     }
 
-    // Redirect to login with success param
-    return res.redirect(`/auth/login?awaitingApproval=true&role=${role}`);
+    // Notify all SuperAdmins about the new account request
+    try {
+      const { rows: superAdmins } = await query(
+        "SELECT email, name FROM users WHERE role = 'SuperAdmin' AND approved = true"
+      );
+      if (superAdmins && superAdmins.length) {
+        const subject = 'New account request – Sweet Home Real Estate Investments';
+        const html = `
+          <p>Hello,</p>
+          <p>A new account has been requested and is awaiting review.</p>
+          <ul>
+            <li><strong>Name:</strong> ${name}</li>
+            <li><strong>Area:</strong> ${area}</li>
+            <li><strong>Role:</strong> ${role}</li>
+          </ul>
+          <p>Please review the request from your SuperAdmin dashboard.</p>
+          <p style=\"margin-top:16px;\">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
+        `;
+        const text = `Hello,\n\nA new account has been requested and is awaiting review.\n\nName: ${name}\nArea: ${area}\nRole: ${role}\n\nPlease review the request from your SuperAdmin dashboard.\n\nBest regards,\nSweet Home Real Estate Investments' team`;
+
+        await Promise.all(
+          superAdmins.map(sa => sendMail({ to: sa.email, subject, html, text }))
+        );
+      }
+    } catch (notifyErr) {
+      if (process.env.SMTP_DEBUG === 'true') {
+        try { console.warn('SuperAdmin notify failed:', notifyErr && (notifyErr.stack || notifyErr.message || notifyErr)); } catch (_) {}
+      }
+      // Do not block registration flow on notification failure
+    }
+
+    // Redirect to thank-you page
+    return res.redirect('/auth/thank-you');
   } catch (err) {
     next(err);
   }
@@ -213,6 +244,11 @@ exports.logout = (req, res) => {
   res.redirect('/auth/login');
 };
 
+// Simple thank-you page after registration
+exports.thankYouPage = (req, res) => {
+  res.render('auth/thank-you', { title: 'Thank you' });
+};
+
 
 // ———————————————————————————————————————————————
 // Password reset: request form (GET /auth/forgot)
@@ -229,14 +265,10 @@ exports.forgotPasswordPage = (req, res) => {
 exports.forgotPassword = async (req, res, next) => {
   try {
     const email = (req.body.email || '').trim().toLowerCase();
-    // Always respond the same to prevent user enumeration
-    const genericResponse = () => res.render('auth/forgot', {
-      title: 'Forgot your password?',
-      error: null,
-      sent: true
-    });
+    // We redirect to /auth/reset regardless to avoid user enumeration and ensure flow continues
+    const redirectToReset = () => res.redirect('/auth/reset');
 
-    if (!email) return genericResponse();
+    if (!email) return redirectToReset();
 
     if (process.env.SMTP_DEBUG === 'true') {
       try { console.log('[Forgot] Incoming request for:', email); } catch (_) {}
@@ -247,7 +279,7 @@ exports.forgotPassword = async (req, res, next) => {
     if (process.env.SMTP_DEBUG === 'true') {
       try { console.log('[Forgot] User found:', !!rows.length); } catch (_) {}
     }
-    if (!rows.length) return genericResponse();
+    if (!rows.length) return redirectToReset();
     const user = rows[0];
 
     // Simple rate-limit: if a request was made in the last 2 minutes, do nothing
@@ -259,7 +291,7 @@ exports.forgotPassword = async (req, res, next) => {
         if (process.env.SMTP_DEBUG === 'true') {
           try { console.log('[Forgot] Rate-limited, last request', diffMs, 'ms ago'); } catch (_) {}
         }
-        return genericResponse();
+        return redirectToReset();
       }
     }
 
@@ -280,25 +312,24 @@ exports.forgotPassword = async (req, res, next) => {
       if (process.env.SMTP_DEBUG === 'true') {
         try { console.warn('[Forgot] Failed to persist token:', e && (e.stack || e.message || e)); } catch (_) {}
       }
-      // Still return generic response
-      return genericResponse();
+      // Still redirect to reset page
+      return redirectToReset();
     }
 
     // Email the user the reset link (do not reveal success/failure specifics)
-    const baseUrl = process.env.APP_URL || `${req.protocol}://${req.get('host')}`;
-    const resetUrl = `${baseUrl}/auth/reset?token=${encodeURIComponent(rawToken)}`;
     try {
       const info = await sendMail({
         to: user.email,
         subject: 'Password reset instructions',
         html: `
           <p>Hi ${user.name || ''},</p>
-          <p>We received a request to reset your password. Click the link below to set a new password:</p>
-          <p><a href="${resetUrl}">Reset your password</a></p>
-          <p>This link will expire in ${expiresInMinutes} minutes. If you did not request this, you can ignore this email.</p>
-          <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
+          <p>We received a request to reset your password.</p>
+          <p>Use the following code to reset your password on the Reset Password page:</p>
+          <p><strong>${rawToken}</strong></p>
+          <p>This code will expire in ${expiresInMinutes} minutes. If you did not request this, you can ignore this email.</p>
+          <p style=\"margin-top:16px;\">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
         `,
-        text: `Hi ${user.name || ''},\n\nReset your password using the link below (expires in ${expiresInMinutes} minutes):\n${resetUrl}\n\nIf you did not request this, you can ignore this email.\n\nBest regards,\nSweet Home Real Estate Investments' team`
+        text: `Hi ${user.name || ''},\n\nWe received a request to reset your password.\n\nUse this code to reset your password on the Reset Password page:\n${rawToken}\n\nThis code will expire in ${expiresInMinutes} minutes. If you did not request this, you can ignore this email.\n\nBest regards,\nSweet Home Real Estate Investments' team`
       });
       if (process.env.SMTP_DEBUG === 'true') {
         console.log('Reset email dispatched:', info && info.messageId);
@@ -310,7 +341,8 @@ exports.forgotPassword = async (req, res, next) => {
       // Do not leak email failures to client
     }
 
-    return genericResponse();
+    // Redirect to reset page so user can paste the code
+    try { return res.redirect('/auth/reset'); } catch (_) { return redirectToReset(); }
   } catch (err) {
     next(err);
   }
@@ -322,7 +354,10 @@ exports.forgotPassword = async (req, res, next) => {
 exports.resetPasswordPage = async (req, res, next) => {
   try {
     const token = (req.query.token || '').trim();
-    if (!token) return res.status(400).render('auth/reset', { title: 'Reset password', error: 'Invalid token', token: null });
+    if (!token) {
+      // No token provided: render page allowing manual code entry
+      return res.render('auth/reset', { title: 'Reset password', error: null, token: null });
+    }
     const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
     const { rows } = await query(
       `SELECT id FROM users
@@ -333,9 +368,9 @@ exports.resetPasswordPage = async (req, res, next) => {
       [tokenHash]
     );
     if (!rows.length) {
-      return res.status(400).render('auth/reset', { title: 'Reset password', error: 'This link is invalid or has expired.', token: null });
+      return res.status(400).render('auth/reset', { title: 'Reset password', error: 'This code is invalid or has expired.', token: null });
     }
-    res.render('auth/reset', { title: 'Reset password', error: null, token });
+    return res.render('auth/reset', { title: 'Reset password', error: null, token });
   } catch (err) {
     next(err);
   }

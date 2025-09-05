@@ -61,6 +61,7 @@ app.use(
       "base-uri": ["'self'"],
       "form-action": ["'self'"],
       "img-src": ["'self'", 'data:', 'blob:', 'https://*.tile.openstreetmap.org', 'https://unpkg.com', 'https://www.google-analytics.com', 'https://*.google-analytics.com'],
+      "media-src": ["'self'", 'blob:'],
       "script-src": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://unpkg.com', 'https://www.googletagmanager.com'],
       "script-src-elem": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://unpkg.com', 'https://www.googletagmanager.com'],
       "script-src-attr": ["'none'"],
@@ -147,7 +148,7 @@ app.use(session({
     sameSite: 'lax',
     secure: 'auto',
     maxAge: 1000 * 60 * 60 * 24 * 7
-    }
+  }
 }));
 
 // Trust proxy (for secure cookies/Heroku/Nginx)

@@ -21,24 +21,30 @@ function initializeProjectDetail() {
 
 // Gallery Functionality
 function initializeGallery() {
-  const mainImage = document.getElementById('main-image');
+  const mainImage = document.getElementById('main-image') || document.getElementById('mainVideo');
   const thumbnails = document.querySelectorAll('.thumbnail');
   const prevBtn = document.querySelector('.gallery-nav.prev');
   const nextBtn = document.querySelector('.gallery-nav.next');
   
   if (!mainImage || thumbnails.length === 0) return;
+
+  // Wire play overlay if present
+  setupVideoOverlayAndPoster();
   
   // Handle thumbnail clicks
   thumbnails.forEach(thumbnail => {
     thumbnail.addEventListener('click', function() {
-      const photoSrc = this.dataset.photo;
-      const photoIndex = this.dataset.index;
-      
-      // Update main image
-      updateMainImage(photoSrc, photoIndex);
+      const type = this.dataset.type || 'image';
+      const idx = this.dataset.index;
+      if (type === 'video') {
+        showMainVideo(this.dataset.videoUrl);
+      } else {
+        const photoSrc = this.dataset.photo;
+        updateMainImage(photoSrc, idx);
+      }
       
       // Update active thumbnail
-      updateActiveThumbnail(photoIndex);
+      updateActiveThumbnail(idx);
     });
   });
   
@@ -62,27 +68,135 @@ function initializeGallery() {
 function updateMainImage(photoSrc, photoIndex) {
   const container = document.querySelector('.gallery-main');
   if (!container) return;
-  const current = document.getElementById('main-image');
+  const current = document.getElementById('main-image') || document.getElementById('mainVideo');
   if (current) current.style.opacity = '0';
 
   setTimeout(() => {
     // Remove existing img or picture entirely
     const existingPicture = container.querySelector('picture');
     const existingImg = container.querySelector('#main-image');
+    const existingVideo = container.querySelector('#mainVideo');
+    const existingOverlay = container.querySelector('.video-play-overlay');
     if (existingPicture) existingPicture.remove();
     if (existingImg) existingImg.remove();
+    if (existingVideo) existingVideo.remove();
+    if (existingOverlay) existingOverlay.remove();
 
     const img = document.createElement('img');
     img.id = 'main-image';
     img.className = 'main-image';
-    img.alt = document.querySelector('.project-title')?.textContent || 'Project photo';
+    img.alt = document.querySelector('.project-title') ? document.querySelector('.project-title').textContent : 'Project photo';
     img.decoding = 'async';
-    img.src = photoSrc.startsWith('/uploads/') ? photoSrc : `/uploads/projects/${getProjectId()}/${photoSrc}`;
+    img.src = photoSrc;
     container.insertBefore(img, container.firstChild);
 
     // Fade in
     requestAnimationFrame(() => { img.style.opacity = '1'; });
   }, 150);
+}
+
+function showMainVideo(videoUrl) {
+  const container = document.querySelector('.gallery-main');
+  if (!container) return;
+  const current = document.getElementById('main-image') || document.getElementById('mainVideo');
+  if (current) current.style.opacity = '0';
+
+  setTimeout(() => {
+    const existingPicture = container.querySelector('picture');
+    const existingImg = container.querySelector('#main-image');
+    const existingVideo = container.querySelector('#mainVideo');
+    const existingOverlay = container.querySelector('.video-play-overlay');
+    if (existingPicture) existingPicture.remove();
+    if (existingImg) existingImg.remove();
+    if (existingVideo) existingVideo.remove();
+    if (existingOverlay) existingOverlay.remove();
+
+    const vid = document.createElement('video');
+    vid.id = 'mainVideo';
+    vid.controls = true;
+    vid.playsInline = true;
+    vid.preload = 'metadata';
+    vid.style.width = '100%';
+    vid.style.height = '100%';
+    vid.style.objectFit = 'cover';
+    const src = document.createElement('source');
+    src.src = videoUrl;
+    src.type = 'video/mp4';
+    vid.appendChild(src);
+    container.insertBefore(vid, container.firstChild);
+
+    // Add play overlay button
+    const btn = document.createElement('button');
+    btn.className = 'video-play-overlay';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Play video');
+    btn.innerHTML = '<svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="rgba(0,0,0,0.6)" stroke="white" stroke-width="2" /><polygon points="26,20 26,44 46,32" fill="white" /></svg>';
+    container.appendChild(btn);
+
+    // Wire events
+    btn.addEventListener('click', function(){ try { vid.play(); } catch (_) {} btn.style.display = 'none'; });
+    vid.addEventListener('play', function(){ btn.style.display = 'none'; });
+    vid.addEventListener('pause', function(){ btn.style.display = 'flex'; btn.dataset.shownAt = String(Date.now()); });
+    // Show overlay initially
+    btn.style.display = 'flex';
+    // Do not add a manual click toggle; rely on native controls click behavior
+
+    // Generate poster from 1s
+    tryGeneratePoster(vid, 1);
+
+    requestAnimationFrame(() => { vid.style.opacity = '1'; });
+  }, 150);
+}
+
+function setupVideoOverlayAndPoster() {
+  const vid = document.getElementById('mainVideo');
+  const overlay = document.querySelector('.video-play-overlay');
+  if (vid && overlay) {
+    overlay.addEventListener('click', function(){ try { vid.play(); } catch (_) {} overlay.style.display = 'none'; });
+    vid.addEventListener('play', function(){ overlay.style.display = 'none'; });
+    vid.addEventListener('pause', function(){ overlay.style.display = 'flex'; overlay.dataset.shownAt = String(Date.now()); });
+    tryGeneratePoster(vid, 1);
+    // Ensure visible on initial paused state
+    if (vid.paused) overlay.style.display = 'flex';
+    // Do not add a manual click toggle; rely on native controls click behavior
+  }
+}
+
+function tryGeneratePoster(videoEl, seconds) {
+  if (!videoEl) return;
+  // Ensure metadata is loaded
+  const onLoaded = () => {
+    // Clamp to video duration
+    const target = Math.min(seconds || 1, Math.max(0.1, (videoEl.duration || 1) - 0.1));
+    const seekAndCapture = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = videoEl.videoWidth || 1280;
+      canvas.height = videoEl.videoHeight || 720;
+      const ctx = canvas.getContext('2d');
+      try {
+        ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        if (dataUrl && dataUrl.length > 50) {
+          videoEl.setAttribute('poster', dataUrl);
+        }
+      } catch (_) { /* ignore if cross-origin restrictions */ }
+    };
+    const onSeeked = () => {
+      seekAndCapture();
+      // Reset to start so poster shows until play
+      try { videoEl.currentTime = 0; } catch (_) {}
+      videoEl.removeEventListener('seeked', onSeeked);
+    };
+    videoEl.addEventListener('seeked', onSeeked);
+    try { videoEl.currentTime = target; } catch (e) { /* fallback capture without seek */ seekAndCapture(); videoEl.removeEventListener('seeked', onSeeked); }
+  };
+  if (isNaN(videoEl.duration) || !(videoEl.videoWidth > 0)) {
+    videoEl.addEventListener('loadedmetadata', onLoaded, { once: true });
+    // Trigger metadata load if not already
+    try { videoEl.preload = 'metadata'; } catch (_) {}
+  } else {
+    onLoaded();
+  }
 }
 
 function updateActiveThumbnail(photoIndex) {

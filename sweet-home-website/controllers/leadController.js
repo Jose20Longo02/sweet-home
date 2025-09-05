@@ -112,7 +112,7 @@ exports.createFromProperty = async (req, res, next) => {
                 ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
               </ul>
               ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g, '<br/>')}</p>` : ''}
-              <p>View in CRM: ${process.env.APP_URL || ''}/admin/dashboard/leads</p>
+              <p>You can view this lead in the CRM from your dashboard.</p>
               <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
             `,
             text: `New lead for ${property.title}\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${language ? `\nPreferred language: ${language}` : ''}${message ? `\nMessage: ${message}` : ''}`
@@ -235,7 +235,7 @@ exports.createFromProject = async (req, res, next) => {
                 ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
               </ul>
               ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g, '<br/>')}</p>` : ''}
-              <p>View in CRM: ${process.env.APP_URL || ''}/admin/dashboard/leads</p>
+              <p>You can view this lead in the CRM from your dashboard.</p>
               <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
             `,
             text: `New project lead for ${project.title}\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${language ? `\nPreferred language: ${language}` : ''}${message ? `\nMessage: ${message}` : ''}`

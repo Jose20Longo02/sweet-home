@@ -62,6 +62,13 @@ router.post(
   authController.register
 );
 
+// GET /auth/thank-you — simple confirmation after registration
+router.get(
+  '/thank-you',
+  redirectIfAuthenticated,
+  authController.thankYouPage
+);
+
 // POST /auth/logout — any authenticated user
 router.post(
   '/logout',
@@ -78,7 +85,7 @@ router.get(
 router.post(
   '/forgot',
   redirectIfAuthenticated,
-  [ body('email').isString().trim().isEmail().normalizeEmail() ],
+  [ body('email').isString().trim().isEmail().toLowerCase() ],
   authController.forgotPassword
 );
 

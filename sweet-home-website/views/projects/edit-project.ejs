@@ -122,19 +122,28 @@
         <input id="project_photos" name="photos" type="file" accept="image/*" multiple />
         <small>Upload 1–20 images. Drag to reorder thumbnails.</small>
         <div id="projPhotoPreview" class="preview-grid">
-          <% (project.photos || []).forEach(ph => { %>
-            <div class="item"><img class="thumb" src="<%= ph %>"></div>
+          <% (Array.isArray(project.photos) ? project.photos.filter(Boolean) : []).forEach(ph => { %>
+            <div class="item" style="position:relative">
+              <img class="thumb" src="<%= ph %>">
+              <button type="button" class="remove-btn" data-remove-photo="<%= ph %>" aria-label="Remove" style="position:absolute;right:6px;top:6px;width:24px;height:24px;border-radius:50%;border:none;background:rgba(0,0,0,0.6);color:#fff;cursor:pointer">×</button>
+            </div>
           <% }) %>
         </div>
+        <div id="orderedExistingPhotos"></div>
       </div>
       <div class="field">
         <label>Video</label>
         <input id="project_video" name="video" type="file" accept="video/*" />
         <div id="projVideoPreview" class="video-preview">
           <% if (project.video_url) { %>
-            <video src="<%= project.video_url %>" controls playsinline></video>
+            <div style="position:relative;display:inline-block">
+              <video src="<%= project.video_url %>" controls playsinline style="max-width:100%; border-radius:8px;"></video>
+              <button type="button" class="remove-btn" data-remove-video="true" aria-label="Remove video" style="position:absolute;right:6px;top:6px;width:24px;height:24px;border:none;border-radius:50%;background:rgba(0,0,0,0.6);color:#fff;cursor:pointer">×</button>
+            </div>
           <% } %>
         </div>
+        <input type="hidden" id="remove_existing_video" name="remove_existing_video" value="false" />
+        <input type="hidden" id="remove_existing_photos" name="remove_existing_photos" value="" />
       </div>
     </div>
   </section>

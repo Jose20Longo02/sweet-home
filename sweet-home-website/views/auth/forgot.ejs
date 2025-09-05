@@ -7,7 +7,7 @@
     <h1>Reset your password</h1>
 
     <% if (typeof sent !== 'undefined' && sent) { %>
-      <div class="alert alert-success">If that email exists, we sent a reset link.</div>
+      <div class="alert alert-success">If that email exists, we sent a reset code. Enter it on the next page.</div>
     <% } %>
 
     <% if (error) { %>
@@ -17,7 +17,7 @@
     <label for="email">Email</label>
     <input id="email" name="email" type="email" autocomplete="email" required />
 
-    <button type="submit">Send reset link</button>
+    <button type="submit">Send reset code</button>
 
     <p>
       <a href="/auth/login">Back to sign in</a>
@@ -26,4 +26,24 @@
   <p class="auth-helper-text">For your security, we never disclose whether an email is registered.</p>
 </div>
 
+<!-- Sending Overlay -->
+<div id="sendOverlay" class="upload-overlay" hidden style="display:none;">
+  <div class="upload-dialog">
+    <div class="upload-spinner"></div>
+    <div>
+      <div class="upload-title">Sending...</div>
+      <div class="upload-sub">Please wait while we process your request.</div>
+    </div>
+  </div>
+  <style>
+    .upload-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; z-index: 3000; }
+    .upload-dialog { background: #ffffff; border-radius: 12px; padding: 18px 22px; box-shadow: 0 10px 30px rgba(0,0,0,.25); display: flex; align-items: center; gap: 12px; min-width: 280px; }
+    .upload-spinner { width: 22px; height: 22px; border: 3px solid #e5e7eb; border-top-color: var(--primary-color); border-radius: 50%; animation: upload-spin 1s linear infinite; }
+    .upload-title { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; font-weight: 600; color: #111; }
+    .upload-sub { font-size: 12px; color: #666; margin-top: 2px; }
+    @keyframes upload-spin { to { transform: rotate(360deg); } }
+  </style>
+</div>
+
+<script src="/js/auth-forgot.js" defer></script>
 

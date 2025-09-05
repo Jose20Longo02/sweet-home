@@ -50,6 +50,26 @@ function initializeProjectList() {
   // Bind euro formatting for unit price filters if present
   bindEuroFilter('minUnitPriceDisplay', 'minUnitPrice');
   bindEuroFilter('maxUnitPriceDisplay', 'maxUnitPrice');
+
+  // Mobile filters open/close (CSP-safe)
+  const openFiltersBtn = document.querySelector('.mobile-filters-trigger');
+  if (openFiltersBtn) {
+    openFiltersBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleMobileFilters(true);
+    });
+  }
+  const closeFiltersBtn = document.querySelector('.filters-close');
+  if (closeFiltersBtn) {
+    closeFiltersBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleMobileFilters(false);
+    });
+  }
+  const filtersOverlay = document.getElementById('filtersOverlay');
+  if (filtersOverlay) {
+    filtersOverlay.addEventListener('click', () => toggleMobileFilters(false));
+  }
 }
 
 // Filter Management
@@ -66,6 +86,26 @@ function initializeFilters() {
 
   // Handle location cascading (supports both old and new IDs)
   initializeLocationCascading();
+
+  // Ensure toggleMobileFilters exists and controls the sidebar
+  window.toggleMobileFilters = function(open) {
+    const sidebar = document.getElementById('filtersSidebar');
+    const overlay = document.getElementById('filtersOverlay');
+    if (!sidebar) return;
+    if (open) {
+      sidebar.classList.add('open');
+      sidebar.setAttribute('aria-hidden', 'false');
+      if (overlay) overlay.classList.add('open');
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    } else {
+      sidebar.classList.remove('open');
+      sidebar.setAttribute('aria-hidden', 'true');
+      if (overlay) overlay.classList.remove('open');
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    }
+  };
 }
 
 function initializeLocationCascading() {

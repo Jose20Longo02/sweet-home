@@ -147,11 +147,16 @@
         <label for="photos">Photos</label>
         <input id="photos" name="photos" type="file" accept="image/*" multiple />
         <small>Upload 1–20 images. Leave empty to keep existing order.</small>
-        <div class="preview-grid">
+        <div class="preview-grid" id="photoPreview">
           <% (property.photos || []).forEach((ph) => { %>
-            <div class="item"><img class="thumb" src="<%= ph %>"></div>
+            <div class="item" style="position:relative">
+              <img class="thumb" src="<%= ph %>">
+              <button type="button" class="remove-btn" data-remove-photo="<%= ph %>" aria-label="Remove" style="position:absolute;right:6px;top:6px;width:24px;height:24px;border-radius:50%;border:none;background:rgba(0,0,0,0.6);color:#fff;cursor:pointer">×</button>
+            </div>
           <% }) %>
         </div>
+        <!-- Ordered existing photos will be posted here -->
+        <div id="orderedExistingPhotos"></div>
       </div>
 
       <div class="grid-3">
@@ -165,6 +170,16 @@
         <div class="field" id="videoUploadWrap">
           <label for="video">Upload new video</label>
           <input id="video" name="video" type="file" accept="video/*" />
+          <div id="videoPreview" class="video-preview">
+            <% if (property.video_url) { %>
+              <div style="position:relative;display:inline-block">
+                <video src="<%= property.video_url %>" controls playsinline style="max-width:100%; border-radius:8px;"></video>
+                <button type="button" class="remove-btn" data-remove-video="true" aria-label="Remove video" style="position:absolute;right:6px;top:6px;width:24px;height:24px;border-radius:50%;border:none;background:rgba(0,0,0,0.6);color:#fff;cursor:pointer">×</button>
+              </div>
+            <% } %>
+          </div>
+          <input type="hidden" id="remove_existing_video" name="remove_existing_video" value="false" />
+          <input type="hidden" id="remove_existing_photos" name="remove_existing_photos" value="" />
         </div>
         <div class="field" id="videoUrlWrap" hidden>
           <label for="video_url">Video URL</label>
@@ -216,9 +231,13 @@
           <div class="field">
             <label for="floorplan">Floorplan image</label>
             <input id="floorplan" name="floorplan" type="file" accept="image/*" />
-            <% if (property.floorplan_url) { %>
-              <div class="preview-grid"><div class="item"><img class="thumb" src="<%= property.floorplan_url %>"></div></div>
-            <% } %>
+            <div class="preview-grid" id="floorplanPreview">
+              <% if (property.floorplan_url) { %>
+                <div class="item" style="position:relative">
+                  <img class="thumb" src="<%= property.floorplan_url %>">
+                </div>
+              <% } %>
+            </div>
           </div>
         </div>
       </div>
@@ -244,9 +263,11 @@
           <div class="field">
             <label for="plan_photo_hv">Plan image</label>
             <input id="plan_photo_hv" name="plan_photo" type="file" accept="image/*" />
-            <% if (property.plan_photo_url) { %>
-              <div class="preview-grid"><div class="item"><img class="thumb" src="<%= property.plan_photo_url %>"></div></div>
-            <% } %>
+            <div class="preview-grid" id="planPhotoPreviewHV">
+              <% if (property.plan_photo_url) { %>
+                <div class="item" style="position:relative"><img class="thumb" src="<%= property.plan_photo_url %>"></div>
+              <% } %>
+            </div>
           </div>
         </div>
       </div>
@@ -260,12 +281,16 @@
           <div class="field">
             <label for="plan_photo">Plan image</label>
             <input id="plan_photo" name="plan_photo" type="file" accept="image/*" />
-            <% if (property.plan_photo_url) { %>
-              <div class="preview-grid"><div class="item"><img class="thumb" src="<%= property.plan_photo_url %>"></div></div>
-            <% } %>
+            <div class="preview-grid" id="planPhotoPreview">
+              <% if (property.plan_photo_url) { %>
+                <div class="item" style="position:relative"><img class="thumb" src="<%= property.plan_photo_url %>"></div>
+              <% } %>
+            </div>
           </div>
         </div>
       </div>
+      <input type="hidden" id="remove_existing_floorplan" name="remove_existing_floorplan" value="false" />
+      <input type="hidden" id="remove_existing_plan_photo" name="remove_existing_plan_photo" value="false" />
     </section>
 
     <!-- F. Submit -->

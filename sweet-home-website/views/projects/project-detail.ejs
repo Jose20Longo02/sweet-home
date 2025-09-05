@@ -70,23 +70,35 @@
         <div class="project-main">
           <!-- Project Gallery -->
           <div class="project-gallery">
-            <% if (project.photos && project.photos.length > 0) { %>
+            <% if ((project.photos && project.photos.length > 0) || project.video_url) { %>
               <div class="gallery-main">
-                <% const first = project.photos[0];
-                   const dot = first.lastIndexOf('.');
-                   const base = dot > -1 ? first.slice(0, dot) : first; %>
-                <% if (project.has_main_variants && project.main_variant_base) { %>
-                  <picture>
-                    <source srcset="<%= project.main_variant_base %>-640.avif 640w, <%= project.main_variant_base %>-960.avif 960w, <%= project.main_variant_base %>-1280.avif 1280w, <%= project.main_variant_base %>-1920.avif 1920w" type="image/avif">
-                    <source srcset="<%= project.main_variant_base %>-640.webp 640w, <%= project.main_variant_base %>-960.webp 960w, <%= project.main_variant_base %>-1280.webp 1280w, <%= project.main_variant_base %>-1920.webp 1920w" type="image/webp">
-                    <img src="<%= first %>" alt="<%= project.title %>"
-                         id="main-image" class="main-image"
-                         srcset="<%= project.main_variant_base %>-640.jpg 640w, <%= project.main_variant_base %>-960.jpg 960w, <%= project.main_variant_base %>-1280.jpg 1280w, <%= project.main_variant_base %>-1920.jpg 1920w"
-                         sizes="(max-width: 768px) 100vw, 960px"
-                         decoding="async">
-                  </picture>
+                <% if (project.video_url) { %>
+                  <video id="mainVideo" controls style="width:100%; height:100%; object-fit:cover; background:#000; pointer-events:auto;" playsinline>
+                    <source src="<%= project.video_url %>" type="video/mp4">
+                  </video>
+                  <button class="video-play-overlay" type="button" aria-label="Play video">
+                    <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
+                      <circle cx="32" cy="32" r="31" fill="rgba(0,0,0,0.6)" stroke="white" stroke-width="2" />
+                      <polygon points="26,20 26,44 46,32" fill="white" />
+                    </svg>
+                  </button>
                 <% } else { %>
-                  <img src="<%= first %>" alt="<%= project.title %>" id="main-image" class="main-image" decoding="async">
+                  <% const first = project.photos[0];
+                     const dot = first.lastIndexOf('.');
+                     const base = dot > -1 ? first.slice(0, dot) : first; %>
+                  <% if (project.has_main_variants && project.main_variant_base) { %>
+                    <picture>
+                      <source srcset="<%= project.main_variant_base %>-640.avif 640w, <%= project.main_variant_base %>-960.avif 960w, <%= project.main_variant_base %>-1280.avif 1280w, <%= project.main_variant_base %>-1920.avif 1920w" type="image/avif">
+                      <source srcset="<%= project.main_variant_base %>-640.webp 640w, <%= project.main_variant_base %>-960.webp 960w, <%= project.main_variant_base %>-1280.webp 1280w, <%= project.main_variant_base %>-1920.webp 1920w" type="image/webp">
+                      <img src="<%= first %>" alt="<%= project.title %>"
+                           id="main-image" class="main-image"
+                           srcset="<%= project.main_variant_base %>-640.jpg 640w, <%= project.main_variant_base %>-960.jpg 960w, <%= project.main_variant_base %>-1280.jpg 1280w, <%= project.main_variant_base %>-1920.jpg 1920w"
+                           sizes="(max-width: 768px) 100vw, 960px"
+                           decoding="async">
+                    </picture>
+                  <% } else { %>
+                    <img src="<%= first %>" alt="<%= project.title %>" id="main-image" class="main-image" decoding="async">
+                  <% } %>
                 <% } %>
                 <div class="photo-overlay">
                   <button class="gallery-nav prev" aria-label="<%= t('common.previous','Previous') %> image">
@@ -101,13 +113,26 @@
                   </button>
                 </div>
               </div>
-              
-              <% if (project.photos.length > 1) { %>
+
+              <% if ((project.photos && project.photos.length > 0) || project.video_url) { %>
                 <div class="gallery-thumbnails">
-                  <% project.photos.forEach((photo, index) => { %>
-                    <div class="thumbnail <%= index === 0 ? 'active' : '' %>" 
+                  <% if (project.video_url) { %>
+                    <div class="thumbnail video-thumb active" data-type="video" data-index="0" data-video-url="<%= project.video_url %>">
+                      <img src="<%= (project.photos && project.photos[0]) ? project.photos[0] : '/img/property-placeholder.jpg' %>" alt="<%= project.title %> - Video" loading="lazy" decoding="async">
+                      <span class="play-badge" aria-hidden="true">
+                        <svg viewBox="0 0 36 36" width="28" height="28">
+                          <circle cx="18" cy="18" r="17" fill="rgba(0,0,0,0.55)" stroke="white" stroke-width="1.5" />
+                          <polygon points="14,10 14,26 26,18" fill="white" />
+                        </svg>
+                      </span>
+                    </div>
+                  <% } %>
+                  <% (project.photos || []).forEach((photo, index) => { %>
+                    <% const offset = project.video_url ? 1 : 0; %>
+                    <div class="thumbnail <%= (!project.video_url && index === 0) ? 'active' : '' %>" 
+                         data-type="image"
                          data-photo="<%= photo %>"
-                         data-index="<%= index %>">
+                         data-index="<%= index + offset %>">
                       <img src="<%= photo %>" alt="<%= project.title %> - Image <%= index + 1 %>" loading="lazy" decoding="async">
                     </div>
                   <% }) %>
@@ -120,6 +145,15 @@
               </div>
             <% } %>
           </div>
+
+          <% if (project.brochure_url) { %>
+          <div class="brochure-wrap">
+            <a href="<%= project.brochure_url %>" target="_blank" rel="noopener" class="btn btn-brochure btn-block">
+              <i class="fas fa-file-pdf"></i>
+              Open Brochure
+            </a>
+          </div>
+          <% } %>
 
           <!-- Project Description -->
           <div class="project-section">

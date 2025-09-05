@@ -610,6 +610,13 @@ exports.createProperty = async (req, res, next) => {
     // Build photos from uploads OR provided URLs
     const uploadedPhotosFiles = (req.files && Array.isArray(req.files.photos)) ? req.files.photos : [];
     let photos = uploadedPhotosFiles.map(f => '/uploads/properties/' + f.filename);
+    // Respect client-side removals for new form (remove any deleted before submit)
+    try {
+      const removed = (body.remove_existing_photos || '').split(/\n+/).filter(Boolean);
+      if (removed.length) {
+        photos = photos.filter(p => !removed.includes(p));
+      }
+    } catch (_) {}
     const urlPhotos = Array.isArray(body.photos) ? body.photos.filter(Boolean) : (body.photos ? [body.photos] : []);
     photos = [...photos, ...urlPhotos];
     if (photos.length < 1) errors.push('Please upload at least one photo');
@@ -618,6 +625,10 @@ exports.createProperty = async (req, res, next) => {
     // Video: support either upload or URL depending on selected source
     let videoUrl = (body.video_source === 'link' ? (body.video_url?.trim() || null) : null);
     const uploadedVideoFile = (req.files && Array.isArray(req.files.video) && req.files.video[0]) ? req.files.video[0] : null;
+    if (!uploadedVideoFile && String(body.remove_existing_video || 'false') === 'true') {
+      // If explicitly removed and no replacement uploaded, ensure no video is saved
+      body.video_url = '';
+    }
     if (!videoUrl && uploadedVideoFile) {
       videoUrl = '/uploads/properties/' + uploadedVideoFile.filename;
     }
@@ -633,6 +644,22 @@ exports.createProperty = async (req, res, next) => {
         planPhotoUrl = '/uploads/properties/' + p.filename;
       }
     }
+
+    // Apply removal flags for floorplan/plan_photo on edit (set to null if flagged and no replacement uploaded)
+    const parseBoolFlag = (v) => {
+      const s = String(v ?? '').toLowerCase();
+      return s === 'true' || s === 'on' || s === '1' || s === 'yes';
+    };
+    const removeFloorplan = parseBoolFlag(body.remove_existing_floorplan);
+    const removePlanPhoto = parseBoolFlag(body.remove_existing_plan_photo);
+    if (removeFloorplan && !(req.files && Array.isArray(req.files.floorplan) && req.files.floorplan[0])) {
+      floorplanUrl = null;
+    }
+    if (removePlanPhoto && !(req.files && Array.isArray(req.files.plan_photo) && req.files.plan_photo[0])) {
+      planPhotoUrl = null;
+    }
+
+    // (handled above)
 
     if (errors.length) {
       const [{ rows: projects }, { rows: teamMembers }] = await Promise.all([
@@ -844,6 +871,25 @@ exports.editPropertyForm = async (req, res, next) => {
       return res.status(403).send('Forbidden – Not assigned to you');
     }
 
+    // Ensure photos are absolute URLs and exist on disk; drop missing to prevent empty previews
+    try {
+      const arr = Array.isArray(property.photos) ? property.photos.filter(Boolean) : (property.photos ? [property.photos] : []);
+      const publicDir = path.join(__dirname, '../public');
+      const cleaned = [];
+      for (const ph of arr) {
+        const url = String(ph);
+        const abs = url.startsWith('/uploads/')
+          ? path.join(publicDir, url.replace(/^\//, ''))
+          : path.join(publicDir, 'uploads/properties', String(property.id), url);
+        if (fs.existsSync(abs)) {
+          cleaned.push(url.startsWith('/uploads/') ? url : `/uploads/properties/${property.id}/${url}`);
+        }
+      }
+      property.photos = cleaned;
+    } catch (_) {
+      property.photos = Array.isArray(property.photos) ? property.photos.filter(Boolean) : [];
+    }
+
     // Fetch options needed by the form
     const [{ rows: projects }, { rows: teamMembers }] = await Promise.all([
       query('SELECT id, title FROM projects ORDER BY title'),
@@ -953,14 +999,44 @@ exports.updateProperty = async (req, res, next) => {
 
     // Uploaded files
     const uploadedPhotosFiles = (req.files && Array.isArray(req.files.photos)) ? req.files.photos : [];
-    let photos = uploadedPhotosFiles.length ? uploadedPhotosFiles.map(f => '/uploads/properties/' + f.filename) : existing.photos || [];
+    let photos = Array.isArray(existing.photos) ? [...existing.photos] : [];
     const urlPhotos = Array.isArray(body.photos) ? body.photos.filter(Boolean) : (body.photos ? [body.photos] : []);
-    if (!uploadedPhotosFiles.length && urlPhotos.length) photos = urlPhotos;
+    if (urlPhotos.length) photos = urlPhotos;
+    // Custom order tokens from client combining existing URLs and new file indices
+    let orderTokens = body['photos_order'] || body['photos_order[]'] || [];
+    if (typeof orderTokens === 'string') orderTokens = [orderTokens];
 
     let videoUrl = (body.video_source === 'link' ? (body.video_url?.trim() || null) : null) || existing.video_url;
     const uploadedVideoFile = (req.files && Array.isArray(req.files.video) && req.files.video[0]) ? req.files.video[0] : null;
     if (!videoUrl && uploadedVideoFile) {
       videoUrl = '/uploads/properties/' + uploadedVideoFile.filename;
+    }
+
+    // Apply removals for existing media when editing
+    const removedPhotosList = (body.remove_existing_photos || '').split(/[\n,]+/).map(s => s && s.trim()).filter(Boolean);
+    const isSameUrl = (a, b) => {
+      if (a === b) return true;
+      try { if (decodeURIComponent(a) === b) return true; } catch (_) {}
+      try { if (a === decodeURIComponent(b)) return true; } catch (_) {}
+      try { if (decodeURIComponent(a) === decodeURIComponent(b)) return true; } catch (_) {}
+      return false;
+    };
+    try {
+      if (removedPhotosList.length) {
+        photos = (photos || []).filter(p => !removedPhotosList.some(r => isSameUrl(p, r)));
+      }
+    } catch (_) {}
+    const parseBool = (v) => {
+      const s = String(v ?? '').toLowerCase();
+      return s === 'true' || s === 'on' || s === '1' || s === 'yes';
+    };
+    const removeExistingVideoFlag = parseBool(body.remove_existing_video);
+    if (!uploadedVideoFile && removeExistingVideoFlag) {
+      // If user requested to remove existing video and did not upload a new one or set a link
+      const isLinkProvided = body.video_source === 'link' && (body.video_url?.trim());
+      if (!isLinkProvided) {
+        videoUrl = null;
+      }
     }
 
     if (req.files) {
@@ -1009,6 +1085,41 @@ exports.updateProperty = async (req, res, next) => {
         currentUser: req.session.user,
         error: errors.join('. ')
       });
+    }
+
+    // If reordering only (no uploads yet), apply order of existing URLs now
+    if ((!uploadedPhotosFiles || uploadedPhotosFiles.length === 0) && Array.isArray(orderTokens) && orderTokens.length) {
+      const ordered = [];
+      const used = new Set();
+      for (const t of orderTokens) {
+        if (!t || typeof t !== 'string') continue;
+        if (t.startsWith('url:')) {
+          const u = t.slice(4);
+          if (u) { ordered.push(u); used.add(u); }
+        }
+      }
+      // append any remaining existing photos not referenced
+      for (const p of photos || []) { if (!used.has(p)) ordered.push(p); }
+      photos = ordered;
+    }
+
+    // Remove any empty entries and non-existent files; normalize to absolute URLs before persisting
+    try {
+      const publicDir = path.join(__dirname, '../public');
+      const normalizedExisting = [];
+      for (const p of (photos || [])) {
+        if (!p || !String(p).trim()) continue;
+        const url = String(p);
+        const abs = url.startsWith('/uploads/')
+          ? path.join(publicDir, url.replace(/^\//, ''))
+          : path.join(publicDir, 'uploads/properties', String(propId), url);
+        if (fs.existsSync(abs)) {
+          normalizedExisting.push(url.startsWith('/uploads/') ? url : `/uploads/properties/${propId}/${url}`);
+        }
+      }
+      photos = normalizedExisting;
+    } catch (_) {
+      photos = (photos || []).filter(p => p && String(p).trim());
     }
 
     // Ensure unique slug (exclude current property id)
@@ -1089,6 +1200,34 @@ exports.updateProperty = async (req, res, next) => {
       );
     } catch (_) { /* non-fatal */ }
 
+    // Ensure floorplan/plan removals are persisted even when there are no new uploads
+    try {
+      if (removeFloorplan || removePlanPhoto) {
+        await query(
+          `UPDATE properties
+              SET floorplan_url = CASE WHEN $1 THEN NULL ELSE floorplan_url END,
+                  plan_photo_url = CASE WHEN $2 THEN NULL ELSE plan_photo_url END,
+                  updated_at = NOW()
+            WHERE id = $3`,
+          [removeFloorplan, removePlanPhoto, propId]
+        );
+      }
+    } catch (_) { /* best-effort */ }
+
+    // Final safeguard: ensure DB reflects removals even if earlier branches skipped
+    try {
+      if (removeFloorplan || removePlanPhoto) {
+        await query(
+          `UPDATE properties
+              SET floorplan_url = CASE WHEN $1 THEN NULL ELSE floorplan_url END,
+                  plan_photo_url = CASE WHEN $2 THEN NULL ELSE plan_photo_url END,
+                  updated_at = NOW()
+            WHERE id = $3`,
+          [removeFloorplan, removePlanPhoto, propId]
+        );
+      }
+    } catch (_) { /* best-effort */ }
+
     // If there are new uploads, move them into the property folder and generate variants, then persist final URLs
     try {
       const propDir = path.join(__dirname, '../public/uploads/properties', String(propId));
@@ -1109,8 +1248,8 @@ exports.updateProperty = async (req, res, next) => {
           } catch (e) { /* non-fatal */ }
           movedPhotos.push(`/uploads/properties/${propId}/${f.filename}`);
         }
-        const urlPhotos = Array.isArray(body.photos) ? body.photos.filter(Boolean) : (body.photos ? [body.photos] : []);
-        photos = [...movedPhotos, ...urlPhotos];
+        // Append new moved photos to any existing kept photos
+        photos = [...(photos || []), ...movedPhotos];
       }
 
       // Video file
@@ -1140,7 +1279,7 @@ exports.updateProperty = async (req, res, next) => {
       }
 
       // Persist updated media paths if anything changed
-      if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || (req.files && (req.files.floorplan || req.files.plan_photo))) {
+      if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || removeFloorplan || removePlanPhoto || (req.files && (req.files.floorplan || req.files.plan_photo))) {
         await query(
           `UPDATE properties
               SET photos = $1,
@@ -1156,6 +1295,49 @@ exports.updateProperty = async (req, res, next) => {
       // Non-fatal: log and continue
       console.error('File move/update error:', fileErr);
     }
+
+    // After DB changes and file moves, delete removed files from disk (best-effort)
+    try {
+      // Delete removed photos (original + common variants)
+      if (removedPhotosList && removedPhotosList.length) {
+        for (const url of removedPhotosList) {
+          if (!url) continue;
+          const publicPath = path.join(__dirname, '../public', String(url).replace(/^\//, ''));
+          try {
+            if (fs.existsSync(publicPath)) fs.unlinkSync(publicPath);
+          } catch (_) {}
+          // Try deleting responsive variants if they exist (jpg/webp/avif at common widths)
+          try {
+            const ext = path.extname(publicPath);
+            const base = publicPath.slice(0, -ext.length);
+            const widths = [320, 480, 640, 960, 1280, 1600];
+            const exts  = ['.jpg', '.jpeg', '.png', '.webp', '.avif'];
+            for (const w of widths) {
+              for (const e of exts) {
+                const variant = `${base}-${w}${e}`;
+                if (fs.existsSync(variant)) {
+                  try { fs.unlinkSync(variant); } catch (_) {}
+                }
+              }
+            }
+          } catch (_) {}
+        }
+      }
+      // Delete removed existing video if flagged and not replaced
+      if (removeExistingVideoFlag && existing.video_url && existing.video_url !== (videoUrl || '')) {
+        const videoPath = path.join(__dirname, '../public', String(existing.video_url).replace(/^\//, ''));
+        try { if (fs.existsSync(videoPath)) fs.unlinkSync(videoPath); } catch (_) {}
+      }
+      // Delete removed floorplan/plan photo if flagged and not replaced
+      if (removeFloorplan && existing.floorplan_url && existing.floorplan_url !== (floorplanUrl || '')) {
+        const fp = path.join(__dirname, '../public', String(existing.floorplan_url).replace(/^\//, ''));
+        try { if (fs.existsSync(fp)) fs.unlinkSync(fp); } catch (_) {}
+      }
+      if (removePlanPhoto && existing.plan_photo_url && existing.plan_photo_url !== (planPhotoUrl || '')) {
+        const pp = path.join(__dirname, '../public', String(existing.plan_photo_url).replace(/^\//, ''));
+        try { if (fs.existsSync(pp)) fs.unlinkSync(pp); } catch (_) {}
+      }
+    } catch (_) { /* best-effort */ }
 
     const role = req.session.user?.role;
     if (role === 'SuperAdmin') {

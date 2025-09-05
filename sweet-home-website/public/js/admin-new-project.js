@@ -67,43 +67,75 @@ document.addEventListener('DOMContentLoaded', function () {
   bindEuro('min_price_display', 'min_price');
   bindEuro('max_price_display', 'max_price');
 
-  // Project photos preview
+  // Project photos preview (append across selections)
   const photosInput = document.getElementById('project_photos');
   const preview = document.getElementById('projPhotoPreview');
   if (photosInput && preview) {
     let dragIndex = null;
+    let selectedFiles = [];
+    function setInputFromSelected() {
+      const dt = new DataTransfer();
+      selectedFiles.forEach(f => dt.items.add(f));
+      photosInput.files = dt.files;
+    }
     function rebuildPreview() {
       preview.innerHTML = '';
-      Array.from(photosInput.files).forEach((file, index) => {
+      selectedFiles.forEach((file, index) => {
         const url = URL.createObjectURL(file);
         const item = document.createElement('div');
         item.className = 'item';
+        item.style.position = 'relative';
         item.draggable = true;
         const img = document.createElement('img');
         img.src = url; img.className = 'thumb';
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.textContent = '×';
+        remove.setAttribute('aria-label','Remove');
+        remove.style.position = 'absolute';
+        remove.style.right = '6px';
+        remove.style.top = '6px';
+        remove.style.width = '24px';
+        remove.style.height = '24px';
+        remove.style.borderRadius = '50%';
+        remove.style.border = 'none';
+        remove.style.background = 'rgba(0,0,0,0.6)';
+        remove.style.color = '#fff';
+        remove.style.cursor = 'pointer';
+        remove.addEventListener('click', function(){
+          selectedFiles.splice(index, 1);
+          setInputFromSelected();
+          rebuildPreview();
+        });
         const handle = document.createElement('div');
         handle.className = 'handle';
         handle.textContent = 'drag';
         item.appendChild(img);
+        item.appendChild(remove);
         item.appendChild(handle);
         item.addEventListener('dragstart', () => { dragIndex = index; });
         item.addEventListener('dragover', (e) => { e.preventDefault(); });
         item.addEventListener('drop', (e) => {
           e.preventDefault();
           if (dragIndex === null) return;
-          const files = Array.from(photosInput.files);
-          const moved = files.splice(dragIndex, 1)[0];
-          files.splice(index, 0, moved);
-          const dt = new DataTransfer();
-          files.forEach(f => dt.items.add(f));
-          photosInput.files = dt.files;
+          const moved = selectedFiles.splice(dragIndex, 1)[0];
+          selectedFiles.splice(index, 0, moved);
+          setInputFromSelected();
           dragIndex = null;
           rebuildPreview();
         });
         preview.appendChild(item);
       });
     }
-    photosInput.addEventListener('change', rebuildPreview);
+    photosInput.addEventListener('change', () => {
+      const newlySelected = Array.from(photosInput.files || []);
+      newlySelected.forEach(f => {
+        const exists = selectedFiles.some(sf => sf.name === f.name && sf.size === f.size && sf.lastModified === f.lastModified);
+        if (!exists) selectedFiles.push(f);
+      });
+      setInputFromSelected();
+      rebuildPreview();
+    });
   }
 
   const videoInput = document.getElementById('project_video');
@@ -113,9 +145,23 @@ document.addEventListener('DOMContentLoaded', function () {
       videoPreview.innerHTML = '';
       if (videoInput.files && videoInput.files[0]) {
         const url = URL.createObjectURL(videoInput.files[0]);
+        const container = document.createElement('div');
+        container.style.position = 'relative';
+        container.style.display = 'inline-block';
         const vid = document.createElement('video');
-        vid.src = url; vid.controls = true; vid.playsInline = true;
-        videoPreview.appendChild(vid);
+        vid.src = url; vid.controls = true; vid.playsInline = true; vid.style.maxWidth = '100%';
+        const remove = document.createElement('button');
+        remove.type = 'button'; remove.textContent = '×'; remove.setAttribute('aria-label','Remove video');
+        remove.style.position = 'absolute'; remove.style.right = '6px'; remove.style.top = '6px';
+        remove.style.width = '24px'; remove.style.height = '24px'; remove.style.borderRadius = '50%';
+        remove.style.border = 'none'; remove.style.background = 'rgba(0,0,0,0.6)'; remove.style.color = '#fff'; remove.style.cursor = 'pointer';
+        remove.addEventListener('click', function(){
+          videoInput.value = '';
+          videoPreview.innerHTML = '';
+        });
+        container.appendChild(vid);
+        container.appendChild(remove);
+        videoPreview.appendChild(container);
       }
     });
   }

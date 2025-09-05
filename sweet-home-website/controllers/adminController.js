@@ -375,7 +375,7 @@ exports.approveRequest = async (req, res, next) => {
         <p>Welcome aboard!</p>
         <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
       `,
-      text: `Hi ${user.name},\n\nYour ${user.role} account has been approved. You can now log in at ${process.env.APP_URL}/auth/login\n\nWelcome aboard!\n\nBest regards,\nSweet Home Real Estate Investments' team`
+      text: `Hi ${user.name},\n\nYour ${user.role} account has been approved. You can now log in.\n\nWelcome aboard!\n\nBest regards,\nSweet Home Real Estate Investments' team`
     });
     if (process.env.SMTP_DEBUG === 'true') {
       console.log('Approval email dispatched:', info && info.messageId);

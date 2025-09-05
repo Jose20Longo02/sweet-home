@@ -292,6 +292,40 @@ exports.editProjectForm = async (req, res, next) => {
     const { rows } = await query(`SELECT * FROM projects WHERE id = $1`, [req.params.id]);
     if (!rows.length) return res.status(404).render('errors/404');
     const project = rows[0];
+    // Normalize photos to array of non-empty strings to avoid empty previews
+    try {
+      const normalize = (val) => {
+        if (Array.isArray(val)) return val.filter(Boolean).map(String);
+        if (typeof val === 'string') {
+          const str = val.trim();
+          if (!str) return [];
+          if (str.startsWith('[')) { try { const arr = JSON.parse(str); return Array.isArray(arr) ? arr.filter(Boolean).map(String) : []; } catch (_) { return []; } }
+          if (str.startsWith('{') && str.endsWith('}')) {
+            return str.slice(1, -1).split(',').map(s => s.replace(/^\"|\"$/g, '').trim()).filter(Boolean);
+          }
+          return [str];
+        }
+        return [];
+      };
+      project.photos = normalize(project.photos);
+      // Ensure photo URLs are absolute and files exist; drop missing to prevent empty previews
+      try {
+        const publicDir = path.join(__dirname, '../public');
+        const cleaned = [];
+        for (const ph of project.photos) {
+          const url = String(ph);
+          const abs = url.startsWith('/uploads/')
+            ? path.join(publicDir, url.replace(/^\//, ''))
+            : path.join(publicDir, 'uploads/projects', String(project.id), url);
+          if (fs.existsSync(abs)) {
+            cleaned.push(url.startsWith('/uploads/') ? url : `/uploads/projects/${project.id}/${url}`);
+          }
+        }
+        project.photos = cleaned;
+      } catch (_) {}
+    } catch (_) {
+      project.photos = Array.isArray(project.photos) ? project.photos.filter(Boolean) : [];
+    }
     const { rows: teamMembers } = await query(`
       SELECT id, name
         FROM users
@@ -359,23 +393,91 @@ exports.updateProject = async (req, res, next) => {
       amenities = amenities.split(',').map(s => s.trim()).filter(Boolean);
     }
 
-    // Existing media defaults
-    let photos   = Array.isArray(existing.photos) ? existing.photos : [];
+    // Existing media defaults (normalize to array of strings)
+    const normalizePhotosValue = (val) => {
+      if (Array.isArray(val)) return val.filter(Boolean).map(String);
+      if (typeof val === 'string') {
+        const str = val.trim();
+        if (!str) return [];
+        if (str.startsWith('[')) {
+          try { const arr = JSON.parse(str); return Array.isArray(arr) ? arr.filter(Boolean).map(String) : []; } catch (_) { return []; }
+        }
+        if (str.startsWith('{') && str.endsWith('}')) {
+          return str.slice(1, -1).split(',').map(s => s.replace(/^\"|\"$/g, '').trim()).filter(Boolean);
+        }
+        return [str];
+      }
+      return [];
+    };
+    let photos   = normalizePhotosValue(existing.photos);
     let videoUrl = existing.video_url || null;
     let brochure = existing.brochure_url || null;
 
     // New uploads (optional)
     const uploadedPhotosFiles = (req.files && Array.isArray(req.files.photos)) ? req.files.photos : [];
-    if (uploadedPhotosFiles.length) {
-      photos = uploadedPhotosFiles.map(f => '/uploads/projects/' + encodeURIComponent(f.filename));
-    }
+    // Apply removals for existing photos
+    const removedPhotosList = (body.remove_existing_photos || '').split(/[\n,]+/).map(s => s && s.trim()).filter(Boolean);
+    const isSameUrl = (a, b) => {
+      if (a === b) return true;
+      try { if (decodeURIComponent(a) === b) return true; } catch (_) {}
+      try { if (a === decodeURIComponent(b)) return true; } catch (_) {}
+      try { if (decodeURIComponent(a) === decodeURIComponent(b)) return true; } catch (_) {}
+      return false;
+    };
+    try {
+      if (removedPhotosList.length) {
+        photos = photos.filter(p => !removedPhotosList.some(r => isSameUrl(p, r)));
+      }
+    } catch (_) {}
     const uploadedVideoFile = (req.files && Array.isArray(req.files.video) && req.files.video[0]) ? req.files.video[0] : null;
     if (uploadedVideoFile) {
       videoUrl = '/uploads/projects/' + encodeURIComponent(uploadedVideoFile.filename);
     }
+    const removeExistingVideoFlag = String(body.remove_existing_video || 'false') === 'true';
+    if (!uploadedVideoFile && removeExistingVideoFlag) {
+      videoUrl = null;
+    }
     const uploadedBrochure = (req.files && Array.isArray(req.files.brochure) && req.files.brochure[0]) ? req.files.brochure[0] : null;
     if (uploadedBrochure) {
       brochure = '/uploads/projects/' + encodeURIComponent(uploadedBrochure.filename);
+    }
+
+    
+
+    // Apply saved order when no new uploads are present
+    let photoOrderTokens = body['photos_order'] || body['photos_order[]'] || [];
+    if (typeof photoOrderTokens === 'string') photoOrderTokens = [photoOrderTokens];
+    if ((!uploadedPhotosFiles || uploadedPhotosFiles.length === 0) && Array.isArray(photoOrderTokens) && photoOrderTokens.length) {
+      const ordered = [];
+      const used = new Set();
+      for (const t of photoOrderTokens) {
+        if (!t || typeof t !== 'string') continue;
+        if (t.startsWith('url:')) {
+          const u = t.slice(4);
+          if (u) { ordered.push(u); used.add(u); }
+        }
+      }
+      for (const p of photos || []) { if (!used.has(p)) ordered.push(p); }
+      photos = ordered;
+    }
+
+    // Remove empty entries and non-existent files; normalize to absolute URLs before persisting
+    try {
+      const publicDir = path.join(__dirname, '../public');
+      const normalizedExisting = [];
+      for (const p of (photos || [])) {
+        if (!p || !String(p).trim()) continue;
+        const url = String(p);
+        const abs = url.startsWith('/uploads/')
+          ? path.join(publicDir, url.replace(/^\//, ''))
+          : path.join(publicDir, 'uploads/projects', String(projId), url);
+        if (fs.existsSync(abs)) {
+          normalizedExisting.push(url.startsWith('/uploads/') ? url : `/uploads/projects/${projId}/${url}`);
+        }
+      }
+      photos = normalizedExisting;
+    } catch (_) {
+      photos = (photos || []).filter(p => p && String(p).trim());
     }
 
     // Assignment (agent): optional change
@@ -458,7 +560,7 @@ exports.updateProject = async (req, res, next) => {
         try { await generateVariants(dest, `/uploads/projects/${projId}`); } catch (_) {}
         movedPhotos.push(`/uploads/projects/${projId}/${encodeURIComponent(f.filename)}`);
       }
-      if (movedPhotos.length) photos = movedPhotos;
+      if (movedPhotos.length) photos = [...photos, ...movedPhotos];
       if (uploadedVideoFile) {
         const src = uploadedVideoFile.path; const dest = path.join(projDir, uploadedVideoFile.filename);
         try { fs.renameSync(src, dest); } catch (_) {}
@@ -475,6 +577,80 @@ exports.updateProject = async (req, res, next) => {
         [photos, videoUrl, brochure, projId]
       );
     }
+
+    // Even if there were no new uploads, persist removals (photos/video) when arrays/flags changed
+    if (!uploadedPhotosFiles.length && !uploadedVideoFile && !uploadedBrochure) {
+      await query(
+        `UPDATE projects SET photos=$1, video_url=$2 WHERE id=$3`,
+        [photos, videoUrl, projId]
+      );
+    }
+
+    // After DB persistence, best-effort delete removed files from disk (photos and old video)
+    try {
+      if (removedPhotosList && removedPhotosList.length) {
+        for (const url of removedPhotosList) {
+          if (!url) continue;
+          const normalizedUrl = String(url).replace(/^\//, '');
+          const abs = path.join(__dirname, '../public', normalizedUrl);
+          // 1) Try direct unlink of the exact URL
+          try { if (fs.existsSync(abs)) fs.unlinkSync(abs); } catch (_) {}
+          // 2) Remove potential responsive variants alongside the exact URL
+          try {
+            const ext = path.extname(abs);
+            const base = abs.slice(0, -ext.length);
+            const widths = [320, 480, 640, 960, 1280, 1600, 1920];
+            const exts = ['.jpg', '.jpeg', '.png', '.webp', '.avif'];
+            for (const w of widths) {
+              for (const e of exts) {
+                const variant = `${base}-${w}${e}`;
+                if (fs.existsSync(variant)) {
+                  try { fs.unlinkSync(variant); } catch (_) {}
+                }
+              }
+            }
+          } catch (_) {}
+          // 3) Also try deleting by basename inside the project folder (handles encoded/decoded names)
+          try {
+            const projDir = path.join(__dirname, '../public/uploads/projects', String(projId));
+            const basename = path.basename(abs);
+            const candidates = new Set([basename]);
+            try { candidates.add(decodeURIComponent(basename)); } catch (_) {}
+            // derive stems (without extension) for width-variant patterns
+            const stems = new Set();
+            for (const name of candidates) {
+              const ext = path.extname(name);
+              stems.add(name.slice(0, -ext.length));
+            }
+            if (fs.existsSync(projDir)) {
+              const entries = fs.readdirSync(projDir);
+              entries.forEach(entry => {
+                // direct match
+                if (candidates.has(entry)) {
+                  const p = path.join(projDir, entry);
+                  try { fs.unlinkSync(p); } catch (_) {}
+                  return;
+                }
+                // width-variant match
+                const ext = path.extname(entry);
+                const stem = entry.slice(0, -ext.length);
+                for (const s of stems) {
+                  if (stem.startsWith(`${s}-`)) {
+                    const p = path.join(projDir, entry);
+                    try { fs.unlinkSync(p); } catch (_) {}
+                    break;
+                  }
+                }
+              });
+            }
+          } catch (_) {}
+        }
+      }
+      if (removeExistingVideoFlag && existing.video_url && existing.video_url !== (videoUrl || '')) {
+        const absVid = path.join(__dirname, '../public', String(existing.video_url).replace(/^\//, ''));
+        try { if (fs.existsSync(absVid)) fs.unlinkSync(absVid); } catch (_) {}
+      }
+    } catch (_) { /* best-effort */ }
 
     const role = req.session.user?.role;
     if (role === 'SuperAdmin') {
@@ -725,7 +901,7 @@ exports.showProject = async (req, res, next) => {
     const { rows: projects } = await query(`
       SELECT
         p.id, p.title, p.title_i18n, p.slug, p.country, p.city, p.neighborhood,
-        p.description, p.photos, p.created_at, p.status,
+        p.description, p.photos, p.video_url, p.brochure_url, p.created_at, p.status,
         p.total_units, p.completion_date, p.price_range, p.features,
         p.amenities, p.specifications, p.location_details
       FROM projects p

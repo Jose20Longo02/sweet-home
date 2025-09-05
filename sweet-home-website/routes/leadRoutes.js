@@ -89,7 +89,7 @@ router.post(
                   ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
                 </ul>
                 ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g,'<br/>')}</p>` : ''}
-                <p>View leads: ${(process.env.APP_URL || '')}/superadmin/dashboard/leads</p>
+                <p>Please review this lead from your SuperAdmin dashboard.</p>
                 <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
               `,
               text: `New SELLER lead\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${message?`\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
@@ -141,7 +141,7 @@ router.post(
                   ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
                 </ul>
                 ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g,'<br/>')}</p>` : ''}
-                <p>View in CRM: ${(process.env.APP_URL || '')}/superadmin/dashboard/leads?leadKind=unknown</p>
+                <p>Please review this lead from your SuperAdmin dashboard.</p>
                 <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
               `,
               text: `New Contact form submission\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${language?`\nPreferred language: ${language}`:''}${message?`\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
