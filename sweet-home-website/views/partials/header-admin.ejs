@@ -1,0 +1,79 @@
+<header class="site-header admin" role="banner">
+  <div class="nav-container">
+    <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <a href="/" class="brand-mobile" aria-label="Sweet Home">
+      <img src="/images/Sweet Home Logo.png" alt="Sweet Home" onerror="this.style.display='none'">
+    </a>
+
+    <% const p = (typeof currentPath !== 'undefined' ? currentPath : ''); %>
+    <nav class="nav-grid" aria-label="Primary">
+      <a href="/projects" class="<%= p.startsWith('/projects') ? 'is-active' : '' %>"><%= t('nav.projects','Projects') %></a>
+      <a href="/owners" class="<%= p.startsWith('/owners') ? 'is-active' : '' %>"><%= t('nav.owners','Owners') %></a>
+      <a href="/services" class="<%= p.startsWith('/services') ? 'is-active' : '' %>"><%= t('nav.services','Services') %></a>
+      <a href="/" class="brand">
+        <img src="/images/Sweet Home Logo.png" alt="Sweet Home" onerror="this.style.display='none'">
+      </a>
+      <a href="/about" class="<%= p.startsWith('/about') ? 'is-active' : '' %>"><%= t('nav.about','About') %></a>
+      <a href="/contact" class="<%= p.startsWith('/contact') ? 'is-active' : '' %>"><%= t('nav.contact','Contact') %></a>
+    </nav>
+    <div class="lang-switcher-wrap">
+      <%- include('./lang-switcher') %>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+    <nav class="mobile-links" aria-label="Mobile">
+      <a href="/projects"><%= t('nav.projects','Projects') %></a>
+      <a href="/owners"><%= t('nav.owners','Owners') %></a>
+      <a href="/services"><%= t('nav.services','Services') %></a>
+      <a href="/about"><%= t('nav.about','About') %></a>
+      <a href="/contact"><%= t('nav.contact','Contact') %></a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header.admin { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: #ffffff; box-shadow: none; }
+  .nav-container { max-width: 1200px; margin: 0 auto; padding: 16px 20px; overflow: visible; }
+
+  /* Even distribution: seven cells with centered logo */
+  .nav-grid { display: grid; grid-template-columns: repeat(7, 1fr); align-items: center; gap: 0; text-align: center; }
+  .nav-grid a { text-decoration: none; color: #111; font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; letter-spacing: .2px; position: relative; padding: 4px 0; }
+  .nav-grid a.is-active::after { content: ""; position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%); width: 26px; height: 2px; background: var(--primary-color); border-radius: 2px; }
+  .nav-grid .brand { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+  .nav-grid .brand img { height: 130px; width: auto; }
+
+  /* Language switcher placement */
+  .lang-switcher-wrap { position: absolute; right: 16px; top: 12px; }
+
+  /* Mobile */
+  .brand-mobile { display: none; text-decoration: none; }
+  .brand-mobile img { height: 130px; width: auto; }
+  .menu-toggle { display: none; background: transparent; border: 0; width: 40px; height: 40px; align-items: center; justify-content: center; }
+  .menu-toggle span { display: block; width: 24px; height: 2px; background: #111; transition: transform .25s ease, opacity .25s ease; }
+  .menu-toggle span:nth-child(2) { margin: 5px 0; }
+  .menu-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .menu-toggle.active span:nth-child(2) { opacity: 0; }
+  .menu-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .mobile-menu { position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; border-bottom: 1px solid #eee; display: none; }
+  .mobile-menu.open { display: block; }
+  .mobile-links { display: grid; gap: 10px; padding: 12px 16px; }
+  .mobile-links a { text-decoration: none; color: #111; }
+
+  /* Space below header for admin pages */
+  .main-offset { padding-top: 84px; }
+
+  @media (max-width: 900px) {
+    .nav-container { display: flex; align-items: center; justify-content: center; padding: 6px 12px; position: relative; }
+    .nav-grid { display: none; }
+    .brand-mobile { display: inline-flex; align-items: center; gap: 8px; margin: 0; line-height: 0; }
+    .brand-mobile img { display: block; }
+    .menu-toggle { display: inline-flex; position: absolute; right: 12px; top: 10px; flex-direction: column; }
+    /* Align language pills to the left on mobile/tablet */
+    .lang-switcher-wrap { position: absolute; left: 12px; right: auto; top: 10px; }
+  }
+</style>
+

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | Sweet Home</title>
+  <!-- Fonts: Playfair Display for headings, Lato for body -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@600;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <% if (typeof headPartial !== 'undefined' && headPartial) { try { %>
+    <%- include(headPartial) %>
+  <% } catch (e) { /* safely ignore optional head partial errors */ } } %>
+  <link rel="preload" as="style" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="preload" as="style" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/variables.css" />
+  <meta name="csrf-token" content="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+  <% if ((typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) && !(typeof currentPath !== 'undefined' && (/^\/(admin|superadmin)/).test(currentPath))) { %>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<%= GA_MEASUREMENT_ID %>"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      // Consent Mode: default from env (dev=granted, prod=denied unless a banner updates it)
+      gtag('consent', 'default', { 'ad_storage': '<%= GA_CONSENT_DEFAULT %>', 'analytics_storage': '<%= GA_CONSENT_DEFAULT %>' });
+      gtag('config', '<%= GA_MEASUREMENT_ID %>');
+    </script>
+  <% } %>
+  <% if (typeof canonicalUrl !== 'undefined' && canonicalUrl) { %>
+    <link rel="canonical" href="<%= canonicalUrl %>">
+  <% } %>
+  <% if (typeof canonicalUrl !== 'undefined' && canonicalUrl) { %>
+    <link rel="alternate" hreflang="en" href="<%= canonicalUrl.replace(/:\/\//, '://').replace(/\/es\//,'/').replace(/\/de\//,'/') %>">
+    <link rel="alternate" hreflang="es" href="<%= canonicalUrl.replace(/:\/\//, '://').replace(/:\/\//, '://').replace(/\/de\//,'/es/').replace(/\/en\//,'/es/').replace(/\/$/,'/').replace(/\/\/$/,'/') %>">
+    <link rel="alternate" hreflang="de" href="<%= canonicalUrl.replace(/:\/\//, '://').replace(/:\/\//, '://').replace(/\/es\//,'/de/').replace(/\/en\//,'/de/').replace(/\/$/,'/').replace(/\/\/$/,'/') %>">
+    <link rel="alternate" hreflang="x-default" href="<%= canonicalUrl.replace(/:\/\//, '://').replace(/\/es\//,'/').replace(/\/de\//,'/') %>">
+  <% } %>
+  <script src="/js/main.js" defer></script>
+  <script>
+    // Lazy-load non-critical scripts when idle
+    window.requestIdleCallback && requestIdleCallback(function(){
+      [
+        '/js/home.js'
+      ].forEach(function(src){
+        var s = document.createElement('script');
+        s.src = src; s.defer = true; document.body.appendChild(s);
+      });
+    });
+  </script>
+</head>
+<body class="<%= (typeof stickyFooter !== 'undefined' && stickyFooter) ? 'layout-sticky' : '' %>">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <% const isAdmin = (typeof currentPath !== 'undefined' ? /^\/admin/.test(currentPath) : false); %>
+  <% const isSuperAdmin = (typeof currentPath !== 'undefined' ? /^\/superadmin/.test(currentPath) : false); %>
+  <% const _useDarkHeader = (typeof useDarkHeader !== 'undefined' ? useDarkHeader : isAdmin); %>
+  <%- include(isAdmin ? '../partials/header-dark' : (isSuperAdmin ? '../partials/header-admin' : (_useDarkHeader ? '../partials/header-dark' : '../partials/header'))) %>
+  <main id="main-content" class="<%= (typeof useMainContainer !== 'undefined' && useMainContainer === false) ? '' : 'container' %> <%= (isAdmin || isSuperAdmin || _useDarkHeader) ? 'main-offset' : '' %>" role="main">
+    <%- body %>
+  </main>
+  <% if (!(isAdmin || isSuperAdmin) && !(typeof hideFooter !== 'undefined' && hideFooter === true)) { %>
+    <%- include('../partials/footer') %>
+  <% } %>
+</body>
+</html>

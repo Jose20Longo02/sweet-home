@@ -1,0 +1,77 @@
+:root {
+  --regions-ease: cubic-bezier(.2,.8,.2,1);
+}
+
+.regions-page { min-height: 100vh; }
+
+.regions-split {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+.region {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--white, #fff);
+  isolation: isolate;
+}
+
+.region-media {
+  position: absolute; inset: 0;
+  background-position: center; background-size: cover; background-repeat: no-repeat;
+  transform: scale(1.02);
+}
+.region-left .region-media { background-image: url('/images/cyprus-hero.jpg'); }
+.region-right .region-media { background-image: url('/images/dubai-hero.jpg'); }
+
+.region-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.5); transition: background-color 260ms var(--regions-ease); }
+
+.region-title { position: relative; z-index: 2; font-size: clamp(2.25rem, 4.5vw, 3.25rem); font-weight: 800; text-align: center; margin: 0; transition: opacity 260ms var(--regions-ease); color: var(--white, #fff); }
+
+.region-cta { position: absolute; top: 50%; left: 50%; z-index: 2; padding: 20px 36px; border-radius: 999px; border: 2px solid rgba(255,255,255,.85); color: #fff; background: transparent; box-shadow: none; font-size: 1.25rem; font-weight: 800; letter-spacing: .25px; opacity: 0; transform: translate(-50%, -50%); transition: transform 280ms var(--regions-ease), opacity 240ms var(--regions-ease), background-color 240ms var(--regions-ease), color 240ms var(--regions-ease), border-color 240ms var(--regions-ease); will-change: transform, opacity, background-color, color, border-color; }
+/* Start offset so it slides clearly into the title position */
+.region-left .region-cta { transform: translate(-50%, -50%) translateX(-140px); }
+.region-right .region-cta { transform: translate(-50%, -50%) translateX(140px); }
+
+.region:is(:hover, :focus-visible) .region-overlay { background: rgba(0,0,0,.8); }
+.region:is(:hover, :focus-visible) .region-title { opacity: 0; }
+.region-left:is(:hover, :focus-visible) .region-cta { opacity: 1; transform: translate(-50%, -50%) translateX(0); }
+.region-right:is(:hover, :focus-visible) .region-cta { opacity: 1; transform: translate(-50%, -50%) translateX(0); }
+
+/* CTA hover/focus effect */
+.region-cta:hover,
+.region-cta:focus-visible {
+  background: var(--white, #fff);
+  color: var(--gray-900, #0f172a);
+  border-color: transparent;
+  box-shadow: 0 6px 18px rgba(0,0,0,.22);
+  transform: translate(-50%, -50%) translateY(-2px);
+}
+
+.region:focus-visible { outline: 3px solid var(--primary-color, #2ea862); outline-offset: -3px; }
+
+.regions-divider { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; transform: translateX(-1px); background: linear-gradient(to bottom, transparent, rgba(255,255,255,.6), transparent); z-index: 1; pointer-events: none; }
+
+@media (max-width: 767px) {
+  .regions-split { grid-template-columns: 1fr; }
+  .region { min-height: min(50vh, 420px); }
+  .region-title { opacity: 1 !important; }
+  /* Smaller CTA and tighter spacing below the title */
+  .region-cta { opacity: 1; left: 50% !important; right: auto !important; top: 64%; bottom: auto; transform: translate(-50%, -50%) !important; padding: 14px 24px; font-size: 1.05rem; background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.85); }
+  .region-cta:hover,
+  .region-cta:focus-visible { transform: translate(-50%, -50%) translateY(-2px) !important; background: var(--white, #fff); color: var(--gray-900, #0f172a); border-color: transparent; }
+  /* Hide vertical divider on mobile */
+  .regions-divider { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .region-cta { transition: opacity 0.001s linear; transform: none !important; }
+  .region-overlay, .region-title { transition: opacity 0.001s linear; }
+}
+

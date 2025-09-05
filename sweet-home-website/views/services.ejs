@@ -1,0 +1,104 @@
+<% title = t('nav.services','Services') %>
+<% useDarkHeader = false %>
+<% useMainContainer = false %>
+<% hideFooter = false %>
+<link rel="stylesheet" href="/css/services.css" />
+
+<!-- i18n for services panel -->
+<div id="i18n-services" data-i18n='<%- JSON.stringify({
+  services: {
+    cta: t("services.panel.cta","Contact Us!"),
+    consulting: { title: t("services.panel.consulting.title","Property Consulting"), copy: t("services.panel.consulting.copy","") },
+    management: { title: t("services.panel.management.title","Property Management"), copy: t("services.panel.management.copy","") },
+    finance: { title: t("services.panel.finance.title","Financial Services"), copy: t("services.panel.finance.copy","") }
+  }
+}).replace(/'/g, '&#39;') %>' style="display:none;"></div>
+
+<!-- SECTION 1: Hero with Tabbed Services Panel -->
+<section class="services-hero" aria-label="<%= t('services.hero.aria','Services hero') %>">
+  <div class="hero-bg"><!-- REPLACE: hero background image URL --></div>
+  <div class="hero-overlay"></div>
+
+  <div class="tabs-wrap">
+    <div class="tabs-box">
+      <div role="tablist" aria-label="<%= t('services.tabs.aria','Service tabs') %>" class="tabs" id="serviceTabs">
+      <button role="tab" id="tab-consulting" aria-controls="panel-service" aria-selected="true" tabindex="0" class="tab is-active"><%= t('services.tabs.consulting','Property Consulting') %></button>
+      <button role="tab" id="tab-management" aria-controls="panel-service" aria-selected="false" tabindex="-1" class="tab"><%= t('services.tabs.management','Property Management') %></button>
+      <button role="tab" id="tab-finance" aria-controls="panel-service" aria-selected="false" tabindex="-1" class="tab"><%= t('services.tabs.finance','Financial Services') %></button>
+      </div>
+      <div class="tab-indicator" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <div id="panel-service" role="tabpanel" aria-labelledby="tab-consulting" class="service-panel">
+    <div class="panel-inner">
+      <div class="panel-copy">
+        <h2 class="panel-title" id="serviceTitle"><%= t('services.panel.consulting.title','Property Consulting') %></h2>
+        <p id="serviceCopy"><%= t('services.panel.consulting.copy','') %></p>
+        <a href="#contact" class="btn-outline" id="serviceCTA"><%= t('services.panel.cta','Contact Us!') %></a>
+      </div>
+      <div class="panel-media" id="serviceImage"><!-- REPLACE: service image src --></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: Contact Us -->
+<section id="contact" class="services-contact">
+  <h2 class="section-title"><%= t('services.contact.title','Contact Us') %></h2>
+  <div class="contact-grid">
+    <form id="servicesContactForm" class="contact-form" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="row-2">
+        <div class="field">
+          <label for="firstName"><%= t('forms.firstName','First Name') %>*</label>
+          <input id="firstName" name="firstName" type="text" required>
+          <p class="error" data-for="firstName"></p>
+        </div>
+        <div class="field">
+          <label for="lastName"><%= t('forms.lastName','Last Name') %>*</label>
+          <input id="lastName" name="lastName" type="text" required>
+          <p class="error" data-for="lastName"></p>
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label for="countryCode"><%= t('forms.countryCode','Country code') %>*</label>
+          <input id="countryCode" name="countryCode" type="text" required placeholder="e.g. +49">
+          <p class="error" data-for="countryCode"></p>
+        </div>
+        <div class="field">
+          <label for="phoneNumber"><%= t('forms.phoneNumber','Phone Number') %>*</label>
+          <input id="phoneNumber" name="phoneNumber" type="tel" required>
+          <p class="error" data-for="phoneNumber"></p>
+        </div>
+      </div>
+      <div class="field">
+        <label for="email"><%= t('forms.email','Email Address') %>*</label>
+        <input id="email" name="email" type="email" required>
+        <p class="error" data-for="email"></p>
+      </div>
+      <div class="field">
+        <label for="language"><%= t('forms.preferredLanguage','Preferred language') %>*</label>
+        <select id="language" name="language" required>
+          <option value="">Select language</option>
+          <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
+            <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
+          <% }) %>
+        </select>
+        <p class="error" data-for="language"></p>
+      </div>
+      <div class="field">
+        <label for="message"><%= t('forms.message','Message') %></label>
+        <textarea id="message" name="message" rows="5"></textarea>
+      </div>
+      <button type="submit" class="btn-submit"><%= t('forms.submit','Submit') %></button>
+      <p class="form-status" role="status" aria-live="polite" style="display:none"></p>
+    </form>
+  </div>
+</section>
+
+<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<script src="/js/services.js" defer></script>
+
+

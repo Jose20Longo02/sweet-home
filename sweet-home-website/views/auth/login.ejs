@@ -1,0 +1,69 @@
+<% title = 'Sign In' %>
+
+<head>
+  <link rel="stylesheet" href="/css/auth/login.css">
+  <% if (process.env.RECAPTCHA_SITE_KEY) { %>
+    <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+  <% } %>
+</head>
+
+<div class="login-wrap">
+  <form action="/auth/login" method="post" class="auth-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <% if (process.env.RECAPTCHA_SITE_KEY) { %>
+      <input type="hidden" name="recaptchaToken" id="recaptchaTokenLogin" />
+    <% } %>
+    <h1>Sign In</h1>
+
+    <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
+    <% } %>
+
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email" autocomplete="email" required />
+
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required />
+
+    <button type="submit">Log In</button>
+
+    <p>
+      <a href="/auth/forgot">Forgot your password?</a>
+    </p>
+
+    <p>
+      Don’t have an account?
+      <a href="/auth/register">Register here</a>
+    </p>
+  </form>
+</div>
+
+<% if (awaitingApproval) { %>
+  <!-- The overlay -->
+  <div id="approvalModal" class="modal-overlay">
+    <div class="modal-content">
+      <h2>Thanks for registering!</h2>
+      <p>Your <strong><%= role %></strong> account is now pending approval.</p>
+      <p>Once a SuperAdmin approves it, you’ll receive an email and be able to log in.</p>
+      <button id="approvalOkBtn">OK</button>
+    </div>
+  </div>
+  <script>
+    // show the modal on page load
+    document.getElementById('approvalModal').style.display = 'flex';
+    document.getElementById('approvalOkBtn').onclick = () => {
+      document.getElementById('approvalModal').style.display = 'none';
+    };
+  </script>
+<% } %>
+
+<% if (process.env.RECAPTCHA_SITE_KEY) { %>
+  <script>
+    grecaptcha.ready(function() {
+      grecaptcha.execute('<%= process.env.RECAPTCHA_SITE_KEY %>', {action: 'login'}).then(function(token) {
+        var el = document.getElementById('recaptchaTokenLogin');
+        if (el) el.value = token;
+      });
+    });
+  </script>
+<% } %>

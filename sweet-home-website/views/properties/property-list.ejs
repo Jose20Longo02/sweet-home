@@ -1,0 +1,649 @@
+<% title = 'Property Search Results'; headPartial = '../partials/seo/property-list-head'; useDarkHeader = true; %>
+<link rel="stylesheet" href="/css/property-list.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<!-- Locations data for JavaScript -->
+<div id="locations-data" data-locations='<%- JSON.stringify(locations).replace(/'/g, '&#39;') %>' style="display: none;"></div>
+<!-- Location colors for JavaScript -->
+<div id="location-colors-data" data-location-colors='<%- JSON.stringify(locationColors).replace(/'/g, '&#39;') %>' style="display: none;"></div>
+<!-- i18n strings for client-side JS -->
+<div id="i18n-property-list" data-i18n='<%- JSON.stringify({
+  compare: {
+    title: t("properties.list.compare.title","Properties to Compare"),
+    cta: t("properties.list.compare.cta","Compare"),
+    modalTitle: t("properties.list.compare.modalTitle","Property Comparison"),
+    added: t("properties.list.compare.added","Property added to comparison"),
+    removed: t("properties.list.compare.removed","Property removed from comparison"),
+    max: t("properties.list.compare.max","You can only compare up to 3 properties at a time"),
+    cleared: t("properties.list.compare.cleared","Comparison cleared"),
+    needTwo: t("properties.list.compare.needTwo","Please select at least 2 properties to compare"),
+    headers: {
+      feature: t("properties.list.compare.headers.feature","Feature"),
+      image: t("properties.list.compare.headers.image","Image"),
+      location: t("properties.list.compare.headers.location","Location"),
+      price: t("properties.list.compare.headers.price","Price"),
+      type: t("properties.list.compare.headers.type","Type"),
+      bedrooms: t("properties.list.compare.headers.bedrooms","Bedrooms"),
+      bathrooms: t("properties.list.compare.headers.bathrooms","Bathrooms"),
+      size: t("properties.list.compare.headers.size","Size")
+    },
+    remove: t("properties.list.compare.remove","Remove from comparison"),
+    removeAria: t("properties.list.compare.removeAria","Remove %s from comparison")
+  },
+  forms: {
+    anyCity: t('forms.anyCity','Any City'),
+    anyNeighborhood: t('forms.anyNeighborhood','Any Neighborhood')
+  },
+  meta: {
+    sqm: t('properties.list.meta.sqm','m²'),
+    beds: t('properties.list.meta.beds','beds'),
+    baths: t('properties.list.meta.baths','baths')
+  },
+  viewDetails: t('properties.list.viewDetails','View details'),
+  map: {
+    error: t('properties.list.map.error','Unable to load map. Please try refreshing the page.')
+  },
+  common: {
+    retry: t('common.retry','Retry')
+  },
+  saved: {
+    noneTitle: t('properties.list.saved.noneTitle','No Saved Searches'),
+    noneHint: t('properties.list.saved.noneHint','Save your property searches to quickly access them later.'),
+    noDescription: t('properties.list.saved.noDescription','No description'),
+    created: t('properties.list.saved.created','Created:'),
+    lastUsed: t('properties.list.saved.lastUsed','Last used:'),
+    emailAlerts: t('properties.list.saved.emailAlerts','Email Alerts'),
+    apply: t('properties.list.saved.apply','Apply Search'),
+    delete: t('properties.list.saved.delete','Delete'),
+    savedOk: t('properties.list.saved.savedOk','Search saved successfully!'),
+    deletedOk: t('properties.list.saved.deletedOk','Search deleted successfully!')
+  }
+}).replace(/'/g, '&#39;') %>' style="display:none;"></div>
+
+<div class="property-search-page">
+  <!-- Search Header removed per design request; dark header enabled in layout -->
+
+  <div class="container-wide">
+    <div class="property-layout">
+      <!-- Filters Sidebar -->
+      <aside class="filters-sidebar" id="filtersSidebar" aria-hidden="true">
+        <div class="filters-header">
+          <h3><%= t('properties.list.filters.title','Filters') %></h3>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button class="clear-filters" onclick="clearAllFilters()"><%= t('common.clearAll','Clear All') %></button>
+            <button type="button" class="filters-close" onclick="toggleMobileFilters(false)" aria-label="<%= t('common.close','Close') %>">×</button>
+          </div>
+        </div>
+        
+        <form id="filtersForm" class="filters-form">
+          <!-- Location Filters -->
+          <div class="filter-group">
+            <h4><%= t('properties.list.location','Location') %></h4>
+            <div class="form-group">
+              <label for="filterCountry"><%= t('forms.country','Country') %></label>
+               <select id="filterCountry" name="country" class="form-select">
+                <option value=""><%= t('forms.anyCountry','Any country') %></option>
+                <% Object.keys(locations).forEach(country => { %>
+                  <option value="<%= country %>" <%= locals.filters?.country === country ? 'selected' : '' %>><%= country %></option>
+                <% }); %>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="filterCity"><%= t('forms.city','City') %></label>
+               <select id="filterCity" name="city" class="form-select">
+                <option value=""><%= t('forms.anyCity','Any City') %></option>
+                <!-- Cities will be populated dynamically -->
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="filterNeighborhood"><%= t('forms.neighborhood','Neighborhood') %></label>
+              <select id="filterNeighborhood" name="neighborhood" class="form-select">
+                <option value=""><%= t('forms.anyNeighborhood','Any Neighborhood') %></option>
+                <!-- Neighborhoods will be populated dynamically -->
+              </select>
+            </div>
+          </div>
+
+          <!-- Property Type -->
+          <div class="filter-group">
+            <h4><%= t('properties.list.propertyType','Property Type') %></h4>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" name="type" value="Apartment" <%= locals.filters?.type?.includes('Apartment') ? 'checked' : '' %>>
+                <span class="checkmark"></span>
+                <%= t('forms.types.apartment','Apartment') %>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="type" value="House" <%= locals.filters?.type?.includes('House') ? 'checked' : '' %>>
+                <span class="checkmark"></span>
+                <%= t('forms.types.house','House') %>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="type" value="Villa" <%= locals.filters?.type?.includes('Villa') ? 'checked' : '' %>>
+                <span class="checkmark"></span>
+                <%= t('forms.types.villa','Villa') %>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="type" value="Land" <%= locals.filters?.type?.includes('Land') ? 'checked' : '' %>>
+                <span class="checkmark"></span>
+                <%= t('forms.types.land','Land') %>
+              </label>
+            </div>
+          </div>
+
+          
+          <div class="filters-collapsibles"></div>
+          <!-- More Filters (collapsed by default) -->
+          <div class="filter-group collapsible collapsed">
+            <h4><%= t('properties.list.moreFilters','More filters') %></h4>
+            <div class="filter-content">
+              <!-- Price Range -->
+              <div class="filter-group">
+                <h4><%= t('properties.list.priceRange.title','Price Range') %></h4>
+                <div class="price-range">
+                  <div class="form-group">
+                    <label for="minPrice"><%= t('properties.list.priceRange.min','Min Price (€)') %></label>
+                    <input type="text" id="minPrice" placeholder="€0" 
+                           value="<%= locals.filters?.min_price ? '€' + Number(locals.filters.min_price).toLocaleString() : '' %>" 
+                           class="form-input" inputmode="numeric" autocomplete="off">
+                    <input type="hidden" id="minPriceHidden" name="min_price" value="<%= locals.filters?.min_price || '' %>">
+                  </div>
+                  <div class="form-group">
+                    <label for="maxPrice"><%= t('properties.list.priceRange.max','Max Price (€)') %></label>
+                    <input type="text" id="maxPrice" placeholder="€ <%= t('common.any','Any') %>" 
+                           value="<%= locals.filters?.max_price ? '€' + Number(locals.filters.max_price).toLocaleString() : '' %>" 
+                           class="form-input" inputmode="numeric" autocomplete="off">
+                    <input type="hidden" id="maxPriceHidden" name="max_price" value="<%= locals.filters?.max_price || '' %>">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Size Range -->
+              <div class="filter-group">
+                <h4><%= t('properties.list.sizeRange.title','Size Range (m²)') %></h4>
+                <div class="size-range">
+                  <div class="form-group">
+                    <label for="minSize"><%= t('properties.list.sizeRange.min','Min Size') %></label>
+                    <input type="number" id="minSize" name="min_size" placeholder="0" 
+                           value="<%= locals.filters?.min_size || '' %>" class="form-input">
+                  </div>
+                  <div class="form-group">
+                    <label for="maxSize"><%= t('properties.list.sizeRange.max','Max Size') %></label>
+                    <input type="number" id="maxSize" name="max_size" placeholder="<%= t('common.any','Any') %>" 
+                           value="<%= locals.filters?.max_size || '' %>" class="form-input">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bedrooms -->
+              <div class="filter-group" data-filter-group="bedrooms">
+                <h4><%= t('properties.list.bedrooms','Bedrooms') %></h4>
+                <div class="checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="bedrooms" value="1" <%= locals.filters?.bedrooms?.includes('1') ? 'checked' : '' %>>
+                    <span class="checkmark"></span>
+                    1+
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="bedrooms" value="2" <%= locals.filters?.bedrooms?.includes('2') ? 'checked' : '' %>>
+                    <span class="checkmark"></span>
+                    2+
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="bedrooms" value="3" <%= locals.filters?.bedrooms?.includes('3') ? 'checked' : '' %>>
+                    <span class="checkmark"></span>
+                    3+
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="bedrooms" value="4" <%= locals.filters?.bedrooms?.includes('4') ? 'checked' : '' %>>
+                    <span class="checkmark"></span>
+                    4+
+                  </label>
+                </div>
+              </div>
+
+              <!-- Bathrooms -->
+              <div class="filter-group" data-filter-group="bathrooms">
+                <h4><%= t('properties.list.bathrooms','Bathrooms') %></h4>
+                <div class="checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="bathrooms" value="1" <%= locals.filters?.bathrooms === '1' ? 'checked' : '' %>>
+                    <span class="checkmark"></span>
+                    1+
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="bathrooms" value="2" <%= locals.filters?.bathrooms === '2' ? 'checked' : '' %>>
+                    <span class="checkmark"></span>
+                    2+
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="bathrooms" value="3" <%= locals.filters?.bathrooms === '3' ? 'checked' : '' %>>
+                    <span class="checkmark"></span>
+                    3+
+                  </label>
+                </div>
+              </div>
+
+              <!-- Year Built Range -->
+              <div class="filter-group" data-filter-group="year_built">
+                <h4><%= t('properties.detail.yearBuilt','Year Built') %></h4>
+                <div class="year-range">
+                  <div class="form-group">
+                    <label for="yearBuiltMin"><%= t('properties.list.year.from','From Year') %></label>
+                    <input type="number" id="yearBuiltMin" name="year_built_min" placeholder="1900" 
+                           min="1800" max="<%= new Date().getFullYear() %>"
+                           value="<%= locals.filters?.year_built_min || '' %>" class="form-input">
+                  </div>
+                  <div class="form-group">
+                    <label for="yearBuiltMax"><%= t('properties.list.year.to','To Year') %></label>
+                    <input type="number" id="yearBuiltMax" name="year_built_max" placeholder="<%= new Date().getFullYear() %>" 
+                           min="1800" max="<%= new Date().getFullYear() %>"
+                           value="<%= locals.filters?.year_built_max || '' %>" class="form-input">
+                  </div>
+                </div>
+              </div>
+              <!-- Features and Status inside More Filters -->
+              <div class="filter-group collapsible collapsed">
+                <h4><%= t('properties.list.featuresStatus','Features & Status') %></h4>
+                <div class="filter-content">
+              <!-- Property Features -->
+              <div class="filter-group">
+                <h4><%= t('properties.list.features','Features') %></h4>
+                <div class="checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="featured" value="true" <%= locals.filters?.featured === 'true' ? 'checked' : '' %>>
+                    <span class="checkmark"></span>
+                    <%= t('properties.list.featured','Featured Properties') %>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="new_listing" value="true" <%= locals.filters?.new_listing === 'true' ? 'checked' : '' %>>
+                    <span class="checkmark"></span>
+                    <%= t('properties.list.newListings','New Listings (7 days)') %>
+                  </label>
+                  <div data-filter-group="features">
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="features" value="garden" <%= locals.filters?.features?.includes('garden') ? 'checked' : '' %>>
+                      <span class="checkmark"></span>
+                      <%= t('properties.features.garden','Garden') %>
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="features" value="balcony" <%= locals.filters?.features?.includes('balcony') ? 'checked' : '' %>>
+                      <span class="checkmark"></span>
+                      <%= t('properties.features.balcony','Balcony') %>
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="features" value="parking" <%= locals.filters?.features?.includes('parking') ? 'checked' : '' %>>
+                      <span class="checkmark"></span>
+                      <%= t('properties.features.parking','Parking') %>
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="features" value="elevator" <%= locals.filters?.features?.includes('elevator') ? 'checked' : '' %>>
+                      <span class="checkmark"></span>
+                      <%= t('properties.features.elevator','Elevator') %>
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="features" value="air_conditioning" <%= locals.filters?.features?.includes('air_conditioning') ? 'checked' : '' %>>
+                      <span class="checkmark"></span>
+                      <%= t('properties.features.air_conditioning','Air Conditioning') %>
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="features" value="separate_kitchen" <%= locals.filters?.features?.includes('separate_kitchen') ? 'checked' : '' %>>
+                      <span class="checkmark"></span>
+                      <%= t('properties.features.separate_kitchen','Separate kitchen') %>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Status Tags -->
+              <div class="filter-group">
+                <h4><%= t('properties.list.status','Status') %></h4>
+                <div class="checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="status" value="New" <%= locals.filters?.status?.includes('New') ? 'checked' : '' %>>
+                    <span class="checkmark"></span>
+                    <%= t('properties.status.new','New') %>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="status" value="Reduced" <%= locals.filters?.status?.includes('Reduced') ? 'checked' : '' %>>
+                    <span class="checkmark"></span>
+                    <%= t('properties.status.reduced','Reduced') %>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="status" value="Exclusive" <%= locals.filters?.status?.includes('Exclusive') ? 'checked' : '' %>>
+                    <span class="checkmark"></span>
+                    <%= t('properties.status.exclusive','Exclusive') %>
+                  </label>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+
+          <!-- Apply Filters Button -->
+          <button type="submit" class="btn btn-primary btn-block"><%= t('properties.list.apply','Apply Filters') %></button>
+        </form>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="property-main">
+        <!-- Results Header -->
+        <div class="results-header">
+          <div class="results-info">
+            <h2><%= totalProperties %> <%= t('properties.list.found','Properties Found') %></h2>
+            <p>
+              <% if (locals.query || Object.values(locals.filters).some(v => v && (Array.isArray(v) ? v.length > 0 : true))) { %>
+                <%= t('properties.list.showing','Showing') %> <%= properties.length %> <%= t('properties.list.of','of') %> <%= totalProperties %> <%= t('properties.list.results','results') %>
+                <% if (locals.query) { %>
+                  <%= t('properties.list.for','for') %> "<%= locals.query %>"
+                <% } %>
+                <% if (locals.filters.country || locals.filters.city) { %>
+                  <%= t('properties.list.in','in') %> <%= locals.filters.city || locals.filters.country %>
+                <% } %>
+              <% } else { %>
+                <%= t('properties.list.browseAll','Browse all available properties') %>
+              <% } %>
+            </p>
+            
+            <!-- Active Filters Display -->
+            <% if (Object.values(locals.filters).some(v => v && (Array.isArray(v) ? v.length > 0 : true))) { %>
+              <div class="active-filters">
+                <span class="active-filters-label"><%= t('properties.list.activeFilters','Active filters:') %></span>
+                <% if (locals.filters.country) { %>
+                  <span class="filter-tag">
+                    <%= locals.filters.country %>
+                    <button onclick="removeFilter('country')" class="filter-remove">&times;</button>
+                  </span>
+                <% } %>
+                <% if (locals.filters.city) { %>
+                  <span class="filter-tag">
+                    <%= locals.filters.city %>
+                    <button onclick="removeFilter('city')" class="filter-remove">&times;</button>
+                  </span>
+                <% } %>
+                <% if (locals.filters.type && locals.filters.type.length > 0) { %>
+                  <% locals.filters.type.forEach(type => { %>
+                    <span class="filter-tag">
+                      <%= type %>
+                      <button onclick="removeFilter('type', '<%= type %>')" class="filter-remove">&times;</button>
+                    </span>
+                  <% }) %>
+                <% } %>
+                <% if (locals.filters.min_price || locals.filters.max_price) { %>
+                  <span class="filter-tag">
+                    €<%= locals.filters.min_price || '0' %> - €<%= locals.filters.max_price || '∞' %>
+                    <button onclick="removeFilter('price')" class="filter-remove">&times;</button>
+                  </span>
+                <% } %>
+                <% if (locals.filters.min_size || locals.filters.max_size) { %>
+                  <span class="filter-tag">
+                    <%= locals.filters.min_size || '0' %> - <%= locals.filters.max_size || '∞' %> m²
+                    <button onclick="removeFilter('size')" class="filter-remove">&times;</button>
+                  </span>
+                <% } %>
+                <% if (locals.filters.year_built_min || locals.filters.year_built_max) { %>
+                  <span class="filter-tag">
+                    <%= locals.filters.year_built_min || '1900' %> - <%= locals.filters.year_built_max || new Date().getFullYear() %>
+                    <button onclick="removeFilter('year_built')" class="filter-remove">&times;</button>
+                  </span>
+                <% } %>
+                <% if (locals.filters.features && locals.filters.features.length > 0) { %>
+                  <% locals.filters.features.forEach(feature => { %>
+                    <span class="filter-tag">
+                      <%= feature %>
+                      <button onclick="removeFilter('features', '<%= feature %>')" class="filter-remove">&times;</button>
+                    </span>
+                  <% }) %>
+                <% } %>
+                <% if (locals.filters.status && locals.filters.status.length > 0) { %>
+                  <% locals.filters.status.forEach(st => { %>
+                    <span class="filter-tag">
+                      <%= st %>
+                      <button onclick="removeFilter('status', '<%= st %>')" class="filter-remove">&times;</button>
+                    </span>
+                  <% }) %>
+                <% } %>
+                
+                
+              </div>
+            <% } %>
+          </div>
+          
+          <div class="results-controls">
+            <div class="sort-controls">
+              <label for="sortBy"><%= t('common.sortBy','Sort by:') %></label>
+              <select id="sortBy" name="sort" class="form-select" onchange="updateSort()">
+                <option value="relevance" <%= locals.sort === 'relevance' ? 'selected' : '' %>><%= t('common.sort.relevance','Relevance') %></option>
+                <option value="price_low" <%= locals.sort === 'price_low' ? 'selected' : '' %>><%= t('common.sort.priceLow','Price: Low to High') %></option>
+                <option value="price_high" <%= locals.sort === 'price_high' ? 'selected' : '' %>><%= t('common.sort.priceHigh','Price: High to Low') %></option>
+                <option value="date_new" <%= locals.sort === 'date_new' ? 'selected' : '' %>><%= t('common.sort.newest','Newest First') %></option>
+                <option value="date_old" <%= locals.sort === 'date_old' ? 'selected' : '' %>><%= t('common.sort.oldest','Oldest First') %></option>
+              </select>
+            </div>
+            <button class="mobile-filters-trigger" onclick="toggleMobileFilters(true)"><%= t('properties.list.filters.title','Filters') %></button>
+          </div>
+        </div>
+
+        <!-- Properties Grid -->
+        <div class="properties-container">
+          <% if (properties.length > 0) { %>
+            <!-- Property Comparison Bar -->
+            <div id="comparisonContainer" class="comparison-container" style="display: none;">
+              <div class="comparison-header">
+                <h3><%= t('properties.list.compare.title','Properties to Compare') %></h3>
+                <div style="display:flex; gap:8px; align-items:center;">
+                  <button type="button" id="clearComparisonBtn" class="btn btn-outline btn-sm"><%= t('common.clearAll','Clear All') %></button>
+                  <button id="compareBtn" class="btn btn-primary" disabled>
+                    <%= t('properties.list.compare.cta','Compare') %> (0)
+                  </button>
+                </div>
+              </div>
+              <div id="comparisonList" class="comparison-list">
+                <!-- Comparison items will be added here -->
+              </div>
+            </div>
+            
+            <div class="properties-grid" id="propertiesGrid">
+              <% properties.forEach(property => { %>
+                <div class="property-card country-<%= property.country.toLowerCase() %>" 
+                     data-country="<%= property.country %>"
+                     data-property-id="<%= property.id %>"
+                     data-slug="<%= property.slug %>">
+                  
+                  <!-- Accent strip -->
+                  <div class="card-accent"></div>
+
+                  <!-- Image Area -->
+                  <div class="property-image">
+                    <% if (property.photos && property.photos.length > 0) { %>
+                      <% if (property.has_variants && property.variant_base) { %>
+                        <picture>
+                          <source srcset="<%= property.variant_base %>-320.avif 320w, <%= property.variant_base %>-640.avif 640w, <%= property.variant_base %>-960.avif 960w, <%= property.variant_base %>-1280.avif 1280w, <%= property.variant_base %>-1920.avif 1920w" type="image/avif">
+                          <source srcset="<%= property.variant_base %>-320.webp 320w, <%= property.variant_base %>-640.webp 640w, <%= property.variant_base %>-960.webp 960w, <%= property.variant_base %>-1280.webp 1280w, <%= property.variant_base %>-1920.webp 1920w" type="image/webp">
+                          <img src="<%= property.photos[0] %>" alt="<%= property.title %>"
+                               srcset="<%= property.variant_base %>-320.jpg 320w, <%= property.variant_base %>-640.jpg 640w, <%= property.variant_base %>-960.jpg 960w, <%= property.variant_base %>-1280.jpg 1280w, <%= property.variant_base %>-1920.jpg 1920w"
+                               sizes="100vw"
+                               loading="lazy" decoding="async"
+                               onerror="this.src='/img/property-placeholder.jpg'">
+                        </picture>
+                      <% } else { %>
+                        <img src="<%= property.photos[0] %>" alt="<%= property.title %>" loading="lazy" decoding="async"
+                             onerror="this.src='/img/property-placeholder.jpg'">
+                      <% } %>
+                    <% } else { %>
+                      <img src="/img/property-placeholder.jpg" alt="<%= property.title %>" loading="lazy" decoding="async">
+                    <% } %>
+
+                    <!-- Overlay Pills -->
+                    <div class="image-overlays">
+                      <span class="pill-location"><%= property.neighborhood || property.city %></span>
+                    </div>
+                    <div class="image-action-left">
+                      <button class="btn btn-sm btn-compare"><%= t('properties.list.compare.cta','Compare') %></button>
+                    </div>
+                  </div>
+
+                  <!-- Floating Info Panel -->
+                  <div class="property-info-panel">
+                    <h3 class="property-title" title="<%= property.title %>"><%= property.title %></h3>
+
+                    <div class="property-meta">
+                      <% if (property.size) { %>
+                      <div class="meta-item">
+                        <span class="icon icon-16 icon-inline icon-mask icon-size" style="color: #000;"></span>
+                        <span><%= property.size %> <%= t('properties.list.meta.sqm','m²') %></span>
+                      </div>
+                      <% } %>
+                      <% if (typeof property.bedrooms !== 'undefined' && property.bedrooms !== null) { %>
+                      <div class="meta-item">
+                        <span class="icon icon-16 icon-inline icon-mask icon-bed" style="color: #000;"></span>
+                        <span><%= property.bedrooms %> <%= t('properties.list.meta.beds','beds') %></span>
+                      </div>
+                      <% } %>
+                      <% if (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) { %>
+                      <div class="meta-item">
+                        <span class="icon icon-16 icon-inline icon-mask icon-bath" style="color: #000;"></span>
+                        <span><%= property.bathrooms %> <%= t('properties.list.meta.baths','baths') %></span>
+                      </div>
+                      <% } %>
+                    </div>
+
+                    <div class="panel-footer">
+                      <div class="property-price compact">
+                        <% if (property.price && Number(property.price) > 0) { %>
+                          <span class="price-amount">€<%= Number(property.price).toLocaleString('en-US') %></span>
+                        <% } else { %>
+                          <span class="price-amount"><%= t('properties.list.contactForPrice','Contact for price') %></span>
+                        <% } %>
+                      </div>
+                      <button class="btn btn-outline btn-sm btn-view"><%= t('properties.list.viewDetails','View details') %></button>
+                    </div>
+                  </div>
+                </div>
+              <% }); %>
+            </div>
+            
+            <!-- Map View Container -->
+            <div id="mapContainer" class="map-container" style="display: none;">
+              <div class="map-header">
+                <h3><%= t('properties.list.map.title','Property Map View') %></h3>
+                <p><%= t('properties.list.map.hint','Click on map markers to view property details') %></p>
+              </div>
+              <div id="propertyMap" class="property-map">
+                <!-- Map will be loaded here -->
+                <div class="map-loading">
+                  <div class="map-loading-spinner"></div>
+                  <p><%= t('properties.detail.loadingMap','Loading map...') %></p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Pagination -->
+            <% if (totalPages > 1) { %>
+              <div class="pagination">
+                <% if (currentPage > 1) { %>
+                  <a href="?<%= new URLSearchParams({...locals.query, page: currentPage - 1}) %>" class="page-link">Previous</a>
+                <% } %>
+                
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                  <% if (i === currentPage) { %>
+                    <span class="page-link active"><%= i %></span>
+                  <% } else if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) { %>
+                    <a href="?<%= new URLSearchParams({...locals.query, page: i}) %>" class="page-link"><%= i %></a>
+                  <% } else if (i === currentPage - 3 || i === currentPage + 3) { %>
+                    <span class="page-link">...</span>
+                  <% } %>
+                <% } %>
+                
+                <% if (currentPage < totalPages) { %>
+                  <a href="?<%= new URLSearchParams({...locals.query, page: currentPage + 1}) %>" class="page-link">Next</a>
+                <% } %>
+              </div>
+            <% } %>
+            
+          <% } else { %>
+            <div class="no-results">
+              <div class="no-results-icon">🏠</div>
+              <h3>No Properties Found</h3>
+              <p>Try adjusting your search criteria or browse all available properties.</p>
+              <div class="no-results-actions">
+                <button class="btn btn-secondary" onclick="clearAllFilters()">Clear Filters</button>
+                <a href="/properties" class="btn btn-primary">Browse All Properties</a>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      </main>
+      <div id="filtersOverlay" class="filters-overlay" onclick="toggleMobileFilters(false)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Property Comparison Modal -->
+<div id="comparisonModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3><%= t('properties.list.compare.modalTitle','Property Comparison') %></h3>
+      <button class="modal-close" id="comparisonModalClose">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="comparisonContent">
+        <!-- Comparison content will be loaded here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Save Search Modal -->
+<div id="saveSearchModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Save Search</h3>
+      <button class="modal-close" onclick="closeSaveSearchModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="saveSearchForm" class="save-search-form">
+        <div class="form-group">
+          <label for="searchName">Search Name</label>
+          <input type="text" id="searchName" name="searchName" placeholder="e.g., 3-bedroom apartments in Madrid" required class="form-input">
+        </div>
+        <div class="form-group">
+          <label for="searchDescription">Description (optional)</label>
+          <textarea id="searchDescription" name="searchDescription" placeholder="Add a description to help you remember this search..." class="form-input" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="emailAlerts" name="emailAlerts">
+            <span class="checkmark"></span>
+            Receive email alerts for new properties matching this search
+          </label>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeSaveSearchModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Search</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Saved Searches Modal -->
+<div id="savedSearchesModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Saved Searches</h3>
+      <button class="modal-close" onclick="closeSavedSearchesModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="savedSearchesContent">
+        <!-- Saved searches will be loaded here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/js/property-list.js"></script>

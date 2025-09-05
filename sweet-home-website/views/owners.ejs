@@ -1,0 +1,189 @@
+<% title = title || 'Owners' %>
+<% useDarkHeader = false %>
+<% useMainContainer = false %>
+<% hideFooter = false %>
+<link rel="stylesheet" href="/css/owners.css" />
+<% if (process.env.RECAPTCHA_SITE_KEY) { %>
+<script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+<% } %>
+
+<!-- Owners i18n for client JS -->
+<div id="i18n-owners" data-i18n='<%- JSON.stringify({
+  recentlySold: t("owners.recentlySold","Recently Sold"),
+  validation: {
+    fullName: t("owners.validation.fullName","Please enter your full name"),
+    countryCode: t("owners.validation.countryCode","Please enter a country code"),
+    phone: t("owners.validation.phone","Please enter a phone number"),
+    email: t("owners.validation.email","Enter a valid email address"),
+    language: t("owners.validation.language","Select a language")
+  },
+  form: {
+    fixErrors: t("owners.form.fixErrors","Please fix the errors above."),
+    sending: t("owners.form.sending","Sending..."),
+    successShort: t("owners.form.successShort","Thanks! We will reach out shortly."),
+    submitted: t("owners.form.submitted","Submission received."),
+    successToast: t("owners.form.successToast","Thank you! Your message was successfully sent."),
+    errorStatus: t("owners.form.errorStatus","There was a problem. Please try again."),
+    errorToast: t("owners.form.errorToast","Something went wrong. Please try again later.")
+  }
+}).replace(/'/g, '&#39;') %>' style="display:none;"></div>
+
+<!-- Hero -->
+<section class="owners-hero" aria-label="<%= t('owners.aria.hero','Owners hero') %>">
+  <div class="hero-bg" aria-hidden="true"><!-- REPLACE: hero background image URL --></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <h1><%= t('owners.hero.title','Ready to sell/rent your property?') %></h1>
+    <div class="cta-row" role="group" aria-label="<%= t('owners.aria.primaryActions','Primary actions') %>">
+      <a href="#lead-cta" class="btn-pill btn-white"><%= t('owners.hero.cta','Contact us!') %></a>
+      <a href="#recently-sold" class="btn-pill btn-outline"><%= t('owners.hero.learnMore','Learn More') %></a>
+    </div>
+  </div>
+  <span class="sr-only"><%= t('owners.aria.heroNote','Hero background image has a decorative dark overlay to improve text contrast') %></span>
+  </section>
+
+<!-- Recently Sold – infinite sliding carousel -->
+<section id="recently-sold" class="owners-recent">
+  <h2 class="sr-only"><%= t('owners.recentlySold','Recently Sold') %></h2>
+  <% if ((soldProperties || []).length >= 5) { %>
+  <div class="sold-carousel" id="soldCarousel" data-speed="25" aria-label="<%= t('owners.aria.recentlySoldCarousel','Recently sold carousel') %>">
+    <div class="sold-track">
+      <% (soldProperties || []).forEach(function(p){ const bg = (p.photos && p.photos[0]) ? p.photos[0] : '/images/apartment-interior.jpg'; %>
+        <article class="sold-card">
+          <a href="/properties/<%= p.slug %>" aria-label="<%= t('properties.list.viewDetails','View details') %> - <%= p.title %>">
+            <div class="media" style="background-image:url('<%= bg %>')"></div>
+          </a>
+          <div class="gradient"></div>
+          <div class="overlay">
+            <div class="title"><%= t('owners.recentlySold','Recently Sold') %></div>
+            <div class="location"><%= (p.neighborhood ? (p.neighborhood + ', ') : '') + (p.city || '') %></div>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  </div>
+  <% } %>
+</section>
+
+<!-- Why work with us -->
+<section class="owners-why">
+  <h2><%= t('owners.why.title','Why work with us?') %></h2>
+  <div class="why-grid">
+    <ul class="checklist" aria-label="<%= t('owners.aria.reasons','Reasons list') %>">
+      <li>
+        <span class="icon-check" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <rect x="1.5" y="1.5" width="21" height="21" rx="4" stroke="currentColor" stroke-width="2"></rect>
+            <path d="M6 12l4 4 8-8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
+        <span class="text"><%= t('owners.why.items.trusted','Trusted local experts in Berlin, Dubai and North Cyprus') %></span>
+      </li>
+      <li>
+        <span class="icon-check" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <rect x="1.5" y="1.5" width="21" height="21" rx="4" stroke="currentColor" stroke-width="2"></rect>
+            <path d="M6 12l4 4 8-8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
+        <span class="text"><%= t('owners.why.items.endToEnd','End‑to‑end selling and renting service') %></span>
+      </li>
+      <li>
+        <span class="icon-check" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <rect x="1.5" y="1.5" width="21" height="21" rx="4" stroke="currentColor" stroke-width="2"></rect>
+            <path d="M6 12l4 4 8-8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
+        <span class="text"><%= t('owners.why.items.proMedia','Professional photography, video and staging') %></span>
+      </li>
+      <li>
+        <span class="icon-check" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <rect x="1.5" y="1.5" width="21" height="21" rx="4" stroke="currentColor" stroke-width="2"></rect>
+            <path d="M6 12l4 4 8-8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
+        <span class="text"><%= t('owners.why.items.globalReach','Global marketing reach to verified buyers and tenants') %></span>
+      </li>
+      <li>
+        <span class="icon-check" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <rect x="1.5" y="1.5" width="21" height="21" rx="4" stroke="currentColor" stroke-width="2"></rect>
+            <path d="M6 12l4 4 8-8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
+        <span class="text"><%= t('owners.why.items.transparent','Transparent fees and weekly progress updates') %></span>
+      </li>
+    </ul>
+    <figure class="why-media">
+      <img src="/images/berlin-owners.jpg" alt="<%= t('owners.why.altBerlin','Berlin skyline') %>" loading="lazy" decoding="async">
+    </figure>
+  </div>
+</section>
+
+<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+<!-- Lead Form CTA -->
+<section id="lead-cta" class="owners-lead">
+  <h2><%= t('owners.hero.title','Ready to sell/rent your property?') %></h2>
+  <div class="lead-grid">
+    <form id="ownersLeadForm" class="lead-form lead-form-centered" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <% if (process.env.RECAPTCHA_SITE_KEY) { %>
+      <input type="hidden" name="recaptchaToken" id="recaptchaTokenOwners" />
+      <% } %>
+      <div class="form-group">
+        <label for="fullName"><%= t('forms.fullName','Full name') %>*</label>
+        <input id="fullName" name="name" type="text" required aria-required="true" placeholder="<%= t('forms.fullName','Full name') %>*">
+        <p class="error" data-for="fullName"></p>
+      </div>
+      <div class="row-2">
+        <div class="form-group">
+          <label for="countryCode"><%= t('forms.countryCode','Country code') %>*</label>
+          <input id="countryCode" name="countryCode" type="text" required aria-required="true" placeholder="+49">
+          <p class="error" data-for="countryCode"></p>
+        </div>
+        <div class="form-group">
+          <label for="phone"><%= t('forms.phoneNumber','Phone Number') %>*</label>
+          <input id="phone" name="phone" type="tel" required aria-required="true" placeholder="<%= t('forms.phoneNumber','Phone Number') %>*" inputmode="tel">
+          <p class="error" data-for="phone"></p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email"><%= t('forms.email','Email Address') %>*</label>
+        <input id="email" name="email" type="email" required aria-required="true" placeholder="<%= t('forms.email','Email Address') %>*">
+        <p class="error" data-for="email"></p>
+      </div>
+      <div class="form-group">
+        <label for="language"><%= t('forms.preferredLanguage','Preferred language') %>*</label>
+        <select id="language" name="language" required aria-required="true">
+          <option value=""><%= t('owners.form.selectLanguage','Select language') %></option>
+          <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
+            <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
+          <% }) %>
+        </select>
+        <p class="error" data-for="language"></p>
+      </div>
+      <button type="submit" class="btn-submit"><%= t('owners.form.submit','Send') %></button>
+      <p class="form-status" role="status" aria-live="polite" style="display:none"></p>
+    </form>
+  </div>
+</section>
+
+<script src="/js/owners.js" defer></script>
+<% if (process.env.RECAPTCHA_SITE_KEY) { %>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    if (window.grecaptcha && typeof grecaptcha.ready === 'function') {
+      grecaptcha.ready(function() {
+        grecaptcha.execute('<%= process.env.RECAPTCHA_SITE_KEY %>', { action: 'owners_lead' }).then(function(token) {
+          var el = document.getElementById('recaptchaTokenOwners');
+        if (el) el.value = token;
+        });
+      });
+    }
+  });
+</script>
+<% } %>
+
+

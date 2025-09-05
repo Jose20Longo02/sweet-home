@@ -1,0 +1,169 @@
+<% title = 'Register'; useDarkHeader = true %>
+<link rel="stylesheet" href="/css/register.css" />
+
+<div class="auth-page">
+<form
+  action="/auth/register?_csrf=<%= csrfToken %>"
+  method="post"
+  enctype="multipart/form-data"
+  class="auth-form"
+>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <h1>Create Account</h1>
+
+  <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <label for="name">Full Name</label>
+  <input id="name" name="name" type="text" required />
+
+  <label for="email">Email</label>
+  <input id="email" name="email" type="email" required />
+  <div id="emailError" class="error-text"></div>
+
+  <label for="password">Password</label>
+  <input id="password" name="password" type="password" required />
+
+  <label for="passwordConfirm">Confirm Password</label>
+  <input id="passwordConfirm" name="passwordConfirm" type="password" required />
+  <div id="passwordError" class="error-text"></div>
+
+  <label for="areaSelect">Area</label>
+  <select id="areaSelect" name="area" required>
+    <option value="">-- Select Area --</option>
+    <% Object.keys(areaRoles).forEach(area => { %>
+      <option value="<%= area %>"><%= area %></option>
+    <% }) %>
+  </select>
+
+  <label for="positionSelect">Position</label>
+  <select id="positionSelect" name="position" disabled required>
+    <option>Choose an area first</option>
+  </select>
+
+  <label for="profile_picture">Profile Picture (optional)</label>
+  <input
+    id="profile_picture"
+    name="profile_picture"
+    type="file"
+    accept="image/*"
+  />
+  <div class="thumb-wrapper">
+    <img id="profilePreview" class="thumb" style="display:none;" />
+  </div>
+
+  <button type="submit">Register</button>
+
+  <p>
+    Already have an account? <a href="/auth/login">Log in here</a>
+  </p>
+</form>
+</div>
+
+<script>
+  const areaRoles = <%- JSON.stringify(areaRoles) %>;
+  const areaSelect  = document.getElementById('areaSelect');
+  const posSelect   = document.getElementById('positionSelect');
+  const picInput    = document.getElementById('profile_picture');
+  const picPreview  = document.getElementById('profilePreview');
+  const emailInput  = document.getElementById('email');
+  const emailError  = document.getElementById('emailError');
+  const pw1         = document.getElementById('password');
+  const pw2         = document.getElementById('passwordConfirm');
+  const pwError     = document.getElementById('passwordError');
+  const form        = document.querySelector('.auth-form');
+
+  // Area → Position
+  areaSelect.addEventListener('change', () => {
+    const opts = areaRoles[areaSelect.value] || [];
+    posSelect.innerHTML = '';
+    if (opts.length) {
+      posSelect.disabled = false;
+      posSelect.appendChild(new Option('-- Select Position --',''));
+      opts.forEach(role => posSelect.appendChild(new Option(role,role)));
+    } else {
+      posSelect.disabled = true;
+      posSelect.innerHTML = '<option>Choose an area first</option>';
+    }
+  });
+
+  // Profile pic live preview (supports HEIC)
+  picInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) { picPreview.style.display = 'none'; return; }
+    const name = (file.name || '').toLowerCase();
+    const isHeic = name.endsWith('.heic') || name.endsWith('.heif');
+
+    // Helper to load heic2any when needed
+    const loadHeic2Any = () => new Promise((resolve, reject) => {
+      if (window.heic2any) return resolve(window.heic2any);
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js';
+      s.onload = () => resolve(window.heic2any);
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+
+    const reader = new FileReader();
+    reader.onload = async ev => {
+      try {
+        if (isHeic) {
+          // Convert to JPEG blob for preview
+          const heic2any = await loadHeic2Any();
+          const inputBlob = new Blob([ev.target.result]);
+          const outBlob = await heic2any({ blob: inputBlob, toType: 'image/jpeg', quality: 0.8 });
+          if (picPreview.dataset.urlrev) URL.revokeObjectURL(picPreview.dataset.urlrev);
+          const objUrl = URL.createObjectURL(outBlob);
+          picPreview.dataset.urlrev = objUrl;
+          picPreview.src = objUrl;
+        } else {
+          // Non-HEIC: data URL is fine
+          picPreview.src = ev.target.result;
+        }
+        picPreview.style.display = 'block';
+      } catch (err) {
+        // Graceful fallback
+        try {
+          const blob = new Blob([ev.target.result], { type: file.type || 'application/octet-stream' });
+          const objUrl = URL.createObjectURL(blob);
+          picPreview.src = objUrl; picPreview.style.display = 'block';
+        } catch (_) { picPreview.style.display = 'none'; }
+      }
+    };
+    if (isHeic) reader.readAsArrayBuffer(file); else reader.readAsDataURL(file);
+  });
+
+  // Password match on blur
+  pw2.addEventListener('blur', () => {
+    pwError.textContent = (pw1.value && pw1.value !== pw2.value)
+      ? 'Passwords do not match'
+      : '';
+  });
+
+  // Email uniqueness on blur
+  emailInput.addEventListener('blur', async () => {
+    const email = emailInput.value.trim();
+    if (!email) return emailError.textContent = '';
+    try {
+      const resp = await fetch(`/auth/check-email?email=${encodeURIComponent(email)}`);
+      if (resp.ok) {
+        const { exists } = await resp.json();
+        emailError.textContent = exists ? 'Email already in use' : '';
+      }
+    } catch (_) {
+      /* optional: network error */
+    }
+  });
+
+  // Final guard on submit
+  form.addEventListener('submit', e => {
+    let ok = true;
+    if (pw1.value && pw1.value !== pw2.value) {
+      pwError.textContent = 'Passwords do not match';
+      ok = false;
+    }
+    if (emailError.textContent) ok = false;
+    if (!ok) e.preventDefault();
+  });
+</script>

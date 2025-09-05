@@ -1,0 +1,104 @@
+<header class="site-header gradient" role="banner">
+  <div class="nav-container">
+    <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <a href="/" class="brand-mobile" aria-label="Sweet Home">
+      <img src="/images/Sweet Home Logo.png" alt="Sweet Home" onerror="this.style.display='none'">
+
+    </a>
+
+    <nav class="nav-grid" aria-label="Primary">
+      <a href="/projects/regions"><%= t('nav.projects','Projects') %></a>
+      <a href="/owners"><%= t('nav.owners','Owners') %></a>
+      <a href="/services"><%= t('nav.services','Services') %></a>
+      <a href="/" class="brand">
+        <img src="/images/Sweet Home Logo.png" alt="Sweet Home" onerror="this.style.display='none'">
+
+      </a>
+      <a href="/about"><%= t('nav.about','About') %></a>
+      <a href="/blog"><%= t('nav.blog','Blog') %></a>
+      <a href="/contact"><%= t('nav.contact','Contact') %></a>
+    </nav>
+    <div class="lang-switcher-wrap">
+      <%- include('./lang-switcher') %>
+      <a href="/admin" class="staff-pill" aria-label="Staff dashboard">
+        <span class="icon" aria-hidden="true">🔐</span>
+        <span>Staff</span>
+      </a>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+    <nav class="mobile-links" aria-label="Mobile">
+      <a href="/projects/regions"><%= t('nav.projects','Projects') %></a>
+      <a href="/owners"><%= t('nav.owners','Owners') %></a>
+      <a href="/services"><%= t('nav.services','Services') %></a>
+      <a href="/about"><%= t('nav.about','About') %></a>
+      <a href="/blog"><%= t('nav.blog','Blog') %></a>
+      <a href="/contact"><%= t('nav.contact','Contact') %></a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; transition: background .3s ease, box-shadow .3s ease, height .3s ease; }
+  /* Fading white (30% transparency) -> fully transparent */
+  .site-header.gradient { background: linear-gradient(to bottom, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.35) 55%, rgba(255,255,255,0) 100%); }
+  .site-header.shrink { background: rgba(255,255,255,0.98); box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+
+  .nav-container { max-width: 1200px; margin: 0 auto; padding: 18px 24px; overflow: visible; }
+  .site-header.shrink .nav-container { padding: 8px 20px; }
+
+  /* Even distribution: 7 grid cells, middle cell is the logo */
+  .nav-grid { display: grid; grid-template-columns: repeat(7, 1fr); align-items: center; gap: 0; text-align: center; }
+  .nav-grid a { text-decoration: none; color: #111; font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; letter-spacing: .2px; }
+  .nav-grid a:hover { opacity: .8; }
+  .nav-grid .brand { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+  .nav-grid .brand img { height: 130px; width: auto; }
+  .brand-text { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 18px; letter-spacing: .5px; color: #111; }
+
+  /* Language switcher placement */
+  .lang-switcher-wrap { position: absolute; right: 16px; top: 18px; display: flex; flex-direction: row; align-items: center; gap: 8px; }
+  .lang-switcher-wrap .lang-switcher { margin-left: 0; }
+  .staff-pill { margin: 0; }
+  @media (min-width: 901px) {
+    .lang-switcher-wrap .lang-trigger,
+    .lang-switcher-wrap .staff-pill { height: 36px; padding: 0 12px; align-items: center; }
+  }
+  /* Staff pill below language, same sizing */
+  .staff-pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: none; border-radius: 999px; background: transparent; color: #111; font-size: 13px; line-height: 1.2; text-decoration: none; margin: 0; box-shadow: none; }
+  .staff-pill:hover { transform: translateY(-1px); background: rgba(17,17,17,0.04); color: #111; }
+  .staff-pill .icon { font-size: 14px; }
+
+  /* Mobile menu */
+  .brand-mobile { display: none; text-decoration: none; }
+  .brand-mobile img { height: 130px; width: auto; }
+  .menu-toggle { display: none; background: transparent; border: 0; width: 40px; height: 40px; align-items: center; justify-content: center; }
+  /* hamburger bars */
+  .menu-toggle { box-shadow: none; border-radius: 0; }
+  .menu-toggle span { display: block; width: 24px; height: 2px; background: #111; transition: transform .25s ease, opacity .25s ease; }
+  .menu-toggle span:nth-child(2) { margin: 5px 0; }
+  .menu-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .menu-toggle.active span:nth-child(2) { opacity: 0; }
+  .menu-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .mobile-menu { position: absolute; top: 100%; left: 0; right: 0; background: rgba(255,255,255,0.98); border-bottom: 1px solid #eee; display: none; }
+  .mobile-menu.open { display: block; }
+  .mobile-links { display: grid; gap: 10px; padding: 12px 16px; }
+  .mobile-links a { text-decoration: none; color: #111; }
+
+  @media (max-width: 900px) {
+    .nav-container { display: flex; align-items: center; justify-content: center; padding: 4px 12px; position: relative; }
+    .nav-grid { display: none; }
+    .brand-mobile { display: inline-flex; align-items: center; gap: 8px; margin: 0; line-height: 0; }
+    .brand-mobile img { display: block; }
+    .brand-mobile .brand-text { display: none; }
+    .menu-toggle { display: inline-flex; position: absolute; right: 12px; top: 10px; background: transparent !important; border: 0 !important; box-shadow: none !important; flex-direction: column; }
+    /* Move language pills to the left on mobile/tablet */
+    .lang-switcher-wrap { position: absolute; left: 12px; right: auto; top: 10px; display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+    .lang-switcher-wrap .lang-switcher { margin-left: 0; }
+    .staff-pill { padding: 6px 10px; font-size: 12px; margin: 0; }
+  }
+</style>
+

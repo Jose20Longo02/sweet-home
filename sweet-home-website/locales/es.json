@@ -1,0 +1,399 @@
+{
+  "owners": {
+    "recentlySold": "Recientemente vendido",
+    "hero": { "title": "¿Listo para vender/alquilar tu propiedad?", "cta": "¡Contáctanos!", "learnMore": "Saber más" },
+    "why": {
+      "title": "¿Por qué trabajar con nosotros?",
+      "items": {
+        "trusted": "Expertos locales de confianza en Berlín, Dubái y Chipre del Norte",
+        "endToEnd": "Servicio integral de venta y alquiler",
+        "proMedia": "Fotografía, video y home staging profesional",
+        "globalReach": "Alcance de marketing global a compradores e inquilinos verificados",
+        "transparent": "Tarifas transparentes y actualizaciones semanales"
+      },
+      "altBerlin": "Horizonte de Berlín"
+    },
+    "form": { "submit": "Enviar", "selectLanguage": "Selecciona un idioma", "fixErrors": "Corrige los errores arriba.", "sending": "Enviando...", "successShort": "¡Gracias! Nos pondremos en contacto pronto.", "submitted": "Envío recibido.", "successToast": "¡Gracias! Tu mensaje se envió correctamente.", "errorStatus": "Hubo un problema. Inténtalo de nuevo.", "errorToast": "Algo salió mal. Inténtalo de nuevo más tarde." },
+    "validation": { "fullName": "Introduce tu nombre completo", "countryCode": "Introduce un código de país", "phone": "Introduce un número de teléfono", "email": "Introduce un correo válido", "language": "Selecciona un idioma" },
+    "aria": { "hero": "Sección de propietarios", "primaryActions": "Acciones principales", "heroNote": "La imagen de fondo tiene una superposición oscura para mejorar el contraste", "reasons": "Lista de razones", "recentlySoldCarousel": "Carrusel de recientemente vendidos" }
+  },
+  "brand": "PlataformaInmobiliaria",
+  "nav": {
+    "home": "Inicio",
+    "properties": "Propiedades",
+    "projects": "Proyectos",
+    "owners": "Propietarios",
+    "services": "Servicios",
+    "about": "Sobre nosotros",
+    "blog": "Blog",
+    "contact": "Contacto"
+  },
+  "common": {
+    "share": "Compartir",
+    "sendMessage": "Enviar mensaje",
+    "learnMore": "Saber más",
+    "clearAll": "Limpiar todo",
+    "close": "Cerrar",
+    "sortBy": "Ordenar por:",
+    "sort": { "relevance": "Relevancia", "priceLow": "Precio: menor a mayor", "priceHigh": "Precio: mayor a menor", "newest": "Más nuevos", "oldest": "Más antiguos" },
+    "previous": "Anterior",
+    "next": "Siguiente"
+  },
+  "properties": {
+    "status": { "new": "Nuevo", "reduced": "Reducido", "exclusive": "Exclusivo" },
+    "features": { "garden": "Jardín", "balcony": "Balcón", "parking": "Aparcamiento", "elevator": "Ascensor", "air_conditioning": "Aire acondicionado", "separate_kitchen": "Cocina separada" },
+    "detail": {
+      "id": "ID:",
+      "listed": "Publicado:",
+      "contactAgent": "Contactar agente",
+      "bedrooms": "Habitaciones",
+      "bathrooms": "Baños",
+      "size": "Tamaño",
+      "type": "Tipo de propiedad",
+      "yearBuilt": "Año de construcción",
+      "description": "Descripción",
+      "noDescription": "No hay descripción disponible para esta propiedad.",
+      "features": "Características y comodidades",
+      "location": "Ubicación",
+      "coordinates": "Coordenadas",
+      "loadingMap": "Cargando mapa...",
+      "price": "Precio",
+      "featured": "Destacado",
+      "listedBy": "Anunciado por",
+      "agent": "Agente",
+      "agentRole": "Agente inmobiliario",
+      "callAgent": "Llamar al agente",
+      "similar": "Propiedades similares",
+      "partOfProject": "Parte de un proyecto",
+      "partOfProjectSubtitle": "Esta propiedad forma parte de este proyecto.",
+      "viewFloorplan": "Ver plano",
+      "viewPlan": "Ver plano",
+      "interestPlaceholder": "Estoy interesado en esta propiedad...",
+      "readMore": "Leer más"
+    },
+    "list": {
+      "filters": { "title": "Filtros" },
+      "location": "Ubicación",
+      "propertyType": "Tipo de propiedad",
+      "moreFilters": "Más filtros",
+      "priceRange": { "title": "Rango de precios", "min": "Precio mínimo (€)", "max": "Precio máximo (€)" },
+      "sizeRange": { "title": "Rango de tamaño (m²)", "min": "Tamaño mínimo", "max": "Tamaño máximo" },
+      "bedrooms": "Habitaciones",
+      "bathrooms": "Baños",
+      "year": { "from": "Desde el año", "to": "Hasta el año" },
+      "featuresStatus": "Características y estado",
+      "features": "Características",
+      "featured": "Propiedades destacadas",
+      "newListings": "Nuevos anuncios (7 días)",
+      "status": "Estado",
+      "apply": "Aplicar filtros",
+      "found": "Propiedades encontradas",
+      "browseAll": "Ver todas las propiedades disponibles",
+      "activeFilters": "Filtros activos:",
+      "compare": {
+        "title": "Propiedades para comparar",
+        "cta": "Comparar",
+        "modalTitle": "Comparación de propiedades",
+        "added": "Propiedad añadida a la comparación",
+        "removed": "Propiedad eliminada de la comparación",
+        "max": "Solo puedes comparar hasta 3 propiedades a la vez",
+        "cleared": "Comparación limpiada",
+        "needTwo": "Selecciona al menos 2 propiedades para comparar",
+        "headers": {
+          "feature": "Característica",
+          "image": "Imagen",
+          "location": "Ubicación",
+          "price": "Precio",
+          "type": "Tipo",
+          "bedrooms": "Habitaciones",
+          "bathrooms": "Baños",
+          "size": "Tamaño"
+        },
+        "remove": "Eliminar de la comparación",
+        "removeAria": "Eliminar %s de la comparación"
+      },
+      "contactForPrice": "Consultar precio",
+      "viewDetails": "Ver detalles",
+      "map": { "title": "Vista en mapa", "hint": "Haz clic en los marcadores para ver detalles", "error": "No se puede cargar el mapa. Intenta actualizar la página." },
+      "noResults": { "title": "No se encontraron propiedades", "hint": "Ajusta los criterios de búsqueda o explora todas las propiedades disponibles." },
+      "clearFilters": "Limpiar filtros",
+      "meta": { "sqm": "m²", "beds": "hab", "baths": "baños" },
+      "saved": {
+        "noneTitle": "No hay búsquedas guardadas",
+        "noneHint": "Guarda tus búsquedas para acceder a ellas rápidamente.",
+        "noDescription": "Sin descripción",
+        "created": "Creada:",
+        "lastUsed": "Último uso:",
+        "emailAlerts": "Alertas por correo",
+        "apply": "Aplicar búsqueda",
+        "delete": "Eliminar",
+        "savedOk": "¡Búsqueda guardada con éxito!",
+        "deletedOk": "Búsqueda eliminada con éxito!"
+      }
+    }
+  },
+  "home": {
+    "title": "Encuentra la casa de tus sueños",
+    "hero": {
+      "title": "Encuentra la casa de tus sueños",
+      "subtitle": "Descubre la propiedad perfecta en las ubicaciones más deseadas"
+    },
+    "search": { "cta": "Buscar propiedades" },
+    "featured": {
+      "title": "Propiedades destacadas",
+      "subtitle": "Descubre nuestra selección de propiedades premium",
+      "viewAll": "Ver todas las propiedades"
+    },
+    "international": { "title": "Inmobiliaria internacional", "see": "Ver propiedades" },
+    "about": { "title": "Sobre Sweet Home", "copy": "En Sweet Home convertimos tus objetivos inmobiliarios en llaves reales. Desde tu primera conversación hasta el día de la firma, nuestros expertos te guían con consejos claros, opciones seleccionadas y un acompañamiento sin estrés. ¿Listo para dar el siguiente paso con confianza? Encontraremos el lugar que de verdad se sienta como tu hogar." },
+    "services": { "title": "Nuestros servicios", "brief": "Desde asesoría personalizada hasta gestión integral y orientación financiera, te ayudamos a comprar, vender y gestionar tu propiedad con confianza." },
+    "calc": {
+      "title": "Calculadora hipotecaria",
+      "subtitle": "Calcula tus pagos mensuales y entiende tus opciones de financiación",
+      "price": "Precio de la propiedad (€)",
+      "down": "Entrada (€)",
+      "term": "Plazo del préstamo (años)",
+      "rate": "Tipo de interés (%)",
+      "cta": "Calcular pago",
+      "placeholders": { "price": "ej. €350.000", "down": "ej. €70.000", "rate": "ej. 4,50" },
+      "errors": { "invalid": "Introduce valores válidos en todos los campos.", "downTooHigh": "La entrada no puede ser mayor o igual que el precio de la propiedad." },
+      "result": {
+        "title": "Tu pago mensual",
+        "pi": "Capital e intereses:",
+        "tax": "Impuesto de propiedad (estimado):",
+        "ins": "Seguro (estimado):",
+        "total": "Pago mensual total:",
+        "summary": "Resumen del préstamo",
+        "loan": "Importe del préstamo:",
+        "interest": "Interés total:",
+        "cost": "Costo total:"
+      }
+    },
+    "testimonials": { "title": "Lo que nuestros clientes dicen de nosotros" }
+  },
+  "services": {
+    "hero": { "aria": "Héroe de servicios" },
+    "tabs": {
+      "aria": "Pestañas de servicio",
+      "consulting": "Consultoría inmobiliaria",
+      "management": "Gestión de propiedades",
+      "finance": "Servicios financieros"
+    },
+    "panel": {
+      "consulting": {
+        "title": "Consultoría inmobiliaria",
+        "copy": "Asesoramiento estratégico para comprar o vender inmuebles residenciales. Analizamos comparables, definimos la estrategia de precio, preparamos la narrativa de marketing y negociamos por ti para lograr el mejor resultado."
+      },
+      "management": {
+        "title": "Gestión de propiedades",
+        "copy": "Gestión integral de principio a fin: captación y filtrado de inquilinos, contratos y check‑ins, cobro de rentas, mantenimiento preventivo y reparaciones, y reportes mensuales—para que tu inversión no te dé trabajo."
+      },
+      "finance": {
+        "title": "Servicios financieros",
+        "copy": "Asesoría financiera independiente: pre‑evaluación hipotecaria, presentación a entidades, modelos de rentabilidad y planificación de flujos, además de estructuras fiscales con nuestros partners para optimizar el retorno."
+      },
+      "cta": "¡Contáctanos!"
+    },
+    "contact": { "title": "Contáctanos" }
+  },
+  "about": {
+    "intro": { "title": "Sobre Sweet Home", "copy": "En Sweet Home convertimos tus objetivos inmobiliarios en llaves reales. Desde tu primera conversación hasta el día de la firma, nuestros expertos te guían con consejos claros, opciones seleccionadas y un acompañamiento sin estrés. ¿Listo para dar el siguiente paso con confianza? Encontraremos el lugar que de verdad se sienta como tu hogar." },
+    "team": { "title": "Conoce a nuestro equipo", "member": "Miembro del equipo" }
+  },
+  "contact": {
+    "title": "Contáctanos",
+    "office": { "aria": "Imagen de la oficina de Berlín", "name": "Oficina de Berlín", "address": "Hohenzollerndamm 196, 10717 Berlin", "phone": "+49-030-65852933" },
+    "submit": "Enviar"
+  },
+  "blog": {
+    "by": "Por",
+    "publishedBy": "Publicado por",
+    "read": "Leer artículo",
+    "list": { "empty": "Aún no hay artículos." },
+    "detail": { "recent": "Artículos recientes", "noRecent": "No hay publicaciones recientes." }
+  },
+  "errors": {
+    "common": { "home": "Volver al inicio", "back": "Volver" },
+    "404": { "title": "Página no encontrada", "hint": "La página que buscas no existe o pudo haberse movido." },
+    "500": { "title": "Algo salió mal", "heading": "Ocurrió un error inesperado", "hint": "Inténtalo de nuevo. Si el problema persiste, contacta soporte." }
+  },
+  "projects": {
+    "regions": {
+      "title": "Proyectos por región",
+      "aria": { "page": "Proyectos por región", "cyprus": "Ver todos los proyectos en Chipre", "dubai": "Ver todos los proyectos en Dubái" },
+      "cyprusTitle": "Proyectos en Chipre",
+      "dubaiTitle": "Proyectos en Dubái",
+      "cta": "Ver todos los proyectos"
+    },
+    "viewDetails": "Ver detalles del proyecto",
+    "amenitiesTitle": "Comodidades del proyecto",
+    "detail": {
+      "defaultType": "Desarrollo",
+      "noImages": "No hay imágenes disponibles",
+      "overview": "Descripción del proyecto",
+      "keyFeatures": "Características clave",
+      "amenities": "Comodidades",
+      "specifications": "Especificaciones",
+      "locationDetails": "Detalles de la ubicación",
+      "interested": "¿Interesado en este proyecto?",
+      "getInTouch": "Ponte en contacto con nuestro equipo para más información",
+      "messagePlaceholder": "Cuéntanos tu interés en este proyecto...",
+      "details": "Detalles del proyecto",
+      "typeLabel": "Tipo:",
+      "totalUnits": "Unidades totales:",
+      "priceRange": "Rango de precios:",
+      "status": "Estado:",
+      "units": "Unidades",
+      "image": "Imagen",
+      "related": "Proyectos relacionados"
+    },
+    "list": {
+      "filters": { "title": "Filtros" },
+      "typeOfUnits": "Tipo de unidades",
+      "units": { "villas": "Villas", "apartments": "Apartamentos", "houses": "Casas", "offices": "Oficinas" },
+      "pricePerUnit": { "title": "Precio por unidad", "min": "Precio mínimo", "max": "Precio máximo" },
+      "apply": "Aplicar filtros",
+      "found": "Proyectos encontrados",
+      "browseAll": "Explora todos los proyectos disponibles",
+      "activeFilters": "Filtros activos:",
+      "sort": { "nameAsc": "Nombre: A-Z", "nameDesc": "Nombre: Z-A", "completion": "Fecha de finalización" },
+      "completion": "Finalización",
+      "noResults": { "title": "No se encontraron proyectos", "hint": "Ajusta tus criterios de búsqueda o explora todos los proyectos disponibles." },
+      "clearFilters": "Limpiar filtros"
+    }
+  },
+  "forms": {
+    "country": "País",
+    "anyCountry": "Cualquier país",
+    "city": "Ciudad",
+    "anyCity": "Cualquier ciudad",
+    "neighborhood": "Barrio",
+    "anyNeighborhood": "Cualquier barrio",
+    "propertyType": "Tipo de propiedad",
+    "anyType": "Cualquier tipo",
+    "operation": "Operación",
+    "anyOperation": "Cualquier operación",
+    "operations": { "buy": "Comprar", "rent": "Alquilar" },
+    "types": { "apartment": "Apartamento", "house": "Casa", "villa": "Villa", "land": "Terreno" },
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "fullName": "Nombre completo",
+    "countryCode": "Código del país",
+    "phoneNumber": "Número de teléfono",
+    "email": "Correo electrónico",
+    "preferredLanguage": "Idioma preferido",
+    "message": "Mensaje",
+    "submit": "Enviar"
+  }
+  ,
+  "footer": {
+    "tagline": "El mejor equipo que jamás necesitarás.",
+    "help": "Ayuda",
+    "features": "Funciones",
+    "company": "Empresa",
+    "support": "Soporte",
+    "realEstate": "Inmobiliaria",
+    "agents": "Agentes",
+    "mapSearch": "Búsqueda en mapa",
+    "about": "Sobre nosotros",
+    "careers": "Empleo",
+    "contact": "Contáctanos",
+    "email": "Correo",
+    "emailAddress": "Dirección de correo",
+    "subscribe": "Suscribirse",
+    "rights": "Todos los derechos reservados.",
+    "social": "Redes sociales"
+  }
+  ,
+  "legal": {
+    "cookies": {
+      "title": "Política de Cookies",
+      "intro": "Usamos cookies necesarias para que el sitio funcione y cookies de analítica para mejorarlo. Puedes controlar las cookies desde tu navegador.",
+      "types": { "title": "Tipos de cookies", "body": "Esenciales (para el funcionamiento básico), analíticas (para entender el uso) y de marketing (para personalizar ofertas)." },
+      "manage": { "title": "Gestionar cookies", "body": "La mayoría de navegadores permiten bloquear o eliminar cookies. Deshabilitar algunas puede afectar el funcionamiento del sitio." }
+    },
+    "privacy": {
+      "title": "Política de Privacidad",
+      "intro": "Respetamos tu privacidad. Esta política explica qué datos recopilamos, cómo los usamos y tus derechos.",
+      "updated": "Última actualización:",
+      "sections": {
+        "controller": {
+          "title": "Responsable del tratamiento",
+          "body": "Sweet Home Real Estate Investments (\"nosotros\") es el responsable de tus datos personales. Contacto: Site@Sweet-Home.co.il"
+        },
+        "collection": {
+          "title": "Datos que recopilamos",
+          "body": "Podemos recopilar datos de contacto, contenido de consultas, preferencias inmobiliarias, datos de uso (analítica), cookies y datos técnicos para prestar y mejorar nuestros servicios."
+        },
+        "use": {
+          "title": "Cómo usamos tus datos",
+          "body": "Para responder consultas, ofrecer recomendaciones, gestionar citas, enviar correos transaccionales, mejorar el sitio, prevenir fraudes y cumplir obligaciones legales."
+        },
+        "legalBasis": {
+          "title": "Bases legales",
+          "body": "Ejecución de contrato o medidas precontractuales, intereses legítimos (p. ej., analítica, seguridad), consentimiento (cuando sea necesario) y obligaciones legales."
+        },
+        "sharing": {
+          "title": "Cesiones",
+          "body": "Podemos compartir datos con encargados de confianza (hosting, correo, analítica), agentes colaboradores (con tu consentimiento o cuando sea necesario) y autoridades cuando la ley lo exija."
+        },
+        "intl": {
+          "title": "Transferencias internacionales",
+          "body": "Tus datos pueden procesarse fuera de tu país. Utilizamos garantías adecuadas como Cláusulas Contractuales Tipo cuando sea necesario."
+        },
+        "retention": {
+          "title": "Plazos de conservación",
+          "body": "Conservamos los datos solo el tiempo necesario para los fines indicados o según lo exija la ley."
+        },
+        "rights": {
+          "title": "Tus derechos",
+          "body": "Tienes derecho de acceso, rectificación, supresión, limitación, oposición y portabilidad. También puedes retirar tu consentimiento. Contáctanos para ejercer tus derechos."
+        },
+        "cookies": {
+          "title": "Cookies y analítica",
+          "body": "Usamos cookies necesarias y analítica para mejorar el sitio. Gestiona tus preferencias en la configuración de tu navegador. Consulta también nuestra Política de Cookies."
+        },
+        "contact": {
+          "title": "Contacto",
+          "body": "Para solicitudes de privacidad, escribe a Site@Sweet-Home.co.il o a nuestra dirección en Berlín indicada en la página de Contacto."
+        }
+      }
+    },
+    "terms": {
+      "title": "Términos de Servicio",
+      "intro": "Estos términos regulan el uso de nuestro sitio web y servicios. Al acceder, aceptas estos términos.",
+      "updated": "Última actualización:",
+      "sections": {
+        "use": {
+          "title": "Uso del servicio",
+          "body": "Te comprometes a usar el sitio de forma lícita y a no abusar de los formularios ni interferir con el sitio. Debes ser mayor de 18 años para enviar consultas."
+        },
+        "content": {
+          "title": "Contenido y exactitud",
+          "body": "Los detalles y precios se facilitan de buena fe y pueden cambiar. No garantizamos disponibilidad hasta confirmación por un agente."
+        },
+        "accounts": {
+          "title": "Cuentas",
+          "body": "Si creas una cuenta, eres responsable de proteger tus credenciales y de la actividad bajo tu cuenta. Avísanos ante uso no autorizado."
+        },
+        "thirdParty": {
+          "title": "Servicios de terceros",
+          "body": "Integramos herramientas de terceros (p. ej., mapas, analítica). Se aplican sus términos y políticas de privacidad cuando corresponda."
+        },
+        "liability": {
+          "title": "Responsabilidad",
+          "body": "En la máxima medida permitida por la ley, rechazamos garantías y limitamos la responsabilidad por daños indirectos o consecuentes derivados del uso del sitio."
+        },
+        "changes": {
+          "title": "Cambios",
+          "body": "Podemos actualizar estos términos. El uso continuado tras los cambios implica aceptación."
+        },
+        "contact": {
+          "title": "Contacto",
+          "body": "¿Dudas sobre estos términos? Contáctanos mediante la página de Contacto."
+        }
+      }
+    }
+  }
+}
+

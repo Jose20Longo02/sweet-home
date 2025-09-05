@@ -1,0 +1,55 @@
+<% title = 'Reset Password' %>
+<link rel="stylesheet" href="/css/auth/login.css">
+
+<div class="login-wrap">
+  <form action="/auth/reset" method="post" class="auth-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <h1>Create a new password</h1>
+
+    <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
+    <% } %>
+
+    <input type="hidden" name="token" value="<%= typeof token !== 'undefined' ? token : '' %>">
+
+    <label for="password">New password</label>
+    <input id="password" name="password" type="password" autocomplete="new-password" required />
+
+    <label for="passwordConfirm">Confirm new password</label>
+    <input id="passwordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" required />
+
+    <div id="pwdMismatch" class="alert alert-error" style="display:none; margin-top:8px;">Passwords do not match.</div>
+
+    <button type="submit">Reset password</button>
+
+    <p>
+      <a href="/auth/login">Back to sign in</a>
+    </p>
+  </form>
+  <p class="auth-helper-text">Choose any password you prefer. Make sure you remember it.</p>
+</div>
+
+<script>
+  (function () {
+    const form = document.querySelector('.auth-form');
+    const p1 = document.getElementById('password');
+    const p2 = document.getElementById('passwordConfirm');
+    const alertBox = document.getElementById('pwdMismatch');
+
+    function checkMatch() {
+      const mismatch = p1.value !== p2.value;
+      alertBox.style.display = mismatch ? 'block' : 'none';
+      return !mismatch;
+    }
+
+    p1.addEventListener('input', checkMatch);
+    p2.addEventListener('input', checkMatch);
+    form.addEventListener('submit', (e) => {
+      if (!checkMatch()) {
+        e.preventDefault();
+      }
+    });
+  })();
+</script>
+
+

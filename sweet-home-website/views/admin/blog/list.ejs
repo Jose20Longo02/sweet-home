@@ -1,0 +1,41 @@
+<% title = 'My Blog Posts' %>
+<link rel="stylesheet" href="/css/admin/blog-list.css" />
+<div class="admin-panel">
+  <div class="admin-body">
+    <main class="admin-content blog-list-page">
+      <div class="admin-header">
+        <div>
+          <h1>My Blog Posts</h1>
+          <p class="subtitle">Create and manage your articles</p>
+        </div>
+        <a href="/admin/dashboard/blog/new" class="btn">+ New Post</a>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Updated</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if ((posts || []).length === 0) { %>
+            <tr><td colspan="4">No posts yet.</td></tr>
+          <% } %>
+          <% (posts || []).forEach(p => { %>
+            <tr>
+              <td><%= p.title %></td>
+              <td><%= p.status %></td>
+              <td><%= new Date(p.updated_at || p.created_at).toLocaleString() %></td>
+              <td>
+                <a href="/admin/dashboard/blog/<%= p.id %>/edit">Edit</a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </main>
+  </div>
+ </div>
+

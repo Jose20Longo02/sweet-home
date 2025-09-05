@@ -1,0 +1,54 @@
+<% title = t('nav.about','About') %>
+<% useDarkHeader = true %>
+<% useMainContainer = false %>
+<link rel="stylesheet" href="/css/about.css" />
+<script src="/js/about.js" defer></script>
+
+<!-- Section A: Intro -->
+<section class="about-hero">
+  <div class="copy">
+    <h1><%= t('about.intro.title','About Sweet Home') %></h1>
+    <p><%= t('about.intro.copy', "At Sweet Home, we turn property goals into real-life keys. From your first chat to closing day, our friendly experts guide you with clear advice, curated options, and stress-free support. Ready to move forward with confidence? Let's find the place that truly feels like home.") %></p>
+    <a href="#team" class="btn"><%= t('common.learnMore','Learn More') %></a>
+  </div>
+  <div class="image"><!-- REPLACE: modern city buildings image --></div>
+  <style>
+    /* Use same background image as contact office card */
+    .about-hero .image { background: #cbd5e1 url('/images/berlin-contact.jpg') center/cover no-repeat; }
+  </style>
+  </section>
+
+<!-- Section B: Team -->
+<section id="team" class="team-section">
+  <h2><%= t('about.team.title','Meet our team') %></h2>
+
+  <% const byArea = (area) => (team||[]).filter(m => (m.area||'').toLowerCase() === area); %>
+  <% const AREAS = (Array.isArray(areaOrder) && areaOrder.length
+      ? areaOrder.map(k => ({ key: String(k).toLowerCase(), label: String(k), rtl:false }))
+      : ['Administrative','Management','Sales'].map(k => ({ key: k.toLowerCase(), label: k, rtl:false }))
+    ); %>
+
+  <% AREAS.forEach(({key,label,rtl}) => { const members = byArea(key); if (members.length) { %>
+    <div class="area-block">
+      <h3 class="area-title"><%= label %></h3>
+      <div class="marquee">
+        <div class="track <%= rtl ? 'rtl' : '' %>">
+          <% const repeat = (members.length === 1) ? 6 : 2; %>
+          <% for (let r=0; r<repeat; r++) { members.forEach(m => { %>
+            <article class="card" tabindex="0">
+              <div class="photo" style="background-image:url(&quot;<%= (m.profile_picture || '') %>&quot;)">
+                <span class="shine" aria-hidden="true"></span>
+              </div>
+              <div class="footer">
+                <div class="name"><%= m.name || (m.email || '').split('@')[0] %></div>
+                <div class="role"><%= m.position || m.role || t('about.team.member','Team Member') %></div>
+              </div>
+            </article>
+          <% }) } %>
+        </div>
+      </div>
+    </div>
+  <% } }) %>
+  </section>
+
+

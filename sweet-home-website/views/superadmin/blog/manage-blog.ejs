@@ -1,0 +1,44 @@
+<% title = 'Manage Blog' %>
+<link rel="stylesheet" href="/css/superadmin/manage-blog.css" />
+<div class="admin-panel">
+  <div class="admin-body">
+    <%- include('../../partials/superadmin-sidebar', { activePage: 'blog', pendingCount: pendingCount }) %>
+    <main class="admin-content blog-manage">
+      <div class="admin-header">
+        <div>
+          <h1>Manage Blog</h1>
+          <p class="subtitle">View and manage all posts</p>
+        </div>
+        <a href="/admin/dashboard/blog/new" class="btn">+ New Post</a>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Author</th>
+            <th>Updated</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if ((posts || []).length === 0) { %>
+            <tr><td colspan="5">No posts yet.</td></tr>
+          <% } %>
+          <% (posts || []).forEach(p => { %>
+            <tr>
+              <td><%= p.title %></td>
+              <td><%= p.status %></td>
+              <td><%= (currentUser && p.author_id === currentUser.id) ? 'You' : (p.author_name || '-') %></td>
+              <td><%= new Date(p.updated_at || p.created_at).toLocaleString() %></td>
+              <td>
+                <a href="/admin/dashboard/blog/<%= p.id %>/edit">Edit</a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </main>
+  </div>
+</div>
+

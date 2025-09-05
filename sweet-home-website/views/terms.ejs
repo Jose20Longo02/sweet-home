@@ -1,0 +1,38 @@
+<% title = t('legal.terms.title','Terms of Service') %>
+<section class="container legal-page" aria-label="<%= t('legal.terms.title','Terms of Service') %>">
+  <h1><%= t('legal.terms.title','Terms of Service') %></h1>
+  <p><%= t('legal.terms.intro','These terms govern your use of our website and services. By accessing our website, you agree to these terms.') %></p>
+  <p class="updated"><strong><%= t('legal.terms.updated','Last updated:') %></strong> <%= new Date().toISOString().slice(0,10) %></p>
+
+  <h2><%= t('legal.terms.sections.use.title','Use of Service') %></h2>
+  <p><%= t('legal.terms.sections.use.body','You agree to use the site lawfully and not to misuse contact forms or interfere with the website. You must be at least 18 years old to submit enquiries.') %></p>
+
+  <h2><%= t('legal.terms.sections.content.title','Content & Accuracy') %></h2>
+  <p><%= t('legal.terms.sections.content.body','Property details and prices are provided in good faith and may change. We do not guarantee availability until confirmed by an agent.') %></p>
+
+  <h2><%= t('legal.terms.sections.accounts.title','Accounts') %></h2>
+  <p><%= t('legal.terms.sections.accounts.body','If you create an account, you are responsible for safeguarding credentials and for activity under your account. Notify us of any unauthorized use.') %></p>
+
+  <h2><%= t('legal.terms.sections.thirdParty.title','Third‑Party Services') %></h2>
+  <p><%= t('legal.terms.sections.thirdParty.body','We integrate third‑party tools (e.g., maps, analytics). Their terms and privacy policies apply where relevant.') %></p>
+
+  <h2><%= t('legal.terms.sections.liability.title','Liability') %></h2>
+  <p><%= t('legal.terms.sections.liability.body','To the maximum extent permitted by law, we disclaim warranties and limit liability for indirect or consequential damages arising from use of the site.') %></p>
+
+  <h2><%= t('legal.terms.sections.changes.title','Changes') %></h2>
+  <p><%= t('legal.terms.sections.changes.body','We may update these terms. Continued use after changes constitutes acceptance.') %></p>
+
+  <h2><%= t('legal.terms.sections.contact.title','Contact') %></h2>
+  <p><%= t('legal.terms.sections.contact.body','Questions about these terms? Contact us via the Contact page.') %></p>
+</section>
+
+<style>
+  .legal-page { max-width: 900px; margin: 32px auto; background: #fff; border:1px solid var(--gray-200); border-radius: var(--card-radius); padding: 24px; box-shadow: var(--card-shadow); }
+  .legal-page h1 { margin-top: 0; }
+  .legal-page h2 { margin-top: 20px; }
+  .legal-page p { color: var(--gray-700); }
+  .legal-page .updated { color: var(--gray-600); }
+  @media (max-width: 640px) { .legal-page { padding: 16px; } }
+</style>
+
+

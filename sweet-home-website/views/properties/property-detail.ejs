@@ -1,0 +1,455 @@
+<% title = property.title; headPartial = '../partials/seo/property-detail-head'; hideFooter = false; %>
+<%
+  let videoKind = null;
+  let videoEmbedUrl = null;
+  if (property.video_url) {
+    const v = property.video_url;
+    if (/youtu\.be|youtube\.com/.test(v)) {
+      videoKind = 'youtube';
+      let id = null;
+      const m1 = v.match(/youtu\.be\/([\w-]+)/);
+      const m2 = v.match(/[?&]v=([\w-]+)/);
+      id = (m1 && m1[1]) || (m2 && m2[1]) || null;
+      if (id) videoEmbedUrl = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+    } else if (/vimeo\.com/.test(v)) {
+      videoKind = 'vimeo';
+      const m = v.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+      const id = m && m[1];
+      if (id) videoEmbedUrl = `https://player.vimeo.com/video/${id}?autoplay=1&muted=0&playsinline=1`;
+    } else {
+      videoKind = 'file';
+    }
+  }
+%>
+<link rel="stylesheet" href="/css/property-detail.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<% if (process.env.RECAPTCHA_SITE_KEY) { %>
+<script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+<% } %>
+
+<div class="property-detail-page">
+  <!-- Data payload for JS -->
+  <div id="propertyData"
+       data-id="<%= property.id %>"
+       data-slug="<%= property.slug %>"
+       data-title="<%= property.title %>"
+       data-country="<%= property.country %>"
+       data-city="<%= property.city %>"
+       data-neighborhood="<%= property.neighborhood || '' %>"
+       data-map-link="<%= property.map_link || '' %>"
+       data-latitude="<%= property.latitude || '' %>"
+       data-longitude="<%= property.longitude || '' %>"></div>
+  <!-- Breadcrumb Navigation -->
+  <nav class="breadcrumb-nav">
+    <div class="container">
+      <ol class="breadcrumb">
+        <li><a href="/"><%= t('nav.home','Home') %></a></li>
+        <li><a href="/properties"><%= t('nav.properties','Properties') %></a></li>
+        <li><a href="/properties?country=<%= property.country %>"><%= property.country %></a></li>
+        <li><a href="/properties?country=<%= property.country %>&city=<%= property.city %>"><%= property.city %></a></li>
+        <li class="active"><%= property.title %></li>
+      </ol>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Property Header -->
+    <header class="property-header">
+      <div class="property-title-section">
+        <h1 class="property-title"><%= property.title %></h1>
+        <div class="property-location">
+          <span class="icon icon-20 icon-inline icon-mask icon-location" style="color: #000;"></span>
+          <%= property.neighborhood %>, <%= property.city %>, <%= property.country %>
+        </div>
+        <div class="property-meta">
+          <span class="property-price-header">€<%= Number(property.price || 0).toLocaleString('en-US') %></span>
+        </div>
+      </div>
+      
+      <div class="property-actions">
+        <button class="btn btn-outline js-share-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+            <polyline points="16,6 12,2 8,6"></polyline>
+            <line x1="12" y1="2" x2="12" y2="15"></line>
+          </svg>
+          <span class="btn-text"><%= t('common.share','Share') %></span>
+        </button>
+        <button class="btn btn-primary js-contact-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span class="btn-text"><%= t('contact.title','Contact Us') %></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Property Content -->
+    <div class="property-content">
+      <div class="property-main">
+        <!-- Photo Gallery -->
+        <section class="photo-gallery">
+          <div class="gallery-main">
+            <div class="main-photo" id="mainPhoto" data-video-kind="<%= videoKind || '' %>" data-video-embed="<%= videoEmbedUrl || '' %>">
+              <% if (property.video_url) { %>
+                <% if (videoKind === 'file') { %>
+                  <video id="mainVideo" controls style="width:100%; height:100%; object-fit:cover; border-radius: 0; background:#000" playsinline>
+                    <source src="<%= property.video_url %>" type="video/mp4">
+                  </video>
+                <% } %>
+                <button class="video-play-overlay" type="button" aria-label="Play video">
+                  <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
+                    <circle cx="32" cy="32" r="31" fill="rgba(0,0,0,0.6)" stroke="white" stroke-width="2" />
+                    <polygon points="26,20 26,44 46,32" fill="white" />
+                  </svg>
+                </button>
+              <% } else { %>
+                <% if (property.photos && property.photos.length > 0) { %>
+                  <% if (property.has_main_variants && property.main_variant_base) { %>
+                    <picture>
+                      <source srcset="<%= property.main_variant_base %>-640.avif 640w, <%= property.main_variant_base %>-960.avif 960w, <%= property.main_variant_base %>-1280.avif 1280w, <%= property.main_variant_base %>-1920.avif 1920w" type="image/avif">
+                      <source srcset="<%= property.main_variant_base %>-640.webp 640w, <%= property.main_variant_base %>-960.webp 960w, <%= property.main_variant_base %>-1280.webp 1280w, <%= property.main_variant_base %>-1920.webp 1920w" type="image/webp">
+                      <img src="<%= property.photos[0] %>" alt="<%= property.title %>" id="mainPhotoImg"
+                           srcset="<%= property.main_variant_base %>-640.jpg 640w, <%= property.main_variant_base %>-960.jpg 960w, <%= property.main_variant_base %>-1280.jpg 1280w, <%= property.main_variant_base %>-1920.jpg 1920w"
+                           sizes="(max-width: 768px) 100vw, 960px"
+                           fetchpriority="high" decoding="async">
+                    </picture>
+                  <% } else { %>
+                    <img src="<%= property.photos[0] %>" alt="<%= property.title %>" id="mainPhotoImg" loading="lazy" decoding="async">
+                  <% } %>
+                <% } else { %>
+                  <img src="/img/property-placeholder.jpg" alt="<%= property.title %>" id="mainPhotoImg" loading="lazy" decoding="async">
+                <% } %>
+              <% } %>
+              <button class="gallery-nav prev" aria-label="<%= t('common.previous','Previous') %> image">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="15,18 9,12 15,6"></polyline>
+                </svg>
+              </button>
+              <button class="gallery-nav next" aria-label="<%= t('common.next','Next') %> image">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9,18 15,12 9,6"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <% if ((property.photos && property.photos.length > 0) || property.video_url) { %>
+            <div class="gallery-thumbnails">
+              <% if (property.video_url) { %>
+                <div class="thumbnail video-thumb active" data-type="video" data-index="0" data-video-url="<%= property.video_url %>" data-video-kind="<%= videoKind || '' %>" data-video-embed="<%= videoEmbedUrl || '' %>">
+                  <img src="<%= (property.photos && property.photos[0]) ? property.photos[0] : '/img/property-placeholder.jpg' %>" alt="<%= property.title %> - Video" loading="lazy" decoding="async">
+                  <span class="play-badge" aria-hidden="true">
+                    <svg viewBox="0 0 36 36" width="28" height="28">
+                      <circle cx="18" cy="18" r="17" fill="rgba(0,0,0,0.55)" stroke="white" stroke-width="1.5" />
+                      <polygon points="14,10 14,26 26,18" fill="white" />
+                    </svg>
+                  </span>
+                </div>
+              <% } %>
+              <% if (property.photos && property.photos.length > 0) { %>
+                <% property.photos.forEach((photo, index) => { %>
+                  <% const hasVideo = !!property.video_url; %>
+                  <% const displayIndex = hasVideo ? (index + 1) : index; %>
+                  <% const isActive = (!property.video_url && index === 0) ? 'active' : '' %>
+                  <div class="thumbnail <%= isActive %>" data-type="image" data-index="<%= displayIndex %>">
+                    <img src="<%= photo %>" alt="<%= property.title %> - Photo <%= index + 1 %>" loading="lazy" decoding="async">
+                  </div>
+                <% }); %>
+              <% } %>
+            </div>
+          <% } %>
+        </section>
+        <% if (property.project) { %>
+        <section class="project-link-card" style="margin-top: 16px;">
+          <div class="project-link-header">
+            <div>
+              <span class="badge"><%= t('properties.detail.partOfProject','Part of a project') %></span>
+              <h2 class="project-link-title">
+                <svg class="project-link-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                </svg>
+                <%= property.project.title %>
+              </h2>
+              <p class="project-link-subtitle"><%= t('properties.detail.partOfProjectSubtitle','This property is part of this project.') %></p>
+            </div>
+            <% if (property.project.slug) { %>
+              <a href="/projects/<%= property.project.slug %>" class="btn btn-primary project-link-cta"><%= t('projects.viewDetails','View project details') %></a>
+            <% } %>
+          </div>
+          <div class="project-link-divider"></div>
+          <% if (property.project.amenities && property.project.amenities.length > 0) { %>
+            <h3 class="project-amenities-title"><%= t('projects.amenitiesTitle','Amenities of the project') %></h3>
+            <div class="project-amenities">
+              <% property.project.amenities.forEach(function(a){ %>
+                <div class="amenity-chip">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"></polyline></svg>
+                  <span><%= a %></span>
+                </div>
+              <% }) %>
+            </div>
+          <% } %>
+        </section>
+        <% } %>
+        <% 
+          const isApartment = property.type === 'Apartment';
+          const planUrl = isApartment ? property.floorplan_url : property.plan_photo_url;
+          const planLabel = isApartment ? t('properties.detail.viewFloorplan','View Floorplan') : t('properties.detail.viewPlan','View Plan');
+        %>
+        <% if (planUrl) { %>
+        <div style="margin-top: 12px;">
+          <button type="button" class="btn btn-primary btn-block plan-button" data-plan-url="<%= planUrl %>"><%= planLabel %></button>
+        </div>
+        <% } %>
+
+        <!-- Property Details -->
+        <section class="property-details">
+          <div class="details-grid">
+            <div class="detail-item">
+              <div class="detail-icon"><span class="icon icon-20 icon-inline icon-mask icon-bed" style="color: var(--primary-color);"></span></div>
+              <div class="detail-content">
+                <span class="detail-label"><%= t('properties.detail.bedrooms','Bedrooms') %></span>
+                <span class="detail-value"><%= property.bedrooms || 'N/A' %></span>
+              </div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-icon"><span class="icon icon-20 icon-inline icon-mask icon-bath" style="color: var(--primary-color);"></span></div>
+              <div class="detail-content">
+                <span class="detail-label"><%= t('properties.detail.bathrooms','Bathrooms') %></span>
+                <span class="detail-value"><%= property.bathrooms || 'N/A' %></span>
+              </div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-icon"><span class="icon icon-20 icon-inline icon-mask icon-size" style="color: var(--primary-color);"></span></div>
+              <div class="detail-content">
+                <span class="detail-label"><%= t('properties.detail.size','Size') %></span>
+                <span class="detail-value"><%= property.size ? property.size + ' m²' : 'N/A' %></span>
+              </div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                </svg>
+              </div>
+              <div class="detail-content">
+                <span class="detail-label"><%= t('properties.detail.type','Property Type') %></span>
+                <span class="detail-value"><%= property.type %></span>
+              </div>
+            </div>
+            
+            <% if (property.year_built) { %>
+            <div class="detail-item">
+              <div class="detail-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12,6 12,12 16,14"></polyline>
+                </svg>
+              </div>
+              <div class="detail-content">
+                <span class="detail-label"><%= t('properties.detail.yearBuilt','Year Built') %></span>
+                <span class="detail-value"><%= property.year_built %></span>
+              </div>
+            </div>
+            <% } %>
+            
+
+          </div>
+        </section>
+
+        <!-- Property Description -->
+        <section class="property-description">
+          <h2><%= t('properties.detail.description','Description') %></h2>
+          <div class="description-content collapsed" id="descriptionContent">
+            <p><%= property.description || t('properties.detail.noDescription','No description available for this property.') %></p>
+          </div>
+          <button class="btn btn-outline description-toggle" id="descriptionToggle"><%= t('properties.detail.readMore','Read more') %></button>
+        </section>
+
+        <!-- Property Features -->
+        <% if (property.features && property.features.length > 0) { %>
+        <section class="property-features">
+          <h2><%= t('properties.detail.features','Features & Amenities') %></h2>
+          <div class="features-grid">
+            <% property.features.forEach(feature => { %>
+              <div class="feature-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20,6 9,17 4,12"></polyline>
+                </svg>
+                <span><%= feature %></span>
+              </div>
+            <% }); %>
+          </div>
+        </section>
+        <% } %>
+
+        
+
+        
+
+        <!-- Location & Map -->
+        <section class="property-location-map" <%= (property.map_link && property.map_link.trim()) ? '' : 'style="display:none"' %>>
+          <h2><%= t('properties.detail.location','Location') %></h2>
+          <div class="location-info">
+            <div class="location-details">
+              <div class="location-item">
+                <strong><%= t('forms.country','Country') %>:</strong> <%= property.country %>
+              </div>
+              <div class="location-item">
+                <strong><%= t('forms.city','City') %>:</strong> <%= property.city %>
+              </div>
+              <div class="location-item">
+                <strong><%= t('forms.neighborhood','Neighborhood') %>:</strong> <%= property.neighborhood %>
+              </div>
+              <% if (property.latitude && property.longitude) { %>
+              <div class="location-item">
+                <strong><%= t('properties.detail.coordinates','Coordinates') %>:</strong> <%= property.latitude %>, <%= property.longitude %>
+              </div>
+              <% } %>
+            </div>
+          </div>
+          
+          <div class="map-container">
+            <div id="propertyMap" class="property-map">
+              <!-- Map will be loaded here -->
+              <div class="map-loading">
+                <div class="map-loading-spinner"></div>
+                <p><%= t('properties.detail.loadingMap','Loading map...') %></p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Property Sidebar -->
+      <aside class="property-sidebar">
+        <!-- Contact Card (inline) -->
+        <div class="contact-card" id="inlineContactForm">
+          <h3><%= t('contact.title','Contact Us') %></h3>
+          <form id="contactForm" class="contact-form">
+            <% if (process.env.RECAPTCHA_SITE_KEY) { %>
+            <input type="hidden" name="recaptchaToken" id="recaptchaTokenProperty" data-site-key="<%= process.env.RECAPTCHA_SITE_KEY %>" />
+            <% } %>
+            <div class="form-group">
+              <label for="contactName"><%= t('forms.fullName','Full name') %></label>
+              <input type="text" id="contactName" name="name" required class="form-input">
+            </div>
+            <div class="form-group">
+              <label for="contactEmail"><%= t('forms.email','Email Address') %></label>
+              <input type="email" id="contactEmail" name="email" required class="form-input">
+            </div>
+            <div class="form-group" style="display:grid; grid-template-columns: 140px 1fr; gap: 8px; align-items:end;">
+              <div>
+                <label for="contactCountryCode"><%= t('forms.countryCode','Country code') %></label>
+                <input type="text" id="contactCountryCode" name="countryCode" class="form-input" placeholder="+49">
+              </div>
+              <div>
+                <label for="contactPhone"><%= t('forms.phoneNumber','Phone Number') %></label>
+                <input type="tel" id="contactPhone" name="phone" class="form-input" placeholder="Phone number">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="contactLanguage"><%= t('forms.preferredLanguage','Preferred language') %></label>
+              <select id="contactLanguage" name="language" class="form-input">
+                <option value=""><%= t('forms.preferredLanguage','Preferred language') %></option>
+                <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
+                  <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="contactMessage"><%= t('forms.message','Message') %></label>
+              <textarea id="contactMessage" name="message" rows="4" required class="form-input" 
+                        placeholder="<%= t('properties.detail.interestPlaceholder','I\'m interested in this property...') %>"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary btn-block"><%= t('common.sendMessage','Send Message') %></button>
+            </div>
+          </form>
+        </div>
+
+
+        
+      </aside>
+    </div>
+    
+    <!-- Mobile: relocate contact form below map -->
+    <div class="mobile-contact-form" aria-hidden="true" style="display:none"></div>
+    
+    <!-- Similar Properties (full width) -->
+    <section class="similar-properties-wide">
+      <h2><%= t('properties.detail.similar','Similar Properties') %></h2>
+      <div class="similar-list" id="similarProperties">
+        <!-- Similar properties will be loaded here -->
+        <div class="loading-placeholder">
+          <div class="placeholder-image"></div>
+          <div class="placeholder-content">
+            <div class="placeholder-title"></div>
+            <div class="placeholder-price"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Lightbox for Gallery -->
+<div id="lightbox" class="lightbox">
+  <button class="lightbox-close" aria-label="Close">&times;</button>
+  <button class="lightbox-nav lightbox-prev" aria-label="Previous">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"></polyline></svg>
+  </button>
+  <img id="lightboxImage" alt="<%= property.title %>">
+  <button class="lightbox-nav lightbox-next" aria-label="Next">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,18 15,12 9,6"></polyline></svg>
+  </button>
+</div>
+
+<!-- Share Property Modal -->
+<div id="shareModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Share Property</h3>
+      <button class="modal-close" onclick="closeShareModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="share-options">
+        <div class="share-option" onclick="shareOnSocial('facebook')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+          <span>Facebook</span>
+        </div>
+        <div class="share-option" onclick="shareOnSocial('twitter')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.665 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+          </svg>
+          <span>Twitter</span>
+        </div>
+        <div class="share-option" onclick="shareOnSocial('linkedin')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+          <span>LinkedIn</span>
+        </div>
+        <div class="share-option" onclick="copyLink()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg>
+          <span>Copy Link</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/js/property-detail.js"></script>
+<!-- Inline reCAPTCHA execution removed to satisfy CSP; handled in property-detail.js -->

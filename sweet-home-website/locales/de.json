@@ -1,0 +1,407 @@
+{
+  "owners": {
+    "recentlySold": "Kürzlich verkauft",
+    "hero": { "title": "Bereit, Ihre Immobilie zu verkaufen/zu vermieten?", "cta": "Kontaktieren Sie uns!", "learnMore": "Mehr erfahren" },
+    "why": {
+      "title": "Warum mit uns arbeiten?",
+      "items": {
+        "trusted": "Vertrauenswürdige lokale Experten in Berlin, Dubai und Nordzypern",
+        "endToEnd": "Kompletter Verkaufs- und Vermietungsservice",
+        "proMedia": "Professionelle Fotos, Videos und Staging",
+        "globalReach": "Globale Marketing-Reichweite zu verifizierten Käufern und Mietern",
+        "transparent": "Transparente Gebühren und wöchentliche Updates"
+      },
+      "altBerlin": "Berliner Skyline"
+    },
+    "form": { "submit": "Senden", "selectLanguage": "Sprache auswählen", "fixErrors": "Bitte korrigieren Sie die Fehler oben.", "sending": "Wird gesendet...", "successShort": "Danke! Wir melden uns in Kürze.", "submitted": "Eingang bestätigt.", "successToast": "Danke! Ihre Nachricht wurde erfolgreich gesendet.", "errorStatus": "Es gab ein Problem. Bitte erneut versuchen.", "errorToast": "Etwas ist schiefgelaufen. Bitte später erneut versuchen." },
+    "validation": { "fullName": "Bitte geben Sie Ihren vollständigen Namen ein", "countryCode": "Bitte eine Ländervorwahl eingeben", "phone": "Bitte eine Telefonnummer eingeben", "email": "Geben Sie eine gültige E-Mail-Adresse ein", "language": "Bitte eine Sprache auswählen" },
+    "aria": { "hero": "Bereich für Eigentümer", "primaryActions": "Hauptaktionen", "heroNote": "Hintergrundbild mit dunkler Überlagerung zur besseren Lesbarkeit", "reasons": "Gründe-Liste", "recentlySoldCarousel": "Karussell: Kürzlich verkauft" }
+  },
+  "projects": {
+    "regions": {
+      "title": "Projekte nach Region",
+      "aria": { "page": "Projekte nach Region", "cyprus": "Alle Projekte in Zypern ansehen", "dubai": "Alle Projekte in Dubai ansehen" },
+      "cyprusTitle": "Projekte in Zypern",
+      "dubaiTitle": "Projekte in Dubai",
+      "cta": "Alle Projekte ansehen"
+    }
+  },
+  "brand": "ImmobilienPlattform",
+  "nav": {
+    "home": "Start",
+    "properties": "Immobilien",
+    "projects": "Projekte",
+    "owners": "Eigentümer",
+    "services": "Leistungen",
+    "about": "Über uns",
+    "blog": "Blog",
+    "contact": "Kontakt"
+  },
+  "common": {
+    "share": "Teilen",
+    "sendMessage": "Nachricht senden",
+    "learnMore": "Mehr erfahren",
+    "clearAll": "Alle löschen",
+    "close": "Schließen",
+    "sortBy": "Sortieren nach:",
+    "sort": { "relevance": "Relevanz", "priceLow": "Preis: aufsteigend", "priceHigh": "Preis: absteigend", "newest": "Neueste zuerst", "oldest": "Älteste zuerst" },
+    "previous": "Zurück",
+    "next": "Weiter"
+  },
+  "properties": {
+    "status": { "new": "Neu", "reduced": "Reduziert", "exclusive": "Exklusiv" },
+    "features": { "garden": "Garten", "balcony": "Balkon", "parking": "Parkplatz", "elevator": "Aufzug", "air_conditioning": "Klimaanlage", "separate_kitchen": "Separate Küche" },
+    "detail": {
+      "id": "ID:",
+      "listed": "Eingestellt:",
+      "contactAgent": "Makler kontaktieren",
+      "bedrooms": "Schlafzimmer",
+      "bathrooms": "Badezimmer",
+      "size": "Fläche",
+      "type": "Immobilientyp",
+      "yearBuilt": "Baujahr",
+      "description": "Beschreibung",
+      "noDescription": "Keine Beschreibung für diese Immobilie verfügbar.",
+      "features": "Ausstattung",
+      "location": "Lage",
+      "coordinates": "Koordinaten",
+      "loadingMap": "Karte wird geladen...",
+      "price": "Preis",
+      "featured": "Hervorgehoben",
+      "listedBy": "Anbieter",
+      "agent": "Makler",
+      "agentRole": "Immobilienmakler",
+      "callAgent": "Makler anrufen",
+      "similar": "Ähnliche Immobilien",
+      "partOfProject": "Teil eines Projekts",
+      "partOfProjectSubtitle": "Diese Immobilie ist Teil dieses Projekts.",
+      "viewFloorplan": "Grundriss ansehen",
+      "viewPlan": "Plan ansehen",
+      "interestPlaceholder": "Ich interessiere mich für diese Immobilie...",
+      "readMore": "Mehr lesen"
+    },
+    "list": {
+      "filters": { "title": "Filter" },
+      "location": "Lage",
+      "propertyType": "Immobilientyp",
+      "moreFilters": "Weitere Filter",
+      "priceRange": { "title": "Preisspanne", "min": "Mindestpreis (€)", "max": "Höchstpreis (€)" },
+      "sizeRange": { "title": "Flächenbereich (m²)", "min": "Mindestfläche", "max": "Maximalfläche" },
+      "bedrooms": "Schlafzimmer",
+      "bathrooms": "Badezimmer",
+      "year": { "from": "Ab Jahr", "to": "Bis Jahr" },
+      "featuresStatus": "Ausstattung & Status",
+      "features": "Ausstattung",
+      "featured": "Hervorgehobene Immobilien",
+      "newListings": "Neue Angebote (7 Tage)",
+      "status": "Status",
+      "apply": "Filter anwenden",
+      "found": "Immobilien gefunden",
+      "browseAll": "Alle verfügbaren Immobilien anzeigen",
+      "activeFilters": "Aktive Filter:",
+      "compare": {
+        "title": "Immobilien zum Vergleichen",
+        "cta": "Vergleichen",
+        "modalTitle": "Immobilienvergleich",
+        "added": "Immobilie zum Vergleich hinzugefügt",
+        "removed": "Immobilie aus dem Vergleich entfernt",
+        "max": "Sie können maximal 3 Immobilien gleichzeitig vergleichen",
+        "cleared": "Vergleich gelöscht",
+        "needTwo": "Bitte wählen Sie mindestens 2 Immobilien zum Vergleichen aus",
+        "headers": {
+          "feature": "Merkmal",
+          "image": "Bild",
+          "location": "Lage",
+          "price": "Preis",
+          "type": "Typ",
+          "bedrooms": "Schlafzimmer",
+          "bathrooms": "Badezimmer",
+          "size": "Fläche"
+        },
+        "remove": "Aus dem Vergleich entfernen",
+        "removeAria": "%s aus dem Vergleich entfernen"
+      },
+      "contactForPrice": "Preis auf Anfrage",
+      "viewDetails": "Details ansehen",
+      "map": { "title": "Kartenansicht", "hint": "Klicken Sie auf die Marker, um Details zu sehen", "error": "Karte konnte nicht geladen werden. Bitte Seite neu laden." },
+      "noResults": { "title": "Keine Immobilien gefunden", "hint": "Passen Sie die Suche an oder zeigen Sie alle verfügbaren Immobilien an." },
+      "clearFilters": "Filter löschen",
+      "meta": { "sqm": "m²", "beds": "SZ", "baths": "Bad" },
+      "saved": {
+        "noneTitle": "Keine gespeicherten Suchen",
+        "noneHint": "Speichern Sie Ihre Suchen, um später schnell darauf zuzugreifen.",
+        "noDescription": "Keine Beschreibung",
+        "created": "Erstellt:",
+        "lastUsed": "Zuletzt verwendet:",
+        "emailAlerts": "E-Mail-Benachrichtigungen",
+        "apply": "Suche anwenden",
+        "delete": "Löschen",
+        "savedOk": "Suche erfolgreich gespeichert!",
+        "deletedOk": "Suche erfolgreich gelöscht!"
+      }
+    }
+  },
+  "home": {
+    "title": "Finden Sie Ihr Traumhaus",
+    "hero": {
+      "title": "Finden Sie Ihr Traumhaus",
+      "subtitle": "Entdecken Sie die perfekte Immobilie an den begehrtesten Standorten"
+    },
+    "search": { "cta": "Immobilien suchen" },
+    "featured": {
+      "title": "Ausgewählte Immobilien",
+      "subtitle": "Entdecken Sie unsere handverlesene Auswahl an Premium-Immobilien",
+      "viewAll": "Alle Immobilien anzeigen"
+    },
+    "international": { "title": "Internationales Immobilienangebot", "see": "Immobilien ansehen" },
+    "about": { "title": "Über Sweet Home", "copy": "Bei Sweet Home machen wir aus Immobilienzielen echte Schlüssel. Vom ersten Gespräch bis zum Notartermin begleiten unsere freundlichen Experten Sie mit klarer Beratung, kuratierten Optionen und stressfreier Unterstützung. Bereit, den nächsten Schritt mit Vertrauen zu gehen? Finden wir den Ort, der sich wirklich wie Zuhause anfühlt." },
+    "services": { "title": "Unsere Leistungen", "brief": "Von maßgeschneiderter Beratung über praxisnahe Verwaltung bis hin zu Finanzierungsberatung – wir helfen Ihnen, Immobilien sicher zu kaufen, zu verkaufen und zu verwalten." },
+    "calc": {
+      "title": "Hypothekenrechner",
+      "subtitle": "Berechnen Sie Ihre monatliche Rate und verstehen Sie Ihre Finanzierung",
+      "price": "Kaufpreis (€)",
+      "down": "Eigenkapital (€)",
+      "term": "Laufzeit (Jahre)",
+      "rate": "Zinssatz (%)",
+      "cta": "Rate berechnen",
+      "placeholders": { "price": "z. B. €350.000", "down": "z. B. €70.000", "rate": "z. B. 4,50" },
+      "errors": { "invalid": "Bitte geben Sie gültige Werte in allen Feldern ein.", "downTooHigh": "Die Anzahlung darf nicht größer oder gleich dem Kaufpreis sein." },
+      "result": {
+        "title": "Ihre monatliche Rate",
+        "pi": "Tilgung & Zinsen:",
+        "tax": "Grundsteuer (geschätzt):",
+        "ins": "Versicherung (geschätzt):",
+        "total": "Gesamtmonatliche Rate:",
+        "summary": "Kreditübersicht",
+        "loan": "Kreditsumme:",
+        "interest": "Gesamtzinsen:",
+        "cost": "Gesamtkosten:"
+      }
+    },
+    "testimonials": { "title": "Was unsere Kunden über uns sagen" }
+  },
+  "services": {
+    "hero": { "aria": "Leistungsbereich" },
+    "tabs": {
+      "aria": "Leistungs-Tabs",
+      "consulting": "Immobilienberatung",
+      "management": "Immobilienverwaltung",
+      "finance": "Finanzdienstleistungen"
+    },
+    "panel": {
+      "consulting": {
+        "title": "Immobilienberatung",
+        "copy": "Strategische Beratung beim Kauf oder Verkauf von Wohnimmobilien. Wir analysieren Vergleichswerte, entwickeln die Preisstrategie, erstellen die Vermarktungsstory und verhandeln in Ihrem Namen für das bestmögliche Ergebnis."
+      },
+      "management": {
+        "title": "Immobilienverwaltung",
+        "copy": "Umfassende Betreuung von A bis Z: Mieterakquise und ‑prüfung, Verträge und Check‑ins, Mietinkasso, präventive Wartung und Reparaturen sowie monatliches Reporting – damit Ihre Investition stressfrei bleibt."
+      },
+      "finance": {
+        "title": "Finanzdienstleistungen",
+        "copy": "Unabhängige Finanzierungsberatung: Vorab‑Check, Einführung bei Kreditgebern, Rendite‑ und Cash‑Flow‑Modelle sowie steuerbewusste Strukturen mit unseren Partnern zur Optimierung der Erträge."
+      },
+      "cta": "Kontaktieren Sie uns!"
+    },
+    "contact": { "title": "Kontakt" }
+  },
+  "about": {
+    "intro": { "title": "Über Sweet Home", "copy": "Bei Sweet Home machen wir aus Immobilienzielen echte Schlüssel. Vom ersten Gespräch bis zum Notartermin begleiten unsere freundlichen Experten Sie mit klarer Beratung, kuratierten Optionen und stressfreier Unterstützung. Bereit, den nächsten Schritt mit Vertrauen zu gehen? Finden wir den Ort, der sich wirklich wie Zuhause anfühlt." },
+    "team": { "title": "Unser Team", "member": "Teammitglied" }
+  },
+  "contact": {
+    "title": "Kontakt",
+    "office": { "aria": "Bild des Berliner Büros", "name": "Büro Berlin", "address": "Hohenzollerndamm 196, 10717 Berlin", "phone": "+49-030-65852933" },
+    "submit": "Senden"
+  },
+  "blog": {
+    "by": "Von",
+    "publishedBy": "Veröffentlicht von",
+    "read": "Artikel lesen",
+    "list": { "empty": "Noch keine Artikel." },
+    "detail": { "recent": "Neueste Artikel", "noRecent": "Keine aktuellen Beiträge." }
+  },
+  "errors": {
+    "common": { "home": "Zur Startseite", "back": "Zurück" },
+    "404": { "title": "Seite nicht gefunden", "hint": "Die gesuchte Seite existiert nicht oder wurde verschoben." },
+    "500": { "title": "Etwas ist schiefgelaufen", "heading": "Ein unerwarteter Fehler ist aufgetreten", "hint": "Bitte erneut versuchen. Wenn das Problem bleibt, kontaktieren Sie den Support." }
+  },
+  "legal": {
+    "cookies": {
+      "title": "Cookie-Richtlinie",
+      "intro": "Wir verwenden notwendige Cookies für die Funktion der Website und Analyse-Cookies zur Verbesserung. Sie können Cookies in den Browser-Einstellungen steuern.",
+      "types": { "title": "Arten von Cookies", "body": "Notwendige (für die Kernfunktionen), Analyse (zur Nutzungsanalyse) und Marketing (zur Personalisierung von Angeboten)." },
+      "manage": { "title": "Cookies verwalten", "body": "Die meisten Browser erlauben das Blockieren oder Löschen von Cookies. Das Deaktivieren mancher Cookies kann die Funktion beeinträchtigen." }
+    },
+    "privacy": {
+      "title": "Datenschutzerklärung",
+      "intro": "Wir respektieren Ihre Privatsphäre. Diese Erklärung erläutert, welche Daten wir erheben, wie wir sie nutzen und welche Rechte Sie haben.",
+      "updated": "Zuletzt aktualisiert:",
+      "sections": {
+        "controller": {
+          "title": "Verantwortlicher",
+          "body": "Sweet Home Real Estate Investments (\"wir\") ist Verantwortlicher für Ihre personenbezogenen Daten. Kontakt: Site@Sweet-Home.co.il"
+        },
+        "collection": {
+          "title": "Welche Daten wir erheben",
+          "body": "Wir können Kontaktdaten, Anfrageninhalte, Immobilienpräferenzen, Nutzungsdaten (Analytik), Cookies und technische Daten erheben, um unsere Leistungen bereitzustellen und zu verbessern."
+        },
+        "use": {
+          "title": "Wie wir Ihre Daten nutzen",
+          "body": "Zur Beantwortung von Anfragen, Bereitstellung von Empfehlungen, Terminverwaltung, Versand transaktionaler E‑Mails, Website‑Verbesserung, Betrugsprävention und Erfüllung gesetzlicher Pflichten."
+        },
+        "legalBasis": {
+          "title": "Rechtsgrundlagen",
+          "body": "Vertragserfüllung bzw. vorvertragliche Maßnahmen, berechtigte Interessen (z. B. Analytik, Sicherheit), Einwilligung (wo erforderlich) sowie gesetzliche Pflichten."
+        },
+        "sharing": {
+          "title": "Weitergabe",
+          "body": "Wir geben Daten ggf. an vertrauenswürdige Auftragsverarbeiter (Hosting, E‑Mail, Analytik), Partner‑Makler (mit Ihrer Einwilligung oder wenn erforderlich) sowie Behörden, soweit gesetzlich vorgeschrieben, weiter."
+        },
+        "intl": {
+          "title": "Internationale Übermittlungen",
+          "body": "Ihre Daten können außerhalb Ihres Landes verarbeitet werden. Wir verwenden geeignete Garantien wie Standardvertragsklauseln, sofern erforderlich."
+        },
+        "retention": {
+          "title": "Aufbewahrung",
+          "body": "Wir speichern Daten nur so lange, wie es für die genannten Zwecke erforderlich ist oder gesetzlich vorgeschrieben wird."
+        },
+        "rights": {
+          "title": "Ihre Rechte",
+          "body": "Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung, Widerspruch und Datenübertragbarkeit. Sie können eine Einwilligung widerrufen. Kontaktieren Sie uns zur Ausübung Ihrer Rechte."
+        },
+        "cookies": {
+          "title": "Cookies & Analytik",
+          "body": "Wir verwenden notwendige Cookies und Analytik zur Verbesserung der Website. Verwalten Sie Ihre Präferenzen in den Browser‑Einstellungen. Siehe auch unsere Cookie‑Richtlinie."
+        },
+        "contact": {
+          "title": "Kontakt",
+          "body": "Für Datenschutzanfragen schreiben Sie an Site@Sweet-Home.co.il oder an unsere Berliner Adresse auf der Kontaktseite."
+        }
+      }
+    },
+    "terms": {
+      "title": "Nutzungsbedingungen",
+      "intro": "Diese Bedingungen regeln die Nutzung unserer Website und Leistungen. Mit dem Zugriff stimmen Sie zu.",
+      "updated": "Zuletzt aktualisiert:",
+      "sections": {
+        "use": {
+          "title": "Nutzung des Dienstes",
+          "body": "Sie verpflichten sich zu rechtmäßiger Nutzung und dazu, Formulare nicht zu missbrauchen oder die Website zu stören. Für Anfragen müssen Sie mindestens 18 Jahre alt sein."
+        },
+        "content": {
+          "title": "Inhalte & Richtigkeit",
+          "body": "Immobiliendetails und Preise werden nach bestem Wissen bereitgestellt und können sich ändern. Verfügbarkeit ist nicht garantiert, bis ein Makler dies bestätigt."
+        },
+        "accounts": {
+          "title": "Konten",
+          "body": "Wenn Sie ein Konto erstellen, sind Sie für den Schutz der Zugangsdaten und für Aktivitäten unter Ihrem Konto verantwortlich. Informieren Sie uns bei unbefugter Nutzung."
+        },
+        "thirdParty": {
+          "title": "Dienste Dritter",
+          "body": "Wir integrieren Dienste Dritter (z. B. Karten, Analytik). Deren Bedingungen und Datenschutzerklärungen gelten entsprechend."
+        },
+        "liability": {
+          "title": "Haftung",
+          "body": "Soweit gesetzlich zulässig, übernehmen wir keine Gewähr und haften nicht für indirekte oder Folgeschäden aus der Nutzung der Website."
+        },
+        "changes": {
+          "title": "Änderungen",
+          "body": "Wir können diese Bedingungen aktualisieren. Die fortgesetzte Nutzung nach Änderungen gilt als Zustimmung."
+        },
+        "contact": {
+          "title": "Kontakt",
+          "body": "Fragen zu diesen Bedingungen? Kontaktieren Sie uns über die Kontaktseite."
+        }
+      }
+    }
+  },
+  "projects": {
+    "regions": {
+      "title": "Projekte nach Region",
+      "aria": { "page": "Projekte nach Region", "cyprus": "Alle Projekte in Zypern ansehen", "dubai": "Alle Projekte in Dubai ansehen" },
+      "cyprusTitle": "Projekte in Zypern",
+      "dubaiTitle": "Projekte in Dubai",
+      "cta": "Alle Projekte ansehen"
+    },
+    "viewDetails": "Projektdetails ansehen",
+    "amenitiesTitle": "Ausstattung des Projekts",
+    "detail": {
+      "defaultType": "Projektentwicklung",
+      "noImages": "Keine Bilder verfügbar",
+      "overview": "Projektübersicht",
+      "keyFeatures": "Wesentliche Merkmale",
+      "amenities": "Ausstattung",
+      "specifications": "Spezifikationen",
+      "locationDetails": "Standortdetails",
+      "interested": "Interessiert an diesem Projekt?",
+      "getInTouch": "Kontaktieren Sie unser Team für weitere Informationen",
+      "messagePlaceholder": "Beschreiben Sie Ihr Interesse an diesem Projekt...",
+      "details": "Projektdetails",
+      "typeLabel": "Typ:",
+      "totalUnits": "Gesamtanzahl Einheiten:",
+      "priceRange": "Preisspanne:",
+      "status": "Status:",
+      "units": "Einheiten",
+      "image": "Bild",
+      "related": "Verwandte Projekte"
+    },
+    "list": {
+      "filters": { "title": "Filter" },
+      "typeOfUnits": "Einheitstypen",
+      "units": { "villas": "Villen", "apartments": "Apartments", "houses": "Häuser", "offices": "Büros" },
+      "pricePerUnit": { "title": "Preis pro Einheit", "min": "Mindestpreis", "max": "Höchstpreis" },
+      "apply": "Filter anwenden",
+      "found": "Projekte gefunden",
+      "browseAll": "Alle verfügbaren Projekte anzeigen",
+      "activeFilters": "Aktive Filter:",
+      "sort": { "nameAsc": "Name: A–Z", "nameDesc": "Name: Z–A", "completion": "Fertigstellungstermin" },
+      "completion": "Fertigstellung",
+      "noResults": { "title": "Keine Projekte gefunden", "hint": "Passen Sie Ihre Suche an oder zeigen Sie alle verfügbaren Projekte an." },
+      "clearFilters": "Filter löschen"
+    }
+  },
+  "forms": {
+    "country": "Land",
+    "anyCountry": "Beliebiges Land",
+    "city": "Stadt",
+    "anyCity": "Beliebige Stadt",
+    "neighborhood": "Stadtteil",
+    "anyNeighborhood": "Beliebiger Stadtteil",
+    "propertyType": "Immobilientyp",
+    "anyType": "Beliebiger Typ",
+    "operation": "Vorgang",
+    "anyOperation": "Beliebiger Vorgang",
+    "operations": { "buy": "Kaufen", "rent": "Mieten" },
+    "types": { "apartment": "Wohnung", "house": "Haus", "villa": "Villa", "land": "Grundstück" },
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "fullName": "Vollständiger Name",
+    "countryCode": "Ländervorwahl",
+    "phoneNumber": "Telefonnummer",
+    "email": "E-Mail-Adresse",
+    "preferredLanguage": "Bevorzugte Sprache",
+    "message": "Nachricht",
+    "submit": "Senden"
+  }
+  ,
+  "footer": {
+    "tagline": "Das beste Team, das Sie je brauchen werden.",
+    "help": "Hilfe",
+    "features": "Funktionen",
+    "company": "Unternehmen",
+    "support": "Support",
+    "realEstate": "Immobilien",
+    "agents": "Makler",
+    "mapSearch": "Kartensuche",
+    "about": "Über uns",
+    "careers": "Karriere",
+    "contact": "Kontakt",
+    "email": "E-Mail",
+    "emailAddress": "E-Mail-Adresse",
+    "subscribe": "Abonnieren",
+    "rights": "Alle Rechte vorbehalten.",
+    "social": "Soziale Medien"
+  }
+}
+

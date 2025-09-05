@@ -1,0 +1,105 @@
+/* public/css/admin/edit-profile.css */
+
+/* 1. Base reset + full-height */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html, body {
+  height: 100%;
+}
+
+/* 2. Center the page as a column */
+.form-page { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:1rem; background: radial-gradient(1200px 800px at 10% -10%, rgba(0,0,0,0.05), transparent), radial-gradient(1200px 800px at 110% 110%, rgba(0,0,0,0.04), transparent), var(--color-light); }
+
+/* 3. Back-link wrapper */
+.back-wrapper {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 1rem;         /* space between link & form */
+  text-align: right;
+}
+.back-dashboard {
+  text-decoration: none;
+  color: var(--color-secondary);
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+.back-dashboard:hover {
+  color: var(--color-primary);
+}
+
+/* 4. Form container */
+.form-container { width:100%; max-width:520px; background:#fff; padding: 2rem; border-radius: var(--card-radius); box-shadow: var(--card-shadow); border:1px solid rgba(0,0,0,.08); }
+
+/* 5. Heading */
+.form-container h1 {
+  margin-bottom: 1.5rem;
+  color: var(--color-primary);
+  text-align: center;
+}
+
+/* 6. Alerts */
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+.alert-error {
+  background: #fdecea;
+  color: #b71c1c;
+}
+.alert-success {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* 7. Form groups */
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+.form-group input, .form-group select { padding: .7rem .9rem; border:1px solid rgba(0,0,0,.16); border-radius:12px; font-size:1rem; transition:border-color .15s, box-shadow .15s; }
+.form-group input:focus, .form-group select:focus { outline:none; border-color: var(--color-primary); box-shadow:0 0 0 4px rgba(0,0,0,.06); }
+
+/* 8. Thumbnail preview */
+.thumb-wrapper {
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+.thumb {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  display: block;
+}
+
+/* 9. Password-error text */
+.error-text {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #b71c1c;
+  min-height: 1em;
+}
+
+/* 10. Primary button */
+.btn-primary { width:100%; padding:.9rem; background:var(--color-primary); color:#fff; border:none; border-radius:999px; font-size:1rem; cursor:pointer; margin-top:1rem; box-shadow:0 8px 20px rgba(0,0,0,.12); transition: transform .16s, box-shadow .16s, opacity .16s; }
+.btn-primary:hover { transform: translateY(-1px); opacity:.95; box-shadow:0 12px 28px rgba(0,0,0,.16); }
+
+/* 11. Mobile tweaks */
+@media (max-width: 480px) {
+  .form-container {
+    padding: 1.5rem;
+  }
+  .back-dashboard {
+    font-size: 0.85rem;
+  }
+}

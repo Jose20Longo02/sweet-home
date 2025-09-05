@@ -1,0 +1,338 @@
+<% title = project.title; hideFooter = false; %>
+<link rel="stylesheet" href="/css/project-detail.css" />
+<% if (process.env.RECAPTCHA_SITE_KEY) { %>
+<script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+<% } %>
+
+<div class="project-detail-page">
+  <!-- Project Header -->
+  <section class="project-header">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href="/projects"><%= t('nav.projects','Projects') %></a>
+        <span class="separator">/</span>
+        <a href="/projects?country=<%= project.country %>"><%= project.country %></a>
+        <span class="separator">/</span>
+        <a href="/projects?country=<%= project.country %>&city=<%= project.city %>"><%= project.city %></a>
+        <span class="separator">/</span>
+        <span class="current"><%= project.title %></span>
+      </nav>
+      
+      <div class="project-header-content">
+        <div class="project-badges">
+          <span class="badge badge-type"><%= project.type || t('projects.detail.defaultType','Development') %></span>
+          <% if (project.status) { %>
+            <span class="badge badge-status badge-<%= project.status %>"><%= project.status %></span>
+          <% } %>
+        </div>
+        
+        <h1 class="project-title"><%= project.title %></h1>
+        
+        <div class="project-location">
+          <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: #fff;"></span>
+          <span><%= project.city %>, <%= project.country %></span>
+          <% if (project.neighborhood) { %>
+            <span class="neighborhood">• <%= project.neighborhood %></span>
+          <% } %>
+        </div>
+        
+        <div class="project-meta">
+          <% if (project.total_units) { %>
+            <div class="meta-item">
+              <i class="fas fa-building"></i>
+              <span><%= project.total_units %> <%= t('projects.detail.units','Units') %></span>
+            </div>
+          <% } %>
+          
+          <% if (project.completion_date) { %>
+            <div class="meta-item">
+              <i class="fas fa-calendar"></i>
+              <span><%= t('projects.list.completion','Completion') %>: <%= project.completion_date %></span>
+            </div>
+          <% } %>
+          
+          <% if (project.price_range) { %>
+            <div class="meta-item">
+              <i class="fas fa-dollar-sign"></i>
+              <span><%= project.price_range %></span>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project Content -->
+  <section class="project-content">
+    <div class="container">
+      <div class="project-layout">
+        <!-- Main Content -->
+        <div class="project-main">
+          <!-- Project Gallery -->
+          <div class="project-gallery">
+            <% if (project.photos && project.photos.length > 0) { %>
+              <div class="gallery-main">
+                <% const first = project.photos[0];
+                   const dot = first.lastIndexOf('.');
+                   const base = dot > -1 ? first.slice(0, dot) : first; %>
+                <% if (project.has_main_variants && project.main_variant_base) { %>
+                  <picture>
+                    <source srcset="<%= project.main_variant_base %>-640.avif 640w, <%= project.main_variant_base %>-960.avif 960w, <%= project.main_variant_base %>-1280.avif 1280w, <%= project.main_variant_base %>-1920.avif 1920w" type="image/avif">
+                    <source srcset="<%= project.main_variant_base %>-640.webp 640w, <%= project.main_variant_base %>-960.webp 960w, <%= project.main_variant_base %>-1280.webp 1280w, <%= project.main_variant_base %>-1920.webp 1920w" type="image/webp">
+                    <img src="<%= first %>" alt="<%= project.title %>"
+                         id="main-image" class="main-image"
+                         srcset="<%= project.main_variant_base %>-640.jpg 640w, <%= project.main_variant_base %>-960.jpg 960w, <%= project.main_variant_base %>-1280.jpg 1280w, <%= project.main_variant_base %>-1920.jpg 1920w"
+                         sizes="(max-width: 768px) 100vw, 960px"
+                         decoding="async">
+                  </picture>
+                <% } else { %>
+                  <img src="<%= first %>" alt="<%= project.title %>" id="main-image" class="main-image" decoding="async">
+                <% } %>
+                <div class="photo-overlay">
+                  <button class="gallery-nav prev" aria-label="<%= t('common.previous','Previous') %> image">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="15,18 9,12 15,6"></polyline>
+                    </svg>
+                  </button>
+                  <button class="gallery-nav next" aria-label="<%= t('common.next','Next') %> image">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="9,18 15,12 9,6"></polyline>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              
+              <% if (project.photos.length > 1) { %>
+                <div class="gallery-thumbnails">
+                  <% project.photos.forEach((photo, index) => { %>
+                    <div class="thumbnail <%= index === 0 ? 'active' : '' %>" 
+                         data-photo="<%= photo %>"
+                         data-index="<%= index %>">
+                      <img src="<%= photo %>" alt="<%= project.title %> - Image <%= index + 1 %>" loading="lazy" decoding="async">
+                    </div>
+                  <% }) %>
+                </div>
+              <% } %>
+            <% } else { %>
+              <div class="gallery-placeholder">
+                <i class="fas fa-image"></i>
+                <p><%= t('projects.detail.noImages','No images available') %></p>
+              </div>
+            <% } %>
+          </div>
+
+          <!-- Project Description -->
+          <div class="project-section">
+            <h2><%= t('projects.detail.overview','Project Overview') %></h2>
+            <div class="project-description">
+              <p><%= project.description %></p>
+            </div>
+          </div>
+
+          <!-- Project Features -->
+          <% if (project.features && project.features.length > 0) { %>
+            <div class="project-section">
+              <h2><%= t('projects.detail.keyFeatures','Key Features') %></h2>
+              <div class="features-grid">
+                <% project.features.forEach(feature => { %>
+                  <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span><%= feature %></span>
+                  </div>
+                <% }) %>
+              </div>
+            </div>
+          <% } %>
+
+          <!-- Project Amenities -->
+          <% if (project.amenities && project.amenities.length > 0) { %>
+            <div class="project-section">
+              <h2><%= t('projects.detail.amenities','Amenities') %></h2>
+              <div class="amenities-grid">
+                <% project.amenities.forEach(amenity => { %>
+                  <div class="amenity-item">
+                    <i class="fas fa-star"></i>
+                    <span><%= amenity %></span>
+                  </div>
+                <% }) %>
+              </div>
+            </div>
+          <% } %>
+
+          <!-- Project Specifications -->
+          <% if (project.specifications && Object.keys(project.specifications).length > 0) { %>
+            <div class="project-section">
+              <h2><%= t('projects.detail.specifications','Specifications') %></h2>
+              <div class="specifications-table">
+                <% Object.entries(project.specifications).forEach(([key, value]) => { %>
+                  <div class="spec-row">
+                    <div class="spec-label"><%= key %></div>
+                    <div class="spec-value"><%= value %></div>
+                  </div>
+                <% }) %>
+              </div>
+            </div>
+          <% } %>
+
+          <!-- Location Details -->
+          <% if (project.location_details) { %>
+            <div class="project-section">
+              <h2><%= t('projects.detail.locationDetails','Location Details') %></h2>
+              <div class="location-details">
+                <p><%= project.location_details %></p>
+              </div>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="project-sidebar" data-project-id="<%= project.id %>">
+          <!-- Contact Form -->
+          <div class="contact-card" id="projectContactCard">
+            <h3><%= t('projects.detail.interested','Interested in this project?') %></h3>
+            <p><%= t('projects.detail.getInTouch','Get in touch with our team for more information') %></p>
+            
+            <form class="contact-form" id="project-contact-form">
+              <% if (process.env.RECAPTCHA_SITE_KEY) { %>
+              <input type="hidden" name="recaptchaToken" id="recaptchaTokenProject" />
+              <% } %>
+              <div class="form-group">
+                <label for="contact-name"><%= t('forms.fullName','Full name') %></label>
+                <input type="text" id="contact-name" name="name" required class="form-input">
+              </div>
+              
+              <div class="form-group">
+                <label for="contact-email"><%= t('forms.email','Email Address') %></label>
+                <input type="email" id="contact-email" name="email" required class="form-input">
+              </div>
+              
+              <div class="form-group" style="display:grid; grid-template-columns: 140px 1fr; gap: 8px; align-items:end;">
+                <div>
+                  <label for="contact-cc"><%= t('forms.countryCode','Country code') %></label>
+                  <input type="text" id="contact-cc" name="countryCode" class="form-input" placeholder="+49">
+                </div>
+                <div>
+                  <label for="contact-phone"><%= t('forms.phoneNumber','Phone Number') %></label>
+                  <input type="tel" id="contact-phone" name="phone" class="form-input" placeholder="<%= t('forms.phoneNumber','Phone Number') %>">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-language"><%= t('forms.preferredLanguage','Preferred language') %></label>
+                <select id="contact-language" name="language" class="form-input">
+                  <option value=""><%= t('forms.preferredLanguage','Preferred language') %></option>
+                  <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
+                    <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
+                  <% }) %>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="contact-message"><%= t('forms.message','Message') %></label>
+                <textarea id="contact-message" name="message" rows="4" required class="form-textarea" 
+                          placeholder="<%= t('projects.detail.messagePlaceholder','Tell us about your interest in this project...') %>"></textarea>
+              </div>
+              
+              <input type="hidden" name="projectId" value="<%= project.id %>" />
+              <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-paper-plane"></i>
+                <%= t('common.sendMessage','Send Message') %>
+              </button>
+            </form>
+          </div>
+
+          <!-- Project Quick Info -->
+          <div class="quick-info-card">
+            <h3>Project Details</h3>
+            
+            <div class="info-list">
+              <% if (project.type) { %>
+                <div class="info-item">
+                  <span class="info-label">Type:</span>
+                  <span class="info-value"><%= project.type %></span>
+                </div>
+              <% } %>
+              
+              <% if (project.total_units) { %>
+                <div class="info-item">
+                  <span class="info-label">Total Units:</span>
+                  <span class="info-value"><%= project.total_units %></span>
+                </div>
+              <% } %>
+              
+              <% if (project.completion_date) { %>
+                <div class="info-item">
+                  <span class="info-label">Completion:</span>
+                  <span class="info-value"><%= project.completion_date %></span>
+                </div>
+              <% } %>
+              
+              <% if (project.price_range) { %>
+                <div class="info-item">
+                  <span class="info-label">Price Range:</span>
+                  <span class="info-value"><%= project.price_range %></span>
+                </div>
+              <% } %>
+              
+              <div class="info-item">
+                <span class="info-label">Status:</span>
+                <span class="info-value status-<%= project.status %>"><%= project.status %></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Related Projects -->
+          <% if (relatedProjects && relatedProjects.length > 0) { %>
+            <div class="related-projects-card">
+              <h3><%= t('projects.detail.related','Related Projects') %></h3>
+              
+              <div class="related-projects-list">
+                <% relatedProjects.forEach(relatedProject => { %>
+                  <div class="related-project-item">
+                    <div class="related-project-image">
+                      <% if (relatedProject.photos && relatedProject.photos.length > 0) { %>
+                        <img src="/uploads/projects/<%= relatedProject.id %>/<%= relatedProject.photos[0] %>" 
+                             alt="<%= relatedProject.title %>">
+                      <% } else { %>
+                        <div class="placeholder-image">
+                          <i class="fas fa-image"></i>
+                        </div>
+                      <% } %>
+                    </div>
+                    
+                    <div class="related-project-content">
+                      <h4><%= relatedProject.title %></h4>
+                      <p class="location"><%= relatedProject.city %>, <%= relatedProject.country %></p>
+                      <a href="/projects/<%= relatedProject.slug %>" class="btn btn-outline btn-sm"><%= t('projects.viewDetails','View project details') %></a>
+                    </div>
+                  </div>
+                <% }) %>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+</div>
+
+<!-- Mobile mount for contact form -->
+<div class="mobile-project-contact" aria-hidden="true" style="display:none"></div>
+
+<script src="/js/project-detail.js"></script>
+<% if (process.env.RECAPTCHA_SITE_KEY) { %>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    if (window.grecaptcha && typeof grecaptcha.ready === 'function') {
+      grecaptcha.ready(function() {
+        grecaptcha.execute('<%= process.env.RECAPTCHA_SITE_KEY %>', { action: 'project_lead' }).then(function(token) {
+          var el = document.getElementById('recaptchaTokenProject');
+          if (el) el.value = token;
+        });
+      });
+    }
+  });
+</script>
+<% } %>

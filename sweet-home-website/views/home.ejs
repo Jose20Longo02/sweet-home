@@ -1,0 +1,235 @@
+<% title = 'Home' %>
+<% useDarkHeader = false %>
+<% useMainContainer = false %>
+<% hideFooter = false %>
+<link rel="stylesheet" href="/css/home.css" />
+
+<!-- Preload the primary hero image for faster first paint -->
+<link rel="preload" as="image" href="/images/dubai-hero.jpg" imagesrcset="/images/dubai-hero.jpg" />
+
+<div id="locations-data" data-locations='<%- JSON.stringify(locations).replace(/'/g, '&#39;') %>' style="display:none;"></div>
+<!-- i18n strings for Home JS -->
+<div id="i18n-home" data-i18n='<%- JSON.stringify({
+  calc: {
+    placeholders: {
+      price: t("home.calc.placeholders.price","e.g. €350,000"),
+      down: t("home.calc.placeholders.down","e.g. €70,000"),
+      rate: t("home.calc.placeholders.rate","e.g. 4.50")
+    },
+    errors: {
+      invalid: t("home.calc.errors.invalid","Please enter valid values for all fields."),
+      downTooHigh: t("home.calc.errors.downTooHigh","Down payment cannot be greater than or equal to property price.")
+    }
+  },
+  aria: {
+    prev: t('common.previous','Previous'),
+    next: t('common.next','Next')
+  }
+}).replace(/'/g, '&#39;') %>' style="display:none;"></div>
+
+<!-- 1) Header overlayed hero with 3 vertical panels and centered search -->
+<section class="hero-panels">
+  <div class="panel" data-country="Berlin"><img src="/images/berlin-hero.jpg" alt="" loading="lazy" decoding="async"></div>
+  <div class="panel" data-country="Dubai"><img src="/images/dubai-hero.jpg" alt="" fetchpriority="high" decoding="async"></div>
+  <div class="panel" data-country="Cyprus"><img src="/images/cyprus-hero.jpg" alt="" loading="lazy" decoding="async"></div>
+
+  <form class="hero-search" action="/properties" method="get">
+    <div class="search-row">
+      <label class="sr-only" for="country"><%= t('forms.country','Country') %></label>
+      <select id="country" name="country">
+        <option value=""><%= t('forms.country','Country') %></option>
+        <% Object.keys(locations).forEach(country => { %>
+          <option value="<%= country %>"><%= country %></option>
+        <% }); %>
+      </select>
+      <label class="sr-only" for="city"><%= t('forms.city','City') %></label>
+      <select id="city" name="city" disabled>
+        <option value=""><%= t('forms.city','City') %></option>
+      </select>
+      <label class="sr-only" for="neighborhood"><%= t('forms.neighborhood','Neighborhood') %></label>
+      <select id="neighborhood" name="neighborhood" disabled>
+        <option value=""><%= t('forms.neighborhood','Neighborhood') %></option>
+      </select>
+      <label class="sr-only" for="operation"><%= t('forms.operation','Operation') %></label>
+      <select id="operation" name="operation">
+        <option value=""><%= t('forms.anyOperation','Any Operation') %></option>
+        <option value="buy"><%= t('forms.operations.buy','Buy') %></option>
+        <option value="rent"><%= t('forms.operations.rent','Rent') %></option>
+      </select>
+      <label class="sr-only" for="type"><%= t('forms.propertyType','Property Type') %></label>
+      <select id="type" name="type">
+        <option value=""><%= t('forms.anyType','Any Type') %></option>
+        <option><%= t('forms.types.apartment','Apartment') %></option>
+        <option><%= t('forms.types.house','House') %></option>
+        <option><%= t('forms.types.villa','Villa') %></option>
+        <option><%= t('forms.types.land','Land') %></option>
+      </select>
+      <button type="submit"><%= t('home.search.cta','Search Properties') %></button>
+    </div>
+  </form>
+</section>
+
+<!-- 3) Featured Properties – card carousel (3-up) -->
+<section class="section featured">
+  <h2 class="section-title"><%= t('home.featured.title','Featured Properties') %></h2>
+  <div class="cards-carousel" id="featuredCarousel" aria-label="Featured properties">
+    <button class="carousel-nav prev" data-target="#featuredCarousel" aria-label="<%= t('common.previous','Previous') %>">&#8249;</button>
+    <div class="cards-track" id="featuredProperties"><!-- populated by JS --></div>
+    <button class="carousel-nav next" data-target="#featuredCarousel" aria-label="<%= t('common.next','Next') %>">&#8250;</button>
+  </div>
+</section>
+
+<!-- 4) International Real Estate – stretch/collapse carousel -->
+<section class="section international">
+  <h2 class="section-title"><%= t('home.international.title','International Real Estate') %></h2>
+  <div class="stretch-carousel" id="intlCarousel">
+    <button class="carousel-nav prev" data-target="#intlCarousel" aria-label="<%= t('common.previous','Previous') %>">&#8249;</button>
+    <div class="stretch-track">
+      <article class="stretch-card is-collapsed" data-title="North Cyprus">
+        <img src="/images/cyprus-international.jpg" alt="" loading="lazy">
+        <span class="vertical-title">North Cyprus</span>
+        <div class="expanded-info">
+          <h3>North Cyprus</h3>
+          <a href="/properties?country=North%20Cyprus" class="see-link"><%= t('home.international.see','See properties') %></a>
+        </div>
+      </article>
+      <article class="stretch-card is-collapsed" data-title="Dubai, UAE">
+        <img src="/images/dubai-international.jpg" alt="" loading="lazy">
+        <span class="vertical-title">Dubai, UAE</span>
+        <div class="expanded-info">
+          <h3>Dubai, UAE</h3>
+          <a href="/properties?country=United%20Arab%20Emirates&city=Dubai" class="see-link"><%= t('home.international.see','See properties') %></a>
+        </div>
+      </article>
+      <article class="stretch-card is-focused" data-title="Berlin, Germany">
+        <img src="/images/berlin-international.jpg" alt="" loading="lazy">
+        <span class="vertical-title">Berlin, Germany</span>
+        <div class="expanded-info">
+          <h3>Berlin, Germany</h3>
+          <a href="/properties?country=Germany&city=Berlin" class="see-link"><%= t('home.international.see','See properties') %></a>
+        </div>
+      </article>
+    </div>
+    <button class="carousel-nav next" data-target="#intlCarousel" aria-label="<%= t('common.next','Next') %>">&#8250;</button>
+  </div>
+</section>
+
+<!-- 5) About Section over panoramic image -->
+<section class="about-hero">
+  <img src="/images/berlin-about.jpg" alt="" loading="lazy">
+  <div class="about-overlay">
+    <h2><%= t('home.about.title','About Sweet Home') %></h2>
+    <p><%= t('home.about.copy','') %></p>
+    <a href="/about" class="btn-dark"><%= t('common.learnMore','Learn More') %></a>
+  </div>
+</section>
+
+<!-- 6) Services with image right -->
+<section class="section services-brief">
+  <div class="services-grid">
+    <div class="copy">
+      <h2><%= t('home.services.title','Our Services') %></h2>
+      <p><%= t('home.services.brief','') %></p>
+      <a href="/services" class="btn-green"><%= t('common.learnMore','Learn More') %></a>
+    </div>
+    <div class="image"><img src="/images/apartment-interior.jpg" alt="" loading="lazy"></div>
+  </div>
+  </section>
+
+<!-- Mortgage Calculator -->
+<section class="mortgage-calculator" id="mortgage">
+  <h2 class="section-title"><%= t('home.calc.title','Mortgage Calculator') %></h2>
+  <div class="calculator-container">
+    <form class="calculator-form" id="mortgageForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="propertyPrice"><%= t('home.calc.price','Property Price (€)') %></label>
+          <input type="text" id="propertyPrice" inputmode="numeric" placeholder="<%= t('home.calc.placeholders.price','e.g. €350,000') %>">
+        </div>
+        <div class="form-group">
+          <label for="downPayment"><%= t('home.calc.down','Down Payment (€)') %></label>
+          <input type="text" id="downPayment" inputmode="numeric" placeholder="<%= t('home.calc.placeholders.down','e.g. €70,000') %>">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="loanTerm"><%= t('home.calc.term','Loan Term (Years)') %></label>
+          <select id="loanTerm">
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+            <option value="30" selected>30</option>
+            <option value="35">35</option>
+            <option value="40">40</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="interestRate"><%= t('home.calc.rate','Interest Rate (%)') %></label>
+          <input type="number" id="interestRate" min="0" max="25" step="0.01" placeholder="<%= t('home.calc.placeholders.rate','e.g. 4.50') %>">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-green"><%= t('home.calc.cta','Calculate Payment') %></button>
+    </form>
+
+    <aside class="calculator-results" id="calculatorResults" style="display:none;">
+      <h3><%= t('home.calc.result.title','Your Monthly Payment') %></h3>
+      <div class="payment-breakdown">
+        <div class="result-item">
+          <span class="result-label"><%= t('home.calc.result.pi','Principal & Interest:') %></span>
+          <span class="result-value" id="monthlyPayment">€0</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label"><%= t('home.calc.result.tax','Property Tax (estimated):') %></span>
+          <span class="result-value" id="propertyTax">€0</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label"><%= t('home.calc.result.ins','Insurance (estimated):') %></span>
+          <span class="result-value" id="insurance">€0</span>
+        </div>
+        <div class="result-item total">
+          <span class="result-label"><%= t('home.calc.result.total','Total Monthly Payment:') %></span>
+          <span class="result-value" id="totalPayment">€0</span>
+        </div>
+      </div>
+
+      <div class="loan-summary">
+        <h4><%= t('home.calc.result.summary','Loan Summary') %></h4>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span class="summary-label"><%= t('home.calc.result.loan','Loan Amount:') %></span>
+            <span class="summary-value" id="loanAmount">€0</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label"><%= t('home.calc.result.interest','Total Interest:') %></span>
+            <span class="summary-value" id="totalInterest">€0</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label"><%= t('home.calc.result.cost','Total Cost:') %></span>
+            <span class="summary-value" id="totalCost">€0</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- 7) Testimonials – 3-up carousel -->
+<section class="section testimonials">
+  <h2 class="section-title"><%= t('home.testimonials.title','What our clients say about us') %></h2>
+  <div class="cards-carousel" id="testimonialsCarousel" aria-label="Testimonials">
+    <button class="carousel-nav prev" data-target="#testimonialsCarousel" aria-label="<%= t('common.previous','Previous') %>">&#8249;</button>
+    <div class="cards-track">
+      <% const testimonialItems = [1,2,3,4,5,6]; testimonialItems.forEach(i => { %>
+      <article class="testimonial-card">
+        <div class="stars" aria-label="5 stars">★★★★★</div>
+        <p class="review">Lorem ipsum dolor sit amet consectetur. Nunc habitant nibh nibh vel. Nisl habitant nibh nibh vel nibh consequat.</p>
+        <div class="client">JOSE LONGO<br><span>Founder of Medialy</span></div>
+      </article>
+      <% }) %>
+    </div>
+    <button class="carousel-nav next" data-target="#testimonialsCarousel" aria-label="<%= t('common.next','Next') %>">&#8250;</button>
+  </div>
+</section>
+
+
+<script src="/js/home.js"></script>

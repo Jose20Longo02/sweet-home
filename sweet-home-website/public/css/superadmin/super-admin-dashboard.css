@@ -1,0 +1,225 @@
+
+
+/* 1. Base reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html, body {
+  height: 100%;
+  font-family: var(--font-sans);
+  background: #f4f6f9;
+  color: var(--color-secondary);
+}
+
+/* 2. Panel container */
+.admin-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* 5. Main dashboard area */
+.admin-content {
+  flex: 1;
+  padding: calc(var(--spacing) * 3) calc(var(--spacing) * 2);
+  overflow-y: auto;
+  background: linear-gradient(180deg, #f7f9fc 0%, #f1f3f7 100%);
+}
+.admin-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.25rem;
+  color: #111;
+  letter-spacing: .2px;
+  margin-bottom: .25rem;
+}
+.admin-content .subtitle {
+  font-size: 1rem;
+  margin-bottom: calc(var(--spacing) * 2.5);
+  color: #5b6472;
+}
+/* Top action bar */
+.admin-actions { display:flex; align-items:center; justify-content: space-between; gap: 12px; margin-bottom: calc(var(--spacing) * 2); }
+.admin-actions .search { flex: 1; }
+.admin-actions .search input { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(17,24,39,.12); background:#fff; }
+.admin-actions .buttons { display:flex; gap: 10px; }
+.admin-actions .btn { padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(17,24,39,.12); background: #fff; cursor:pointer; transition: box-shadow .2s, transform .2s; }
+.admin-actions .btn:hover { box-shadow: 0 8px 20px rgba(0,0,0,.08); transform: translateY(-1px); }
+
+/* 6. Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: calc(var(--spacing) * 1.25);
+  margin-bottom: calc(var(--spacing) * 3);
+}
+.stat-card {
+  position: relative;
+  background: #fff;
+  color: #1c1f24;
+  border-radius: 14px;
+  padding: calc(var(--spacing) * 1.5);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  overflow: hidden;
+  transition: transform 260ms ease, box-shadow 260ms ease;
+  text-align: center;
+}
+.stat-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--color-primary), rgba(0,0,0,0));
+}
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.10);
+}
+.stat-card h2 {
+  font-size: 0.95rem;
+  margin-bottom: 0.35rem;
+  color: #4a5565;
+}
+.stat-card p {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #111;
+}
+
+/* 7. Carousel sections */
+.carousel-section {
+  margin-bottom: calc(var(--spacing) * 2);
+}
+.carousel-section h2 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1c1f24;
+  margin-bottom: calc(var(--spacing) * 1.25);
+  position: relative;
+}
+.carousel-section h2::after {
+  content: "";
+  position: absolute; left: 0; bottom: -8px;
+  width: 48px; height: 2px; background: var(--color-primary);
+}
+.carousel-section .section-desc { margin: 6px 0 12px; color:#5b6472; }
+.carousel-section .empty {
+  color: var(--color-secondary);
+  font-style: italic;
+  text-align: center;
+}
+
+/* 8. Carousel wrapper */
+.carousel {
+  display: flex;
+  gap: var(--spacing);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: var(--spacing);
+}
+.carousel::-webkit-scrollbar {
+  height: 6px;
+}
+.carousel::-webkit-scrollbar-thumb {
+  background: var(--color-tertiary);
+  border-radius: 3px;
+}
+
+/* 9. Cards inside carousel */
+.carousel .card {
+  flex: 0 0 240px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  scroll-snap-align: start;
+  overflow: hidden;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+.carousel .card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.10);
+}
+.carousel .card img,
+.carousel .card .avatar {
+  display: block;
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+.carousel .card .card-info {
+  padding: var(--spacing);
+  text-align: center;
+}
+.carousel .card-info h3 {
+  font-size: 1rem;
+  color: #111;
+  margin-bottom: 0.35rem;
+}
+.carousel .card-info p {
+  font-size: 0.875rem;
+  color: var(--color-secondary);
+}
+
+/* Elegant table styles */
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+.admin-table thead th {
+  text-align: left; font-weight: 700; font-size: .95rem; color:#1c1f24; padding: 0 12px 4px;
+}
+.admin-table tbody tr {
+  background: #fff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,.06);
+}
+.admin-table tbody td { padding: 14px 12px; border-top: 1px solid rgba(17,24,39,.06); border-bottom: 1px solid rgba(17,24,39,.06); }
+.admin-table tbody tr:first-child td { border-top: none; }
+.admin-table tbody tr:last-child td { border-bottom: none; }
+.admin-table .tag { display:inline-block; padding: 4px 10px; border-radius: 999px; background: #eef2ff; color:#3730a3; font-size:.8rem; }
+
+/* KPI band */
+.kpi-band { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 12px; margin: 18px 0 24px; }
+.kpi { background:#fff; padding: 14px; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,.06); border: 1px solid rgba(17,24,39,.06); text-align:center; }
+.kpi .label { color:#4a5565; font-size:.9rem; }
+.kpi .value { color:#111; font-weight:800; font-size:1.4rem; }
+
+/* Centered logout at the bottom of the dashboard */
+.logout-area { margin-top: var(--spacing-12); display:flex; align-items:center; justify-content:center; }
+.btn-logout-center {
+  background: var(--error-color);
+  color: #fff;
+  padding: 14px 28px;
+  border: none;
+  border-radius: var(--radius-2xl);
+  cursor: pointer;
+  font-size: 1.125rem;
+  font-weight: 700;
+  min-width: 260px;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(239, 68, 68, 0.25);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast);
+}
+.btn-logout-center:hover { opacity: .98; transform: translateY(-1px); box-shadow: 0 14px 28px rgba(239, 68, 68, 0.3); }
+.btn-logout-center:active { transform: translateY(0); box-shadow: 0 8px 18px rgba(239, 68, 68, 0.22); }
+
+/* 10. Responsive: content padding & carousel size */
+@media (max-width: 768px) {
+  .admin-content {
+    padding: var(--spacing);
+  }
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  .carousel .card {
+    flex: 0 0 200px;
+  }
+}
+@media (max-width: 480px) {
+  .carousel .card {
+    flex: 0 0 160px;
+  }
+}

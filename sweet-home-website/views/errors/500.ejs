@@ -1,0 +1,13 @@
+<% title = t('errors.500.title','Something went wrong'); %>
+
+<div class="container" style="padding: 4rem 1rem; text-align: center;">
+  <h1 style="font-size: 2rem; margin-bottom: 0.5rem;"><%= t('errors.500.heading','An unexpected error occurred') %></h1>
+  <p style="color: #6c757d; margin-bottom: 1.5rem;"><%= t('errors.500.hint','Please try again. If the problem persists, contact support.') %></p>
+  <% if (process.env.NODE_ENV !== 'production' && error) { %>
+    <pre style="text-align:left; white-space:pre-wrap; background:#f8f9fa; padding:1rem; border-radius:8px; overflow:auto;"> <%= (error.stack || error) %> </pre>
+  <% } %>
+  <a href="/" class="btn btn-primary"><%= t('errors.common.home','Go back home') %></a>
+  <a href="javascript:history.back()" class="btn btn-outline" style="margin-left: 0.5rem;"><%= t('errors.common.back','Go back') %></a>
+</div>
+
+

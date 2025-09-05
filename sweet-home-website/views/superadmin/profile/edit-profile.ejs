@@ -1,0 +1,297 @@
+<!-- views/admin/profile/edit-profile.ejs -->
+<% title = 'Edit Profile' %>
+
+<!-- Load page-specific CSS -->
+<head>
+  <link rel="stylesheet" href="/css/superadmin/edit-profile.css" />
+</head>
+
+<div class="admin-panel">
+  <div class="admin-body">
+    <!-- Sidebar -->
+    <%- include('../../partials/superadmin-sidebar', {
+      activePage: 'profile',     // or 'projects', 'properties', etc.
+      pendingCount: pendingCount   // make sure you pass this in your controller
+    }) %>
+
+    <!-- Main content -->
+    <main class="admin-content">
+      <section class="form-container">
+        <h1>Edit Profile</h1>
+
+        <% if (error) { %>
+          <div class="alert alert-error"><%= error %></div>
+        <% } %>
+        <% if (success) { %>
+          <div class="alert alert-success"><%= success %></div>
+        <% } %>
+
+        <form
+          id="editProfileForm"
+          action="/superadmin/dashboard/profile?_csrf=<%= csrfToken %>"
+          method="post"
+          enctype="multipart/form-data"
+          class="form"
+          data-user-position="<%= user.position || '' %>"
+          data-user-area="<%= user.area || '' %>"
+        >
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <!-- Name -->
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              value="<%= user.name %>"
+              required
+            />
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value="<%= user.email %>"
+              required
+            />
+          </div>
+
+          <!-- Profile Picture -->
+          <div class="form-group">
+            <label for="profile_picture">Profile Picture</label>
+            <div class="thumb-wrapper">
+              <% if (user.profile_picture) { %>
+                <img
+                  id="profilePreview"
+                  src="<%= user.profile_picture %>"
+                  alt="Profile Picture"
+                  class="thumb"
+                />
+              <% } else { %>
+                <img
+                  id="profilePreview"
+                  style="display:none;"
+                  alt="Profile Preview"
+                  class="thumb"
+                />
+              <% } %>
+            </div>
+            <input
+              id="profile_picture"
+              name="profile_picture"
+              type="file"
+              accept="image/*,.heic,.heif"
+            />
+          </div>
+
+          <hr />
+
+          <!-- Area & Position (dependent dropdown) -->
+          <div class="form-group">
+            <label for="areaSelect">Area</label>
+            <select
+              id="areaSelect"
+              name="area"
+              required
+            >
+              <option value="">-- Select Area --</option>
+              <% Object.keys(areaRoles).forEach(area => { %>
+                <option
+                  value="<%= area %>"
+                  <%= user.area === area ? 'selected' : '' %>
+                ><%= area %></option>
+              <% }); %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="positionSelect">Position</label>
+            <select
+              id="positionSelect"
+              name="position"
+              required
+            >
+              <% (areaRoles[user.area] || []).forEach(function(pos){ %>
+                <option value="<%= pos %>" <%= (user.position===pos ? 'selected' : '') %>><%= pos %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <hr />
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="password">New Password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="••••••••"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="passwordConfirm">Confirm New Password</label>
+            <input
+              id="passwordConfirm"
+              name="passwordConfirm"
+              type="password"
+              placeholder="••••••••"
+            />
+            <div id="passwordError" class="error-text"></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            Save Changes
+          </button>
+        </form>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+  (function(){
+  function initSuperAdminProfile() {
+  // Roles config passed from server
+  const areaRoles = <%- JSON.stringify(areaRoles) %>;
+
+  // Profile picture live preview with HEIC support
+  const picInput   = document.getElementById('profile_picture');
+  const picPreview = document.getElementById('profilePreview');
+  picInput?.addEventListener('change', async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const ext = (file.name.split('.').pop() || '').toLowerCase();
+    if (ext === 'heic' || ext === 'heif') {
+      try {
+        const { default: heic2any } = await import('https://cdn.skypack.dev/heic2any@0.0.4');
+        const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.9 });
+        const url = URL.createObjectURL(blob);
+        picPreview.src = url;
+        picPreview.style.display = 'block';
+      } catch (err) {
+        const reader = new FileReader();
+        reader.onload = ev => {
+          picPreview.src = ev.target.result;
+          picPreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    } else {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        picPreview.src = ev.target.result;
+        picPreview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Dependent dropdown: Area → Position
+  const areaSelect = document.getElementById('areaSelect');
+  const posSelect  = document.getElementById('positionSelect');
+  const formEl     = document.getElementById('editProfileForm');
+  const initialPosition = (formEl?.getAttribute('data-user-position') || '').trim();
+  const initialArea     = (formEl?.getAttribute('data-user-area') || '').trim();
+  let didInitialSelect = false;
+
+  function populatePositions() {
+    const norm = s => (s||'').replace(/\s+/g,' ').trim().toLowerCase();
+    let areaVal = areaSelect.value;
+    // If no area selected yet, try the saved one
+    if (!areaVal && initialArea) {
+      areaVal = initialArea;
+      // Best-effort select the matching area option if present
+      const matchOpt = Array.from(areaSelect.options).find(o => norm(o.value) === norm(areaVal));
+      if (matchOpt) areaSelect.value = matchOpt.value;
+    }
+    // If area selection is still empty, stop here
+    if (!areaSelect.value) {
+      posSelect.innerHTML = '';
+      posSelect.disabled = true;
+      posSelect.appendChild(new Option('Choose an area first',''));
+      return;
+    }
+    posSelect.innerHTML = '';
+    // Find area key by normalized match
+    const areaKey = Object.keys(areaRoles).find(k => norm(k) === norm(areaVal));
+    const roles = areaKey ? (areaRoles[areaKey] || []) : [];
+    if (roles.length) {
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = '-- Select Position --';
+      posSelect.appendChild(placeholder);
+
+      const initialNorm = norm(initialPosition);
+      roles.forEach(role => {
+        const opt = document.createElement('option');
+        opt.value = role;
+        opt.textContent = role;
+        if (!didInitialSelect && initialNorm && norm(role) === initialNorm) {
+          opt.selected = true;
+          didInitialSelect = true;
+        }
+        posSelect.appendChild(opt);
+      });
+      // If not selected via option flag, try setting select value explicitly
+      if (!didInitialSelect && initialPosition) {
+        const hasMatch = Array.from(posSelect.options).some(o => norm(o.value) === initialNorm);
+        if (hasMatch) {
+          posSelect.value = Array.from(posSelect.options).find(o => norm(o.value) === initialNorm).value;
+          didInitialSelect = true;
+        }
+      }
+      posSelect.disabled = false;
+    } else {
+      const opt = document.createElement('option');
+      opt.value = '';
+      opt.textContent = 'Choose an area first';
+      posSelect.appendChild(opt);
+      posSelect.disabled = true;
+    }
+  }
+
+  // Initialize on load
+  populatePositions();
+  areaSelect.addEventListener('change', () => { didInitialSelect = true; populatePositions(); });
+  areaSelect.addEventListener('input', () => { didInitialSelect = true; populatePositions(); });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSuperAdminProfile);
+  } else {
+    initSuperAdminProfile();
+  }
+  })();
+
+  // Live password‐match validation
+  const pw1 = document.getElementById('password');
+  const pw2 = document.getElementById('passwordConfirm');
+  const errEl = document.getElementById('passwordError');
+  const form  = document.getElementById('editProfileForm');
+
+  function validatePasswords() {
+    if (pw1.value || pw2.value) {
+      if (pw1.value !== pw2.value) {
+        errEl.textContent = 'Passwords do not match';
+        return false;
+      }
+    }
+    errEl.textContent = '';
+    return true;
+  }
+
+  pw1.addEventListener('input', validatePasswords);
+  pw2.addEventListener('input', validatePasswords);
+
+  form.addEventListener('submit', e => {
+    if (!validatePasswords()) {
+      e.preventDefault();
+      pw2.focus();
+    }
+  });
+</script>

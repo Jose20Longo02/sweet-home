@@ -1,0 +1,29 @@
+<% title = 'Forgot your password?' %>
+<link rel="stylesheet" href="/css/auth/login.css">
+
+<div class="login-wrap">
+  <form action="/auth/forgot" method="post" class="auth-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <h1>Reset your password</h1>
+
+    <% if (typeof sent !== 'undefined' && sent) { %>
+      <div class="alert alert-success">If that email exists, we sent a reset link.</div>
+    <% } %>
+
+    <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
+    <% } %>
+
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email" autocomplete="email" required />
+
+    <button type="submit">Send reset link</button>
+
+    <p>
+      <a href="/auth/login">Back to sign in</a>
+    </p>
+  </form>
+  <p class="auth-helper-text">For your security, we never disclose whether an email is registered.</p>
+</div>
+
+

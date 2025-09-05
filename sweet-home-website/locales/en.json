@@ -1,0 +1,412 @@
+{
+  "brand": "Sweet Home",
+  "nav": {
+    "home": "Home",
+    "properties": "Properties",
+    "projects": "Projects",
+    "owners": "Owners",
+    "services": "Services",
+    "about": "About",
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "common": {
+    "share": "Share",
+    "sendMessage": "Send Message",
+    "learnMore": "Learn More",
+    "clearAll": "Clear All",
+    "close": "Close",
+    "sortBy": "Sort by:",
+    "sort": { "relevance": "Relevance", "priceLow": "Price: Low to High", "priceHigh": "Price: High to Low", "newest": "Newest First", "oldest": "Oldest First" },
+    "previous": "Previous",
+    "next": "Next",
+    "any": "Any",
+    "retry": "Retry"
+  },
+  "owners": {
+    "recentlySold": "Recently Sold",
+    "hero": { "title": "Ready to sell/rent your property?", "cta": "Contact us!", "learnMore": "Learn More" },
+    "why": {
+      "title": "Why work with us?",
+      "items": {
+        "trusted": "Trusted local experts in Berlin, Dubai and North Cyprus",
+        "endToEnd": "End‑to‑end selling and renting service",
+        "proMedia": "Professional photography, video and staging",
+        "globalReach": "Global marketing reach to verified buyers and tenants",
+        "transparent": "Transparent fees and weekly progress updates"
+      },
+      "altBerlin": "Berlin skyline"
+    },
+    "form": { "submit": "Send", "selectLanguage": "Select language", "fixErrors": "Please fix the errors above.", "sending": "Sending...", "successShort": "Thanks! We will reach out shortly.", "submitted": "Submission received.", "successToast": "Thank you! Your message was successfully sent.", "errorStatus": "There was a problem. Please try again.", "errorToast": "Something went wrong. Please try again later." },
+    "validation": { "fullName": "Please enter your full name", "countryCode": "Please enter a country code", "phone": "Please enter a phone number", "email": "Enter a valid email address", "language": "Select a language" },
+    "aria": { "hero": "Owners hero", "primaryActions": "Primary actions", "heroNote": "Hero background image has a decorative dark overlay to improve text contrast", "reasons": "Reasons list", "recentlySoldCarousel": "Recently sold carousel" }
+  },
+  "projects": {
+    "regions": {
+      "title": "Projects by Region",
+      "aria": { "page": "Projects by region", "cyprus": "See all projects in Cyprus", "dubai": "See all projects in Dubai" },
+      "cyprusTitle": "Projects in Cyprus",
+      "dubaiTitle": "Projects in Dubai",
+      "cta": "See all projects"
+    }
+  },
+  "properties": {
+    "status": { "new": "New", "reduced": "Reduced", "exclusive": "Exclusive" },
+    "features": { "garden": "Garden", "balcony": "Balcony", "parking": "Parking", "elevator": "Elevator", "air_conditioning": "Air Conditioning", "separate_kitchen": "Separate kitchen" },
+    "detail": {
+      "id": "ID:",
+      "listed": "Listed:",
+      "contactAgent": "Contact Agent",
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms",
+      "size": "Size",
+      "type": "Property Type",
+      "yearBuilt": "Year Built",
+      "description": "Description",
+      "noDescription": "No description available for this property.",
+      "features": "Features & Amenities",
+      "location": "Location",
+      "coordinates": "Coordinates",
+      "loadingMap": "Loading map...",
+      "price": "Price",
+      "featured": "Featured",
+      "listedBy": "Listed by",
+      "agent": "Agent",
+      "agentRole": "Real Estate Agent",
+      "callAgent": "Call Agent",
+      "similar": "Similar Properties",
+      "partOfProject": "Part of a project",
+      "partOfProjectSubtitle": "This property is part of this project.",
+      "viewFloorplan": "View Floorplan",
+      "viewPlan": "View Plan",
+      "interestPlaceholder": "I'm interested in this property...",
+      "readMore": "Read more"
+    },
+    "list": {
+      "filters": { "title": "Filters" },
+      "location": "Location",
+      "propertyType": "Property Type",
+      "moreFilters": "More filters",
+      "priceRange": { "title": "Price Range", "min": "Min Price (€)", "max": "Max Price (€)" },
+      "sizeRange": { "title": "Size Range (m²)", "min": "Min Size", "max": "Max Size" },
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms",
+      "year": { "from": "From Year", "to": "To Year" },
+      "featuresStatus": "Features & Status",
+      "features": "Features",
+      "featured": "Featured Properties",
+      "newListings": "New Listings (7 days)",
+      "status": "Status",
+      "apply": "Apply Filters",
+      "found": "Properties Found",
+      "browseAll": "Browse all available properties",
+      "activeFilters": "Active filters:",
+      "compare": {
+        "title": "Properties to Compare",
+        "cta": "Compare",
+        "modalTitle": "Property Comparison",
+        "added": "Property added to comparison",
+        "removed": "Property removed from comparison",
+        "max": "You can only compare up to 3 properties at a time",
+        "cleared": "Comparison cleared",
+        "needTwo": "Please select at least 2 properties to compare",
+        "headers": {
+          "feature": "Feature",
+          "image": "Image",
+          "location": "Location",
+          "price": "Price",
+          "type": "Type",
+          "bedrooms": "Bedrooms",
+          "bathrooms": "Bathrooms",
+          "size": "Size"
+        },
+        "remove": "Remove from comparison",
+        "removeAria": "Remove %s from comparison"
+      },
+      "contactForPrice": "Contact for price",
+      "viewDetails": "View details",
+      "map": { "title": "Property Map View", "hint": "Click on map markers to view property details", "error": "Unable to load map. Please try refreshing the page." },
+      "noResults": { "title": "No Properties Found", "hint": "Try adjusting your search criteria or browse all available properties." },
+      "clearFilters": "Clear Filters",
+      "meta": { "sqm": "m²", "beds": "beds", "baths": "baths" },
+      "showing": "Showing",
+      "of": "of",
+      "results": "results",
+      "for": "for",
+      "in": "in",
+      "saved": {
+        "noneTitle": "No Saved Searches",
+        "noneHint": "Save your property searches to quickly access them later.",
+        "noDescription": "No description",
+        "created": "Created:",
+        "lastUsed": "Last used:",
+        "emailAlerts": "Email Alerts",
+        "apply": "Apply Search",
+        "delete": "Delete",
+        "savedOk": "Search saved successfully!",
+        "deletedOk": "Search deleted successfully!"
+      }
+    }
+  },
+  "home": {
+    "title": "Find Your Dream Home",
+    "hero": {
+      "title": "Find Your Dream Home",
+      "subtitle": "Discover the perfect property in the most desirable locations worldwide"
+    },
+    "search": { "cta": "Search Properties" },
+    "featured": {
+      "title": "Featured Properties",
+      "subtitle": "Discover our handpicked selection of premium properties",
+      "viewAll": "View All Properties"
+    },
+    "international": { "title": "International Real Estate", "see": "See properties" },
+    "about": { "title": "About Sweet Home", "copy": "At Sweet Home, we turn property goals into real-life keys. From your first chat to closing day, our friendly experts guide you with clear advice, curated options, and stress-free support. Ready to move forward with confidence? Let's find the place that truly feels like home." },
+    "services": { "title": "Our Services", "brief": "From tailored consulting to hands‑on management and financing guidance, our team helps you buy, sell and manage property with confidence." },
+    "calc": {
+      "title": "Mortgage Calculator",
+      "subtitle": "Calculate your monthly mortgage payments and understand your financing options",
+      "price": "Property Price (€)",
+      "down": "Down Payment (€)",
+      "term": "Loan Term (Years)",
+      "rate": "Interest Rate (%)",
+      "cta": "Calculate Payment",
+      "placeholders": { "price": "e.g. €350,000", "down": "e.g. €70,000", "rate": "e.g. 4.50" },
+      "errors": { "invalid": "Please enter valid values for all fields.", "downTooHigh": "Down payment cannot be greater than or equal to property price." },
+      "result": {
+        "title": "Your Monthly Payment",
+        "pi": "Principal & Interest:",
+        "tax": "Property Tax (estimated):",
+        "ins": "Insurance (estimated):",
+        "total": "Total Monthly Payment:",
+        "summary": "Loan Summary",
+        "loan": "Loan Amount:",
+        "interest": "Total Interest:",
+        "cost": "Total Cost:"
+      }
+    },
+    "testimonials": { "title": "What our clients say about us" }
+  },
+  "services": {
+    "hero": { "aria": "Services hero" },
+    "tabs": {
+      "aria": "Service tabs",
+      "consulting": "Property Consulting",
+      "management": "Property Management",
+      "finance": "Financial Services"
+    },
+    "panel": {
+      "consulting": {
+        "title": "Property Consulting",
+        "copy": "Strategic advice for buying or selling residential assets. We benchmark local comps, build the pricing strategy, prepare the marketing narrative, and negotiate on your behalf to achieve the strongest outcome."
+      },
+      "management": {
+        "title": "Property Management",
+        "copy": "Hands‑on, end‑to‑end management: tenant sourcing and screening, contracts and check‑ins, rent collection, preventative maintenance and repairs, and monthly performance reporting—so your investment stays hassle‑free."
+      },
+      "finance": {
+        "title": "Financial Services",
+        "copy": "Independent financing guidance: mortgage pre‑assessment, lender introductions, yield modeling and cash‑flow planning, plus tax‑aware structures with our trusted partners to optimise returns."
+      },
+      "cta": "Contact Us!"
+    },
+    "contact": { "title": "Contact Us" }
+  },
+  "about": {
+    "intro": { "title": "About Sweet Home", "copy": "At Sweet Home, we turn property goals into real-life keys. From your first chat to closing day, our friendly experts guide you with clear advice, curated options, and stress-free support. Ready to move forward with confidence? Let's find the place that truly feels like home." },
+    "team": { "title": "Meet our team", "member": "Team Member" }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "office": { "aria": "Berlin Office image", "name": "Berlin Office", "address": "Hohenzollerndamm 196, 10717 Berlin", "phone": "+49-030-65852933" },
+    "submit": "Send"
+  },
+  "blog": {
+    "by": "By",
+    "publishedBy": "Published by",
+    "read": "Read article",
+    "list": { "empty": "No articles yet." },
+    "detail": { "recent": "Recent articles", "noRecent": "No recent posts." }
+  },
+  "errors": {
+    "common": { "home": "Go back home", "back": "Go back" },
+    "404": { "title": "Page Not Found", "hint": "The page you’re looking for doesn’t exist or may have been moved." },
+    "500": { "title": "Something went wrong", "heading": "An unexpected error occurred", "hint": "Please try again. If the problem persists, contact support." }
+  },
+  "legal": {
+    "cookies": {
+      "title": "Cookies Policy",
+      "intro": "We use necessary cookies to make our site work and analytics cookies to improve it. You can control cookies in your browser settings.",
+      "types": { "title": "Types of Cookies", "body": "Essential (required for core functionality), analytics (to understand usage), and marketing (to personalize offers)." },
+      "manage": { "title": "Manage Cookies", "body": "Most browsers allow you to block or delete cookies. Disabling some cookies may affect site functionality." }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro": "We respect your privacy. This policy explains what data we collect, how we use it, and your rights.",
+      "updated": "Last updated:",
+      "sections": {
+        "controller": {
+          "title": "Data Controller",
+          "body": "Sweet Home Real Estate Investments (\"we\", \"us\") is the controller of your personal data. Contact: Site@Sweet-Home.co.il"
+        },
+        "collection": {
+          "title": "Data We Collect",
+          "body": "We may collect contact details, enquiry content, property preferences, usage data (analytics), cookies, and technical data to provide and improve our services."
+        },
+        "use": {
+          "title": "How We Use Your Data",
+          "body": "To respond to enquiries, provide property recommendations, manage appointments, send transactional emails, improve the website, prevent fraud, and comply with legal obligations."
+        },
+        "legalBasis": {
+          "title": "Legal Bases",
+          "body": "Performance of a contract or pre‑contractual steps, legitimate interests (e.g. analytics, security), consent (where required), and legal obligations."
+        },
+        "sharing": {
+          "title": "Sharing",
+          "body": "We may share data with trusted processors (hosting, email, analytics), partner agents (with your consent or when necessary), and authorities where legally required."
+        },
+        "intl": {
+          "title": "International Transfers",
+          "body": "Your data may be processed outside your country. We use appropriate safeguards such as Standard Contractual Clauses where required."
+        },
+        "retention": {
+          "title": "Retention",
+          "body": "We keep data only as long as necessary for the purposes stated, or as required by law."
+        },
+        "rights": {
+          "title": "Your Rights",
+          "body": "You have the right to access, rectify, erase, restrict, object, and data portability. You can also withdraw consent. Contact us to exercise your rights."
+        },
+        "cookies": {
+          "title": "Cookies & Analytics",
+          "body": "We use necessary cookies and analytics to improve the site. Manage your preferences in your browser settings. See also our Cookies Policy."
+        },
+        "contact": {
+          "title": "Contact",
+          "body": "For privacy requests, email Site@Sweet-Home.co.il or write to our Berlin office address in the Contact page."
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "intro": "These terms govern your use of our website and services. By accessing our website, you agree to these terms.",
+      "updated": "Last updated:",
+      "sections": {
+        "use": {
+          "title": "Use of Service",
+          "body": "You agree to use the site lawfully and not to misuse contact forms or interfere with the website. You must be at least 18 years old to submit enquiries."
+        },
+        "content": {
+          "title": "Content & Accuracy",
+          "body": "Property details and prices are provided in good faith and may change. We do not guarantee availability until confirmed by an agent."
+        },
+        "accounts": {
+          "title": "Accounts",
+          "body": "If you create an account, you are responsible for safeguarding credentials and for activity under your account. Notify us of any unauthorized use."
+        },
+        "thirdParty": {
+          "title": "Third‑Party Services",
+          "body": "We integrate third‑party tools (e.g., maps, analytics). Their terms and privacy policies apply where relevant."
+        },
+        "liability": {
+          "title": "Liability",
+          "body": "To the maximum extent permitted by law, we disclaim warranties and limit liability for indirect or consequential damages arising from use of the site."
+        },
+        "changes": {
+          "title": "Changes",
+          "body": "We may update these terms. Continued use after changes constitutes acceptance."
+        },
+        "contact": {
+          "title": "Contact",
+          "body": "Questions about these terms? Contact us via the Contact page."
+        }
+      }
+    }
+  },
+  "projects": {
+    "viewDetails": "View project details",
+    "amenitiesTitle": "Amenities of the project",
+    "detail": {
+      "defaultType": "Development",
+      "noImages": "No images available",
+      "overview": "Project Overview",
+      "keyFeatures": "Key Features",
+      "amenities": "Amenities",
+      "specifications": "Specifications",
+      "locationDetails": "Location Details",
+      "interested": "Interested in this project?",
+      "getInTouch": "Get in touch with our team for more information",
+      "messagePlaceholder": "Tell us about your interest in this project...",
+      "details": "Project Details",
+      "typeLabel": "Type:",
+      "totalUnits": "Total Units:",
+      "priceRange": "Price Range:",
+      "status": "Status:",
+      "units": "Units",
+      "image": "Image",
+      "related": "Related Projects"
+    },
+    "list": {
+      "filters": { "title": "Filters" },
+      "typeOfUnits": "Type of Units",
+      "units": { "villas": "Villas", "apartments": "Apartments", "houses": "Houses", "offices": "Offices" },
+      "pricePerUnit": { "title": "Price per Unit", "min": "Min Price", "max": "Max Price" },
+      "apply": "Apply Filters",
+      "found": "Projects Found",
+      "browseAll": "Browse all available development projects",
+      "activeFilters": "Active filters:",
+      "sort": { "nameAsc": "Name: A-Z", "nameDesc": "Name: Z-A", "completion": "Completion Date" },
+      "completion": "Completion",
+      "noResults": { "title": "No Projects Found", "hint": "Try adjusting your search criteria or browse all available projects." },
+      "clearFilters": "Clear Filters",
+      "showing": "Showing",
+      "of": "of",
+      "results": "results",
+      "for": "for",
+      "in": "in"
+    }
+  },
+  "forms": {
+    "country": "Country",
+    "anyCountry": "Any country",
+    "city": "City",
+    "anyCity": "Any City",
+    "neighborhood": "Neighborhood",
+    "anyNeighborhood": "Any Neighborhood",
+    "propertyType": "Property Type",
+    "anyType": "Any Type",
+    "operation": "Operation",
+    "anyOperation": "Any Operation",
+    "operations": { "buy": "Buy", "rent": "Rent" },
+    "types": { "apartment": "Apartment", "house": "House", "villa": "Villa", "land": "Land" },
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "fullName": "Full name",
+    "countryCode": "Country code",
+    "phoneNumber": "Phone Number",
+    "email": "Email Address",
+    "preferredLanguage": "Preferred language",
+    "message": "Message",
+    "submit": "Submit"
+  }
+  ,
+  "footer": {
+    "tagline": "The best team that you will ever need.",
+    "help": "Help",
+    "features": "Features",
+    "company": "Company",
+    "support": "Support",
+    "realEstate": "Real Estate",
+    "agents": "Agents",
+    "mapSearch": "Map Search",
+    "about": "About Us",
+    "careers": "Careers",
+    "contact": "Contact Us",
+    "email": "Email",
+    "emailAddress": "Email address",
+    "subscribe": "Subscribe",
+    "rights": "All rights reserved.",
+    "social": "Social media"
+  }
+}
+

@@ -1,0 +1,63 @@
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-wrapper">
+    <div class="footer-col brand-col">
+      <a href="/" class="brand" aria-label="<%= t('brand','Sweet Home') %>">
+        <img src="/images/Sweet Home Logo.png" alt="<%= t('brand','Sweet Home') %>" onerror="this.style.display='none'">
+      </a>
+      <p class="brand-note"><%= t('footer.tagline','The best team that you will ever need.') %></p>
+    </div>
+
+    <div class="footer-col">
+      <h4><%= t('footer.help','Help') %></h4>
+      <ul>
+        <li><a href="/privacy"><%= t('legal.privacy.title','Privacy Policy') %></a></li>
+        <li><a href="/terms"><%= t('legal.terms.title','Terms of Service') %></a></li>
+        <li><a href="/contact"><%= t('footer.support','Support') %></a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4><%= t('footer.features','Features') %></h4>
+      <ul>
+        <li><a href="/properties"><%= t('footer.realEstate','Real Estate') %></a></li>
+        <li><a href="/admin/dashboard/team"><%= t('footer.agents','Agents') %></a></li>
+        <li><a href="/projects"><%= t('footer.mapSearch','Map Search') %></a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4><%= t('footer.company','Company') %></h4>
+      <ul>
+        <li><a href="/about"><%= t('footer.about','About Us') %></a></li>
+        <li><a href="/careers"><%= t('footer.careers','Careers') %></a></li>
+        <li><a href="/contact"><%= t('footer.contact','Contact Us') %></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="copyright">&copy; <%= new Date().getFullYear() %> <%= t('brand','Sweet Home') %>. <%= t('footer.rights','All rights reserved.') %></p>
+    <div class="socials" aria-label="<%= t('footer.social','Social media') %>">
+      <a href="#" aria-label="Facebook">Fb</a>
+      <a href="#" aria-label="Instagram">Ig</a>
+      <a href="#" aria-label="LinkedIn">In</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: #f7f7f8; padding-top: 40px; margin-top: 40px; border-top: 1px solid #ececec; }
+  .footer-wrapper { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 24px; }
+  .footer-col h4 { font-family: 'Playfair Display', serif; margin: 0 0 12px; color: #111; }
+  .footer-col ul { list-style: none; padding: 0; margin: 0; }
+  .footer-col a { color: #444; text-decoration: none; }
+  .footer-col a:hover { text-decoration: underline; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+  .brand img { height: 150px; width: auto; }
+  .brand-text { font-family: 'Playfair Display', serif; font-weight: 700; color: #111; }
+  .brand-note { color: #666; margin-top: 8px; }
+  .footer-bottom { border-top: 1px solid #ececec; margin-top: 24px; padding: 12px 20px 24px; display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin-left: auto; margin-right: auto; }
+  .socials a { color: #444; margin-left: 12px; text-decoration: none; }
+  @media (max-width: 900px) { .footer-wrapper { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .footer-wrapper { grid-template-columns: 1fr; } .footer-bottom { flex-direction: column; gap: 12px; } }
+</style>
+

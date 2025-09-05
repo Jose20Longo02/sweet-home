@@ -1,0 +1,34 @@
+<% title = t('nav.blog','Blog') %>
+<link rel="stylesheet" href="/css/blog.css" />
+<div class="container main blog-page">
+  <h1><%= t('nav.blog','Blog') %></h1>
+  <div class="blog-list">
+    <% if ((posts || []).length === 0) { %>
+      <p><%= t('blog.list.empty','No articles yet.') %></p>
+    <% } %>
+    <% (posts || []).forEach(p => { %>
+      <article class="blog-card">
+        <% if (p.cover_image) { %>
+          <img src="<%= p.cover_image %>" alt="" class="cover" />
+        <% } %>
+        <div class="info">
+          <h2><a href="/blog/<%= p.slug %>"><%= p.title %></a></h2>
+          <% if (p.author_name) { %><p class="meta"><%= t('blog.by','By') %> <%= p.author_name %></p><% } %>
+          <% if (p.excerpt) { %><p><%= p.excerpt %></p><% } %>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+  <% if (totalPages && totalPages > 1) { %>
+    <nav class="pagination" aria-label="Pagination">
+      <ul>
+        <li class="prev <%= page <= 1 ? 'disabled' : '' %>"><a href="<%= page <= 1 ? '#' : ('/blog?page=' + (page - 1)) %>"><%= t('common.previous','Previous') %></a></li>
+        <% for (var i = 1; i <= totalPages; i++) { %>
+          <li class="<%= i === page ? 'active' : '' %>"><a href="/blog?page=<%= i %>"><%= i %></a></li>
+        <% } %>
+        <li class="next <%= page >= totalPages ? 'disabled' : '' %>"><a href="<%= page >= totalPages ? '#' : ('/blog?page=' + (page + 1)) %>"><%= t('common.next','Next') %></a></li>
+      </ul>
+    </nav>
+  <% } %>
+  </div>
+

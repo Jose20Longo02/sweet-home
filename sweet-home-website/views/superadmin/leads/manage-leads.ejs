@@ -1,0 +1,147 @@
+<% title = 'All Leads'; %>
+<link rel="stylesheet" href="/css/superadmin/leads.css" />
+
+<div class="admin-panel">
+  <div class="admin-body">
+    <!-- Sidebar -->
+    <%- include('../../partials/superadmin-sidebar', { activePage: 'leads', pendingCount: typeof pendingCount !== 'undefined' ? pendingCount : 0 }) %>
+
+    <!-- Main content -->
+    <main class="admin-content">
+  <header class="np-header">
+    <div class="left">
+      <h1>All Leads</h1>
+      <p class="subtitle">All inquiries across all properties</p>
+    </div>
+    <div class="right">
+      <a href="/superadmin/dashboard" class="btn btn-light">← Return to dashboard</a>
+    </div>
+  </header>
+
+  <section class="card" style="margin-top: 1rem;">
+    <form method="get" class="filters-grid">
+      <input type="text" name="q" placeholder="Search name/email/phone/message" value="<%= filters.q || '' %>" />
+      <select name="status">
+        <option value="">All Statuses</option>
+        <% ['New','Contacted','Interested','Not Interested','Closed'].forEach(s => { %>
+          <option value="<%= s %>" <%= filters.status === s ? 'selected' : '' %>><%= s %></option>
+        <% }) %>
+      </select>
+      <select name="leadKind">
+        <option value="">All Lead Kinds</option>
+        <option value="buyer" <%= filters.leadKind === 'buyer' ? 'selected' : '' %>>Buyer leads (property/project)</option>
+        <option value="seller" <%= filters.leadKind === 'seller' ? 'selected' : '' %>>Seller leads (owners form)</option>
+        <option value="unknown" <%= filters.leadKind === 'unknown' ? 'selected' : '' %>>Unknown (general forms)</option>
+      </select>
+      <select name="leadType">
+        <option value="">All Relation Types</option>
+        <option value="property" <%= filters.leadType === 'property' ? 'selected' : '' %>>Only property leads</option>
+        <option value="project" <%= filters.leadType === 'project' ? 'selected' : '' %>>Only project leads</option>
+      </select>
+      <input type="date" name="from" value="<%= filters.from || '' %>" />
+      <input type="date" name="to" value="<%= filters.to || '' %>" />
+      <input type="number" name="agentId" placeholder="Agent ID" value="<%= filters.agentId || '' %>" />
+      <input type="number" name="propertyId" placeholder="Property ID" value="<%= filters.propertyId || '' %>" />
+      <input type="number" name="projectId" placeholder="Project ID" value="<%= filters.projectId || '' %>" />
+      <button class="btn btn-primary" type="submit">Filter</button>
+    </form>
+  </section>
+
+  <section class="card" style="margin-top: 1rem;">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Created</th>
+            <th>Property</th>
+            <th>Project</th>
+            <th>Agent</th>
+            <th>Lead</th>
+            <th>Language</th>
+            <th>Status</th>
+            <th>Last Contact</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (!leads || leads.length === 0) { %>
+            <tr><td colspan="9" style="text-align:center;">No leads found</td></tr>
+          <% } %>
+          <% leads.forEach(lead => { %>
+            <tr>
+              <td data-label="Created"><%= new Date(lead.created_at).toLocaleString() %></td>
+              <td data-label="Property">
+                <div><strong>#<%= lead.property_id %></strong> <%= lead.property_title || '' %></div>
+              </td>
+              <td data-label="Project">
+                <div><strong>#<%= lead.project_id || '' %></strong> <%= lead.project_title || '' %></div>
+              </td>
+              <td data-label="Agent">
+                <div>
+                  <select class="lead-agent" data-lead-id="<%= lead.id %>">
+                    <option value="" <%= !lead.agent_id ? 'selected' : '' %>>Unassigned</option>
+                    <% if (typeof allAgents !== 'undefined' && Array.isArray(allAgents)) { %>
+                      <% allAgents.forEach(function(a){ %>
+                        <option value="<%= a.id %>" <%= (lead.agent_id === a.id ? 'selected' : '') %>><%= a.name %> (#<%= a.id %>)</option>
+                      <% }) %>
+                    <% } %>
+                  </select>
+                </div>
+              </td>
+              <td data-label="Lead">
+                <div><strong><%= lead.name %></strong></div>
+                <div><a href="mailto:<%= lead.email %>"><%= lead.email %></a></div>
+                <% if (lead.phone) { %><div><a href="tel:<%= lead.phone %>"><%= lead.phone %></a></div><% } %>
+              </td>
+              <td data-label="Language"><%= lead.preferred_language ? String(lead.preferred_language).toUpperCase() : '-' %></td>
+              <td data-label="Status">
+                <select data-lead-id="<%= lead.id %>" class="lead-status">
+                  <% ['New','Contacted','Interested','Not Interested','Closed'].forEach(s => { %>
+                    <option value="<%= s %>" <%= lead.status === s ? 'selected' : '' %>><%= s %></option>
+                  <% }) %>
+                </select>
+              </td>
+              <td data-label="Last Contact">
+                <input type="datetime-local" data-lead-id="<%= lead.id %>" class="lead-last-contact" value="<%= lead.last_contact_at ? new Date(lead.last_contact_at).toISOString().slice(0,16) : '' %>" />
+              </td>
+              <td data-label="Actions">
+                <button class="btn btn-light" data-toggle-notes="<%= lead.id %>">
+                  Notes <span class="notes-count" data-notes-count-for="<%= lead.id %>"><%= (lead.internal_notes ? (String(lead.internal_notes).split(/\n\n+/).filter(Boolean).length) : 0) %></span>
+                </button>
+                <button class="btn btn-outline" data-delete-lead="<%= lead.id %>">Delete</button>
+              </td>
+            </tr>
+            <tr id="notes-<%= lead.id %>" class="notes-row" style="display:none;">
+              <td colspan="9">
+                <% const _notesArr = (lead.internal_notes ? String(lead.internal_notes).split(/\n\n+/).filter(Boolean) : []); %>
+                <ul class="lead-notes-list" data-notes-list-for="<%= lead.id %>" style="padding-left:18px; margin:0 0 10px 0;">
+                  <% _notesArr.forEach(function(n){
+                       var m = n.match(/^(.*)\s*\(by\s+(.+?)\s+on\s+([^)]+)\)$/);
+                       var body = m ? m[1] : n;
+                       var who  = m ? m[2] : '';
+                       var when = m ? m[3] : '';
+                  %>
+                    <li style="margin-bottom:6px;">
+                      <div><%= body %></div>
+                      <div style="font-size:12px;color:var(--gray-600);"><%= who ? ('by ' + who) : '' %><%= when ? (' • ' + when) : '' %></div>
+                    </li>
+                  <% }); %>
+                </ul>
+                <textarea rows="3" style="width:100%;" data-lead-id="<%= lead.id %>" class="lead-new-note" placeholder="Add a new note..."></textarea>
+                <div style="margin-top: .5rem; text-align: right;">
+                  <button class="btn btn-primary" data-save="<%= lead.id %>">Save</button>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+    </main>
+  </div>
+</div>
+
+<script src="/js/superadmin-leads.js?v=2" defer></script>
+
+

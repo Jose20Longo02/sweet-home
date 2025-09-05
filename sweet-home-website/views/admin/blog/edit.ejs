@@ -1,0 +1,66 @@
+<% title = 'Edit Post' %>
+<link rel="stylesheet" href="/css/admin/blog-new.css" />
+<link href="https://unpkg.com/quill@1.3.7/dist/quill.snow.css" rel="stylesheet" />
+<div class="admin-panel">
+  <div class="admin-body">
+    <main class="admin-content">
+      <div class="admin-header">
+        <div>
+          <h1>Edit Post</h1>
+          <p class="subtitle">Update your article</p>
+        </div>
+        <a href="<%= (currentUser && currentUser.role === 'SuperAdmin') ? '/superadmin/dashboard' : '/admin/dashboard' %>" class="back-home">← Return to dashboard</a>
+      </div>
+      <% if (error) { %><p class="error"><%= error %></p><% } %>
+      <form action="/admin/dashboard/blog/<%= post.id %>?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <label>Title</label>
+        <input type="text" name="title" value="<%- post.title %>" required />
+
+        <label>Excerpt</label>
+        <textarea name="excerpt" rows="3"><%- post.excerpt || '' %></textarea>
+
+        <label>Content</label>
+        <div id="editor" style="height: 380px; background:#fff;"></div>
+        <textarea id="content" name="content" rows="12" style="display:none;" required><%- post.content %></textarea>
+
+        <div style="display:flex; gap:20px; align-items:flex-start; margin-top:12px;">
+          <div style="flex:1;">
+            <label for="cover">Replace cover image</label>
+            <input id="cover" type="file" name="cover" accept="image/*" />
+            <small class="hint">Optional. Large, landscape image recommended (min ~1200px width).</small>
+          </div>
+          <div style="width:280px;">
+            <div style="border:1px solid #eee; padding:8px; text-align:center;">
+              <% if (post.cover_image) { %>
+                <img id="coverPreview" src="<%= post.cover_image %>" alt="Cover preview" style="max-width:100%; display:block;" />
+                <span id="coverPlaceholder" style="display:none; color:#888;">No image selected</span>
+              <% } else { %>
+                <img id="coverPreview" src="" alt="Cover preview" style="max-width:100%; display:none;" />
+                <span id="coverPlaceholder" style="display:block; color:#888;">No image selected</span>
+              <% } %>
+            </div>
+          </div>
+        </div>
+
+        <label>Status</label>
+        <select name="status">
+          <option value="draft" <%= post.status === 'draft' ? 'selected' : '' %>>Draft</option>
+          <option value="published" <%= post.status === 'published' ? 'selected' : '' %>>Published</option>
+        </select>
+
+        <div style="display:flex;gap:12px;margin-top:12px;">
+          <button type="submit" class="btn">Save</button>
+        </div>
+      </form>
+
+      <form action="/admin/dashboard/blog/<%= post.id %>/delete?_csrf=<%= csrfToken %>" method="post" onsubmit="return confirm('Delete this post?');" style="margin-top:16px;">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+      <script src="https://unpkg.com/quill@1.3.7/dist/quill.min.js"></script>
+      <script src="/js/admin-blog.js"></script>
+    </main>
+  </div>
+</div>
+

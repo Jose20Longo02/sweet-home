@@ -1,0 +1,86 @@
+<% title = t('nav.contact','Contact') %>
+<% useDarkHeader = true %>
+<% useMainContainer = false %>
+<% hideFooter = false %>
+<link rel="stylesheet" href="/css/contact.css" />
+<script src="/js/contact.js" defer></script>
+<% if (process.env.RECAPTCHA_SITE_KEY) { %>
+  <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+<% } %>
+
+<section class="contact-hero">
+  <h1 class="title"><%= t('contact.title','Contact Us') %></h1>
+  <div class="grid">
+    <article class="office-card" aria-label="<%= t('contact.office.aria','Berlin Office image') %>">
+      <!-- REPLACE: office image src -->
+      <span class="shine" aria-hidden="true"></span>
+      <div class="info">
+        <div class="name"><%= t('contact.office.name','Berlin Office') %></div>
+        <p class="line"><%= t('contact.office.address','Hohenzollerndamm 196, 10717 Berlin') %></p>
+        <p class="line"><%= t('contact.office.phone','+49-030-65852933') %></p>
+      </div>
+    </article>
+
+    <form action="/api/leads/contact" method="post" class="contact-form" novalidate <% if (process.env.RECAPTCHA_SITE_KEY) { %> data-recaptcha-site-key="<%= process.env.RECAPTCHA_SITE_KEY %>" <% } %>>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <% if (process.env.RECAPTCHA_SITE_KEY) { %>
+        <input type="hidden" name="recaptchaToken" id="recaptchaTokenContact" />
+      <% } %>
+      <!-- Honeypot field for spam bots -->
+      <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
+
+      <div class="row">
+        <div class="field">
+          <label for="fullName"><%= t('forms.fullName','Full name') %><span aria-hidden="true">*</span></label>
+          <input id="fullName" name="name" type="text" placeholder="Full name*" required />
+        </div>
+        <div class="field">
+          <label for="email"><%= t('forms.email','Email Address') %><span aria-hidden="true">*</span></label>
+          <input id="email" name="email" type="email" placeholder="Email Address*" required />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="countryCode"><%= t('forms.countryCode','Country code') %><span aria-hidden="true">*</span></label>
+          <input id="countryCode" name="countryCode" type="text" placeholder="e.g. +49" required />
+        </div>
+        <div class="field">
+          <label for="phone"><%= t('forms.phoneNumber','Phone Number') %><span aria-hidden="true">*</span></label>
+          <input id="phone" name="phone" type="tel" placeholder="Phone number*" required />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="language"><%= t('forms.preferredLanguage','Preferred language') %><span aria-hidden="true">*</span></label>
+          <select id="language" name="language" required>
+            <option value="" selected disabled><%= t('forms.preferredLanguage','Preferred language') %>*</option>
+            <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
+              <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+      <!-- Hidden metadata fields captured in JS -->
+      <input type="hidden" name="utm_source" />
+      <input type="hidden" name="utm_medium" />
+      <input type="hidden" name="utm_campaign" />
+      <input type="hidden" name="utm_term" />
+      <input type="hidden" name="utm_content" />
+      <input type="hidden" name="referrer" />
+      <input type="hidden" name="page_path" />
+
+      <div class="field">
+        <label for="message"><%= t('forms.message','Message') %></label>
+        <textarea id="message" name="message" rows="5" placeholder="<%= t('forms.message','Message') %>"></textarea>
+      </div>
+
+      <button type="submit" class="submit"><%= t('contact.submit','Send') %></button>
+    </form>
+
+
+  </div>
+</section>
+
+

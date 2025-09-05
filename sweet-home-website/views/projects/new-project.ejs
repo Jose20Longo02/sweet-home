@@ -1,0 +1,166 @@
+<% title = 'New Project' %>
+<link rel="stylesheet" href="/css/admin/new-property.css" />
+
+<div id="proj-data" data-locations='<%- JSON.stringify(locations).replace(/'/g, '&#39;') %>'></div>
+
+<form id="projectForm" action="/superadmin/dashboard/projects?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data" class="np-form">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <header class="np-header">
+    <div class="left">
+      <h1>Create Project</h1>
+      <p class="subtitle">Provide all required information. Some fields are optional.</p>
+    </div>
+  </header>
+
+  <% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <section class="card">
+    <h2>Location</h2>
+    <div class="grid-3">
+      <div class="field">
+        <label>Country<span class="req">*</span></label>
+        <select id="country" name="country" required>
+          <option value="">Select country</option>
+          <% Object.keys(locations).forEach(c => { %>
+            <option value="<%= c %>" <%= form.country===c?'selected':'' %>><%= c %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="field">
+        <label>City<span class="req">*</span></label>
+        <select id="city" name="city" required></select>
+      </div>
+      <div class="field">
+        <label>Neighborhood</label>
+        <select id="neighborhood" name="neighborhood"></select>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Basics</h2>
+    <div class="grid-1">
+      <div class="field">
+        <label>Title<span class="req">*</span></label>
+        <input name="title" type="text" maxlength="255" required value="<%= form.title||'' %>" />
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label for="agent_id">Assigned team member<span class="req">*</span></label>
+        <select id="agent_id" name="agent_id" required>
+          <% (teamMembers || []).forEach(m => { %>
+            <option value="<%= m.id %>" <%= String(form.agent_id||currentUser.id)===String(m.id)?'selected':'' %>><%= m.name %></option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Description<span class="req">*</span></label>
+      <textarea name="description" rows="6" required><%= form.description||'' %></textarea>
+    </div>
+    <div class="grid-4">
+      <div class="field">
+        <label>Min unit size (sqm)</label>
+        <input name="min_unit_size" type="number" min="0" step="0.01" value="<%= form.min_unit_size||'' %>" />
+      </div>
+      <div class="field">
+        <label>Max unit size (sqm)</label>
+        <input name="max_unit_size" type="number" min="0" step="0.01" value="<%= form.max_unit_size||'' %>" />
+      </div>
+      <div class="field">
+        <label>Min price</label>
+        <input id="min_price_display" type="text" inputmode="decimal" placeholder="€0.00" />
+        <input id="min_price" name="min_price" type="hidden" value="<%= form.min_price||'' %>" />
+      </div>
+      <div class="field">
+        <label>Max price</label>
+        <input id="max_price_display" type="text" inputmode="decimal" placeholder="€0.00" />
+        <input id="max_price" name="max_price" type="hidden" value="<%= form.max_price||'' %>" />
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Min bedrooms</label>
+        <input name="min_bedrooms" type="number" min="0" step="1" value="<%= form.min_bedrooms||'' %>" />
+      </div>
+      <div class="field">
+        <label>Max bedrooms</label>
+        <input name="max_bedrooms" type="number" min="0" step="1" value="<%= form.max_bedrooms||'' %>" />
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="field">
+        <label>Amenities (comma separated)</label>
+        <input name="amenities" type="text" value="<%= (form.amenities||[]).join(', ') %>" />
+      </div>
+      <div class="field">
+        <label>Type of units</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label"><input type="checkbox" name="unit_type" value="Villas"> Villas</label>
+          <label class="checkbox-label"><input type="checkbox" name="unit_type" value="Apartments"> Apartments</label>
+          <label class="checkbox-label"><input type="checkbox" name="unit_type" value="Houses"> Houses</label>
+          <label class="checkbox-label"><input type="checkbox" name="unit_type" value="Offices"> Offices</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Brochure (PDF)</label>
+        <input name="brochure" type="file" accept="application/pdf" />
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Media</h2>
+    <div class="grid-2">
+      <div class="field">
+        <label>Photos</label>
+        <input id="project_photos" name="photos" type="file" accept="image/*" multiple />
+        <small>Upload 1–20 images. Drag to reorder thumbnails.</small>
+        <div id="projPhotoPreview" class="preview-grid"></div>
+      </div>
+      <div class="field">
+        <label>Video</label>
+        <input id="project_video" name="video" type="file" accept="video/*" />
+        <div id="projVideoPreview" class="video-preview"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Status</h2>
+    <label class="checkbox">
+      <input type="checkbox" name="is_sold_out" <%= form.is_sold_out?'checked':'' %> />
+      <span>Sold out</span>
+    </label>
+  </section>
+
+  <section class="card">
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">Save Project</button>
+    </div>
+  </section>
+</form>
+
+<!-- Uploading Overlay -->
+<div id="uploadOverlay" class="upload-overlay" hidden style="display:none;">
+  <div class="upload-dialog">
+    <div class="upload-spinner"></div>
+    <div>
+      <div class="upload-title">Uploading...</div>
+      <div class="upload-sub">This may take a moment. Please don’t close this page.</div>
+    </div>
+  </div>
+  <style>
+    .upload-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; z-index: 3000; }
+    .upload-dialog { background: #ffffff; border-radius: 12px; padding: 18px 22px; box-shadow: 0 10px 30px rgba(0,0,0,.25); display: flex; align-items: center; gap: 12px; min-width: 280px; }
+    .upload-spinner { width: 22px; height: 22px; border: 3px solid #e5e7eb; border-top-color: var(--primary-color); border-radius: 50%; animation: upload-spin 1s linear infinite; }
+    .upload-title { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; font-weight: 600; color: #111; }
+    .upload-sub { font-size: 12px; color: #666; margin-top: 2px; }
+    @keyframes upload-spin { to { transform: rotate(360deg); } }
+  </style>
+</div>
+
+<script src="/js/admin-new-project.js" defer></script>

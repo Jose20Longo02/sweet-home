@@ -1,0 +1,47 @@
+<% title = t('legal.privacy.title','Privacy Policy') %>
+<section class="container legal-page" aria-label="<%= t('legal.privacy.title','Privacy Policy') %>">
+  <h1><%= t('legal.privacy.title','Privacy Policy') %></h1>
+  <p><%= t('legal.privacy.intro','We respect your privacy. This policy explains what data we collect, how we use it, and your rights.') %></p>
+  <p class="updated"><strong><%= t('legal.privacy.updated','Last updated:') %></strong> <%= new Date().toISOString().slice(0,10) %></p>
+
+  <h2><%= t('legal.privacy.sections.controller.title','Data Controller') %></h2>
+  <p><%= t('legal.privacy.sections.controller.body','Sweet Home Real Estate Investments ("we", "us") is the controller of your personal data. Contact: Site@Sweet-Home.co.il') %></p>
+
+  <h2><%= t('legal.privacy.sections.collection.title','Data We Collect') %></h2>
+  <p><%= t('legal.privacy.sections.collection.body','We may collect contact details, enquiry content, property preferences, usage data (analytics), cookies, and technical data to provide and improve our services.') %></p>
+
+  <h2><%= t('legal.privacy.sections.use.title','How We Use Your Data') %></h2>
+  <p><%= t('legal.privacy.sections.use.body','To respond to enquiries, provide property recommendations, manage appointments, send transactional emails, improve the website, prevent fraud, and comply with legal obligations.') %></p>
+
+  <h2><%= t('legal.privacy.sections.legalBasis.title','Legal Bases') %></h2>
+  <p><%= t('legal.privacy.sections.legalBasis.body','Performance of a contract or pre‑contractual steps, legitimate interests (e.g. analytics, security), consent (where required), and legal obligations.') %></p>
+
+  <h2><%= t('legal.privacy.sections.sharing.title','Sharing') %></h2>
+  <p><%= t('legal.privacy.sections.sharing.body','We may share data with trusted processors (hosting, email, analytics), partner agents (with your consent or when necessary), and authorities where legally required.') %></p>
+
+  <h2><%= t('legal.privacy.sections.intl.title','International Transfers') %></h2>
+  <p><%= t('legal.privacy.sections.intl.body','Your data may be processed outside your country. We use appropriate safeguards such as Standard Contractual Clauses where required.') %></p>
+
+  <h2><%= t('legal.privacy.sections.retention.title','Retention') %></h2>
+  <p><%= t('legal.privacy.sections.retention.body','We keep data only as long as necessary for the purposes stated, or as required by law.') %></p>
+
+  <h2><%= t('legal.privacy.sections.rights.title','Your Rights') %></h2>
+  <p><%= t('legal.privacy.sections.rights.body','You have the right to access, rectify, erase, restrict, object, and data portability. You can also withdraw consent. Contact us to exercise your rights.') %></p>
+
+  <h2><%= t('legal.privacy.sections.cookies.title','Cookies & Analytics') %></h2>
+  <p><%= t('legal.privacy.sections.cookies.body','We use necessary cookies and analytics to improve the site. Manage your preferences in your browser settings. See also our Cookies Policy.') %></p>
+
+  <h2><%= t('legal.privacy.sections.contact.title','Contact') %></h2>
+  <p><%= t('legal.privacy.sections.contact.body','For privacy requests, email Site@Sweet-Home.co.il or write to our Berlin office address in the Contact page.') %></p>
+</section>
+
+<style>
+  .legal-page { max-width: 900px; margin: 32px auto; background: #fff; border:1px solid var(--gray-200); border-radius: var(--card-radius); padding: 24px; box-shadow: var(--card-shadow); }
+  .legal-page h1 { margin-top: 0; }
+  .legal-page h2 { margin-top: 20px; }
+  .legal-page p { color: var(--gray-700); }
+  .legal-page .updated { color: var(--gray-600); }
+  @media (max-width: 640px) { .legal-page { padding: 16px; } }
+</style>
+
+

@@ -1,0 +1,63 @@
+<% title = 'New Post' %>
+<link rel="stylesheet" href="/css/admin/blog-new.css" />
+<link href="https://unpkg.com/quill@1.3.7/dist/quill.snow.css" rel="stylesheet" />
+<div class="admin-panel">
+  <div class="admin-body">
+    <main class="admin-content">
+      <div class="admin-header">
+        <div>
+          <h1>New Post</h1>
+          <p class="subtitle">Share insights, guides, and updates</p>
+        </div>
+        <a href="<%= (currentUser && currentUser.role === 'SuperAdmin') ? '/superadmin/dashboard' : '/admin/dashboard' %>" class="back-home">← Return to dashboard</a>
+      </div>
+
+      <% if (error) { %><p class="error"><%= error %></p><% } %>
+
+      <form action="/admin/dashboard/blog?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <label for="title">Title</label>
+        <input id="title" type="text" name="title" maxlength="255" placeholder="e.g., Buying property in Cyprus: complete guide" required />
+        <small class="hint">Max 255 characters. Use a clear, descriptive headline.</small>
+
+        <label for="excerpt" style="margin-top:10px;">Excerpt</label>
+        <textarea id="excerpt" name="excerpt" rows="3" maxlength="500" placeholder="1–3 sentence summary for listings and previews"></textarea>
+        <small class="hint">Optional. Shown in lists and previews.</small>
+
+        <label for="content" style="margin-top:10px;">Content</label>
+        <div id="editor" style="height: 380px; background:#fff;"></div>
+        <textarea id="content" name="content" rows="14" style="display:none;"></textarea>
+
+        <div style="display:flex; gap:20px; align-items:flex-start; margin-top:12px;">
+          <div style="flex:1;">
+            <label for="cover">Cover image</label>
+            <input id="cover" type="file" name="cover" accept="image/*" />
+            <small class="hint">Optional. Large, landscape image recommended (min ~1200px width).</small>
+          </div>
+          <div style="width:280px;">
+            <div style="border:1px solid #eee; padding:8px; text-align:center;">
+              <img id="coverPreview" src="" alt="Cover preview" style="max-width:100%; display:none;" />
+              <span id="coverPlaceholder" style="display:block; color:#888;">No image selected</span>
+            </div>
+          </div>
+        </div>
+
+        <label for="status" style="margin-top:12px;">Status</label>
+        <select id="status" name="status">
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+        </select>
+
+        <div style="margin-top:16px; display:flex; gap:12px;">
+          <button type="submit" class="btn">Create</button>
+          <a href="/admin/dashboard/blog" class="btn" style="text-decoration:none; display:inline-block;">Cancel</a>
+        </div>
+      </form>
+
+      <script src="https://unpkg.com/quill@1.3.7/dist/quill.min.js"></script>
+      <script src="/js/admin-blog.js"></script>
+    </main>
+  </div>
+</div>
+

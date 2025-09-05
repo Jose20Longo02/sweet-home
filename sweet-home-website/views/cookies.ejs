@@ -1,0 +1,19 @@
+<% title = t('legal.cookies.title','Cookies Policy') %>
+<section class="container legal-page" aria-label="<%= t('legal.cookies.title','Cookies Policy') %>">
+  <h1><%= t('legal.cookies.title','Cookies Policy') %></h1>
+  <p><%= t('legal.cookies.intro','We use necessary cookies to make our site work and analytics cookies to improve it. You can control cookies in your browser settings.') %></p>
+  <h2><%= t('legal.cookies.types.title','Types of Cookies') %></h2>
+  <p><%= t('legal.cookies.types.body','Essential (required for core functionality), analytics (to understand usage), and marketing (to personalize offers).') %></p>
+  <h2><%= t('legal.cookies.manage.title','Manage Cookies') %></h2>
+  <p><%= t('legal.cookies.manage.body','Most browsers allow you to block or delete cookies. Disabling some cookies may affect site functionality.') %></p>
+</section>
+
+<style>
+  .legal-page { max-width: 900px; margin: 32px auto; background: #fff; border:1px solid var(--gray-200); border-radius: var(--card-radius); padding: 24px; box-shadow: var(--card-shadow); }
+  .legal-page h1 { margin-top: 0; }
+  .legal-page h2 { margin-top: 20px; }
+  .legal-page p { color: var(--gray-700); }
+  @media (max-width: 640px) { .legal-page { padding: 16px; } }
+</style>
+
+

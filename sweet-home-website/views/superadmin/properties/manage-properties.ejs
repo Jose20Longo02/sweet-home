@@ -1,0 +1,195 @@
+<% title = 'Manage Properties' %>
+<link rel="stylesheet" href="/css/superadmin/manage-properties.css" />
+
+<div id="mp-data" data-locations='<%- JSON.stringify(locations).replace(/'/g, '&#39;') %>'></div>
+
+<div class="admin-panel">
+  <div class="admin-body">
+    <!-- Sidebar -->
+    <%- include('../../partials/superadmin-sidebar', {
+      activePage: 'properties',     // or 'projects', 'properties', etc.
+      pendingCount: pendingCount   // make sure you pass this in your controller
+    }) %>
+
+    <!-- Main Content -->
+    <main class="admin-content">
+      <section class="properties-container">
+
+        <!-- Header + New Property Button -->
+        <div class="properties-header">
+          <h1>All Properties</h1>
+          <a href="/admin/properties/new" class="btn btn-primary">New Property</a>
+        </div>
+
+        <!-- Filters -->
+        <form class="properties-filters" id="filterForm" method="get">
+          <select id="countrySelect" name="country">
+            <option value="">All Countries</option>
+            <% countryOptions.forEach(c => { %>
+              <option value="<%= c %>" <%= filters.country===c?'selected':'' %>><%= c %></option>
+            <% }) %>
+          </select>
+
+          <select id="citySelect" name="city" <%= !filters.country?'disabled':'' %>>
+            <option value="">All Cities</option>
+            <% cityOptions.forEach(ct => { %>
+              <option value="<%= ct %>" <%= filters.city===ct?'selected':'' %>><%= ct %></option>
+            <% }) %>
+          </select>
+
+          <select name="type" onchange="filterForm.submit()">
+            <option value="">All Types</option>
+            <% typeOptions.forEach(t => { %>
+              <option value="<%= t %>" <%= filters.type===t?'selected':'' %>><%= t %></option>
+            <% }) %>
+          </select>
+
+          <select name="status" onchange="filterForm.submit()">
+            <option value="">All Statuses</option>
+            <% statusOptions.forEach(s => { %>
+              <option value="<%= s %>" <%= filters.status===s?'selected':'' %>><%= s %></option>
+            <% }) %>
+          </select>
+          <select name="sold" onchange="filterForm.submit()">
+            <option value="">All</option>
+            <option value="true" <%= filters.sold==='true'?'selected':'' %>>Sold</option>
+            <option value="false" <%= filters.sold==='false'?'selected':'' %>>Not sold</option>
+          </select>
+
+          <input type="number"
+                 name="minPrice"
+                 placeholder="Min Price"
+                 value="<%= filters.minPrice||'' %>"
+                 onchange="filterForm.submit()" />
+
+          <input type="number"
+                 name="maxPrice"
+                 placeholder="Max Price"
+                 value="<%= filters.maxPrice||'' %>"
+                 onchange="filterForm.submit()" />
+        </form>
+
+        <!-- Properties Grid -->
+        <div class="properties-grid">
+          <% properties.forEach(prop => { %>
+            <div class="property-card">
+              <!-- UNASSIGNED WARNING -->
+              <% if (!prop.agent_id) { %>
+                <div class="unassigned-warning">
+                  ⚠️ Unassigned
+                </div>
+              <% } %>
+
+              <!-- Uploader avatar -->
+              <img
+                src="<%= prop.uploader_pic || '/img/default-avatar.png' %>"
+                class="uploader-thumb"
+              />
+
+              <!-- Property thumbnail -->
+              <div style="position:relative; width:100%;">
+                <img
+                  src="<%= prop.photos?.[0] || '/img/property-placeholder.png' %>"
+                  class="thumb"
+                />
+                <% if (prop.sold) { %>
+                  <div class="sold-overlay">
+                    <div class="sold-text">SOLD</div>
+                    <% if (prop.sold_at) { %><div class="sold-date"><%= new Date(prop.sold_at).toLocaleDateString() %></div><% } %>
+                  </div>
+                <% } %>
+              </div>
+
+              <h3>
+                <%= prop.title %>
+                <% if (prop.sold) { %>
+                  <span style="display:inline-block; margin-left:6px; padding:2px 6px; border-radius:10px; background:#eee; font-size:12px;">Sold<% if (prop.sold_at) { %> — <%= new Date(prop.sold_at).toLocaleDateString() %><% } %></span>
+                <% } %>
+              </h3>
+              <p><%= prop.city %>, <%= prop.neighborhood %></p>
+
+              <!-- Agent assignment dropdown -->
+              <div class="assign-agent">
+                <label for="agent-<%= prop.id %>">Agent in charge:</label>
+                <form
+                  action="/superadmin/dashboard/properties/<%= prop.id %>/reassign?page=<%= currentPage %>"
+                  method="post"
+                  class="reassign-form"
+                >
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <select
+                    id="agent-<%= prop.id %>"
+                    name="agent_id"
+                  >
+                    <option value="">— Unassigned —</option>
+                    <% allAgents.forEach(agent => { %>
+                      <option
+                        value="<%= agent.id %>"
+                        <%= prop.agent_id === agent.id ? 'selected' : '' %>
+                      ><%= agent.name %></option>
+                    <% }) %>
+                  </select>
+                  <button type="submit" class="reassign-submit" style="display:none">Save</button>
+                </form>
+              </div>
+
+              <!-- Action buttons -->
+              <div class="actions">
+                <form
+                  action="/superadmin/dashboard/properties/<%= prop.id %>/delete?page=<%= currentPage %>"
+                  method="post"
+                  onsubmit="return confirm('Delete “<%= prop.title %>”?');"
+                >
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <a
+                  href="/properties/<%= prop.id %>/edit"
+                  class="btn btn-secondary"
+                >Edit</a>
+                <a
+                  href="/properties/<%= prop.slug %>"
+                  class="btn btn-secondary"
+                >View</a>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+
+        <!-- Pagination -->
+        <nav class="pagination">
+          <% if (currentPage > 1) { %>
+            <a href="?page=<%= currentPage - 1 %>" class="page-link">« Prev</a>
+          <% } %>
+          <span class="page-info">
+            Page <%= currentPage %> of <%= totalPages %>
+          </span>
+          <% if (currentPage < totalPages) { %>
+            <a href="?page=<%= currentPage + 1 %>" class="page-link">Next »</a>
+          <% } %>
+        </nav>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- Reassign overlay -->
+<div id="reassignOverlay" class="upload-overlay" hidden style="display:none;">
+  <div class="upload-dialog">
+    <div class="upload-spinner"></div>
+    <div>
+      <div class="upload-title">Changing...</div>
+      <div class="upload-sub">Updating assignment. Please wait.</div>
+    </div>
+  </div>
+  <style>
+    .upload-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; z-index: 3000; }
+    .upload-dialog { background: #ffffff; border-radius: 12px; padding: 18px 22px; box-shadow: 0 10px 30px rgba(0,0,0,.25); display: flex; align-items: center; gap: 12px; min-width: 260px; }
+    .upload-spinner { width: 22px; height: 22px; border: 3px solid #e5e7eb; border-top-color: var(--primary-color); border-radius: 50%; animation: upload-spin 1s linear infinite; }
+    .upload-title { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; font-weight: 600; color: #111; }
+    .upload-sub { font-size: 12px; color: #666; margin-top: 2px; }
+    @keyframes upload-spin { to { transform: rotate(360deg); } }
+  </style>
+</div>
+
+<script src="/js/superadmin-properties.js" defer></script>
