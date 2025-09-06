@@ -135,8 +135,10 @@
 }
 
 /* Hide mobile-only controls on desktop */
-.mobile-filters-trigger { display: none; }
-.filters-close { display: none; }
+@media (min-width: 1025px) {
+  .mobile-filters-trigger { display: none; }
+  .filters-close { display: none; }
+}
 
 .clear-filters {
   background: none;
