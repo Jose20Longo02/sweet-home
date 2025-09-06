@@ -12,7 +12,7 @@
       <p class="subtitle">Add a listing with all required details. Fields change based on property type.</p>
     </div>
     <div class="right">
-      <a href="/admin/dashboard" class="btn btn-light">Cancel</a>
+      <a href="<%= (currentUser && currentUser.role === 'SuperAdmin') ? '/superadmin/dashboard' : '/admin/dashboard' %>" class="btn btn-light">Cancel</a>
     </div>
   </header>
 
