@@ -19,9 +19,6 @@
       <a href="/about" class="<%= p.startsWith('/about') ? 'is-active' : '' %>"><%= t('nav.about','About') %></a>
       <a href="/contact" class="<%= p.startsWith('/contact') ? 'is-active' : '' %>"><%= t('nav.contact','Contact') %></a>
     </nav>
-    <div class="lang-switcher-wrap">
-      <%- include('./lang-switcher') %>
-    </div>
   </div>
 
   <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
