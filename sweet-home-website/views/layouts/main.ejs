@@ -56,7 +56,7 @@
   <% const isAdmin = (typeof currentPath !== 'undefined' ? /^\/admin/.test(currentPath) : false); %>
   <% const isSuperAdmin = (typeof currentPath !== 'undefined' ? /^\/superadmin/.test(currentPath) : false); %>
   <% const _useDarkHeader = (typeof useDarkHeader !== 'undefined' ? useDarkHeader : isAdmin); %>
-  <%- include(isAdmin ? '../partials/header-dark' : (isSuperAdmin ? '../partials/header-admin' : (_useDarkHeader ? '../partials/header-dark' : '../partials/header'))) %>
+  <%- include(isAdmin ? '../partials/header-main' : (isSuperAdmin ? '../partials/header-admin' : (_useDarkHeader ? '../partials/header-main' : '../partials/header'))) %>
   <main id="main-content" class="<%= (typeof useMainContainer !== 'undefined' && useMainContainer === false) ? '' : 'container' %> <%= (isAdmin || isSuperAdmin || _useDarkHeader) ? 'main-offset' : '' %>" role="main">
     <%- body %>
   </main>
