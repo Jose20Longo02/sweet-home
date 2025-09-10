@@ -55,9 +55,9 @@
   <a href="#main-content" class="skip-link">Skip to main content</a>
   <% const isAdmin = (typeof currentPath !== 'undefined' ? /^\/admin/.test(currentPath) : false); %>
   <% const isSuperAdmin = (typeof currentPath !== 'undefined' ? /^\/superadmin/.test(currentPath) : false); %>
-  <% const _useDarkHeader = (typeof useDarkHeader !== 'undefined' ? useDarkHeader : isAdmin); %>
-  <%- include(isAdmin ? '../partials/header-main' : (isSuperAdmin ? '../partials/header-admin' : (_useDarkHeader ? '../partials/header-main' : '../partials/header'))) %>
-  <main id="main-content" class="<%= (typeof useMainContainer !== 'undefined' && useMainContainer === false) ? '' : 'container' %> <%= (isAdmin || isSuperAdmin || _useDarkHeader) ? 'main-offset' : '' %>" role="main">
+  <% const isHomePage = (typeof currentPath !== 'undefined' ? currentPath === '/' : false); %>
+  <%- include(isSuperAdmin ? '../partials/header-admin' : (isHomePage ? '../partials/header' : '../partials/header-main')) %>
+  <main id="main-content" class="<%= (typeof useMainContainer !== 'undefined' && useMainContainer === false) ? '' : 'container' %> <%= (isAdmin || isSuperAdmin || !isHomePage) ? 'main-offset' : '' %>" role="main">
     <%- body %>
   </main>
   <% if (!(isAdmin || isSuperAdmin) && !(typeof hideFooter !== 'undefined' && hideFooter === true)) { %>

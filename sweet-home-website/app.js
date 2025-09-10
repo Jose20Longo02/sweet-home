@@ -232,7 +232,6 @@ app.get('/about', async (req, res, next) => {
     res.render('about', {
       title: 'About',
       team: rows,
-      useDarkHeader: true,
       useMainContainer: false,
       areaOrder
     });
@@ -281,7 +280,6 @@ app.get('/admin', (req, res) => {
 app.get('/services', (req, res) => {
   res.render('services', {
     title: 'Services',
-    useDarkHeader: false,
     useMainContainer: false,
     canonicalUrl: (process.env.APP_URL || `${req.protocol}://${req.get('host')}`) + '/services'
   });
@@ -303,7 +301,6 @@ app.get('/owners', async (req, res, next) => {
     }));
     res.render('owners', {
       title: 'Owners',
-      useDarkHeader: false,
       useMainContainer: false,
       soldProperties: properties,
       canonicalUrl: (process.env.APP_URL || `${req.protocol}://${req.get('host')}`) + '/owners'
