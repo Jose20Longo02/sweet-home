@@ -7,7 +7,13 @@ module.exports = {
       "Neukölln",
       "Charlottenburg-Wilmersdorf",
       "Prenzlauer Berg",
-      "Pankow"
+      "Pankow",
+      "Tempelhof",
+      "Reinickendorf",
+      "Wedding (Gesundbrunnen)",
+      "Kreuzberg",
+      "Moabit",
+      "Reinickendorf (Am Schäfersee)"
     ]
   },
   "UAE": {
@@ -20,7 +26,11 @@ module.exports = {
       "Bur Dubai",
       "Business Bay",
       "Al Barsha",
-      "Barsha Heights"
+      "Barsha Heights",
+      "Al Jaddaf",
+      "Dubai Sports City",
+      "Mohammed Bin Rashid City (Meydan)",
+      "Dubai Studio City"
     ]
   },
   "Cyprus": {
