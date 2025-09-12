@@ -16,9 +16,11 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
-    // if we have a logged-in user, use their ID; otherwise fall back to timestamp
-    const idOrTimestamp = req.session.user?.id || Date.now();
-    cb(null, `profile-${idOrTimestamp}${ext}`);
+    // Generate a unique filename using timestamp and random string
+    // This avoids conflicts and makes the filename more unique
+    const timestamp = Date.now();
+    const random = Math.random().toString(36).substring(2, 8);
+    cb(null, `profile-${timestamp}-${random}${ext}`);
   }
 });
 

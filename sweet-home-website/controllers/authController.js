@@ -152,11 +152,9 @@ exports.register = async (req, res, next) => {
     const values = [name, email, hash, role, false, area, position];
 
     // Handle optional profile picture
-    let tempFilename;
     if (req.file) {
-      tempFilename = req.file.filename;
       fields.push('profile_picture');
-      values.push('/uploads/profiles/' + tempFilename);
+      values.push('/uploads/profiles/' + req.file.filename);
     }
 
     // Perform INSERT and get new ID
@@ -166,21 +164,6 @@ exports.register = async (req, res, next) => {
       values
     );
     const newId = insertRes.rows[0].id;
-
-    // Rename temp file to final {profile-newId.ext}
-    if (tempFilename) {
-      const uploadDir = path.join(__dirname, '../public/uploads/profiles');
-      const ext       = path.extname(tempFilename);
-      const oldPath   = path.join(uploadDir, tempFilename);
-      const newName   = `profile-${newId}${ext}`;
-      const newPath   = path.join(uploadDir, newName);
-      fs.renameSync(oldPath, newPath);
-      // Update user record with final path
-      await query(
-        'UPDATE users SET profile_picture = $1 WHERE id = $2',
-        ['/uploads/profiles/' + newName, newId]
-      );
-    }
 
     // Notify all SuperAdmins about the new account request
     try {
