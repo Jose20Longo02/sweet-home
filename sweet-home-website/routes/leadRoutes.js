@@ -72,6 +72,49 @@ router.post(
       });
       res.json({ success: true, lead });
 
+      // Send to Zapier webhook (async)
+      setImmediate(async () => {
+        try {
+          const webhookUrl = process.env.ZAPIER_WEBHOOK_URL;
+          if (!webhookUrl) {
+            console.log('Zapier webhook URL not configured');
+            return;
+          }
+
+          const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+          const payload = {
+            lead_id: lead.id,
+            name: lead.name,
+            email: lead.email,
+            phone: lead.phone,
+            message: lead.message,
+            source: lead.source,
+            preferred_language: lead.preferred_language,
+            property_id: lead.property_id,
+            project_id: lead.project_id,
+            agent_id: lead.agent_id,
+            created_at: lead.created_at,
+            timestamp: new Date().toISOString()
+          };
+
+          const response = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+          });
+
+          if (response.ok) {
+            console.log('Lead sent to Zapier successfully');
+          } else {
+            console.error('Failed to send lead to Zapier:', response.status, response.statusText);
+          }
+        } catch (error) {
+          console.error('Error sending lead to Zapier:', error.message);
+        }
+      });
+
       // Notify all SuperAdmins and the user depending on lead type
       if (lead_type === 'seller') {
         try {

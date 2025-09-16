@@ -2,8 +2,51 @@
 const { query } = require('../config/db');
 const Lead = require('../models/Lead');
 const sendMail = require('../config/mailer');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 const { validationResult } = require('express-validator');
+
+// Webhook utility function
+const sendToZapier = async (leadData) => {
+  try {
+    const webhookUrl = process.env.ZAPIER_WEBHOOK_URL;
+    if (!webhookUrl) {
+      console.log('Zapier webhook URL not configured');
+      return;
+    }
+
+    const payload = {
+      lead_id: leadData.id,
+      name: leadData.name,
+      email: leadData.email,
+      phone: leadData.phone,
+      message: leadData.message,
+      source: leadData.source,
+      preferred_language: leadData.preferred_language,
+      property_id: leadData.property_id,
+      project_id: leadData.project_id,
+      agent_id: leadData.agent_id,
+      created_at: leadData.created_at,
+      timestamp: new Date().toISOString()
+    };
+
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      console.log('Lead sent to Zapier successfully');
+    } else {
+      console.error('Failed to send lead to Zapier:', response.status, response.statusText);
+    }
+  } catch (error) {
+    console.error('Error sending lead to Zapier:', error.message);
+  }
+};
 
 // Public API: create a lead from property detail form
 exports.createFromProperty = async (req, res, next) => {
@@ -46,6 +89,11 @@ exports.createFromProperty = async (req, res, next) => {
 
     // Respond quickly, then send emails asynchronously
     res.json({ success: true, lead });
+
+    // Send to Zapier webhook (async)
+    setImmediate(() => {
+      sendToZapier(lead);
+    });
 
     setImmediate(async () => {
       // Increment inquiry count in property_stats
@@ -177,6 +225,11 @@ exports.createFromProject = async (req, res, next) => {
 
     // Respond quickly
     res.json({ success: true, lead });
+
+    // Send to Zapier webhook (async)
+    setImmediate(() => {
+      sendToZapier(lead);
+    });
 
     // Emails (async)
     setImmediate(async () => {
