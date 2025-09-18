@@ -97,9 +97,9 @@ exports.create = async (req, res, next) => {
     // Redirect based on user role
     const role = req.session.user?.role;
     if (role === 'SuperAdmin') {
-      return res.redirect(`/superadmin/dashboard/blog/${post.id}/edit`);
+      return res.redirect('/superadmin/dashboard/blog');
     }
-    return res.redirect(`/admin/dashboard/blog/${post.id}/edit`);
+    return res.redirect('/admin/dashboard/blog');
   } catch (err) { next(err); }
 };
 
@@ -152,9 +152,9 @@ exports.update = async (req, res, next) => {
     // Redirect based on user role
     const role = req.session.user?.role;
     if (role === 'SuperAdmin') {
-      return res.redirect(`/superadmin/dashboard/blog/${updated.id}/edit`);
+      return res.redirect('/superadmin/dashboard/blog');
     }
-    return res.redirect(`/admin/dashboard/blog/${updated.id}/edit`);
+    return res.redirect('/admin/dashboard/blog');
   } catch (err) { next(err); }
 };
 
