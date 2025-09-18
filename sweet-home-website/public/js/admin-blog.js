@@ -84,6 +84,52 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
   }
+
+  // Prevent double submit and show uploading overlay for forms
+  (function lockWhileUploading(){
+    const forms = document.querySelectorAll('form[method="post"]');
+    forms.forEach(form => {
+      let isSubmitting = false;
+      form.addEventListener('submit', function() {
+        if (isSubmitting) return false;
+        if (!form.checkValidity()) { return true; }
+        isSubmitting = true;
+        
+        const overlay = document.getElementById('uploadOverlay');
+        if (overlay) { 
+          overlay.hidden = false; 
+          overlay.style.display = 'flex'; 
+        }
+        
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.dataset.originalText = submitBtn.textContent || '';
+          
+          // Different text based on form action
+          if (form.action.includes('/delete')) {
+            submitBtn.textContent = 'Deleting...';
+            if (overlay) {
+              const title = overlay.querySelector('.upload-title');
+              if (title) title.textContent = 'Deleting Post...';
+            }
+          } else if (form.action.includes('/edit') || form.action.includes('/update')) {
+            submitBtn.textContent = 'Saving...';
+            if (overlay) {
+              const title = overlay.querySelector('.upload-title');
+              if (title) title.textContent = 'Saving Changes...';
+            }
+          } else {
+            submitBtn.textContent = 'Creating...';
+            if (overlay) {
+              const title = overlay.querySelector('.upload-title');
+              if (title) title.textContent = 'Creating Post...';
+            }
+          }
+        }
+      }, { capture: true });
+    });
+  })();
 });
 
 
