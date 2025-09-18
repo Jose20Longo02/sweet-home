@@ -1,12 +1,16 @@
 @import url('/css/variables.css');
 
-/* Add breathing room on the right edge for admin blog listing */
+/* Add breathing room on both sides for admin blog listing */
 .admin-content.blog-list-page {
+  padding-left: var(--spacing-8);
   padding-right: var(--spacing-8);
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 @media (max-width: 900px) {
   .admin-content.blog-list-page {
+    padding-left: var(--spacing-4);
     padding-right: var(--spacing-4);
   }
 }
