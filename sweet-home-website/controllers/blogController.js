@@ -94,7 +94,12 @@ exports.create = async (req, res, next) => {
         [i18n.title_i18n || { en: title || '' }, i18n.excerpt_i18n || { en: excerpt || '' }, i18n.content_i18n || { en: safeContent || '' }, post.id]
       );
     } catch (_) { /* non-fatal */ }
-    res.redirect(`/admin/dashboard/blog/${post.id}/edit`);
+    // Redirect based on user role
+    const role = req.session.user?.role;
+    if (role === 'SuperAdmin') {
+      return res.redirect(`/superadmin/dashboard/blog/${post.id}/edit`);
+    }
+    return res.redirect(`/admin/dashboard/blog/${post.id}/edit`);
   } catch (err) { next(err); }
 };
 
@@ -144,7 +149,12 @@ exports.update = async (req, res, next) => {
         [i18n.title_i18n, i18n.excerpt_i18n, i18n.content_i18n, id]
       );
     } catch (_) { /* non-fatal */ }
-    res.redirect(`/admin/dashboard/blog/${updated.id}/edit`);
+    // Redirect based on user role
+    const role = req.session.user?.role;
+    if (role === 'SuperAdmin') {
+      return res.redirect(`/superadmin/dashboard/blog/${updated.id}/edit`);
+    }
+    return res.redirect(`/admin/dashboard/blog/${updated.id}/edit`);
   } catch (err) { next(err); }
 };
 
@@ -158,7 +168,13 @@ exports.delete = async (req, res, next) => {
       return res.status(403).send('Forbidden');
     }
     await BlogPost.delete(id);
-    res.redirect('/admin/dashboard/blog');
+    
+    // Redirect based on user role
+    const role = req.session.user?.role;
+    if (role === 'SuperAdmin') {
+      return res.redirect('/superadmin/dashboard/blog');
+    }
+    return res.redirect('/admin/dashboard/blog');
   } catch (err) { next(err); }
 };
 

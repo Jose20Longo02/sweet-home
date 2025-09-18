@@ -17,7 +17,7 @@ const allowStaff = (req, res, next) => {
   return (role === 'Admin' || role === 'SuperAdmin') ? next() : res.status(403).send('Forbidden – staff only');
 };
 
-adminRouter.get('/', ensureAuthenticated, ensureAdmin, blog.listMine);
+adminRouter.get('/', ensureAuthenticated, allowStaff, blog.listMine);
 adminRouter.get('/new', ensureAuthenticated, allowStaff, blog.newForm);
 adminRouter.post('/', ensureAuthenticated, allowStaff, uploadBlogMedia, blog.create);
 adminRouter.get('/:id/edit', ensureAuthenticated, allowStaff, blog.editForm);
