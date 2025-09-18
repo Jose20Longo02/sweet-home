@@ -11,23 +11,25 @@
     <% const p = (typeof currentPath !== 'undefined' ? currentPath : ''); %>
     <nav class="nav-grid" aria-label="Primary">
       <a href="/projects" class="<%= p.startsWith('/projects') ? 'is-active' : '' %>"><%= t('nav.projects','Projects') %></a>
+      <a href="/properties" class="<%= p.startsWith('/properties') ? 'is-active' : '' %>"><%= t('nav.properties','Properties') %></a>
       <a href="/owners" class="<%= p.startsWith('/owners') ? 'is-active' : '' %>"><%= t('nav.owners','Owners') %></a>
-      <a href="/services" class="<%= p.startsWith('/services') ? 'is-active' : '' %>"><%= t('nav.services','Services') %></a>
       <a href="/" class="brand">
         <img src="/images/Sweet Home Logo.png" alt="Sweet Home" onerror="this.style.display='none'">
       </a>
+      <a href="/services" class="<%= p.startsWith('/services') ? 'is-active' : '' %>"><%= t('nav.services','Services') %></a>
       <a href="/about" class="<%= p.startsWith('/about') ? 'is-active' : '' %>"><%= t('nav.about','About') %></a>
-      <a href="/contact" class="<%= p.startsWith('/contact') ? 'is-active' : '' %>"><%= t('nav.contact','Contact') %></a>
+      <a href="/blog" class="<%= p.startsWith('/blog') ? 'is-active' : '' %>"><%= t('nav.blog','Blog') %></a>
     </nav>
   </div>
 
   <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
     <nav class="mobile-links" aria-label="Mobile">
       <a href="/projects"><%= t('nav.projects','Projects') %></a>
+      <a href="/properties"><%= t('nav.properties','Properties') %></a>
       <a href="/owners"><%= t('nav.owners','Owners') %></a>
       <a href="/services"><%= t('nav.services','Services') %></a>
       <a href="/about"><%= t('nav.about','About') %></a>
-      <a href="/contact"><%= t('nav.contact','Contact') %></a>
+      <a href="/blog"><%= t('nav.blog','Blog') %></a>
     </nav>
   </div>
 </header>

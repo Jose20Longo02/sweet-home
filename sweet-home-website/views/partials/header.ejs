@@ -11,15 +11,15 @@
 
     <nav class="nav-grid" aria-label="Primary">
       <a href="/projects/regions"><%= t('nav.projects','Projects') %></a>
+      <a href="/properties"><%= t('nav.properties','Properties') %></a>
       <a href="/owners"><%= t('nav.owners','Owners') %></a>
-      <a href="/services"><%= t('nav.services','Services') %></a>
       <a href="/" class="brand">
         <img src="/images/Sweet Home Logo.png" alt="Sweet Home" onerror="this.style.display='none'">
 
       </a>
+      <a href="/services"><%= t('nav.services','Services') %></a>
       <a href="/about"><%= t('nav.about','About') %></a>
       <a href="/blog"><%= t('nav.blog','Blog') %></a>
-      <a href="/contact"><%= t('nav.contact','Contact') %></a>
     </nav>
     <div class="lang-switcher-wrap">
       <%- include('./lang-switcher') %>
@@ -33,11 +33,11 @@
   <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
     <nav class="mobile-links" aria-label="Mobile">
       <a href="/projects/regions"><%= t('nav.projects','Projects') %></a>
+      <a href="/properties"><%= t('nav.properties','Properties') %></a>
       <a href="/owners"><%= t('nav.owners','Owners') %></a>
       <a href="/services"><%= t('nav.services','Services') %></a>
       <a href="/about"><%= t('nav.about','About') %></a>
       <a href="/blog"><%= t('nav.blog','Blog') %></a>
-      <a href="/contact"><%= t('nav.contact','Contact') %></a>
     </nav>
   </div>
 </header>
