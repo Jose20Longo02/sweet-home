@@ -29,6 +29,13 @@ adminRouter.post('/api/inline-image', ensureAuthenticated, allowStaff, uploadBlo
 // SuperAdmin router mounted at /superadmin/dashboard/blog
 const superAdminRouter = express.Router();
 superAdminRouter.get('/', ensureAuthenticated, ensureSuperAdmin, blog.listAll);
+superAdminRouter.get('/new', ensureAuthenticated, ensureSuperAdmin, blog.newForm);
+superAdminRouter.post('/', ensureAuthenticated, ensureSuperAdmin, uploadBlogMedia, blog.create);
+superAdminRouter.get('/:id/edit', ensureAuthenticated, ensureSuperAdmin, blog.editForm);
+superAdminRouter.post('/:id', ensureAuthenticated, ensureSuperAdmin, uploadBlogMedia, blog.update);
+superAdminRouter.post('/:id/delete', ensureAuthenticated, ensureSuperAdmin, blog.delete);
+// Inline image upload
+superAdminRouter.post('/api/inline-image', ensureAuthenticated, ensureSuperAdmin, uploadBlogInline, blog.uploadInlineImage);
 
 module.exports = { publicRouter, adminRouter, superAdminRouter };
 

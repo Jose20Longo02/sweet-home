@@ -38,4 +38,45 @@
 .admin-content.blog-manage .table tbody tr td:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
 .admin-content.blog-manage .table tbody tr td:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
 
+/* Action buttons */
+.btn-link {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-right: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.btn-link:last-child {
+  margin-right: 0;
+}
+
+.btn-link {
+  color: var(--primary-color);
+  background: var(--primary-50);
+  border-color: var(--primary-200);
+}
+
+.btn-link:hover {
+  background: var(--primary-100);
+  border-color: var(--primary-300);
+  color: var(--primary-700);
+}
+
+.btn-link--danger {
+  color: #dc2626;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.btn-link--danger:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
 
