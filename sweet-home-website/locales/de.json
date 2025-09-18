@@ -15,7 +15,7 @@
     },
     "form": { "submit": "Senden", "selectLanguage": "Sprache auswählen", "fixErrors": "Bitte korrigieren Sie die Fehler oben.", "sending": "Wird gesendet...", "successShort": "Danke! Wir melden uns in Kürze.", "submitted": "Eingang bestätigt.", "successToast": "Danke! Ihre Nachricht wurde erfolgreich gesendet.", "errorStatus": "Es gab ein Problem. Bitte erneut versuchen.", "errorToast": "Etwas ist schiefgelaufen. Bitte später erneut versuchen." },
     "validation": { "fullName": "Bitte geben Sie Ihren vollständigen Namen ein", "countryCode": "Bitte eine Ländervorwahl eingeben", "phone": "Bitte eine Telefonnummer eingeben", "email": "Geben Sie eine gültige E-Mail-Adresse ein", "language": "Bitte eine Sprache auswählen" },
-    "aria": { "hero": "Bereich für Eigentümer", "primaryActions": "Hauptaktionen", "heroNote": "Hintergrundbild mit dunkler Überlagerung zur besseren Lesbarkeit", "reasons": "Gründe-Liste", "recentlySoldCarousel": "Karussell: Kürzlich verkauft" }
+    "aria": { "hero": "Bereich für Verkäufer", "primaryActions": "Hauptaktionen", "heroNote": "Hintergrundbild mit dunkler Überlagerung zur besseren Lesbarkeit", "reasons": "Gründe-Liste", "recentlySoldCarousel": "Karussell: Kürzlich verkauft" }
   },
   "projects": {
     "regions": {
@@ -31,7 +31,7 @@
     "home": "Start",
     "properties": "Immobilien",
     "projects": "Projekte",
-    "owners": "Eigentümer",
+    "owners": "Für Verkäufer",
     "services": "Leistungen",
     "about": "Über uns",
     "blog": "Blog",

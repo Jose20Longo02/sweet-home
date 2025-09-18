@@ -300,7 +300,7 @@ app.get('/owners', async (req, res, next) => {
       photos: Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : [])
     }));
     res.render('owners', {
-      title: 'Owners',
+      title: 'For Sellers',
       useMainContainer: false,
       soldProperties: properties,
       canonicalUrl: (process.env.APP_URL || `${req.protocol}://${req.get('host')}`) + '/owners'

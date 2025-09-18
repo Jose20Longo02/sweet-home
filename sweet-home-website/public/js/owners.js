@@ -113,7 +113,7 @@
           name: payload.name,
           email: payload.email,
           phone: `${payload.countryCode || ''} ${payload.phone || ''}`.trim(),
-          message: `Owners page SELLER lead`,
+          message: `For Sellers page SELLER lead`,
           lead_type: 'seller',
           language: payload.language || ''
         })

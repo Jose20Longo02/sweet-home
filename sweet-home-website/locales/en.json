@@ -4,7 +4,7 @@
     "home": "Home",
     "properties": "Properties",
     "projects": "Projects",
-    "owners": "Owners",
+    "owners": "For Sellers",
     "services": "Services",
     "about": "About",
     "blog": "Blog",
@@ -39,7 +39,7 @@
     },
     "form": { "submit": "Send", "selectLanguage": "Select language", "fixErrors": "Please fix the errors above.", "sending": "Sending...", "successShort": "Thanks! We will reach out shortly.", "submitted": "Submission received.", "successToast": "Thank you! Your message was successfully sent.", "errorStatus": "There was a problem. Please try again.", "errorToast": "Something went wrong. Please try again later." },
     "validation": { "fullName": "Please enter your full name", "countryCode": "Please enter a country code", "phone": "Please enter a phone number", "email": "Enter a valid email address", "language": "Select a language" },
-    "aria": { "hero": "Owners hero", "primaryActions": "Primary actions", "heroNote": "Hero background image has a decorative dark overlay to improve text contrast", "reasons": "Reasons list", "recentlySoldCarousel": "Recently sold carousel" }
+    "aria": { "hero": "For Sellers hero", "primaryActions": "Primary actions", "heroNote": "Hero background image has a decorative dark overlay to improve text contrast", "reasons": "Reasons list", "recentlySoldCarousel": "Recently sold carousel" }
   },
   "projects": {
     "regions": {

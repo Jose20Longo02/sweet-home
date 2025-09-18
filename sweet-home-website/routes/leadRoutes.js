@@ -125,7 +125,7 @@ router.post(
               to: recipients.join(','),
               subject: 'Sweet Home Real Estate Investments – New SELLER lead',
               html: `
-                <p>New SELLER lead submitted on the Owners page.</p>
+                <p>New SELLER lead submitted on the For Sellers page.</p>
                 <ul>
                   <li><strong>Name:</strong> ${name}</li>
                   <li><strong>Email:</strong> ${email}</li>
