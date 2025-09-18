@@ -88,19 +88,15 @@ document.addEventListener('DOMContentLoaded', function () {
   // Prevent double submit and show uploading overlay for forms
   (function lockWhileUploading(){
     const forms = document.querySelectorAll('form[method="post"]');
-    console.log('Found forms:', forms.length); // Debug log
     forms.forEach(form => {
       let isSubmitting = false;
       form.addEventListener('submit', function() {
-        console.log('Form submitted!'); // Debug log
         if (isSubmitting) return false;
         if (!form.checkValidity()) { return true; }
         isSubmitting = true;
         
         const overlay = document.getElementById('uploadOverlay');
-        console.log('Overlay found:', !!overlay); // Debug log
         if (overlay) { 
-          console.log('Showing overlay'); // Debug log
           overlay.hidden = false; 
           overlay.style.display = 'flex'; 
         }

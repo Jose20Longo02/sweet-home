@@ -36,4 +36,149 @@
 .admin-content.blog-list-page .table tbody tr td:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
 .admin-content.blog-list-page .table { margin-top: var(--spacing-2); }
 
+/* Button styling for edit and delete actions */
+.btn-link {
+  display: inline-block;
+  padding: 8px 16px;
+  margin-right: 12px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: 1px solid;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.btn-link:last-child {
+  margin-right: 0;
+}
+
+.btn-link {
+  color: #2563eb;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.btn-link:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-link--danger {
+  color: #dc2626;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.btn-link--danger:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.15);
+}
+
+/* Add a subtle separator between buttons */
+.btn-link:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 20px;
+  background: #e5e7eb;
+}
+
+/* Style the action column */
+.admin-content.blog-list-page .table tbody td:last-child {
+  text-align: right;
+  padding-right: 20px;
+  white-space: nowrap;
+  min-width: 180px;
+}
+
+/* Improve button focus states */
+.btn-link:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.btn-link--danger:focus {
+  outline: 2px solid #dc2626;
+  outline-offset: 2px;
+}
+
+/* Style buttons inside forms to look like links */
+form .btn-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 16px;
+  margin-right: 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: 1px solid;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+form .btn-link:last-child {
+  margin-right: 0;
+}
+
+form .btn-link {
+  color: #2563eb;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+form .btn-link:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+form .btn-link--danger {
+  color: #dc2626;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+form .btn-link--danger:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.15);
+}
+
+form .btn-link:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+form .btn-link--danger:focus {
+  outline: 2px solid #dc2626;
+  outline-offset: 2px;
+}
+
 
