@@ -333,7 +333,17 @@ exports.editProjectForm = async (req, res, next) => {
           project.photos = cleaned;
         } catch (_) {}
       } else {
-        try { project.photos = (Array.isArray(project.photos) ? project.photos : [project.photos]).filter(Boolean).map(String); } catch (_) { project.photos = []; }
+        try {
+          const toAbs = (u) => {
+            const s = String(u || '').trim();
+            if (!s) return s;
+            if (s.startsWith('http://') || s.startsWith('https://') || s.startsWith('/')) return s;
+            return `https://${s}`;
+          };
+          project.photos = (Array.isArray(project.photos) ? project.photos : [project.photos])
+            .filter(Boolean)
+            .map(toAbs);
+        } catch (_) { project.photos = []; }
       }
     } catch (_) {
       project.photos = Array.isArray(project.photos) ? project.photos.filter(Boolean) : [];

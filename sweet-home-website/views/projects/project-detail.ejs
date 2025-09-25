@@ -325,7 +325,7 @@
                   <div class="related-project-item">
                     <div class="related-project-image">
                       <% if (relatedProject.photos && relatedProject.photos.length > 0) { %>
-                        <img src="/uploads/projects/<%= relatedProject.id %>/<%= relatedProject.photos[0] %>" 
+                        <img src="<%= relatedProject.photos[0] %>" 
                              alt="<%= relatedProject.title %>">
                       <% } else { %>
                         <div class="placeholder-image">

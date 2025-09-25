@@ -905,9 +905,17 @@ exports.editPropertyForm = async (req, res, next) => {
         property.photos = Array.isArray(property.photos) ? property.photos.filter(Boolean) : [];
       }
     } else {
-      // With Spaces, keep whatever URLs are stored (likely absolute HTTPS)
+      // With Spaces, ensure absolute HTTPS URLs for existing DB values
       try {
-        property.photos = (Array.isArray(property.photos) ? property.photos : [property.photos]).filter(Boolean).map(String);
+        const toAbs = (u) => {
+          const s = String(u || '').trim();
+          if (!s) return s;
+          if (s.startsWith('http://') || s.startsWith('https://') || s.startsWith('/')) return s;
+          return `https://${s}`;
+        };
+        property.photos = (Array.isArray(property.photos) ? property.photos : [property.photos])
+          .filter(Boolean)
+          .map(toAbs);
       } catch (_) { property.photos = []; }
     }
 
