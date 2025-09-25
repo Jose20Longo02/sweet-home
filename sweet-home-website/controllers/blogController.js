@@ -161,12 +161,40 @@ exports.update = async (req, res, next) => {
 exports.delete = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id, 10);
-    const rows = await query('SELECT author_id, cover_image FROM blog_posts WHERE id = $1', [id]);
+    const rows = await query('SELECT author_id, cover_image, slug FROM blog_posts WHERE id = $1', [id]);
     const post = rows.rows[0];
     if (!post) return res.status(404).render('errors/404');
     if (req.session.user.role !== 'SuperAdmin' && post.author_id !== req.session.user.id) {
       return res.status(403).send('Forbidden');
     }
+    // Delete cover image and any inline images under blog/<slug>/ if using Spaces
+    try {
+      if (process.env.DO_SPACES_BUCKET) {
+        const s3 = require('../config/spaces');
+        const bucket = process.env.DO_SPACES_BUCKET;
+        const prefixes = [];
+        if (post.cover_image && /^https?:\/\//.test(post.cover_image)) {
+          const key = String(post.cover_image).replace(/^https?:\/\/[^/]+\//, '');
+          prefixes.push(key.split('/').slice(0, -1).join('/') + '/');
+          await new Promise((resolve)=> s3.deleteObject({ Bucket: bucket, Key: key }, ()=>resolve()));
+        }
+        if (post.slug) {
+          prefixes.push(`blog/${post.slug}/`);
+        }
+        // Delete all objects under collected prefixes (paginated)
+        for (const pfx of prefixes) {
+          if (!pfx) continue;
+          let token;
+          do {
+            const page = await new Promise((resolve, reject) => s3.listObjectsV2({ Bucket: bucket, Prefix: pfx, ContinuationToken: token }, (e,d)=>e?reject(e):resolve(d||{})));
+            const objs = (page.Contents || []).map(o => ({ Key: o.Key }));
+            if (objs.length) await new Promise((resolve,reject)=> s3.deleteObjects({ Bucket: bucket, Delete: { Objects: objs } }, (e)=>e?reject(e):resolve()));
+            token = page.IsTruncated ? page.NextContinuationToken : undefined;
+          } while (token);
+        }
+      }
+    } catch (_) { /* best-effort */ }
+
     await BlogPost.delete(id);
     
     // Redirect based on user role
