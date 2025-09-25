@@ -28,10 +28,10 @@ const fileFilter = (req, file, cb) => {
 const uploader = multer({ storage, fileFilter, limits: { fileSize: 10 * 1024 * 1024, files: 1 } }).single('image');
 
 // Helper function to upload to Spaces
-const uploadToSpaces = async (buffer, filename, mimetype) => {
+const uploadToSpaces = async (buffer, filename, mimetype, folder) => {
   const params = {
     Bucket: process.env.DO_SPACES_BUCKET,
-    Key: `blog/inline/${filename}`,
+    Key: `${folder}/${filename}`,
     Body: buffer,
     ContentType: mimetype,
     ACL: 'public-read'
@@ -43,8 +43,9 @@ const uploadToSpaces = async (buffer, filename, mimetype) => {
         reject(err);
       } else {
         const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
-        const url = cdn ? `${cdn}/${params.Key}` : data.Location;
-        resolve(url);
+        const base = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : null;
+        const url = base ? `${base}/${params.Key}` : data.Location;
+        resolve({ url, key: params.Key });
       }
     });
   });
@@ -92,12 +93,15 @@ module.exports = function uploadBlogInline(req, res, next) {
       // Generate sanitized filename
       const finalFilename = sanitizeFilename(filename);
 
-      // Upload to Spaces
-      const fileUrl = await uploadToSpaces(buffer, finalFilename, mimetype);
+      // Upload to temporary inline folder; on delete we remove blog/<slug>/ entirely
+      const authorId = req.session?.user?.id || 'anon';
+      const folder = `blog/tmp/${authorId}/inline`;
+      const { url: fileUrl, key } = await uploadToSpaces(buffer, finalFilename, mimetype, folder);
       
       // Store the CDN URL in req.file for the controller
       req.file.filename = finalFilename;
       req.file.url = fileUrl;
+      req.file.key = key;
       
       next();
     } catch (e) { 

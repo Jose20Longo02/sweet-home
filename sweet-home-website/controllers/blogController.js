@@ -81,6 +81,24 @@ exports.create = async (req, res, next) => {
     const post = await BlogPost.create({
       title, excerpt, content: safeContent, cover_image, status, author_id: req.session.user.id, published_at
     });
+    // If using Spaces and we have a temp cover key, move it to blog/<slug>/cover and store the final URL
+    try {
+      if (process.env.DO_SPACES_BUCKET && req.file && req.file.key) {
+        const s3 = require('../config/spaces');
+        const bucket = process.env.DO_SPACES_BUCKET;
+        const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
+        const cdnBase = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : '';
+        // resolve slug from DB (BlogPost.create likely set it)
+        const { rows: slugRow } = await query('SELECT slug FROM blog_posts WHERE id = $1', [post.id]);
+        const slug = slugRow[0]?.slug || String(post.id);
+        const name = req.file.filename;
+        const newKey = `blog/${slug}/cover/${name}`;
+        await new Promise((resolve, reject) => s3.copyObject({ Bucket: bucket, CopySource: `/${bucket}/${req.file.key}`, Key: newKey, ACL: 'public-read' }, (e)=>e?reject(e):resolve()));
+        await new Promise((resolve) => s3.deleteObject({ Bucket: bucket, Key: req.file.key }, ()=>resolve()));
+        const finalUrl = `${cdnBase}/${newKey}`;
+        await query('UPDATE blog_posts SET cover_image = $1 WHERE id = $2', [finalUrl, post.id]);
+      }
+    } catch (_) { /* non-fatal */ }
     try {
       const i18n = await ensureLocalizedFields({
         fields: { title: title || '', excerpt: excerpt || '', content: safeContent || '' },

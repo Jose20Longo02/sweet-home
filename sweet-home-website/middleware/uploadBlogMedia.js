@@ -32,10 +32,10 @@ const uploader = multer({
 }).single('cover');
 
 // Helper function to upload to Spaces
-const uploadToSpaces = async (buffer, filename, mimetype) => {
+const uploadToSpaces = async (buffer, filename, mimetype, folder) => {
   const params = {
     Bucket: process.env.DO_SPACES_BUCKET,
-    Key: `blog/${filename}`,
+    Key: `${folder}/${filename}`,
     Body: buffer,
     ContentType: mimetype,
     ACL: 'public-read'
@@ -47,8 +47,9 @@ const uploadToSpaces = async (buffer, filename, mimetype) => {
         reject(err);
       } else {
         const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
-        const url = cdn ? `${cdn}/${params.Key}` : data.Location;
-        resolve(url);
+        const base = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : null;
+        const url = base ? `${base}/${params.Key}` : data.Location;
+        resolve({ url, key: params.Key });
       }
     });
   });
@@ -96,12 +97,15 @@ module.exports = function uploadBlogMedia(req, res, next) {
       // Generate sanitized filename
       const finalFilename = sanitizeFilename(filename);
 
-      // Upload to Spaces
-      const fileUrl = await uploadToSpaces(buffer, finalFilename, mimetype);
+      // Upload to temp folder; controller will move to blog/<slug>/cover on create when slug is known
+      const authorId = req.session?.user?.id || 'anon';
+      const folder = `blog/tmp/${authorId}/cover`;
+      const { url: fileUrl, key } = await uploadToSpaces(buffer, finalFilename, mimetype, folder);
       
       // Store the CDN URL in req.file for the controller
       req.file.filename = finalFilename;
       req.file.url = fileUrl;
+      req.file.key = key;
       
       next();
     } catch (e) { 
