@@ -2,11 +2,12 @@
 require('dotenv').config();
 const { Pool } = require('pg');
 // …
-const isProd = process.env.NODE_ENV === 'production';
+const connString = process.env.DATABASE_URL || '';
+const isLocal = /localhost|127\.0\.0\.1/.test(connString);
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  // Render Postgres requires TLS. Use verified TLS locally off, and relax CA verification in prod.
-  ssl: isProd ? { rejectUnauthorized: false } : false
+  connectionString: connString,
+  // Force TLS for hosted DBs (Render, etc); keep off only for local dev
+  ssl: isLocal ? false : { rejectUnauthorized: false }
 });
 
 module.exports.connectDB = () => {
