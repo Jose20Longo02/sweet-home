@@ -102,6 +102,48 @@ exports.create = async (req, res, next) => {
         await query('UPDATE blog_posts SET cover_image = $1 WHERE id = $2', [finalUrl, post.id]);
       }
     } catch (_) { /* non-fatal */ }
+
+    // Move inline images from provisional slug folder to final slug and rewrite content URLs
+    try {
+      if (process.env.DO_SPACES_BUCKET) {
+        const s3 = require('../config/spaces');
+        const bucket = process.env.DO_SPACES_BUCKET;
+        const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
+        const cdnBase = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : '';
+        // final slug
+        const { rows: slugRow2 } = await query('SELECT slug, content FROM blog_posts WHERE id = $1', [post.id]);
+        const finalSlug = slugRow2[0]?.slug || String(post.id);
+        const currentContent = slugRow2[0]?.content || safeContent || '';
+        // provisional slug from title at submit time
+        const provisionalSlug = String((req.body && req.body.title) || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || finalSlug;
+        if (provisionalSlug !== finalSlug) {
+          const fromPrefix = `blog/${provisionalSlug}/inline/`;
+          const toPrefix   = `blog/${finalSlug}/inline/`;
+          // move objects under inline/
+          let token;
+          do {
+            const page = await new Promise((resolve, reject) => s3.listObjectsV2({ Bucket: bucket, Prefix: fromPrefix, ContinuationToken: token }, (e,d)=>e?reject(e):resolve(d||{})));
+            const items = page.Contents || [];
+            for (const obj of items) {
+              const fileName = obj.Key.substring(fromPrefix.length);
+              const newKey = `${toPrefix}${fileName}`;
+              await new Promise((resolve, reject) => s3.copyObject({ Bucket: bucket, CopySource: `/${bucket}/${obj.Key}`, Key: newKey, ACL: 'public-read' }, (e)=>e?reject(e):resolve()));
+            }
+            if (items.length) {
+              await new Promise((resolve, reject) => s3.deleteObjects({ Bucket: bucket, Delete: { Objects: items.map(o=>({ Key:o.Key })) } }, (e)=>e?reject(e):resolve()));
+            }
+            token = page.IsTruncated ? page.NextContinuationToken : undefined;
+          } while (token);
+          // rewrite content URLs
+          const fromBase = `${cdnBase}/blog/${provisionalSlug}/`;
+          const toBase   = `${cdnBase}/blog/${finalSlug}/`;
+          const rewritten = currentContent.split(fromBase).join(toBase);
+          if (rewritten !== currentContent) {
+            await query('UPDATE blog_posts SET content = $1 WHERE id = $2', [rewritten, post.id]);
+          }
+        }
+      }
+    } catch (_) { /* non-fatal */ }
     try {
       const i18n = await ensureLocalizedFields({
         fields: { title: title || '', excerpt: excerpt || '', content: safeContent || '' },
@@ -171,6 +213,44 @@ exports.update = async (req, res, next) => {
           await new Promise((resolve) => s3.deleteObject({ Bucket: bucket, Key: currentKey }, ()=>resolve()));
           cover_image = `${cdnBase}/${desiredKey}`;
           await query('UPDATE blog_posts SET cover_image = $1 WHERE id = $2', [cover_image, id]);
+        }
+      }
+    } catch (_) { /* non-fatal */ }
+
+    // Move inline images from provisional slug to final slug and rewrite URLs on update as well
+    try {
+      if (process.env.DO_SPACES_BUCKET) {
+        const s3 = require('../config/spaces');
+        const bucket = process.env.DO_SPACES_BUCKET;
+        const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
+        const cdnBase = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : '';
+        const slugRow = await query('SELECT slug, content FROM blog_posts WHERE id = $1', [id]);
+        const finalSlug = slugRow.rows[0]?.slug || String(id);
+        const currentContent = slugRow.rows[0]?.content || safeContent || '';
+        const provisionalSlug = String((req.body && req.body.title) || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || finalSlug;
+        if (provisionalSlug !== finalSlug) {
+          const fromPrefix = `blog/${provisionalSlug}/inline/`;
+          const toPrefix   = `blog/${finalSlug}/inline/`;
+          let token;
+          do {
+            const page = await new Promise((resolve, reject) => s3.listObjectsV2({ Bucket: bucket, Prefix: fromPrefix, ContinuationToken: token }, (e,d)=>e?reject(e):resolve(d||{})));
+            const items = page.Contents || [];
+            for (const obj of items) {
+              const fileName = obj.Key.substring(fromPrefix.length);
+              const newKey = `${toPrefix}${fileName}`;
+              await new Promise((resolve, reject) => s3.copyObject({ Bucket: bucket, CopySource: `/${bucket}/${obj.Key}`, Key: newKey, ACL: 'public-read' }, (e)=>e?reject(e):resolve()));
+            }
+            if (items.length) {
+              await new Promise((resolve, reject) => s3.deleteObjects({ Bucket: bucket, Delete: { Objects: items.map(o=>({ Key:o.Key })) } }, (e)=>e?reject(e):resolve()));
+            }
+            token = page.IsTruncated ? page.NextContinuationToken : undefined;
+          } while (token);
+          const fromBase = `${cdnBase}/blog/${provisionalSlug}/`;
+          const toBase   = `${cdnBase}/blog/${finalSlug}/`;
+          const rewritten = currentContent.split(fromBase).join(toBase);
+          if (rewritten !== currentContent) {
+            await query('UPDATE blog_posts SET content = $1 WHERE id = $2', [rewritten, id]);
+          }
         }
       }
     } catch (_) { /* non-fatal */ }
