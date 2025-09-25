@@ -49,8 +49,7 @@ const uploadToSpaces = async (buffer, filename, mimetype, folder) => {
         reject(err);
       } else {
         const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
-        const base = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : null;
-        const url = base ? `${base}/${params.Key}` : data.Location;
+        const url = cdn ? `${cdn}/${params.Key}` : data.Location;
         resolve(url);
       }
     });

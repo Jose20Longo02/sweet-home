@@ -53,54 +53,27 @@ sendMail.verify && sendMail.verify()
 const isProd = process.env.NODE_ENV === 'production';
 app.use(helmet());
 // Apply the same CSP in all envs (no reportOnly) to avoid mixed behavior
-app.use((req, res, next) => {
-  const cdn = process.env.DO_SPACES_CDN_ENDPOINT || '';
-  const endpoint = process.env.DO_SPACES_ENDPOINT || '';
-  const allowHosts = [];
-  const norm = (u) => {
-    try {
-      const host = String(u).replace(/^https?:\/\//, '').replace(/\/$/, '');
-      if (host) allowHosts.push(`https://${host}`);
-    } catch (_) {}
-  };
-  norm(cdn);
-  norm(endpoint);
-  // Generic allowances for DigitalOcean Spaces/CDN
-  allowHosts.push('https://*.digitaloceanspaces.com');
-  allowHosts.push('https://*.cdn.digitaloceanspaces.com');
-
-  app.use(
-    helmet.contentSecurityPolicy({
-      useDefaults: true,
-      directives: {
-        "default-src": ["'self'"],
-        "base-uri": ["'self'"],
-        "form-action": ["'self'"],
-        "img-src": [
-          "'self'",
-          'data:',
-          'blob:',
-          'https://*.tile.openstreetmap.org',
-          'https://unpkg.com',
-          'https://www.google-analytics.com',
-          'https://*.google-analytics.com',
-          ...allowHosts
-        ],
-        "media-src": ["'self'", 'blob:', ...allowHosts],
-        "script-src": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://unpkg.com', 'https://www.googletagmanager.com'],
-        "script-src-elem": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://unpkg.com', 'https://www.googletagmanager.com'],
-        "script-src-attr": ["'none'"],
-        "style-src": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
-        "style-src-elem": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
-        "style-src-attr": ["'unsafe-inline'"],
-        "font-src": ["'self'", 'data:', 'https://fonts.gstatic.com'],
-        "connect-src": ["'self'", 'https://nominatim.openstreetmap.org', 'https://www.google-analytics.com', 'https://region1.google-analytics.com', 'https://*.google-analytics.com', 'https://www.googletagmanager.com'],
-        "frame-src": ['https://www.google.com', 'https://www.youtube.com', 'https://player.vimeo.com']
-      }
-    })
-  );
-  next();
-});
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      "default-src": ["'self'"],
+      "base-uri": ["'self'"],
+      "form-action": ["'self'"],
+      "img-src": ["'self'", 'data:', 'blob:', 'https://*.tile.openstreetmap.org', 'https://unpkg.com', 'https://www.google-analytics.com', 'https://*.google-analytics.com'],
+      "media-src": ["'self'", 'blob:'],
+      "script-src": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://unpkg.com', 'https://www.googletagmanager.com'],
+      "script-src-elem": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://unpkg.com', 'https://www.googletagmanager.com'],
+      "script-src-attr": ["'none'"],
+      "style-src": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
+      "style-src-elem": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
+      "style-src-attr": ["'unsafe-inline'"],
+      "font-src": ["'self'", 'data:', 'https://fonts.gstatic.com'],
+      "connect-src": ["'self'", 'https://nominatim.openstreetmap.org', 'https://www.google-analytics.com', 'https://region1.google-analytics.com', 'https://*.google-analytics.com', 'https://www.googletagmanager.com'],
+      "frame-src": ['https://www.google.com', 'https://www.youtube.com', 'https://player.vimeo.com']
+    }
+  })
+);
 
 // Logging & compression
 if (process.env.NODE_ENV === 'production') {
