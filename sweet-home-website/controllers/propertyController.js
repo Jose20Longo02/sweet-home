@@ -1464,8 +1464,16 @@ exports.updateProperty = async (req, res, next) => {
 // Delete a property (agent)
 exports.deleteProperty = async (req, res, next) => {
   try {
-    // Delete DB row first
+    // Determine prefixes BEFORE deleting the DB row
+    let slug = null;
+    try {
+      const { rows } = await query('SELECT slug FROM properties WHERE id = $1', [req.params.id]);
+      slug = rows[0]?.slug || null;
+    } catch (_) {}
+
+    // Delete DB row
     await query(`DELETE FROM properties WHERE id = $1`, [req.params.id]);
+
     // Remove media folder (local or Spaces)
     try {
       if (!process.env.DO_SPACES_BUCKET) {
@@ -1475,21 +1483,25 @@ exports.deleteProperty = async (req, res, next) => {
         }
       } else {
         const bucket = process.env.DO_SPACES_BUCKET;
-        // Fetch slug to use slug-based prefix when available
-        let prefix = `properties/${String(req.params.id)}/`;
-        try {
-          const { rows } = await query('SELECT slug FROM properties WHERE id = $1', [req.params.id]);
-          const slug = rows[0]?.slug;
-          if (slug) prefix = `properties/${slug}/`;
-        } catch (_) {}
-        const list = await new Promise((resolve, reject) => {
-          s3.listObjectsV2({ Bucket: bucket, Prefix: prefix }, (err, data) => err ? reject(err) : resolve(data || { Contents: [] }));
-        });
-        const objects = (list.Contents || []).map(o => ({ Key: o.Key }));
-        if (objects.length) {
-          await new Promise((resolve, reject) => {
-            s3.deleteObjects({ Bucket: bucket, Delete: { Objects: objects } }, (err) => err ? reject(err) : resolve());
-          });
+        const prefixes = [];
+        prefixes.push(`properties/${String(req.params.id)}/`);
+        if (slug) prefixes.push(`properties/${slug}/`);
+
+        // Delete all objects under each prefix (paginated)
+        for (const pfx of prefixes) {
+          let token = undefined;
+          do {
+            const page = await new Promise((resolve, reject) => {
+              s3.listObjectsV2({ Bucket: bucket, Prefix: pfx, ContinuationToken: token }, (err, data) => err ? reject(err) : resolve(data || {}));
+            });
+            const objs = (page.Contents || []).map(o => ({ Key: o.Key }));
+            if (objs.length) {
+              await new Promise((resolve, reject) => {
+                s3.deleteObjects({ Bucket: bucket, Delete: { Objects: objs } }, (err) => err ? reject(err) : resolve());
+              });
+            }
+            token = page.IsTruncated ? page.NextContinuationToken : undefined;
+          } while (token);
         }
       }
     } catch (_) {}
@@ -1723,6 +1735,13 @@ exports.reassignProperty = async (req, res, next) => {
 // Delete any property (SuperAdmin)
 exports.deletePropertyAdmin = async (req, res, next) => {
   try {
+    // Determine slug before deleting row
+    let slug = null;
+    try {
+      const { rows } = await query('SELECT slug FROM properties WHERE id = $1', [req.params.id]);
+      slug = rows[0]?.slug || null;
+    } catch (_) {}
+
     await query(`DELETE FROM properties WHERE id = $1`, [req.params.id]);
     try {
       if (!process.env.DO_SPACES_BUCKET) {
@@ -1732,21 +1751,23 @@ exports.deletePropertyAdmin = async (req, res, next) => {
         }
       } else {
         const bucket = process.env.DO_SPACES_BUCKET;
-        // Prefer slug-based prefix
-        let prefix = `properties/${String(req.params.id)}/`;
-        try {
-          const { rows } = await query('SELECT slug FROM properties WHERE id = $1', [req.params.id]);
-          const slug = rows[0]?.slug;
-          if (slug) prefix = `properties/${slug}/`;
-        } catch (_) {}
-        const list = await new Promise((resolve, reject) => {
-          s3.listObjectsV2({ Bucket: bucket, Prefix: prefix }, (err, data) => err ? reject(err) : resolve(data || { Contents: [] }));
-        });
-        const objects = (list.Contents || []).map(o => ({ Key: o.Key }));
-        if (objects.length) {
-          await new Promise((resolve, reject) => {
-            s3.deleteObjects({ Bucket: bucket, Delete: { Objects: objects } }, (err) => err ? reject(err) : resolve());
-          });
+        const prefixes = [];
+        prefixes.push(`properties/${String(req.params.id)}/`);
+        if (slug) prefixes.push(`properties/${slug}/`);
+        for (const pfx of prefixes) {
+          let token = undefined;
+          do {
+            const page = await new Promise((resolve, reject) => {
+              s3.listObjectsV2({ Bucket: bucket, Prefix: pfx, ContinuationToken: token }, (err, data) => err ? reject(err) : resolve(data || {}));
+            });
+            const objs = (page.Contents || []).map(o => ({ Key: o.Key }));
+            if (objs.length) {
+              await new Promise((resolve, reject) => {
+                s3.deleteObjects({ Bucket: bucket, Delete: { Objects: objs } }, (err) => err ? reject(err) : resolve());
+              });
+            }
+            token = page.IsTruncated ? page.NextContinuationToken : undefined;
+          } while (token);
         }
       }
     } catch (e) { /* ignore */ }
