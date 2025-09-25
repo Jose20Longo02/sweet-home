@@ -282,25 +282,54 @@ exports.update = async (req, res, next) => {
 exports.delete = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id, 10);
-    const rows = await query('SELECT author_id, cover_image, slug FROM blog_posts WHERE id = $1', [id]);
+    const rows = await query('SELECT author_id, cover_image, slug, content, content_i18n FROM blog_posts WHERE id = $1', [id]);
     const post = rows.rows[0];
     if (!post) return res.status(404).render('errors/404');
     if (req.session.user.role !== 'SuperAdmin' && post.author_id !== req.session.user.id) {
       return res.status(403).send('Forbidden');
     }
-    // Delete cover image and any inline images under blog/<slug>/ if using Spaces
+    // Delete cover image and any inline images if using Spaces
     try {
       if (process.env.DO_SPACES_BUCKET) {
         const s3 = require('../config/spaces');
         const bucket = process.env.DO_SPACES_BUCKET;
         const prefixes = [];
+        const keys = [];
         if (post.cover_image && /^https?:\/\//.test(post.cover_image)) {
           const key = String(post.cover_image).replace(/^https?:\/\/[^/]+\//, '');
           prefixes.push(key.split('/').slice(0, -1).join('/') + '/');
-          await new Promise((resolve)=> s3.deleteObject({ Bucket: bucket, Key: key }, ()=>resolve()));
+          keys.push(key);
         }
         if (post.slug) {
           prefixes.push(`blog/${post.slug}/`);
+        }
+        // Extract inline image keys referenced in content (including any provisional slug like "post")
+        try {
+          const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
+          const cdnBase = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : '';
+          const htmls = [];
+          if (post.content) htmls.push(String(post.content));
+          try {
+            const i18n = post.content_i18n && (typeof post.content_i18n === 'object' ? post.content_i18n : JSON.parse(post.content_i18n));
+            if (i18n && typeof i18n === 'object') {
+              Object.values(i18n).forEach(v => { if (v) htmls.push(String(v)); });
+            }
+          } catch (_) {}
+          const regex = new RegExp(`${cdnBase.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}/(blog/[^"'\)\s>]+)`, 'g');
+          for (const html of htmls) {
+            let m; while ((m = regex.exec(html)) !== null) { keys.push(m[1]); }
+          }
+        } catch (_) {}
+
+        // Delete individual keys collected from content and cover
+        if (keys.length) {
+          // unique keys
+          const uniq = Array.from(new Set(keys)).map(k => ({ Key: k }));
+          // delete in chunks of 1000
+          for (let i = 0; i < uniq.length; i += 1000) {
+            const chunk = uniq.slice(i, i + 1000);
+            await new Promise((resolve, reject) => s3.deleteObjects({ Bucket: bucket, Delete: { Objects: chunk } }, (e)=>e?reject(e):resolve()));
+          }
         }
         // Delete all objects under collected prefixes (paginated)
         for (const pfx of prefixes) {
