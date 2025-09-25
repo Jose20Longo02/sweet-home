@@ -278,6 +278,7 @@ async function loadFeaturedProperties() {
           </div>
           <div class="meta">
             <div class="title">${property.title}</div>
+            ${priceText ? `<div class="price">${priceText}</div>` : ''}
             <div class="location">${property.city}, ${property.country}</div>
             <div class="features-row">
               ${size ? `

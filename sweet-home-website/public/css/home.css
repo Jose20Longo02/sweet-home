@@ -688,15 +688,16 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 .cards-track > .edge-spacer { flex: 0 0 0; }
 .property-card { background: #fff; border-radius: 16px; box-shadow: 0 10px 24px rgba(0,0,0,.08); overflow: hidden; transform: scale(.94); opacity: .7; transition: transform .35s ease, opacity .35s ease, box-shadow .35s ease; }
 .property-card.is-center { transform: scale(1.02); opacity: 1; box-shadow: 0 18px 40px rgba(0,0,0,.12); }
-.property-card img { width: 100%; height: 200px; object-fit: cover; display: block; }
+.property-card img { width: 100%; height: 280px; object-fit: cover; display: block; }
 .property-card .img-wrap { position: relative; }
 .property-card .img-wrap::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(46,168,98,1) 0%, rgba(46,168,98,.75) 45%, rgba(46,168,98,.25) 85%, rgba(46,168,98,0) 100%); opacity: 0; transition: opacity .25s ease; z-index: 1; }
 .property-card .img-wrap::before { content: attr(data-price); position: absolute; left: 50%; top: 75%; transform: translate(-50%, -50%); color: #fff; font-weight: 300; font-size: 28px; letter-spacing: .2px; opacity: 0; transition: opacity .25s ease, transform .25s ease; pointer-events: none; z-index: 2; }
 /* Apply hover only when card is centered */
 .property-card.is-center:hover .img-wrap::after { opacity: 1; }
 .property-card.is-center:hover .img-wrap::before { opacity: 1; transform: translate(-50%, -50%) scale(1.02); }
-.property-card .meta { padding: 16px 16px; min-height: 160px; }
+.property-card .meta { padding: 16px 16px; min-height: 180px; }
 .property-card .title { font-weight: 700; margin: 0 0 8px; color: var(--gray-900); }
+.property-card .price { font-weight: 600; font-size: 18px; color: var(--primary-color, #2ea862); margin: 0 0 8px; }
 .property-card .location { color: var(--gray-600); font-size: 12px; margin-bottom: 14px; }
 .property-card .features-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
 .property-card .feature { display: inline-flex; gap: 6px; align-items: center; color: var(--gray-700); font-size: 12px; background: var(--gray-100); border-radius: 999px; padding: 4px 8px; }
@@ -806,6 +807,10 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   .stretch-carousel { padding-bottom: 44px; }
   .services-brief .services-grid { grid-template-columns: 1fr; }
   .cards-track > .property-card, .cards-track > .testimonial-card { flex-basis: 80%; }
+  /* Property card images - slightly smaller on medium screens */
+  .property-card img { height: 240px; }
+  .property-card .meta { min-height: 160px; }
+  .property-card .price { font-size: 16px; }
   /* About responsiveness */
   .about-hero { height: 460px; }
   .about-overlay { padding-left: 8%; max-width: 92%; gap: 16px; }
@@ -822,6 +827,10 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   /* stack only at very small widths */
   .hero-search .search-row { display: grid; grid-template-columns: 1fr; }
   .cards-track > .property-card, .cards-track > .testimonial-card { flex-basis: 92%; }
+  /* Property card images - smaller on mobile for better performance */
+  .property-card img { height: 200px; }
+  .property-card .meta { min-height: 140px; }
+  .property-card .price { font-size: 15px; }
   /* International: small screens */
   .stretch-track { gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; }
   .stretch-card { height: 240px; flex: 0 0 160px; scroll-snap-align: center; }
