@@ -23,10 +23,14 @@ const upload = multer({
 }).single('profile_picture');
 
 // Helper function to upload to Spaces
-const uploadToSpaces = async (buffer, filename, mimetype, userId) => {
+const slugify = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+const uploadToSpaces = async (buffer, filename, mimetype, userId, displayName) => {
+  const nameSlug = slugify(displayName);
+  const folder = userId ? (nameSlug ? `profiles/${userId}-${nameSlug}` : `profiles/${userId}`) : `profiles`;
   const params = {
     Bucket: process.env.DO_SPACES_BUCKET,
-    Key: userId ? `profiles/${userId}/${filename}` : `profiles/${filename}`,
+    Key: `${folder}/${filename}`,
     Body: buffer,
     ContentType: mimetype,
     ACL: 'public-read'
@@ -40,7 +44,7 @@ const uploadToSpaces = async (buffer, filename, mimetype, userId) => {
         const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
         const base = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : null;
         const url = base ? `${base}/${params.Key}` : data.Location;
-        resolve({ url, key: params.Key });
+        resolve({ url, key: params.Key, folder });
       }
     });
   });
@@ -96,12 +100,14 @@ module.exports = async function uploadProfilePic(req, res, next) {
 
       // Upload to Spaces
       const userId = req.session?.user?.id || null;
-      const { url: fileUrl, key } = await uploadToSpaces(buffer, finalFilename, mimetype, userId);
+      const displayName = req.body?.name || req.session?.user?.name || '';
+      const { url: fileUrl, key, folder } = await uploadToSpaces(buffer, finalFilename, mimetype, userId, displayName);
       
       // Store the CDN URL in req.file for the controller
       req.file.filename = finalFilename;
       req.file.url = fileUrl;
       req.file.key = key;
+      req.file.folder = folder;
       
       next();
     } catch (e) {

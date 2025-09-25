@@ -211,7 +211,17 @@ exports.updateSuperAdminProfile = async (req, res, next) => {
     }
 
     if (req.file) {
-      // Use the Spaces URL if available, otherwise fall back to local path
+      // Remove previous Spaces object if replacing
+      try {
+        if (process.env.DO_SPACES_BUCKET && req.session.user.profile_picture) {
+          const prevUrl = String(req.session.user.profile_picture);
+          if (/^https?:\/\//.test(prevUrl)) {
+            const key = prevUrl.replace(/^https?:\/\/[^/]+\//, '');
+            const s3 = require('../config/spaces');
+            await new Promise((resolve) => s3.deleteObject({ Bucket: process.env.DO_SPACES_BUCKET, Key: key }, () => resolve()));
+          }
+        }
+      } catch (_) {}
       const picUrl = req.file.url || '/uploads/profiles/' + req.file.filename;
       fields.push(`profile_picture = $${idx++}`); values.push(picUrl);
     }
@@ -285,11 +295,26 @@ exports.deleteTeamMember = async (req, res, next) => {
       [memberId]
     );
     const pic = rows[0]?.profile_picture;
-    if (pic && String(pic).startsWith('/uploads/')) {
-      const fullPath = path.join(__dirname, '../public', pic);
-      fs.unlink(fullPath, err => {
-        if (err && err.code !== 'ENOENT') console.error('Failed to delete pic:', err);
-      });
+    if (pic) {
+      if (String(pic).startsWith('/uploads/')) {
+        const fullPath = path.join(__dirname, '../public', pic);
+        fs.unlink(fullPath, err => { if (err && err.code !== 'ENOENT') console.error('Failed to delete pic:', err); });
+      } else if (process.env.DO_SPACES_BUCKET) {
+        try {
+          const s3 = require('../config/spaces');
+          const key = String(pic).replace(/^https?:\/\/[^/]+\//, '');
+          await new Promise((resolve) => s3.deleteObject({ Bucket: process.env.DO_SPACES_BUCKET, Key: key }, () => resolve()));
+          // Also try deleting the whole folder (profiles/<id>-<slug>/)
+          const folderPrefix = key.split('/').slice(0, -1).join('/') + '/';
+          let token;
+          do {
+            const page = await new Promise((resolve, reject) => s3.listObjectsV2({ Bucket: process.env.DO_SPACES_BUCKET, Prefix: folderPrefix, ContinuationToken: token }, (e,d)=>e?reject(e):resolve(d||{})));
+            const objs = (page.Contents || []).map(o => ({ Key: o.Key }));
+            if (objs.length) await new Promise((resolve,reject)=>s3.deleteObjects({ Bucket: process.env.DO_SPACES_BUCKET, Delete: { Objects: objs } }, (e)=>e?reject(e):resolve()));
+            token = page.IsTruncated ? page.NextContinuationToken : undefined;
+          } while(token);
+        } catch (_) {}
+      }
     }
 
     // 3) Remove the user
@@ -544,6 +569,17 @@ exports.updateAdminProfile = async (req, res, next) => {
       fields.push(`password = $${idx++}`); values.push(hash);
     }
     if (req.file) {
+      // Remove previous Spaces object if replacing (Admin profile)
+      try {
+        if (process.env.DO_SPACES_BUCKET && req.session.user.profile_picture) {
+          const prevUrl = String(req.session.user.profile_picture);
+          if (/^https?:\/\//.test(prevUrl)) {
+            const key = prevUrl.replace(/^https?:\/\/[^/]+\//, '');
+            const s3 = require('../config/spaces');
+            await new Promise((resolve) => s3.deleteObject({ Bucket: process.env.DO_SPACES_BUCKET, Key: key }, () => resolve()));
+          }
+        }
+      } catch (_) {}
       // Use the Spaces URL if available, otherwise fall back to local path
       const picUrl = req.file.url || '/uploads/profiles/' + req.file.filename;
       fields.push(`profile_picture = $${idx++}`); values.push(picUrl);
