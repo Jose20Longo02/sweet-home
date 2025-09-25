@@ -1725,9 +1725,29 @@ exports.deletePropertyAdmin = async (req, res, next) => {
   try {
     await query(`DELETE FROM properties WHERE id = $1`, [req.params.id]);
     try {
-      const propDir = path.join(__dirname, '../public/uploads/properties', String(req.params.id));
-      if (fs.existsSync(propDir)) {
-        fs.rmSync(propDir, { recursive: true, force: true });
+      if (!process.env.DO_SPACES_BUCKET) {
+        const propDir = path.join(__dirname, '../public/uploads/properties', String(req.params.id));
+        if (fs.existsSync(propDir)) {
+          fs.rmSync(propDir, { recursive: true, force: true });
+        }
+      } else {
+        const bucket = process.env.DO_SPACES_BUCKET;
+        // Prefer slug-based prefix
+        let prefix = `properties/${String(req.params.id)}/`;
+        try {
+          const { rows } = await query('SELECT slug FROM properties WHERE id = $1', [req.params.id]);
+          const slug = rows[0]?.slug;
+          if (slug) prefix = `properties/${slug}/`;
+        } catch (_) {}
+        const list = await new Promise((resolve, reject) => {
+          s3.listObjectsV2({ Bucket: bucket, Prefix: prefix }, (err, data) => err ? reject(err) : resolve(data || { Contents: [] }));
+        });
+        const objects = (list.Contents || []).map(o => ({ Key: o.Key }));
+        if (objects.length) {
+          await new Promise((resolve, reject) => {
+            s3.deleteObjects({ Bucket: bucket, Delete: { Objects: objects } }, (err) => err ? reject(err) : resolve());
+          });
+        }
       }
     } catch (e) { /* ignore */ }
     res.redirect('/superadmin/dashboard/properties?page=' + (req.query.page||1));
