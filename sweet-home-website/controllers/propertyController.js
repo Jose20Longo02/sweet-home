@@ -876,7 +876,7 @@ exports.createProperty = async (req, res, next) => {
           return out;
         };
 
-        const basePrefix = `properties/${newId}`;
+        const basePrefix = `properties/${uniqueSlug || newId}`;
         // photos
         photos = await ensurePrefixedList(processed.photos || [], `${basePrefix}/photos`);
         // video
@@ -1475,7 +1475,13 @@ exports.deleteProperty = async (req, res, next) => {
         }
       } else {
         const bucket = process.env.DO_SPACES_BUCKET;
-        const prefix = `properties/${String(req.params.id)}/`;
+        // Fetch slug to use slug-based prefix when available
+        let prefix = `properties/${String(req.params.id)}/`;
+        try {
+          const { rows } = await query('SELECT slug FROM properties WHERE id = $1', [req.params.id]);
+          const slug = rows[0]?.slug;
+          if (slug) prefix = `properties/${slug}/`;
+        } catch (_) {}
         const list = await new Promise((resolve, reject) => {
           s3.listObjectsV2({ Bucket: bucket, Prefix: prefix }, (err, data) => err ? reject(err) : resolve(data || { Contents: [] }));
         });
