@@ -49,8 +49,9 @@ const uploadToSpaces = async (buffer, filename, mimetype, folder) => {
         reject(err);
       } else {
         const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
-        const url = cdn ? `${cdn}/${params.Key}` : data.Location;
-        resolve(url);
+        const base = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : null;
+        const url = base ? `${base}/${params.Key}` : data.Location;
+        resolve({ url, key: params.Key });
       }
     });
   });
@@ -99,12 +100,13 @@ const processAndUploadFile = async (file, folder) => {
   const finalFilename = `${Date.now()}-${base}${ext}`;
 
   // Upload to Spaces
-  const fileUrl = await uploadToSpaces(buffer, finalFilename, mimetype, folder);
+  const { url: fileUrl, key } = await uploadToSpaces(buffer, finalFilename, mimetype, folder);
   
   // Return file info with Spaces URL
   return {
     filename: finalFilename,
     url: fileUrl,
+    key,
     mimetype: mimetype,
     size: buffer.length
   };
@@ -117,30 +119,34 @@ module.exports = async function uploadPropertyMedia(req, res, next) {
     try {
       const processedFiles = {};
 
+      // Determine target prefixes (if id param present, upload under that id)
+      const propId = req.params && req.params.id ? String(req.params.id) : null;
+      const basePrefix = propId ? `properties/${propId}` : `properties`;
+
       // Process photos
       if (req.files?.photos) {
         processedFiles.photos = [];
         for (const file of req.files.photos) {
-          const processed = await processAndUploadFile(file, 'properties/photos');
+          const processed = await processAndUploadFile(file, `${basePrefix}/photos`);
           if (processed) processedFiles.photos.push(processed);
         }
       }
 
       // Process video
       if (req.files?.video) {
-        const processed = await processAndUploadFile(req.files.video[0], 'properties/videos');
+        const processed = await processAndUploadFile(req.files.video[0], `${basePrefix}/videos`);
         if (processed) processedFiles.video = [processed];
       }
 
       // Process floorplan
       if (req.files?.floorplan) {
-        const processed = await processAndUploadFile(req.files.floorplan[0], 'properties/floorplans');
+        const processed = await processAndUploadFile(req.files.floorplan[0], `${basePrefix}/floorplan`);
         if (processed) processedFiles.floorplan = [processed];
       }
 
       // Process plan_photo
       if (req.files?.plan_photo) {
-        const processed = await processAndUploadFile(req.files.plan_photo[0], 'properties/plans');
+        const processed = await processAndUploadFile(req.files.plan_photo[0], `${basePrefix}/plan`);
         if (processed) processedFiles.plan_photo = [processed];
       }
 

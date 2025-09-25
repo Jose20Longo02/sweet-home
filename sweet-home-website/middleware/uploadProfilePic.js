@@ -23,10 +23,10 @@ const upload = multer({
 }).single('profile_picture');
 
 // Helper function to upload to Spaces
-const uploadToSpaces = async (buffer, filename, mimetype) => {
+const uploadToSpaces = async (buffer, filename, mimetype, userId) => {
   const params = {
     Bucket: process.env.DO_SPACES_BUCKET,
-    Key: `profiles/${filename}`,
+    Key: userId ? `profiles/${userId}/${filename}` : `profiles/${filename}`,
     Body: buffer,
     ContentType: mimetype,
     ACL: 'public-read'
@@ -38,8 +38,9 @@ const uploadToSpaces = async (buffer, filename, mimetype) => {
         reject(err);
       } else {
         const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
-        const url = cdn ? `${cdn}/${params.Key}` : data.Location;
-        resolve(url);
+        const base = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`)) : null;
+        const url = base ? `${base}/${params.Key}` : data.Location;
+        resolve({ url, key: params.Key });
       }
     });
   });
@@ -94,11 +95,13 @@ module.exports = async function uploadProfilePic(req, res, next) {
       const finalFilename = `profile-${timestamp}-${random}${ext}`;
 
       // Upload to Spaces
-      const fileUrl = await uploadToSpaces(buffer, finalFilename, mimetype);
+      const userId = req.session?.user?.id || null;
+      const { url: fileUrl, key } = await uploadToSpaces(buffer, finalFilename, mimetype, userId);
       
       // Store the CDN URL in req.file for the controller
       req.file.filename = finalFilename;
       req.file.url = fileUrl;
+      req.file.key = key;
       
       next();
     } catch (e) {

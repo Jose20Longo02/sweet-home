@@ -56,8 +56,9 @@ const uploadToSpaces = async (buffer, filename, mimetype, folder) => {
         reject(err);
       } else {
         const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
-        const url = cdn ? `${cdn}/${params.Key}` : data.Location;
-        resolve(url);
+        const base = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : null;
+        const url = base ? `${base}/${params.Key}` : data.Location;
+        resolve({ url, key: params.Key });
       }
     });
   });
@@ -104,12 +105,13 @@ const processAndUploadFile = async (file, folder) => {
   const finalFilename = sanitizeFilename(filename);
 
   // Upload to Spaces
-  const fileUrl = await uploadToSpaces(buffer, finalFilename, mimetype, folder);
+  const { url: fileUrl, key } = await uploadToSpaces(buffer, finalFilename, mimetype, folder);
   
   // Return file info with Spaces URL
   return {
     filename: finalFilename,
     url: fileUrl,
+    key,
     mimetype: mimetype,
     size: buffer.length
   };
@@ -121,24 +123,27 @@ module.exports = async function uploadProjectMedia(req, res, next) {
     try {
       const processedFiles = {};
 
+      const projId = req.params && req.params.id ? String(req.params.id) : null;
+      const basePrefix = projId ? `projects/${projId}` : `projects`;
+
       // Process photos
       if (req.files?.photos) {
         processedFiles.photos = [];
         for (const file of req.files.photos) {
-          const processed = await processAndUploadFile(file, 'projects/photos');
+          const processed = await processAndUploadFile(file, `${basePrefix}/photos`);
           if (processed) processedFiles.photos.push(processed);
         }
       }
 
       // Process video
       if (req.files?.video) {
-        const processed = await processAndUploadFile(req.files.video[0], 'projects/videos');
+        const processed = await processAndUploadFile(req.files.video[0], `${basePrefix}/videos`);
         if (processed) processedFiles.video = [processed];
       }
 
       // Process brochure
       if (req.files?.brochure) {
-        const processed = await processAndUploadFile(req.files.brochure[0], 'projects/brochures');
+        const processed = await processAndUploadFile(req.files.brochure[0], `${basePrefix}/brochure`);
         if (processed) processedFiles.brochure = [processed];
       }
 
