@@ -147,14 +147,27 @@ exports.createProject = async (req, res, next) => {
     // Numeric constraints: NUMERIC(8,2) => max 9,999,999.99; NUMERIC(12,2) => max 9,999,999,999.99
     const maxSize = 9999999.99;
     const maxMoney = 9999999999.99;
-    const minUnitSize  = clamp(sanitizeDecimalString(body.min_unit_size), 0, maxSize);
-    const maxUnitSize  = clamp(sanitizeDecimalString(body.max_unit_size), 0, maxSize);
-    const minPrice     = clamp(sanitizeDecimalString(body.min_price), 0, maxMoney);
-    const maxPrice     = clamp(sanitizeDecimalString(body.max_price), 0, maxMoney);
-    const minBedrooms  = parseNumberField(body.min_bedrooms);
-    const maxBedrooms  = parseNumberField(body.max_bedrooms);
-    const minBathrooms = parseNumberField(body.min_bathrooms);
-    const maxBathrooms = parseNumberField(body.max_bathrooms);
+    const rawMinUnitSize  = clamp(sanitizeDecimalString(body.min_unit_size), 0, maxSize);
+    const rawMaxUnitSize  = clamp(sanitizeDecimalString(body.max_unit_size), 0, maxSize);
+    const rawMinPrice     = clamp(sanitizeDecimalString(body.min_price), 0, maxMoney);
+    const rawMaxPrice     = clamp(sanitizeDecimalString(body.max_price), 0, maxMoney);
+    const rawMinBedrooms  = parseNumberField(body.min_bedrooms);
+    const rawMaxBedrooms  = parseNumberField(body.max_bedrooms);
+    const rawMinBathrooms = parseNumberField(body.min_bathrooms);
+    const rawMaxBathrooms = parseNumberField(body.max_bathrooms);
+
+    // Final coercion for DB to avoid numeric overflow; coerce to bounded strings
+    const toDbDecimal = (n, max) => (n === null ? null : Number.isFinite(n) ? Math.min(Math.max(n, 0), max).toFixed(2) : null);
+    const toDbInt     = (n, max) => (n === null ? null : Number.isFinite(n) ? Math.min(Math.max(Math.trunc(n), 0), max) : null);
+
+    const minUnitSize  = toDbDecimal(rawMinUnitSize, maxSize);
+    const maxUnitSize  = toDbDecimal(rawMaxUnitSize, maxSize);
+    const minPrice     = toDbDecimal(rawMinPrice, maxMoney);
+    const maxPrice     = toDbDecimal(rawMaxPrice, maxMoney);
+    const minBedrooms  = toDbInt(rawMinBedrooms, 99);
+    const maxBedrooms  = toDbInt(rawMaxBedrooms, 99);
+    const minBathrooms = toDbInt(rawMinBathrooms, 99);
+    const maxBathrooms = toDbInt(rawMaxBathrooms, 99);
     const isSoldOut    = body.is_sold_out === 'on' || body.is_sold_out === 'true' || body.is_sold_out === true;
     const brochureUrl  = null; // to be set from upload
     let amenities      = body['amenities'] || body['amenities[]'] || [];
