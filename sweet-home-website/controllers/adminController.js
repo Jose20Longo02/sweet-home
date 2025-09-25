@@ -404,11 +404,19 @@ exports.rejectRequest = async (req, res, next) => {
     await query('DELETE FROM users WHERE id = $1', [req.params.id]);
 
     // 3) Remove the file (if it exists)
-    if (user.profile_picture && String(user.profile_picture).startsWith('/uploads/')) {
-      const filePath = path.join(__dirname, '../public', user.profile_picture);
-      fs.unlink(filePath, err => {
-        if (err && err.code !== 'ENOENT') console.error('Failed to delete pic:', err);
-      });
+    if (user.profile_picture) {
+      if (String(user.profile_picture).startsWith('/uploads/')) {
+        const filePath = path.join(__dirname, '../public', user.profile_picture);
+        fs.unlink(filePath, err => { if (err && err.code !== 'ENOENT') console.error('Failed to delete pic:', err); });
+      } else if (process.env.DO_SPACES_BUCKET) {
+        try {
+          const s3 = require('../config/spaces');
+          const url = String(user.profile_picture);
+          const bucket = process.env.DO_SPACES_BUCKET;
+          const key = url.replace(/^https?:\/\/[^/]+\//, '');
+          await new Promise((resolve) => s3.deleteObject({ Bucket: bucket, Key: key }, () => resolve()));
+        } catch (_) {}
+      }
     }
 
     // 4) Send the rejection email—**make sure to include `to:`!**

@@ -6,6 +6,7 @@ const locationColors = require('../config/locationColors');
 const slugify     = require('slugify');
 const fs          = require('fs');
 const path        = require('path');
+const s3          = require('../config/spaces');
 const sendMail    = require('../config/mailer');
 const { generateVariants, SIZES } = require('../middleware/imageVariants');
 const { ensureLocalizedFields } = require('../config/translator');
@@ -777,7 +778,7 @@ exports.createProperty = async (req, res, next) => {
       );
     } catch (_) { /* non-fatal */ }
 
-    // Move uploaded files into a property-specific folder and update paths (local disk only)
+    // Move uploaded files into a property-specific folder and update paths
     if (!process.env.DO_SPACES_BUCKET) {
       try {
       const propDir = path.join(__dirname, '../public/uploads/properties', String(newId));
@@ -846,17 +847,83 @@ exports.createProperty = async (req, res, next) => {
         console.error('File move error:', fileErr);
       }
     } else {
-      // Using Spaces: URLs already computed above, just persist
-      await query(
-        `UPDATE properties
-            SET photos = $1,
-                video_url = $2,
-                floorplan_url = $3,
-                plan_photo_url = $4,
-                updated_at = NOW()
-          WHERE id = $5`,
-        [photos, videoUrl, floorplanUrl, planPhotoUrl, newId]
-      );
+      // Using Spaces: if uploads were done without id prefix, copy them under properties/<id>/...
+      try {
+        const bucket = process.env.DO_SPACES_BUCKET;
+        const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
+        const cdnBase = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : '';
+        const processed = req.files || {};
+
+        const copyOne = async (oldKey, newKey) => new Promise((resolve, reject) => {
+          s3.copyObject({ Bucket: bucket, CopySource: `/${bucket}/${oldKey}`, Key: newKey, ACL: 'public-read' }, (err) => {
+            if (err) return reject(err);
+            s3.deleteObject({ Bucket: bucket, Key: oldKey }, () => resolve(`${cdnBase}/${newKey}`));
+          });
+        });
+
+        const ensurePrefixedList = async (items, targetPrefix) => {
+          if (!Array.isArray(items) || items.length === 0) return [];
+          const out = [];
+          for (const it of items) {
+            const key = it.key || '';
+            const already = key.startsWith(`${targetPrefix}/`);
+            if (already) { out.push(it.url); continue; }
+            const name = path.basename(key || it.filename || '');
+            const newKey = `${targetPrefix}/${name}`;
+            const url = await copyOne(key, newKey);
+            out.push(url);
+          }
+          return out;
+        };
+
+        const basePrefix = `properties/${newId}`;
+        // photos
+        photos = await ensurePrefixedList(processed.photos || [], `${basePrefix}/photos`);
+        // video
+        if (processed.video && processed.video[0]) {
+          const v = processed.video[0];
+          const key = v.key || '';
+          const newKey = key.startsWith(`${basePrefix}/videos/`) ? key : `${basePrefix}/videos/${path.basename(key || v.filename || '')}`;
+          videoUrl = key === newKey ? v.url : await copyOne(key, newKey);
+        }
+        // floorplan
+        if (processed.floorplan && processed.floorplan[0]) {
+          const f = processed.floorplan[0];
+          const key = f.key || '';
+          const newKey = key.startsWith(`${basePrefix}/floorplan/`) ? key : `${basePrefix}/floorplan/${path.basename(key || f.filename || '')}`;
+          floorplanUrl = key === newKey ? f.url : await copyOne(key, newKey);
+        }
+        // plan photo
+        if (processed.plan_photo && processed.plan_photo[0]) {
+          const p = processed.plan_photo[0];
+          const key = p.key || '';
+          const newKey = key.startsWith(`${basePrefix}/plan/`) ? key : `${basePrefix}/plan/${path.basename(key || p.filename || '')}`;
+          planPhotoUrl = key === newKey ? p.url : await copyOne(key, newKey);
+        }
+
+        await query(
+          `UPDATE properties
+              SET photos = $1,
+                  video_url = $2,
+                  floorplan_url = $3,
+                  plan_photo_url = $4,
+                  updated_at = NOW()
+            WHERE id = $5`,
+          [photos, videoUrl, floorplanUrl, planPhotoUrl, newId]
+        );
+      } catch (_) {
+        // Fallback: persist whatever URLs we had
+        await query(
+          `UPDATE properties
+              SET photos = $1,
+                  video_url = $2,
+                  floorplan_url = $3,
+                  plan_photo_url = $4,
+                  updated_at = NOW()
+            WHERE id = $5`,
+          [photos, videoUrl, floorplanUrl, planPhotoUrl, newId]
+        );
+      }
     }
 
     const role = req.session.user.role;
@@ -1399,11 +1466,25 @@ exports.deleteProperty = async (req, res, next) => {
   try {
     // Delete DB row first
     await query(`DELETE FROM properties WHERE id = $1`, [req.params.id]);
-    // Remove media folder
+    // Remove media folder (local or Spaces)
     try {
-      const propDir = path.join(__dirname, '../public/uploads/properties', String(req.params.id));
-      if (fs.existsSync(propDir)) {
-        fs.rmSync(propDir, { recursive: true, force: true });
+      if (!process.env.DO_SPACES_BUCKET) {
+        const propDir = path.join(__dirname, '../public/uploads/properties', String(req.params.id));
+        if (fs.existsSync(propDir)) {
+          fs.rmSync(propDir, { recursive: true, force: true });
+        }
+      } else {
+        const bucket = process.env.DO_SPACES_BUCKET;
+        const prefix = `properties/${String(req.params.id)}/`;
+        const list = await new Promise((resolve, reject) => {
+          s3.listObjectsV2({ Bucket: bucket, Prefix: prefix }, (err, data) => err ? reject(err) : resolve(data || { Contents: [] }));
+        });
+        const objects = (list.Contents || []).map(o => ({ Key: o.Key }));
+        if (objects.length) {
+          await new Promise((resolve, reject) => {
+            s3.deleteObjects({ Bucket: bucket, Delete: { Objects: objects } }, (err) => err ? reject(err) : resolve());
+          });
+        }
       }
     } catch (_) {}
     // Redirect back to Admin list when deletion initiated from Admin dashboard

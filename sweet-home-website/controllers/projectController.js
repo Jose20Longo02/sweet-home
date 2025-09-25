@@ -5,6 +5,7 @@ const locations   = require('../config/locations');
 const { generateVariants } = require('../middleware/imageVariants');
 const { ensureLocalizedFields } = require('../config/translator');
 const path = require('path');
+const s3   = require('../config/spaces');
 const fs   = require('fs');
 
 /**
@@ -275,11 +276,60 @@ exports.createProject = async (req, res, next) => {
         );
       } catch (_) { /* non-fatal */ }
     } else {
-      // Using Spaces: URLs already computed above
-      await query(
-        `UPDATE projects SET photos=$1, video_url=$2, brochure_url=$3 WHERE id=$4`,
-        [photos, videoUrl, brochure, newId]
-      );
+      // Using Spaces: ensure files live under projects/<id>/...
+      try {
+        const bucket = process.env.DO_SPACES_BUCKET;
+        const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
+        const cdnBase = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : '';
+        const processed = req.files || {};
+
+        const copyOne = async (oldKey, newKey) => new Promise((resolve, reject) => {
+          s3.copyObject({ Bucket: bucket, CopySource: `/${bucket}/${oldKey}`, Key: newKey, ACL: 'public-read' }, (err) => {
+            if (err) return reject(err);
+            s3.deleteObject({ Bucket: bucket, Key: oldKey }, () => resolve(`${cdnBase}/${newKey}`));
+          });
+        });
+
+        const basePrefix = `projects/${newId}`;
+        const fixList = async (items, folder) => {
+          if (!Array.isArray(items) || !items.length) return [];
+          const out = [];
+          for (const it of items) {
+            const key = it.key || '';
+            const already = key.startsWith(`${basePrefix}/${folder}/`);
+            if (already) { out.push(it.url); continue; }
+            const name = path.basename(key || it.filename || '');
+            const newKey = `${basePrefix}/${folder}/${name}`;
+            const url = await copyOne(key, newKey);
+            out.push(url);
+          }
+          return out;
+        };
+
+        photos = await fixList(processed.photos || [], 'photos');
+        if (processed.video && processed.video[0]) {
+          const v = processed.video[0];
+          const key = v.key || '';
+          const newKey = key.startsWith(`${basePrefix}/videos/`) ? key : `${basePrefix}/videos/${path.basename(key || v.filename || '')}`;
+          videoUrl = key === newKey ? v.url : await copyOne(key, newKey);
+        }
+        if (processed.brochure && processed.brochure[0]) {
+          const b = processed.brochure[0];
+          const key = b.key || '';
+          const newKey = key.startsWith(`${basePrefix}/brochure/`) ? key : `${basePrefix}/brochure/${path.basename(key || b.filename || '')}`;
+          brochure = key === newKey ? b.url : await copyOne(key, newKey);
+        }
+
+        await query(
+          `UPDATE projects SET photos=$1, video_url=$2, brochure_url=$3 WHERE id=$4`,
+          [photos, videoUrl, brochure, newId]
+        );
+      } catch (_) {
+        await query(
+          `UPDATE projects SET photos=$1, video_url=$2, brochure_url=$3 WHERE id=$4`,
+          [photos, videoUrl, brochure, newId]
+        );
+      }
     }
 
     const role = req.session.user?.role;
@@ -712,6 +762,20 @@ exports.deleteProject = async (req, res, next) => {
         console.error('Failed to remove project dir:', e);
       }
     }
+  } else {
+    try {
+      const bucket = process.env.DO_SPACES_BUCKET;
+      const prefix = `projects/${projId}/`;
+      const list = await new Promise((resolve, reject) => {
+        s3.listObjectsV2({ Bucket: bucket, Prefix: prefix }, (err, data) => err ? reject(err) : resolve(data || { Contents: [] }));
+      });
+      const objects = (list.Contents || []).map(o => ({ Key: o.Key }));
+      if (objects.length) {
+        await new Promise((resolve, reject) => {
+          s3.deleteObjects({ Bucket: bucket, Delete: { Objects: objects } }, (err) => err ? reject(err) : resolve());
+        });
+      }
+    } catch (e) { /* ignore */ }
   }
 
     const role = req.session.user?.role;
