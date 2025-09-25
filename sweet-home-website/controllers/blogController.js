@@ -117,23 +117,29 @@ exports.create = async (req, res, next) => {
         // provisional slug from title at submit time
         const provisionalSlug = String((req.body && req.body.title) || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || finalSlug;
         if (provisionalSlug !== finalSlug) {
-          const fromPrefix = `blog/${provisionalSlug}/inline/`;
+          const candidateFromPrefixes = [
+            `blog/${provisionalSlug}/inline/`,
+            `blog/post-${req.session?.user?.id || 'anon'}/inline/`,
+            `blog/post/inline/`
+          ];
           const toPrefix   = `blog/${finalSlug}/inline/`;
           // move objects under inline/
-          let token;
-          do {
-            const page = await new Promise((resolve, reject) => s3.listObjectsV2({ Bucket: bucket, Prefix: fromPrefix, ContinuationToken: token }, (e,d)=>e?reject(e):resolve(d||{})));
-            const items = page.Contents || [];
-            for (const obj of items) {
-              const fileName = obj.Key.substring(fromPrefix.length);
-              const newKey = `${toPrefix}${fileName}`;
-              await new Promise((resolve, reject) => s3.copyObject({ Bucket: bucket, CopySource: `/${bucket}/${obj.Key}`, Key: newKey, ACL: 'public-read' }, (e)=>e?reject(e):resolve()));
-            }
-            if (items.length) {
-              await new Promise((resolve, reject) => s3.deleteObjects({ Bucket: bucket, Delete: { Objects: items.map(o=>({ Key:o.Key })) } }, (e)=>e?reject(e):resolve()));
-            }
-            token = page.IsTruncated ? page.NextContinuationToken : undefined;
-          } while (token);
+          for (const fromPrefix of candidateFromPrefixes) {
+            let token;
+            do {
+              const page = await new Promise((resolve, reject) => s3.listObjectsV2({ Bucket: bucket, Prefix: fromPrefix, ContinuationToken: token }, (e,d)=>e?reject(e):resolve(d||{})));
+              const items = page.Contents || [];
+              for (const obj of items) {
+                const fileName = obj.Key.substring(fromPrefix.length);
+                const newKey = `${toPrefix}${fileName}`;
+                await new Promise((resolve, reject) => s3.copyObject({ Bucket: bucket, CopySource: `/${bucket}/${obj.Key}`, Key: newKey, ACL: 'public-read' }, (e)=>e?reject(e):resolve()));
+              }
+              if (items.length) {
+                await new Promise((resolve, reject) => s3.deleteObjects({ Bucket: bucket, Delete: { Objects: items.map(o=>({ Key:o.Key })) } }, (e)=>e?reject(e):resolve()));
+              }
+              token = page.IsTruncated ? page.NextContinuationToken : undefined;
+            } while (token);
+          }
           // rewrite content URLs
           const fromBase = `${cdnBase}/blog/${provisionalSlug}/`;
           const toBase   = `${cdnBase}/blog/${finalSlug}/`;
@@ -303,6 +309,9 @@ exports.delete = async (req, res, next) => {
         if (post.slug) {
           prefixes.push(`blog/${post.slug}/`);
         }
+        // Also attempt deleting common provisional prefixes used by inline uploads
+        prefixes.push(`blog/post/`);
+        prefixes.push(`blog/post-${req.session?.user?.id || 'anon'}/`);
         // Extract inline image keys referenced in content (including any provisional slug like "post")
         try {
           const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
