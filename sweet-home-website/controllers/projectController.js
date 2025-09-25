@@ -290,7 +290,7 @@ exports.createProject = async (req, res, next) => {
           });
         });
 
-        const basePrefix = `projects/${newId}`;
+        const basePrefix = `projects/${slug || newId}`;
         const fixList = async (items, folder) => {
           if (!Array.isArray(items) || !items.length) return [];
           const out = [];
@@ -765,15 +765,29 @@ exports.deleteProject = async (req, res, next) => {
   } else {
     try {
       const bucket = process.env.DO_SPACES_BUCKET;
-      const prefix = `projects/${projId}/`;
-      const list = await new Promise((resolve, reject) => {
-        s3.listObjectsV2({ Bucket: bucket, Prefix: prefix }, (err, data) => err ? reject(err) : resolve(data || { Contents: [] }));
-      });
-      const objects = (list.Contents || []).map(o => ({ Key: o.Key }));
-      if (objects.length) {
-        await new Promise((resolve, reject) => {
-          s3.deleteObjects({ Bucket: bucket, Delete: { Objects: objects } }, (err) => err ? reject(err) : resolve());
-        });
+      // resolve slug before deletion (we still have it in req.params.id scope here)
+      let slug = null;
+      try {
+        const { rows } = await query('SELECT slug FROM projects WHERE id = $1', [projId]);
+        slug = rows[0]?.slug || null;
+      } catch (_) {}
+      const prefixes = [];
+      prefixes.push(`projects/${projId}/`);
+      if (slug) prefixes.push(`projects/${slug}/`);
+      for (const pfx of prefixes) {
+        let token = undefined;
+        do {
+          const page = await new Promise((resolve, reject) => {
+            s3.listObjectsV2({ Bucket: bucket, Prefix: pfx, ContinuationToken: token }, (err, data) => err ? reject(err) : resolve(data || {}));
+          });
+          const objs = (page.Contents || []).map(o => ({ Key: o.Key }));
+          if (objs.length) {
+            await new Promise((resolve, reject) => {
+              s3.deleteObjects({ Bucket: bucket, Delete: { Objects: objs } }, (err) => err ? reject(err) : resolve());
+            });
+          }
+          token = page.IsTruncated ? page.NextContinuationToken : undefined;
+        } while (token);
       }
     } catch (e) { /* ignore */ }
   }
