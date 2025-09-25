@@ -93,9 +93,10 @@ module.exports = function uploadBlogInline(req, res, next) {
       // Generate sanitized filename
       const finalFilename = sanitizeFilename(filename);
 
-      // Upload to temporary inline folder; on delete we remove blog/<slug>/ entirely
-      const authorId = req.session?.user?.id || 'anon';
-      const folder = `blog/tmp/${authorId}/inline`;
+      // Upload under a provisional slug based on provided title; controller can reconcile later if needed
+      const slugify = (s) => String(s || 'post').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const provisionalSlug = slugify(req.body?.title);
+      const folder = `blog/${provisionalSlug}/inline`;
       const { url: fileUrl, key } = await uploadToSpaces(buffer, finalFilename, mimetype, folder);
       
       // Store the CDN URL in req.file for the controller

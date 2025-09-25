@@ -97,15 +97,17 @@ module.exports = function uploadBlogMedia(req, res, next) {
       // Generate sanitized filename
       const finalFilename = sanitizeFilename(filename);
 
-      // Upload to temp folder; controller will move to blog/<slug>/cover on create when slug is known
-      const authorId = req.session?.user?.id || 'anon';
-      const folder = `blog/tmp/${authorId}/cover`;
+      // Upload directly under blog/<provisionalSlug>/cover using title; controller will reconcile if slug changes
+      const slugify = (s) => String(s || 'post').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const provisionalSlug = slugify(req.body?.title);
+      const folder = `blog/${provisionalSlug}/cover`;
       const { url: fileUrl, key } = await uploadToSpaces(buffer, finalFilename, mimetype, folder);
       
       // Store the CDN URL in req.file for the controller
       req.file.filename = finalFilename;
       req.file.url = fileUrl;
       req.file.key = key;
+      req.file.provisionalSlug = provisionalSlug;
       
       next();
     } catch (e) { 

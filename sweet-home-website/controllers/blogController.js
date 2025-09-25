@@ -81,7 +81,7 @@ exports.create = async (req, res, next) => {
     const post = await BlogPost.create({
       title, excerpt, content: safeContent, cover_image, status, author_id: req.session.user.id, published_at
     });
-    // If using Spaces and we have a temp cover key, move it to blog/<slug>/cover and store the final URL
+    // If using Spaces and we uploaded under a provisional slug, reconcile to final slug
     try {
       if (process.env.DO_SPACES_BUCKET && req.file && req.file.key) {
         const s3 = require('../config/spaces');
@@ -92,10 +92,13 @@ exports.create = async (req, res, next) => {
         const { rows: slugRow } = await query('SELECT slug FROM blog_posts WHERE id = $1', [post.id]);
         const slug = slugRow[0]?.slug || String(post.id);
         const name = req.file.filename;
-        const newKey = `blog/${slug}/cover/${name}`;
-        await new Promise((resolve, reject) => s3.copyObject({ Bucket: bucket, CopySource: `/${bucket}/${req.file.key}`, Key: newKey, ACL: 'public-read' }, (e)=>e?reject(e):resolve()));
-        await new Promise((resolve) => s3.deleteObject({ Bucket: bucket, Key: req.file.key }, ()=>resolve()));
-        const finalUrl = `${cdnBase}/${newKey}`;
+        const currentKey = req.file.key;
+        const desiredKey = `blog/${slug}/cover/${name}`;
+        if (currentKey !== desiredKey) {
+          await new Promise((resolve, reject) => s3.copyObject({ Bucket: bucket, CopySource: `/${bucket}/${currentKey}`, Key: desiredKey, ACL: 'public-read' }, (e)=>e?reject(e):resolve()));
+          await new Promise((resolve) => s3.deleteObject({ Bucket: bucket, Key: currentKey }, ()=>resolve()));
+        }
+        const finalUrl = `${cdnBase}/${desiredKey}`;
         await query('UPDATE blog_posts SET cover_image = $1 WHERE id = $2', [finalUrl, post.id]);
       }
     } catch (_) { /* non-fatal */ }
