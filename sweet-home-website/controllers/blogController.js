@@ -147,13 +147,33 @@ exports.update = async (req, res, next) => {
       return res.status(403).send('Forbidden');
     }
 
-    const cover_image = req.file ? (req.file.url || '/uploads/blog/' + req.file.filename) : existing.cover_image;
+    let cover_image = req.file ? (req.file.url || '/uploads/blog/' + req.file.filename) : existing.cover_image;
     const { title, excerpt, content, status } = req.body;
     const published_at = status === 'published' && !existing.published_at ? new Date() : existing.published_at;
 
     const safeContent = (typeof content === 'string') ? content : existing.content || '';
 
     const updated = await BlogPost.update(id, { title, excerpt, content: safeContent, cover_image, status, published_at });
+    // If Spaces and cover uploaded under a different provisional slug, reconcile to final slug
+    try {
+      if (process.env.DO_SPACES_BUCKET && req.file && req.file.key) {
+        const s3 = require('../config/spaces');
+        const bucket = process.env.DO_SPACES_BUCKET;
+        const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
+        const cdnBase = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : '';
+        const slugRow = await query('SELECT slug FROM blog_posts WHERE id = $1', [id]);
+        const slug = slugRow.rows[0]?.slug || String(id);
+        const name = req.file.filename;
+        const currentKey = req.file.key;
+        const desiredKey = `blog/${slug}/cover/${name}`;
+        if (currentKey !== desiredKey) {
+          await new Promise((resolve, reject) => s3.copyObject({ Bucket: bucket, CopySource: `/${bucket}/${currentKey}`, Key: desiredKey, ACL: 'public-read' }, (e)=>e?reject(e):resolve()));
+          await new Promise((resolve) => s3.deleteObject({ Bucket: bucket, Key: currentKey }, ()=>resolve()));
+          cover_image = `${cdnBase}/${desiredKey}`;
+          await query('UPDATE blog_posts SET cover_image = $1 WHERE id = $2', [cover_image, id]);
+        }
+      }
+    } catch (_) { /* non-fatal */ }
     try {
       const currentTitle = updated.title || title || existing.title || '';
       const currentExcerpt = (excerpt !== undefined ? excerpt : updated.excerpt || existing.excerpt || '') || '';

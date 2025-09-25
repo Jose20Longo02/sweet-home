@@ -65,6 +65,11 @@ document.addEventListener('DOMContentLoaded', function () {
           if (!file) return;
           var formData = new FormData();
           formData.append('image', file);
+          // Send current title so server can place image under blog/<provisional-slug>
+          var titleInput = document.querySelector('input[name="title"]');
+          if (titleInput && titleInput.value) {
+            formData.append('title', titleInput.value);
+          }
           // CSRF token
           var csrfEl = document.querySelector('input[name="_csrf"]');
           var csrf = csrfEl ? csrfEl.value : '';
