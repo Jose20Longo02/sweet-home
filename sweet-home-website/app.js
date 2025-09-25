@@ -60,8 +60,9 @@ app.use(
       "default-src": ["'self'"],
       "base-uri": ["'self'"],
       "form-action": ["'self'"],
-      "img-src": ["'self'", 'data:', 'blob:', 'https://*.tile.openstreetmap.org', 'https://unpkg.com', 'https://www.google-analytics.com', 'https://*.google-analytics.com'],
-      "media-src": ["'self'", 'blob:'],
+      // permit CDN images broadly; Spaces CDN is HTTPS
+      "img-src": ["'self'", 'data:', 'blob:', 'https:', 'https://*.tile.openstreetmap.org', 'https://unpkg.com', 'https://www.google-analytics.com', 'https://*.google-analytics.com'],
+      "media-src": ["'self'", 'blob:', 'https:'],
       "script-src": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://unpkg.com', 'https://www.googletagmanager.com'],
       "script-src-elem": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://unpkg.com', 'https://www.googletagmanager.com'],
       "script-src-attr": ["'none'"],
