@@ -154,7 +154,9 @@ exports.register = async (req, res, next) => {
     // Handle optional profile picture
     if (req.file) {
       fields.push('profile_picture');
-      values.push('/uploads/profiles/' + req.file.filename);
+      // Use the Spaces URL if available, otherwise fall back to local path
+      const profilePictureUrl = req.file.url || '/uploads/profiles/' + req.file.filename;
+      values.push(profilePictureUrl);
     }
 
     // Perform INSERT and get new ID

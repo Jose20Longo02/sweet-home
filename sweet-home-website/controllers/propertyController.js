@@ -609,7 +609,7 @@ exports.createProperty = async (req, res, next) => {
 
     // Build photos from uploads OR provided URLs
     const uploadedPhotosFiles = (req.files && Array.isArray(req.files.photos)) ? req.files.photos : [];
-    let photos = uploadedPhotosFiles.map(f => '/uploads/properties/' + f.filename);
+    let photos = uploadedPhotosFiles.map(f => f.url || '/uploads/properties/' + f.filename);
     // Respect client-side removals for new form (remove any deleted before submit)
     try {
       const removed = (body.remove_existing_photos || '').split(/\n+/).filter(Boolean);
@@ -630,18 +630,18 @@ exports.createProperty = async (req, res, next) => {
       body.video_url = '';
     }
     if (!videoUrl && uploadedVideoFile) {
-      videoUrl = '/uploads/properties/' + uploadedVideoFile.filename;
+      videoUrl = uploadedVideoFile.url || '/uploads/properties/' + uploadedVideoFile.filename;
     }
 
     // Floorplan / plan photo uploads
     if (req.files) {
       if (type === 'Apartment' && Array.isArray(req.files.floorplan) && req.files.floorplan[0]) {
         const f = req.files.floorplan[0];
-        floorplanUrl = '/uploads/properties/' + f.filename;
+        floorplanUrl = f.url || '/uploads/properties/' + f.filename;
       }
       if ((type === 'House' || type === 'Villa' || type === 'Land') && Array.isArray(req.files.plan_photo) && req.files.plan_photo[0]) {
         const p = req.files.plan_photo[0];
-        planPhotoUrl = '/uploads/properties/' + p.filename;
+        planPhotoUrl = p.url || '/uploads/properties/' + p.filename;
       }
     }
 
@@ -777,8 +777,9 @@ exports.createProperty = async (req, res, next) => {
       );
     } catch (_) { /* non-fatal */ }
 
-    // Move uploaded files into a property-specific folder and update paths
-    try {
+    // Move uploaded files into a property-specific folder and update paths (local disk only)
+    if (!process.env.DO_SPACES_BUCKET) {
+      try {
       const propDir = path.join(__dirname, '../public/uploads/properties', String(newId));
       if (!fs.existsSync(propDir)) {
         fs.mkdirSync(propDir, { recursive: true });
@@ -829,7 +830,23 @@ exports.createProperty = async (req, res, next) => {
         planPhotoUrl = `/uploads/properties/${newId}/${p.filename}`;
       }
 
-      // Persist updated paths
+        // Persist updated paths
+        await query(
+          `UPDATE properties
+              SET photos = $1,
+                  video_url = $2,
+                  floorplan_url = $3,
+                  plan_photo_url = $4,
+                  updated_at = NOW()
+            WHERE id = $5`,
+          [photos, videoUrl, floorplanUrl, planPhotoUrl, newId]
+        );
+      } catch (fileErr) {
+        // Non-fatal: log and continue
+        console.error('File move error:', fileErr);
+      }
+    } else {
+      // Using Spaces: URLs already computed above, just persist
       await query(
         `UPDATE properties
             SET photos = $1,
@@ -840,9 +857,6 @@ exports.createProperty = async (req, res, next) => {
           WHERE id = $5`,
         [photos, videoUrl, floorplanUrl, planPhotoUrl, newId]
       );
-    } catch (fileErr) {
-      // Non-fatal: log and continue
-      console.error('File move error:', fileErr);
     }
 
     const role = req.session.user.role;
@@ -871,23 +885,30 @@ exports.editPropertyForm = async (req, res, next) => {
       return res.status(403).send('Forbidden – Not assigned to you');
     }
 
-    // Ensure photos are absolute URLs and exist on disk; drop missing to prevent empty previews
-    try {
-      const arr = Array.isArray(property.photos) ? property.photos.filter(Boolean) : (property.photos ? [property.photos] : []);
-      const publicDir = path.join(__dirname, '../public');
-      const cleaned = [];
-      for (const ph of arr) {
-        const url = String(ph);
-        const abs = url.startsWith('/uploads/')
-          ? path.join(publicDir, url.replace(/^\//, ''))
-          : path.join(publicDir, 'uploads/properties', String(property.id), url);
-        if (fs.existsSync(abs)) {
-          cleaned.push(url.startsWith('/uploads/') ? url : `/uploads/properties/${property.id}/${url}`);
+    // Ensure photos are usable for previews
+    if (!process.env.DO_SPACES_BUCKET) {
+      try {
+        const arr = Array.isArray(property.photos) ? property.photos.filter(Boolean) : (property.photos ? [property.photos] : []);
+        const publicDir = path.join(__dirname, '../public');
+        const cleaned = [];
+        for (const ph of arr) {
+          const url = String(ph);
+          const abs = url.startsWith('/uploads/')
+            ? path.join(publicDir, url.replace(/^\//, ''))
+            : path.join(publicDir, 'uploads/properties', String(property.id), url);
+          if (fs.existsSync(abs)) {
+            cleaned.push(url.startsWith('/uploads/') ? url : `/uploads/properties/${property.id}/${url}`);
+          }
         }
+        property.photos = cleaned;
+      } catch (_) {
+        property.photos = Array.isArray(property.photos) ? property.photos.filter(Boolean) : [];
       }
-      property.photos = cleaned;
-    } catch (_) {
-      property.photos = Array.isArray(property.photos) ? property.photos.filter(Boolean) : [];
+    } else {
+      // With Spaces, keep whatever URLs are stored (likely absolute HTTPS)
+      try {
+        property.photos = (Array.isArray(property.photos) ? property.photos : [property.photos]).filter(Boolean).map(String);
+      } catch (_) { property.photos = []; }
     }
 
     // Fetch options needed by the form
@@ -1009,7 +1030,7 @@ exports.updateProperty = async (req, res, next) => {
     let videoUrl = (body.video_source === 'link' ? (body.video_url?.trim() || null) : null) || existing.video_url;
     const uploadedVideoFile = (req.files && Array.isArray(req.files.video) && req.files.video[0]) ? req.files.video[0] : null;
     if (!videoUrl && uploadedVideoFile) {
-      videoUrl = '/uploads/properties/' + uploadedVideoFile.filename;
+      videoUrl = uploadedVideoFile.url || '/uploads/properties/' + uploadedVideoFile.filename;
     }
 
     // Apply removals for existing media when editing
@@ -1042,11 +1063,11 @@ exports.updateProperty = async (req, res, next) => {
     if (req.files) {
       if (type === 'Apartment' && Array.isArray(req.files.floorplan) && req.files.floorplan[0]) {
         const f = req.files.floorplan[0];
-        floorplanUrl = '/uploads/properties/' + f.filename;
+        floorplanUrl = f.url || '/uploads/properties/' + f.filename;
       }
       if ((type === 'House' || type === 'Villa' || type === 'Land') && Array.isArray(req.files.plan_photo) && req.files.plan_photo[0]) {
         const p = req.files.plan_photo[0];
-        planPhotoUrl = '/uploads/properties/' + p.filename;
+        planPhotoUrl = p.url || '/uploads/properties/' + p.filename;
       }
     }
 
@@ -1228,8 +1249,9 @@ exports.updateProperty = async (req, res, next) => {
       }
     } catch (_) { /* best-effort */ }
 
-    // If there are new uploads, move them into the property folder and generate variants, then persist final URLs
-    try {
+    // If there are new uploads, move them into the property folder and generate variants, then persist final URLs (local disk only)
+    if (!process.env.DO_SPACES_BUCKET) {
+      try {
       const propDir = path.join(__dirname, '../public/uploads/properties', String(propId));
       if (!fs.existsSync(propDir)) {
         fs.mkdirSync(propDir, { recursive: true });
@@ -1279,6 +1301,24 @@ exports.updateProperty = async (req, res, next) => {
       }
 
       // Persist updated media paths if anything changed
+        if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || removeFloorplan || removePlanPhoto || (req.files && (req.files.floorplan || req.files.plan_photo))) {
+          await query(
+            `UPDATE properties
+                SET photos = $1,
+                    video_url = $2,
+                    floorplan_url = $3,
+                    plan_photo_url = $4,
+                    updated_at = NOW()
+              WHERE id = $5`,
+            [photos, videoUrl, floorplanUrl, planPhotoUrl, propId]
+          );
+        }
+      } catch (fileErr) {
+        // Non-fatal: log and continue
+        console.error('File move/update error:', fileErr);
+      }
+    } else {
+      // Using Spaces: URLs already computed above, just persist when something changed
       if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || removeFloorplan || removePlanPhoto || (req.files && (req.files.floorplan || req.files.plan_photo))) {
         await query(
           `UPDATE properties
@@ -1291,9 +1331,6 @@ exports.updateProperty = async (req, res, next) => {
           [photos, videoUrl, floorplanUrl, planPhotoUrl, propId]
         );
       }
-    } catch (fileErr) {
-      // Non-fatal: log and continue
-      console.error('File move/update error:', fileErr);
     }
 
     // After DB changes and file moves, delete removed files from disk (best-effort)
@@ -1323,17 +1360,17 @@ exports.updateProperty = async (req, res, next) => {
           } catch (_) {}
         }
       }
-      // Delete removed existing video if flagged and not replaced
-      if (removeExistingVideoFlag && existing.video_url && existing.video_url !== (videoUrl || '')) {
+      // Delete removed existing video if flagged and not replaced (local files only)
+      if (removeExistingVideoFlag && existing.video_url && existing.video_url !== (videoUrl || '') && String(existing.video_url).startsWith('/uploads/')) {
         const videoPath = path.join(__dirname, '../public', String(existing.video_url).replace(/^\//, ''));
         try { if (fs.existsSync(videoPath)) fs.unlinkSync(videoPath); } catch (_) {}
       }
       // Delete removed floorplan/plan photo if flagged and not replaced
-      if (removeFloorplan && existing.floorplan_url && existing.floorplan_url !== (floorplanUrl || '')) {
+      if (removeFloorplan && existing.floorplan_url && existing.floorplan_url !== (floorplanUrl || '') && String(existing.floorplan_url).startsWith('/uploads/')) {
         const fp = path.join(__dirname, '../public', String(existing.floorplan_url).replace(/^\//, ''));
         try { if (fs.existsSync(fp)) fs.unlinkSync(fp); } catch (_) {}
       }
-      if (removePlanPhoto && existing.plan_photo_url && existing.plan_photo_url !== (planPhotoUrl || '')) {
+      if (removePlanPhoto && existing.plan_photo_url && existing.plan_photo_url !== (planPhotoUrl || '') && String(existing.plan_photo_url).startsWith('/uploads/')) {
         const pp = path.join(__dirname, '../public', String(existing.plan_photo_url).replace(/^\//, ''));
         try { if (fs.existsSync(pp)) fs.unlinkSync(pp); } catch (_) {}
       }

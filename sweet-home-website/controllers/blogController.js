@@ -75,7 +75,7 @@ exports.newForm = (req, res) => {
 exports.create = async (req, res, next) => {
   try {
     const { title, excerpt, content, status } = req.body;
-    const cover_image = req.file ? ('/uploads/blog/' + req.file.filename) : null;
+    const cover_image = req.file ? (req.file.url || '/uploads/blog/' + req.file.filename) : null;
     const published_at = status === 'published' ? new Date() : null;
     const safeContent = (typeof content === 'string') ? content : '';
     const post = await BlogPost.create({
@@ -126,7 +126,7 @@ exports.update = async (req, res, next) => {
       return res.status(403).send('Forbidden');
     }
 
-    const cover_image = req.file ? ('/uploads/blog/' + req.file.filename) : existing.cover_image;
+    const cover_image = req.file ? (req.file.url || '/uploads/blog/' + req.file.filename) : existing.cover_image;
     const { title, excerpt, content, status } = req.body;
     const published_at = status === 'published' && !existing.published_at ? new Date() : existing.published_at;
 
@@ -189,7 +189,7 @@ exports.listAll = async (req, res, next) => {
 // Inline image upload for rich text editor
 exports.uploadInlineImage = async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file' });
-  const url = '/uploads/blog/inline/' + req.file.filename;
+  const url = req.file.url || '/uploads/blog/inline/' + req.file.filename;
   return res.json({ url });
 };
 

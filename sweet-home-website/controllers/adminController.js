@@ -211,7 +211,8 @@ exports.updateSuperAdminProfile = async (req, res, next) => {
     }
 
     if (req.file) {
-      const picUrl = '/uploads/profiles/' + req.file.filename;
+      // Use the Spaces URL if available, otherwise fall back to local path
+      const picUrl = req.file.url || '/uploads/profiles/' + req.file.filename;
       fields.push(`profile_picture = $${idx++}`); values.push(picUrl);
     }
 
@@ -284,7 +285,7 @@ exports.deleteTeamMember = async (req, res, next) => {
       [memberId]
     );
     const pic = rows[0]?.profile_picture;
-    if (pic) {
+    if (pic && String(pic).startsWith('/uploads/')) {
       const fullPath = path.join(__dirname, '../public', pic);
       fs.unlink(fullPath, err => {
         if (err && err.code !== 'ENOENT') console.error('Failed to delete pic:', err);
@@ -403,7 +404,7 @@ exports.rejectRequest = async (req, res, next) => {
     await query('DELETE FROM users WHERE id = $1', [req.params.id]);
 
     // 3) Remove the file (if it exists)
-    if (user.profile_picture) {
+    if (user.profile_picture && String(user.profile_picture).startsWith('/uploads/')) {
       const filePath = path.join(__dirname, '../public', user.profile_picture);
       fs.unlink(filePath, err => {
         if (err && err.code !== 'ENOENT') console.error('Failed to delete pic:', err);
@@ -535,7 +536,8 @@ exports.updateAdminProfile = async (req, res, next) => {
       fields.push(`password = $${idx++}`); values.push(hash);
     }
     if (req.file) {
-      const picUrl = '/uploads/profiles/' + req.file.filename;
+      // Use the Spaces URL if available, otherwise fall back to local path
+      const picUrl = req.file.url || '/uploads/profiles/' + req.file.filename;
       fields.push(`profile_picture = $${idx++}`); values.push(picUrl);
     }
 

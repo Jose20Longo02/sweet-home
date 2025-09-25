@@ -166,11 +166,11 @@ exports.createProject = async (req, res, next) => {
 
     // Media from uploads
     const uploadedPhotosFiles = (req.files && Array.isArray(req.files.photos)) ? req.files.photos : [];
-    let photos = uploadedPhotosFiles.map(f => '/uploads/projects/' + encodeURIComponent(f.filename));
+    let photos = uploadedPhotosFiles.map(f => f.url || '/uploads/projects/' + encodeURIComponent(f.filename));
     const uploadedVideoFile = (req.files && Array.isArray(req.files.video) && req.files.video[0]) ? req.files.video[0] : null;
-    let videoUrl = uploadedVideoFile ? '/uploads/projects/' + encodeURIComponent(uploadedVideoFile.filename) : null;
+    let videoUrl = uploadedVideoFile ? (uploadedVideoFile.url || '/uploads/projects/' + encodeURIComponent(uploadedVideoFile.filename)) : null;
     const uploadedBrochure = (req.files && Array.isArray(req.files.brochure) && req.files.brochure[0]) ? req.files.brochure[0] : null;
-    let brochure = uploadedBrochure ? '/uploads/projects/' + encodeURIComponent(uploadedBrochure.filename) : null;
+    let brochure = uploadedBrochure ? (uploadedBrochure.url || '/uploads/projects/' + encodeURIComponent(uploadedBrochure.filename)) : null;
 
     // Assignment (agent): allow choosing any approved Admin/SuperAdmin; fallback to current user
     const agentId = body.agent_id ? Number(body.agent_id) : req.session.user.id;
@@ -240,8 +240,9 @@ exports.createProject = async (req, res, next) => {
       );
     } catch (_) { /* non-fatal */ }
 
-    // Move uploaded files into a project-specific folder and update paths
-    try {
+    // Move uploaded files into a project-specific folder and update paths (local disk only)
+    if (!process.env.DO_SPACES_BUCKET) {
+      try {
       const path = require('path');
       const fs = require('fs');
       const projDir = path.join(__dirname, '../public/uploads/projects', String(newId));
@@ -268,11 +269,18 @@ exports.createProject = async (req, res, next) => {
         try { fs.renameSync(src, dest); } catch (_) {}
         brochure = `/uploads/projects/${newId}/${encodeURIComponent(uploadedBrochure.filename)}`;
       }
+        await query(
+          `UPDATE projects SET photos=$1, video_url=$2, brochure_url=$3 WHERE id=$4`,
+          [photos, videoUrl, brochure, newId]
+        );
+      } catch (_) { /* non-fatal */ }
+    } else {
+      // Using Spaces: URLs already computed above
       await query(
         `UPDATE projects SET photos=$1, video_url=$2, brochure_url=$3 WHERE id=$4`,
         [photos, videoUrl, brochure, newId]
       );
-    } catch (_) { /* non-fatal */ }
+    }
 
     const role = req.session.user?.role;
     if (role === 'SuperAdmin') {
@@ -308,21 +316,25 @@ exports.editProjectForm = async (req, res, next) => {
         return [];
       };
       project.photos = normalize(project.photos);
-      // Ensure photo URLs are absolute and files exist; drop missing to prevent empty previews
-      try {
-        const publicDir = path.join(__dirname, '../public');
-        const cleaned = [];
-        for (const ph of project.photos) {
-          const url = String(ph);
-          const abs = url.startsWith('/uploads/')
-            ? path.join(publicDir, url.replace(/^\//, ''))
-            : path.join(publicDir, 'uploads/projects', String(project.id), url);
-          if (fs.existsSync(abs)) {
-            cleaned.push(url.startsWith('/uploads/') ? url : `/uploads/projects/${project.id}/${url}`);
+      // Normalize photo URLs for previews
+      if (!process.env.DO_SPACES_BUCKET) {
+        try {
+          const publicDir = path.join(__dirname, '../public');
+          const cleaned = [];
+          for (const ph of project.photos) {
+            const url = String(ph);
+            const abs = url.startsWith('/uploads/')
+              ? path.join(publicDir, url.replace(/^\//, ''))
+              : path.join(publicDir, 'uploads/projects', String(project.id), url);
+            if (fs.existsSync(abs)) {
+              cleaned.push(url.startsWith('/uploads/') ? url : `/uploads/projects/${project.id}/${url}`);
+            }
           }
-        }
-        project.photos = cleaned;
-      } catch (_) {}
+          project.photos = cleaned;
+        } catch (_) {}
+      } else {
+        try { project.photos = (Array.isArray(project.photos) ? project.photos : [project.photos]).filter(Boolean).map(String); } catch (_) { project.photos = []; }
+      }
     } catch (_) {
       project.photos = Array.isArray(project.photos) ? project.photos.filter(Boolean) : [];
     }
@@ -461,22 +473,26 @@ exports.updateProject = async (req, res, next) => {
       photos = ordered;
     }
 
-    // Remove empty entries and non-existent files; normalize to absolute URLs before persisting
-    try {
-      const publicDir = path.join(__dirname, '../public');
-      const normalizedExisting = [];
-      for (const p of (photos || [])) {
-        if (!p || !String(p).trim()) continue;
-        const url = String(p);
-        const abs = url.startsWith('/uploads/')
-          ? path.join(publicDir, url.replace(/^\//, ''))
-          : path.join(publicDir, 'uploads/projects', String(projId), url);
-        if (fs.existsSync(abs)) {
-          normalizedExisting.push(url.startsWith('/uploads/') ? url : `/uploads/projects/${projId}/${url}`);
+    // Normalize photos: for local-only ensure file exists; with Spaces, keep URLs
+    if (!process.env.DO_SPACES_BUCKET) {
+      try {
+        const publicDir = path.join(__dirname, '../public');
+        const normalizedExisting = [];
+        for (const p of (photos || [])) {
+          if (!p || !String(p).trim()) continue;
+          const url = String(p);
+          const abs = url.startsWith('/uploads/')
+            ? path.join(publicDir, url.replace(/^\//, ''))
+            : path.join(publicDir, 'uploads/projects', String(projId), url);
+          if (fs.existsSync(abs)) {
+            normalizedExisting.push(url.startsWith('/uploads/') ? url : `/uploads/projects/${projId}/${url}`);
+          }
         }
+        photos = normalizedExisting;
+      } catch (_) {
+        photos = (photos || []).filter(p => p && String(p).trim());
       }
-      photos = normalizedExisting;
-    } catch (_) {
+    } else {
       photos = (photos || []).filter(p => p && String(p).trim());
     }
 
@@ -546,30 +562,32 @@ exports.updateProject = async (req, res, next) => {
       );
     } catch (_) { /* non-fatal */ }
 
-    // If there are new uploads, move them and then update URLs
+    // If there are new uploads, update URLs; if not using Spaces, move files locally
     if (uploadedPhotosFiles.length || uploadedVideoFile || uploadedBrochure) {
-      const path = require('path');
-      const fs = require('fs');
-      const projDir = path.join(__dirname, '../public/uploads/projects', String(projId));
-      if (!fs.existsSync(projDir)) fs.mkdirSync(projDir, { recursive: true });
+      if (!process.env.DO_SPACES_BUCKET) {
+        const path = require('path');
+        const fs = require('fs');
+        const projDir = path.join(__dirname, '../public/uploads/projects', String(projId));
+        if (!fs.existsSync(projDir)) fs.mkdirSync(projDir, { recursive: true });
 
-      const movedPhotos = [];
-      for (const f of uploadedPhotosFiles) {
-        const src = f.path; const dest = path.join(projDir, f.filename);
-        try { fs.renameSync(src, dest); } catch (_) {}
-        try { await generateVariants(dest, `/uploads/projects/${projId}`); } catch (_) {}
-        movedPhotos.push(`/uploads/projects/${projId}/${encodeURIComponent(f.filename)}`);
-      }
-      if (movedPhotos.length) photos = [...photos, ...movedPhotos];
-      if (uploadedVideoFile) {
-        const src = uploadedVideoFile.path; const dest = path.join(projDir, uploadedVideoFile.filename);
-        try { fs.renameSync(src, dest); } catch (_) {}
-        videoUrl = `/uploads/projects/${projId}/${encodeURIComponent(uploadedVideoFile.filename)}`;
-      }
-      if (uploadedBrochure) {
-        const src = uploadedBrochure.path; const dest = path.join(projDir, uploadedBrochure.filename);
-        try { fs.renameSync(src, dest); } catch (_) {}
-        brochure = `/uploads/projects/${projId}/${encodeURIComponent(uploadedBrochure.filename)}`;
+        const movedPhotos = [];
+        for (const f of uploadedPhotosFiles) {
+          const src = f.path; const dest = path.join(projDir, f.filename);
+          try { fs.renameSync(src, dest); } catch (_) {}
+          try { await generateVariants(dest, `/uploads/projects/${projId}`); } catch (_) {}
+          movedPhotos.push(`/uploads/projects/${projId}/${encodeURIComponent(f.filename)}`);
+        }
+        if (movedPhotos.length) photos = [...photos, ...movedPhotos];
+        if (uploadedVideoFile) {
+          const src = uploadedVideoFile.path; const dest = path.join(projDir, uploadedVideoFile.filename);
+          try { fs.renameSync(src, dest); } catch (_) {}
+          videoUrl = `/uploads/projects/${projId}/${encodeURIComponent(uploadedVideoFile.filename)}`;
+        }
+        if (uploadedBrochure) {
+          const src = uploadedBrochure.path; const dest = path.join(projDir, uploadedBrochure.filename);
+          try { fs.renameSync(src, dest); } catch (_) {}
+          brochure = `/uploads/projects/${projId}/${encodeURIComponent(uploadedBrochure.filename)}`;
+        }
       }
 
       await query(
@@ -588,7 +606,7 @@ exports.updateProject = async (req, res, next) => {
 
     // After DB persistence, best-effort delete removed files from disk (photos and old video)
     try {
-      if (removedPhotosList && removedPhotosList.length) {
+      if (!process.env.DO_SPACES_BUCKET && removedPhotosList && removedPhotosList.length) {
         for (const url of removedPhotosList) {
           if (!url) continue;
           const normalizedUrl = String(url).replace(/^\//, '');
@@ -646,7 +664,7 @@ exports.updateProject = async (req, res, next) => {
           } catch (_) {}
         }
       }
-      if (removeExistingVideoFlag && existing.video_url && existing.video_url !== (videoUrl || '')) {
+      if (removeExistingVideoFlag && existing.video_url && existing.video_url !== (videoUrl || '') && String(existing.video_url).startsWith('/uploads/')) {
         const absVid = path.join(__dirname, '../public', String(existing.video_url).replace(/^\//, ''));
         try { if (fs.existsSync(absVid)) fs.unlinkSync(absVid); } catch (_) {}
       }
@@ -672,7 +690,8 @@ exports.deleteProject = async (req, res, next) => {
     // Remove DB row first (or after files; either is fine with CASCADE)
     await query(`DELETE FROM projects WHERE id = $1`, [projId]);
 
-    // Remove folder and files under /public/uploads/projects/<id>
+  // Remove local folder only when not using Spaces
+  if (!process.env.DO_SPACES_BUCKET) {
     const path = require('path');
     const fs = require('fs');
     const projDir = path.join(__dirname, '../public/uploads/projects', projId);
@@ -683,6 +702,7 @@ exports.deleteProject = async (req, res, next) => {
         console.error('Failed to remove project dir:', e);
       }
     }
+  }
 
     const role = req.session.user?.role;
     if (role === 'SuperAdmin') {

@@ -1,12 +1,11 @@
 const multer = require('multer');
-const path   = require('path');
-const fs     = require('fs');
+const path = require('path');
+const sharp = require('sharp');
+const heicConvert = require('heic-convert');
+const s3 = require('../config/spaces');
 
-// ensure upload folder exists and store files under public/uploads/projects
-const uploadDir = path.join(__dirname, '../public/uploads/projects');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+// Use memory storage since we'll upload to Spaces
+const storage = multer.memoryStorage();
 
 function sanitizeFilename(originalName) {
   const ext = path.extname(originalName).toLowerCase();
@@ -17,15 +16,6 @@ function sanitizeFilename(originalName) {
     .replace(/^-|-$/g, '');
   return `${Date.now()}-${safeBase}${ext}`;
 }
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, sanitizeFilename(file.originalname));
-  }
-});
 
 const fileFilter = (req, file, cb) => {
   const mm = (file.mimetype || '').toLowerCase();
@@ -50,40 +40,114 @@ const uploader = multer({
   { name: 'brochure', maxCount: 1  }
 ]);
 
+// Helper function to upload to Spaces
+const uploadToSpaces = async (buffer, filename, mimetype, folder) => {
+  const params = {
+    Bucket: process.env.DO_SPACES_BUCKET,
+    Key: `${folder}/${filename}`,
+    Body: buffer,
+    ContentType: mimetype,
+    ACL: 'public-read'
+  };
+  
+  return new Promise((resolve, reject) => {
+    s3.upload(params, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
+        const url = cdn ? `${cdn}/${params.Key}` : data.Location;
+        resolve(url);
+      }
+    });
+  });
+};
+
+// Helper function to convert HEIC to JPEG
+const convertHeicToJpeg = async (buffer) => {
+  try {
+    const jpegBuffer = await heicConvert({
+      buffer: buffer,
+      format: 'JPEG',
+      quality: 0.8
+    });
+    return jpegBuffer;
+  } catch (error) {
+    throw new Error('Failed to convert HEIC image');
+  }
+};
+
+// Helper function to process and upload a single file
+const processAndUploadFile = async (file, folder) => {
+  if (!file) return null;
+
+  let buffer = file.buffer;
+  let filename = file.originalname;
+  let mimetype = file.mimetype;
+
+  // Convert HEIC/HEIF to JPEG
+  if (file.mimetype === 'image/heic' || file.mimetype === 'image/heif') {
+    buffer = await convertHeicToJpeg(buffer);
+    filename = filename.replace(/\.(heic|heif)$/i, '.jpg');
+    mimetype = 'image/jpeg';
+  }
+
+  // Resize images if needed (except videos and PDFs)
+  if (mimetype.startsWith('image/') && buffer.length > 2 * 1024 * 1024) { // If larger than 2MB
+    buffer = await sharp(buffer)
+      .resize(1200, 800, { fit: 'inside', withoutEnlargement: true })
+      .jpeg({ quality: 85 })
+      .toBuffer();
+  }
+
+  // Generate sanitized filename
+  const finalFilename = sanitizeFilename(filename);
+
+  // Upload to Spaces
+  const fileUrl = await uploadToSpaces(buffer, finalFilename, mimetype, folder);
+  
+  // Return file info with Spaces URL
+  return {
+    filename: finalFilename,
+    url: fileUrl,
+    mimetype: mimetype,
+    size: buffer.length
+  };
+};
+
 module.exports = async function uploadProjectMedia(req, res, next) {
   uploader(req, res, async function (err) {
     if (err) return next(err);
     try {
-      const sharp = require('sharp');
-      let heicConvert;
-      try { heicConvert = require('heic-convert'); } catch (_) { heicConvert = null; }
-      const convertIfHeic = async (file) => {
-        if (!file) return;
-        const ext = path.extname(file.path).toLowerCase();
-        if (ext === '.heic' || ext === '.heif') {
-          const dest = file.path.replace(/\.(heic|heif)$/i, '.jpg');
-          try {
-            await sharp(file.path).rotate().jpeg({ quality: 80 }).toFile(dest);
-          } catch (e) {
-            if (heicConvert) {
-              const inputBuffer = fs.readFileSync(file.path);
-              const outputBuffer = await heicConvert({ buffer: inputBuffer, format: 'JPEG', quality: 0.8 });
-              fs.writeFileSync(dest, outputBuffer);
-            } else { throw e; }
-          }
-          try { fs.unlinkSync(file.path); } catch (_) {}
-          file.filename = path.basename(dest);
-          file.path = dest;
-          file.mimetype = 'image/jpeg';
-          file.size = fs.statSync(dest).size;
+      const processedFiles = {};
+
+      // Process photos
+      if (req.files?.photos) {
+        processedFiles.photos = [];
+        for (const file of req.files.photos) {
+          const processed = await processAndUploadFile(file, 'projects/photos');
+          if (processed) processedFiles.photos.push(processed);
         }
-      };
-      const all = [];
-      (req.files?.photos || []).forEach(f => all.push(convertIfHeic(f)));
-      await Promise.all(all);
+      }
+
+      // Process video
+      if (req.files?.video) {
+        const processed = await processAndUploadFile(req.files.video[0], 'projects/videos');
+        if (processed) processedFiles.video = [processed];
+      }
+
+      // Process brochure
+      if (req.files?.brochure) {
+        const processed = await processAndUploadFile(req.files.brochure[0], 'projects/brochures');
+        if (processed) processedFiles.brochure = [processed];
+      }
+
+      // Replace req.files with processed files
+      req.files = processedFiles;
+      
       return next();
-    } catch (e) { return next(e); }
+    } catch (e) { 
+      return next(e); 
+    }
   });
 };
-
-

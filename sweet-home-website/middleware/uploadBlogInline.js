@@ -1,11 +1,11 @@
 const multer = require('multer');
-const path   = require('path');
-const fs     = require('fs');
+const path = require('path');
+const sharp = require('sharp');
+const heicConvert = require('heic-convert');
+const s3 = require('../config/spaces');
 
-const uploadDir = path.join(__dirname, '../public/uploads/blog/inline');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+// Use memory storage since we'll upload to Spaces
+const storage = multer.memoryStorage();
 
 function sanitizeFilename(originalName) {
   const ext = path.extname(originalName).toLowerCase();
@@ -17,11 +17,6 @@ function sanitizeFilename(originalName) {
   return `${Date.now()}-${safeBase}${ext}`;
 }
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
-  filename: (req, file, cb) => cb(null, sanitizeFilename(file.originalname))
-});
-
 const fileFilter = (req, file, cb) => {
   const mm = (file.mimetype || '').toLowerCase();
   const ext = path.extname(file.originalname || '').toLowerCase();
@@ -32,35 +27,81 @@ const fileFilter = (req, file, cb) => {
 
 const uploader = multer({ storage, fileFilter, limits: { fileSize: 10 * 1024 * 1024, files: 1 } }).single('image');
 
+// Helper function to upload to Spaces
+const uploadToSpaces = async (buffer, filename, mimetype) => {
+  const params = {
+    Bucket: process.env.DO_SPACES_BUCKET,
+    Key: `blog/inline/${filename}`,
+    Body: buffer,
+    ContentType: mimetype,
+    ACL: 'public-read'
+  };
+  
+  return new Promise((resolve, reject) => {
+    s3.upload(params, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
+        const url = cdn ? `${cdn}/${params.Key}` : data.Location;
+        resolve(url);
+      }
+    });
+  });
+};
+
+// Helper function to convert HEIC to JPEG
+const convertHeicToJpeg = async (buffer) => {
+  try {
+    const jpegBuffer = await heicConvert({
+      buffer: buffer,
+      format: 'JPEG',
+      quality: 0.8
+    });
+    return jpegBuffer;
+  } catch (error) {
+    throw new Error('Failed to convert HEIC image');
+  }
+};
+
 module.exports = function uploadBlogInline(req, res, next) {
   uploader(req, res, async function (err) {
     if (err) return next(err);
     try {
       if (!req.file) return next();
-      const sharp = require('sharp');
-      let heicConvert;
-      try { heicConvert = require('heic-convert'); } catch (_) { heicConvert = null; }
-      const ext = path.extname(req.file.path).toLowerCase();
-      if (ext === '.heic' || ext === '.heif') {
-        const dest = req.file.path.replace(/\.(heic|heif)$/i, '.jpg');
-        try {
-          await sharp(req.file.path).rotate().jpeg({ quality: 80 }).toFile(dest);
-        } catch (e) {
-          if (heicConvert) {
-            const inputBuffer = fs.readFileSync(req.file.path);
-            const outputBuffer = await heicConvert({ buffer: inputBuffer, format: 'JPEG', quality: 0.8 });
-            fs.writeFileSync(dest, outputBuffer);
-          } else { throw e; }
-        }
-        try { fs.unlinkSync(req.file.path); } catch (_) {}
-        req.file.filename = path.basename(dest);
-        req.file.path = dest;
-        req.file.mimetype = 'image/jpeg';
-        req.file.size = fs.statSync(dest).size;
+
+      let buffer = req.file.buffer;
+      let filename = req.file.originalname;
+      let mimetype = req.file.mimetype;
+
+      // Convert HEIC/HEIF to JPEG
+      if (req.file.mimetype === 'image/heic' || req.file.mimetype === 'image/heif') {
+        buffer = await convertHeicToJpeg(buffer);
+        filename = filename.replace(/\.(heic|heif)$/i, '.jpg');
+        mimetype = 'image/jpeg';
       }
+
+      // Resize image if needed
+      if (buffer.length > 1024 * 1024) { // If larger than 1MB
+        buffer = await sharp(buffer)
+          .resize(800, 600, { fit: 'inside', withoutEnlargement: true })
+          .jpeg({ quality: 85 })
+          .toBuffer();
+      }
+
+      // Generate sanitized filename
+      const finalFilename = sanitizeFilename(filename);
+
+      // Upload to Spaces
+      const fileUrl = await uploadToSpaces(buffer, finalFilename, mimetype);
+      
+      // Store the CDN URL in req.file for the controller
+      req.file.filename = finalFilename;
+      req.file.url = fileUrl;
+      
       next();
-    } catch (e) { next(e); }
+    } catch (e) { 
+      next(e); 
+    }
   });
 };
-
-
