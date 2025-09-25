@@ -746,8 +746,14 @@ exports.updateProject = async (req, res, next) => {
 exports.deleteProject = async (req, res, next) => {
   try {
     const projId = String(req.params.id);
+    // Resolve slug BEFORE deleting row
+    let slug = null;
+    try {
+      const { rows } = await query('SELECT slug FROM projects WHERE id = $1', [projId]);
+      slug = rows[0]?.slug || null;
+    } catch (_) {}
 
-    // Remove DB row first (or after files; either is fine with CASCADE)
+    // Remove DB row
     await query(`DELETE FROM projects WHERE id = $1`, [projId]);
 
   // Remove local folder only when not using Spaces
@@ -765,12 +771,6 @@ exports.deleteProject = async (req, res, next) => {
   } else {
     try {
       const bucket = process.env.DO_SPACES_BUCKET;
-      // resolve slug before deletion (we still have it in req.params.id scope here)
-      let slug = null;
-      try {
-        const { rows } = await query('SELECT slug FROM projects WHERE id = $1', [projId]);
-        slug = rows[0]?.slug || null;
-      } catch (_) {}
       const prefixes = [];
       prefixes.push(`projects/${projId}/`);
       if (slug) prefixes.push(`projects/${slug}/`);
