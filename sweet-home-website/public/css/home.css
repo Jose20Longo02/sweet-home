@@ -192,10 +192,6 @@
   cursor: pointer;
 }
 
-.property-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-xl);
-}
 
 .property-image {
   height: 250px;
@@ -692,9 +688,7 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 .property-card .img-wrap { position: relative; }
 .property-card .img-wrap::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(46,168,98,1) 0%, rgba(46,168,98,.75) 45%, rgba(46,168,98,.25) 85%, rgba(46,168,98,0) 100%); opacity: 0; transition: opacity .25s ease; z-index: 1; }
 .property-card .img-wrap::before { content: attr(data-price); position: absolute; left: 50%; top: 75%; transform: translate(-50%, -50%); color: #fff; font-weight: 300; font-size: 28px; letter-spacing: .2px; opacity: 0; transition: opacity .25s ease, transform .25s ease; pointer-events: none; z-index: 2; }
-/* Apply hover only when card is centered */
-.property-card.is-center:hover .img-wrap::after { opacity: 1; }
-.property-card.is-center:hover .img-wrap::before { opacity: 1; transform: translate(-50%, -50%) scale(1.02); }
+/* Hover effects removed */
 .property-card .meta { padding: 16px 16px; min-height: 180px; }
 .property-card .title { font-weight: 700; margin: 0 0 8px; color: var(--gray-900); }
 .property-card .price { font-weight: 600; font-size: 18px; color: var(--primary-color, #2ea862); margin: 0 0 8px; }
@@ -703,7 +697,6 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 .property-card .feature { display: inline-flex; gap: 6px; align-items: center; color: var(--gray-700); font-size: 12px; background: var(--gray-100); border-radius: 999px; padding: 4px 8px; }
 .property-card .feature svg { color: var(--gray-600); }
 .property-card .learn-more { display: inline-flex; align-items: center; gap: 6px; color: var(--primary-color); font-weight: 600; font-size: 13px; text-decoration: none; }
-.property-card .learn-more:hover { text-decoration: underline; }
 .carousel-nav { position: absolute; top: 50%; transform: translateY(-50%); background: var(--primary-color); color: #fff; border: none; width: 36px; height: 36px; border-radius: 50%; box-shadow: 0 6px 16px rgba(46,168,98,.25); cursor: pointer; transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast); z-index: 10; }
 .carousel-nav:hover { background: var(--primary-dark); color: #fff; box-shadow: 0 10px 24px rgba(46,168,98,.35); transform: translateY(-50%) scale(1.06); }
 .carousel-nav:active { transform: translateY(-50%) scale(0.96); }
