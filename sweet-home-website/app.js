@@ -136,6 +136,8 @@ app.use((req, res, next) => { try { res.set('X-App-Lang', res.locals.lang || '')
 app.use((req, res, next) => { res.locals.GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID || ''; next(); });
 // Expose default consent (dev only convenience)
 app.use((req, res, next) => { res.locals.GA_CONSENT_DEFAULT = process.env.GA_CONSENT_DEFAULT || (process.env.NODE_ENV !== 'production' ? 'granted' : 'denied'); next(); });
+// Expose a simple asset version for cache busting of non-hashed files (e.g., CSS)
+app.use((req, res, next) => { res.locals.assetVersion = process.env.ASSET_VERSION || (process.env.NODE_ENV === 'production' ? '1' : String(Date.now())); next(); });
 app.use(session({
   store: new PgSession({
     pool,
