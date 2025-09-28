@@ -35,7 +35,7 @@ router.get(
 router.post(
   '/login',
   loginLimiter,
-  recaptchaRequired(0.3),
+  // recaptchaRequired(0.3), // Temporarily disabled - uncomment when reCAPTCHA is configured
   redirectIfAuthenticated,
   [
     // Do NOT normalize (e.g., removing dots for Gmail) because it may change the actual address
