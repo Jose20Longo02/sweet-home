@@ -660,20 +660,6 @@ exports.createProperty = async (req, res, next) => {
       planPhotoUrl = null;
     }
 
-    // Removal flags for floorplan/plan photo on edit
-    const parseBoolFlag = (v) => {
-      const s = String(v ?? '').toLowerCase();
-      return s === 'true' || s === 'on' || s === '1' || s === 'yes';
-    };
-    const removeFloorplan = parseBoolFlag(body.remove_existing_floorplan);
-    const removePlanPhoto = parseBoolFlag(body.remove_existing_plan_photo);
-    if (removeFloorplan && !(req.files && Array.isArray(req.files.floorplan) && req.files.floorplan[0])) {
-      floorplanUrl = null;
-    }
-    if (removePlanPhoto && !(req.files && Array.isArray(req.files.plan_photo) && req.files.plan_photo[0])) {
-      planPhotoUrl = null;
-    }
-
     // (handled above)
 
     if (errors.length) {
