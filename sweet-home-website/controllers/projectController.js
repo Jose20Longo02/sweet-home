@@ -286,9 +286,20 @@ exports.createProject = async (req, res, next) => {
       }
       if (movedPhotos.length) photos = movedPhotos;
       if (uploadedVideoFile) {
-        const src = uploadedVideoFile.path; const dest = path.join(projDir, uploadedVideoFile.filename);
+        const src = uploadedVideoFile.path;
+        
+        // Generate SEO-friendly filename for video
+        const seoVideoFileName = generateSEOFileName(
+          { title, neighborhood, city, country },
+          'project',
+          1,
+          path.extname(uploadedVideoFile.filename),
+          'video'
+        );
+        
+        const dest = path.join(projDir, seoVideoFileName);
         try { fs.renameSync(src, dest); } catch (_) {}
-        videoUrl = `/uploads/projects/${newId}/${encodeURIComponent(uploadedVideoFile.filename)}`;
+        videoUrl = `/uploads/projects/${newId}/${seoVideoFileName}`;
       }
       if (uploadedBrochure) {
         const src = uploadedBrochure.path; const dest = path.join(projDir, uploadedBrochure.filename);
@@ -316,26 +327,45 @@ exports.createProject = async (req, res, next) => {
         });
 
         const basePrefix = `projects/${slug || newId}`;
-        const fixList = async (items, folder) => {
+        const fixList = async (items, folder, fileType = 'project', fileNumber = 1) => {
           if (!Array.isArray(items) || !items.length) return [];
           const out = [];
-          for (const it of items) {
+          for (let i = 0; i < items.length; i++) {
+            const it = items[i];
             const key = it.key || '';
             const already = key.startsWith(`${basePrefix}/${folder}/`);
             if (already) { out.push(it.url); continue; }
-            const name = path.basename(key || it.filename || '');
-            const newKey = `${basePrefix}/${folder}/${name}`;
+            
+            // Generate SEO-friendly filename
+            const seoFileName = generateSEOFileName(
+              { title, neighborhood, city, country },
+              fileType,
+              fileNumber + i,
+              path.extname(key || it.filename || '')
+            );
+            
+            const newKey = `${basePrefix}/${folder}/${seoFileName}`;
             const url = await copyOne(key, newKey);
             out.push(url);
           }
           return out;
         };
 
-        photos = await fixList(processed.photos || [], 'photos');
+        photos = await fixList(processed.photos || [], 'photos', 'project', 1);
         if (processed.video && processed.video[0]) {
           const v = processed.video[0];
           const key = v.key || '';
-          const newKey = key.startsWith(`${basePrefix}/videos/`) ? key : `${basePrefix}/videos/${path.basename(key || v.filename || '')}`;
+          
+          // Generate SEO-friendly filename for video
+          const seoVideoFileName = generateSEOFileName(
+            { title, neighborhood, city, country },
+            'project',
+            1,
+            path.extname(key || v.filename || ''),
+            'video'
+          );
+          
+          const newKey = key.startsWith(`${basePrefix}/videos/`) ? key : `${basePrefix}/videos/${seoVideoFileName}`;
           videoUrl = key === newKey ? v.url : await copyOne(key, newKey);
         }
         if (processed.brochure && processed.brochure[0]) {
@@ -675,9 +705,20 @@ exports.updateProject = async (req, res, next) => {
         }
         if (movedPhotos.length) photos = [...photos, ...movedPhotos];
         if (uploadedVideoFile) {
-          const src = uploadedVideoFile.path; const dest = path.join(projDir, uploadedVideoFile.filename);
+          const src = uploadedVideoFile.path;
+          
+          // Generate SEO-friendly filename for video
+          const seoVideoFileName = generateSEOFileName(
+            { title, neighborhood, city, country },
+            'project',
+            1,
+            path.extname(uploadedVideoFile.filename),
+            'video'
+          );
+          
+          const dest = path.join(projDir, seoVideoFileName);
           try { fs.renameSync(src, dest); } catch (_) {}
-          videoUrl = `/uploads/projects/${projId}/${encodeURIComponent(uploadedVideoFile.filename)}`;
+          videoUrl = `/uploads/projects/${projId}/${seoVideoFileName}`;
         }
         if (uploadedBrochure) {
           const src = uploadedBrochure.path; const dest = path.join(projDir, uploadedBrochure.filename);

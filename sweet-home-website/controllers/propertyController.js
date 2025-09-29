@@ -819,9 +819,19 @@ exports.createProperty = async (req, res, next) => {
       // Video file
       if (uploadedVideoFile) {
         const src = uploadedVideoFile.path;
-        const dest = path.join(propDir, uploadedVideoFile.filename);
+        
+        // Generate SEO-friendly filename for video
+        const seoVideoFileName = generateSEOFileName(
+          { type, title, neighborhood, city, country },
+          'property',
+          1,
+          path.extname(uploadedVideoFile.filename),
+          'video'
+        );
+        
+        const dest = path.join(propDir, seoVideoFileName);
         try { fs.renameSync(src, dest); } catch (e) { /* ignore */ }
-        videoUrl = `/uploads/properties/${newId}/${uploadedVideoFile.filename}`;
+        videoUrl = `/uploads/properties/${newId}/${seoVideoFileName}`;
       }
 
       // Floorplan
@@ -872,15 +882,24 @@ exports.createProperty = async (req, res, next) => {
           });
         });
 
-        const ensurePrefixedList = async (items, targetPrefix) => {
+        const ensurePrefixedList = async (items, targetPrefix, fileType = 'property', fileNumber = 1) => {
           if (!Array.isArray(items) || items.length === 0) return [];
           const out = [];
-          for (const it of items) {
+          for (let i = 0; i < items.length; i++) {
+            const it = items[i];
             const key = it.key || '';
             const already = key.startsWith(`${targetPrefix}/`);
             if (already) { out.push(it.url); continue; }
-            const name = path.basename(key || it.filename || '');
-            const newKey = `${targetPrefix}/${name}`;
+            
+            // Generate SEO-friendly filename
+            const seoFileName = generateSEOFileName(
+              { type, title, neighborhood, city, country },
+              fileType,
+              fileNumber + i,
+              path.extname(key || it.filename || '')
+            );
+            
+            const newKey = `${targetPrefix}/${seoFileName}`;
             const url = await copyOne(key, newKey);
             out.push(url);
           }
@@ -889,12 +908,22 @@ exports.createProperty = async (req, res, next) => {
 
         const basePrefix = `properties/${uniqueSlug || newId}`;
         // photos
-        photos = await ensurePrefixedList(processed.photos || [], `${basePrefix}/photos`);
+        photos = await ensurePrefixedList(processed.photos || [], `${basePrefix}/photos`, 'property', 1);
         // video
         if (processed.video && processed.video[0]) {
           const v = processed.video[0];
           const key = v.key || '';
-          const newKey = key.startsWith(`${basePrefix}/videos/`) ? key : `${basePrefix}/videos/${path.basename(key || v.filename || '')}`;
+          
+          // Generate SEO-friendly filename for video
+          const seoVideoFileName = generateSEOFileName(
+            { type, title, neighborhood, city, country },
+            'property',
+            1,
+            path.extname(key || v.filename || ''),
+            'video'
+          );
+          
+          const newKey = key.startsWith(`${basePrefix}/videos/`) ? key : `${basePrefix}/videos/${seoVideoFileName}`;
           videoUrl = key === newKey ? v.url : await copyOne(key, newKey);
         }
         // floorplan
@@ -1382,9 +1411,19 @@ exports.updateProperty = async (req, res, next) => {
       // Video file
       if (uploadedVideoFile) {
         const src = uploadedVideoFile.path;
-        const dest = path.join(propDir, uploadedVideoFile.filename);
+        
+        // Generate SEO-friendly filename for video
+        const seoVideoFileName = generateSEOFileName(
+          { type, title, neighborhood, city, country },
+          'property',
+          1,
+          path.extname(uploadedVideoFile.filename),
+          'video'
+        );
+        
+        const dest = path.join(propDir, seoVideoFileName);
         try { fs.renameSync(src, dest); } catch (e) { /* ignore */ }
-        videoUrl = `/uploads/properties/${propId}/${uploadedVideoFile.filename}`;
+        videoUrl = `/uploads/properties/${propId}/${seoVideoFileName}`;
       }
 
       // Floorplan
