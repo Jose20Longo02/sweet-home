@@ -31,6 +31,20 @@ body { background: radial-gradient(1200px 800px at 10% -10%, rgba(0,0,0,0.05), t
   padding: 0.2rem;
 }
 
+/* File help text */
+.file-help-text {
+  margin-top: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
 /* Buttons */
 .auth-form button { width:100%; margin-top:1.5rem; padding:.9rem; background:var(--color-primary); color:#fff; border:none; border-radius:999px; font-size:1rem; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.12); transition: transform .16s ease, box-shadow .16s ease, opacity .16s ease; }
 .auth-form button:hover { transform: translateY(-1px); opacity:.95; box-shadow:0 12px 28px rgba(0,0,0,.16); }
