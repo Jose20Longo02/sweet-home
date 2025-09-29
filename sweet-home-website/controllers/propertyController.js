@@ -1126,6 +1126,8 @@ exports.updateProperty = async (req, res, next) => {
       const s = String(v ?? '').toLowerCase();
       return s === 'true' || s === 'on' || s === '1' || s === 'yes';
     };
+    const removeFloorplanFlag = parseBool(body.remove_existing_floorplan);
+    const removePlanPhotoFlag = parseBool(body.remove_existing_plan_photo);
     const removeExistingVideoFlag = parseBool(body.remove_existing_video);
     if (!uploadedVideoFile && removeExistingVideoFlag) {
       // If user requested to remove existing video and did not upload a new one or set a link
