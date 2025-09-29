@@ -647,16 +647,16 @@ exports.createProperty = async (req, res, next) => {
     }
 
     // Define removal flags within updateProperty scope
-    const parseBoolFlag = (v) => {
+    function parseBoolFlag(v) {
       const s = String(v ?? '').toLowerCase();
       return s === 'true' || s === 'on' || s === '1' || s === 'yes';
-    };
-    const removeFloorplan = parseBoolFlag(body.remove_existing_floorplan);
-    const removePlanPhoto = parseBoolFlag(body.remove_existing_plan_photo);
-    if (removeFloorplan && !(req.files && Array.isArray(req.files.floorplan) && req.files.floorplan[0])) {
+    }
+    const removeFloorplanFlag = parseBoolFlag(body.remove_existing_floorplan);
+    const removePlanPhotoFlag = parseBoolFlag(body.remove_existing_plan_photo);
+    if (removeFloorplanFlag && !(req.files && Array.isArray(req.files.floorplan) && req.files.floorplan[0])) {
       floorplanUrl = null;
     }
-    if (removePlanPhoto && !(req.files && Array.isArray(req.files.plan_photo) && req.files.plan_photo[0])) {
+    if (removePlanPhotoFlag && !(req.files && Array.isArray(req.files.plan_photo) && req.files.plan_photo[0])) {
       planPhotoUrl = null;
     }
 
@@ -1305,28 +1305,28 @@ exports.updateProperty = async (req, res, next) => {
 
     // Ensure floorplan/plan removals are persisted even when there are no new uploads
     try {
-      if (removeFloorplan || removePlanPhoto) {
+      if (removeFloorplanFlag || removePlanPhotoFlag) {
         await query(
           `UPDATE properties
               SET floorplan_url = CASE WHEN $1 THEN NULL ELSE floorplan_url END,
                   plan_photo_url = CASE WHEN $2 THEN NULL ELSE plan_photo_url END,
                   updated_at = NOW()
             WHERE id = $3`,
-          [removeFloorplan, removePlanPhoto, propId]
+          [removeFloorplanFlag, removePlanPhotoFlag, propId]
         );
       }
     } catch (_) { /* best-effort */ }
 
     // Final safeguard: ensure DB reflects removals even if earlier branches skipped
     try {
-      if (removeFloorplan || removePlanPhoto) {
+      if (removeFloorplanFlag || removePlanPhotoFlag) {
         await query(
           `UPDATE properties
               SET floorplan_url = CASE WHEN $1 THEN NULL ELSE floorplan_url END,
                   plan_photo_url = CASE WHEN $2 THEN NULL ELSE plan_photo_url END,
                   updated_at = NOW()
             WHERE id = $3`,
-          [removeFloorplan, removePlanPhoto, propId]
+          [removeFloorplanFlag, removePlanPhotoFlag, propId]
         );
       }
     } catch (_) { /* best-effort */ }
@@ -1383,7 +1383,7 @@ exports.updateProperty = async (req, res, next) => {
       }
 
       // Persist updated media paths if anything changed
-        if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || removeFloorplan || removePlanPhoto || (req.files && (req.files.floorplan || req.files.plan_photo))) {
+        if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || removeFloorplanFlag || removePlanPhotoFlag || (req.files && (req.files.floorplan || req.files.plan_photo))) {
           await query(
             `UPDATE properties
                 SET photos = $1,
@@ -1401,7 +1401,7 @@ exports.updateProperty = async (req, res, next) => {
       }
     } else {
       // Using Spaces: URLs already computed above, just persist when something changed
-      if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || removeFloorplan || removePlanPhoto || (req.files && (req.files.floorplan || req.files.plan_photo))) {
+      if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || removeFloorplanFlag || removePlanPhotoFlag || (req.files && (req.files.floorplan || req.files.plan_photo))) {
         await query(
           `UPDATE properties
               SET photos = $1,
@@ -1448,11 +1448,11 @@ exports.updateProperty = async (req, res, next) => {
         try { if (fs.existsSync(videoPath)) fs.unlinkSync(videoPath); } catch (_) {}
       }
       // Delete removed floorplan/plan photo if flagged and not replaced
-      if (removeFloorplan && existing.floorplan_url && existing.floorplan_url !== (floorplanUrl || '') && String(existing.floorplan_url).startsWith('/uploads/')) {
+      if (removeFloorplanFlag && existing.floorplan_url && existing.floorplan_url !== (floorplanUrl || '') && String(existing.floorplan_url).startsWith('/uploads/')) {
         const fp = path.join(__dirname, '../public', String(existing.floorplan_url).replace(/^\//, ''));
         try { if (fs.existsSync(fp)) fs.unlinkSync(fp); } catch (_) {}
       }
-      if (removePlanPhoto && existing.plan_photo_url && existing.plan_photo_url !== (planPhotoUrl || '') && String(existing.plan_photo_url).startsWith('/uploads/')) {
+      if (removePlanPhotoFlag && existing.plan_photo_url && existing.plan_photo_url !== (planPhotoUrl || '') && String(existing.plan_photo_url).startsWith('/uploads/')) {
         const pp = path.join(__dirname, '../public', String(existing.plan_photo_url).replace(/^\//, ''));
         try { if (fs.existsSync(pp)) fs.unlinkSync(pp); } catch (_) {}
       }
