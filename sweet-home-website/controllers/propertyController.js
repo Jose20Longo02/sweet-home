@@ -647,12 +647,6 @@ exports.createProperty = async (req, res, next) => {
     }
 
     // Apply removal flags for floorplan/plan_photo on edit (set to null if flagged and no replacement uploaded)
-    const parseBoolFlag = (v) => {
-      const s = String(v ?? '').toLowerCase();
-      return s === 'true' || s === 'on' || s === '1' || s === 'yes';
-    };
-    const removeFloorplan = parseBoolFlag(body.remove_existing_floorplan);
-    const removePlanPhoto = parseBoolFlag(body.remove_existing_plan_photo);
     if (removeFloorplan && !(req.files && Array.isArray(req.files.floorplan) && req.files.floorplan[0])) {
       floorplanUrl = null;
     }
@@ -1029,6 +1023,14 @@ exports.updateProperty = async (req, res, next) => {
     const body = req.body || {};
     const required = (v) => v !== undefined && v !== null && String(v).trim() !== '';
     const toNum = (v) => (v === undefined || v === null || v === '' ? null : Number(v));
+    
+    // Define removal flags early in the function scope
+    const parseBoolFlag = (v) => {
+      const s = String(v ?? '').toLowerCase();
+      return s === 'true' || s === 'on' || s === '1' || s === 'yes';
+    };
+    const removeFloorplan = parseBoolFlag(body.remove_existing_floorplan);
+    const removePlanPhoto = parseBoolFlag(body.remove_existing_plan_photo);
     const parseNumberField = (value) => {
       if (Array.isArray(value)) {
         for (let i = value.length - 1; i >= 0; i -= 1) {
@@ -1376,7 +1378,7 @@ exports.updateProperty = async (req, res, next) => {
       }
 
       // Persist updated media paths if anything changed
-        if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || removeFloorplan || removePlanPhoto || (req.files && (req.files.floorplan || req.files.plan_photo))) {
+      if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || removeFloorplan || removePlanPhoto || (req.files && (req.files.floorplan || req.files.plan_photo))) {
           await query(
             `UPDATE properties
                 SET photos = $1,
