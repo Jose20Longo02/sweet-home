@@ -647,6 +647,26 @@ exports.createProperty = async (req, res, next) => {
     }
 
     // Apply removal flags for floorplan/plan_photo on edit (set to null if flagged and no replacement uploaded)
+    const parseBoolFlag = (v) => {
+      const s = String(v ?? '').toLowerCase();
+      return s === 'true' || s === 'on' || s === '1' || s === 'yes';
+    };
+    const removeFloorplan = parseBoolFlag(body.remove_existing_floorplan);
+    const removePlanPhoto = parseBoolFlag(body.remove_existing_plan_photo);
+    if (removeFloorplan && !(req.files && Array.isArray(req.files.floorplan) && req.files.floorplan[0])) {
+      floorplanUrl = null;
+    }
+    if (removePlanPhoto && !(req.files && Array.isArray(req.files.plan_photo) && req.files.plan_photo[0])) {
+      planPhotoUrl = null;
+    }
+
+    // Apply removal flags for floorplan/plan_photo on edit (set to null if flagged and no replacement uploaded)
+    const parseBoolFlag = (v) => {
+      const s = String(v ?? '').toLowerCase();
+      return s === 'true' || s === 'on' || s === '1' || s === 'yes';
+    };
+    const removeFloorplan = parseBoolFlag(body.remove_existing_floorplan);
+    const removePlanPhoto = parseBoolFlag(body.remove_existing_plan_photo);
     if (removeFloorplan && !(req.files && Array.isArray(req.files.floorplan) && req.files.floorplan[0])) {
       floorplanUrl = null;
     }
@@ -1023,14 +1043,6 @@ exports.updateProperty = async (req, res, next) => {
     const body = req.body || {};
     const required = (v) => v !== undefined && v !== null && String(v).trim() !== '';
     const toNum = (v) => (v === undefined || v === null || v === '' ? null : Number(v));
-    
-    // Define removal flags early in the function scope
-    const parseBoolFlag = (v) => {
-      const s = String(v ?? '').toLowerCase();
-      return s === 'true' || s === 'on' || s === '1' || s === 'yes';
-    };
-    const removeFloorplan = parseBoolFlag(body.remove_existing_floorplan);
-    const removePlanPhoto = parseBoolFlag(body.remove_existing_plan_photo);
     const parseNumberField = (value) => {
       if (Array.isArray(value)) {
         for (let i = value.length - 1; i >= 0; i -= 1) {
@@ -1201,21 +1213,28 @@ exports.updateProperty = async (req, res, next) => {
       photos = ordered;
     }
 
-    // Remove any empty entries and non-existent files; normalize to absolute URLs before persisting
+    // Normalize photos; preserve remote and absolute URLs. Skip strict existence checks on Spaces/CDN.
     try {
-      const publicDir = path.join(__dirname, '../public');
-      const normalizedExisting = [];
-      for (const p of (photos || [])) {
-        if (!p || !String(p).trim()) continue;
-        const url = String(p);
-        const abs = url.startsWith('/uploads/')
-          ? path.join(publicDir, url.replace(/^\//, ''))
-          : path.join(publicDir, 'uploads/properties', String(propId), url);
-        if (fs.existsSync(abs)) {
-          normalizedExisting.push(url.startsWith('/uploads/') ? url : `/uploads/properties/${propId}/${url}`);
+      const list = (photos || []).filter(p => p && String(p).trim());
+      if (process.env.DO_SPACES_BUCKET) {
+        photos = list;
+      } else {
+        const publicDir = path.join(__dirname, '../public');
+        const normalizedExisting = [];
+        for (const p of list) {
+          const url = String(p);
+          if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/uploads/')) {
+            normalizedExisting.push(url);
+            continue;
+          }
+          // Treat bare filenames as local files under uploads/properties/:id
+          const abs = path.join(publicDir, 'uploads/properties', String(propId), url);
+          if (fs.existsSync(abs)) {
+            normalizedExisting.push(`/uploads/properties/${propId}/${url}`);
+          }
         }
+        photos = normalizedExisting;
       }
-      photos = normalizedExisting;
     } catch (_) {
       photos = (photos || []).filter(p => p && String(p).trim());
     }
@@ -1378,7 +1397,7 @@ exports.updateProperty = async (req, res, next) => {
       }
 
       // Persist updated media paths if anything changed
-      if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || removeFloorplan || removePlanPhoto || (req.files && (req.files.floorplan || req.files.plan_photo))) {
+        if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || removeFloorplan || removePlanPhoto || (req.files && (req.files.floorplan || req.files.plan_photo))) {
           await query(
             `UPDATE properties
                 SET photos = $1,
