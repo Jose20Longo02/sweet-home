@@ -111,7 +111,7 @@ class PropertyDetailPage {
           video.playsInline = true;
           video.style.width = '100%';
           video.style.height = '100%';
-          video.style.objectFit = 'cover';
+          video.style.objectFit = 'contain';
           video.style.background = '#000';
           const source = document.createElement('source');
           source.src = item.src;

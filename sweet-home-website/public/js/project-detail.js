@@ -118,7 +118,7 @@ function showMainVideo(videoUrl) {
     vid.preload = 'metadata';
     vid.style.width = '100%';
     vid.style.height = '100%';
-    vid.style.objectFit = 'cover';
+    vid.style.objectFit = 'contain';
     const src = document.createElement('source');
     src.src = videoUrl;
     src.type = 'video/mp4';
