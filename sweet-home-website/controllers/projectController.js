@@ -1170,10 +1170,19 @@ exports.showProject = async (req, res, next) => {
       LIMIT 3
     `, [project.city, project.country, project.id]);
 
-    // Normalize photos for related projects
+    // Normalize photos for related projects - handle both local paths and DigitalOcean Spaces URLs
     const normalizedRelatedProjects = relatedProjects.map(p => {
       const arr2 = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
-      const photos = arr2.map(ph => (ph && String(ph).startsWith('/uploads/')) ? ph : (ph ? `/uploads/projects/${p.id}/${ph}` : ph));
+      const photos = arr2.map(ph => {
+        if (!ph) return ph;
+        const phStr = String(ph);
+        // If already a full path/URL (starts with /uploads/ or http), use as-is
+        if (phStr.startsWith('/uploads/') || phStr.startsWith('http')) {
+          return phStr;
+        }
+        // Otherwise, assume it's a filename and prepend the project path
+        return `/uploads/projects/${p.id}/${phStr}`;
+      });
       let has=false, base=null;
       const first=photos[0];
       if (first) {
