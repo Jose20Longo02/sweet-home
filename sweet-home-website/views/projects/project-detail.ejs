@@ -73,7 +73,7 @@
             <% if ((project.photos && project.photos.length > 0) || project.video_url) { %>
               <div class="gallery-main">
                 <% if (project.video_url) { %>
-                  <video id="mainVideo" controls style="width:100%; height:100%; object-fit:cover; background:#000; pointer-events:auto;" playsinline>
+                  <video id="mainVideo" controls style="width:100%; height:100%; object-fit:contain; background:#000; pointer-events:auto;" playsinline>
                     <source src="<%= project.video_url %>" type="video/mp4">
                   </video>
                   <button class="video-play-overlay" type="button" aria-label="Play video">

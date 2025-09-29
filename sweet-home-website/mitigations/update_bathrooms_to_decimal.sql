@@ -17,3 +17,4 @@ ALTER COLUMN max_bathrooms TYPE NUMERIC(3,1);
 COMMENT ON COLUMN properties.bathrooms IS 'Number of bathrooms (supports decimals for half baths, e.g., 1.5, 2.5)';
 COMMENT ON COLUMN projects.min_bathrooms IS 'Minimum number of bathrooms (supports decimals for half baths)';
 COMMENT ON COLUMN projects.max_bathrooms IS 'Maximum number of bathrooms (supports decimals for half baths)';
+
