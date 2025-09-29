@@ -4,6 +4,7 @@ const { query } = require('../config/db');
 const locations   = require('../config/locations');
 const { generateVariants } = require('../middleware/imageVariants');
 const { ensureLocalizedFields } = require('../config/translator');
+const { generateSEOFileName } = require('../utils/imageNaming');
 const path = require('path');
 const s3   = require('../config/spaces');
 const fs   = require('fs');
@@ -264,13 +265,24 @@ exports.createProject = async (req, res, next) => {
         fs.mkdirSync(projDir, { recursive: true });
       }
       const movedPhotos = [];
-      for (const f of uploadedPhotosFiles) {
-        const src = f.path; const dest = path.join(projDir, f.filename);
+      for (let i = 0; i < uploadedPhotosFiles.length; i++) {
+        const f = uploadedPhotosFiles[i];
+        const src = f.path;
+        
+        // Generate SEO-friendly filename
+        const seoFileName = generateSEOFileName(
+          { title, neighborhood, city, country },
+          'project',
+          i + 1,
+          path.extname(f.filename)
+        );
+        
+        const dest = path.join(projDir, seoFileName);
         try { fs.renameSync(src, dest); } catch (_) {}
         try {
           await generateVariants(dest, `/uploads/projects/${newId}`);
         } catch (_) {}
-        movedPhotos.push(`/uploads/projects/${newId}/${encodeURIComponent(f.filename)}`);
+        movedPhotos.push(`/uploads/projects/${newId}/${seoFileName}`);
       }
       if (movedPhotos.length) photos = movedPhotos;
       if (uploadedVideoFile) {
@@ -644,11 +656,22 @@ exports.updateProject = async (req, res, next) => {
         if (!fs.existsSync(projDir)) fs.mkdirSync(projDir, { recursive: true });
 
         const movedPhotos = [];
-        for (const f of uploadedPhotosFiles) {
-          const src = f.path; const dest = path.join(projDir, f.filename);
+        for (let i = 0; i < uploadedPhotosFiles.length; i++) {
+          const f = uploadedPhotosFiles[i];
+          const src = f.path;
+          
+          // Generate SEO-friendly filename
+          const seoFileName = generateSEOFileName(
+            { title, neighborhood, city, country },
+            'project',
+            i + 1,
+            path.extname(f.filename)
+          );
+          
+          const dest = path.join(projDir, seoFileName);
           try { fs.renameSync(src, dest); } catch (_) {}
           try { await generateVariants(dest, `/uploads/projects/${projId}`); } catch (_) {}
-          movedPhotos.push(`/uploads/projects/${projId}/${encodeURIComponent(f.filename)}`);
+          movedPhotos.push(`/uploads/projects/${projId}/${seoFileName}`);
         }
         if (movedPhotos.length) photos = [...photos, ...movedPhotos];
         if (uploadedVideoFile) {

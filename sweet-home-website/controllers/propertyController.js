@@ -10,6 +10,7 @@ const s3          = require('../config/spaces');
 const sendMail    = require('../config/mailer');
 const { generateVariants, SIZES } = require('../middleware/imageVariants');
 const { ensureLocalizedFields } = require('../config/translator');
+const { generateSEOFileName } = require('../utils/imageNaming');
 
 // Extract coordinates from common map link formats or raw "lat,lng"
 function extractCoordsFromLink(input) {
@@ -789,9 +790,19 @@ exports.createProperty = async (req, res, next) => {
       // Photos with responsive variants
       if (uploadedPhotosFiles.length) {
         const movedPhotos = [];
-        for (const f of uploadedPhotosFiles) {
+        for (let i = 0; i < uploadedPhotosFiles.length; i++) {
+          const f = uploadedPhotosFiles[i];
           const src = f.path; // absolute temp path
-          const dest = path.join(propDir, f.filename);
+          
+          // Generate SEO-friendly filename
+          const seoFileName = generateSEOFileName(
+            { type, title, neighborhood, city, country },
+            'property',
+            i + 1,
+            path.extname(f.filename)
+          );
+          
+          const dest = path.join(propDir, seoFileName);
           try { fs.renameSync(src, dest); } catch (e) { /* ignore */ }
           // Generate variants
           try {
@@ -800,7 +811,7 @@ exports.createProperty = async (req, res, next) => {
           } catch (e) {
             // Non-fatal
           }
-          movedPhotos.push(`/uploads/properties/${newId}/${f.filename}`);
+          movedPhotos.push(`/uploads/properties/${newId}/${seoFileName}`);
         }
         photos = [...movedPhotos, ...urlPhotos];
       }
@@ -1344,15 +1355,25 @@ exports.updateProperty = async (req, res, next) => {
       // Photos with responsive variants
       if (uploadedPhotosFiles && uploadedPhotosFiles.length) {
         const movedPhotos = [];
-        for (const f of uploadedPhotosFiles) {
+        for (let i = 0; i < uploadedPhotosFiles.length; i++) {
+          const f = uploadedPhotosFiles[i];
           const src = f.path; // absolute temp path
-          const dest = path.join(propDir, f.filename);
+          
+          // Generate SEO-friendly filename
+          const seoFileName = generateSEOFileName(
+            { type, title, neighborhood, city, country },
+            'property',
+            i + 1,
+            path.extname(f.filename)
+          );
+          
+          const dest = path.join(propDir, seoFileName);
           try { fs.renameSync(src, dest); } catch (e) { /* ignore */ }
           try {
             const publicUrlBase = `/uploads/properties/${propId}`;
             await generateVariants(dest, publicUrlBase);
           } catch (e) { /* non-fatal */ }
-          movedPhotos.push(`/uploads/properties/${propId}/${f.filename}`);
+          movedPhotos.push(`/uploads/properties/${propId}/${seoFileName}`);
         }
         // Append new moved photos to any existing kept photos
         photos = [...(photos || []), ...movedPhotos];
