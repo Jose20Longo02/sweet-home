@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function(){
   var posSelect   = document.getElementById('positionSelect');
   var picInput    = document.getElementById('profile_picture');
   var picPreview  = document.getElementById('profilePreview');
+  var fileHelpText = document.getElementById('fileHelpText');
   var emailInput  = document.getElementById('email');
   var emailError  = document.getElementById('emailError');
   var pw1         = document.getElementById('password');
@@ -39,7 +40,13 @@ document.addEventListener('DOMContentLoaded', function(){
   if (picInput && picPreview) {
     picInput.addEventListener('change', function(e){
       var file = e.target.files && e.target.files[0];
-      if (!file) { picPreview.style.display = 'none'; return; }
+      if (!file) { 
+        picPreview.style.display = 'none'; 
+        if (fileHelpText) fileHelpText.style.display = 'block';
+        return; 
+      }
+      // Hide the warning message when a file is selected
+      if (fileHelpText) fileHelpText.style.display = 'none';
       var name = (file.name || '').toLowerCase();
       var isHeic = name.endsWith('.heic') || name.endsWith('.heif');
 
