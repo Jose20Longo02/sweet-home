@@ -1013,13 +1013,19 @@ exports.listProjectsPublic = async (req, res, next) => {
     // Execute the main query
     const { rows: projects } = await query(baseQuery, queryParams);
 
-    // Normalize photos to absolute URLs under /uploads/projects/{id}/
+    // Normalize photos - handle both local paths and DigitalOcean Spaces URLs
     const langPub = res.locals.lang || 'en';
     const normalizedProjects = projects.map(p => {
       const arr = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
       const normalized = arr.map(ph => {
         if (!ph) return ph;
-        return String(ph).startsWith('/uploads/') ? ph : `/uploads/projects/${p.id}/${ph}`;
+        const phStr = String(ph);
+        // If already a full path/URL (starts with /uploads/ or http), use as-is
+        if (phStr.startsWith('/uploads/') || phStr.startsWith('http')) {
+          return phStr;
+        }
+        // Otherwise, assume it's a filename and prepend the project path
+        return `/uploads/projects/${p.id}/${phStr}`;
       });
       return {
         ...p,
@@ -1108,9 +1114,18 @@ exports.showProject = async (req, res, next) => {
       project.description = project.description_i18n[langDetail];
     }
     
-    // Normalize photos to absolute URLs
+    // Normalize photos - handle both local paths and DigitalOcean Spaces URLs
     const arr = Array.isArray(project.photos) ? project.photos : (project.photos ? [project.photos] : []);
-    project.photos = arr.map(ph => (ph && String(ph).startsWith('/uploads/')) ? ph : (ph ? `/uploads/projects/${project.id}/${ph}` : ph));
+    project.photos = arr.map(ph => {
+      if (!ph) return ph;
+      const phStr = String(ph);
+      // If already a full path/URL (starts with /uploads/ or http), use as-is
+      if (phStr.startsWith('/uploads/') || phStr.startsWith('http')) {
+        return phStr;
+      }
+      // Otherwise, assume it's a filename and prepend the project path
+      return `/uploads/projects/${project.id}/${phStr}`;
+    });
     // Detect main variants
     let hasMain = false, mainBase = null;
     if (project.photos.length) {
