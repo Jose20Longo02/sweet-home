@@ -136,17 +136,9 @@
           <h2 class="title"><%= recommendedProject.title %></h2>
           <p class="location"><span>📍</span><%= recommendedProject.city %>, <%= recommendedProject.country %></p>
           
-          <% 
-            const unitLabel = (recommendedProject.unit_types && recommendedProject.unit_types.length)
-              ? (recommendedProject.unit_types[0] + 's for sale')
-              : 'Units for sale';
-          %>
           <div class="info-grid">
-            <div class="info-card">
-              <div class="info-label"><%= unitLabel %></div>
-            </div>
             <% if (recommendedProject.min_price) { %>
-              <div class="info-card highlight">
+              <div class="info-card">
                 <div class="info-label">Starting at</div>
                 <div class="info-value">€<%= Number(recommendedProject.min_price).toLocaleString('en-US') %></div>
               </div>

@@ -831,11 +831,12 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   border-radius: 12px; 
   padding: 12px 18px; 
   transition: all 0.3s ease;
+  cursor: pointer;
 }
-.project-hero .info-card:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
-.project-hero .info-card.highlight { 
+.project-hero .info-card:hover { 
   background: var(--primary-color); 
-  border-color: var(--primary-color); 
+  border-color: var(--primary-color);
+  transform: translateY(-2px); 
   box-shadow: 0 8px 20px rgba(46,168,98,0.35);
 }
 .project-hero .info-label { 
@@ -845,8 +846,9 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   color: rgba(255,255,255,0.75); 
   margin-bottom: 4px; 
   font-weight: 600;
+  transition: color 0.3s ease;
 }
-.project-hero .info-card.highlight .info-label { color: rgba(255,255,255,0.9); }
+.project-hero .info-card:hover .info-label { color: #fff; }
 .project-hero .info-value { 
   font-size: clamp(18px, 2.2vw, 24px); 
   font-weight: 700; 
