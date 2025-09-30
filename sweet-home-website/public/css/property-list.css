@@ -794,15 +794,6 @@
   gap: var(--spacing-2);
 }
 
-/* Top-right actions container */
-.property-actions {
-  position: absolute;
-  top: var(--spacing-3);
-  right: var(--spacing-3);
-  display: flex;
-  gap: var(--spacing-2);
-}
-
 .badge {
   padding: var(--spacing-1) var(--spacing-3);
   border-radius: var(--radius-full);
@@ -870,7 +861,8 @@
 
 .property-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  gap: var(--spacing-3);
 }
 
 /* pill-row removed in new design */
