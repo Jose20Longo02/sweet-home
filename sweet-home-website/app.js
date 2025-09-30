@@ -266,7 +266,8 @@ app.get('/', async (req, res, next) => {
   try {
     // Pick one random active project to highlight
     const { rows } = await query(`
-      SELECT id, title, slug, country, city, neighborhood, photos, min_price, max_price, status
+      SELECT id, title, slug, country, city, neighborhood, photos,
+             min_price, max_price, min_unit_size, max_unit_size, unit_types, status
         FROM projects
        WHERE status = 'active'
        ORDER BY random()
@@ -292,7 +293,10 @@ app.get('/', async (req, res, next) => {
         neighborhood: p.neighborhood,
         photos,
         min_price: p.min_price,
-        max_price: p.max_price
+        max_price: p.max_price,
+        min_unit_size: p.min_unit_size,
+        max_unit_size: p.max_unit_size,
+        unit_types: Array.isArray(p.unit_types) ? p.unit_types : (p.unit_types ? [p.unit_types] : [])
       };
     }
 

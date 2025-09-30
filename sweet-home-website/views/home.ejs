@@ -131,9 +131,24 @@
         <% }) %>
       </div>
       <div class="overlay">
+        <div class="badge-top-right">Recommended project</div>
         <div class="meta">
-          <div class="eyebrow">Recommended project</div>
-          <h2 class="title"><%= recommendedProject.title %></h2>
+          <h2 class="title small"><%= recommendedProject.title %></h2>
+          <% 
+            const unitLabel = (recommendedProject.unit_types && recommendedProject.unit_types.length)
+              ? (recommendedProject.unit_types[0] + 's for sale')
+              : 'Units for sale';
+          %>
+          <p class="unit-type"><%= unitLabel %></p>
+          <% if (recommendedProject.min_price) { %>
+            <p class="price-start">Starting at: <strong>€<%= Number(recommendedProject.min_price).toLocaleString('en-US') %></strong></p>
+          <% } %>
+          <% if (recommendedProject.min_unit_size || recommendedProject.max_unit_size) { %>
+            <p class="sizes">
+              <%= recommendedProject.min_unit_size ? Math.round(recommendedProject.min_unit_size) : '?' %>–
+              <%= recommendedProject.max_unit_size ? Math.round(recommendedProject.max_unit_size) : '?' %> m²
+            </p>
+          <% } %>
           <p class="location"><span>📍</span><%= recommendedProject.city %>, <%= recommendedProject.country %></p>
           <div class="actions">
             <a class="btn btn-primary" href="/projects/<%= recommendedProject.slug %>">View project</a>
