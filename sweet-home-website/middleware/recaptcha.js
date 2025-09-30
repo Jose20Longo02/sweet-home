@@ -22,7 +22,8 @@ async function verifyRecaptchaToken(token, remoteIp) {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: params
     });
-    let data = await res.json();
+    const primaryStatus = res && res.status;
+    let data = await res.json().catch(() => ({}));
     // If response is malformed or unreachable, try recaptcha.net as fallback
     if (!data || typeof data.success === 'undefined') {
       try {
@@ -31,12 +32,16 @@ async function verifyRecaptchaToken(token, remoteIp) {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: params
         });
-        data = await res.json();
+        const fallbackStatus = res && res.status;
+        data = await res.json().catch(() => ({}));
+        if (process.env.RECAPTCHA_DEBUG === 'true') {
+          try { console.log('[reCAPTCHA verify:fallbackStatus]', { fallbackStatus }); } catch (_) {}
+        }
       } catch (_) {}
     }
     if (process.env.RECAPTCHA_DEBUG === 'true') {
       const tokenPreview = token ? String(token).slice(0, 10) + '...' : '';
-      try { console.log('[reCAPTCHA verify]', { tokenPresent: !!token, tokenPreview, success: data?.success, score: data?.score, action: data?.action, hostname: data?.hostname, errorCodes: data && data['error-codes'] }); } catch (_) {}
+      try { console.log('[reCAPTCHA verify]', { primaryStatus, tokenPresent: !!token, tokenPreview, success: data?.success, score: data?.score, action: data?.action, hostname: data?.hostname, errorCodes: data && data['error-codes'] }); } catch (_) {}
     }
     return data || { success: false, error: 'recaptcha_verification_failed' };
   } catch (e) {
