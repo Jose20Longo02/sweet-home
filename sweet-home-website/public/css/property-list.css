@@ -689,7 +689,7 @@
 }
 
 .property-card.country-usa:hover {
-  border-color: var(--usa-color);
+  border-color: var(--country-color, var(--usa-color));
   box-shadow: 0 10px 25px rgba(220, 38, 38, 0.15);
 }
 
@@ -703,7 +703,7 @@
 }
 
 .property-card.country-spain:hover {
-  border-color: var(--spain-color);
+  border-color: var(--country-color, var(--spain-color));
   box-shadow: 0 10px 25px rgba(245, 158, 11, 0.15);
 }
 
@@ -717,8 +717,8 @@
 }
 
 .property-card.country-germany:hover {
-  border-color: var(--germany-color);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border-color: var(--country-color, var(--germany-color));
+  box-shadow: 0 10px 25px rgba(53, 156, 75, 0.15);
 }
 
 /* France Properties */
@@ -731,7 +731,7 @@
 }
 
 .property-card.country-france:hover {
-  border-color: var(--france-color);
+  border-color: var(--country-color, var(--france-color));
   box-shadow: 0 10px 25px rgba(29, 78, 216, 0.15);
 }
 
@@ -745,7 +745,7 @@
 }
 
 .property-card.country-italy:hover {
-  border-color: var(--italy-color);
+  border-color: var(--country-color, var(--italy-color));
   box-shadow: 0 10px 25px rgba(5, 150, 105, 0.15);
 }
 
@@ -759,7 +759,7 @@
 }
 
 .property-card.country-uk:hover {
-  border-color: var(--uk-color);
+  border-color: var(--country-color, var(--uk-color));
   box-shadow: 0 10px 25px rgba(124, 58, 237, 0.15);
 }
 
