@@ -686,7 +686,7 @@ function initRecommendedProject() {
 
   // Parallax on scroll (subtle)
   let raf = null;
-  const maxShift = 40; // px
+  const maxShift = 120; // px — stronger parallax
   function onScroll() {
     if (raf) return;
     raf = requestAnimationFrame(() => {
@@ -698,7 +698,7 @@ function initRecommendedProject() {
       const norm = Math.max(-1, Math.min(1, center / (vh / 2)));
       const shift = -norm * maxShift;
       const active = hero.querySelector('.slide.is-active');
-      if (active) active.style.transform = `translateY(${shift}px) scale(1.03)`;
+      if (active) active.style.transform = `translateY(${shift}px) scale(1.08)`;
     });
   }
   onScroll();
