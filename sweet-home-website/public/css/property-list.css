@@ -665,7 +665,7 @@
 .property-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
-  border-color: var(--primary-200);
+  border-color: var(--country-color, var(--primary-color));
 }
 
 /* Thin accent strip at top of image */
