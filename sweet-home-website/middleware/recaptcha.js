@@ -6,13 +6,14 @@ const fetch = require('node-fetch');
  * Adds req.recaptcha = { success, score, action }.
  */
 async function verifyRecaptchaToken(token, remoteIp) {
-  if (!process.env.RECAPTCHA_SECRET_KEY) {
+  const secret = (process.env.RECAPTCHA_SECRET_KEY || '').trim();
+  if (!secret) {
     // If not configured, treat as success to avoid blocking dev
     return { success: true, score: 1, action: 'unconfigured' };
   }
   try {
     const params = new URLSearchParams();
-    params.append('secret', process.env.RECAPTCHA_SECRET_KEY);
+    params.append('secret', secret);
     params.append('response', token || '');
     if (remoteIp) params.append('remoteip', remoteIp);
 
@@ -45,6 +46,9 @@ async function verifyRecaptchaToken(token, remoteIp) {
     }
     return data || { success: false, error: 'recaptcha_verification_failed' };
   } catch (e) {
+    if (process.env.RECAPTCHA_DEBUG === 'true') {
+      try { console.error('[reCAPTCHA verify:error]', e && (e.stack || e.message || e)); } catch (_) {}
+    }
     return { success: false, error: 'recaptcha_verification_failed' };
   }
 }
