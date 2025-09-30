@@ -386,6 +386,27 @@ class PropertyDetailPage {
     if (shareBtn) shareBtn.addEventListener('click', () => shareProperty());
     const contactBtn = document.querySelector('.js-contact-btn');
     if (contactBtn) contactBtn.addEventListener('click', () => contactAgent());
+    // Share modal delegated events (no inline handlers)
+    const shareModal = document.getElementById('shareModal');
+    if (shareModal) {
+      // Close button
+      const closeBtn = shareModal.querySelector('.modal-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => closeShareModal());
+      }
+      // Options
+      const options = shareModal.querySelectorAll('.share-option');
+      options.forEach(option => {
+        option.addEventListener('click', () => {
+          const platform = option.getAttribute('data-platform');
+          if (platform === 'copy') {
+            copyLink();
+          } else {
+            shareOnSocial(platform);
+          }
+        });
+      });
+    }
 
     // Floorplan/Plan popup
     const planBtn = document.querySelector('.plan-button');
