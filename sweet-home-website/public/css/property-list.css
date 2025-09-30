@@ -797,7 +797,7 @@
 /* Neighborhood Badge */
 .property-neighborhood-badge {
   position: absolute;
-  top: var(--spacing-3);
+  top: var(--spacing-6);
   right: var(--spacing-3);
 }
 
@@ -821,7 +821,7 @@
 }
 
 .badge-neighborhood {
-  background: #10b981;
+  background: var(--country-color, #10b981);
   color: var(--white);
   font-size: var(--font-size-xs);
   padding: var(--spacing-1) var(--spacing-2);
