@@ -521,7 +521,6 @@ function compareProperty(propertyId) {
   const dataSize = propertyCard.getAttribute('data-size') || '';
   const dataBedrooms = propertyCard.getAttribute('data-bedrooms') || '';
   const dataBathrooms = propertyCard.getAttribute('data-bathrooms') || '';
-  const dataPrice = priceEl ? Number(priceEl.getAttribute('data-price') || 0) : 0;
 
   // Fallbacks from visible meta if data-* is missing
   const fallbackSize = metaItems && metaItems[0] ? metaItems[0].textContent : '';
@@ -537,9 +536,7 @@ function compareProperty(propertyId) {
     bedrooms: dataBedrooms || fallbackBedrooms,
     bathrooms: dataBathrooms || fallbackBathrooms,
     size: dataSize || fallbackSize,
-    image: imgEl ? imgEl.src : '',
-    priceNumber: Number.isFinite(dataPrice) ? dataPrice : 0,
-    sizeNumber: Number.parseFloat(dataSize || fallbackSize) || 0
+    image: imgEl ? imgEl.src : ''
   };
   
   // Check if property is already in comparison
@@ -661,68 +658,17 @@ function showComparisonModal() {
 // Function to create comparison table
 function createComparisonTable() {
   const headers = [i18nGet('compare.headers.feature','Feature'), ...comparisonList.map(p => p.title)];
-
-  // Compute derived metrics
-  const euroPerSqm = comparisonList.map(p => {
-    const price = Number(p.priceNumber || 0);
-    const size = Number(p.sizeNumber || 0);
-    if (price > 0 && size > 0) return price / size;
-    return null;
-  });
-
-  // Utility formatters
-  const formatEuro = (n) => {
-    if (!Number.isFinite(n)) return 'N/A';
-    return '€' + Number(n).toLocaleString('en-US');
-  };
-  const formatEuroPerSqm = (n) => {
-    if (!Number.isFinite(n)) return 'N/A';
-    return '€' + Math.round(n).toLocaleString('en-US') + '/m²';
-  };
-  const formatSize = (n) => {
-    if (!Number.isFinite(n)) return 'N/A';
-    return Math.round(n) + ' m²';
-  };
-  const formatNumber = (n) => {
-    if (n === null || typeof n === 'undefined' || n === '') return 'N/A';
-    const num = Number(n);
-    if (!Number.isFinite(num)) return String(n);
-    return String(num);
-  };
-
-  // Ranges/spreads (for summary rows)
-  const numericPrices = comparisonList.map(p => Number(p.priceNumber || 0)).filter(v => v > 0);
-  const numericSizes = comparisonList.map(p => Number(p.sizeNumber || 0)).filter(v => v > 0);
-  const numericEurSqm = euroPerSqm.filter(v => Number.isFinite(v));
-  const numBeds = comparisonList.map(p => Number(p.bedrooms)).filter(v => Number.isFinite(v));
-  const numBaths = comparisonList.map(p => Number(p.bathrooms)).filter(v => Number.isFinite(v));
-
-  const rangeRow = (label, arr, formatter) => {
-    if (!arr.length) return [label, ...comparisonList.map(() => 'N/A')];
-    const min = Math.min(...arr);
-    const max = Math.max(...arr);
-    const spread = max - min;
-    const spreadPct = min > 0 ? (spread / min) * 100 : null;
-    const summary = spreadPct !== null ? `${formatter(min)} – ${formatter(max)} (Δ ${formatter(spread)}${Number.isFinite(spreadPct) ? `, ${spreadPct.toFixed(1)}%` : ''})` : `${formatter(min)} – ${formatter(max)} (Δ ${formatter(spread)})`;
-    return [label, ...comparisonList.map((_, idx) => idx === 0 ? summary : '')];
-  };
-
+  
   const rows = [
     [i18nGet('compare.headers.image','Image'), ...comparisonList.map(p => `<img src="${p.image}" alt="${p.title}" class="comparison-modal-image">`)],
     [i18nGet('compare.headers.location','Location'), ...comparisonList.map(p => p.location)],
-    [i18nGet('compare.headers.price','Price'), ...comparisonList.map(p => p.priceNumber ? formatEuro(p.priceNumber) : (p.price || ''))],
-    ['€/m²', ...euroPerSqm.map(v => formatEuroPerSqm(v))],
-    [i18nGet('compare.headers.size','Size'), ...comparisonList.map(p => p.sizeNumber ? formatSize(p.sizeNumber) : (p.size || ''))],
-    [i18nGet('compare.headers.bedrooms','Bedrooms'), ...comparisonList.map(p => formatNumber(p.bedrooms))],
-    [i18nGet('compare.headers.bathrooms','Bathrooms'), ...comparisonList.map(p => formatNumber(p.bathrooms))],
-    // Summary rows
-    rangeRow('Price range / spread', numericPrices, formatEuro),
-    rangeRow('€/m² range / spread', numericEurSqm, formatEuroPerSqm),
-    rangeRow('Size range / spread', numericSizes, formatSize),
-    rangeRow('Bedrooms range', numBeds, (n)=>String(n)),
-    rangeRow('Bathrooms range', numBaths, (n)=>String(n))
+    [i18nGet('compare.headers.price','Price'), ...comparisonList.map(p => p.price)],
+    [i18nGet('compare.headers.type','Type'), ...comparisonList.map(p => p.type)],
+    [i18nGet('compare.headers.bedrooms','Bedrooms'), ...comparisonList.map(p => p.bedrooms)],
+    [i18nGet('compare.headers.bathrooms','Bathrooms'), ...comparisonList.map(p => p.bathrooms)],
+    [i18nGet('compare.headers.size','Size'), ...comparisonList.map(p => p.size)]
   ];
-
+  
   let tableHTML = `
     <div class="comparison-table-container">
       <table class="comparison-table">
@@ -733,7 +679,7 @@ function createComparisonTable() {
         </thead>
         <tbody>
   `;
-
+  
   rows.forEach(row => {
     tableHTML += '<tr>';
     row.forEach((cell, index) => {
@@ -745,13 +691,13 @@ function createComparisonTable() {
     });
     tableHTML += '</tr>';
   });
-
+  
   tableHTML += `
         </tbody>
       </table>
     </div>
   `;
-
+  
   return tableHTML;
 }
 

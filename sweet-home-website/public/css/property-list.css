@@ -1520,19 +1520,6 @@
   width: 120px;
 }
 
-/* Mobile: keep columns readable */
-@media (max-width: 640px) {
-  .comparison-table th,
-  .comparison-table td {
-    padding: 8px;
-    font-size: 0.9rem;
-  }
-  .comparison-modal-image {
-    width: 64px;
-    height: 48px;
-  }
-}
-
 .comparison-modal-image {
   width: 80px;
   height: 60px;
