@@ -1442,9 +1442,12 @@
   }
   
   .property-details {
-    flex-direction: column;
+    flex-direction: row;
     gap: var(--spacing-2);
+    flex-wrap: nowrap;
   }
+  .property-details .detail-item { white-space: nowrap; }
+  .property-details .detail-item + .detail-item::before { left: -8px; height: 12px; }
   
   .property-info-panel {
     position: static;
