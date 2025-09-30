@@ -516,19 +516,26 @@ function compareProperty(propertyId) {
   const metaItems = propertyCard.querySelectorAll('.property-meta .meta-item span');
   const imgEl = propertyCard.querySelector('.property-image img');
 
-  const bedrooms = metaItems && metaItems[1] ? metaItems[1].textContent : '';
-  const bathrooms = metaItems && metaItems[2] ? metaItems[2].textContent : '';
-  const size = metaItems && metaItems[0] ? metaItems[0].textContent : '';
+  // Prefer explicit data-* attributes to avoid layout/translation issues
+  const dataType = propertyCard.getAttribute('data-type') || '';
+  const dataSize = propertyCard.getAttribute('data-size') || '';
+  const dataBedrooms = propertyCard.getAttribute('data-bedrooms') || '';
+  const dataBathrooms = propertyCard.getAttribute('data-bathrooms') || '';
+
+  // Fallbacks from visible meta if data-* is missing
+  const fallbackSize = metaItems && metaItems[0] ? metaItems[0].textContent : '';
+  const fallbackBedrooms = metaItems && metaItems[1] ? metaItems[1].textContent : '';
+  const fallbackBathrooms = metaItems && metaItems[2] ? metaItems[2].textContent : '';
 
   const property = {
     id: propertyId,
     title: titleEl ? titleEl.textContent : '',
     location: locationEl ? locationEl.textContent : '',
     price: priceEl ? priceEl.textContent : '',
-    type: '',
-    bedrooms: bedrooms,
-    bathrooms: bathrooms,
-    size: size,
+    type: dataType,
+    bedrooms: dataBedrooms || fallbackBedrooms,
+    bathrooms: dataBathrooms || fallbackBathrooms,
+    size: dataSize || fallbackSize,
     image: imgEl ? imgEl.src : ''
   };
   

@@ -451,7 +451,11 @@
                 <div class="property-card country-<%= property.country.toLowerCase() %>" 
                      data-country="<%= property.country %>"
                      data-property-id="<%= property.id %>"
-                     data-slug="<%= property.slug %>">
+                     data-slug="<%= property.slug %>"
+                     data-type="<%= property.type || '' %>"
+                     data-size="<%= property.size || '' %>"
+                     data-bedrooms="<%= (typeof property.bedrooms !== 'undefined' && property.bedrooms !== null) ? property.bedrooms : '' %>"
+                     data-bathrooms="<%= (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) ? property.bathrooms : '' %>">
                   
                   <!-- Accent strip -->
                   <div class="card-accent"></div>
