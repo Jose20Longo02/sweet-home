@@ -674,14 +674,9 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 96px;
-  background: linear-gradient(
-    to bottom,
-    var(--country-color, var(--primary-color)) 0%,
-    transparent 100%
-  );
+  height: 20px;
+  background: var(--country-color, var(--primary-color));
   z-index: 2;
-  opacity: 0.8;
 }
 
 /* USA Properties */
