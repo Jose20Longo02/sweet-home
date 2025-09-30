@@ -797,7 +797,7 @@
 /* Neighborhood Badge */
 .property-neighborhood-badge {
   position: absolute;
-  top: var(--spacing-8);
+  top: var(--spacing-6);
   right: var(--spacing-3);
 }
 
