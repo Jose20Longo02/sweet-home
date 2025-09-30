@@ -1060,6 +1060,7 @@
   color: var(--white);
   border: 1px solid var(--primary-color);
   box-shadow: var(--shadow-sm);
+  min-width: 160px;
 }
 .property-footer .btn-view:hover {
   background: var(--primary-dark);
