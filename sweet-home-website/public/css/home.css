@@ -816,7 +816,7 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 .section.recommended-project { padding: 24px 0 64px; }
 .project-hero { position: relative; height: 70vh; min-height: 520px; max-height: 820px; overflow: hidden; border-radius: 14px; margin: 0 16px; }
 .project-hero .slides { position: absolute; inset: 0; }
-.project-hero .slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity .6s ease; }
+.project-hero .slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity .6s ease, transform .2s ease; will-change: transform; transform: translateY(0) scale(1); }
 .project-hero .slide.is-active { opacity: 1; }
 .project-hero .overlay { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr; align-content: end; padding: 24px; background: linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,.25) 40%, rgba(0,0,0,0) 100%); }
 .project-hero .meta { color: #fff; max-width: 900px; padding: 16px 8px; }

@@ -683,6 +683,26 @@ function initRecommendedProject() {
   hero.addEventListener('mouseenter', stop);
   hero.addEventListener('mouseleave', start);
   start();
+
+  // Parallax on scroll (subtle)
+  let raf = null;
+  const maxShift = 40; // px
+  function onScroll() {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = null;
+      const rect = hero.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      // progress: 0 at middle, negative above, positive below
+      const center = rect.top + rect.height / 2 - vh / 2;
+      const norm = Math.max(-1, Math.min(1, center / (vh / 2)));
+      const shift = -norm * maxShift;
+      const active = hero.querySelector('.slide.is-active');
+      if (active) active.style.transform = `translateY(${shift}px) scale(1.03)`;
+    });
+  }
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
 }
 
 function initMobileHeroSlideshow() {
