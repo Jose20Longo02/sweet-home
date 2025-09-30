@@ -979,33 +979,28 @@
 /* Bottom actions outside the floating panel, aligned horizontally with location pill and away from edge */
 /* removed bottom actions since action is now inside image */
 
-/* Standout styling for compare button */
+/* Compare button styling */
 .btn-compare {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 14px;
-  min-width: 140px;
+  padding: var(--spacing-2) var(--spacing-4);
   justify-content: center;
-  border-radius: var(--radius-full);
-  background: var(--white);
-  color: var(--gray-900);
-  border: none;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  backdrop-filter: saturate(140%) blur(6px);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-fast);
 }
 
 .btn-compare:hover {
   background: var(--primary-color);
   color: var(--white);
+  border-color: var(--primary-color);
   transform: translateY(-1px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
-  border: none;
 }
 
 .btn-compare:active {
   transform: translateY(0);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
 }
 
 .btn-compare:focus-visible {
