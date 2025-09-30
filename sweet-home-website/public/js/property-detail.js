@@ -462,7 +462,7 @@ class PropertyDetailPage {
     window.addEventListener('resize', doMove);
   }
 
-  handleContactFormSubmit(event) {
+  async handleContactFormSubmit(event) {
     event.preventDefault();
     if (this.isSubmittingLead) return;
     this.isSubmittingLead = true;
@@ -475,10 +475,26 @@ class PropertyDetailPage {
     
     const formData = new FormData(event.target);
     const formDataObj = Object.fromEntries(formData.entries());
-    // Include recaptcha token if present
-    if (!formDataObj.recaptchaToken) {
+    // Ensure a fresh reCAPTCHA v3 token right before submit (tokens expire quickly)
+    try {
       const rt = document.getElementById('recaptchaTokenProperty');
-      if (rt && rt.value) formDataObj.recaptchaToken = rt.value;
+      const siteKey = rt ? rt.getAttribute('data-site-key') : null;
+      if (siteKey && window.grecaptcha && typeof grecaptcha.execute === 'function') {
+        const token = await grecaptcha.execute(siteKey, { action: 'property_lead' });
+        if (token) {
+          formDataObj.recaptchaToken = token;
+          if (rt) rt.value = token;
+        }
+      } else {
+        // fallback to any existing token already on the page
+        if (!formDataObj.recaptchaToken && rt && rt.value) formDataObj.recaptchaToken = rt.value;
+      }
+    } catch (_) {
+      // If recaptcha fails, let server validate and respond accordingly
+      if (!formDataObj.recaptchaToken) {
+        const rt = document.getElementById('recaptchaTokenProperty');
+        if (rt && rt.value) formDataObj.recaptchaToken = rt.value;
+      }
     }
     // combine country code + phone
     if (formDataObj.countryCode || formDataObj.phone) {
