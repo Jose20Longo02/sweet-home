@@ -22,6 +22,9 @@ async function verifyRecaptchaToken(token, remoteIp) {
       body: params
     });
     const data = await res.json();
+    if (process.env.RECAPTCHA_DEBUG === 'true') {
+      try { console.log('[reCAPTCHA verify]', { success: data.success, score: data.score, action: data.action, errorCodes: data['error-codes'] }); } catch (_) {}
+    }
     return data;
   } catch (e) {
     return { success: false, error: 'recaptcha_verification_failed' };
@@ -35,6 +38,9 @@ function recaptchaRequired(minScore = 0.5) {
       const remoteIp = req.ip;
       const result = await verifyRecaptchaToken(token, remoteIp);
       req.recaptcha = result;
+      if (process.env.RECAPTCHA_DEBUG === 'true') {
+        try { console.log('[reCAPTCHA gate]', { success: !!result?.success, score: result?.score, action: result?.action }); } catch (_) {}
+      }
       if (!result || !result.success || (typeof result.score === 'number' && result.score < minScore)) {
         return res.status(400).json ? res.status(400).json({ success: false, message: 'reCAPTCHA verification failed' })
                                     : res.status(400).send('reCAPTCHA verification failed');

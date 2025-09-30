@@ -63,14 +63,14 @@ app.use(
       // permit CDN images broadly; Spaces CDN is HTTPS
       "img-src": ["'self'", 'data:', 'blob:', 'https:', 'https://*.tile.openstreetmap.org', 'https://unpkg.com', 'https://www.google-analytics.com', 'https://*.google-analytics.com'],
       "media-src": ["'self'", 'blob:', 'https:'],
-      "script-src": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://unpkg.com', 'https://www.googletagmanager.com'],
-      "script-src-elem": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://unpkg.com', 'https://www.googletagmanager.com'],
+      "script-src": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com'],
+      "script-src-elem": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com'],
       "script-src-attr": ["'none'"],
       "style-src": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
       "style-src-elem": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
       "style-src-attr": ["'unsafe-inline'"],
       "font-src": ["'self'", 'data:', 'https://fonts.gstatic.com'],
-      "connect-src": ["'self'", 'https://nominatim.openstreetmap.org', 'https://www.google-analytics.com', 'https://region1.google-analytics.com', 'https://*.google-analytics.com', 'https://www.googletagmanager.com'],
+      "connect-src": ["'self'", 'https://nominatim.openstreetmap.org', 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://www.google-analytics.com', 'https://region1.google-analytics.com', 'https://*.google-analytics.com', 'https://www.googletagmanager.com'],
       "frame-src": ['https://www.google.com', 'https://www.youtube.com', 'https://player.vimeo.com']
     }
   })

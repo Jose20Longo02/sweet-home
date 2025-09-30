@@ -8,6 +8,10 @@ const { ensureAdmin, ensureSuperAdmin, ensureAuthenticated } = require('../middl
 const rateLimit = require('express-rate-limit');
 const { body } = require('express-validator');
 const { recaptchaRequired } = require('../middleware/recaptcha');
+const recaptchaMinScore = (() => {
+  const v = parseFloat(process.env.RECAPTCHA_MIN_SCORE || '0.5');
+  return Number.isFinite(v) ? v : 0.5;
+})();
 
 // Rate limiters for lead endpoints
 const createLeadLimiter = rateLimit({
@@ -28,14 +32,14 @@ const leadValidations = [
 ];
 
 // Public API endpoints (rate limited + validated)
-router.post('/api/leads', createLeadLimiter, recaptchaRequired(0.5), leadValidations, leadController.createFromProperty);
-router.post('/api/leads/project', createLeadLimiter, recaptchaRequired(0.5), leadValidations, leadController.createFromProject);
+router.post('/api/leads', createLeadLimiter, recaptchaRequired(recaptchaMinScore), leadValidations, leadController.createFromProperty);
+router.post('/api/leads/project', createLeadLimiter, recaptchaRequired(recaptchaMinScore), leadValidations, leadController.createFromProject);
 
 // Public contact form endpoint
 router.post(
   '/api/leads/contact',
   createLeadLimiter,
-  recaptchaRequired(0.5),
+  recaptchaRequired(recaptchaMinScore),
   [
     body('name').isString().trim().isLength({ min: 2, max: 100 }),
     body('email').isString().trim().isEmail().normalizeEmail(),
