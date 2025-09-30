@@ -1000,15 +1000,26 @@
 
 .panel-actions { display: flex; justify-content: flex-end; }
 .panel-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-4); }
-.btn-view { border-color: var(--primary-color); color: var(--primary-color); }
-.btn-view:hover { background: var(--primary-color); color: var(--white); }
+.property-footer .btn-view {
+  background: var(--primary-color);
+  color: var(--white);
+  border: 1px solid var(--primary-color);
+  box-shadow: var(--shadow-sm);
+}
+.property-footer .btn-view:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: var(--white);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
 
 /* Bottom actions row inside info panel */
 /* Bottom actions outside the floating panel, aligned horizontally with location pill and away from edge */
 /* removed bottom actions since action is now inside image */
 
 /* Compare button styling */
-.btn-compare {
+.property-footer .btn-compare {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -1018,9 +1029,12 @@
   font-weight: 500;
   font-size: var(--font-size-sm);
   transition: all var(--transition-fast);
+  background: var(--accent-color);
+  color: var(--country-color, var(--primary-color));
+  border: 1px solid var(--country-color, var(--brand-sand-dark));
 }
 
-.btn-compare:hover {
+.property-footer .btn-compare:hover {
   background: var(--primary-color);
   color: var(--white);
   border-color: var(--primary-color);
