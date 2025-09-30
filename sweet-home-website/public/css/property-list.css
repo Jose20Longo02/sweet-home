@@ -821,7 +821,7 @@
 }
 
 .badge-neighborhood {
-  background: var(--green-500);
+  background: #10b981;
   color: var(--white);
   font-size: var(--font-size-xs);
   padding: var(--spacing-1) var(--spacing-2);
