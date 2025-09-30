@@ -791,10 +791,10 @@
 /* Remove legacy left border for colored countries in new design */
 .property-card[class*='country-'] { border-left: 0; }
 
-/* Image-Focused Property Image Section */
+/* Compact Image-Focused Property Image Section */
 .property-image {
   position: relative;
-  height: 300px;
+  height: 200px;
   overflow: hidden;
   background: linear-gradient(135deg, var(--gray-100), var(--gray-200));
   border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
@@ -881,9 +881,9 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Compact Property Content */
+/* Ultra-Compact Property Content */
 .property-content {
-  padding: var(--spacing-4);
+  padding: var(--spacing-3);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -892,11 +892,11 @@
 }
 
 .property-title {
-  margin: 0 0 var(--spacing-2) 0;
+  margin: 0 0 var(--spacing-1) 0;
   color: var(--gray-900);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.2;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -910,22 +910,22 @@
   gap: var(--spacing-1);
   color: var(--gray-600);
   font-size: var(--font-size-xs);
-  margin-bottom: var(--spacing-2);
+  margin-bottom: var(--spacing-1);
   font-weight: 500;
 }
 
 .property-location svg {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   opacity: 0.7;
 }
 
-/* Compact Property Details */
+/* Ultra-Compact Property Details */
 .property-details {
   display: flex;
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-3);
-  padding: var(--spacing-2) 0;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-2);
+  padding: var(--spacing-1) 0;
   border-top: 1px solid var(--gray-100);
   border-bottom: 1px solid var(--gray-100);
 }
@@ -940,23 +940,23 @@
 }
 
 .detail-item svg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   opacity: 0.8;
 }
 
-/* Compact Price Section */
+/* Ultra-Compact Price Section */
 .property-price {
-  margin-bottom: var(--spacing-3);
+  margin-bottom: var(--spacing-2);
   text-align: center;
-  padding: var(--spacing-2);
+  padding: var(--spacing-1);
   background: linear-gradient(135deg, var(--gray-50), var(--gray-100));
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   border: 1px solid var(--gray-200);
 }
 
 .price-amount {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: 800;
   color: var(--gray-900);
   margin-bottom: var(--spacing-1);
@@ -969,14 +969,14 @@
   font-weight: 500;
 }
 
-/* Compact Footer */
+/* Ultra-Compact Footer */
 .property-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: var(--spacing-1);
   margin-top: auto;
-  padding-top: var(--spacing-2);
+  padding-top: var(--spacing-1);
   border-top: 1px solid var(--gray-100);
 }
 
@@ -1095,12 +1095,12 @@
 /* Bottom actions outside the floating panel, aligned horizontally with location pill and away from edge */
 /* removed bottom actions since action is now inside image */
 
-/* Compact Compare Button */
+/* Ultra-Compact Compare Button */
 .btn-compare {
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-1);
-  padding: var(--spacing-2) var(--spacing-3);
+  padding: var(--spacing-1) var(--spacing-2);
   justify-content: center;
   border-radius: var(--radius-full);
   font-weight: 600;
@@ -1108,8 +1108,8 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: var(--white);
   color: var(--gray-700);
-  border: 2px solid var(--gray-200);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--gray-200);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -1470,23 +1470,23 @@
   }
   
   .property-image {
-    height: 250px;
+    height: 180px;
   }
   
   .property-content {
-    padding: var(--spacing-3);
+    padding: var(--spacing-2);
   }
   
   .property-title {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-sm);
     margin-bottom: var(--spacing-1);
   }
   
   .property-details {
     flex-direction: column;
-    gap: var(--spacing-2);
-    margin-bottom: var(--spacing-2);
-    padding: var(--spacing-2) 0;
+    gap: var(--spacing-1);
+    margin-bottom: var(--spacing-1);
+    padding: var(--spacing-1) 0;
   }
   
   .detail-item {
@@ -1495,23 +1495,23 @@
   }
   
   .property-price {
-    margin-bottom: var(--spacing-2);
-    padding: var(--spacing-2);
+    margin-bottom: var(--spacing-1);
+    padding: var(--spacing-1);
   }
   
   .price-amount {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-base);
   }
   
   .property-footer {
     flex-direction: column;
-    gap: var(--spacing-2);
-    padding-top: var(--spacing-2);
+    gap: var(--spacing-1);
+    padding-top: var(--spacing-1);
   }
   
   .btn-compare {
     width: 100%;
-    padding: var(--spacing-2) var(--spacing-3);
+    padding: var(--spacing-1) var(--spacing-2);
   }
   
   .property-badges {
@@ -1532,16 +1532,16 @@
 
 @media (max-width: 640px) {
   .property-image {
-    height: 220px;
+    height: 160px;
   }
   
   .property-content {
-    padding: var(--spacing-3);
+    padding: var(--spacing-2);
   }
   
   .property-title {
-    font-size: var(--font-size-sm);
-    line-height: 1.4;
+    font-size: var(--font-size-xs);
+    line-height: 1.3;
     margin-bottom: var(--spacing-1);
   }
   
@@ -1552,7 +1552,7 @@
   
   .property-details {
     gap: var(--spacing-1);
-    margin-bottom: var(--spacing-2);
+    margin-bottom: var(--spacing-1);
     padding: var(--spacing-1) 0;
   }
   
@@ -1561,17 +1561,17 @@
   }
   
   .detail-item svg {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
   }
   
   .property-price {
     padding: var(--spacing-1);
-    margin-bottom: var(--spacing-2);
+    margin-bottom: var(--spacing-1);
   }
   
   .price-amount {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-sm);
   }
   
   .price-per-sqm {
