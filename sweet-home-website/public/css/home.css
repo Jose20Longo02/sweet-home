@@ -856,9 +856,9 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   line-height: 1.2;
 }
 .project-hero .actions .btn-primary { background: var(--primary-color); color: #fff; border: none; padding: 12px 22px; border-radius: 10px; text-decoration: none; box-shadow: 0 10px 24px rgba(46,168,98,.28); }
-.project-hero .controls { position: absolute; right: 16px; bottom: 16px; display: flex; gap: 10px; }
-.project-hero .ctrl { background: rgba(0,0,0,.45); color: #fff; border: 0; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: grid; place-items: center; transition: background .2s ease, transform .2s ease; }
-.project-hero .ctrl:hover { background: rgba(0,0,0,.6); transform: translateY(-1px); }
+.project-hero .controls { position: absolute; right: 16px; bottom: 16px; display: flex; gap: 10px; z-index: 10; }
+.project-hero .ctrl { background: var(--primary-color); color: #fff; border: 0; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: grid; place-items: center; transition: background .2s ease, transform .2s ease; font-size: 20px; }
+.project-hero .ctrl:hover { background: var(--primary-dark); transform: translateY(-1px); }
 
 /* Top-right badge */
 .project-hero .badge-top-right {
@@ -874,6 +874,9 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 @media (max-width: 560px) {
   .project-hero { height: 52vh; min-height: 380px; border-radius: 10px; }
   .project-hero .overlay { padding: 18px; }
+  .project-hero .meta { padding-bottom: 60px; }
+  .project-hero .actions .btn-primary { width: calc(100% - 110px); max-width: none; }
+  .project-hero .controls { bottom: 12px; }
 }
 
 /* Move arrows to bottom-right for international carousel */
