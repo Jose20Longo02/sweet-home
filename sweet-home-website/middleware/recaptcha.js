@@ -1,5 +1,8 @@
 // middleware/recaptcha.js
-const fetch = require('node-fetch');
+// Use global fetch if available (Node 18+), otherwise dynamically import node-fetch (v3 ESM)
+const fetchFn = (typeof fetch === 'function')
+  ? fetch.bind(globalThis)
+  : ((...args) => import('node-fetch').then(({ default: f }) => f(...args)));
 
 /**
  * Verify reCAPTCHA v3 token from client. Requires env RECAPTCHA_SECRET_KEY.
@@ -18,7 +21,7 @@ async function verifyRecaptchaToken(token, remoteIp) {
     if (remoteIp) params.append('remoteip', remoteIp);
 
     // Primary verification endpoint
-    let res = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+    let res = await fetchFn('https://www.google.com/recaptcha/api/siteverify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: params
@@ -28,7 +31,7 @@ async function verifyRecaptchaToken(token, remoteIp) {
     // If response is malformed or unreachable, try recaptcha.net as fallback
     if (!data || typeof data.success === 'undefined') {
       try {
-        res = await fetch('https://www.recaptcha.net/recaptcha/api/siteverify', {
+        res = await fetchFn('https://www.recaptcha.net/recaptcha/api/siteverify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: params
