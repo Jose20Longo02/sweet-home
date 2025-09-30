@@ -706,8 +706,21 @@ function shareOnSocial(platform) {
     case 'facebook':
       shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(propertyUrl)}`;
       break;
-    case 'twitter':
-      shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(propertyTitle)}&url=${encodeURIComponent(propertyUrl)}`;
+    case 'instagram':
+      // Instagram doesn't have a direct sharing API, so we'll copy the property info and open Instagram
+      const instagramText = `Check out this property: ${propertyTitle} - ${propertyUrl}`;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(instagramText).then(() => {
+          if (window.propertyDetailPage) {
+            window.propertyDetailPage.showSuccessMessage('Property info copied! You can now paste it on Instagram.');
+          }
+        }).catch(() => {
+          fallbackCopyTextToClipboard(instagramText);
+        });
+      } else {
+        fallbackCopyTextToClipboard(instagramText);
+      }
+      shareUrl = `https://www.instagram.com/`;
       break;
     case 'linkedin':
       shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(propertyUrl)}`;
