@@ -821,14 +821,38 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 .project-hero .slide.is-active { opacity: 1; }
 .project-hero .overlay { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr; align-content: end; padding: 24px; background: linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,.25) 40%, rgba(0,0,0,0) 100%); }
 .project-hero .meta { color: #fff; max-width: 900px; padding: 16px 8px; }
-.project-hero .title { font-size: clamp(26px, 3.6vw, 40px); font-weight: 800; line-height: 1.08; margin: 0 0 6px; color: #fff; }
-.project-hero .title.small { font-size: clamp(22px, 3.2vw, 34px); }
-.project-hero .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, auto)); gap: 10px 14px; align-items: center; margin: 8px 0 14px; }
-.project-hero .unit-type { margin: 0; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,.15); color: #fff; font-weight: 700; font-size: 12px; letter-spacing: .2px; text-transform: none; justify-self: start; }
-.project-hero .price-start { margin: 0; color: #e5e7eb; font-weight: 600; }
-.project-hero .price-start strong { color: #fff; font-size: clamp(16px, 2vw, 20px); }
-.project-hero .sizes { margin: 0; color: #e5e7eb; font-weight: 600; }
-.project-hero .location { display: flex; align-items: center; gap: 8px; margin: 0 0 18px; font-size: clamp(14px, 1.8vw, 18px); color: #e5e7eb; }
+.project-hero .title { font-size: clamp(32px, 4.2vw, 48px); font-weight: 800; line-height: 1.1; margin: 0 0 12px; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+.project-hero .location { display: flex; align-items: center; gap: 8px; margin: 0 0 24px; font-size: clamp(14px, 1.6vw, 17px); color: rgba(255,255,255,0.9); font-weight: 500; }
+.project-hero .info-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+.project-hero .info-card { 
+  background: rgba(255,255,255,0.12); 
+  backdrop-filter: blur(10px); 
+  border: 1px solid rgba(255,255,255,0.2); 
+  border-radius: 12px; 
+  padding: 12px 18px; 
+  transition: all 0.3s ease;
+}
+.project-hero .info-card:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
+.project-hero .info-card.highlight { 
+  background: var(--primary-color); 
+  border-color: var(--primary-color); 
+  box-shadow: 0 8px 20px rgba(46,168,98,0.35);
+}
+.project-hero .info-label { 
+  font-size: 11px; 
+  text-transform: uppercase; 
+  letter-spacing: 0.8px; 
+  color: rgba(255,255,255,0.75); 
+  margin-bottom: 4px; 
+  font-weight: 600;
+}
+.project-hero .info-card.highlight .info-label { color: rgba(255,255,255,0.9); }
+.project-hero .info-value { 
+  font-size: clamp(18px, 2.2vw, 24px); 
+  font-weight: 700; 
+  color: #fff; 
+  line-height: 1.2;
+}
 .project-hero .actions .btn-primary { background: var(--primary-color); color: #fff; border: none; padding: 12px 22px; border-radius: 10px; text-decoration: none; box-shadow: 0 10px 24px rgba(46,168,98,.28); }
 .project-hero .controls { position: absolute; right: 16px; bottom: 16px; display: flex; gap: 10px; }
 .project-hero .ctrl { background: rgba(0,0,0,.45); color: #fff; border: 0; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: grid; place-items: center; transition: background .2s ease, transform .2s ease; }
