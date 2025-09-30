@@ -1029,9 +1029,9 @@
   font-weight: 500;
   font-size: var(--font-size-sm);
   transition: all var(--transition-fast);
-  background: var(--accent-color);
-  color: var(--country-color, var(--primary-color));
-  border: 1px solid var(--country-color, var(--brand-sand-dark));
+  background: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
 }
 
 .property-footer .btn-compare:hover {
