@@ -821,7 +821,7 @@
 .property-title {
   margin: 0 0 var(--spacing-3) 0;
   color: var(--gray-900);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: 600;
   line-height: 1.3;
 }
