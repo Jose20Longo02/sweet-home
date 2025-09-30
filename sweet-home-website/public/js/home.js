@@ -661,7 +661,6 @@ function initRecommendedProject() {
   const prev = hero.querySelector('.ctrl.prev');
   const next = hero.querySelector('.ctrl.next');
   let idx = 0;
-  let timer = null;
 
   function apply(i) {
     slides.forEach((s, j) => s.classList.toggle('is-active', j === i));
@@ -672,17 +671,9 @@ function initRecommendedProject() {
     apply(idx);
   }
 
-  function start() {
-    stop();
-    timer = setInterval(() => go(1), 5000);
-  }
-  function stop() { if (timer) { clearInterval(timer); timer = null; } }
-
-  prev && prev.addEventListener('click', () => { go(-1); start(); });
-  next && next.addEventListener('click', () => { go(1); start(); });
-  hero.addEventListener('mouseenter', stop);
-  hero.addEventListener('mouseleave', start);
-  start();
+  // Manual controls only (auto-rotate disabled)
+  prev && prev.addEventListener('click', () => { go(-1); });
+  next && next.addEventListener('click', () => { go(1); });
 
   // Parallax on scroll (subtle)
   let raf = null;

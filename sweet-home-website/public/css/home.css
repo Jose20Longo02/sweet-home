@@ -814,7 +814,8 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 
 /* Recommended Project */
 .section.recommended-project { padding: 24px 0 64px; }
-.project-hero { position: relative; height: 70vh; min-height: 520px; max-height: 820px; overflow: hidden; border-radius: 14px; margin: 0 16px; }
+.section.recommended-project .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+.project-hero { position: relative; height: 70vh; min-height: 520px; max-height: 820px; overflow: hidden; border-radius: 14px; margin: 0; }
 .project-hero .slides { position: absolute; inset: 0; }
 .project-hero .slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity .6s ease, transform .2s ease; will-change: transform; transform: translateY(0) scale(1); }
 .project-hero .slide.is-active { opacity: 1; }
