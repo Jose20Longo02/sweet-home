@@ -871,6 +871,7 @@
   align-items: center;
   gap: var(--spacing-2);
   color: var(--gray-600);
+  margin-top: var(--spacing-2);
   font-size: var(--font-size-sm);
   margin-bottom: var(--spacing-4);
 }
@@ -923,7 +924,6 @@
   justify-content: space-between;
   gap: var(--spacing-3);
   padding-top: var(--spacing-3);
-  border-top: 1px dashed var(--gray-200);
 }
 
 /* Hover dynamics using country color */
