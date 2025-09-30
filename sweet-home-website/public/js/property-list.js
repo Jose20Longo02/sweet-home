@@ -536,7 +536,22 @@ function compareProperty(propertyId) {
     bedrooms: dataBedrooms || fallbackBedrooms,
     bathrooms: dataBathrooms || fallbackBathrooms,
     size: dataSize || fallbackSize,
-    image: imgEl ? imgEl.src : ''
+    image: imgEl ? imgEl.src : '',
+    // Numeric fields for calculations
+    priceNum: (() => {
+      const raw = propertyCard.getAttribute('data-price');
+      const n = raw ? parseFloat(raw) : NaN;
+      return Number.isFinite(n) ? n : NaN;
+    })(),
+    sizeNum: (() => {
+      if (dataSize) {
+        const n = parseFloat(dataSize);
+        return Number.isFinite(n) ? n : NaN;
+      }
+      const text = fallbackSize ? String(fallbackSize) : '';
+      const n = parseFloat(text.replace(/[^0-9.]/g, ''));
+      return Number.isFinite(n) ? n : NaN;
+    })()
   };
   
   // Check if property is already in comparison
@@ -663,6 +678,7 @@ function createComparisonTable() {
     [i18nGet('compare.headers.image','Image'), ...comparisonList.map(p => `<img src="${p.image}" alt="${p.title}" class="comparison-modal-image">`)],
     [i18nGet('compare.headers.location','Location'), ...comparisonList.map(p => p.location)],
     [i18nGet('compare.headers.price','Price'), ...comparisonList.map(p => p.price)],
+    [i18nGet('compare.headers.pricePerSqm','Price per m²'), ...comparisonList.map(p => formatPricePerSqm(p.priceNum, p.sizeNum))],
     [i18nGet('compare.headers.type','Type'), ...comparisonList.map(p => p.type)],
     [i18nGet('compare.headers.bedrooms','Bedrooms'), ...comparisonList.map(p => p.bedrooms)],
     [i18nGet('compare.headers.bathrooms','Bathrooms'), ...comparisonList.map(p => p.bathrooms)],
@@ -699,6 +715,18 @@ function createComparisonTable() {
   `;
   
   return tableHTML;
+}
+
+function formatPricePerSqm(priceNum, sizeNum) {
+  try {
+    if (!Number.isFinite(priceNum) || !Number.isFinite(sizeNum) || sizeNum <= 0) {
+      return '—';
+    }
+    const value = Math.round(priceNum / sizeNum);
+    return `€${value.toLocaleString('en-US')} / m²`;
+  } catch (_e) {
+    return '—';
+  }
 }
 
 // Function to close comparison modal

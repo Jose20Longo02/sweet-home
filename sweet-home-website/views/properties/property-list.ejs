@@ -22,6 +22,7 @@
       image: t("properties.list.compare.headers.image","Image"),
       location: t("properties.list.compare.headers.location","Location"),
       price: t("properties.list.compare.headers.price","Price"),
+      pricePerSqm: t("properties.list.compare.headers.pricePerSqm","Price per m²"),
       type: t("properties.list.compare.headers.type","Type"),
       bedrooms: t("properties.list.compare.headers.bedrooms","Bedrooms"),
       bathrooms: t("properties.list.compare.headers.bathrooms","Bathrooms"),
@@ -455,7 +456,8 @@
                      data-type="<%= property.type || '' %>"
                      data-size="<%= property.size || '' %>"
                      data-bedrooms="<%= (typeof property.bedrooms !== 'undefined' && property.bedrooms !== null) ? property.bedrooms : '' %>"
-                     data-bathrooms="<%= (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) ? property.bathrooms : '' %>">
+                     data-bathrooms="<%= (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) ? property.bathrooms : '' %>"
+                     data-price="<%= (typeof property.price !== 'undefined' && property.price !== null) ? property.price : '' %>">
                   
                   <!-- Accent strip -->
                   <div class="card-accent"></div>
