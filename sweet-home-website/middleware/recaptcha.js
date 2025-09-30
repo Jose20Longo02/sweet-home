@@ -60,8 +60,19 @@ function recaptchaRequired(minScore = 0.5) {
           try { console.warn('[reCAPTCHA] FAIL-OPEN enabled. Bypassing verification failure.'); } catch (_) {}
           return next();
         }
-        return res.status(400).json ? res.status(400).json({ success: false, message: 'reCAPTCHA verification failed' })
-                                    : res.status(400).send('reCAPTCHA verification failed');
+        if (res.status(400).json) {
+          const debugPayload = (process.env.RECAPTCHA_DEBUG === 'true') ? {
+            debug: {
+              tokenPresent: !!(req.body.recaptchaToken || req.query.recaptchaToken),
+              score: result && result.score,
+              action: result && result.action,
+              hostname: result && result.hostname,
+              errorCodes: result && result['error-codes']
+            }
+          } : {};
+          return res.status(400).json(Object.assign({ success: false, message: 'reCAPTCHA verification failed' }, debugPayload));
+        }
+        return res.status(400).send('reCAPTCHA verification failed');
       }
       return next();
     } catch (e) {
