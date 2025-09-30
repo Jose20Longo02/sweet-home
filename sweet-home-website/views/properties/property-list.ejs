@@ -518,7 +518,7 @@
                     <div class="panel-footer">
                       <div class="property-price compact">
                         <% if (property.price && Number(property.price) > 0) { %>
-                          <span class="price-amount">€<%= Number(property.price).toLocaleString('en-US') %></span>
+                          <span class="price-amount" data-price="<%= Number(property.price) %>">€<%= Number(property.price).toLocaleString('en-US') %></span>
                         <% } else { %>
                           <span class="price-amount"><%= t('properties.list.contactForPrice','Contact for price') %></span>
                         <% } %>
