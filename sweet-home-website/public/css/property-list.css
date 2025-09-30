@@ -833,40 +833,13 @@
 }
 
 .badge-neighborhood {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  background: var(--country-color, var(--primary-color));
   color: var(--white);
   font-size: var(--font-size-xs);
-  padding: 6px 12px;
-  border-radius: var(--radius-xl);
-  /* Fallback background */
-  background: var(--country-color, var(--primary-color));
-  /* Prefer a tinted translucent background when supported */
-  background: color-mix(in srgb, var(--country-color, var(--primary-color)) 85%, transparent);
-  /* Add a subtle ring using country color */
-  border: 1px solid var(--country-color, var(--primary-color));
-  border-color: color-mix(in srgb, var(--country-color, var(--primary-color)) 70%, white);
-  box-shadow: 0 0 0 1px var(--country-color, var(--primary-color)) inset, 0 8px 16px rgba(0,0,0,0.12);
-  backdrop-filter: saturate(140%) blur(6px);
-  text-shadow: 0 1px 1px rgba(0,0,0,0.25);
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
-}
-
-/* Add a small location pin without changing markup */
-.badge-neighborhood::before {
-  content: '';
-  width: 14px;
-  height: 14px;
-  background-color: currentColor;
-  -webkit-mask: url('/icons/icon_location.svg') no-repeat center / contain;
-          mask: url('/icons/icon_location.svg') no-repeat center / contain;
-  opacity: 0.95;
-}
-
-.property-card:hover .badge-neighborhood {
-  transform: translateY(-1px);
-  box-shadow: 0 0 0 1px var(--country-color, var(--primary-color)) inset, 0 10px 20px rgba(0,0,0,0.15);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-full);
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 /* Property Content */
