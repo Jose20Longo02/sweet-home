@@ -614,7 +614,7 @@ function updateComparisonUI() {
         <p>${property.location}</p>
         <p class="comparison-price">${property.price}</p>
       </div>
-      <button class="comparison-remove" onclick="compareProperty('${property.id}')" aria-label="${(i18nGet('compare.removeAria','Remove %s from comparison')||'').replace('%s', property.title)}" title="${i18nGet('compare.remove','Remove from comparison')}">&times;</button>
+      <button class="comparison-remove" data-id="${property.id}" aria-label="${(i18nGet('compare.removeAria','Remove %s from comparison')||'').replace('%s', property.title)}" title="${i18nGet('compare.remove','Remove from comparison')}">&times;</button>
     </div>
   `).join('');
   
@@ -735,6 +735,19 @@ function closeComparisonModal() {
   if (modal) {
     modal.style.display = 'none';
   }
+}
+
+// Remove a property from the comparison list by id
+function removeFromComparison(propertyId) {
+  const index = comparisonList.findIndex(p => p.id === propertyId);
+  if (index === -1) return;
+  // Remove visual selection on the card if present
+  const card = document.querySelector(`[data-property-id="${propertyId}"]`);
+  if (card) card.classList.remove('in-comparison');
+  // Remove from list and update UI
+  comparisonList.splice(index, 1);
+  updateComparisonUI();
+  showNotification(i18nGet('compare.removed','Property removed from comparison'), 'info');
 }
 
 // Function to show notification
@@ -1103,6 +1116,15 @@ document.addEventListener('DOMContentLoaded', function() {
   if (compareBtn) {
     compareBtn.addEventListener('click', () => {
       showComparisonModal();
+    });
+  }
+  const comparisonListEl = document.getElementById('comparisonList');
+  if (comparisonListEl) {
+    comparisonListEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('.comparison-remove');
+      if (!btn) return;
+      const id = btn.getAttribute('data-id');
+      if (id) removeFromComparison(id);
     });
   }
   const clearComparisonBtn = document.getElementById('clearComparisonBtn');
