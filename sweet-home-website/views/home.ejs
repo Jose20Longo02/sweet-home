@@ -164,53 +164,6 @@
   </div>
 </section>
 
-<!-- Recommended Project (full-bleed feature) -->
-<% if (typeof recommendedProject !== 'undefined' && recommendedProject) { %>
-<section class="section recommended-project" aria-label="Recommended Project">
-  <div class="container">
-    <div class="project-hero">
-      <div class="slides" data-count="<%= recommendedProject.photos.length %>">
-        <% (recommendedProject.photos || []).slice(0,6).forEach(function(src, i){ %>
-          <div class="slide <%= i === 0 ? 'is-active' : '' %>" style="background-image:url('<%= src %>')"></div>
-        <% }) %>
-      </div>
-      <div class="overlay">
-        <div class="badge-top-right">Recommended project</div>
-        <div class="meta">
-          <h2 class="title"><%= recommendedProject.title %></h2>
-          <p class="location"><span>📍</span><%= recommendedProject.city %>, <%= recommendedProject.country %></p>
-          
-          <div class="info-grid">
-            <% if (recommendedProject.min_price) { %>
-              <div class="info-card">
-                <div class="info-label">Starting at</div>
-                <div class="info-value">€<%= Number(recommendedProject.min_price).toLocaleString('en-US') %></div>
-              </div>
-            <% } %>
-            <% if (recommendedProject.min_unit_size || recommendedProject.max_unit_size) { %>
-              <div class="info-card">
-                <div class="info-label">Size range</div>
-                <div class="info-value">
-                  <%= recommendedProject.min_unit_size ? Math.round(recommendedProject.min_unit_size) : '?' %>–<%= recommendedProject.max_unit_size ? Math.round(recommendedProject.max_unit_size) : '?' %> m²
-                </div>
-              </div>
-            <% } %>
-          </div>
-          
-          <div class="actions">
-            <a class="btn btn-primary" href="/projects/<%= recommendedProject.slug %>">View project</a>
-          </div>
-        </div>
-        <div class="controls" role="group" aria-label="Slide controls">
-          <button class="ctrl prev" aria-label="Previous">&#8249;</button>
-          <button class="ctrl next" aria-label="Next">&#8250;</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<% } %>
-
 <!-- 5) About Section over panoramic image -->
 <section class="about-hero">
   <img src="/images/berlin-about.jpg" alt="" loading="lazy">
