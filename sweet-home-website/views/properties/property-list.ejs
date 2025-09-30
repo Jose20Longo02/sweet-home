@@ -492,6 +492,11 @@
                         <span class="badge badge-new"><%= t('properties.list.new','New') %></span>
                       <% } %>
                     </div>
+                    
+                    <!-- Neighborhood Badge (top-right) -->
+                    <div class="property-neighborhood-badge">
+                      <span class="badge badge-neighborhood"><%= property.neighborhood || property.city %></span>
+                    </div>
                   </div>
                   
                   <!-- Property Content -->

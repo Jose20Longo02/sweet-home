@@ -794,6 +794,13 @@
   gap: var(--spacing-2);
 }
 
+/* Neighborhood Badge */
+.property-neighborhood-badge {
+  position: absolute;
+  top: var(--spacing-3);
+  right: var(--spacing-3);
+}
+
 .badge {
   padding: var(--spacing-1) var(--spacing-3);
   border-radius: var(--radius-full);
@@ -811,6 +818,13 @@
 .badge-new {
   background: var(--green-500);
   color: var(--white);
+}
+
+.badge-neighborhood {
+  background: var(--green-500);
+  color: var(--white);
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-1) var(--spacing-2);
 }
 
 /* Property Content */
