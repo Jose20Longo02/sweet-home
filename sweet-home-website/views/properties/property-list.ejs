@@ -462,7 +462,7 @@
                   <!-- Accent strip -->
                   <div class="card-accent"></div>
 
-                  <!-- Image Area -->
+                  <!-- Property Image -->
                   <div class="property-image">
                     <% if (property.photos && property.photos.length > 0) { %>
                       <% if (property.has_variants && property.variant_base) { %>
@@ -471,7 +471,7 @@
                           <source srcset="<%= property.variant_base %>-320.webp 320w, <%= property.variant_base %>-640.webp 640w, <%= property.variant_base %>-960.webp 960w, <%= property.variant_base %>-1280.webp 1280w, <%= property.variant_base %>-1920.webp 1920w" type="image/webp">
                           <img src="<%= property.photos[0] %>" alt="<%= property.title %>"
                                srcset="<%= property.variant_base %>-320.jpg 320w, <%= property.variant_base %>-640.jpg 640w, <%= property.variant_base %>-960.jpg 960w, <%= property.variant_base %>-1280.jpg 1280w, <%= property.variant_base %>-1920.jpg 1920w"
-                               sizes="100vw"
+                               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
                                loading="lazy" decoding="async"
                                onerror="this.src='/img/property-placeholder.jpg'">
                         </picture>
@@ -482,49 +482,62 @@
                     <% } else { %>
                       <img src="/img/property-placeholder.jpg" alt="<%= property.title %>" loading="lazy" decoding="async">
                     <% } %>
-
-                    <!-- Overlay Pills -->
-                    <div class="image-overlays">
-                      <span class="pill-location"><%= property.neighborhood || property.city %></span>
+                    
+                    <!-- Property Badges (top-left) -->
+                    <div class="property-badges">
+                      <% if (property.featured) { %>
+                        <span class="badge badge-featured"><%= t('properties.list.featured','Featured') %></span>
+                      <% } %>
+                      <% if (property.new_listing) { %>
+                        <span class="badge badge-new"><%= t('properties.list.new','New') %></span>
+                      <% } %>
                     </div>
-                    <div class="image-action-left">
+                    
+                    <!-- Property Actions (top-right) -->
+                    <div class="property-actions">
                       <button class="btn btn-sm btn-compare"><%= t('properties.list.compare.cta','Compare') %></button>
                     </div>
                   </div>
-
-                  <!-- Floating Info Panel -->
-                  <div class="property-info-panel">
-                    <h3 class="property-title" title="<%= property.title %>"><%= property.title %></h3>
-
-                    <div class="property-meta">
+                  
+                  <!-- Property Content -->
+                  <div class="property-content">
+                    <h3 class="property-title"><%= property.title %></h3>
+                    
+                    <div class="property-location">
+                      <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: #000;"></span>
+                      <%= property.neighborhood || property.city %>, <%= property.country %>
+                    </div>
+                    
+                    <div class="property-details">
                       <% if (property.size) { %>
-                      <div class="meta-item">
-                        <span class="icon icon-16 icon-inline icon-mask icon-size" style="color: #000;"></span>
-                        <span><%= property.size %> <%= t('properties.list.meta.sqm','m²') %></span>
-                      </div>
+                        <div class="detail-item">
+                          <span class="icon icon-16 icon-inline icon-mask icon-size" style="color: #000;"></span>
+                          <%= property.size %> <%= t('properties.list.meta.sqm','m²') %>
+                        </div>
                       <% } %>
                       <% if (typeof property.bedrooms !== 'undefined' && property.bedrooms !== null) { %>
-                      <div class="meta-item">
-                        <span class="icon icon-16 icon-inline icon-mask icon-bed" style="color: #000;"></span>
-                        <span><%= property.bedrooms %> <%= t('properties.list.meta.beds','beds') %></span>
-                      </div>
+                        <div class="detail-item">
+                          <span class="icon icon-16 icon-inline icon-mask icon-bed" style="color: #000;"></span>
+                          <%= property.bedrooms %> <%= t('properties.list.meta.beds','beds') %>
+                        </div>
                       <% } %>
                       <% if (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) { %>
-                      <div class="meta-item">
-                        <span class="icon icon-16 icon-inline icon-mask icon-bath" style="color: #000;"></span>
-                        <span><%= property.bathrooms %> <%= t('properties.list.meta.baths','baths') %></span>
-                      </div>
+                        <div class="detail-item">
+                          <span class="icon icon-16 icon-inline icon-mask icon-bath" style="color: #000;"></span>
+                          <%= property.bathrooms %> <%= t('properties.list.meta.baths','baths') %>
+                        </div>
                       <% } %>
                     </div>
-
-                    <div class="panel-footer">
-                      <div class="property-price compact">
-                        <% if (property.price && Number(property.price) > 0) { %>
-                          <span class="price-amount">€<%= Number(property.price).toLocaleString('en-US') %></span>
-                        <% } else { %>
-                          <span class="price-amount"><%= t('properties.list.contactForPrice','Contact for price') %></span>
-                        <% } %>
-                      </div>
+                    
+                    <div class="property-price">
+                      <% if (property.price && Number(property.price) > 0) { %>
+                        <span class="price-amount">€<%= Number(property.price).toLocaleString('en-US') %></span>
+                      <% } else { %>
+                        <span class="price-amount"><%= t('properties.list.contactForPrice','Contact for price') %></span>
+                      <% } %>
+                    </div>
+                    
+                    <div class="property-footer">
                       <button class="btn btn-outline btn-sm btn-view"><%= t('properties.list.viewDetails','View details') %></button>
                     </div>
                   </div>
