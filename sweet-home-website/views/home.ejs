@@ -72,6 +72,33 @@
   </form>
 </section>
 
+<!-- Recommended Project (full-bleed feature) -->
+<% if (typeof recommendedProject !== 'undefined' && recommendedProject) { %>
+<section class="section recommended-project" aria-label="Recommended Project">
+  <div class="project-hero">
+    <div class="slides" data-count="<%= recommendedProject.photos.length %>">
+      <% (recommendedProject.photos || []).slice(0,6).forEach(function(src, i){ %>
+        <div class="slide <%= i === 0 ? 'is-active' : '' %>" style="background-image:url('<%= src %>')"></div>
+      <% }) %>
+    </div>
+    <div class="overlay">
+      <div class="meta">
+        <div class="eyebrow">Recommended project</div>
+        <h2 class="title"><%= recommendedProject.title %></h2>
+        <p class="location"><span>📍</span><%= recommendedProject.city %>, <%= recommendedProject.country %></p>
+        <div class="actions">
+          <a class="btn btn-primary" href="/projects/<%= recommendedProject.slug %>">View project</a>
+        </div>
+      </div>
+      <div class="controls" role="group" aria-label="Slide controls">
+        <button class="ctrl prev" aria-label="Previous">&#8249;</button>
+        <button class="ctrl next" aria-label="Next">&#8250;</button>
+      </div>
+    </div>
+  </div>
+</section>
+<% } %>
+
 <!-- 3) Featured Properties – card carousel (3-up) -->
 <section class="section featured">
   <h2 class="section-title"><%= t('home.featured.title','Featured Properties') %></h2>

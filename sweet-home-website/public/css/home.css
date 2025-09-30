@@ -812,6 +812,30 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 .stretch-card.is-focused .expanded-info { opacity: 1; transform: translateY(0); }
 .see-link { color: #fff; text-decoration: underline; }
 
+/* Recommended Project */
+.section.recommended-project { padding: 24px 0 64px; }
+.project-hero { position: relative; height: 70vh; min-height: 520px; max-height: 820px; overflow: hidden; border-radius: 14px; margin: 0 16px; }
+.project-hero .slides { position: absolute; inset: 0; }
+.project-hero .slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity .6s ease; }
+.project-hero .slide.is-active { opacity: 1; }
+.project-hero .overlay { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr; align-content: end; padding: 24px; background: linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,.25) 40%, rgba(0,0,0,0) 100%); }
+.project-hero .meta { color: #fff; max-width: 900px; padding: 16px 8px; }
+.project-hero .eyebrow { font-size: 13px; opacity: .9; margin-bottom: 6px; }
+.project-hero .title { font-size: clamp(28px, 4.5vw, 54px); font-weight: 800; line-height: 1.06; margin: 0 0 8px; color: #fff; }
+.project-hero .location { display: flex; align-items: center; gap: 8px; margin: 0 0 18px; font-size: clamp(14px, 1.8vw, 18px); color: #e5e7eb; }
+.project-hero .actions .btn-primary { background: var(--primary-color); color: #fff; border: none; padding: 12px 22px; border-radius: 10px; text-decoration: none; box-shadow: 0 10px 24px rgba(46,168,98,.28); }
+.project-hero .controls { position: absolute; right: 16px; bottom: 16px; display: flex; gap: 10px; }
+.project-hero .ctrl { background: rgba(0,0,0,.45); color: #fff; border: 0; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: grid; place-items: center; transition: background .2s ease, transform .2s ease; }
+.project-hero .ctrl:hover { background: rgba(0,0,0,.6); transform: translateY(-1px); }
+
+@media (max-width: 900px) {
+  .project-hero { height: 56vh; min-height: 420px; border-radius: 12px; }
+}
+@media (max-width: 560px) {
+  .project-hero { height: 52vh; min-height: 380px; border-radius: 10px; }
+  .project-hero .overlay { padding: 18px; }
+}
+
 /* Move arrows to bottom-right for international carousel */
 .stretch-carousel { padding-bottom: 48px; }
 .stretch-carousel .carousel-nav { position: absolute; top: auto; bottom: 0; transform: none; }

@@ -262,13 +262,48 @@ app.use('/superadmin/dashboard/properties', adminPropertyRoutes);
 app.use('/admin/properties', propertyRoutes);
 
 // Home page route
-app.get('/', (req, res) => {
-  res.render('home', { 
-    title: 'Find Your Dream Home',
-    user: req.session.user || null,
-    locations,
-    canonicalUrl: (process.env.APP_URL || `${req.protocol}://${req.get('host')}`) + '/'
-  });
+app.get('/', async (req, res, next) => {
+  try {
+    // Pick one random active project to highlight
+    const { rows } = await query(`
+      SELECT id, title, slug, country, city, neighborhood, photos, min_price, max_price, status
+        FROM projects
+       WHERE status = 'active'
+       ORDER BY random()
+       LIMIT 1
+    `);
+
+    let recommendedProject = null;
+    if (rows && rows[0]) {
+      const p = rows[0];
+      const arr = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      const photos = arr.map(ph => {
+        if (!ph) return ph;
+        const s = String(ph);
+        if (s.startsWith('/uploads/') || s.startsWith('http')) return s;
+        return `/uploads/projects/${p.id}/${s}`;
+      });
+      recommendedProject = {
+        id: p.id,
+        title: p.title,
+        slug: p.slug,
+        country: p.country,
+        city: p.city,
+        neighborhood: p.neighborhood,
+        photos,
+        min_price: p.min_price,
+        max_price: p.max_price
+      };
+    }
+
+    res.render('home', { 
+      title: 'Find Your Dream Home',
+      user: req.session.user || null,
+      locations,
+      recommendedProject,
+      canonicalUrl: (process.env.APP_URL || `${req.protocol}://${req.get('host')}`) + '/'
+    });
+  } catch (e) { next(e); }
 });
 
 // Staff convenience entry — bookmarkable
