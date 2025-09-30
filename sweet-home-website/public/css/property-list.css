@@ -883,7 +883,7 @@
 
 /* Minimal Property Content */
 .property-content {
-  padding: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-2) var(--spacing-2) var(--spacing-4);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -894,7 +894,7 @@
 .property-title {
   margin: 0 0 var(--spacing-1) 0;
   color: var(--gray-900);
-  font-size: var(--font-size-xs);
+  font-size: 10px;
   font-weight: 600;
   line-height: 1.2;
   display: -webkit-box;
@@ -1491,11 +1491,11 @@
   }
   
   .property-content {
-    padding: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-2) var(--spacing-2) var(--spacing-3);
   }
   
   .property-title {
-    font-size: var(--font-size-xs);
+    font-size: 9px;
     margin-bottom: var(--spacing-1);
   }
   
@@ -1553,11 +1553,11 @@
   }
   
   .property-content {
-    padding: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-2) var(--spacing-2) var(--spacing-3);
   }
   
   .property-title {
-    font-size: var(--font-size-xs);
+    font-size: 8px;
     line-height: 1.2;
     margin-bottom: var(--spacing-1);
   }
