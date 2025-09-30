@@ -971,6 +971,15 @@
   color: var(--white);
 }
 
+/* Ensure neighborhood badge uses normal case and larger padding, overriding generic .badge */
+.badge.badge-neighborhood {
+  text-transform: none;
+  letter-spacing: 0;
+  padding: var(--spacing-2) var(--spacing-5);
+  border-radius: var(--radius-full);
+  background: var(--country-color, var(--primary-color));
+}
+
 /* Removed favorite button styles (no favorites system) */
 
 /* Property Content */
