@@ -521,7 +521,6 @@ function compareProperty(propertyId) {
   const dataSize = propertyCard.getAttribute('data-size') || '';
   const dataBedrooms = propertyCard.getAttribute('data-bedrooms') || '';
   const dataBathrooms = propertyCard.getAttribute('data-bathrooms') || '';
-  const priceEl = propertyCard.querySelector('.price-amount');
   const dataPrice = priceEl ? Number(priceEl.getAttribute('data-price') || 0) : 0;
 
   // Fallbacks from visible meta if data-* is missing
