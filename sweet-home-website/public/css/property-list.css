@@ -683,9 +683,49 @@
   border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
 }
 
-/* Modern Country-Specific Styling */
+/* Country-Specific Styling with Correct Colors */
+/* Germany Properties */
+.property-card.country-germany .card-accent {
+  background: #359C4B;
+}
+
+.property-card.country-germany:hover {
+  box-shadow: 0 20px 40px rgba(53, 156, 75, 0.2);
+}
+
+.property-card.country-germany .property-price .price-amount {
+  color: #359C4B;
+}
+
+/* Cyprus Properties */
+.property-card.country-cyprus .card-accent {
+  background: #2C3E50;
+}
+
+.property-card.country-cyprus:hover {
+  box-shadow: 0 20px 40px rgba(44, 62, 80, 0.2);
+}
+
+.property-card.country-cyprus .property-price .price-amount {
+  color: #2C3E50;
+}
+
+/* UAE Properties */
+.property-card.country-uae .card-accent {
+  background: #CBBA9E;
+}
+
+.property-card.country-uae:hover {
+  box-shadow: 0 20px 40px rgba(203, 186, 158, 0.2);
+}
+
+.property-card.country-uae .property-price .price-amount {
+  color: #CBBA9E;
+}
+
+/* USA Properties */
 .property-card.country-usa .card-accent {
-  background: linear-gradient(90deg, var(--usa-color), #ff6b6b);
+  background: var(--usa-color);
 }
 
 .property-card.country-usa:hover {
@@ -698,7 +738,7 @@
 
 /* Spain Properties */
 .property-card.country-spain .card-accent {
-  background: linear-gradient(90deg, var(--spain-color), #fbbf24);
+  background: var(--spain-color);
 }
 
 .property-card.country-spain:hover {
@@ -709,22 +749,9 @@
   color: var(--spain-color);
 }
 
-/* Germany Properties */
-.property-card.country-germany .card-accent {
-  background: linear-gradient(90deg, var(--germany-color), #374151);
-}
-
-.property-card.country-germany:hover {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-}
-
-.property-card.country-germany .property-price .price-amount {
-  color: var(--germany-color);
-}
-
 /* France Properties */
 .property-card.country-france .card-accent {
-  background: linear-gradient(90deg, var(--france-color), #3b82f6);
+  background: var(--france-color);
 }
 
 .property-card.country-france:hover {
@@ -737,7 +764,7 @@
 
 /* Italy Properties */
 .property-card.country-italy .card-accent {
-  background: linear-gradient(90deg, var(--italy-color), #10b981);
+  background: var(--italy-color);
 }
 
 .property-card.country-italy:hover {
@@ -750,7 +777,7 @@
 
 /* UK Properties */
 .property-card.country-uk .card-accent {
-  background: linear-gradient(90deg, var(--uk-color), #8b5cf6);
+  background: var(--uk-color);
 }
 
 .property-card.country-uk:hover {
@@ -767,7 +794,7 @@
 /* Modern Property Image Section */
 .property-image {
   position: relative;
-  height: 320px;
+  height: 240px;
   overflow: hidden;
   background: linear-gradient(135deg, var(--gray-100), var(--gray-200));
   border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
@@ -856,7 +883,7 @@
 
 /* Modern Property Content */
 .property-content {
-  padding: var(--spacing-6);
+  padding: var(--spacing-5);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -919,9 +946,9 @@
 
 /* Modern Price Section */
 .property-price {
-  margin-bottom: var(--spacing-6);
+  margin-bottom: var(--spacing-4);
   text-align: center;
-  padding: var(--spacing-4);
+  padding: var(--spacing-3);
   background: linear-gradient(135deg, var(--gray-50), var(--gray-100));
   border-radius: var(--radius-xl);
   border: 1px solid var(--gray-200);
@@ -1442,7 +1469,7 @@
   }
   
   .property-image {
-    height: 280px;
+    height: 220px;
   }
   
   .property-content {
@@ -1504,7 +1531,7 @@
 
 @media (max-width: 640px) {
   .property-image {
-    height: 240px;
+    height: 200px;
   }
   
   .property-content {
