@@ -42,7 +42,9 @@ class Lead {
     const limit = Math.max(1, Number(pageSize));
 
     const listSql = `
-      SELECT l.*, p.title AS property_title, pr.title AS project_title
+      SELECT l.*, 
+             p.title AS property_title, p.neighborhood AS property_neighborhood, p.city AS property_city, p.country AS property_country,
+             pr.title AS project_title, pr.neighborhood AS project_neighborhood, pr.city AS project_city, pr.country AS project_country
         FROM leads l
         LEFT JOIN properties p ON p.id = l.property_id
         LEFT JOIN projects pr ON pr.id = l.project_id
@@ -82,7 +84,10 @@ class Lead {
     const offset = (Math.max(1, Number(page)) - 1) * Math.max(1, Number(pageSize));
     const limit = Math.max(1, Number(pageSize));
     const listSql = `
-      SELECT l.*, p.title AS property_title, pr.title AS project_title, u.name AS agent_name
+      SELECT l.*, 
+             p.title AS property_title, p.neighborhood AS property_neighborhood, p.city AS property_city, p.country AS property_country,
+             pr.title AS project_title, pr.neighborhood AS project_neighborhood, pr.city AS project_city, pr.country AS project_country,
+             u.name AS agent_name
         FROM leads l
         LEFT JOIN properties p ON p.id = l.property_id
         LEFT JOIN projects pr ON pr.id = l.project_id

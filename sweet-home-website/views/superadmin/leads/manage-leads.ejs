@@ -55,6 +55,7 @@
             <th>Created</th>
             <th>Property</th>
             <th>Project</th>
+            <th>Location</th>
             <th>Agent</th>
             <th>Lead</th>
             <th>Language</th>
@@ -65,16 +66,35 @@
         </thead>
         <tbody>
           <% if (!leads || leads.length === 0) { %>
-            <tr><td colspan="9" style="text-align:center;">No leads found</td></tr>
+            <tr><td colspan="10" style="text-align:center;">No leads found</td></tr>
           <% } %>
           <% leads.forEach(lead => { %>
             <tr>
               <td data-label="Created"><%= new Date(lead.created_at).toLocaleString() %></td>
               <td data-label="Property">
-                <div><strong>#<%= lead.property_id %></strong> <%= lead.property_title || '' %></div>
+                <% if (lead.property_id && lead.property_title) { %>
+                  <div><a href="/properties/<%= lead.property_id %>" target="_blank"><%= lead.property_title %></a></div>
+                <% } else { %>
+                  <div>-</div>
+                <% } %>
               </td>
               <td data-label="Project">
-                <div><strong>#<%= lead.project_id || '' %></strong> <%= lead.project_title || '' %></div>
+                <% if (lead.project_id && lead.project_title) { %>
+                  <div><a href="/projects/<%= lead.project_id %>" target="_blank"><%= lead.project_title %></a></div>
+                <% } else { %>
+                  <div>-</div>
+                <% } %>
+              </td>
+              <td data-label="Location">
+                <% 
+                  let location = '';
+                  if (lead.property_id && (lead.property_neighborhood || lead.property_city)) {
+                    location = `${lead.property_neighborhood || lead.property_city}, ${lead.property_city || lead.property_country}`;
+                  } else if (lead.project_id && (lead.project_neighborhood || lead.project_city)) {
+                    location = `${lead.project_neighborhood || lead.project_city}, ${lead.project_city || lead.project_country}`;
+                  }
+                %>
+                <div><%= location || '-' %></div>
               </td>
               <td data-label="Agent">
                 <div>
