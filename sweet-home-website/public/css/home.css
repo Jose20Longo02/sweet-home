@@ -1049,6 +1049,7 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   border-radius: 50%;
   transition: all 0.3s ease;
   z-index: -1;
+  transform: scale(0);
 }
 
 .social-link svg {
@@ -1113,24 +1114,6 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   transform: scale(1);
 }
 
-/* Twitter */
-.social-link.twitter {
-  color: #1da1f2;
-  background: rgba(29, 161, 242, 0.1);
-}
-
-.social-link.twitter::before {
-  background: #1da1f2;
-}
-
-.social-link.twitter:hover {
-  color: white;
-  transform: translateY(-2px);
-}
-
-.social-link.twitter:hover::before {
-  transform: scale(1);
-}
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
