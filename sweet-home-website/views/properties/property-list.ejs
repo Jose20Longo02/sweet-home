@@ -451,6 +451,8 @@
               <% properties.forEach(property => { %>
                 <div class="property-card country-<%= property.country.toLowerCase() %>" 
                      data-country="<%= property.country %>"
+                     data-city="<%= property.city || '' %>"
+                     data-neighborhood="<%= property.neighborhood || '' %>"
                      data-property-id="<%= property.id %>"
                      data-slug="<%= property.slug %>"
                      data-type="<%= property.type || '' %>"

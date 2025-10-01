@@ -511,7 +511,7 @@ function compareProperty(propertyId) {
   
   // Safely read current DOM structure
   const titleEl = propertyCard.querySelector('.property-title');
-  const locationEl = propertyCard.querySelector('.pill-location');
+  const locationEl = propertyCard.querySelector('.property-location');
   const priceEl = propertyCard.querySelector('.price-amount');
   const metaItems = propertyCard.querySelectorAll('.property-meta .meta-item span');
   const imgEl = propertyCard.querySelector('.property-image img');
@@ -521,16 +521,27 @@ function compareProperty(propertyId) {
   const dataSize = propertyCard.getAttribute('data-size') || '';
   const dataBedrooms = propertyCard.getAttribute('data-bedrooms') || '';
   const dataBathrooms = propertyCard.getAttribute('data-bathrooms') || '';
+  const dataCountry = propertyCard.getAttribute('data-country') || '';
+  const dataCity = propertyCard.getAttribute('data-city') || '';
+  const dataNeighborhood = propertyCard.getAttribute('data-neighborhood') || '';
 
   // Fallbacks from visible meta if data-* is missing
   const fallbackSize = metaItems && metaItems[0] ? metaItems[0].textContent : '';
   const fallbackBedrooms = metaItems && metaItems[1] ? metaItems[1].textContent : '';
   const fallbackBathrooms = metaItems && metaItems[2] ? metaItems[2].textContent : '';
+  const fallbackLocation = locationEl ? locationEl.textContent.trim() : '';
+
+  // Build location string from data attributes or fallback to text
+  const location = dataNeighborhood && dataCountry 
+    ? `${dataNeighborhood}, ${dataCountry}` 
+    : (dataCity && dataCountry 
+      ? `${dataCity}, ${dataCountry}` 
+      : fallbackLocation);
 
   const property = {
     id: propertyId,
     title: titleEl ? titleEl.textContent : '',
-    location: locationEl ? locationEl.textContent : '',
+    location: location,
     price: priceEl ? priceEl.textContent : '',
     type: dataType,
     bedrooms: dataBedrooms || fallbackBedrooms,
