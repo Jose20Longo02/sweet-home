@@ -43,8 +43,8 @@ class Lead {
 
     const listSql = `
       SELECT l.*, 
-             p.title AS property_title, p.neighborhood AS property_neighborhood, p.city AS property_city, p.country AS property_country,
-             pr.title AS project_title, pr.neighborhood AS project_neighborhood, pr.city AS project_city, pr.country AS project_country
+             p.title AS property_title, p.slug AS property_slug, p.neighborhood AS property_neighborhood, p.city AS property_city, p.country AS property_country,
+             pr.title AS project_title, pr.slug AS project_slug, pr.neighborhood AS project_neighborhood, pr.city AS project_city, pr.country AS project_country
         FROM leads l
         LEFT JOIN properties p ON p.id = l.property_id
         LEFT JOIN projects pr ON pr.id = l.project_id
@@ -85,8 +85,8 @@ class Lead {
     const limit = Math.max(1, Number(pageSize));
     const listSql = `
       SELECT l.*, 
-             p.title AS property_title, p.neighborhood AS property_neighborhood, p.city AS property_city, p.country AS property_country,
-             pr.title AS project_title, pr.neighborhood AS project_neighborhood, pr.city AS project_city, pr.country AS project_country,
+             p.title AS property_title, p.slug AS property_slug, p.neighborhood AS property_neighborhood, p.city AS property_city, p.country AS property_country,
+             pr.title AS project_title, pr.slug AS project_slug, pr.neighborhood AS project_neighborhood, pr.city AS project_city, pr.country AS project_country,
              u.name AS agent_name
         FROM leads l
         LEFT JOIN properties p ON p.id = l.property_id

@@ -58,15 +58,15 @@
             <tr>
               <td data-label="Created"><%= new Date(lead.created_at).toLocaleString() %></td>
               <td data-label="Property">
-                <% if (lead.property_id && lead.property_title) { %>
-                  <div><a href="/properties/<%= lead.property_id %>" target="_blank"><%= lead.property_title %></a></div>
+                <% if (lead.property_id && lead.property_title && lead.property_slug) { %>
+                  <div><a href="/properties/<%= lead.property_slug %>" target="_blank"><%= lead.property_title %></a></div>
                 <% } else { %>
                   <div>-</div>
                 <% } %>
               </td>
               <td data-label="Project">
-                <% if (lead.project_id && lead.project_title) { %>
-                  <div><a href="/projects/<%= lead.project_id %>" target="_blank"><%= lead.project_title %></a></div>
+                <% if (lead.project_id && lead.project_title && lead.project_slug) { %>
+                  <div><a href="/projects/<%= lead.project_slug %>" target="_blank"><%= lead.project_title %></a></div>
                 <% } else { %>
                   <div>-</div>
                 <% } %>
