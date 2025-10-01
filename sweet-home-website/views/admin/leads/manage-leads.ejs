@@ -60,6 +60,29 @@
               <td data-label="Property">
                 <% if (lead.property_id && lead.property_title && lead.property_slug) { %>
                   <div><a href="/properties/<%= lead.property_slug %>" target="_blank"><%= lead.property_title %></a></div>
+                <% } else if (!lead.property_id && !lead.project_id) { %>
+                  <div class="lead-source">
+                    <% 
+                      let sourceText = '';
+                      switch(lead.source) {
+                        case 'seller_form':
+                          sourceText = 'Sellers Form';
+                          break;
+                        case 'contact_form':
+                          sourceText = 'General Contact Form';
+                          break;
+                        case 'property_form':
+                          sourceText = 'Property Form';
+                          break;
+                        case 'project_form':
+                          sourceText = 'Project Form';
+                          break;
+                        default:
+                          sourceText = lead.source || 'Unknown';
+                      }
+                    %>
+                    <span class="source-badge"><%= sourceText %></span>
+                  </div>
                 <% } else { %>
                   <div>-</div>
                 <% } %>
