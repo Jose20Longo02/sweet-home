@@ -772,3 +772,71 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
+// ========================================
+// SOCIAL MEDIA BAR FUNCTIONALITY
+// ========================================
+
+function initSocialMediaBar() {
+  const socialBar = document.getElementById('socialBar');
+  if (!socialBar) return;
+
+  // Add scroll-based visibility
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+
+  function updateSocialBarVisibility() {
+    const currentScrollY = window.scrollY;
+    const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
+    
+    // Hide when scrolling down, show when scrolling up
+    if (scrollDirection === 'down' && currentScrollY > 200) {
+      socialBar.style.transform = 'translateY(-50%) translateX(100px)';
+      socialBar.style.opacity = '0';
+    } else {
+      socialBar.style.transform = 'translateY(-50%) translateX(0)';
+      socialBar.style.opacity = '0.9';
+    }
+    
+    lastScrollY = currentScrollY;
+    ticking = false;
+  }
+
+  function requestTick() {
+    if (!ticking) {
+      requestAnimationFrame(updateSocialBarVisibility);
+      ticking = true;
+    }
+  }
+
+  // Listen for scroll events
+  window.addEventListener('scroll', requestTick, { passive: true });
+
+  // Add click tracking for analytics (if needed)
+  const socialLinks = socialBar.querySelectorAll('.social-link');
+  socialLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      const platform = this.classList[1]; // facebook, instagram, etc.
+      console.log(`Social media click: ${platform}`);
+      
+      // You can add analytics tracking here
+      // gtag('event', 'social_click', { platform: platform });
+    });
+  });
+
+  // Add hover effects for better UX
+  socialBar.addEventListener('mouseenter', function() {
+    this.style.transform = 'translateY(-50%) scale(1.05)';
+    this.style.opacity = '1';
+  });
+
+  socialBar.addEventListener('mouseleave', function() {
+    this.style.transform = 'translateY(-50%) scale(1)';
+    this.style.opacity = '0.9';
+  });
+}
+
+// Initialize social media bar when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  initSocialMediaBar();
+});
