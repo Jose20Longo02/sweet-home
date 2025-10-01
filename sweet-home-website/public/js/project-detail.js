@@ -276,13 +276,30 @@ function initializeContactForm() {
   const contactForm = document.getElementById('project-contact-form');
   if (!contactForm) return;
   
-  contactForm.addEventListener('submit', function(e) {
+  contactForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     
     // Validate form
     if (!validateContactForm()) {
       return;
     }
+    
+    // Ensure recaptcha token exists; try to generate if missing
+    try {
+      var tokenEl = document.getElementById('recaptchaTokenProject');
+      if (tokenEl && !tokenEl.value && window.grecaptcha && typeof grecaptcha.execute === 'function') {
+        var siteKey = tokenEl.getAttribute('data-site-key');
+        if (siteKey) {
+          await new Promise((resolve) => {
+            if (typeof grecaptcha.ready === 'function') {
+              grecaptcha.ready(function(){
+                grecaptcha.execute(siteKey, { action: 'property_lead' }).then(function(token){ tokenEl.value = token || ''; resolve(); }).catch(function(){ resolve(); });
+              });
+            } else { resolve(); }
+          });
+        }
+      }
+    } catch (_) {}
     
     // Submit form
     submitContactForm();
