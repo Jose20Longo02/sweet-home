@@ -1664,8 +1664,6 @@
   position: sticky;
   top: 0;
   font-size: var(--font-size-sm);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
   border-bottom: 2px solid var(--gray-300);
 }
 
