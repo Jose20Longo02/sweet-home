@@ -788,13 +788,22 @@ function initSocialMediaBar() {
   function updateSocialBarVisibility() {
     const currentScrollY = window.scrollY;
     const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
+    const isMobile = window.innerWidth <= 768;
     
     // Hide when scrolling down, show when scrolling up
     if (scrollDirection === 'down' && currentScrollY > 200) {
-      socialBar.style.transform = 'translateY(-50%) translateX(100px)';
+      if (isMobile) {
+        socialBar.style.transform = 'translateX(-50%) translateY(100px)';
+      } else {
+        socialBar.style.transform = 'translateY(-50%) translateX(100px)';
+      }
       socialBar.style.opacity = '0';
     } else {
-      socialBar.style.transform = 'translateY(-50%) translateX(0)';
+      if (isMobile) {
+        socialBar.style.transform = 'translateX(-50%) translateY(0)';
+      } else {
+        socialBar.style.transform = 'translateY(-50%) translateX(0)';
+      }
       socialBar.style.opacity = '0.9';
     }
     
@@ -826,12 +835,22 @@ function initSocialMediaBar() {
 
   // Add hover effects for better UX
   socialBar.addEventListener('mouseenter', function() {
-    this.style.transform = 'translateY(-50%) scale(1.05)';
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      this.style.transform = 'translateX(-50%) scale(1.05)';
+    } else {
+      this.style.transform = 'translateY(-50%) scale(1.05)';
+    }
     this.style.opacity = '1';
   });
 
   socialBar.addEventListener('mouseleave', function() {
-    this.style.transform = 'translateY(-50%) scale(1)';
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      this.style.transform = 'translateX(-50%) scale(1)';
+    } else {
+      this.style.transform = 'translateY(-50%) scale(1)';
+    }
     this.style.opacity = '0.9';
   });
 }

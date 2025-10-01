@@ -1118,7 +1118,31 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .social-media-bar {
-    display: none; /* Hide on mobile to avoid clutter */
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    top: auto;
+    right: auto;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    border-radius: 30px;
+    width: auto;
+    max-width: calc(100vw - 40px);
+  }
+  
+  .social-media-bar__content {
+    flex-direction: row;
+    gap: 16px;
+  }
+  
+  .social-link {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .social-link svg {
+    width: 22px;
+    height: 22px;
   }
 }
 
