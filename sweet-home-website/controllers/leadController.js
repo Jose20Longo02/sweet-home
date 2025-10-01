@@ -15,6 +15,22 @@ const sendToZapier = async (leadData) => {
       return;
     }
 
+    // Enrich payload with property/project title, slug and URL if available
+    let property_title = null, property_slug = null, project_title = null, project_slug = null;
+    try {
+      if (leadData.property_id) {
+        const { rows } = await query('SELECT title, slug FROM properties WHERE id = $1 LIMIT 1', [leadData.property_id]);
+        if (rows && rows[0]) { property_title = rows[0].title || null; property_slug = rows[0].slug || null; }
+      }
+      if (leadData.project_id) {
+        const { rows } = await query('SELECT title, slug FROM projects WHERE id = $1 LIMIT 1', [leadData.project_id]);
+        if (rows && rows[0]) { project_title = rows[0].title || null; project_slug = rows[0].slug || null; }
+      }
+    } catch (_) {}
+    const originBase = String(process.env.PUBLIC_BASE_URL || process.env.SITE_URL || process.env.APP_ORIGIN || '').replace(/\/$/, '');
+    const property_url = property_slug ? ((originBase ? originBase : '') + `/properties/${property_slug}`) : null;
+    const project_url  = project_slug  ? ((originBase ? originBase : '') + `/projects/${project_slug}`)   : null;
+
     const payload = {
       lead_id: leadData.id,
       name: leadData.name,
@@ -24,7 +40,13 @@ const sendToZapier = async (leadData) => {
       source: leadData.source,
       preferred_language: leadData.preferred_language,
       property_id: leadData.property_id,
+      property_title,
+      property_slug,
+      property_url,
       project_id: leadData.project_id,
+      project_title,
+      project_slug,
+      project_url,
       agent_id: leadData.agent_id,
       created_at: leadData.created_at,
       timestamp: new Date().toISOString()
