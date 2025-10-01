@@ -154,6 +154,12 @@
       "viewAll": "Alle Immobilien anzeigen"
     },
     "international": { "title": "Internationales Immobilienangebot", "see": "Immobilien ansehen" },
+    "recommendedProject": {
+      "title": "Empfohlenes Projekt",
+      "startingAt": "Ab",
+      "sizeRange": "Größenbereich",
+      "viewProject": "Projekt ansehen"
+    },
     "about": { "title": "Über Sweet Home", "copy": "Bei Sweet Home machen wir aus Immobilienzielen echte Schlüssel. Vom ersten Gespräch bis zum Notartermin begleiten unsere freundlichen Experten Sie mit klarer Beratung, kuratierten Optionen und stressfreier Unterstützung. Bereit, den nächsten Schritt mit Vertrauen zu gehen? Finden wir den Ort, der sich wirklich wie Zuhause anfühlt." },
     "services": { "title": "Unsere Leistungen", "brief": "Von maßgeschneiderter Beratung über praxisnahe Verwaltung bis hin zu Finanzierungsberatung – wir helfen Ihnen, Immobilien sicher zu kaufen, zu verkaufen und zu verwalten." },
     "calc": {

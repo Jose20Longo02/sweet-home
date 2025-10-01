@@ -145,6 +145,12 @@
       "viewAll": "Ver todas las propiedades"
     },
     "international": { "title": "Inmobiliaria internacional", "see": "Ver propiedades" },
+    "recommendedProject": {
+      "title": "Proyecto recomendado",
+      "startingAt": "Desde",
+      "sizeRange": "Rango de tamaño",
+      "viewProject": "Ver proyecto"
+    },
     "about": { "title": "Sobre Sweet Home", "copy": "En Sweet Home convertimos tus objetivos inmobiliarios en llaves reales. Desde tu primera conversación hasta el día de la firma, nuestros expertos te guían con consejos claros, opciones seleccionadas y un acompañamiento sin estrés. ¿Listo para dar el siguiente paso con confianza? Encontraremos el lugar que de verdad se sienta como tu hogar." },
     "services": { "title": "Nuestros servicios", "brief": "Desde asesoría personalizada hasta gestión integral y orientación financiera, te ayudamos a comprar, vender y gestionar tu propiedad con confianza." },
     "calc": {
