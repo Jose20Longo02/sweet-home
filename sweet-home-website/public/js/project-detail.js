@@ -10,6 +10,13 @@ function initializeProjectDetail() {
   
   // Initialize contact form
   initializeContactForm();
+  // If redirected with sent=1, show success message
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('sent') === '1') {
+      showSuccessMessage('Thank you! Your message has been sent successfully.');
+    }
+  } catch (_) {}
   relocateProjectContactOnMobile();
   
   // Initialize smooth scrolling
