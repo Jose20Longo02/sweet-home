@@ -228,7 +228,7 @@
             
             <form class="contact-form" id="project-contact-form">
               <% if (process.env.RECAPTCHA_SITE_KEY) { %>
-              <input type="hidden" name="recaptchaToken" id="recaptchaTokenProject" />
+              <input type="hidden" name="recaptchaToken" id="recaptchaTokenProject" data-site-key="<%= process.env.RECAPTCHA_SITE_KEY %>" />
               <% } %>
               <div class="form-group">
                 <label for="contact-name"><%= t('forms.fullName','Full name') %></label>
@@ -355,36 +355,4 @@
 <!-- Mobile mount for contact form -->
 <div class="mobile-project-contact" aria-hidden="true" style="display:none"></div>
 
-<script src="/js/project-detail.js"></script>
-<% if (process.env.RECAPTCHA_SITE_KEY) { %>
-<script>
-  // Wait a bit for reCAPTCHA to load
-  setTimeout(function() {
-    console.log('Project page loaded, checking reCAPTCHA...');
-    console.log('grecaptcha available:', !!window.grecaptcha);
-    console.log('grecaptcha.ready available:', !!(window.grecaptcha && typeof grecaptcha.ready === 'function'));
-    
-    if (window.grecaptcha && typeof grecaptcha.ready === 'function') {
-      grecaptcha.ready(function() {
-        console.log('reCAPTCHA ready, executing...');
-        grecaptcha.execute('<%= process.env.RECAPTCHA_SITE_KEY %>', { action: 'property_lead' }).then(function(token) {
-          var el = document.getElementById('recaptchaTokenProject');
-          console.log('Token element found:', !!el);
-          if (el) {
-            el.value = token;
-            console.log('Project reCAPTCHA token set:', token ? token.substring(0, 10) + '...' : 'null');
-            console.log('Element value after setting:', el.value ? el.value.substring(0, 10) + '...' : 'null');
-          } else {
-            console.error('reCAPTCHA token element not found!');
-          }
-        }).catch(function(error) {
-          console.error('Project reCAPTCHA execution error:', error);
-        });
-      });
-    } else {
-      console.warn('reCAPTCHA not available for project form');
-      console.log('window.grecaptcha:', window.grecaptcha);
-    }
-  }, 1000);
-</script>
-<% } %>
+<script src="/js/project-recaptcha.js"></script>
