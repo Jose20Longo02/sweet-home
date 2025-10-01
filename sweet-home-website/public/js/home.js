@@ -853,6 +853,19 @@ function initSocialMediaBar() {
     }
     this.style.opacity = '0.9';
   });
+
+  // Handle window resize to update transforms
+  window.addEventListener('resize', function() {
+    const isMobile = window.innerWidth <= 768;
+    const currentOpacity = socialBar.style.opacity || '0.9';
+    
+    if (isMobile) {
+      socialBar.style.transform = 'translateX(-50%) scale(1)';
+    } else {
+      socialBar.style.transform = 'translateY(-50%) scale(1)';
+    }
+    socialBar.style.opacity = currentOpacity;
+  });
 }
 
 // Initialize social media bar when DOM is ready
