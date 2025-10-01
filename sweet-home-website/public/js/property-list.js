@@ -532,8 +532,8 @@ function compareProperty(propertyId) {
   const fallbackLocation = locationEl ? locationEl.textContent.trim() : '';
 
   // Build location string from data attributes or fallback to text
-  const location = dataNeighborhood && dataCountry 
-    ? `${dataNeighborhood}, ${dataCountry}` 
+  const location = dataNeighborhood && dataCity 
+    ? `${dataNeighborhood}, ${dataCity}` 
     : (dataCity && dataCountry 
       ? `${dataCity}, ${dataCountry}` 
       : fallbackLocation);
