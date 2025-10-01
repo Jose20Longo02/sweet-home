@@ -510,31 +510,17 @@ function showErrorMessage(message) {
 }
 
 function showMessage(message, type) {
-  // Remove existing messages
-  const existingMessages = document.querySelectorAll('.message-banner');
-  existingMessages.forEach(msg => msg.remove());
-  
-  // Create message banner
-  const messageBanner = document.createElement('div');
-  messageBanner.className = `message-banner message-${type}`;
-  messageBanner.innerHTML = `
-    <div class="message-content">
-      <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-      <span>${message}</span>
-    </div>
-    <button class="message-close" onclick="this.parentElement.remove()">×</button>
-  `;
-  
-  // Insert at top of form
-  const contactCard = document.querySelector('.contact-card');
-  contactCard.insertBefore(messageBanner, contactCard.firstChild);
-  
-  // Auto-remove after 5 seconds
+  const toast = document.createElement('div');
+  toast.className = `message message-${type}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  // slide in
+  requestAnimationFrame(() => { toast.classList.add('show'); });
+  // auto hide
   setTimeout(() => {
-    if (messageBanner.parentNode) {
-      messageBanner.remove();
-    }
-  }, 5000);
+    toast.classList.remove('show');
+    setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 300);
+  }, 3000);
 }
 
 // Smooth Scrolling
@@ -632,58 +618,28 @@ function addErrorStyles() {
       display: none;
     }
     
-    .message-banner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: var(--spacing-4);
-      border-radius: var(--radius-lg);
-      margin-bottom: var(--spacing-6);
-      font-size: var(--font-size-sm);
-    }
-    
-    .message-success {
-      background: var(--green-50);
-      color: var(--green-700);
-      border: 1px solid var(--green-200);
-    }
-    
-    .message-error {
-      background: var(--red-50);
-      color: var(--red-700);
-      border: 1px solid var(--red-200);
-    }
-    
-    .message-content {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-2);
-    }
-    
-    .message-close {
-      background: none;
-      border: none;
-      color: inherit;
-      cursor: pointer;
-      font-size: var(--font-size-lg);
-      padding: 0;
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      transition: background-color var(--transition-fast);
-    }
-    
-    .message-close:hover {
-      background: rgba(0, 0, 0, 0.1);
-    }
-    
     .form-input:focus.error,
     .form-textarea:focus.error {
       box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
     }
+
+    /* Toast message like property page */
+    .message {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      z-index: 2000;
+      transform: translateX(100%);
+      transition: transform .3s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,.15);
+    }
+    .message.show { transform: translateX(0); }
+    .message-success { background-color: #16a34a; }
+    .message-error { background-color: #dc2626; }
   `;
   
   document.head.appendChild(style);
