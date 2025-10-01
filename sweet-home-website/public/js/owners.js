@@ -131,7 +131,8 @@
           phone: `${payload.countryCode || ''} ${payload.phone || ''}`.trim(),
           message: `For Sellers page SELLER lead`,
           lead_type: 'seller',
-          language: payload.language || ''
+          language: payload.language || '',
+          recaptchaToken: payload.recaptchaToken || ''
         })
       });
       if (!res.ok) throw new Error('Failed to submit');
