@@ -1100,7 +1100,7 @@ exports.showProject = async (req, res, next) => {
     `, [slug]);
 
     if (projects.length === 0) {
-      return res.status(404).render('errors/404', {
+      return res.status(404).render('error', {
         message: 'Project not found',
         error: { status: 404 }
       });

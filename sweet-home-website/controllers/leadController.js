@@ -223,13 +223,7 @@ exports.createFromProject = async (req, res, next) => {
       source: 'project_form'
     });
 
-    // Respond quickly: HTML form posts get a redirect; AJAX gets JSON
-    const contentType = String(req.headers['content-type'] || '').toLowerCase();
-    const isFormPost = contentType.includes('application/x-www-form-urlencoded') || contentType.includes('multipart/form-data');
-    if (isFormPost || req.accepts('html')) {
-      const back = `/projects/${project.slug}`;
-      return res.redirect(303, back + (back.includes('?') ? '&' : '?') + 'sent=1');
-    }
+    // Respond quickly
     res.json({ success: true, lead });
 
     // Send to Zapier webhook (async)
