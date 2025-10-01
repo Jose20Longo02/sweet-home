@@ -397,7 +397,7 @@ function validateField(field) {
   return true;
 }
 
-function submitContactForm() {
+async function submitContactForm() {
   const form = document.getElementById('project-contact-form');
   const submitBtn = form.querySelector('button[type="submit"]');
   const originalText = submitBtn.innerHTML;
@@ -415,10 +415,34 @@ function submitContactForm() {
     if (rt && rt.value) payload.recaptchaToken = rt.value;
   }
   
+  // If still no token, try to generate one
+  if (!payload.recaptchaToken && window.grecaptcha && typeof grecaptcha.execute === 'function') {
+    console.log('Attempting to generate reCAPTCHA token on form submission...');
+    try {
+      // Get site key from the script tag
+      const scriptTag = document.querySelector('script[src*="recaptcha/api.js"]');
+      const siteKey = scriptTag ? scriptTag.src.match(/render=([^&]+)/)?.[1] : null;
+      if (siteKey) {
+        const token = await grecaptcha.execute(siteKey, { action: 'property_lead' });
+        payload.recaptchaToken = token;
+        console.log('Generated token on submission:', token ? token.substring(0, 10) + '...' : 'null');
+      }
+    } catch (error) {
+      console.error('Failed to generate token on submission:', error);
+    }
+  }
+  
   // Debug reCAPTCHA token
   console.log('Project form submission - reCAPTCHA token present:', !!payload.recaptchaToken);
   if (payload.recaptchaToken) {
     console.log('Project form submission - reCAPTCHA token preview:', payload.recaptchaToken.substring(0, 10) + '...');
+  } else {
+    console.log('Project form submission - NO reCAPTCHA token found!');
+    const tokenEl = document.getElementById('recaptchaTokenProject');
+    console.log('Token element exists:', !!tokenEl);
+    if (tokenEl) {
+      console.log('Token element value:', tokenEl.value ? tokenEl.value.substring(0, 10) + '...' : 'empty');
+    }
   }
   if (!payload.projectId) payload.projectId = getProjectId();
   // include preferred language if present
