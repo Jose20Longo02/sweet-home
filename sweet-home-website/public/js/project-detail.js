@@ -414,6 +414,12 @@ function submitContactForm() {
     const rt = document.getElementById('recaptchaTokenProject');
     if (rt && rt.value) payload.recaptchaToken = rt.value;
   }
+  
+  // Debug reCAPTCHA token
+  console.log('Project form submission - reCAPTCHA token present:', !!payload.recaptchaToken);
+  if (payload.recaptchaToken) {
+    console.log('Project form submission - reCAPTCHA token preview:', payload.recaptchaToken.substring(0, 10) + '...');
+  }
   if (!payload.projectId) payload.projectId = getProjectId();
   // include preferred language if present
   const langEl = form.querySelector('#contact-language');
@@ -438,6 +444,7 @@ function submitContactForm() {
       showSuccessMessage('Thank you! Your message has been sent successfully.');
       form.reset();
     } else {
+      console.error('Project form submission error:', data);
       showErrorMessage(data.message || 'Error sending message. Please try again.');
     }
   })

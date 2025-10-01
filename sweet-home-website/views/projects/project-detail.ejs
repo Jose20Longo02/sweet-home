@@ -361,11 +361,18 @@
   document.addEventListener('DOMContentLoaded', function() {
     if (window.grecaptcha && typeof grecaptcha.ready === 'function') {
       grecaptcha.ready(function() {
-        grecaptcha.execute('<%= process.env.RECAPTCHA_SITE_KEY %>', { action: 'project_lead' }).then(function(token) {
+        grecaptcha.execute('<%= process.env.RECAPTCHA_SITE_KEY %>', { action: 'property_lead' }).then(function(token) {
           var el = document.getElementById('recaptchaTokenProject');
-          if (el) el.value = token;
+          if (el) {
+            el.value = token;
+            console.log('Project reCAPTCHA token generated:', token ? token.substring(0, 10) + '...' : 'null');
+          }
+        }).catch(function(error) {
+          console.error('Project reCAPTCHA error:', error);
         });
       });
+    } else {
+      console.warn('reCAPTCHA not available for project form');
     }
   });
 </script>
