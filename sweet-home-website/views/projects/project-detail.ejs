@@ -227,6 +227,7 @@
             <p><%= t('projects.detail.getInTouch','Get in touch with our team for more information') %></p>
             
             <form class="contact-form" id="project-contact-form" method="post" action="/api/leads/project">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <% if (process.env.RECAPTCHA_SITE_KEY) { %>
               <input type="hidden" name="recaptchaToken" id="recaptchaTokenProject" data-site-key="<%= process.env.RECAPTCHA_SITE_KEY %>" />
               <% } %>

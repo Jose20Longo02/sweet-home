@@ -475,7 +475,8 @@ async function submitContactForm() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'CSRF-Token': (document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '')
+      'CSRF-Token': (document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''),
+      'x-csrf-token': (document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '')
     },
     body: JSON.stringify(payload)
   })
