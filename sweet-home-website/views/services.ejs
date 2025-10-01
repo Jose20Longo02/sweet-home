@@ -2,6 +2,9 @@
 <% useMainContainer = false %>
 <% hideFooter = false %>
 <link rel="stylesheet" href="/css/services.css" />
+<% if (process.env.RECAPTCHA_SITE_KEY) { %>
+<script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+<% } %>
 
 <!-- i18n for services panel -->
 <div id="i18n-services" data-i18n='<%- JSON.stringify({
@@ -47,6 +50,9 @@
   <div class="contact-grid">
     <form id="servicesContactForm" class="contact-form" novalidate>
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <% if (process.env.RECAPTCHA_SITE_KEY) { %>
+      <input type="hidden" name="recaptchaToken" id="recaptchaTokenServices" data-site-key="<%= process.env.RECAPTCHA_SITE_KEY %>">
+      <% } %>
       <div class="row-2">
         <div class="field">
           <label for="firstName"><%= t('forms.firstName','First Name') %>*</label>
@@ -99,5 +105,6 @@
 <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <script src="/js/services.js" defer></script>
+<script src="/js/services-recaptcha.js" defer></script>
 
 

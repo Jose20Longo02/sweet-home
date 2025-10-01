@@ -88,6 +88,9 @@
     if (current) activateTab(current);
   });
 
+  // i18n helper used below
+  function i18nGetServices(path, fb){ return get(path, fb); }
+
   // Contact form behavior
   const form = document.getElementById('servicesContactForm');
   if (form){
@@ -115,17 +118,34 @@
       const submitBtn = form.querySelector('.btn-submit');
       submitBtn.disabled = true; submitBtn.style.opacity = '0.7';
       try{
-        const payload = {
-          name: `${form.firstName.value.trim()} ${form.lastName.value.trim()}`.trim(),
-          email: form.email.value.trim(),
-          phone: `${form.countryCode.value.trim()} ${form.phoneNumber.value.trim()}`.trim(),
-          message: (form.message.value || '').trim(),
-          lead_type: 'unknown',
-          language: form.language.value || ''
-        };
+        // Ensure reCAPTCHA token
+        var rt = document.getElementById('recaptchaTokenServices');
+        var token = rt && rt.value;
+        if (!token && window.grecaptcha && typeof grecaptcha.execute === 'function') {
+          var siteKey = rt && rt.getAttribute('data-site-key');
+          if (siteKey && typeof grecaptcha.ready === 'function') {
+            try {
+              token = await new Promise((resolve)=>{
+                grecaptcha.ready(function(){
+                  grecaptcha.execute(siteKey, { action: 'contact' }).then(function(t){ resolve(t||''); }).catch(function(){ resolve(''); });
+                });
+              });
+            } catch(_) { token = ''; }
+          }
+        }
+        // Send as x-www-form-urlencoded
+        const urlBody = new URLSearchParams();
+        urlBody.append('name', `${form.firstName.value.trim()} ${form.lastName.value.trim()}`.trim());
+        urlBody.append('email', form.email.value.trim());
+        urlBody.append('phone', `${form.countryCode.value.trim()} ${form.phoneNumber.value.trim()}`.trim());
+        urlBody.append('message', (form.message.value || '').trim());
+        urlBody.append('lead_type', 'unknown');
+        urlBody.append('language', form.language.value || '');
+        urlBody.append('recaptchaToken', token || '');
         const res = await fetch('/api/leads/contact', {
-          method:'POST', headers:{ 'Content-Type':'application/json', 'CSRF-Token': form._csrf.value },
-          body: JSON.stringify(payload)
+          method:'POST',
+          headers:{ 'x-csrf-token': form._csrf.value, 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8' },
+          body: urlBody.toString()
         });
         if (!res.ok) throw new Error('Failed');
         status.style.display='block'; status.textContent=i18nGetServices('form.successShort','Thanks! We will contact you shortly.');
