@@ -129,7 +129,7 @@
     <form id="ownersLeadForm" class="lead-form lead-form-centered" novalidate>
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <% if (process.env.RECAPTCHA_SITE_KEY) { %>
-      <input type="hidden" name="recaptchaToken" id="recaptchaTokenOwners" />
+      <input type="hidden" name="recaptchaToken" id="recaptchaTokenOwners" data-site-key="<%= process.env.RECAPTCHA_SITE_KEY %>" />
       <% } %>
       <div class="form-group">
         <label for="fullName"><%= t('forms.fullName','Full name') %>*</label>
@@ -170,19 +170,6 @@
 </section>
 
 <script src="/js/owners.js" defer></script>
-<% if (process.env.RECAPTCHA_SITE_KEY) { %>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    if (window.grecaptcha && typeof grecaptcha.ready === 'function') {
-      grecaptcha.ready(function() {
-        grecaptcha.execute('<%= process.env.RECAPTCHA_SITE_KEY %>', { action: 'owners_lead' }).then(function(token) {
-          var el = document.getElementById('recaptchaTokenOwners');
-        if (el) el.value = token;
-        });
-      });
-    }
-  });
-</script>
-<% } %>
+<script src="/js/owners-recaptcha.js" defer></script>
 
 

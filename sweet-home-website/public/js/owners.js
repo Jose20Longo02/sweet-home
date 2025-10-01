@@ -93,10 +93,25 @@
 
     const formData = new FormData(form);
     const payload = Object.fromEntries(formData.entries());
-    // Include recaptcha token if present
+    // Include recaptcha token if present; if missing try to generate
     if (!payload.recaptchaToken) {
       const rt = document.getElementById('recaptchaTokenOwners');
       if (rt && rt.value) payload.recaptchaToken = rt.value;
+      if (!payload.recaptchaToken && window.grecaptcha && typeof grecaptcha.execute === 'function') {
+        const siteKey = rt && rt.getAttribute('data-site-key');
+        if (siteKey && typeof grecaptcha.ready === 'function') {
+          try {
+            await new Promise((resolve)=>{
+              grecaptcha.ready(function(){
+                grecaptcha.execute(siteKey, { action: 'owners_lead' }).then(function(token){
+                  payload.recaptchaToken = token || '';
+                  resolve();
+                }).catch(function(){ resolve(); });
+              });
+            });
+          } catch(_) {}
+        }
+      }
     }
 
     try {
@@ -107,7 +122,8 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'CSRF-Token': payload._csrf || document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          'CSRF-Token': payload._csrf || document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+          'x-csrf-token': payload._csrf || document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify({
           name: payload.name,
