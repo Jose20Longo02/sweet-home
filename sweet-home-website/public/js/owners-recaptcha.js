@@ -7,7 +7,7 @@
 
     function run(){
       try {
-        grecaptcha.execute(siteKey, { action: 'owners_lead' }).then(function(token){
+        grecaptcha.execute(siteKey, { action: 'contact' }).then(function(token){
           if (input) input.value = token || '';
         }).catch(function(){});
       } catch(_){}

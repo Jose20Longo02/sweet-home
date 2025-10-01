@@ -118,22 +118,23 @@
       status && (status.style.display = 'block', status.textContent = t('form.sending','Sending...'));
       const submitBtn = form.querySelector('button[type="submit"]');
       if (submitBtn) { submitBtn.disabled = true; submitBtn.style.opacity = '0.7'; }
+      // Submit as application/x-www-form-urlencoded like contact.js
+      const urlBody = new URLSearchParams();
+      urlBody.append('name', payload.name || '');
+      urlBody.append('email', payload.email || '');
+      urlBody.append('phone', (`${payload.countryCode || ''} ${payload.phone || ''}`).trim());
+      urlBody.append('message', 'For Sellers page SELLER lead');
+      urlBody.append('lead_type', 'seller');
+      urlBody.append('language', payload.language || '');
+      urlBody.append('recaptchaToken', payload.recaptchaToken || '');
+
       const res = await fetch('/api/leads/contact', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'CSRF-Token': payload._csrf || document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-          'x-csrf-token': payload._csrf || document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          'x-csrf-token': payload._csrf || document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
         },
-        body: JSON.stringify({
-          name: payload.name,
-          email: payload.email,
-          phone: `${payload.countryCode || ''} ${payload.phone || ''}`.trim(),
-          message: `For Sellers page SELLER lead`,
-          lead_type: 'seller',
-          language: payload.language || '',
-          recaptchaToken: payload.recaptchaToken || ''
-        })
+        body: urlBody.toString()
       });
       if (!res.ok) throw new Error('Failed to submit');
       const data = await res.json();
