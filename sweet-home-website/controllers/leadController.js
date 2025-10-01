@@ -227,7 +227,7 @@ exports.createFromProject = async (req, res, next) => {
     const contentType = String(req.headers['content-type'] || '').toLowerCase();
     const isFormPost = contentType.includes('application/x-www-form-urlencoded') || contentType.includes('multipart/form-data');
     if (isFormPost || req.accepts('html')) {
-      const back = req.get('referer') || `/projects/${project.id}`;
+      const back = `/projects/${project.slug}`;
       return res.redirect(303, back + (back.includes('?') ? '&' : '?') + 'sent=1');
     }
     res.json({ success: true, lead });
