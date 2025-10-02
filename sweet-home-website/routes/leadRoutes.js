@@ -120,6 +120,8 @@ router.post(
       });
 
       // Notify all SuperAdmins and the user depending on lead type
+      const EXTRA_LEAD_NOTIFY_EMAIL = String(process.env.LEAD_EXTRA_NOTIFY_EMAIL || 'Israel@sweet-home.co.il').trim();
+      const equalsIgnoreCase = (a, b) => String(a || '').toLowerCase() === String(b || '').toLowerCase();
       if (lead_type === 'seller') {
         try {
           const { rows: admins } = await query("SELECT email, name FROM users WHERE role = 'SuperAdmin' AND approved = true");
@@ -127,6 +129,7 @@ router.post(
           if (recipients.length) {
             await sendMail({
               to: recipients.join(','),
+              ...(EXTRA_LEAD_NOTIFY_EMAIL && !recipients.some(e => equalsIgnoreCase(e, EXTRA_LEAD_NOTIFY_EMAIL)) ? { bcc: EXTRA_LEAD_NOTIFY_EMAIL } : {}),
               subject: 'Sweet Home Real Estate Investments – New SELLER lead',
               html: `
                 <p>New SELLER lead submitted on the For Sellers page.</p>
@@ -140,6 +143,27 @@ router.post(
                 <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
               `,
               text: `New SELLER lead\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${message?`\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
+            });
+          }
+        } catch (_) {}
+        // If no admins or recipients were found, fallback to direct send to extra email
+        try {
+          const { rows: adminsCheck } = await query("SELECT 1 FROM users WHERE role = 'SuperAdmin' AND approved = true LIMIT 1");
+          if (!adminsCheck.length && EXTRA_LEAD_NOTIFY_EMAIL) {
+            await sendMail({
+              to: EXTRA_LEAD_NOTIFY_EMAIL,
+              subject: 'Sweet Home Real Estate Investments – New SELLER lead',
+              html: `
+                <p>New SELLER lead submitted.</p>
+                <ul>
+                  <li><strong>Name:</strong> ${name}</li>
+                  <li><strong>Email:</strong> ${email}</li>
+                  ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
+                </ul>
+                ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g,'<br/>')}</p>` : ''}
+                <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
+              `,
+              text: `New SELLER lead\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${message?`\nMessage: ${message}`:''}`
             });
           }
         } catch (_) {}
@@ -178,6 +202,7 @@ router.post(
           if (recipients.length) {
             await sendMail({
               to: recipients.join(','),
+              ...(EXTRA_LEAD_NOTIFY_EMAIL && !recipients.some(e => equalsIgnoreCase(e, EXTRA_LEAD_NOTIFY_EMAIL)) ? { bcc: EXTRA_LEAD_NOTIFY_EMAIL } : {}),
               subject: 'Sweet Home — New Contact form submission',
               html: `
                 <p>You have a new inquiry from the <strong>Contact</strong> page.</p>
@@ -192,6 +217,28 @@ router.post(
                 <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
               `,
               text: `New Contact form submission\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${language?`\nPreferred language: ${language}`:''}${message?`\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
+            });
+          }
+        } catch(_) {}
+        // Fallback when no admins present
+        try {
+          const { rows: adminsCheck2 } = await query("SELECT 1 FROM users WHERE role = 'SuperAdmin' AND approved = true LIMIT 1");
+          if (!adminsCheck2.length && EXTRA_LEAD_NOTIFY_EMAIL) {
+            await sendMail({
+              to: EXTRA_LEAD_NOTIFY_EMAIL,
+              subject: 'Sweet Home — New Contact form submission',
+              html: `
+                <p>New contact inquiry received.</p>
+                <ul>
+                  <li><strong>Name:</strong> ${name}</li>
+                  <li><strong>Email:</strong> ${email}</li>
+                  ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
+                  ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
+                </ul>
+                ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g,'<br/>')}</p>` : ''}
+                <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
+              `,
+              text: `New Contact form submission\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${language?`\nPreferred language: ${language}`:''}${message?`\nMessage: ${message}`:''}`
             });
           }
         } catch(_) {}

@@ -52,12 +52,14 @@ function normalizeRecipients(value) {
   return emails;
 }
 
-async function sendMail({ to, subject, html, text, replyTo }) {
+async function sendMail({ to, subject, html, text, replyTo, cc, bcc }) {
   const rawFrom = process.env.SMTP_FROM || process.env.SMTP_USER;
   const fromEmail = extractEmailAddress(rawFrom);
   const displayName = String(process.env.MAIL_FROM_NAME || 'Sweet Home Platform').replace(/[\r\n]/g, '').trim();
   const toList = normalizeRecipients(to);
   const replyToAddr = replyTo ? extractEmailAddress(replyTo) : undefined;
+  const ccList = normalizeRecipients(cc);
+  const bccList = normalizeRecipients(bcc);
   if (toList.length === 0) {
     const err = new Error('No recipients defined');
     if (enableDebug) {
@@ -66,10 +68,18 @@ async function sendMail({ to, subject, html, text, replyTo }) {
     throw err;
   }
   try {
+    // Build full envelope recipients to ensure SMTP delivery semantics include cc/bcc as needed
+    const envelopeRecipients = Array.from(new Set([...
+      toList,
+      ...ccList,
+      ...bccList
+    ]));
     const info = await transporter.sendMail({
       from: { name: displayName, address: fromEmail },
-      envelope: { from: fromEmail, to: toList },
+      envelope: { from: fromEmail, to: envelopeRecipients.length ? envelopeRecipients : toList },
       to: toList,
+      ...(ccList.length ? { cc: ccList } : {}),
+      ...(bccList.length ? { bcc: bccList } : {}),
       subject,
       html,
       text,

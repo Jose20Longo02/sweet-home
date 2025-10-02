@@ -6,6 +6,11 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 
 const { validationResult } = require('express-validator');
 
+const EXTRA_LEAD_NOTIFY_EMAIL = String(process.env.LEAD_EXTRA_NOTIFY_EMAIL || 'Israel@sweet-home.co.il').trim();
+function equalsIgnoreCase(a, b) {
+  return String(a || '').toLowerCase() === String(b || '').toLowerCase();
+}
+
 // Webhook utility function
 const sendToZapier = async (leadData) => {
   try {
@@ -167,11 +172,12 @@ exports.createFromProperty = async (req, res, next) => {
         }
       } catch (_) {}
 
-      // Email to agent (notification)
+      // Email to agent (notification) with extra BCC when appropriate; fallback to direct send to extra if no agent
       if (property.agent_email) {
         try {
           const info = await sendMail({
             to: property.agent_email,
+            ...(EXTRA_LEAD_NOTIFY_EMAIL && !equalsIgnoreCase(property.agent_email, EXTRA_LEAD_NOTIFY_EMAIL) ? { bcc: EXTRA_LEAD_NOTIFY_EMAIL } : {}),
             subject: `New lead for ${property.title}`,
             html: `
               <p>You have a new lead for <strong>${property.title}</strong>.</p>
@@ -190,6 +196,26 @@ exports.createFromProperty = async (req, res, next) => {
           if (process.env.SMTP_DEBUG === 'true') {
             console.log('Lead notification email dispatched:', info && info.messageId);
           }
+        } catch (_) {}
+      } else if (EXTRA_LEAD_NOTIFY_EMAIL) {
+        try {
+          await sendMail({
+            to: EXTRA_LEAD_NOTIFY_EMAIL,
+            subject: `New lead for ${property.title}`,
+            html: `
+              <p>New lead received.</p>
+              <ul>
+                <li><strong>Property:</strong> ${property.title}</li>
+                <li><strong>Name:</strong> ${name}</li>
+                <li><strong>Email:</strong> ${email}</li>
+                ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
+                ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
+              </ul>
+              ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g, '<br/>')}</p>` : ''}
+              <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
+            `,
+            text: `New lead\nProperty: ${property.title}\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${language ? `\nPreferred language: ${language}` : ''}${message ? `\nMessage: ${message}` : ''}`
+          });
         } catch (_) {}
       }
     });
@@ -300,6 +326,7 @@ exports.createFromProject = async (req, res, next) => {
         try {
           const info = await sendMail({
             to: project.agent_email,
+            ...(EXTRA_LEAD_NOTIFY_EMAIL && !equalsIgnoreCase(project.agent_email, EXTRA_LEAD_NOTIFY_EMAIL) ? { bcc: EXTRA_LEAD_NOTIFY_EMAIL } : {}),
             subject: `New lead for project: ${project.title}`,
             html: `
               <p>You have a new project lead for <strong>${project.title}</strong>.</p>
@@ -318,6 +345,26 @@ exports.createFromProject = async (req, res, next) => {
           if (process.env.SMTP_DEBUG === 'true') {
             console.log('Project lead notification email dispatched:', info && info.messageId);
           }
+        } catch (_) {}
+      } else if (EXTRA_LEAD_NOTIFY_EMAIL) {
+        try {
+          await sendMail({
+            to: EXTRA_LEAD_NOTIFY_EMAIL,
+            subject: `New lead for project: ${project.title}`,
+            html: `
+              <p>New project lead received.</p>
+              <ul>
+                <li><strong>Project:</strong> ${project.title}</li>
+                <li><strong>Name:</strong> ${name}</li>
+                <li><strong>Email:</strong> ${email}</li>
+                ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
+                ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
+              </ul>
+              ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g, '<br/>')}</p>` : ''}
+              <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
+            `,
+            text: `New project lead\nProject: ${project.title}\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${language ? `\nPreferred language: ${language}` : ''}${message ? `\nMessage: ${message}` : ''}`
+          });
         } catch (_) {}
       }
     });
