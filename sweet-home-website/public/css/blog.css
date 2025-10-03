@@ -70,4 +70,11 @@
   text-align: left !important;
 }
 
+/* Add spacing between blog content and footer */
+.blog-page,
+.blog-list,
+.blog-detail {
+  margin-bottom: 80px;
+}
+
 
