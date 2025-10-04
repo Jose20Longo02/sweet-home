@@ -13,7 +13,8 @@ module.exports = {
       "Wedding (Gesundbrunnen)",
       "Kreuzberg",
       "Moabit",
-      "Reinickendorf (Am Schäfersee)"
+      "Reinickendorf (Am Schäfersee)",
+      "Schöneberg"
     ]
   },
   "UAE": {
