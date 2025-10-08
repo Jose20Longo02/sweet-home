@@ -378,6 +378,7 @@ exports.showProperty = async (req, res, next) => {
         END as size,
         p.featured, p.created_at, p.description,
         p.year_built, p.map_link,
+        p.occupancy_type, p.rental_status, p.rental_income, p.housegeld,
         p.features,
         p.video_url, p.floorplan_url, p.plan_photo_url,
         p.is_in_project, p.project_id,
@@ -539,6 +540,16 @@ exports.createProperty = async (req, res, next) => {
     const neighborhood = body.neighborhood?.trim() || null;
     const price        = parseNumberField(body.price);
     const yearBuilt    = parseNumberField(body.year_built);
+    // New occupancy/rental fields
+    const allowedOccupancy = ['Empty','Short-Term Rented','Suitable for Self Use','Long-Term Rented'];
+    let occupancyType = (body.occupancy_type || '').trim();
+    if (!allowedOccupancy.includes(occupancyType)) occupancyType = null;
+    const allowedRentalStatus = ['not_rented','not_rented_potential','rented'];
+    let rentalStatus = (body.rental_status || '').trim();
+    if (!allowedRentalStatus.includes(rentalStatus)) rentalStatus = null;
+    let rentalIncome = parseNumberField(body.rental_income);
+    if (rentalStatus === 'not_rented') rentalIncome = null;
+    let housegeld = parseNumberField(body.housegeld);
     // Assignment (agent)
     let assignedAgentId = parseNumberField(body.agent_id) || req.session.user.id;
     // Validate the chosen agent belongs to staff and is approved; fallback to current user
@@ -737,6 +748,7 @@ exports.createProperty = async (req, res, next) => {
          map_link,
          year_built,
          features,
+         occupancy_type, rental_status, rental_income, housegeld,
          created_at
        ) VALUES (
          $1,$2,$3,$4,$5,$6,
@@ -748,6 +760,7 @@ exports.createProperty = async (req, res, next) => {
          $24,
          $25,
          $26,
+         $27,$28,$29,$30,
          NOW()
        ) RETURNING id`,
       [
@@ -759,7 +772,8 @@ exports.createProperty = async (req, res, next) => {
         isInProject, projectId,
         mapLink,
         yearBuilt,
-        JSON.stringify(featuresList || [])
+        JSON.stringify(featuresList || []),
+        occupancyType, rentalStatus, rentalIncome, housegeld
       ]
     );
     const newId = insertRes.rows[0].id;
@@ -1089,6 +1103,18 @@ exports.updateProperty = async (req, res, next) => {
     const neighborhood = (body.neighborhood?.trim() || '') || null;
     const price        = parseNumberField(body.price) ?? existing.price;
     const yearBuilt    = parseNumberField(body.year_built) ?? existing.year_built;
+    // New occupancy/rental fields (update)
+    const allowedOccupancy = ['Empty','Short-Term Rented','Suitable for Self Use','Long-Term Rented'];
+    let occupancyType = (body.occupancy_type || '').trim();
+    if (!allowedOccupancy.includes(occupancyType)) occupancyType = existing.occupancy_type || null;
+    const allowedRentalStatus = ['not_rented','not_rented_potential','rented'];
+    let rentalStatus = (body.rental_status || '').trim();
+    if (!allowedRentalStatus.includes(rentalStatus)) rentalStatus = existing.rental_status || null;
+    let rentalIncome = parseNumberField(body.rental_income);
+    if (rentalStatus === 'not_rented') rentalIncome = null;
+    if (rentalIncome === null || Number.isNaN(rentalIncome)) rentalIncome = existing.rental_income;
+    let housegeld = parseNumberField(body.housegeld);
+    if (housegeld === null || Number.isNaN(housegeld)) housegeld = existing.housegeld;
     const soldChecked  = body.sold === 'on' || body.sold === 'true' || body.sold === true;
     let soldAt         = body.sold_at ? new Date(body.sold_at) : null;
     if (soldChecked && (!soldAt || isNaN(soldAt.getTime()))) {
@@ -1305,8 +1331,9 @@ exports.updateProperty = async (req, res, next) => {
          year_built=$25,
          sold=$26,
          sold_at=$27,
+         occupancy_type=$28, rental_status=$29, rental_income=$30, housegeld=$31,
          updated_at=NOW()
-       WHERE id=$28`,
+       WHERE id=$32`,
       [
         country, city, neighborhood,
         title, newSlug, description,
@@ -1322,6 +1349,7 @@ exports.updateProperty = async (req, res, next) => {
         yearBuilt,
         soldChecked,
         soldAt ? soldAt.toISOString() : null,
+        occupancyType, rentalStatus, rentalIncome, housegeld,
         propId
       ]
     );

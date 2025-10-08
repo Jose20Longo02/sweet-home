@@ -258,6 +258,56 @@
               </div>
             </div>
             <% } %>
+
+            <% if (property.occupancy_type) { %>
+            <div class="detail-item">
+              <div class="detail-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                </svg>
+              </div>
+              <div class="detail-content">
+                <span class="detail-label">Occupancy</span>
+                <span class="detail-value"><%= property.occupancy_type %></span>
+              </div>
+            </div>
+            <% } %>
+
+            <% if (property.rental_status || property.rental_income) { %>
+            <div class="detail-item">
+              <div class="detail-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 1v22M3 12h18"></path>
+                </svg>
+              </div>
+              <div class="detail-content">
+                <span class="detail-label">Rental</span>
+                <span class="detail-value">
+                  <% if (property.rental_status === 'rented') { %>
+                    Rented<% if (property.rental_income) { %> – €<%= Number(property.rental_income).toLocaleString('en-US') %>/mo<% } %>
+                  <% } else if (property.rental_status === 'not_rented_potential') { %>
+                    Not rented (potential)<% if (property.rental_income) { %> – €<%= Number(property.rental_income).toLocaleString('en-US') %>/mo potential<% } %>
+                  <% } else { %>
+                    Not rented
+                  <% } %>
+                </span>
+              </div>
+            </div>
+            <% } %>
+
+            <% if (property.housegeld) { %>
+            <div class="detail-item">
+              <div class="detail-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
+              <div class="detail-content">
+                <span class="detail-label">Housegeld</span>
+                <span class="detail-value">€<%= Number(property.housegeld).toLocaleString('en-US') %>/mo</span>
+              </div>
+            </div>
+            <% } %>
             
 
           </div>

@@ -275,6 +275,18 @@ document.addEventListener('DOMContentLoaded', function () {
     if (wrap) wrap.hidden = hide;
     if (input) input.disabled = hide;
   }
+  // Rental income visibility
+  function updateRentalIncomeVisibility() {
+    const statusSel = document.getElementById('rental_status');
+    const wrap = document.getElementById('rentalIncomeWrap');
+    const input = document.getElementById('rental_income');
+    const val = (statusSel && statusSel.value) || '';
+    const show = (val === 'rented' || val === 'not_rented_potential');
+    if (wrap) wrap.hidden = !show;
+    if (input) input.disabled = !show;
+  }
+  const rentalStatus = document.getElementById('rental_status');
+  if (rentalStatus) rentalStatus.addEventListener('change', updateRentalIncomeVisibility);
 
   // Price input formatting (Euro)
   const priceInputHidden = document.getElementById('price');
@@ -331,6 +343,7 @@ document.addEventListener('DOMContentLoaded', function () {
   updateYearBuiltVisibility();
   typeSel.addEventListener('change', updateFeaturesVisibility);
   typeSel.addEventListener('change', updateYearBuiltVisibility);
+  updateRentalIncomeVisibility();
 });
 
 

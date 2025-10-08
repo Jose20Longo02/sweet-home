@@ -123,6 +123,42 @@
       </div>
     </section>
 
+    <!-- B3. Occupancy & Rental -->
+    <section class="card">
+      <h2>Occupancy & Rental</h2>
+      <div class="grid-3">
+        <div class="field">
+          <label for="occupancy_type">Property Type (occupancy)</label>
+          <select id="occupancy_type" name="occupancy_type">
+            <option value="">Select</option>
+            <% ['Empty','Short-Term Rented','Suitable for Self Use','Long-Term Rented'].forEach(v => { %>
+              <option value="<%= v %>" <%= form.occupancy_type===v?'selected':'' %>><%= v %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="field">
+          <label for="rental_status">Rental Income</label>
+          <select id="rental_status" name="rental_status">
+            <option value="">Select</option>
+            <option value="not_rented" <%= form.rental_status==='not_rented'?'selected':'' %>>Not rented</option>
+            <option value="not_rented_potential" <%= form.rental_status==='not_rented_potential'?'selected':'' %>>Not rented (with potential)</option>
+            <option value="rented" <%= form.rental_status==='rented'?'selected':'' %>>Rented</option>
+          </select>
+        </div>
+        <div class="field" id="rentalIncomeWrap" hidden>
+          <label for="rental_income">Rental Income (€ / month)</label>
+          <input id="rental_income" name="rental_income" type="number" inputmode="decimal" step="0.01" min="0" value="<%= form.rental_income||'' %>" />
+          <small>Fill when "Rented" or when adding potential income.</small>
+        </div>
+      </div>
+      <div class="grid-3">
+        <div class="field">
+          <label for="housegeld">Housegeld (€ / month)</label>
+          <input id="housegeld" name="housegeld" type="number" inputmode="decimal" step="0.01" min="0" value="<%= form.housegeld||'' %>" />
+        </div>
+      </div>
+    </section>
+
     <!-- C. Media -->
     <section class="card">
       <h2>Media</h2>
