@@ -37,7 +37,8 @@ module.exports = {
       "Dubai South",
       "Maritime City",
       "Dubailand",
-      "Damac Hills"
+      "Damac Hills",
+      "Dubai Investment Park"
     ]
   },
   "Cyprus": {
