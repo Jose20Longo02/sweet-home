@@ -34,7 +34,8 @@ module.exports = {
       "Dubai Studio City",
       "Al Furjan",
       "City of Arabia",
-      "Dubai South"
+      "Dubai South",
+      "Maritime City"
     ]
   },
   "Cyprus": {
