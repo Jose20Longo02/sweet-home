@@ -68,6 +68,20 @@
       "location": "Location",
       "coordinates": "Coordinates",
       "loadingMap": "Loading map...",
+      "occupancy": "Occupancy",
+      "occupancyTypes": {
+        "empty": "Empty",
+        "shortTerm": "Short‑term rented",
+        "selfUse": "Suitable for self use",
+        "longTerm": "Long‑term rented"
+      },
+      "rental": "Rental",
+      "rentalStatus": {
+        "rented": "Rented",
+        "notRented": "Not rented",
+        "notRentedPotential": "Not rented (potential)"
+      },
+      "maintenanceCosts": "Maintenance costs",
       "price": "Price",
       "featured": "Featured",
       "listedBy": "Listed by",

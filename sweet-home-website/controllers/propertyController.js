@@ -209,6 +209,7 @@ exports.listPropertiesPublic = async (req, res, next) => {
       SELECT
         p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
         p.price, p.photos, p.type, p.bedrooms, p.bathrooms,
+        p.rental_status, p.rental_income,
         CASE 
           WHEN p.type = 'Apartment' THEN p.apartment_size
           WHEN p.type IN ('House', 'Villa') THEN p.living_space

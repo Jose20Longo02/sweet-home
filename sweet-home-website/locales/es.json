@@ -57,6 +57,20 @@
       "location": "Ubicación",
       "coordinates": "Coordenadas",
       "loadingMap": "Cargando mapa...",
+      "occupancy": "Ocupación",
+      "occupancyTypes": {
+        "empty": "Vacía",
+        "shortTerm": "Alquilada a corto plazo",
+        "selfUse": "Apta para uso propio",
+        "longTerm": "Alquilada a largo plazo"
+      },
+      "rental": "Alquiler",
+      "rentalStatus": {
+        "rented": "Alquilada",
+        "notRented": "No alquilada",
+        "notRentedPotential": "No alquilada (potencial)"
+      },
+      "maintenanceCosts": "Gastos de mantenimiento",
       "price": "Precio",
       "featured": "Destacado",
       "listedBy": "Anunciado por",

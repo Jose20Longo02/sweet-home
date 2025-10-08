@@ -260,6 +260,7 @@
             <% } %>
 
             <% if (property.occupancy_type) { %>
+            <% const occMap = { 'Empty': 'empty', 'Short-Term Rented': 'shortTerm', 'Suitable for Self Use': 'selfUse', 'Long-Term Rented': 'longTerm' }; const occKey = occMap[property.occupancy_type] || null; %>
             <div class="detail-item">
               <div class="detail-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -267,13 +268,14 @@
                 </svg>
               </div>
               <div class="detail-content">
-                <span class="detail-label">Occupancy</span>
-                <span class="detail-value"><%= property.occupancy_type %></span>
+                <span class="detail-label"><%= t('properties.detail.occupancy','Occupancy') %></span>
+                <span class="detail-value"><%= occKey ? t('properties.detail.occupancyTypes.' + occKey, property.occupancy_type) : property.occupancy_type %></span>
               </div>
             </div>
             <% } %>
 
             <% if (property.rental_status || property.rental_income) { %>
+            <% const rentalKeyMap = { rented: 'rented', not_rented_potential: 'notRentedPotential', not_rented: 'notRented' }; const rentalKey = rentalKeyMap[property.rental_status] || null; %>
             <div class="detail-item">
               <div class="detail-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -281,14 +283,14 @@
                 </svg>
               </div>
               <div class="detail-content">
-                <span class="detail-label">Rental</span>
+                <span class="detail-label"><%= t('properties.detail.rental','Rental') %></span>
                 <span class="detail-value">
                   <% if (property.rental_status === 'rented') { %>
-                    Rented<% if (property.rental_income) { %> – €<%= Number(property.rental_income).toLocaleString('en-US') %>/mo<% } %>
+                    <%= t('properties.detail.rentalStatus.rented','Rented') %><% if (property.rental_income) { %> – €<%= Number(property.rental_income).toLocaleString('en-US') %>/mo<% } %>
                   <% } else if (property.rental_status === 'not_rented_potential') { %>
-                    Not rented (potential)<% if (property.rental_income) { %> – €<%= Number(property.rental_income).toLocaleString('en-US') %>/mo potential<% } %>
+                    <%= t('properties.detail.rentalStatus.notRentedPotential','Not rented (potential)') %><% if (property.rental_income) { %> – €<%= Number(property.rental_income).toLocaleString('en-US') %>/mo<% } %>
                   <% } else { %>
-                    Not rented
+                    <%= t('properties.detail.rentalStatus.notRented','Not rented') %>
                   <% } %>
                 </span>
               </div>
@@ -303,7 +305,7 @@
                 </svg>
               </div>
               <div class="detail-content">
-                <span class="detail-label">Housegeld</span>
+                <span class="detail-label"><%= t('properties.detail.maintenanceCosts','Maintenance costs') %></span>
                 <span class="detail-value">€<%= Number(property.housegeld).toLocaleString('en-US') %>/mo</span>
               </div>
             </div>

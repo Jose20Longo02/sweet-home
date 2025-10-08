@@ -921,6 +921,20 @@
   color: var(--gray-900);
 }
 
+/* Subtle rental income chip shown next to price when present */
+.rental-income-chip {
+  display: inline-block;
+  margin-left: var(--spacing-3);
+  padding: 2px 8px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--primary-800);
+  background: var(--primary-50);
+  border: 1px solid var(--primary-200);
+  border-radius: var(--radius-full);
+  vertical-align: middle;
+}
+
 .property-footer {
   display: flex;
   justify-content: space-between;

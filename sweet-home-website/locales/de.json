@@ -66,6 +66,20 @@
       "location": "Lage",
       "coordinates": "Koordinaten",
       "loadingMap": "Karte wird geladen...",
+      "occupancy": "Nutzung",
+      "occupancyTypes": {
+        "empty": "Leerstehend",
+        "shortTerm": "Kurzfristig vermietet",
+        "selfUse": "Zur Eigennutzung geeignet",
+        "longTerm": "Langfristig vermietet"
+      },
+      "rental": "Vermietung",
+      "rentalStatus": {
+        "rented": "Vermietet",
+        "notRented": "Nicht vermietet",
+        "notRentedPotential": "Nicht vermietet (Potenzial)"
+      },
+      "maintenanceCosts": "Hausgeld",
       "price": "Preis",
       "featured": "Hervorgehoben",
       "listedBy": "Anbieter",
