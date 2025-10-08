@@ -139,6 +139,7 @@
       },
       "contactForPrice": "Contact for price",
       "viewDetails": "View details",
+      "rentalIncome": "Rental income",
       "map": { "title": "Property Map View", "hint": "Click on map markers to view property details", "error": "Unable to load map. Please try refreshing the page." },
       "noResults": { "title": "No Properties Found", "hint": "Try adjusting your search criteria or browse all available properties." },
       "clearFilters": "Clear Filters",

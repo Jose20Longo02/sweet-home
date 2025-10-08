@@ -128,6 +128,7 @@
       },
       "contactForPrice": "Consultar precio",
       "viewDetails": "Ver detalles",
+      "rentalIncome": "Ingreso por alquiler",
       "map": { "title": "Vista en mapa", "hint": "Haz clic en los marcadores para ver detalles", "error": "No se puede cargar el mapa. Intenta actualizar la página." },
       "noResults": { "title": "No se encontraron propiedades", "hint": "Ajusta los criterios de búsqueda o explora todas las propiedades disponibles." },
       "clearFilters": "Limpiar filtros",

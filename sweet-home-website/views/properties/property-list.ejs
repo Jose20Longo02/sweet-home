@@ -538,7 +538,7 @@
                         <span class="price-amount"><%= t('properties.list.contactForPrice','Contact for price') %></span>
                       <% } %>
                       <% if (property.rental_status && (property.rental_status === 'rented' || property.rental_status === 'not_rented_potential') && property.rental_income) { %>
-                        <span class="rental-income-chip">€<%= Number(property.rental_income).toLocaleString('en-US') %>/mo</span>
+                        <span class="rental-income-chip"><%= t('properties.list.rentalIncome','Rental income') %>: €<%= Number(property.rental_income).toLocaleString('en-US') %>/mo</span>
                       <% } %>
                     </div>
                     
