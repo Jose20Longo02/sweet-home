@@ -920,7 +920,7 @@
 
 .property-price .price-amount {
   font-size: var(--font-size-lg);
-  font-weight: 400; /* restore normal weight */
+  font-weight: 200; /* restore normal weight */
   color: var(--gray-900);
   display: inline;
   margin-bottom: 0;
