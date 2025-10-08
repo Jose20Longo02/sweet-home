@@ -920,7 +920,7 @@
 
 .property-price .price-amount {
   font-size: var(--font-size-lg);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--gray-900);
   display: inline;
   margin-bottom: 0;
@@ -929,16 +929,18 @@
 /* Subtle rental income chip shown next to price when present */
 .rental-income-chip {
   display: inline-block;
-  margin-left: var(--spacing-3);
-  padding: 2px 8px;
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  color: var(--primary-800);
-  background: var(--primary-50);
-  border: 1px solid var(--primary-200);
-  border-radius: var(--radius-full);
-  vertical-align: middle;
+  margin-left: var(--spacing-1);
+  padding: 0;
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  color: var(--gray-600);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  vertical-align: baseline;
 }
+
+.price-sep { color: var(--gray-300); margin: 0 6px; }
 
 .property-footer {
   display: flex;
