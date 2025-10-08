@@ -920,7 +920,7 @@
 
 .property-price .price-amount {
   font-size: var(--font-size-lg);
-  font-weight: 600;
+  font-weight: 400; /* restore normal weight */
   color: var(--gray-900);
   display: inline;
   margin-bottom: 0;
@@ -940,7 +940,7 @@
   vertical-align: baseline;
 }
 
-.price-sep { color: var(--gray-300); margin: 0 6px; }
+.price-sep { color: var(--gray-500); margin: 0 8px; }
 
 .property-footer {
   display: flex;
