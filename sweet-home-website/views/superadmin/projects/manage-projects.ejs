@@ -79,8 +79,10 @@
       function recalc() {
         // Show all cards temporarily to compute actual columns
         cards.forEach(c => c.style.display = '');
-        setTimeout(() => {
-          // Force reflow
+        // Force reflow
+        void grid.offsetHeight;
+        
+        requestAnimationFrame(() => {
           const firstTop = cards[0].offsetTop;
           let cols = 0;
           for (let i = 0; i < cards.length; i++) {
@@ -91,8 +93,11 @@
           pageSize = cols * 2; // exactly 2 rows
           totalPages = Math.max(1, Math.ceil(cards.length / pageSize));
           if (currentPage > totalPages) currentPage = totalPages;
+          
+          console.log('Country:', area.querySelector('h2')?.textContent, 'Cols:', cols, 'PageSize:', pageSize, 'Total cards:', cards.length, 'Total pages:', totalPages);
+          
           render();
-        }, 50);
+        });
       }
 
       function render() {
@@ -124,24 +129,21 @@
         } 
       });
 
-      // Initial calc after DOM ready
-      setTimeout(recalc, 200);
+      // Initial setup - run immediately and on load
+      recalc();
       window.addEventListener('load', recalc);
+      
       // Recalc on resize (debounced)
-      let t;
+      let resizeTimeout;
       window.addEventListener('resize', function() { 
-        clearTimeout(t); 
-        t = setTimeout(recalc, 200); 
+        clearTimeout(resizeTimeout); 
+        resizeTimeout = setTimeout(recalc, 200); 
       });
     }
 
-    // Wait for DOM to be ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.project-area').forEach(setupCountryPagination);
-      });
-    } else {
+    // Setup all country areas
+    setTimeout(function() {
       document.querySelectorAll('.project-area').forEach(setupCountryPagination);
-    }
+    }, 100);
   })();
 </script>
