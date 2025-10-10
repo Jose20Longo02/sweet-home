@@ -74,29 +74,25 @@
       const infoEl  = nav.querySelector('.page-info');
       let currentPage = 1;
       let totalPages = 1;
-      let pageSize = 1;
-
-      function computeColumns() {
-        if (cards.length === 0) return 1;
-        // Temporarily show all cards to detect layout
-        cards.forEach(c => c.style.display = '');
-        // Force reflow
-        grid.offsetHeight;
-        const firstTop = cards[0].offsetTop;
-        let cols = 0;
-        for (let i = 0; i < cards.length; i++) {
-          if (cards[i].offsetTop !== firstTop) break;
-          cols++;
-        }
-        return Math.max(1, cols);
-      }
+      let pageSize = 8; // Fixed: exactly 8 cards per page (2 rows x 4 columns typical)
 
       function recalc() {
-        const cols = computeColumns();
-        pageSize = Math.max(1, cols * 2); // exactly 2 rows
-        totalPages = Math.max(1, Math.ceil(cards.length / pageSize));
-        if (currentPage > totalPages) currentPage = totalPages;
-        render();
+        // Show all cards temporarily to compute actual columns
+        cards.forEach(c => c.style.display = '');
+        setTimeout(() => {
+          // Force reflow
+          const firstTop = cards[0].offsetTop;
+          let cols = 0;
+          for (let i = 0; i < cards.length; i++) {
+            if (cards[i].offsetTop !== firstTop) break;
+            cols++;
+          }
+          cols = Math.max(1, cols);
+          pageSize = cols * 2; // exactly 2 rows
+          totalPages = Math.max(1, Math.ceil(cards.length / pageSize));
+          if (currentPage > totalPages) currentPage = totalPages;
+          render();
+        }, 50);
       }
 
       function render() {
@@ -108,19 +104,44 @@
         prevBtn.disabled = currentPage <= 1;
         nextBtn.disabled = currentPage >= totalPages;
         if (infoEl) infoEl.textContent = 'Page ' + currentPage + ' of ' + totalPages;
+        if (totalPages <= 1) {
+          nav.style.display = 'none';
+        } else {
+          nav.style.display = 'flex';
+        }
       }
 
-      prevBtn.addEventListener('click', function() { if (currentPage > 1) { currentPage--; render(); } });
-      nextBtn.addEventListener('click', function() { if (currentPage < totalPages) { currentPage++; render(); } });
+      prevBtn.addEventListener('click', function() { 
+        if (currentPage > 1) { 
+          currentPage--; 
+          render(); 
+        } 
+      });
+      nextBtn.addEventListener('click', function() { 
+        if (currentPage < totalPages) { 
+          currentPage++; 
+          render(); 
+        } 
+      });
 
-      // Initial calc after layout
-      setTimeout(recalc, 100);
+      // Initial calc after DOM ready
+      setTimeout(recalc, 200);
       window.addEventListener('load', recalc);
       // Recalc on resize (debounced)
       let t;
-      window.addEventListener('resize', function() { clearTimeout(t); t = setTimeout(recalc, 150); });
+      window.addEventListener('resize', function() { 
+        clearTimeout(t); 
+        t = setTimeout(recalc, 200); 
+      });
     }
 
-    document.querySelectorAll('.project-area').forEach(setupCountryPagination);
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.project-area').forEach(setupCountryPagination);
+      });
+    } else {
+      document.querySelectorAll('.project-area').forEach(setupCountryPagination);
+    }
   })();
 </script>
