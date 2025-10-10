@@ -48,7 +48,7 @@
                   </div>
                 <% }); %>
               </div>
-              <nav class="country-pagination" aria-label="Country pagination" style="display:flex;align-items:center;gap:.5rem;justify-content:center;margin-top:12px;">
+              <nav class="country-pagination" aria-label="Country pagination">
                 <button type="button" class="page-btn prev" disabled>« Prev</button>
                 <span class="page-info">Page 1</span>
                 <button type="button" class="page-btn next">Next »</button>
@@ -74,7 +74,7 @@
       const infoEl  = nav.querySelector('.page-info');
       let currentPage = 1;
       let totalPages = 1;
-      let pageSize = 1;
+      let pageSize = 8; // exactly 2 rows (8 cards) per page
 
       function computeColumns() {
         if (cards.length === 0) return 1;
@@ -88,8 +88,8 @@
       }
 
       function recalc() {
-        const cols = computeColumns();
-        pageSize = Math.max(1, cols * 2); // 2 rows per country
+        // Fixed at 8 per page as requested
+        pageSize = 8;
         totalPages = Math.max(1, Math.ceil(cards.length / pageSize));
         if (currentPage > totalPages) currentPage = totalPages;
         render();

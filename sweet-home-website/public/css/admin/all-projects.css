@@ -148,6 +148,31 @@
   color: var(--color-secondary);
 }
 
+/* Internal pagination styling for admin grid */
+#adminInternalPagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  margin-top: 12px;
+}
+#adminInternalPagination .page-btn {
+  padding: .45rem .85rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-secondary);
+  background: #fff;
+  color: var(--color-secondary);
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+#adminInternalPagination .page-btn:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+#adminInternalPagination .page-btn:disabled { opacity: .5; cursor: default; }
+#adminInternalPagination .page-info { color: var(--color-secondary); font-size: .95rem; }
+
 /* Responsive tweaks */
 @media (max-width: 768px) {
   .section-header {
