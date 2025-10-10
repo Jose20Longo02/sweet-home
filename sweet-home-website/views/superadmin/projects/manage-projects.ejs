@@ -48,6 +48,11 @@
                   </div>
                 <% }); %>
               </div>
+              <nav class="country-pagination" aria-label="Country pagination" style="display:flex;align-items:center;gap:.5rem;justify-content:center;margin-top:12px;">
+                <button type="button" class="page-btn prev" disabled>« Prev</button>
+                <span class="page-info">Page 1</span>
+                <button type="button" class="page-btn next">Next »</button>
+              </nav>
             <% } %>
           </div>
         <% }); %>
@@ -55,3 +60,63 @@
     </main>
   </div>
 </div>
+
+<script>
+  (function() {
+    function setupCountryPagination(area) {
+      const grid = area.querySelector('.projects-grid');
+      const cards = Array.from(grid ? grid.children : []);
+      const nav = area.querySelector('.country-pagination');
+      if (!grid || !cards.length || !nav) return;
+
+      const prevBtn = nav.querySelector('.prev');
+      const nextBtn = nav.querySelector('.next');
+      const infoEl  = nav.querySelector('.page-info');
+      let currentPage = 1;
+      let totalPages = 1;
+      let pageSize = 1;
+
+      function computeColumns() {
+        if (cards.length === 0) return 1;
+        const firstTop = cards[0].offsetTop;
+        let cols = 0;
+        for (let i = 0; i < cards.length; i++) {
+          if (cards[i].offsetTop !== firstTop) break;
+          cols++;
+        }
+        return Math.max(1, cols);
+      }
+
+      function recalc() {
+        const cols = computeColumns();
+        pageSize = Math.max(1, cols * 2); // 2 rows per country
+        totalPages = Math.max(1, Math.ceil(cards.length / pageSize));
+        if (currentPage > totalPages) currentPage = totalPages;
+        render();
+      }
+
+      function render() {
+        const start = (currentPage - 1) * pageSize;
+        const end   = start + pageSize;
+        cards.forEach((card, idx) => {
+          card.style.display = (idx >= start && idx < end) ? '' : 'none';
+        });
+        prevBtn.disabled = currentPage <= 1;
+        nextBtn.disabled = currentPage >= totalPages;
+        if (infoEl) infoEl.textContent = 'Page ' + currentPage + ' of ' + totalPages;
+      }
+
+      prevBtn.addEventListener('click', function() { if (currentPage > 1) { currentPage--; render(); } });
+      nextBtn.addEventListener('click', function() { if (currentPage < totalPages) { currentPage++; render(); } });
+
+      // Initial calc after layout
+      window.addEventListener('load', recalc);
+      // Recalc on resize (debounced)
+      let t;
+      window.addEventListener('resize', function() { clearTimeout(t); t = setTimeout(recalc, 150); });
+      recalc();
+    }
+
+    document.querySelectorAll('.project-area').forEach(setupCountryPagination);
+  })();
+</script>
