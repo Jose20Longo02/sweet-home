@@ -282,14 +282,34 @@ function initializePagination() {
   
   // Handle pagination clicks
   paginationContainer.addEventListener('click', function(e) {
-    if (e.target.classList.contains('page-link')) {
+    const link = e.target.closest('.page-link');
+    if (!link) return;
+
+    const dataPage = link.dataset.page;
+    if (dataPage) {
+      // AJAX-style pagination
       e.preventDefault();
-      
-      const page = e.target.dataset.page;
-      if (page) {
-        goToPage(parseInt(page));
-      }
+      const pageNum = parseInt(dataPage, 10);
+      if (!Number.isNaN(pageNum)) goToPage(pageNum);
+      return;
     }
+
+    // If no data-page (server-rendered anchor with href), allow normal navigation
+    const href = link.getAttribute('href');
+    if (href && href !== '#') {
+      // Do not preventDefault so the browser follows the link
+      return;
+    }
+
+    // Fallback: try to read page from href query if present
+    e.preventDefault();
+    try {
+      const url = new URL(link.href || window.location.href);
+      const pageFromHref = parseInt(url.searchParams.get('page') || '', 10);
+      if (!Number.isNaN(pageFromHref)) {
+        goToPage(pageFromHref);
+      }
+    } catch (_) { /* ignore */ }
   });
 }
 
