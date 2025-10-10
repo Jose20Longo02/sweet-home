@@ -74,7 +74,7 @@
       const infoEl  = nav.querySelector('.page-info');
       let currentPage = 1;
       let totalPages = 1;
-      let pageSize = 8; // exactly 2 rows (8 cards) per page
+      let pageSize = 1; // will be computed based on columns
 
       function computeColumns() {
         if (cards.length === 0) return 1;
@@ -88,8 +88,8 @@
       }
 
       function recalc() {
-        // Fixed at 8 per page as requested
-        pageSize = 8;
+        const cols = computeColumns();
+        pageSize = Math.max(1, cols * 2); // exactly 2 rows per current column count
         totalPages = Math.max(1, Math.ceil(cards.length / pageSize));
         if (currentPage > totalPages) currentPage = totalPages;
         render();
