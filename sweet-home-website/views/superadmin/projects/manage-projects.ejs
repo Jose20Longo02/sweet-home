@@ -6,8 +6,8 @@
   <div class="admin-body">
     <!-- Sidebar -->
     <%- include('../../partials/superadmin-sidebar', {
-      activePage: 'projects',
-      pendingCount: pendingCount
+      activePage: 'projects',     // or 'projects', 'properties', etc.
+      pendingCount: pendingCount   // make sure you pass this in your controller
     }) %>
 
     <!-- Main content -->
@@ -18,43 +18,16 @@
           <a href="/superadmin/dashboard/projects/new" class="btn btn-primary">New Project</a>
         </div>
 
-        <!-- Filters -->
-        <form class="filters-form" method="get" action="/superadmin/dashboard/projects">
-          <div class="filter-row">
-            <select id="countryFilter" name="country" class="form-select">
-              <option value="">All Countries</option>
-              <% (countryOptions || []).forEach(c => { %>
-                <option value="<%= c %>" <%= (filters && filters.country === c) ? 'selected' : '' %>><%= c %></option>
-              <% }) %>
-            </select>
-
-            <select id="cityFilter" name="city" class="form-select" <%= !(filters && filters.country) ? 'disabled' : '' %>>
-              <option value="">All Cities</option>
-              <% (cityOptions || []).forEach(ct => { %>
-                <option value="<%= ct %>" <%= (filters && filters.city === ct) ? 'selected' : '' %>><%= ct %></option>
-              <% }) %>
-            </select>
-
-            <a href="/superadmin/dashboard/projects" class="btn-reset">Clear Filters</a>
-          </div>
-        </form>
-
         <% Object.keys(grouped).forEach(country => { %>
-          <% const list = grouped[country]; %>
-          <% if (list.length > 0) { %>
-            <div class="project-area" data-country="<%= country %>">
-              <div class="area-header">
-                <h2><%= country %> (<%= list.length %>)</h2>
-                <% if (list.length > 8) { %>
-                  <button type="button" class="toggle-btn" data-expanded="false">
-                    <span class="toggle-text">Show All</span>
-                    <span class="toggle-icon">▼</span>
-                  </button>
-                <% } %>
-              </div>
+          <div class="project-area">
+            <h2><%= country %></h2>
+            <% const list = grouped[country]; %>
+            <% if (!list.length) { %>
+              <p class="empty">No projects in <%= country %>.</p>
+            <% } else { %>
               <div class="projects-grid">
-                <% list.forEach((project, idx) => { %>
-                  <div class="project-card" style="<%= idx >= 8 ? 'display: none;' : '' %>" data-index="<%= idx %>">
+                <% list.forEach(project => { %>
+                  <div class="project-card">
                     <img
                       src="<%= project.photos?.[0] || '/img/project-placeholder.png' %>"
                       alt="<%= project.title %>"
@@ -66,7 +39,7 @@
                     </p>
 
                     <div class="actions">
-                      <form action="/superadmin/dashboard/projects/<%= project.id %>/delete" method="post" onsubmit="return confirm('Delete "<%= project.title %>"?');">
+                      <form action="/superadmin/dashboard/projects/<%= project.id %>/delete" method="post" onsubmit="return confirm('Delete “<%= project.title %>”?');">
                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <button type="submit" class="btn btn-danger">Delete</button>
                       </form>
@@ -75,63 +48,10 @@
                   </div>
                 <% }); %>
               </div>
-            </div>
-          <% } %>
+            <% } %>
+          </div>
         <% }); %>
       </section>
     </main>
   </div>
 </div>
-
-<script>
-  // Collapsible country sections
-  document.querySelectorAll('.toggle-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const area = this.closest('.project-area');
-      const cards = area.querySelectorAll('.project-card');
-      const isExpanded = this.getAttribute('data-expanded') === 'true';
-      
-      cards.forEach((card, idx) => {
-        if (idx >= 8) {
-          card.style.display = isExpanded ? 'none' : '';
-        }
-      });
-      
-      this.setAttribute('data-expanded', !isExpanded);
-      this.querySelector('.toggle-text').textContent = isExpanded ? 'Show All' : 'Show Less';
-      this.querySelector('.toggle-icon').textContent = isExpanded ? '▼' : '▲';
-    });
-  });
-
-  // Cascading filters
-  const countrySelect = document.getElementById('countryFilter');
-  const citySelect = document.getElementById('cityFilter');
-  const locationsData = <%- JSON.stringify(locations) %>;
-
-  if (countrySelect && citySelect) {
-    countrySelect.addEventListener('change', function() {
-      const country = this.value;
-      citySelect.innerHTML = '<option value="">All Cities</option>';
-      
-      if (country && locationsData[country]) {
-        const cities = Object.keys(locationsData[country]);
-        cities.forEach(city => {
-          const opt = document.createElement('option');
-          opt.value = city;
-          opt.textContent = city;
-          citySelect.appendChild(opt);
-        });
-        citySelect.disabled = false;
-      } else {
-        citySelect.disabled = true;
-      }
-      
-      // Auto-submit on change
-      this.form.submit();
-    });
-
-    citySelect.addEventListener('change', function() {
-      this.form.submit();
-    });
-  }
-</script>

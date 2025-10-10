@@ -32,61 +32,38 @@
     <a class="link-reset" href="?">Reset</a>
   </form>
 
-  <!-- Projects Grid with Collapsible Sections -->
+  <!-- Projects Grid -->
   <% if (!projects || projects.length === 0) { %>
     <div class="empty-state">
       <p>No projects found.</p>
     </div>
   <% } else { %>
-    <% 
-      // Group projects by country
-      const grouped = {};
-      projects.forEach(p => {
-        if (!grouped[p.country]) grouped[p.country] = [];
-        grouped[p.country].push(p);
-      });
-    %>
-    
-    <% Object.keys(grouped).forEach(country => { %>
-      <% const list = grouped[country]; %>
-      <div class="country-section" data-country="<%= country %>">
-        <div class="country-header">
-          <h3><%= country %> (<%= list.length %>)</h3>
-          <% if (list.length > 8) { %>
-            <button type="button" class="toggle-section-btn" data-expanded="false">
-              <span class="toggle-text">Show All</span>
-              <span class="toggle-icon">▼</span>
-            </button>
+    <div class="cards-grid">
+      <% projects.forEach(function(p) { %>
+        <article class="project-card">
+          <% const cover = (Array.isArray(p.photos) && p.photos[0]) ? p.photos[0] : null; %>
+          <% if (cover) { %>
+            <img class="thumb" src="<%= cover %>" alt="<%= p.title %>">
+          <% } else { %>
+            <div class="thumb thumb--placeholder" aria-label="No image available"></div>
           <% } %>
-        </div>
-        <div class="cards-grid">
-          <% list.forEach(function(p, idx) { %>
-            <article class="project-card" style="<%= idx >= 8 ? 'display: none;' : '' %>" data-index="<%= idx %>">
-              <% const cover = (Array.isArray(p.photos) && p.photos[0]) ? p.photos[0] : null; %>
-              <% if (cover) { %>
-                <img class="thumb" src="<%= cover %>" alt="<%= p.title %>">
-              <% } else { %>
-                <div class="thumb thumb--placeholder" aria-label="No image available"></div>
-              <% } %>
-              <div class="card-body">
-                <h3 class="title"><%= p.title %></h3>
-                <p class="meta">
-                  <%= p.country %><% if (p.city) { %> — <%= p.city %><% } %><% if (p.neighborhood) { %>, <%= p.neighborhood %><% } %>
-                </p>
-                <div class="actions">
-                  <form action="/superadmin/dashboard/projects/<%= p.id %>/delete" method="post" onsubmit="return confirm('Delete "<%= p.title %>"?');">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                  </form>
-                  <a class="btn btn-secondary" href="/admin/dashboard/projects/<%= p.id %>/edit">Edit</a>
-                  <a class="btn btn-ghost" href="/projects/<%= p.slug || p.id %>">View</a>
-                </div>
-              </div>
-            </article>
-          <% }) %>
-        </div>
-      </div>
-    <% }); %>
+          <div class="card-body">
+            <h3 class="title"><%= p.title %></h3>
+            <p class="meta">
+              <%= p.country %><% if (p.city) { %> — <%= p.city %><% } %><% if (p.neighborhood) { %>, <%= p.neighborhood %><% } %>
+            </p>
+            <div class="actions">
+              <form action="/superadmin/dashboard/projects/<%= p.id %>/delete" method="post" onsubmit="return confirm('Delete “<%= p.title %>”?');">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+              <a class="btn btn-secondary" href="/admin/dashboard/projects/<%= p.id %>/edit">Edit</a>
+              <a class="btn btn-ghost" href="/projects/<%= p.slug || p.id %>">View</a>
+            </div>
+          </div>
+        </article>
+      <% }) %>
+    </div>
   <% } %>
 
   <!-- Pagination -->
@@ -144,23 +121,4 @@
 
     citySel.addEventListener('change', () => form.submit());
   })();
-
-  // Collapsible sections
-  document.querySelectorAll('.toggle-section-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const section = this.closest('.country-section');
-      const cards = section.querySelectorAll('.project-card');
-      const isExpanded = this.getAttribute('data-expanded') === 'true';
-      
-      cards.forEach((card, idx) => {
-        if (idx >= 8) {
-          card.style.display = isExpanded ? 'none' : '';
-        }
-      });
-      
-      this.setAttribute('data-expanded', !isExpanded);
-      this.querySelector('.toggle-text').textContent = isExpanded ? 'Show All' : 'Show Less';
-      this.querySelector('.toggle-icon').textContent = isExpanded ? '▼' : '▲';
-    });
-  });
 </script>

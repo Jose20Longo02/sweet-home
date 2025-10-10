@@ -148,42 +148,6 @@
   color: var(--color-secondary);
 }
 
-/* Country sections */
-.country-section {
-  margin-bottom: 2.5rem;
-}
-.country-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-.country-header h3 {
-  color: var(--color-primary);
-  font-size: 1.3rem;
-  margin: 0;
-}
-.toggle-section-btn {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  padding: .5rem 1rem;
-  background: var(--color-primary);
-  color: #fff;
-  border: none;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: .9rem;
-  transition: all .2s ease;
-}
-.toggle-section-btn:hover {
-  opacity: .9;
-  transform: translateY(-1px);
-}
-.toggle-icon {
-  font-size: .8rem;
-}
-
 /* Responsive tweaks */
 @media (max-width: 768px) {
   .section-header {
