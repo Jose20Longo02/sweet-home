@@ -32,44 +32,82 @@
     <a class="link-reset" href="?">Reset</a>
   </form>
 
-  <!-- Projects Grid with internal pagination (2 rows per page) -->
+  <!-- Projects Grid with Collapsible Sections -->
   <% if (!projects || projects.length === 0) { %>
     <div class="empty-state">
       <p>No projects found.</p>
     </div>
   <% } else { %>
-    <div class="cards-grid" id="adminProjectsGrid">
-      <% projects.forEach(function(p) { %>
-        <article class="project-card">
-          <% const cover = (Array.isArray(p.photos) && p.photos[0]) ? p.photos[0] : null; %>
-          <% if (cover) { %>
-            <img class="thumb" src="<%= cover %>" alt="<%= p.title %>">
-          <% } else { %>
-            <div class="thumb thumb--placeholder" aria-label="No image available"></div>
+    <% 
+      // Group projects by country
+      const grouped = {};
+      projects.forEach(p => {
+        if (!grouped[p.country]) grouped[p.country] = [];
+        grouped[p.country].push(p);
+      });
+    %>
+    
+    <% Object.keys(grouped).forEach(country => { %>
+      <% const list = grouped[country]; %>
+      <div class="country-section" data-country="<%= country %>">
+        <div class="country-header">
+          <h3><%= country %> (<%= list.length %>)</h3>
+          <% if (list.length > 8) { %>
+            <button type="button" class="toggle-section-btn" data-expanded="false">
+              <span class="toggle-text">Show All</span>
+              <span class="toggle-icon">▼</span>
+            </button>
           <% } %>
-          <div class="card-body">
-            <h3 class="title"><%= p.title %></h3>
-            <p class="meta">
-              <%= p.country %><% if (p.city) { %> — <%= p.city %><% } %><% if (p.neighborhood) { %>, <%= p.neighborhood %><% } %>
-            </p>
-            <div class="actions">
-              <form action="/superadmin/dashboard/projects/<%= p.id %>/delete" method="post" onsubmit="return confirm('Delete “<%= p.title %>”?');">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <button type="submit" class="btn btn-danger">Delete</button>
-              </form>
-              <a class="btn btn-secondary" href="/admin/dashboard/projects/<%= p.id %>/edit">Edit</a>
-              <a class="btn btn-ghost" href="/projects/<%= p.slug || p.id %>">View</a>
-            </div>
-          </div>
-        </article>
-      <% }) %>
-    </div>
-    <nav class="pagination" id="adminInternalPagination" style="display:flex;align-items:center;gap:.5rem;justify-content:center;margin-top:12px;">
-      <button type="button" class="page-btn prev" disabled>« Prev</button>
-      <span class="page-info">Page 1</span>
-      <button type="button" class="page-btn next">Next »</button>
-    </nav>
+        </div>
+        <div class="cards-grid">
+          <% list.forEach(function(p, idx) { %>
+            <article class="project-card" style="<%= idx >= 8 ? 'display: none;' : '' %>" data-index="<%= idx %>">
+              <% const cover = (Array.isArray(p.photos) && p.photos[0]) ? p.photos[0] : null; %>
+              <% if (cover) { %>
+                <img class="thumb" src="<%= cover %>" alt="<%= p.title %>">
+              <% } else { %>
+                <div class="thumb thumb--placeholder" aria-label="No image available"></div>
+              <% } %>
+              <div class="card-body">
+                <h3 class="title"><%= p.title %></h3>
+                <p class="meta">
+                  <%= p.country %><% if (p.city) { %> — <%= p.city %><% } %><% if (p.neighborhood) { %>, <%= p.neighborhood %><% } %>
+                </p>
+                <div class="actions">
+                  <form action="/superadmin/dashboard/projects/<%= p.id %>/delete" method="post" onsubmit="return confirm('Delete "<%= p.title %>"?');">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                  </form>
+                  <a class="btn btn-secondary" href="/admin/dashboard/projects/<%= p.id %>/edit">Edit</a>
+                  <a class="btn btn-ghost" href="/projects/<%= p.slug || p.id %>">View</a>
+                </div>
+              </div>
+            </article>
+          <% }) %>
+        </div>
+      </div>
+    <% }); %>
   <% } %>
+
+  <!-- Pagination -->
+  <nav class="pagination">
+    <% 
+      const qs = (page) => {
+        const params = new URLSearchParams();
+        params.set('page', page);
+        if (filters && filters.country) params.set('country', filters.country);
+        if (filters && filters.city)    params.set('city', filters.city);
+        return '?' + params.toString();
+      };
+    %>
+    <% if (currentPage > 1) { %>
+      <a class="page-link" href="<%= qs(currentPage - 1) %>">« Prev</a>
+    <% } %>
+    <span class="page-info">Page <%= currentPage %> of <%= totalPages %></span>
+    <% if (currentPage < totalPages) { %>
+      <a class="page-link" href="<%= qs(currentPage + 1) %>">Next »</a>
+    <% } %>
+  </nav>
 </div>
 
 <script>
@@ -106,61 +144,23 @@
 
     citySel.addEventListener('change', () => form.submit());
   })();
-</script>
-<script>
-  (function() {
-    const grid = document.getElementById('adminProjectsGrid');
-    const nav  = document.getElementById('adminInternalPagination');
-    if (!grid || !nav) return;
 
-    const cards = Array.from(grid.children);
-    const prevBtn = nav.querySelector('.prev');
-    const nextBtn = nav.querySelector('.next');
-    const infoEl  = nav.querySelector('.page-info');
-    let currentPage = 1;
-    let totalPages = 1;
-    let pageSize = 1;
-
-    function computeColumns() {
-      if (cards.length === 0) return 1;
-      // Temporarily show all cards to detect layout
-      cards.forEach(c => c.style.display = '');
-      // Force reflow
-      grid.offsetHeight;
-      const firstTop = cards[0].offsetTop;
-      let cols = 0;
-      for (let i = 0; i < cards.length; i++) {
-        if (cards[i].offsetTop !== firstTop) break;
-        cols++;
-      }
-      return Math.max(1, cols);
-    }
-
-    function recalc() {
-      const cols = computeColumns();
-      pageSize = Math.max(1, cols * 2); // exactly 2 rows
-      totalPages = Math.max(1, Math.ceil(cards.length / pageSize));
-      if (currentPage > totalPages) currentPage = totalPages;
-      render();
-    }
-
-    function render() {
-      const start = (currentPage - 1) * pageSize;
-      const end   = start + pageSize;
+  // Collapsible sections
+  document.querySelectorAll('.toggle-section-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const section = this.closest('.country-section');
+      const cards = section.querySelectorAll('.project-card');
+      const isExpanded = this.getAttribute('data-expanded') === 'true';
+      
       cards.forEach((card, idx) => {
-        card.style.display = (idx >= start && idx < end) ? '' : 'none';
+        if (idx >= 8) {
+          card.style.display = isExpanded ? 'none' : '';
+        }
       });
-      prevBtn.disabled = currentPage <= 1;
-      nextBtn.disabled = currentPage >= totalPages;
-      if (infoEl) infoEl.textContent = 'Page ' + currentPage + ' of ' + totalPages;
-    }
-
-    prevBtn.addEventListener('click', function() { if (currentPage > 1) { currentPage--; render(); } });
-    nextBtn.addEventListener('click', function() { if (currentPage < totalPages) { currentPage++; render(); } });
-
-    setTimeout(recalc, 100);
-    window.addEventListener('load', recalc);
-    let t;
-    window.addEventListener('resize', function() { clearTimeout(t); t = setTimeout(recalc, 150); });
-  })();
+      
+      this.setAttribute('data-expanded', !isExpanded);
+      this.querySelector('.toggle-text').textContent = isExpanded ? 'Show All' : 'Show Less';
+      this.querySelector('.toggle-icon').textContent = isExpanded ? '▼' : '▲';
+    });
+  });
 </script>

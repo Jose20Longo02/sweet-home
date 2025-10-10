@@ -6,8 +6,8 @@
   <div class="admin-body">
     <!-- Sidebar -->
     <%- include('../../partials/superadmin-sidebar', {
-      activePage: 'projects',     // or 'projects', 'properties', etc.
-      pendingCount: pendingCount   // make sure you pass this in your controller
+      activePage: 'projects',
+      pendingCount: pendingCount
     }) %>
 
     <!-- Main content -->
@@ -18,16 +18,43 @@
           <a href="/superadmin/dashboard/projects/new" class="btn btn-primary">New Project</a>
         </div>
 
+        <!-- Filters -->
+        <form class="filters-form" method="get" action="/superadmin/dashboard/projects">
+          <div class="filter-row">
+            <select id="countryFilter" name="country" class="form-select">
+              <option value="">All Countries</option>
+              <% (countryOptions || []).forEach(c => { %>
+                <option value="<%= c %>" <%= (filters && filters.country === c) ? 'selected' : '' %>><%= c %></option>
+              <% }) %>
+            </select>
+
+            <select id="cityFilter" name="city" class="form-select" <%= !(filters && filters.country) ? 'disabled' : '' %>>
+              <option value="">All Cities</option>
+              <% (cityOptions || []).forEach(ct => { %>
+                <option value="<%= ct %>" <%= (filters && filters.city === ct) ? 'selected' : '' %>><%= ct %></option>
+              <% }) %>
+            </select>
+
+            <a href="/superadmin/dashboard/projects" class="btn-reset">Clear Filters</a>
+          </div>
+        </form>
+
         <% Object.keys(grouped).forEach(country => { %>
-          <div class="project-area">
-            <h2><%= country %></h2>
-            <% const list = grouped[country]; %>
-            <% if (!list.length) { %>
-              <p class="empty">No projects in <%= country %>.</p>
-            <% } else { %>
+          <% const list = grouped[country]; %>
+          <% if (list.length > 0) { %>
+            <div class="project-area" data-country="<%= country %>">
+              <div class="area-header">
+                <h2><%= country %> (<%= list.length %>)</h2>
+                <% if (list.length > 8) { %>
+                  <button type="button" class="toggle-btn" data-expanded="false">
+                    <span class="toggle-text">Show All</span>
+                    <span class="toggle-icon">▼</span>
+                  </button>
+                <% } %>
+              </div>
               <div class="projects-grid">
-                <% list.forEach(project => { %>
-                  <div class="project-card">
+                <% list.forEach((project, idx) => { %>
+                  <div class="project-card" style="<%= idx >= 8 ? 'display: none;' : '' %>" data-index="<%= idx %>">
                     <img
                       src="<%= project.photos?.[0] || '/img/project-placeholder.png' %>"
                       alt="<%= project.title %>"
@@ -39,7 +66,7 @@
                     </p>
 
                     <div class="actions">
-                      <form action="/superadmin/dashboard/projects/<%= project.id %>/delete" method="post" onsubmit="return confirm('Delete “<%= project.title %>”?');">
+                      <form action="/superadmin/dashboard/projects/<%= project.id %>/delete" method="post" onsubmit="return confirm('Delete "<%= project.title %>"?');">
                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <button type="submit" class="btn btn-danger">Delete</button>
                       </form>
@@ -48,13 +75,8 @@
                   </div>
                 <% }); %>
               </div>
-              <nav class="country-pagination" aria-label="Country pagination">
-                <button type="button" class="page-btn prev" disabled>« Prev</button>
-                <span class="page-info">Page 1</span>
-                <button type="button" class="page-btn next">Next »</button>
-              </nav>
-            <% } %>
-          </div>
+            </div>
+          <% } %>
         <% }); %>
       </section>
     </main>
@@ -62,88 +84,54 @@
 </div>
 
 <script>
-  (function() {
-    function setupCountryPagination(area) {
-      const grid = area.querySelector('.projects-grid');
-      const cards = Array.from(grid ? grid.children : []);
-      const nav = area.querySelector('.country-pagination');
-      if (!grid || !cards.length || !nav) return;
-
-      const prevBtn = nav.querySelector('.prev');
-      const nextBtn = nav.querySelector('.next');
-      const infoEl  = nav.querySelector('.page-info');
-      let currentPage = 1;
-      let totalPages = 1;
-      let pageSize = 8; // Fixed: exactly 8 cards per page (2 rows x 4 columns typical)
-
-      function recalc() {
-        // Show all cards temporarily to compute actual columns
-        cards.forEach(c => c.style.display = '');
-        // Force reflow
-        void grid.offsetHeight;
-        
-        requestAnimationFrame(() => {
-          const firstTop = cards[0].offsetTop;
-          let cols = 0;
-          for (let i = 0; i < cards.length; i++) {
-            if (cards[i].offsetTop !== firstTop) break;
-            cols++;
-          }
-          cols = Math.max(1, cols);
-          pageSize = cols * 2; // exactly 2 rows
-          totalPages = Math.max(1, Math.ceil(cards.length / pageSize));
-          if (currentPage > totalPages) currentPage = totalPages;
-          
-          console.log('Country:', area.querySelector('h2')?.textContent, 'Cols:', cols, 'PageSize:', pageSize, 'Total cards:', cards.length, 'Total pages:', totalPages);
-          
-          render();
-        });
-      }
-
-      function render() {
-        const start = (currentPage - 1) * pageSize;
-        const end   = start + pageSize;
-        cards.forEach((card, idx) => {
-          card.style.display = (idx >= start && idx < end) ? '' : 'none';
-        });
-        prevBtn.disabled = currentPage <= 1;
-        nextBtn.disabled = currentPage >= totalPages;
-        if (infoEl) infoEl.textContent = 'Page ' + currentPage + ' of ' + totalPages;
-        if (totalPages <= 1) {
-          nav.style.display = 'none';
-        } else {
-          nav.style.display = 'flex';
-        }
-      }
-
-      prevBtn.addEventListener('click', function() { 
-        if (currentPage > 1) { 
-          currentPage--; 
-          render(); 
-        } 
-      });
-      nextBtn.addEventListener('click', function() { 
-        if (currentPage < totalPages) { 
-          currentPage++; 
-          render(); 
-        } 
-      });
-
-      // Initial setup - run immediately and on load
-      recalc();
-      window.addEventListener('load', recalc);
+  // Collapsible country sections
+  document.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const area = this.closest('.project-area');
+      const cards = area.querySelectorAll('.project-card');
+      const isExpanded = this.getAttribute('data-expanded') === 'true';
       
-      // Recalc on resize (debounced)
-      let resizeTimeout;
-      window.addEventListener('resize', function() { 
-        clearTimeout(resizeTimeout); 
-        resizeTimeout = setTimeout(recalc, 200); 
+      cards.forEach((card, idx) => {
+        if (idx >= 8) {
+          card.style.display = isExpanded ? 'none' : '';
+        }
       });
-    }
+      
+      this.setAttribute('data-expanded', !isExpanded);
+      this.querySelector('.toggle-text').textContent = isExpanded ? 'Show All' : 'Show Less';
+      this.querySelector('.toggle-icon').textContent = isExpanded ? '▼' : '▲';
+    });
+  });
 
-    // Setup all country areas
-    setTimeout(function() {
-      document.querySelectorAll('.project-area').forEach(setupCountryPagination);
-    }, 100);
-  })();
+  // Cascading filters
+  const countrySelect = document.getElementById('countryFilter');
+  const citySelect = document.getElementById('cityFilter');
+  const locationsData = <%- JSON.stringify(locations) %>;
+
+  if (countrySelect && citySelect) {
+    countrySelect.addEventListener('change', function() {
+      const country = this.value;
+      citySelect.innerHTML = '<option value="">All Cities</option>';
+      
+      if (country && locationsData[country]) {
+        const cities = Object.keys(locationsData[country]);
+        cities.forEach(city => {
+          const opt = document.createElement('option');
+          opt.value = city;
+          opt.textContent = city;
+          citySelect.appendChild(opt);
+        });
+        citySelect.disabled = false;
+      } else {
+        citySelect.disabled = true;
+      }
+      
+      // Auto-submit on change
+      this.form.submit();
+    });
+
+    citySelect.addEventListener('change', function() {
+      this.form.submit();
+    });
+  }
 </script>

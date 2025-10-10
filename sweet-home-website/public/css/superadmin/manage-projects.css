@@ -91,37 +91,6 @@ html, body {
   text-align: center;
 }
 
-/* Country internal pagination */
-.country-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: .5rem;
-  margin-top: 12px;
-}
-.country-pagination .page-btn {
-  padding: .45rem .85rem;
-  border-radius: 999px;
-  border: 1px solid var(--color-secondary);
-  background: #fff;
-  color: var(--color-secondary);
-  cursor: pointer;
-  transition: background .15s ease, color .15s ease, box-shadow .15s ease;
-}
-.country-pagination .page-btn:hover:not(:disabled) {
-  background: var(--color-primary);
-  color: #fff;
-  box-shadow: 0 6px 18px rgba(0,0,0,.08);
-}
-.country-pagination .page-btn:disabled {
-  opacity: .5;
-  cursor: default;
-}
-.country-pagination .page-info {
-  color: var(--color-secondary);
-  font-size: .95rem;
-}
-
 /* 9) Action buttons */
 .actions {
   margin-top: auto;
@@ -146,6 +115,70 @@ html, body {
   background: var(--color-primary);
 }
 
+/* Filters form */
+.filters-form {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.08);
+}
+.filter-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.form-select {
+  padding: .6rem .8rem;
+  border: 1px solid var(--color-secondary);
+  border-radius: 8px;
+  font-size: .95rem;
+  min-width: 180px;
+  background: #fff;
+}
+.form-select:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+.btn-reset {
+  color: var(--color-tertiary);
+  text-decoration: none;
+  font-size: .95rem;
+  padding: .6rem .8rem;
+}
+.btn-reset:hover {
+  text-decoration: underline;
+}
+
+/* Area header with toggle */
+.area-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem 1rem;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: .9rem;
+  transition: all .2s ease;
+}
+.toggle-btn:hover {
+  opacity: .9;
+  transform: translateY(-1px);
+}
+.toggle-icon {
+  font-size: .8rem;
+}
+
 /* 12. Responsive adjustments */
 @media (max-width: 768px) {
   .admin-body {
@@ -153,5 +186,12 @@ html, body {
   }
   .admin-content {
     padding: 1rem;
+  }
+  .filter-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .form-select {
+    width: 100%;
   }
 }

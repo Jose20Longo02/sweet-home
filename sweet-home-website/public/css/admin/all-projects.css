@@ -148,30 +148,41 @@
   color: var(--color-secondary);
 }
 
-/* Internal pagination styling for admin grid */
-#adminInternalPagination {
+/* Country sections */
+.country-section {
+  margin-bottom: 2.5rem;
+}
+.country-header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.country-header h3 {
+  color: var(--color-primary);
+  font-size: 1.3rem;
+  margin: 0;
+}
+.toggle-section-btn {
+  display: flex;
+  align-items: center;
   gap: .5rem;
-  margin-top: 12px;
-}
-#adminInternalPagination .page-btn {
-  padding: .45rem .85rem;
-  border-radius: 999px;
-  border: 1px solid var(--color-secondary);
-  background: #fff;
-  color: var(--color-secondary);
-  cursor: pointer;
-  transition: background .15s ease, color .15s ease, box-shadow .15s ease;
-}
-#adminInternalPagination .page-btn:hover:not(:disabled) {
+  padding: .5rem 1rem;
   background: var(--color-primary);
   color: #fff;
-  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: .9rem;
+  transition: all .2s ease;
 }
-#adminInternalPagination .page-btn:disabled { opacity: .5; cursor: default; }
-#adminInternalPagination .page-info { color: var(--color-secondary); font-size: .95rem; }
+.toggle-section-btn:hover {
+  opacity: .9;
+  transform: translateY(-1px);
+}
+.toggle-icon {
+  font-size: .8rem;
+}
 
 /* Responsive tweaks */
 @media (max-width: 768px) {

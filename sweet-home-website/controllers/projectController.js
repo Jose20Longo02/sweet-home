@@ -11,10 +11,29 @@ const fs   = require('fs');
 
 /**
  * Admin-only: list all projects, grouped by country, with uploader avatars and pending-requests badge.
+ * Now supports filtering by country and city via query params.
  */
 exports.listProjects = async (req, res, next) => {
   try {
-    // Fetch basic project info
+    const { country, city } = req.query;
+
+    // Build WHERE clause for filtering
+    const conditions = [];
+    const params = [];
+    let paramIndex = 1;
+
+    if (country) {
+      conditions.push(`country = $${paramIndex++}`);
+      params.push(country);
+    }
+    if (city) {
+      conditions.push(`city = $${paramIndex++}`);
+      params.push(city);
+    }
+
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+    // Fetch basic project info with optional filters
     let { rows: projects } = await query(`
       SELECT
         id,
@@ -23,10 +42,12 @@ exports.listProjects = async (req, res, next) => {
         country,
         city,
         neighborhood,
-        photos    -- or whatever you use for cover images
+        photos
       FROM projects
+      ${whereClause}
       ORDER BY title
-    `);
+    `, params);
+
     // Normalize photos field to array
     const normalizePhotos = (val) => {
       if (Array.isArray(val)) return val;
@@ -57,14 +78,14 @@ exports.listProjects = async (req, res, next) => {
 
     // Group by country
     const grouped = {};
-    Object.keys(locations).forEach(country => {
-      grouped[country] = projects.filter(p => p.country === country);
+    Object.keys(locations).forEach(countryKey => {
+      grouped[countryKey] = projects.filter(p => p.country === countryKey);
     });
     // include any extra countries
     const allCountries = [...new Set(projects.map(p => p.country))];
-    allCountries.forEach(country => {
-      if (!grouped[country]) {
-        grouped[country] = projects.filter(p => p.country === country);
+    allCountries.forEach(countryKey => {
+      if (!grouped[countryKey]) {
+        grouped[countryKey] = projects.filter(p => p.country === countryKey);
       }
     });
 
@@ -77,11 +98,18 @@ exports.listProjects = async (req, res, next) => {
     `);
     const pendingCount = parseInt(rows[0].count, 10);
 
+    // Prepare filter options for dropdowns
+    const countryOptions = Object.keys(locations);
+    const cityOptions = country && locations[country] ? Object.keys(locations[country]) : [];
+
     res.render('superadmin/projects/manage-projects', {
       grouped,
       locations,
       pendingCount,
-      activePage: 'projects'
+      activePage: 'projects',
+      filters: { country, city },
+      countryOptions,
+      cityOptions
     });
   } catch (err) {
     next(err);
