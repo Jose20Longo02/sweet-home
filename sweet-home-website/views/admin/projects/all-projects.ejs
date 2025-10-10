@@ -119,10 +119,14 @@
     const infoEl  = nav.querySelector('.page-info');
     let currentPage = 1;
     let totalPages = 1;
-    let pageSize = 1; // computed from current columns
+    let pageSize = 1;
 
     function computeColumns() {
       if (cards.length === 0) return 1;
+      // Temporarily show all cards to detect layout
+      cards.forEach(c => c.style.display = '');
+      // Force reflow
+      grid.offsetHeight;
       const firstTop = cards[0].offsetTop;
       let cols = 0;
       for (let i = 0; i < cards.length; i++) {
@@ -134,7 +138,7 @@
 
     function recalc() {
       const cols = computeColumns();
-      pageSize = Math.max(1, cols * 2); // exactly 2 rows for current layout
+      pageSize = Math.max(1, cols * 2); // exactly 2 rows
       totalPages = Math.max(1, Math.ceil(cards.length / pageSize));
       if (currentPage > totalPages) currentPage = totalPages;
       render();
@@ -154,9 +158,9 @@
     prevBtn.addEventListener('click', function() { if (currentPage > 1) { currentPage--; render(); } });
     nextBtn.addEventListener('click', function() { if (currentPage < totalPages) { currentPage++; render(); } });
 
+    setTimeout(recalc, 100);
     window.addEventListener('load', recalc);
     let t;
     window.addEventListener('resize', function() { clearTimeout(t); t = setTimeout(recalc, 150); });
-    recalc();
   })();
 </script>

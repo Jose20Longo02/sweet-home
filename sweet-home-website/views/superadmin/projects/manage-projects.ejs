@@ -74,10 +74,14 @@
       const infoEl  = nav.querySelector('.page-info');
       let currentPage = 1;
       let totalPages = 1;
-      let pageSize = 1; // will be computed based on columns
+      let pageSize = 1;
 
       function computeColumns() {
         if (cards.length === 0) return 1;
+        // Temporarily show all cards to detect layout
+        cards.forEach(c => c.style.display = '');
+        // Force reflow
+        grid.offsetHeight;
         const firstTop = cards[0].offsetTop;
         let cols = 0;
         for (let i = 0; i < cards.length; i++) {
@@ -89,7 +93,7 @@
 
       function recalc() {
         const cols = computeColumns();
-        pageSize = Math.max(1, cols * 2); // exactly 2 rows per current column count
+        pageSize = Math.max(1, cols * 2); // exactly 2 rows
         totalPages = Math.max(1, Math.ceil(cards.length / pageSize));
         if (currentPage > totalPages) currentPage = totalPages;
         render();
@@ -110,11 +114,11 @@
       nextBtn.addEventListener('click', function() { if (currentPage < totalPages) { currentPage++; render(); } });
 
       // Initial calc after layout
+      setTimeout(recalc, 100);
       window.addEventListener('load', recalc);
       // Recalc on resize (debounced)
       let t;
       window.addEventListener('resize', function() { clearTimeout(t); t = setTimeout(recalc, 150); });
-      recalc();
     }
 
     document.querySelectorAll('.project-area').forEach(setupCountryPagination);
