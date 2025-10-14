@@ -1052,8 +1052,8 @@ exports.editPropertyForm = async (req, res, next) => {
       `)
     ]);
 
-    // Capture the referrer URL to return to the same page after edit
-    let backUrl = req.get('referer') || '';
+    // Capture the return URL from query parameter (preferred) or referrer (fallback)
+    let backUrl = req.query.return_to || req.get('referer') || '';
     
     // Extract just the path + query if it's a full URL
     if (backUrl.includes('://')) {
@@ -1066,6 +1066,8 @@ exports.editPropertyForm = async (req, res, next) => {
     }
     
     console.log('[editPropertyForm] Captured backUrl:', backUrl);
+    console.log('[editPropertyForm] req.query.return_to:', req.query.return_to);
+    console.log('[editPropertyForm] req.get(referer):', req.get('referer'));
     
     res.render('properties/edit-property', {
       property,
