@@ -1,12 +1,18 @@
-// Intentionally empty placeholder. No JS required for the Contact page change.
+// Make marquee rows truly seamless by ensuring content is duplicated
+// until track width >= 2x container width, then set duration by distance/speed
 (function(){
-  // Make marquee rows truly seamless by ensuring content is duplicated
-  // until track width >= 2x container width, then set duration by distance/speed
   const SPEED_PX_PER_SEC = 40; // pleasant constant speed
 
   document.querySelectorAll('.marquee').forEach((wrap) => {
     const track = wrap.querySelector('.track');
     if (!track) return;
+
+    // Check if this is a static display (3 or fewer members)
+    const memberCount = parseInt(wrap.getAttribute('data-member-count'), 10);
+    if (memberCount <= 3) {
+      // Skip animation setup for static displays
+      return;
+    }
 
     // Build up content
     const containerWidth = wrap.clientWidth;

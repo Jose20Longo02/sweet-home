@@ -18,6 +18,10 @@
 .track.rtl { animation-name: scroll-right; }
 .marquee:hover .track { animation-play-state: paused; }
 
+/* Static display for 3 or fewer members */
+.marquee.static { overflow: visible; }
+.marquee.static .track { animation: none; width: auto; justify-content: center; }
+
 .card { width: 260px; background:#fff; border:1px solid rgba(0,0,0,.06); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm); transition: transform 220ms ease, box-shadow 220ms ease; }
 .card:hover, .card:focus-within { transform: translateY(-4px) scale(1.02); box-shadow: var(--shadow-md); }
 .card .photo { position:relative; height: 180px; background:#e5e7eb center/cover no-repeat; }

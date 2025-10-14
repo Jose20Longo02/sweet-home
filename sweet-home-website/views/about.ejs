@@ -30,9 +30,12 @@
   <% AREAS.forEach(({key,label,rtl}) => { const members = byArea(key); if (members.length) { %>
     <div class="area-block">
       <h3 class="area-title"><%= label %></h3>
-      <div class="marquee">
+      <div class="marquee <%= members.length <= 3 ? 'static' : '' %>" data-member-count="<%= members.length %>">
         <div class="track <%= rtl ? 'rtl' : '' %>">
-          <% const repeat = (members.length === 1) ? 6 : 2; %>
+          <% 
+            // Only duplicate for animation when more than 3 members
+            const repeat = members.length > 3 ? ((members.length === 1) ? 6 : 2) : 1;
+          %>
           <% for (let r=0; r<repeat; r++) { members.forEach(m => { %>
             <article class="card" tabindex="0">
               <div class="photo" style="background-image:url(&quot;<%= (m.profile_picture || '') %>&quot;)">
