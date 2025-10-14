@@ -1,4 +1,4 @@
-name: Run SQL Migration
+name: Run SQL via psql (no npm)
 
 on:
   workflow_dispatch:
@@ -15,20 +15,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
 
-      - name: Install dependencies
-        run: npm ci || npm install
-
-      - name: Run SQL
+      - name: Run SQL (psql)
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: node scripts/run_sql.js "${{ github.event.inputs.sql_path }}"
+        run: |
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "${{ github.event.inputs.sql_path }}"
 
-      - name: Verify column exists
+      - name: Verify column exists (psql)
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: node scripts/verify_phone_column.js
+        run: |
+          psql "$DATABASE_URL" -c "select column_name, data_type from information_schema.columns where table_name='users' and column_name='phone';"
