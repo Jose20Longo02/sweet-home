@@ -127,6 +127,8 @@
   margin-bottom: var(--spacing-6);
   padding-bottom: var(--spacing-4);
   border-bottom: 1px solid var(--gray-200);
+  position: relative;
+  z-index: 100;
 }
 
 .filters-header h3 {
@@ -147,6 +149,9 @@
   font-size: var(--font-size-sm);
   cursor: pointer;
   text-decoration: underline;
+  position: relative;
+  z-index: 100;
+  padding: 4px 8px;
 }
 
 .clear-filters:hover {
