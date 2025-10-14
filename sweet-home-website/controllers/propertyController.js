@@ -1053,7 +1053,19 @@ exports.editPropertyForm = async (req, res, next) => {
     ]);
 
     // Capture the referrer URL to return to the same page after edit
-    const backUrl = req.get('referer') || '';
+    let backUrl = req.get('referer') || '';
+    
+    // Extract just the path + query if it's a full URL
+    if (backUrl.includes('://')) {
+      try {
+        const url = new URL(backUrl);
+        backUrl = url.pathname + url.search;
+      } catch (_) {
+        backUrl = '';
+      }
+    }
+    
+    console.log('[editPropertyForm] Captured backUrl:', backUrl);
     
     res.render('properties/edit-property', {
       property,
@@ -1554,14 +1566,33 @@ exports.updateProperty = async (req, res, next) => {
     } catch (_) { /* best-effort */ }
 
     // Redirect back to the same page with pagination and filters preserved
-    const returnTo = req.body.return_to || req.get('referer');
+    let returnTo = req.body.return_to || req.get('referer') || '';
+    
+    console.log('[updateProperty] Raw returnTo:', returnTo);
+    console.log('[updateProperty] req.body.return_to:', req.body.return_to);
+    console.log('[updateProperty] req.get(referer):', req.get('referer'));
+    
+    // Extract just the path + query if it's a full URL
+    if (returnTo.includes('://')) {
+      try {
+        const url = new URL(returnTo);
+        returnTo = url.pathname + url.search;
+      } catch (_) {
+        returnTo = '';
+      }
+    }
+    
+    console.log('[updateProperty] Cleaned returnTo:', returnTo);
+    
     const superAdminDashboardRegex = /^\/superadmin\/dashboard\/properties(\?.*)?$/;
     const adminMyPropertiesRegex = /^\/admin\/dashboard\/my-properties(\?.*)?$/;
 
     if (returnTo && (superAdminDashboardRegex.test(returnTo) || adminMyPropertiesRegex.test(returnTo))) {
+      console.log('[updateProperty] ✓ Redirecting to:', returnTo);
       return res.redirect(returnTo);
     }
 
+    console.log('[updateProperty] ✗ No valid returnTo, using default redirect');
     const role = req.session.user?.role;
     if (role === 'SuperAdmin') {
       return res.redirect('/superadmin/dashboard/properties');
