@@ -1,0 +1,34 @@
+name: Run SQL Migration
+
+on:
+  workflow_dispatch:
+    inputs:
+      sql_path:
+        description: 'Path to SQL file to run'
+        required: true
+        default: 'mitigations/add_phone_to_users.sql'
+
+jobs:
+  run-sql:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Run SQL
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: node scripts/run_sql.js "${{ github.event.inputs.sql_path }}"
+
+      - name: Verify column exists
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: node scripts/verify_phone_column.js
