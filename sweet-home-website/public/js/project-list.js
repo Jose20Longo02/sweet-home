@@ -219,15 +219,7 @@ function fetchFilteredResults(params) {
 }
 
 function clearAllFilters() {
-  const filterForm = document.getElementById('project-filters') || document.getElementById('filtersForm');
-  if (!filterForm) { window.location.href = '/projects'; return; }
-  // Reset all form inputs
-  const inputs = filterForm.querySelectorAll('input[type="text"], input[type="number"], select');
-  inputs.forEach(input => { input.value = ''; });
-  // Reset checkboxes
-  const checkboxes = filterForm.querySelectorAll('input[type="checkbox"]');
-  checkboxes.forEach(checkbox => { checkbox.checked = false; });
-  // Navigate to base listing (clears URL params) to refresh server-rendered results
+  // Navigate to base listing URL (clears all URL params and refreshes results)
   window.location.href = '/projects';
 }
 

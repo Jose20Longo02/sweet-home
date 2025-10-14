@@ -1074,7 +1074,8 @@ exports.listProjectsPublic = async (req, res, next) => {
       sort,
       currentPage: parseInt(page),
       totalPages,
-      totalProjects
+      totalProjects,
+      queryParams: req.query
     });
   } catch (err) {
     next(err);

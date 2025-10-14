@@ -160,41 +160,8 @@ function updateNeighborhoods() {
 
 // Function to clear all filters
 function clearAllFilters() {
-  const countrySelect = document.getElementById('filterCountry');
-  const citySelect = document.getElementById('filterCity');
-  const neighborhoodSelect = document.getElementById('filterNeighborhood');
-  const minPriceInput = document.getElementById('minPrice');
-  const maxPriceInput = document.getElementById('maxPrice');
-  const minSizeInput = document.getElementById('minSize');
-  const maxSizeInput = document.getElementById('maxSize');
-  const yearBuiltMinInput = document.getElementById('yearBuiltMin');
-  const yearBuiltMaxInput = document.getElementById('yearBuiltMax');
-  
-  if (countrySelect) countrySelect.value = '';
-  if (citySelect) {
-    citySelect.value = '';
-    citySelect.disabled = true;
-  }
-  if (neighborhoodSelect) {
-    neighborhoodSelect.value = '';
-    neighborhoodSelect.disabled = true;
-  }
-  
-  // Clear checkboxes
-  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-  checkboxes.forEach(cb => cb.checked = false);
-  
-  // Clear price, size, and year inputs
-  if (minPriceInput) minPriceInput.value = '';
-  if (maxPriceInput) maxPriceInput.value = '';
-  if (minSizeInput) minSizeInput.value = '';
-  if (maxSizeInput) maxSizeInput.value = '';
-  if (yearBuiltMinInput) yearBuiltMinInput.value = '';
-  if (yearBuiltMaxInput) yearBuiltMaxInput.value = '';
-  
-  // Submit form to refresh results
-  const filtersForm = document.getElementById('filtersForm');
-  if (filtersForm) filtersForm.submit();
+  // Navigate to base listing URL (clears all URL params and refreshes results)
+  window.location.href = '/properties';
 }
 
 // Function to remove a specific filter

@@ -269,21 +269,21 @@
             <% if (totalPages > 1) { %>
               <div class="pagination">
                 <% if (currentPage > 1) { %>
-                  <a href="?<%= new URLSearchParams({...locals.query, page: currentPage - 1}) %>" class="page-link"><%= t('common.previous','Previous') %></a>
+                  <a href="?<%= new URLSearchParams({...queryParams, page: currentPage - 1}) %>" class="page-link"><%= t('common.previous','Previous') %></a>
                 <% } %>
                 
                 <% for (let i = 1; i <= totalPages; i++) { %>
                   <% if (i === currentPage) { %>
                     <span class="page-link active"><%= i %></span>
                   <% } else if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) { %>
-                    <a href="?<%= new URLSearchParams({...locals.query, page: i}) %>" class="page-link"><%= i %></a>
+                    <a href="?<%= new URLSearchParams({...queryParams, page: i}) %>" class="page-link"><%= i %></a>
                   <% } else if (i === currentPage - 3 || i === currentPage + 3) { %>
                     <span class="page-link">...</span>
                   <% } %>
                 <% } %>
                 
                 <% if (currentPage < totalPages) { %>
-                  <a href="?<%= new URLSearchParams({...locals.query, page: currentPage + 1}) %>" class="page-link"><%= t('common.next','Next') %></a>
+                  <a href="?<%= new URLSearchParams({...queryParams, page: currentPage + 1}) %>" class="page-link"><%= t('common.next','Next') %></a>
                 <% } %>
               </div>
             <% } %>
