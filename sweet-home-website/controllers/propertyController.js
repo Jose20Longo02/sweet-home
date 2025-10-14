@@ -981,20 +981,11 @@ exports.createProperty = async (req, res, next) => {
       }
     }
 
-    // Prefer explicit return_to from form, else referer, else role-based default
-    const returnTo = (req.body && req.body.return_to) || '';
-    const referer = req.get('referer') || '';
-    const allowedDashRegex = /^\/(superadmin|admin)\/dashboard\/(properties|my-properties)(\?.*)?$/;
-    const byRole = (req.session.user?.role === 'SuperAdmin') ? '/superadmin/dashboard/properties' : '/admin/dashboard/my-properties';
-    const pick = (url) => {
-      try {
-        const u = new URL(url, 'http://localhost');
-        const s = u.pathname + (u.search || '');
-        return allowedDashRegex.test(s) ? s : '';
-      } catch(_) { return ''; }
-    };
-    const dest = pick(returnTo) || pick(referer) || byRole;
-    return res.redirect(dest);
+    const role = req.session.user.role;
+    if (role === 'SuperAdmin') {
+      return res.redirect('/superadmin/dashboard/properties');
+    }
+    return res.redirect('/admin/dashboard/my-properties');
   } catch (err) {
     next(err);
   }
@@ -1050,23 +1041,6 @@ exports.editPropertyForm = async (req, res, next) => {
       } catch (_) { property.photos = []; }
     }
 
-    // Determine back URL (return destination) from referer if it matches allowed dashboards
-    const referer = req.get('referer') || '';
-    const allowedDashRegex = /^\/(superadmin|admin)\/dashboard\/(properties|my-properties)(\?.*)?$/;
-    let backUrl = isSuper ? '/superadmin/dashboard/properties' : '/admin/dashboard/my-properties';
-    const fromQuery = String(req.query.return_to || '').trim();
-    try {
-      if (fromQuery) {
-        const fu = new URL(fromQuery, 'http://localhost');
-        const fs = fu.pathname + (fu.search || '');
-        if (allowedDashRegex.test(fs)) backUrl = fs;
-      } else if (referer) {
-        const u = new URL(referer, 'http://localhost');
-        const pathWithSearch = u.pathname + (u.search || '');
-        if (allowedDashRegex.test(pathWithSearch)) backUrl = pathWithSearch;
-      }
-    } catch(_) {}
-
     // Fetch options needed by the form
     const [{ rows: projects }, { rows: teamMembers }] = await Promise.all([
       query('SELECT id, title FROM projects ORDER BY title'),
@@ -1078,14 +1052,17 @@ exports.editPropertyForm = async (req, res, next) => {
       `)
     ]);
 
+    // Capture the referrer URL to return to the same page after edit
+    const backUrl = req.get('referer') || '';
+    
     res.render('properties/edit-property', {
       property,
       locations,
       projects,
       teamMembers,
       currentUser: req.session.user,
-      error: null,
-      backUrl
+      backUrl,
+      error: null
     });
   } catch (err) {
     next(err);
@@ -1576,18 +1553,20 @@ exports.updateProperty = async (req, res, next) => {
       }
     } catch (_) { /* best-effort */ }
 
-    const returnTo2 = (req.body && req.body.return_to) || '';
-    const referer2 = req.get('referer') || '';
-    const byRole2 = (req.session.user?.role === 'SuperAdmin') ? '/superadmin/dashboard/properties' : '/admin/dashboard/my-properties';
-    const pick2 = (url) => {
-      try {
-        const u = new URL(url, 'http://localhost');
-        const s = u.pathname + (u.search || '');
-        return /^\/(superadmin|admin)\/dashboard\/(properties|my-properties)(\?.*)?$/.test(s) ? s : '';
-      } catch(_) { return ''; }
-    };
-    const dest2 = pick2(returnTo2) || pick2(referer2) || byRole2;
-    return res.redirect(dest2);
+    // Redirect back to the same page with pagination and filters preserved
+    const returnTo = req.body.return_to || req.get('referer');
+    const superAdminDashboardRegex = /^\/superadmin\/dashboard\/properties(\?.*)?$/;
+    const adminMyPropertiesRegex = /^\/admin\/dashboard\/my-properties(\?.*)?$/;
+
+    if (returnTo && (superAdminDashboardRegex.test(returnTo) || adminMyPropertiesRegex.test(returnTo))) {
+      return res.redirect(returnTo);
+    }
+
+    const role = req.session.user?.role;
+    if (role === 'SuperAdmin') {
+      return res.redirect('/superadmin/dashboard/properties');
+    }
+    return res.redirect('/admin/dashboard/my-properties');
   } catch (err) {
     next(err);
   }

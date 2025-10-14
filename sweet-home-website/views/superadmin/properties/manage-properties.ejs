@@ -193,16 +193,3 @@
 </div>
 
 <script src="/js/superadmin-properties.js" defer></script>
-<script>
-  // Persist current listing URL before navigating to edit, so we can come back to the same page
-  (function(){
-    const saveKey = 'returnToProperties';
-    document.addEventListener('click', function(e){
-      const a = e.target.closest('a');
-      if (!a) return;
-      if (/\/properties\/.+\/edit$/.test(a.getAttribute('href')||'')) {
-        try { localStorage.setItem(saveKey, window.location.pathname + window.location.search); } catch(_) {}
-      }
-    }, true);
-  })();
-</script>

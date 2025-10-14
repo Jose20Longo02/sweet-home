@@ -14,7 +14,7 @@
       <p class="subtitle">Update listing details. Fields change based on property type.</p>
     </div>
     <div class="right">
-      <a id="backLink" href="<%= backUrl || (currentUser && currentUser.role==='SuperAdmin' ? '/superadmin/dashboard/properties' : '/admin/dashboard/my-properties') %>" class="btn btn-light">Back</a>
+      <a href="<%= backUrl || (currentUser && currentUser.role==='SuperAdmin' ? '/superadmin/dashboard/properties' : '/admin/dashboard/my-properties') %>" class="btn btn-light">Back</a>
     </div>
   </header>
 
@@ -22,9 +22,9 @@
     <div class="alert alert-error"><%= error %></div>
   <% } %>
 
-  <form id="propertyForm" class="np-form" method="post" action="/properties/<%= property.id %>?_csrf=<%= csrfToken %>&return_to=<%= encodeURIComponent(backUrl||'') %>" enctype="multipart/form-data">
+  <form id="propertyForm" class="np-form" method="post" action="/properties/<%= property.id %>?_csrf=<%= csrfToken %>" enctype="multipart/form-data">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-    <input id="returnToInput" type="hidden" name="return_to" value="<%= backUrl || '' %>">
+    <input type="hidden" name="return_to" value="<%= backUrl || '' %>">
 
     <!-- A. Location -->
     <section class="card">
@@ -359,20 +359,4 @@
 </div>
 
 <script src="/js/admin-edit-property.js" defer></script>
-
-<script>
-  // On load, prefer saved return URL from localStorage to guarantee returning to exact page
-  (function(){
-    const key = 'returnToProperties';
-    try {
-      const saved = localStorage.getItem(key);
-      if (saved && /^\/(superadmin|admin)\/dashboard\/(properties|my-properties)(\?.*)?$/.test(saved)) {
-        const back = document.getElementById('backLink');
-        const hidden = document.getElementById('returnToInput');
-        if (back) back.href = saved;
-        if (hidden) hidden.value = saved;
-      }
-    } catch(_) {}
-  })();
-</script>
 

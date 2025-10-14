@@ -125,7 +125,7 @@
               <input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <button type="submit" class="btn btn-danger">Delete</button>
             </form>
-            <a class="btn btn-secondary" href="/properties/<%= p.id %>/edit" data-edit-link>Edit</a>
+            <a class="btn btn-secondary" href="/properties/<%= p.id %>/edit">Edit</a>
           </div>
         </article>
       <% }) %>
@@ -165,14 +165,4 @@
     citySel.disabled = cities.length === 0;
     form.submit();
   });
-
-  // Persist current listing URL before navigating to edit, so we can return back to same page
-  (function(){
-    const saveKey = 'returnToProperties';
-    document.addEventListener('click', function(e){
-      const a = e.target.closest('a[data-edit-link]');
-      if (!a) return;
-      try { localStorage.setItem(saveKey, window.location.pathname + window.location.search); } catch(_) {}
-    }, true);
-  })();
 </script>
