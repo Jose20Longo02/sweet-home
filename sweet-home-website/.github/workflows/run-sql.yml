@@ -31,5 +31,3 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           psql "$DATABASE_URL" -c "select column_name, data_type from information_schema.columns where table_name='users' and column_name='phone';"
-
-
