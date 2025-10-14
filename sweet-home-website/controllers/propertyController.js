@@ -1054,10 +1054,17 @@ exports.editPropertyForm = async (req, res, next) => {
     const referer = req.get('referer') || '';
     const allowedDashRegex = /^\/(superadmin|admin)\/dashboard\/(properties|my-properties)(\?.*)?$/;
     let backUrl = isSuper ? '/superadmin/dashboard/properties' : '/admin/dashboard/my-properties';
+    const fromQuery = String(req.query.return_to || '').trim();
     try {
-      const u = new URL(referer, 'http://localhost');
-      const pathWithSearch = u.pathname + (u.search || '');
-      if (allowedDashRegex.test(pathWithSearch)) backUrl = pathWithSearch;
+      if (fromQuery) {
+        const fu = new URL(fromQuery, 'http://localhost');
+        const fs = fu.pathname + (fu.search || '');
+        if (allowedDashRegex.test(fs)) backUrl = fs;
+      } else if (referer) {
+        const u = new URL(referer, 'http://localhost');
+        const pathWithSearch = u.pathname + (u.search || '');
+        if (allowedDashRegex.test(pathWithSearch)) backUrl = pathWithSearch;
+      }
     } catch(_) {}
 
     // Fetch options needed by the form

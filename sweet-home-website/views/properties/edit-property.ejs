@@ -22,7 +22,7 @@
     <div class="alert alert-error"><%= error %></div>
   <% } %>
 
-  <form id="propertyForm" class="np-form" method="post" action="/properties/<%= property.id %>?_csrf=<%= csrfToken %>" enctype="multipart/form-data">
+  <form id="propertyForm" class="np-form" method="post" action="/properties/<%= property.id %>?_csrf=<%= csrfToken %>&return_to=<%= encodeURIComponent(backUrl||'') %>" enctype="multipart/form-data">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <input type="hidden" name="return_to" value="<%= backUrl || '' %>">
 
