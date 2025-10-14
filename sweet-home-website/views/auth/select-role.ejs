@@ -4,106 +4,261 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><%= title %> | Sweet Home Real Estate Investments</title>
-  <link rel="stylesheet" href="/css/auth/login.css" />
   <link rel="stylesheet" href="/css/variables.css" />
   <link rel="icon" href="/images/favicon.png" type="image/png">
-</head>
-<body>
-  <div class="auth-container">
-    <div class="auth-card">
-      <div class="auth-header">
-        <img src="/images/Sweet Home Logo.png" alt="Sweet Home Logo" class="logo" />
-        <h1>Select Your Role</h1>
-        <p class="subtitle">Welcome back, <%= user.name %>! Choose how you want to access the dashboard.</p>
-      </div>
-
-      <form action="/auth/select-role" method="POST" class="auth-form">
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-        <div class="role-selection">
-          <button type="submit" name="role" value="SuperAdmin" class="role-card">
-            <div class="role-icon">👑</div>
-            <h3>SuperAdmin</h3>
-            <p>Full access to all features, team management, and system settings</p>
-          </button>
-
-          <button type="submit" name="role" value="Admin" class="role-card">
-            <div class="role-icon">👤</div>
-            <h3>Admin</h3>
-            <p>Manage your properties and projects</p>
-          </button>
-        </div>
-      </form>
-
-      <div class="auth-footer">
-        <p class="developer-note">🔧 Developer Mode Active</p>
-      </div>
-    </div>
-  </div>
-
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .role-container {
+      width: 100%;
+      max-width: 900px;
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header-section {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .logo {
+      max-width: 180px;
+      height: auto;
+      margin-bottom: 1.5rem;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+    }
+
+    .header-section h1 {
+      color: #fff;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-section .subtitle {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 1.1rem;
+      font-weight: 400;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+
     .role-selection {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin: 2rem 0;
+      gap: 2rem;
+      margin-bottom: 2rem;
     }
 
     .role-card {
       background: #fff;
-      border: 2px solid var(--gray-200);
-      border-radius: 16px;
-      padding: 2rem 1.5rem;
+      border: none;
+      border-radius: 24px;
+      padding: 3rem 2rem;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       text-align: center;
       width: 100%;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .role-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--primary-color, #667eea), var(--primary-color, #764ba2));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .role-card:hover::before {
+      transform: scaleX(1);
     }
 
     .role-card:hover {
-      border-color: var(--primary-color);
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .role-card:active {
+      transform: translateY(-4px) scale(1.01);
     }
 
     .role-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .role-card:nth-child(1) .role-icon {
+      animation-delay: 0s;
+    }
+
+    .role-card:nth-child(2) .role-icon {
+      animation-delay: 0.3s;
     }
 
     .role-card h3 {
-      color: var(--color-primary);
-      margin-bottom: 0.5rem;
-      font-size: 1.25rem;
+      color: var(--color-primary, #333);
+      margin-bottom: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 700;
     }
 
     .role-card p {
-      color: var(--color-secondary);
-      font-size: 0.9rem;
-      line-height: 1.4;
+      color: var(--color-secondary, #666);
+      font-size: 1rem;
+      line-height: 1.6;
       margin: 0;
+    }
+
+    .role-badge {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.4rem 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .developer-note {
       text-align: center;
-      color: var(--color-secondary);
-      font-size: 0.85rem;
-      margin-top: 1rem;
-      padding: 0.5rem;
-      background: #f8f9fa;
-      border-radius: 8px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.95rem;
+      padding: 1rem 1.5rem;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: inline-block;
+      margin: 0 auto;
     }
 
-    .subtitle {
-      color: var(--color-secondary);
-      margin-top: 0.5rem;
+    .footer-wrapper {
+      display: flex;
+      justify-content: center;
     }
 
     @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      .header-section h1 {
+        font-size: 2rem;
+      }
+
+      .header-section .subtitle {
+        font-size: 1rem;
+      }
+
       .role-selection {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .role-card {
+        padding: 2.5rem 1.5rem;
+      }
+
+      .role-icon {
+        font-size: 3.5rem;
+      }
+
+      .logo {
+        max-width: 150px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-section h1 {
+        font-size: 1.75rem;
+      }
+
+      .role-card h3 {
+        font-size: 1.25rem;
+      }
+
+      .role-card p {
+        font-size: 0.9rem;
       }
     }
   </style>
+</head>
+<body>
+  <div class="role-container">
+    <div class="header-section">
+      <img src="/images/Sweet Home Logo.png" alt="Sweet Home Logo" class="logo" />
+      <h1>Select Your Role</h1>
+      <p class="subtitle">Welcome back, <%= user.name %>! Choose how you want to access the dashboard.</p>
+    </div>
+
+    <form action="/auth/select-role" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <div class="role-selection">
+        <button type="submit" name="role" value="SuperAdmin" class="role-card">
+          <div class="role-icon">👑</div>
+          <h3>SuperAdmin</h3>
+          <p>Full access to all features, team management, and system settings</p>
+          <span class="role-badge">Full Access</span>
+        </button>
+
+        <button type="submit" name="role" value="Admin" class="role-card">
+          <div class="role-icon">👤</div>
+          <h3>Admin</h3>
+          <p>Manage your properties and projects with standard permissions</p>
+          <span class="role-badge">Standard Access</span>
+        </button>
+      </div>
+    </form>
+
+    <div class="footer-wrapper">
+      <p class="developer-note">🔧 Developer Mode Active</p>
+    </div>
+  </div>
 </body>
 </html>
 
