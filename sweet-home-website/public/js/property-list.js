@@ -947,6 +947,28 @@ document.addEventListener('DOMContentLoaded', function() {
   // Load localized strings for this page
   loadI18n();
   
+  // Add event listener for "Clear All Filters" button
+  const clearAllBtn = document.getElementById('clearAllFiltersBtn');
+  if (clearAllBtn) {
+    clearAllBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('🔄 Clear All Filters clicked');
+      clearAllFilters();
+    });
+  }
+  
+  // Add event listeners for all clear-all-filters-btn class buttons
+  const clearAllBtns = document.querySelectorAll('.clear-all-filters-btn');
+  clearAllBtns.forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('🔄 Clear All Filters clicked');
+      clearAllFilters();
+    });
+  });
+  
   // Get locations data from the page if available
   const locationsData = document.getElementById('locations-data');
   if (locationsData) {
