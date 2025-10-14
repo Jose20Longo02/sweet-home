@@ -129,6 +129,13 @@ html, body {
 }
 .btn-secondary:hover {
   background: var(--color-primary);
+  color: #fff;
+}
+.btn-primary {
+  color: #fff;
+}
+.btn-primary:hover {
+  color: #fff;
 }
 /* 12. Responsive adjustments */
 @media (max-width: 768px) {
