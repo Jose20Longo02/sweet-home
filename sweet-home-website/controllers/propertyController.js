@@ -1786,7 +1786,10 @@ exports.listPropertiesAdmin = async (req, res, next) => {
     `);
     const pendingCount = parseInt(pendingRes.rows[0].count, 10);
 
-    // 8) Render the view
+    // 8) Build current URL for return_to links
+    const currentUrl = req.originalUrl || req.url;
+    
+    // 9) Render the view
     res.render('superadmin/properties/manage-properties', {
       properties,
       allAgents,
@@ -1799,7 +1802,8 @@ exports.listPropertiesAdmin = async (req, res, next) => {
       statusOptions,
       locations,
       pendingCount,
-      activePage: 'properties'
+      activePage: 'properties',
+      currentUrl
     });
   } catch (err) {
     next(err);
@@ -2016,6 +2020,9 @@ exports.listMyProperties = async (req, res, next) => {
     const typeOptions   = ['Apartment', 'House', 'Villa', 'Land'];
     const statusOptions = ['New', 'Reduced', 'Exclusive'];
 
+    // Build current URL for return_to links
+    const currentUrl = req.originalUrl || req.url;
+    
     // Render
     res.render('admin/properties/my-properties', {
       user: req.session.user,
@@ -2027,7 +2034,8 @@ exports.listMyProperties = async (req, res, next) => {
       cityOptions,
       typeOptions,
       statusOptions,
-      locations
+      locations,
+      currentUrl
     });
   } catch (err) {
     next(err);

@@ -144,7 +144,7 @@
                   <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
                 <a
-                  href="/properties/<%= prop.id %>/edit?return_to=<%= encodeURIComponent('/superadmin/dashboard/properties' + (req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '')) %>"
+                  href="/properties/<%= prop.id %>/edit?return_to=<%= encodeURIComponent(currentUrl) %>"
                   class="btn btn-secondary"
                 >Edit</a>
                 <a
