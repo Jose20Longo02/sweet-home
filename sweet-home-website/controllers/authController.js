@@ -463,7 +463,8 @@ exports.selectRolePage = (req, res) => {
   
   res.render('auth/select-role', {
     title: 'Select Role',
-    user: req.session.pendingUser
+    user: req.session.pendingUser,
+    csrfToken: req.csrfToken()
   });
 };
 

@@ -18,6 +18,7 @@
       </div>
 
       <form action="/auth/select-role" method="POST" class="auth-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
         <div class="role-selection">
           <button type="submit" name="role" value="SuperAdmin" class="role-card">
             <div class="role-icon">👑</div>
