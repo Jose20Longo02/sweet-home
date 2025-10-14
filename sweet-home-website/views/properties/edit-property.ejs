@@ -14,7 +14,7 @@
       <p class="subtitle">Update listing details. Fields change based on property type.</p>
     </div>
     <div class="right">
-      <a href="/admin/dashboard/my-properties" class="btn btn-light">Back</a>
+      <a href="<%= backUrl || (currentUser && currentUser.role==='SuperAdmin' ? '/superadmin/dashboard/properties' : '/admin/dashboard/my-properties') %>" class="btn btn-light">Back</a>
     </div>
   </header>
 
@@ -24,6 +24,7 @@
 
   <form id="propertyForm" class="np-form" method="post" action="/properties/<%= property.id %>?_csrf=<%= csrfToken %>" enctype="multipart/form-data">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="return_to" value="<%= backUrl || '' %>">
 
     <!-- A. Location -->
     <section class="card">
