@@ -5,8 +5,8 @@ class User {
   // Create a new user (agents need approval by default)
   static async create(data) {
     const text = `
-      INSERT INTO users(name, email, password, role, profile_picture, approved)
-      VALUES($1, $2, $3, $4, $5, false)
+      INSERT INTO users(name, email, password, role, profile_picture, phone, approved)
+      VALUES($1, $2, $3, $4, $5, $6, false)
       RETURNING *
     `;
     const values = [
@@ -14,7 +14,8 @@ class User {
       data.email,
       data.password,
       data.role,
-      data.profile_picture // URL or path to profile picture
+      data.profile_picture, // URL or path to profile picture
+      data.phone || null
     ];
     const res = await query(text, values);
     return res.rows[0];

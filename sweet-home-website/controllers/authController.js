@@ -30,7 +30,7 @@ exports.login = async (req, res, next) => {
 
     // 1) Look up user
     const { rows } = await query(
-      'SELECT id, name, email, password, role, approved, profile_picture, area, position FROM users WHERE LOWER(email) = LOWER($1)',
+      'SELECT id, name, email, password, role, approved, profile_picture, area, position, phone FROM users WHERE LOWER(email) = LOWER($1)',
       [email]
     );
     if (rows.length === 0) {
@@ -110,7 +110,8 @@ exports.register = async (req, res, next) => {
       password,
       passwordConfirm,
       area,
-      position
+      position,
+      phone
     } = req.body;
 
     // Determine role by area
@@ -119,7 +120,7 @@ exports.register = async (req, res, next) => {
       : 'Admin';
 
     // Validate inputs
-    if (!name || !email || !password || !passwordConfirm || !area || !position) {
+    if (!name || !email || !password || !passwordConfirm || !area || !position || !phone) {
       return res.render('auth/register', {
         areaRoles,
         pendingCount: 0,
@@ -150,6 +151,12 @@ exports.register = async (req, res, next) => {
     // Build fields/values for INSERT
     const fields = ['name','email','password','role','approved','area','position'];
     const values = [name, email, hash, role, false, area, position];
+
+    // Handle optional phone number
+    if (phone) {
+      fields.push('phone');
+      values.push(phone);
+    }
 
     // Handle optional profile picture
     if (req.file) {

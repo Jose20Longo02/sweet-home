@@ -155,9 +155,9 @@ exports.dashboard = async (req, res, next) => {
 exports.showSuperAdminProfile = async (req, res, next) => {
   try {
     const pendingCount = await getPendingCount();
-    // Fetch fresh user to ensure area/position/profile_picture are present on initial load
+    // Fetch fresh user to ensure area/position/profile_picture/phone are present on initial load
     const { rows } = await query(
-      `SELECT id, name, email, role, approved, area, position, profile_picture
+      `SELECT id, name, email, role, approved, area, position, profile_picture, phone
          FROM users WHERE id = $1`,
       [req.session.user.id]
     );
@@ -181,7 +181,7 @@ exports.showSuperAdminProfile = async (req, res, next) => {
 
 exports.updateSuperAdminProfile = async (req, res, next) => {
   try {
-    const { name, email, password, passwordConfirm, area, position } = req.body;
+    const { name, email, password, passwordConfirm, area, position, phone } = req.body;
 
     if ((password || passwordConfirm) && password !== passwordConfirm) {
       const pendingCount = await getPendingCount();
@@ -204,6 +204,7 @@ exports.updateSuperAdminProfile = async (req, res, next) => {
     fields.push(`email = $${idx++}`);    values.push(email);
     fields.push(`area = $${idx++}`);     values.push(area);
     fields.push(`position = $${idx++}`); values.push(position);
+    fields.push(`phone = $${idx++}`);    values.push(phone || null);
 
     if (password) {
       const hash = await bcrypt.hash(password, 10);
@@ -233,7 +234,7 @@ exports.updateSuperAdminProfile = async (req, res, next) => {
     );
 
     const { rows } = await query(
-      `SELECT id,name,email,role,approved,area,position,profile_picture
+      `SELECT id,name,email,role,approved,area,position,profile_picture,phone
          FROM users WHERE id = $1`,
       [req.session.user.id]
     );
