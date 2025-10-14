@@ -48,6 +48,8 @@
                           </form>
                           <a href="/superadmin/dashboard/team/<%= member.id %>/edit" class="btn btn-secondary" style="flex: 1;">Edit</a>
                         </div>
+                      <% } else { %>
+                        <a href="/superadmin/dashboard/profile" class="btn btn-secondary" style="width: 100%;">Edit Profile</a>
                       <% } %>
                     </div>
                   </div>
