@@ -6,7 +6,7 @@ on:
       sql_path:
         description: 'Path to SQL file to run'
         required: true
-        default: 'mitigations/add_phone_to_users.sql'
+        default: 'sweet-home-website/mitigations/add_phone_to_users.sql'
 
 jobs:
   run-sql:
