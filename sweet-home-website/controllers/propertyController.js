@@ -357,7 +357,8 @@ exports.listPropertiesPublic = async (req, res, next) => {
       sort,
       currentPage: parseInt(page),
       totalPages,
-      totalProperties
+      totalProperties,
+      queryParams: req.query
     });
   } catch (err) {
     next(err);
