@@ -106,4 +106,15 @@ router.post(
   authController.resetPassword
 );
 
+// Role selection for developer accounts
+router.get(
+  '/select-role',
+  authController.selectRolePage
+);
+
+router.post(
+  '/select-role',
+  authController.selectRole
+);
+
 module.exports = router;

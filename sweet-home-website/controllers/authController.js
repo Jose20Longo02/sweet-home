@@ -64,8 +64,21 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    // 4) All good → establish session & redirect
+    // 4) Check if this is a developer account that can switch roles
+    const DEVELOPER_EMAILS = (process.env.DEVELOPER_EMAILS || '').split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
+    const isDeveloper = DEVELOPER_EMAILS.includes(email.toLowerCase());
+    
+    // 5) All good → establish session
     delete user.password;
+    
+    // If developer account, show role selection page
+    if (isDeveloper && user.role === 'SuperAdmin') {
+      // Store user data temporarily in session for role selection
+      req.session.pendingUser = user;
+      return res.redirect('/auth/select-role');
+    }
+    
+    // Regular login flow
     req.session.user = user;
     if (user.role === 'SuperAdmin') {
       return res.redirect('/superadmin/dashboard');
@@ -439,4 +452,45 @@ exports.resetPassword = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+// Show role selection page for developer accounts
+exports.selectRolePage = (req, res) => {
+  // Check if there's a pending user in session
+  if (!req.session.pendingUser) {
+    return res.redirect('/auth/login');
+  }
+  
+  res.render('auth/select-role', {
+    title: 'Select Role',
+    user: req.session.pendingUser
+  });
+};
+
+// Handle role selection
+exports.selectRole = (req, res) => {
+  const { role } = req.body;
+  
+  // Validate that there's a pending user
+  if (!req.session.pendingUser) {
+    return res.redirect('/auth/login');
+  }
+  
+  // Validate role selection
+  if (role !== 'SuperAdmin' && role !== 'Admin') {
+    return res.redirect('/auth/select-role');
+  }
+  
+  // Set the user session with the selected role
+  const user = { ...req.session.pendingUser, role };
+  req.session.user = user;
+  
+  // Clear pending user
+  delete req.session.pendingUser;
+  
+  // Redirect based on selected role
+  if (role === 'SuperAdmin') {
+    return res.redirect('/superadmin/dashboard');
+  }
+  return res.redirect('/admin/dashboard');
 };

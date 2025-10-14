@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | Sweet Home Real Estate Investments</title>
+  <link rel="stylesheet" href="/css/auth/login.css" />
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="icon" href="/images/favicon.png" type="image/png">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <img src="/images/Sweet Home Logo.png" alt="Sweet Home Logo" class="logo" />
+        <h1>Select Your Role</h1>
+        <p class="subtitle">Welcome back, <%= user.name %>! Choose how you want to access the dashboard.</p>
+      </div>
+
+      <form action="/auth/select-role" method="POST" class="auth-form">
+        <div class="role-selection">
+          <button type="submit" name="role" value="SuperAdmin" class="role-card">
+            <div class="role-icon">👑</div>
+            <h3>SuperAdmin</h3>
+            <p>Full access to all features, team management, and system settings</p>
+          </button>
+
+          <button type="submit" name="role" value="Admin" class="role-card">
+            <div class="role-icon">👤</div>
+            <h3>Admin</h3>
+            <p>Manage your properties and projects</p>
+          </button>
+        </div>
+      </form>
+
+      <div class="auth-footer">
+        <p class="developer-note">🔧 Developer Mode Active</p>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .role-selection {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .role-card {
+      background: #fff;
+      border: 2px solid var(--gray-200);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      width: 100%;
+    }
+
+    .role-card:hover {
+      border-color: var(--primary-color);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .role-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .role-card h3 {
+      color: var(--color-primary);
+      margin-bottom: 0.5rem;
+      font-size: 1.25rem;
+    }
+
+    .role-card p {
+      color: var(--color-secondary);
+      font-size: 0.9rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .developer-note {
+      text-align: center;
+      color: var(--color-secondary);
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      padding: 0.5rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .subtitle {
+      color: var(--color-secondary);
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .role-selection {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</body>
+</html>
+
