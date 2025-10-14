@@ -39,6 +39,7 @@
                     <p class="position"><%= member.position %></p>
 
                     <div class="actions">
+                      <p class="property-count"><%= member.property_count %> <%= member.property_count === 1 ? 'property' : 'properties' %> assigned</p>
                       <a href="/superadmin/dashboard/properties?agent=<%= member.id %>" class="btn btn-primary">View Properties</a>
                       <% if (member.id !== currentUser.id) { %>
                         <div style="display: flex; gap: 0.5rem;">

@@ -114,6 +114,13 @@ html, body {
   gap: 0.5rem;
   width: 100%;
 }
+.actions .property-count {
+  font-size: 0.85rem;
+  color: var(--color-secondary);
+  margin: 0;
+  text-align: center;
+  font-weight: 500;
+}
 .actions .btn { flex:1; padding:.7rem .9rem; border:none; border-radius:12px; font-size:var(--font-size-base); text-decoration:none; text-align:center; cursor:pointer; transition: transform .16s ease, box-shadow .16s ease, opacity .16s ease; }
 .actions .btn:hover { transform: translateY(-1px); opacity:.95; box-shadow: 0 8px 20px rgba(0,0,0,.08); }
 .btn-danger {

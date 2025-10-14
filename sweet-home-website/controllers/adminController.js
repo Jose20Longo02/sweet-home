@@ -263,8 +263,23 @@ exports.listTeam = async (req, res, next) => {
         WHERE role IN ('Admin','SuperAdmin') AND approved = true
         ORDER BY name`
     );
+    
+    // Get property counts for each member
+    const membersWithCounts = await Promise.all(
+      result.rows.map(async (member) => {
+        const countResult = await query(
+          'SELECT COUNT(*) as count FROM properties WHERE agent_id = $1',
+          [member.id]
+        );
+        return {
+          ...member,
+          property_count: parseInt(countResult.rows[0].count, 10)
+        };
+      })
+    );
+    
     res.render('superadmin/team/manage-team', {
-      members: result.rows,
+      members: membersWithCounts,
       areaRoles,
       currentUser: req.session.user,
       pendingCount,
