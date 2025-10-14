@@ -6,7 +6,7 @@
     <%- include('../../partials/superadmin-sidebar', { activePage: 'team', pendingCount }) %>
 
     <main class="admin-content">
-      <form class="np-form" action="/superadmin/dashboard/team/<%= member.id %>/edit" method="post">
+      <form class="np-form" action="/superadmin/dashboard/team/<%= member.id %>/edit" method="post" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <header class="np-header">
           <div class="left">
@@ -25,6 +25,18 @@
         <section class="card">
           <h2>Account</h2>
           <div class="grid-3">
+            <div class="field">
+              <label>Full Name<span class="req">*</span></label>
+              <input type="text" name="name" value="<%= member.name %>" required />
+            </div>
+            <div class="field">
+              <label>Email<span class="req">*</span></label>
+              <input type="email" name="email" value="<%= member.email %>" required />
+            </div>
+            <div class="field">
+              <label>Phone</label>
+              <input type="tel" name="phone" value="<%= member.phone || '' %>" placeholder="+1234567890" />
+            </div>
             <div class="field">
               <label>Role<span class="req">*</span></label>
               <select name="role" required>
@@ -48,6 +60,23 @@
                   <option value="<%= pos %>" <%= member.position===pos?'selected':'' %>><%= pos %></option>
                 <% }) %>
               </select>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Profile Picture</h2>
+          <div class="grid-3">
+            <div class="field" style="grid-column: span 3;">
+              <div class="thumb-wrapper">
+                <% const __pic = (member.profile_picture && (/^https?:\/\//.test(member.profile_picture) ? member.profile_picture : (member.profile_picture.startsWith('/') ? member.profile_picture : '/' + member.profile_picture))) || null; %>
+                <% if (__pic) { %>
+                  <img id="profilePreview" src="<%= __pic %>" class="thumb" onerror="this.onerror=null;this.src='/img/default-avatar.png'" />
+                <% } else { %>
+                  <img id="profilePreview" class="thumb" style="display:none;" />
+                <% } %>
+              </div>
+              <input id="profile_picture" name="profile_picture" type="file" accept="image/*,.heic,.heif" />
             </div>
           </div>
         </section>
@@ -77,6 +106,22 @@
       posSel.disabled = true;
       posSel.appendChild(new Option('Choose an area first',''));
     }
+  });
+</script>
+
+<script>
+  // Live picture preview
+  const picInput = document.getElementById('profile_picture');
+  const picPreview = document.getElementById('profilePreview');
+  picInput?.addEventListener('change', async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      picPreview.src = ev.target.result;
+      picPreview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
   });
 </script>
 

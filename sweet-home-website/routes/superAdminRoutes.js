@@ -60,7 +60,7 @@ router.get(
     try {
       const { query } = require('../config/db');
       const { rows } = await query(
-        'SELECT id, name, email, role, area, position FROM users WHERE id = $1',
+        'SELECT id, name, email, phone, profile_picture, role, area, position FROM users WHERE id = $1',
         [req.params.id]
       );
       if (!rows.length) return res.status(404).send('User not found');
@@ -77,14 +77,46 @@ router.post(
   '/team/:id/edit',
   ensureAuthenticated,
   ensureSuperAdmin,
+  uploadProfilePic,
   async (req, res, next) => {
     try {
       const { query } = require('../config/db');
-      const { role, area, position } = req.body;
+      const { name, email, phone, role, area, position } = req.body;
       if (!['Admin','SuperAdmin'].includes(role)) return res.status(400).send('Invalid role');
+      // Build dynamic update
+      const fields = [];
+      const values = [];
+      let idx = 1;
+
+      if (name)  { fields.push(`name = $${idx++}`);  values.push(name); }
+      if (email) { fields.push(`email = $${idx++}`); values.push(email); }
+      if (typeof phone !== 'undefined') { fields.push(`phone = $${idx++}`); values.push(phone || null); }
+      fields.push(`role = $${idx++}`);      values.push(role);
+      fields.push(`area = $${idx++}`);      values.push(area);
+      fields.push(`position = $${idx++}`);  values.push(position);
+
+      // Optional profile picture update
+      if (req.file) {
+        try {
+          // Delete previous Spaces object if applicable
+          if (process.env.DO_SPACES_BUCKET) {
+            const prev = await query('SELECT profile_picture FROM users WHERE id = $1', [req.params.id]);
+            const prevUrl = prev.rows[0] && prev.rows[0].profile_picture;
+            if (prevUrl && /^https?:\/\//.test(String(prevUrl))) {
+              const key = String(prevUrl).replace(/^https?:\/\/[^/]+\//, '');
+              const s3 = require('../config/spaces');
+              await new Promise((resolve) => s3.deleteObject({ Bucket: process.env.DO_SPACES_BUCKET, Key: key }, () => resolve()));
+            }
+          }
+        } catch (_) {}
+        const picUrl = req.file.url || ('/uploads/profiles/' + req.file.filename);
+        fields.push(`profile_picture = $${idx++}`); values.push(picUrl);
+      }
+
+      values.push(req.params.id);
       await query(
-        'UPDATE users SET role=$1, area=$2, position=$3, updated_at=NOW() WHERE id=$4',
-        [role, area, position, req.params.id]
+        `UPDATE users SET ${fields.join(', ')}, updated_at = NOW() WHERE id = $${idx}`,
+        values
       );
       res.redirect('/superadmin/dashboard/team');
     } catch (err) { next(err); }
