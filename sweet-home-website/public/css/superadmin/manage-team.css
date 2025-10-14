@@ -110,6 +110,7 @@ html, body {
 .actions {
   margin-top: auto;
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
   width: 100%;
 }

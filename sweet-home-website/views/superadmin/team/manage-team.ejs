@@ -39,12 +39,15 @@
                     <p class="position"><%= member.position %></p>
 
                     <div class="actions">
+                      <a href="/superadmin/dashboard/properties?agent=<%= member.id %>" class="btn btn-primary">View Properties</a>
                       <% if (member.id !== currentUser.id) { %>
-                        <form action="/superadmin/dashboard/team/<%= member.id %>/delete" method="post" onsubmit="return confirm('Are you sure you want to delete <%= member.name %>?');">
-                          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                          <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                        <a href="/superadmin/dashboard/team/<%= member.id %>/edit" class="btn btn-secondary">Edit</a>
+                        <div style="display: flex; gap: 0.5rem;">
+                          <form action="/superadmin/dashboard/team/<%= member.id %>/delete" method="post" onsubmit="return confirm('Are you sure you want to delete <%= member.name %>?');" style="flex: 1;">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button type="submit" class="btn btn-danger" style="width: 100%;">Delete</button>
+                          </form>
+                          <a href="/superadmin/dashboard/team/<%= member.id %>/edit" class="btn btn-secondary" style="flex: 1;">Edit</a>
+                        </div>
                       <% } %>
                     </div>
                   </div>

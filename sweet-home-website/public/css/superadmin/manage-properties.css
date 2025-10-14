@@ -38,6 +38,7 @@ html, body {
   padding: 0;
 }
 .properties-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; background:linear-gradient(180deg, rgba(0,0,0,.04), transparent); padding:1rem; border-radius: var(--card-radius); }
+.properties-header > div { display: flex; align-items: center; gap: 0.5rem; }
 .properties-filters {
   display: flex;
   flex-wrap: wrap;

@@ -1065,10 +1065,6 @@ exports.editPropertyForm = async (req, res, next) => {
       }
     }
     
-    console.log('[editPropertyForm] Captured backUrl:', backUrl);
-    console.log('[editPropertyForm] req.query.return_to:', req.query.return_to);
-    console.log('[editPropertyForm] req.get(referer):', req.get('referer'));
-    
     res.render('properties/edit-property', {
       property,
       locations,
@@ -1570,10 +1566,6 @@ exports.updateProperty = async (req, res, next) => {
     // Redirect back to the same page with pagination and filters preserved
     let returnTo = req.body.return_to || req.get('referer') || '';
     
-    console.log('[updateProperty] Raw returnTo:', returnTo);
-    console.log('[updateProperty] req.body.return_to:', req.body.return_to);
-    console.log('[updateProperty] req.get(referer):', req.get('referer'));
-    
     // Extract just the path + query if it's a full URL
     if (returnTo.includes('://')) {
       try {
@@ -1584,17 +1576,13 @@ exports.updateProperty = async (req, res, next) => {
       }
     }
     
-    console.log('[updateProperty] Cleaned returnTo:', returnTo);
-    
     const superAdminDashboardRegex = /^\/superadmin\/dashboard\/properties(\?.*)?$/;
     const adminMyPropertiesRegex = /^\/admin\/dashboard\/my-properties(\?.*)?$/;
 
     if (returnTo && (superAdminDashboardRegex.test(returnTo) || adminMyPropertiesRegex.test(returnTo))) {
-      console.log('[updateProperty] ✓ Redirecting to:', returnTo);
       return res.redirect(returnTo);
     }
 
-    console.log('[updateProperty] ✗ No valid returnTo, using default redirect');
     const role = req.session.user?.role;
     if (role === 'SuperAdmin') {
       return res.redirect('/superadmin/dashboard/properties');
@@ -1689,7 +1677,7 @@ exports.listPropertiesAdmin = async (req, res, next) => {
     const page    = parseInt(req.query.page, 10) || 1;
     const limit   = 20;
     const offset  = (page - 1) * limit;
-    const { country, city, type, minPrice, maxPrice, status, sold } = req.query;
+    const { country, city, type, minPrice, maxPrice, status, sold, agent } = req.query;
 
     // 2) Build dynamic WHERE clause
     const conditions = [];
@@ -1702,6 +1690,7 @@ exports.listPropertiesAdmin = async (req, res, next) => {
     if (maxPrice) { conditions.push(`p.price <= $${idx}`);       values.push(maxPrice);idx++; }
     if (status)   { conditions.push(`p.status_tags @> $${idx}`); values.push([status]);idx++; }
     if (sold)     { conditions.push(`p.sold = $${idx}`);         values.push(sold);    idx++; }
+    if (agent)    { conditions.push(`p.agent_id = $${idx}`);     values.push(parseInt(agent, 10)); idx++; }
     const where = conditions.length
       ? `WHERE ${conditions.join(' AND ')}`
       : '';
@@ -1786,16 +1775,27 @@ exports.listPropertiesAdmin = async (req, res, next) => {
     `);
     const pendingCount = parseInt(pendingRes.rows[0].count, 10);
 
-    // 8) Build current URL for return_to links
+    // 8) If filtering by agent, get agent name for display
+    let agentName = null;
+    if (agent) {
+      try {
+        const { rows } = await query('SELECT name FROM users WHERE id = $1', [parseInt(agent, 10)]);
+        if (rows && rows[0]) {
+          agentName = rows[0].name;
+        }
+      } catch (_) {}
+    }
+
+    // 9) Build current URL for return_to links
     const currentUrl = req.originalUrl || req.url;
     
-    // 9) Render the view
+    // 10) Render the view
     res.render('superadmin/properties/manage-properties', {
       properties,
       allAgents,
       currentPage:  page,
       totalPages,
-      filters:      { country, city, type, minPrice, maxPrice, status, sold },
+      filters:      { country, city, type, minPrice, maxPrice, status, sold, agent },
       countryOptions,
       cityOptions,
       typeOptions,
@@ -1803,7 +1803,8 @@ exports.listPropertiesAdmin = async (req, res, next) => {
       locations,
       pendingCount,
       activePage: 'properties',
-      currentUrl
+      currentUrl,
+      agentName
     });
   } catch (err) {
     next(err);

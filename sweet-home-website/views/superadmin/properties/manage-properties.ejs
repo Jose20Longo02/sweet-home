@@ -17,12 +17,26 @@
 
         <!-- Header + New Property Button -->
         <div class="properties-header">
-          <h1>All Properties</h1>
-          <a href="/admin/properties/new" class="btn btn-primary">New Property</a>
+          <h1>
+            <% if (agentName) { %>
+              Properties by <%= agentName %>
+            <% } else { %>
+              All Properties
+            <% } %>
+          </h1>
+          <div>
+            <% if (filters.agent) { %>
+              <a href="/superadmin/dashboard/properties" class="btn btn-secondary" style="margin-right: 10px;">Clear Agent Filter</a>
+            <% } %>
+            <a href="/admin/properties/new" class="btn btn-primary">New Property</a>
+          </div>
         </div>
 
         <!-- Filters -->
         <form class="properties-filters" id="filterForm" method="get">
+          <% if (filters.agent) { %>
+            <input type="hidden" name="agent" value="<%= filters.agent %>">
+          <% } %>
           <select id="countrySelect" name="country">
             <option value="">All Countries</option>
             <% countryOptions.forEach(c => { %>
