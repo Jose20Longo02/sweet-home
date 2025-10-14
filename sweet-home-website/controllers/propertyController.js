@@ -1053,7 +1053,6 @@ exports.editPropertyForm = async (req, res, next) => {
     // Determine back URL (return destination) from referer if it matches allowed dashboards
     const referer = req.get('referer') || '';
     const allowedDashRegex = /^\/(superadmin|admin)\/dashboard\/(properties|my-properties)(\?.*)?$/;
-    const isSuper = req.session.user?.role === 'SuperAdmin';
     let backUrl = isSuper ? '/superadmin/dashboard/properties' : '/admin/dashboard/my-properties';
     try {
       const u = new URL(referer, 'http://localhost');
