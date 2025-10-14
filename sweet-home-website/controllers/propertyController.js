@@ -1675,6 +1675,7 @@ exports.listPropertiesAdmin = async (req, res, next) => {
       SELECT
         p.id,
         p.title,
+        p.slug,
         p.country,
         p.city,
         p.neighborhood,
@@ -1694,6 +1695,23 @@ exports.listPropertiesAdmin = async (req, res, next) => {
       dataQuery,
       [...values, limit, offset]
     );
+
+    // Normalize photos to array
+    const normalizePhotos = (val) => {
+      if (Array.isArray(val)) return val;
+      if (typeof val === 'string') {
+        const str = val.trim();
+        if (str.startsWith('[')) {
+          try { return JSON.parse(str); } catch(_) {}
+        }
+        if (str.startsWith('{') && str.endsWith('}')) {
+          return str.slice(1,-1).split(',').map(s => s.replace(/^\"|\"$/g,'').trim()).filter(Boolean);
+        }
+        if (str) return [str];
+      }
+      return [];
+    };
+    properties.forEach(p => { p.photos = normalizePhotos(p.photos); });
 
     // 5) Dropdown data
     const countryOptions = Object.keys(locations);
