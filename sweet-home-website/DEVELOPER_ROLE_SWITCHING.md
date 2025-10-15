@@ -62,3 +62,4 @@ Login → Dashboard (based on database role)
 - **Access denied**: Ensure your account has `SuperAdmin` role in the database
 - **Session issues**: Try clearing cookies and logging in again
 
+

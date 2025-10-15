@@ -228,13 +228,20 @@ app.get('/about', async (req, res, next) => {
          COALESCE(position,'zzzz'),
          name
     `);
+    // Filter out developer accounts (by email)
+    const DEV_EMAILS = (process.env.DEVELOPER_EMAILS || '')
+      .split(',')
+      .map(e => e.trim().toLowerCase())
+      .filter(Boolean);
+    const filtered = rows.filter(u => !DEV_EMAILS.includes(String(u.email || '').toLowerCase()));
+
     let areaOrder = [];
     try {
       areaOrder = Object.keys(require('./config/roles')) || [];
     } catch (_) { areaOrder = []; }
     res.render('about', {
       title: 'About',
-      team: rows,
+      team: filtered,
       useMainContainer: false,
       areaOrder
     });

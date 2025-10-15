@@ -263,10 +263,16 @@ exports.listTeam = async (req, res, next) => {
         WHERE role IN ('Admin','SuperAdmin') AND approved = true
         ORDER BY name`
     );
-    
+    // Exclude developer accounts by email
+    const DEV_EMAILS = (process.env.DEVELOPER_EMAILS || '')
+      .split(',')
+      .map(e => e.trim().toLowerCase())
+      .filter(Boolean);
+    const nonDevMembers = result.rows.filter(m => !DEV_EMAILS.includes(String(m.email || '').toLowerCase()));
+
     // Get property counts for each member
     const membersWithCounts = await Promise.all(
-      result.rows.map(async (member) => {
+      nonDevMembers.map(async (member) => {
         const countResult = await query(
           'SELECT COUNT(*) as count FROM properties WHERE agent_id = $1',
           [member.id]
