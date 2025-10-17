@@ -196,7 +196,10 @@
             // Parse project video URL if available
             let projectVideoKind = null;
             let projectVideoEmbedUrl = null;
-            if (property.project.video_url) {
+            const hasProjectVideo = !!property.project.video_url;
+            const hasProjectPhotos = property.project.photos && property.project.photos.length > 0;
+            
+            if (hasProjectVideo) {
               const v = property.project.video_url;
               if (/youtu\.be|youtube\.com/.test(v)) {
                 projectVideoKind = 'youtube';
@@ -215,37 +218,75 @@
               }
             }
           %>
-          <% if (property.project.video_url) { %>
-            <div class="project-video-divider"></div>
-            <div class="project-video-section">
-              <h3 class="project-video-title">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <polygon points="5,3 19,12 5,21"></polygon>
-                </svg>
-                <%= t('projects.videoTitle','Project Video') %>
-              </h3>
-              <div class="project-video-wrapper">
-                <% if (projectVideoKind === 'youtube' || projectVideoKind === 'vimeo') { %>
-                  <div class="project-video-container">
-                    <iframe
-                      src="<%= projectVideoEmbedUrl %>"
-                      frameborder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowfullscreen
-                      loading="lazy"
-                      title="<%= property.project.title %> - Project Video"
-                    ></iframe>
-                  </div>
-                <% } else if (projectVideoKind === 'file') { %>
-                  <div class="project-video-container">
-                    <video controls preload="metadata" playsinline>
-                      <source src="<%= property.project.video_url %>" type="video/mp4">
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
+          <% if (hasProjectVideo || hasProjectPhotos) { %>
+            <div class="project-media-divider"></div>
+            <% if (hasProjectVideo) { %>
+              <div class="project-video-section">
+                <h3 class="project-media-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polygon points="5,3 19,12 5,21"></polygon>
+                  </svg>
+                  <%= t('projects.videoTitle','Project Video') %>
+                </h3>
+                <div class="project-video-wrapper">
+                  <% if (projectVideoKind === 'youtube' || projectVideoKind === 'vimeo') { %>
+                    <div class="project-video-container">
+                      <iframe
+                        src="<%= projectVideoEmbedUrl %>"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        loading="lazy"
+                        title="<%= property.project.title %> - Project Video"
+                      ></iframe>
+                    </div>
+                  <% } else if (projectVideoKind === 'file') { %>
+                    <div class="project-video-container">
+                      <video controls preload="metadata" playsinline>
+                        <source src="<%= property.project.video_url %>" type="video/mp4">
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+                  <% } %>
+                </div>
+              </div>
+            <% } else if (hasProjectPhotos) { %>
+              <div class="project-gallery-section">
+                <h3 class="project-media-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21,15 16,10 5,21"></polyline>
+                  </svg>
+                  <%= t('projects.galleryTitle','Project Gallery') %>
+                </h3>
+                <div class="project-gallery-grid">
+                  <% property.project.photos.slice(0, 6).forEach((photo, index) => { %>
+                    <div class="project-gallery-item" data-index="<%= index %>">
+                      <img 
+                        src="<%= photo %>" 
+                        alt="<%= property.project.title %> - Photo <%= index + 1 %>" 
+                        loading="lazy"
+                        decoding="async"
+                      >
+                      <% if (index === 5 && property.project.photos.length > 6) { %>
+                        <div class="project-gallery-overlay">
+                          <span class="project-gallery-more">+<%= property.project.photos.length - 6 %></span>
+                        </div>
+                      <% } %>
+                    </div>
+                  <% }); %>
+                </div>
+                <% if (property.project.slug) { %>
+                  <a href="/projects/<%= property.project.slug %>" class="project-gallery-link">
+                    <%= t('projects.viewAllPhotos','View all project photos') %>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="9,18 15,12 9,6"></polyline>
+                    </svg>
+                  </a>
                 <% } %>
               </div>
-            </div>
+            <% } %>
           <% } %>
         </section>
         <% } %>
