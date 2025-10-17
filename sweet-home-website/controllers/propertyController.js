@@ -384,7 +384,7 @@ exports.showProperty = async (req, res, next) => {
         p.features,
         p.video_url, p.floorplan_url, p.plan_photo_url,
         p.is_in_project, p.project_id,
-        pr.title AS project_title, pr.title_i18n AS project_title_i18n, pr.slug AS project_slug, pr.amenities AS project_amenities,
+        pr.title AS project_title, pr.title_i18n AS project_title_i18n, pr.slug AS project_slug, pr.amenities AS project_amenities, pr.video_url AS project_video_url,
         u.name as agent_name, u.profile_picture as agent_profile_picture
       FROM properties p
       LEFT JOIN users u ON p.agent_id = u.id
@@ -429,7 +429,8 @@ exports.showProperty = async (req, res, next) => {
         slug: p.project_slug || null,
         // Do NOT translate linked project title; use original
         title: p.project_title || null,
-        amenities: Array.isArray(p.project_amenities) ? p.project_amenities : []
+        amenities: Array.isArray(p.project_amenities) ? p.project_amenities : [],
+        video_url: p.project_video_url || null
       } : null,
       agent: {
         name: p.agent_name || 'Agent',
