@@ -193,6 +193,115 @@
             </div>
           <% } %>
 
+          <!-- Project Properties -->
+          <% if (projectProperties && projectProperties.length > 0) { %>
+            <div class="project-section project-properties-section">
+              <div class="project-properties-header">
+                <h2>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9,22 9,12 15,12 15,22"></polyline>
+                  </svg>
+                  <%= t('projects.detail.properties','Properties in this Project') %>
+                </h2>
+                <p class="project-properties-subtitle">
+                  <%= projectProperties.length %> <%= projectProperties.length === 1 ? t('projects.detail.property', 'property') : t('projects.detail.propertiesCount', 'properties') %> <%= t('projects.detail.available', 'available') %>
+                </p>
+              </div>
+              
+              <div class="project-properties-grid">
+                <% projectProperties.forEach(property => { %>
+                  <div class="project-property-card">
+                    <a href="/properties/<%= property.slug %>" class="property-card-link">
+                      <div class="property-image-container">
+                        <% if (property.photos && property.photos.length > 0) { %>
+                          <img 
+                            src="<%= property.photos[0] %>" 
+                            alt="<%= property.title %>" 
+                            loading="lazy"
+                            decoding="async"
+                            class="property-image"
+                          >
+                        <% } else { %>
+                          <div class="property-image-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                              <polyline points="21,15 16,10 5,21"></polyline>
+                            </svg>
+                          </div>
+                        <% } %>
+                        <div class="property-type-badge">
+                          <%= property.type %>
+                        </div>
+                      </div>
+                      
+                      <div class="property-card-content">
+                        <h3 class="property-title"><%= property.title %></h3>
+                        
+                        <div class="property-details">
+                          <% if (property.price) { %>
+                            <div class="property-price">
+                              $<%= Number(property.price).toLocaleString() %>
+                              <% if (property.rental_income) { %>
+                                <span class="rental-income">| Rental: $<%= Number(property.rental_income).toLocaleString() %></span>
+                              <% } %>
+                            </div>
+                          <% } %>
+                          
+                          <div class="property-meta">
+                            <% if (property.bedrooms) { %>
+                              <div class="meta-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                </svg>
+                                <%= property.bedrooms %> <%= t('properties.bedrooms', 'bed') %><%= property.bedrooms > 1 ? 's' : '' %>
+                              </div>
+                            <% } %>
+                            
+                            <% if (property.bathrooms) { %>
+                              <div class="meta-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                                </svg>
+                                <%= property.bathrooms %> <%= t('properties.bathrooms', 'bath') %><%= property.bathrooms > 1 ? 's' : '' %>
+                              </div>
+                            <% } %>
+                            
+                            <% if (property.size) { %>
+                              <div class="meta-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                  <path d="M21 9H3"></path>
+                                  <path d="M21 15H3"></path>
+                                </svg>
+                                <%= property.size %> <%= t('properties.squareMeters', 'm²') %>
+                              </div>
+                            <% } %>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                <% }) %>
+              </div>
+              
+              <% if (projectProperties.length >= 12) { %>
+                <div class="project-properties-footer">
+                  <a href="/properties?project=<%= project.id %>" class="btn btn-outline">
+                    <%= t('projects.detail.viewAllProperties', 'View All Properties') %>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="9,18 15,12 9,6"></polyline>
+                    </svg>
+                  </a>
+                </div>
+              <% } %>
+            </div>
+          <% } %>
+
           <!-- Project Specifications -->
           <% if (project.specifications && Object.keys(project.specifications).length > 0) { %>
             <div class="project-section">

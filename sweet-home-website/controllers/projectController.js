@@ -1194,9 +1194,42 @@ exports.showProject = async (req, res, next) => {
       return { ...p, photos, slug: p.slug || `project-${p.id}`, has_variants: has, variant_base: base };
     });
 
+    // Get properties attached to this project
+    const { rows: projectProperties } = await query(`
+      SELECT 
+        p.id, p.title, p.title_i18n, p.slug, p.price, p.type, p.bedrooms, p.bathrooms,
+        CASE 
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.photos, p.rental_income, p.rental_status
+      FROM properties p
+      WHERE p.is_in_project = true AND p.project_id = $1 AND p.slug IS NOT NULL
+      ORDER BY p.created_at DESC
+      LIMIT 12
+    `, [project.id]);
+
+    // Normalize property data
+    const normalizedProjectProperties = projectProperties.map(prop => {
+      const lang = res.locals.lang || 'en';
+      const localizedTitle = (prop.title_i18n && prop.title_i18n[lang]) || prop.title;
+      
+      // Normalize photos
+      const photos = Array.isArray(prop.photos) ? prop.photos : (prop.photos ? [prop.photos] : []);
+      
+      return {
+        ...prop,
+        title: localizedTitle,
+        photos: photos.length > 0 ? photos : []
+      };
+    });
+
     res.render('projects/project-detail', {
       project,
       relatedProjects: normalizedRelatedProjects,
+      projectProperties: normalizedProjectProperties,
       locations
     });
   } catch (err) {
