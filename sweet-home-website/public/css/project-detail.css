@@ -873,7 +873,8 @@
   font-weight: 500;
 }
 
-.meta-item svg {
+.meta-item svg,
+.meta-item .icon {
   color: var(--gray-500);
   flex-shrink: 0;
 }

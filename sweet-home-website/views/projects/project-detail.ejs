@@ -252,33 +252,22 @@
                           <div class="property-meta">
                             <% if (property.bedrooms) { %>
                               <div class="meta-item">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                                </svg>
-                                <%= property.bedrooms %> <%= t('properties.bedrooms', 'bed') %><%= property.bedrooms > 1 ? 's' : '' %>
+                                <span class="icon icon-16 icon-inline icon-mask icon-bed" style="color: currentColor;"></span>
+                                <%= property.bedrooms %> <%= t('properties.list.meta.beds', 'beds') %>
                               </div>
                             <% } %>
                             
                             <% if (property.bathrooms) { %>
                               <div class="meta-item">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                                  <line x1="8" y1="21" x2="16" y2="21"></line>
-                                  <line x1="12" y1="17" x2="12" y2="21"></line>
-                                </svg>
-                                <%= property.bathrooms %> <%= t('properties.bathrooms', 'bath') %><%= property.bathrooms > 1 ? 's' : '' %>
+                                <span class="icon icon-16 icon-inline icon-mask icon-bath" style="color: currentColor;"></span>
+                                <%= property.bathrooms %> <%= t('properties.list.meta.baths', 'baths') %>
                               </div>
                             <% } %>
                             
                             <% if (property.size) { %>
                               <div class="meta-item">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                  <path d="M21 9H3"></path>
-                                  <path d="M21 15H3"></path>
-                                </svg>
-                                <%= property.size %> <%= t('properties.squareMeters', 'm²') %>
+                                <span class="icon icon-16 icon-inline icon-mask icon-size" style="color: currentColor;"></span>
+                                <%= property.size %> <%= t('properties.list.meta.sqm', 'm²') %>
                               </div>
                             <% } %>
                           </div>
