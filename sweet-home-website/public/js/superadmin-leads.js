@@ -43,7 +43,15 @@ function showMessageModal(message) {
   const content = document.getElementById('messageContent');
   if (modal && content) {
     content.textContent = decodeURIComponent(message);
+    // Ensure proper positioning and overlay
     modal.style.display = 'flex';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100vw';
+    modal.style.height = '100vh';
+    modal.style.zIndex = '9999';
+    modal.style.background = 'rgba(0,0,0,0.45)';
   }
 }
 
@@ -51,6 +59,14 @@ function hideMessageModal() {
   const modal = document.getElementById('messageModal');
   if (modal) {
     modal.style.display = 'none';
+    // Reset any inline styles that might interfere
+    modal.style.position = '';
+    modal.style.top = '';
+    modal.style.left = '';
+    modal.style.width = '';
+    modal.style.height = '';
+    modal.style.zIndex = '';
+    modal.style.background = '';
   }
 }
 

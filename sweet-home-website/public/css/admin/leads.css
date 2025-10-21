@@ -74,12 +74,20 @@
 /* Message Modal Specific Styles */
 #messageModal {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
   background: rgba(0,0,0,0.45);
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 9999;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 #messageModal .modal-content {
@@ -91,6 +99,8 @@
   border: 1px solid var(--gray-200);
   max-height: 80vh;
   overflow: hidden;
+  margin: 0 auto;
+  position: relative;
 }
 
 #messageModal .modal-header {
@@ -131,6 +141,18 @@
   color: var(--gray-800);
   max-height: 60vh;
   overflow-y: auto;
+}
+
+/* Ensure modal positioning and overlay */
+#messageModal {
+  /* Override any parent positioning */
+  transform: none !important;
+  left: 0 !important;
+  top: 0 !important;
+}
+
+#messageModal[style*="display: flex"] {
+  display: flex !important;
 }
 
 /* Responsive */
