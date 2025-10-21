@@ -37,7 +37,50 @@ function openConfirm() {
   });
 }
 
+// Handle message modal
+function showMessageModal(message) {
+  const modal = document.getElementById('messageModal');
+  const content = document.getElementById('messageContent');
+  if (modal && content) {
+    content.textContent = decodeURIComponent(message);
+    modal.style.display = 'flex';
+  }
+}
+
+function hideMessageModal() {
+  const modal = document.getElementById('messageModal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+// Add event listeners for message modal
+document.addEventListener('DOMContentLoaded', function() {
+  const modal = document.getElementById('messageModal');
+  const closeBtn = document.getElementById('messageModalClose');
+  
+  if (closeBtn) {
+    closeBtn.addEventListener('click', hideMessageModal);
+  }
+  
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        hideMessageModal();
+      }
+    });
+  }
+});
+
 document.addEventListener('click', function(e) {
+  const showMessageId = e.target.getAttribute('data-show-message');
+  if (showMessageId) {
+    const message = e.target.getAttribute('data-message');
+    if (message) {
+      showMessageModal(message);
+    }
+  }
+  
   const toggleId = e.target.getAttribute('data-toggle-notes');
   if (toggleId) {
     const row = document.getElementById('notes-' + toggleId);

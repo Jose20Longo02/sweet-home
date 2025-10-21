@@ -71,6 +71,68 @@
 .modal .btn-danger:hover { background: var(--red-700, #b91c1c) !important; border-color: var(--red-700, #b91c1c) !important; color: #fff !important; }
 .modal .btn-danger:focus-visible { outline: 2px solid color-mix(in srgb, var(--error-color) 30%, white); outline-offset: 2px; }
 
+/* Message Modal Specific Styles */
+#messageModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+#messageModal .modal-content {
+  background: #fff;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg, 0 20px 40px rgba(0,0,0,.2));
+  border: 1px solid var(--gray-200);
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+#messageModal .modal-header {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--gray-200);
+  font-weight: 700;
+  color: var(--gray-900);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#messageModal .modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+#messageModal .modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--gray-500);
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#messageModal .modal-close:hover {
+  color: var(--gray-700);
+}
+
+#messageModal .modal-body {
+  padding: 18px;
+  color: var(--gray-800);
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .filters-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }

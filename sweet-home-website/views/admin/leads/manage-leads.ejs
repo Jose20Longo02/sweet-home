@@ -122,6 +122,11 @@
                 <input type="datetime-local" data-lead-id="<%= lead.id %>" class="lead-last-contact" value="<%= lead.last_contact_at ? new Date(lead.last_contact_at).toISOString().slice(0,16) : '' %>" />
               </td>
               <td data-label="Actions">
+                <% if (lead.message && lead.message.trim()) { %>
+                  <button class="btn btn-primary btn-sm" data-show-message="<%= lead.id %>" data-message="<%= encodeURIComponent(lead.message) %>">
+                    See message
+                  </button>
+                <% } %>
                 <button class="btn btn-light" data-toggle-notes="<%= lead.id %>">
                   Notes <span class="notes-count" data-notes-count-for="<%= lead.id %>"><%= (lead.internal_notes ? (String(lead.internal_notes).split(/\n\n+/).filter(Boolean).length) : 0) %></span>
                 </button>
@@ -157,6 +162,18 @@
   </section>
 </div>
 
-<script src="/js/admin-leads.js?v=2" defer></script>
+<!-- Message Modal -->
+<div id="messageModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Client Message</h3>
+      <button class="modal-close" id="messageModalClose">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="messageContent" style="white-space: pre-wrap; line-height: 1.5;"></div>
+    </div>
+  </div>
+</div>
 
+<script src="/js/admin-leads.js?v=2" defer></script>
 
