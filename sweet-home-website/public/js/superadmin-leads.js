@@ -48,10 +48,17 @@ function showMessageModal(message) {
     modal.style.position = 'fixed';
     modal.style.top = '0';
     modal.style.left = '0';
+    modal.style.right = '0';
+    modal.style.bottom = '0';
     modal.style.width = '100vw';
     modal.style.height = '100vh';
     modal.style.zIndex = '9999';
     modal.style.background = 'rgba(0,0,0,0.45)';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
+    modal.style.margin = '0';
+    modal.style.padding = '20px';
+    modal.style.boxSizing = 'border-box';
   }
 }
 
@@ -63,10 +70,17 @@ function hideMessageModal() {
     modal.style.position = '';
     modal.style.top = '';
     modal.style.left = '';
+    modal.style.right = '';
+    modal.style.bottom = '';
     modal.style.width = '';
     modal.style.height = '';
     modal.style.zIndex = '';
     modal.style.background = '';
+    modal.style.alignItems = '';
+    modal.style.justifyContent = '';
+    modal.style.margin = '';
+    modal.style.padding = '';
+    modal.style.boxSizing = '';
   }
 }
 
