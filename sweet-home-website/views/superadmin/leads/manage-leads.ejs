@@ -58,6 +58,7 @@
             <th>Location</th>
             <th>Agent</th>
             <th>Lead</th>
+            <th>Message</th>
             <th>Language</th>
             <th>Status</th>
             <th>Last Contact</th>
@@ -136,6 +137,15 @@
                 <div><a href="mailto:<%= lead.email %>"><%= lead.email %></a></div>
                 <% if (lead.phone) { %><div><a href="tel:<%= lead.phone %>"><%= lead.phone %></a></div><% } %>
               </td>
+              <td data-label="Message">
+                <% if (lead.message && lead.message.trim()) { %>
+                  <button class="btn btn-primary btn-sm" data-show-message="<%= lead.id %>" data-message="<%= encodeURIComponent(lead.message) %>">
+                    See message
+                  </button>
+                <% } else { %>
+                  <span style="color: var(--gray-500);">-</span>
+                <% } %>
+              </td>
               <td data-label="Language"><%= lead.preferred_language ? String(lead.preferred_language).toUpperCase() : '-' %></td>
               <td data-label="Status">
                 <select data-lead-id="<%= lead.id %>" class="lead-status">
@@ -148,11 +158,6 @@
                 <input type="datetime-local" data-lead-id="<%= lead.id %>" class="lead-last-contact" value="<%= lead.last_contact_at ? new Date(lead.last_contact_at).toISOString().slice(0,16) : '' %>" />
               </td>
               <td data-label="Actions">
-                <% if (lead.message && lead.message.trim()) { %>
-                  <button class="btn btn-primary btn-sm" data-show-message="<%= lead.id %>" data-message="<%= encodeURIComponent(lead.message) %>">
-                    See message
-                  </button>
-                <% } %>
                 <button class="btn btn-light" data-toggle-notes="<%= lead.id %>">
                   Notes <span class="notes-count" data-notes-count-for="<%= lead.id %>"><%= (lead.internal_notes ? (String(lead.internal_notes).split(/\n\n+/).filter(Boolean).length) : 0) %></span>
                 </button>
@@ -160,7 +165,7 @@
               </td>
             </tr>
             <tr id="notes-<%= lead.id %>" class="notes-row" style="display:none;">
-              <td colspan="9">
+              <td colspan="11">
                 <% const _notesArr = (lead.internal_notes ? String(lead.internal_notes).split(/\n\n+/).filter(Boolean) : []); %>
                 <ul class="lead-notes-list" data-notes-list-for="<%= lead.id %>" style="padding-left:18px; margin:0 0 10px 0;">
                   <% _notesArr.forEach(function(n){
