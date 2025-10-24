@@ -65,10 +65,9 @@ async function generateMissingTranslations(fields, existingI18n, sourceLang) {
     // Start with existing translations
     results[i18nKey] = { ...existingFieldI18n };
     
-    // Ensure source language is set
-    if (!results[i18nKey][sourceLang]) {
-      results[i18nKey][sourceLang] = fieldValue;
-    }
+    // ALWAYS ensure source language is set with current content
+    // This is crucial for proper language switching
+    results[i18nKey][sourceLang] = fieldValue;
     
     // Generate missing translations
     for (const targetLang of missingLangs) {
