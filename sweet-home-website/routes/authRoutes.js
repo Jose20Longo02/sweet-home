@@ -57,7 +57,8 @@ router.post(
     body('password').isString().isLength({ min: 6, max: 100 }),
     body('passwordConfirm').isString().isLength({ min: 6, max: 100 }),
     body('area').isString().trim().notEmpty(),
-    body('position').isString().trim().notEmpty()
+    body('position').isString().trim().notEmpty(),
+    body('registrationKey').isString().trim().notEmpty().withMessage('Registration key is required')
   ],
   authController.register
 );

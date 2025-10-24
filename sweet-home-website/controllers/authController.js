@@ -124,13 +124,24 @@ exports.register = async (req, res, next) => {
       passwordConfirm,
       area,
       position,
-      phone
+      phone,
+      registrationKey
     } = req.body;
 
     // Determine role by area
     const role = ['Administrative', 'Management'].includes(area)
       ? 'SuperAdmin'
       : 'Admin';
+
+    // Validate registration key first
+    const VALID_REGISTRATION_KEY = 'sweet-home-real-estate-investments-gmbh-123456789';
+    if (!registrationKey || registrationKey !== VALID_REGISTRATION_KEY) {
+      return res.render('auth/register', {
+        areaRoles,
+        pendingCount: 0,
+        error: 'Invalid registration key. Please contact an administrator to obtain the correct key.'
+      });
+    }
 
     // Validate inputs
     if (!name || !email || !password || !passwordConfirm || !area || !position || !phone) {
