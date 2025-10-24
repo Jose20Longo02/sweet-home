@@ -62,6 +62,17 @@
           <input id="title" name="title" type="text" maxlength="255" required value="<%= form.title||'' %>" />
         </div>
         <div class="field">
+          <label for="content_language">Content Language<span class="req">*</span></label>
+          <select id="content_language" name="content_language" required>
+            <option value="">Select language</option>
+            <option value="auto" <%= form.content_language==='auto'?'selected':'' %>>Auto-detect</option>
+            <option value="en" <%= form.content_language==='en'?'selected':'' %>>English</option>
+            <option value="de" <%= form.content_language==='de'?'selected':'' %>>German</option>
+            <option value="es" <%= form.content_language==='es'?'selected':'' %>>Spanish</option>
+          </select>
+          <small>Choose the language of your title and description. Auto-detect will try to determine it automatically.</small>
+        </div>
+        <div class="field">
           <label for="type">Type<span class="req">*</span></label>
           <select id="type" name="type" required>
             <option value="">Select type</option>

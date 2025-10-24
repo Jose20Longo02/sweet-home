@@ -73,18 +73,18 @@ async function generateMissingTranslations(fields, existingI18n, sourceLang) {
     for (const targetLang of missingLangs) {
       tasks.push(
         (async () => {
-          try {
-            const { translateText } = require('../config/translator');
-            const translated = await translateText(fieldValue, targetLang, { 
-              sourceLang, 
-              isHtml: fieldName === 'description' 
-            });
-            if (translated) {
-              results[i18nKey][targetLang] = translated;
+            try {
+              const { translateText } = require('../config/translator');
+              const translated = await translateText(fieldValue, targetLang, { 
+                sourceLang, 
+                isHtml: fieldName === 'description' 
+              });
+              if (translated) {
+                results[i18nKey][targetLang] = translated;
+              }
+            } catch (error) {
+              console.log(`Translation failed for ${fieldName} to ${targetLang}:`, error.message);
             }
-          } catch (error) {
-            console.log(`Translation failed for ${fieldName} to ${targetLang}:`, error.message);
-          }
         })()
       );
     }

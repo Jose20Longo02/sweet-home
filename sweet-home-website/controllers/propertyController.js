@@ -786,22 +786,38 @@ exports.createProperty = async (req, res, next) => {
 
     // Auto-translate and persist i18n JSON
     try {
-      // Detect source language from title and description
-      const sourceLang = detectLanguageFromFields({ title, description });
-      const targetLangs = getTargetLanguages(sourceLang);
+      console.log(`[createProperty] Starting translation process for new property ${newId}`);
+      console.log(`[createProperty] Title: "${title}"`);
+      console.log(`[createProperty] Description: "${description?.substring(0, 50)}..."`);
+      console.log(`[createProperty] Content language: "${form.content_language || 'auto'}"`);
       
-      const i18n = await ensureLocalizedFields({
-        fields: { title: title || '', description: description || '' },
-        existing: {},
-        sourceLang: sourceLang,
-        targetLangs: targetLangs,
-        htmlFields: ['description']
-      });
+      // Determine source language: use user selection or auto-detect
+      let sourceLang;
+      if (form.content_language && form.content_language !== 'auto') {
+        sourceLang = form.content_language;
+        console.log(`[createProperty] Using user-selected language: ${sourceLang}`);
+      } else {
+        sourceLang = detectLanguageFromFields({ title, description });
+        console.log(`[createProperty] Auto-detected language: ${sourceLang}`);
+      }
+      
+      // Use enhanced translation helper for new properties
+      const fields = { title: title || '', description: description || '' };
+      const existingI18n = {}; // Empty for new properties
+      const completeI18n = await ensureCompleteTranslations(fields, existingI18n);
+      
+      console.log(`[createProperty] Complete i18n result:`, completeI18n);
+      
       await query(
         `UPDATE properties SET title_i18n = $1, description_i18n = $2 WHERE id = $3`,
-        [i18n.title_i18n || { [sourceLang]: title || '' }, i18n.description_i18n || { [sourceLang]: description || '' }, newId]
+        [completeI18n.title_i18n, completeI18n.description_i18n, newId]
       );
-    } catch (_) { /* non-fatal */ }
+      
+      console.log(`[createProperty] Translation update completed successfully`);
+    } catch (error) { 
+      console.log(`[createProperty] Translation error:`, error.message);
+      console.log(`[createProperty] Translation error stack:`, error.stack);
+    }
 
     // Move uploaded files into a property-specific folder and update paths
     if (!process.env.DO_SPACES_BUCKET) {
@@ -1381,20 +1397,43 @@ exports.updateProperty = async (req, res, next) => {
     // Enhanced auto-translation for existing properties
     // This will detect missing translations and generate them automatically
     try {
+      console.log(`[updateProperty] Starting translation process for property ${propId}`);
       const { rows: latestRows } = await query(`SELECT title_i18n, description_i18n FROM properties WHERE id = $1`, [propId]);
       const existingI18n = latestRows[0] || {};
       const currentTitle = title || existing.title || '';
       const currentDescription = description || existing.description || '';
       
+      console.log(`[updateProperty] Current title: "${currentTitle}"`);
+      console.log(`[updateProperty] Current description: "${currentDescription.substring(0, 50)}..."`);
+      console.log(`[updateProperty] Content language: "${form.content_language || 'auto'}"`);
+      console.log(`[updateProperty] Existing i18n:`, existingI18n);
+      
+      // Determine source language: use user selection or auto-detect
+      let sourceLang;
+      if (form.content_language && form.content_language !== 'auto') {
+        sourceLang = form.content_language;
+        console.log(`[updateProperty] Using user-selected language: ${sourceLang}`);
+      } else {
+        sourceLang = detectLanguageFromFields({ title: currentTitle, description: currentDescription });
+        console.log(`[updateProperty] Auto-detected language: ${sourceLang}`);
+      }
+      
       // Use enhanced translation helper to ensure all translations exist
       const fields = { title: currentTitle, description: currentDescription };
       const completeI18n = await ensureCompleteTranslations(fields, existingI18n);
+      
+      console.log(`[updateProperty] Complete i18n result:`, completeI18n);
       
       await query(
         `UPDATE properties SET title_i18n = $1, description_i18n = $2, updated_at = NOW() WHERE id = $3`,
         [completeI18n.title_i18n, completeI18n.description_i18n, propId]
       );
-    } catch (_) { /* non-fatal */ }
+      
+      console.log(`[updateProperty] Translation update completed successfully`);
+    } catch (error) { 
+      console.log(`[updateProperty] Translation error:`, error.message);
+      console.log(`[updateProperty] Translation error stack:`, error.stack);
+    }
 
     // Ensure floorplan/plan removals are persisted even when there are no new uploads
     try {

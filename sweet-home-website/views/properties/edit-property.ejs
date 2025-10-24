@@ -95,6 +95,17 @@
           <input id="title" name="title" type="text" maxlength="255" required value="<%= property.title %>" />
         </div>
         <div class="field">
+          <label for="content_language">Content Language<span class="req">*</span></label>
+          <select id="content_language" name="content_language" required>
+            <option value="">Select language</option>
+            <option value="auto" <%= property.content_language==='auto'?'selected':'' %>>Auto-detect</option>
+            <option value="en" <%= property.content_language==='en'?'selected':'' %>>English</option>
+            <option value="de" <%= property.content_language==='de'?'selected':'' %>>German</option>
+            <option value="es" <%= property.content_language==='es'?'selected':'' %>>Spanish</option>
+          </select>
+          <small>Choose the language of your title and description. Auto-detect will try to determine it automatically.</small>
+        </div>
+        <div class="field">
           <label for="type">Type<span class="req">*</span></label>
           <select id="type" name="type" required>
             <% ['Apartment','House','Villa','Land'].forEach(t => { %>

@@ -244,22 +244,38 @@ exports.createProject = async (req, res, next) => {
 
     // Auto-translate and persist i18n JSON
     try {
-      // Detect source language from title and description
-      const sourceLang = detectLanguageFromFields({ title, description });
-      const targetLangs = getTargetLanguages(sourceLang);
+      console.log(`[createProject] Starting translation process for new project ${newId}`);
+      console.log(`[createProject] Title: "${title}"`);
+      console.log(`[createProject] Description: "${description?.substring(0, 50)}..."`);
+      console.log(`[createProject] Content language: "${body.content_language || 'auto'}"`);
       
-      const i18n = await ensureLocalizedFields({
-        fields: { title: title || '', description: description || '' },
-        existing: {},
-        sourceLang: sourceLang,
-        targetLangs: targetLangs,
-        htmlFields: ['description']
-      });
+      // Determine source language: use user selection or auto-detect
+      let sourceLang;
+      if (body.content_language && body.content_language !== 'auto') {
+        sourceLang = body.content_language;
+        console.log(`[createProject] Using user-selected language: ${sourceLang}`);
+      } else {
+        sourceLang = detectLanguageFromFields({ title, description });
+        console.log(`[createProject] Auto-detected language: ${sourceLang}`);
+      }
+      
+      // Use enhanced translation helper for new projects
+      const fields = { title: title || '', description: description || '' };
+      const existingI18n = {}; // Empty for new projects
+      const completeI18n = await ensureCompleteTranslations(fields, existingI18n);
+      
+      console.log(`[createProject] Complete i18n result:`, completeI18n);
+      
       await query(
         `UPDATE projects SET title_i18n = $1, description_i18n = $2 WHERE id = $3`,
-        [i18n.title_i18n || { [sourceLang]: title || '' }, i18n.description_i18n || { [sourceLang]: description || '' }, newId]
+        [completeI18n.title_i18n, completeI18n.description_i18n, newId]
       );
-    } catch (_) { /* non-fatal */ }
+      
+      console.log(`[createProject] Translation update completed successfully`);
+    } catch (error) { 
+      console.log(`[createProject] Translation error:`, error.message);
+      console.log(`[createProject] Translation error stack:`, error.stack);
+    }
 
     // Move uploaded files into a project-specific folder and update paths (local disk only)
     if (!process.env.DO_SPACES_BUCKET) {
@@ -669,18 +685,43 @@ exports.updateProject = async (req, res, next) => {
     // Enhanced auto-translation for existing projects
     // This will detect missing translations and generate them automatically
     try {
+      console.log(`[updateProject] Starting translation process for project ${projId}`);
       const { rows: latestRows } = await query(`SELECT title_i18n, description_i18n FROM projects WHERE id = $1`, [projId]);
       const existingI18n = latestRows[0] || {};
+      const currentTitle = title || existing.title || '';
+      const currentDescription = description || existing.description || '';
+      
+      console.log(`[updateProject] Current title: "${currentTitle}"`);
+      console.log(`[updateProject] Current description: "${currentDescription.substring(0, 50)}..."`);
+      console.log(`[updateProject] Content language: "${body.content_language || 'auto'}"`);
+      console.log(`[updateProject] Existing i18n:`, existingI18n);
+      
+      // Determine source language: use user selection or auto-detect
+      let sourceLang;
+      if (body.content_language && body.content_language !== 'auto') {
+        sourceLang = body.content_language;
+        console.log(`[updateProject] Using user-selected language: ${sourceLang}`);
+      } else {
+        sourceLang = detectLanguageFromFields({ title: currentTitle, description: currentDescription });
+        console.log(`[updateProject] Auto-detected language: ${sourceLang}`);
+      }
       
       // Use enhanced translation helper to ensure all translations exist
-      const fields = { title: title || '', description: description || '' };
+      const fields = { title: currentTitle, description: currentDescription };
       const completeI18n = await ensureCompleteTranslations(fields, existingI18n);
+      
+      console.log(`[updateProject] Complete i18n result:`, completeI18n);
       
       await query(
         `UPDATE projects SET title_i18n = $1, description_i18n = $2 WHERE id = $3`,
         [completeI18n.title_i18n, completeI18n.description_i18n, projId]
       );
-    } catch (_) { /* non-fatal */ }
+      
+      console.log(`[updateProject] Translation update completed successfully`);
+    } catch (error) { 
+      console.log(`[updateProject] Translation error:`, error.message);
+      console.log(`[updateProject] Translation error stack:`, error.stack);
+    }
 
     // If there are new uploads, update URLs; if not using Spaces, move files locally
     if (uploadedPhotosFiles.length || uploadedVideoFile || uploadedBrochure) {

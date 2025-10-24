@@ -46,6 +46,19 @@
         <input name="title" type="text" maxlength="255" required value="<%= project.title||'' %>" />
       </div>
     </div>
+    <div class="grid-1">
+      <div class="field">
+        <label for="content_language">Content Language<span class="req">*</span></label>
+        <select id="content_language" name="content_language" required>
+          <option value="">Select language</option>
+          <option value="auto" <%= project.content_language==='auto'?'selected':'' %>>Auto-detect</option>
+          <option value="en" <%= project.content_language==='en'?'selected':'' %>>English</option>
+          <option value="de" <%= project.content_language==='de'?'selected':'' %>>German</option>
+          <option value="es" <%= project.content_language==='es'?'selected':'' %>>Spanish</option>
+        </select>
+        <small>Choose the language of your title and description. Auto-detect will try to determine it automatically.</small>
+      </div>
+    </div>
     <div class="grid-2">
       <div class="field">
         <label for="agent_id">Assigned team member<span class="req">*</span></label>
