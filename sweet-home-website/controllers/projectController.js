@@ -4,6 +4,8 @@ const { query } = require('../config/db');
 const locations   = require('../config/locations');
 const { generateVariants } = require('../middleware/imageVariants');
 const { ensureLocalizedFields } = require('../config/translator');
+const { detectLanguageFromFields, getTargetLanguages } = require('../utils/languageDetection');
+const { ensureCompleteTranslations } = require('../utils/translationHelper');
 const { generateSEOFileName } = require('../utils/imageNaming');
 const path = require('path');
 const s3   = require('../config/spaces');
@@ -242,16 +244,20 @@ exports.createProject = async (req, res, next) => {
 
     // Auto-translate and persist i18n JSON
     try {
+      // Detect source language from title and description
+      const sourceLang = detectLanguageFromFields({ title, description });
+      const targetLangs = getTargetLanguages(sourceLang);
+      
       const i18n = await ensureLocalizedFields({
         fields: { title: title || '', description: description || '' },
         existing: {},
-        sourceLang: 'en',
-        targetLangs: ['es','de'],
+        sourceLang: sourceLang,
+        targetLangs: targetLangs,
         htmlFields: ['description']
       });
       await query(
         `UPDATE projects SET title_i18n = $1, description_i18n = $2 WHERE id = $3`,
-        [i18n.title_i18n || { en: title || '' }, i18n.description_i18n || { en: description || '' }, newId]
+        [i18n.title_i18n || { [sourceLang]: title || '' }, i18n.description_i18n || { [sourceLang]: description || '' }, newId]
       );
     } catch (_) { /* non-fatal */ }
 
@@ -660,20 +666,19 @@ exports.updateProject = async (req, res, next) => {
       ]
     );
 
-    // Auto-translate updated fields and upsert i18n
+    // Enhanced auto-translation for existing projects
+    // This will detect missing translations and generate them automatically
     try {
       const { rows: latestRows } = await query(`SELECT title_i18n, description_i18n FROM projects WHERE id = $1`, [projId]);
       const existingI18n = latestRows[0] || {};
-      const i18n = await ensureLocalizedFields({
-        fields: { title: title || '', description: description || '' },
-        existing: existingI18n,
-        sourceLang: 'en',
-        targetLangs: ['es','de'],
-        htmlFields: ['description']
-      });
+      
+      // Use enhanced translation helper to ensure all translations exist
+      const fields = { title: title || '', description: description || '' };
+      const completeI18n = await ensureCompleteTranslations(fields, existingI18n);
+      
       await query(
         `UPDATE projects SET title_i18n = $1, description_i18n = $2 WHERE id = $3`,
-        [i18n.title_i18n, i18n.description_i18n, projId]
+        [completeI18n.title_i18n, completeI18n.description_i18n, projId]
       );
     } catch (_) { /* non-fatal */ }
 

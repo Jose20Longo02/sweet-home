@@ -10,6 +10,8 @@ const s3          = require('../config/spaces');
 const sendMail    = require('../config/mailer');
 const { generateVariants, SIZES } = require('../middleware/imageVariants');
 const { ensureLocalizedFields } = require('../config/translator');
+const { detectLanguageFromFields, getTargetLanguages } = require('../utils/languageDetection');
+const { ensureCompleteTranslations } = require('../utils/translationHelper');
 const { generateSEOFileName } = require('../utils/imageNaming');
 
 // Extract coordinates from common map link formats or raw "lat,lng"
@@ -784,16 +786,20 @@ exports.createProperty = async (req, res, next) => {
 
     // Auto-translate and persist i18n JSON
     try {
+      // Detect source language from title and description
+      const sourceLang = detectLanguageFromFields({ title, description });
+      const targetLangs = getTargetLanguages(sourceLang);
+      
       const i18n = await ensureLocalizedFields({
         fields: { title: title || '', description: description || '' },
         existing: {},
-        sourceLang: 'en',
-        targetLangs: ['es','de'],
+        sourceLang: sourceLang,
+        targetLangs: targetLangs,
         htmlFields: ['description']
       });
       await query(
         `UPDATE properties SET title_i18n = $1, description_i18n = $2 WHERE id = $3`,
-        [i18n.title_i18n || { en: title || '' }, i18n.description_i18n || { en: description || '' }, newId]
+        [i18n.title_i18n || { [sourceLang]: title || '' }, i18n.description_i18n || { [sourceLang]: description || '' }, newId]
       );
     } catch (_) { /* non-fatal */ }
 
@@ -1372,22 +1378,21 @@ exports.updateProperty = async (req, res, next) => {
       ]
     );
 
-    // Auto-translate updated fields and upsert i18n
+    // Enhanced auto-translation for existing properties
+    // This will detect missing translations and generate them automatically
     try {
       const { rows: latestRows } = await query(`SELECT title_i18n, description_i18n FROM properties WHERE id = $1`, [propId]);
       const existingI18n = latestRows[0] || {};
       const currentTitle = title || existing.title || '';
       const currentDescription = description || existing.description || '';
-      const i18n = await ensureLocalizedFields({
-        fields: { title: currentTitle, description: currentDescription },
-        existing: existingI18n,
-        sourceLang: 'en',
-        targetLangs: ['es','de'],
-        htmlFields: ['description']
-      });
+      
+      // Use enhanced translation helper to ensure all translations exist
+      const fields = { title: currentTitle, description: currentDescription };
+      const completeI18n = await ensureCompleteTranslations(fields, existingI18n);
+      
       await query(
         `UPDATE properties SET title_i18n = $1, description_i18n = $2, updated_at = NOW() WHERE id = $3`,
-        [i18n.title_i18n, i18n.description_i18n, propId]
+        [completeI18n.title_i18n, completeI18n.description_i18n, propId]
       );
     } catch (_) { /* non-fatal */ }
 
