@@ -22,7 +22,28 @@ function getMissingTranslations(i18n, sourceLang) {
   const missingLangs = [];
   
   for (const lang of targetLangs) {
-    if (!i18n[lang] || String(i18n[lang]).trim() === '') {
+    const translation = i18n[lang];
+    
+    // Check if translation is missing or empty
+    if (!translation || String(translation).trim() === '') {
+      missingLangs.push(lang);
+      continue;
+    }
+    
+    // Check if the existing translation is actually in the wrong language
+    // If the translation content is the same as the source language content, it's not translated
+    const sourceContent = i18n[sourceLang];
+    if (sourceContent && String(translation).trim() === String(sourceContent).trim()) {
+      console.log(`[TranslationHelper] Translation for ${lang} is identical to source (${sourceLang}), regenerating...`);
+      missingLangs.push(lang);
+      continue;
+    }
+    
+    // Additional check: detect if the translation is actually in the source language
+    const { detectLanguageFromFields } = require('./languageDetection');
+    const detectedLang = detectLanguageFromFields({ text: translation });
+    if (detectedLang === sourceLang) {
+      console.log(`[TranslationHelper] Translation for ${lang} is detected as ${sourceLang}, regenerating...`);
       missingLangs.push(lang);
     }
   }
