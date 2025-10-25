@@ -40,11 +40,14 @@ function getMissingTranslations(i18n, sourceLang) {
     }
     
     // Additional check: detect if the translation is actually in the source language
-    const { detectLanguageFromFields } = require('./languageDetection');
-    const detectedLang = detectLanguageFromFields({ text: translation });
-    if (detectedLang === sourceLang) {
-      console.log(`[TranslationHelper] Translation for ${lang} is detected as ${sourceLang}, regenerating...`);
-      missingLangs.push(lang);
+    // Only do this check if the translation is significantly different from source content
+    if (String(translation).trim() !== String(sourceContent).trim()) {
+      const { detectLanguageFromFields } = require('./languageDetection');
+      const detectedLang = detectLanguageFromFields({ text: translation });
+      if (detectedLang === sourceLang) {
+        console.log(`[TranslationHelper] Translation for ${lang} is detected as ${sourceLang}, regenerating...`);
+        missingLangs.push(lang);
+      }
     }
   }
   
@@ -63,6 +66,10 @@ async function generateMissingTranslations(fields, existingI18n, sourceLang) {
     return existingI18n || {};
   }
   
+  console.log(`[TranslationHelper] generateMissingTranslations called with sourceLang: ${sourceLang}`);
+  console.log(`[TranslationHelper] Fields:`, fields);
+  console.log(`[TranslationHelper] Existing i18n:`, existingI18n);
+  
   const results = {};
   const tasks = [];
   
@@ -77,9 +84,12 @@ async function generateMissingTranslations(fields, existingI18n, sourceLang) {
     // Check for missing translations
     const missingLangs = getMissingTranslations(existingFieldI18n, sourceLang);
     
+    console.log(`[TranslationHelper] Field ${fieldName}: missing languages:`, missingLangs);
+    
     if (missingLangs.length === 0) {
       // No missing translations, keep existing
       results[i18nKey] = existingFieldI18n;
+      console.log(`[TranslationHelper] No missing translations for ${fieldName}, keeping existing`);
       continue;
     }
     
@@ -96,15 +106,20 @@ async function generateMissingTranslations(fields, existingI18n, sourceLang) {
         (async () => {
             try {
               const { translateText } = require('../config/translator');
+              console.log(`[TranslationHelper] Attempting to translate ${fieldName} from ${sourceLang} to ${targetLang}`);
+              console.log(`[TranslationHelper] Source text: "${fieldValue.substring(0, 100)}..."`);
               const translated = await translateText(fieldValue, targetLang, { 
                 sourceLang, 
                 isHtml: fieldName === 'description' 
               });
               if (translated) {
                 results[i18nKey][targetLang] = translated;
+                console.log(`[TranslationHelper] ✅ Generated ${sourceLang}→${targetLang} for ${fieldName}: "${translated.substring(0, 100)}..."`);
+              } else {
+                console.log(`[TranslationHelper] ❌ No translation generated for ${sourceLang}→${targetLang} (API not configured or failed)`);
               }
             } catch (error) {
-              console.log(`Translation failed for ${fieldName} to ${targetLang}:`, error.message);
+              console.log(`[TranslationHelper] ❌ Translation failed for ${fieldName} to ${targetLang}:`, error.message);
             }
         })()
       );

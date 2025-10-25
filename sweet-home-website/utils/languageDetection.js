@@ -20,7 +20,12 @@ const LANGUAGE_INDICATORS = {
     'wird', 'würde', 'könnte', 'sollte', 'kann', 'muss',
     'dieser', 'diese', 'dieses', 'hier', 'dort', 'wo', 'wann', 'warum', 'wie',
     'eigentum', 'wohnung', 'haus', 'villa', 'land', 'schlafzimmer', 'badezimmer', 'küche',
-    'wohnzimmer', 'raum', 'platz', 'größe', 'preis', 'standort', 'stadt', 'land'
+    'wohnzimmer', 'raum', 'platz', 'größe', 'preis', 'standort', 'stadt', 'land',
+    'attraktive', 'altbauwohnung', 'erdgeschoss', 'eigennutzung', 'möglich', 'befindet', 'sich',
+    'charmanten', 'altbaus', 'modernisiert', 'vermietet', 'langfristigen', 'mieterschutz', 'sodass',
+    'objektdaten', 'wohnfläche', 'etage', 'hinterhaus', 'kaltmiete', 'kaufpreis', 'hausgeld',
+    'baujahr', 'gebäude', 'heizungsart', 'erdgas', 'energieeffizienzklasse', 'derzeit', 'selbstnutzung',
+    'objektdetails', 'monatliche', 'nebenkosten', 'heizung', 'zimmer', 'wohnung', 'möbliert'
   ],
   es: [
     'el', 'la', 'los', 'las', 'y', 'o', 'pero', 'en', 'sobre', 'a', 'para', 'de', 'con', 'por',
