@@ -539,7 +539,7 @@ exports.createProperty = async (req, res, next) => {
     };
 
     const title        = body.title?.trim();
-    const description  = body.description?.trim();
+    const description  = body.description; // Don't trim to preserve line breaks
     const type         = body.type?.trim();
     const country      = body.country?.trim();
     const city         = body.city?.trim();
@@ -1136,7 +1136,7 @@ exports.updateProperty = async (req, res, next) => {
     };
 
     const title        = body.title?.trim() || existing.title;
-    const description  = body.description?.trim() || existing.description;
+    const description  = body.description || existing.description; // Don't trim to preserve line breaks
     const type         = body.type?.trim() || existing.type;
     const country      = body.country?.trim() || existing.country;
     const city         = body.city?.trim() || existing.city;

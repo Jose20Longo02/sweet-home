@@ -143,7 +143,7 @@ exports.createProject = async (req, res, next) => {
     const clamp = (n, min, max) => (n === null ? null : Math.min(Math.max(n, min), max));
 
     const title        = body.title?.trim();
-    const description  = body.description?.trim();
+    const description  = body.description; // Don't trim to preserve line breaks
     const country      = body.country?.trim();
     const city         = body.city?.trim();
     const neighborhood = body.neighborhood?.trim() || null;
@@ -524,7 +524,7 @@ exports.updateProject = async (req, res, next) => {
     const maxMoney = 9999999999.99;
 
     const title        = body.title?.trim() || existing.title;
-    const description  = body.description?.trim() || existing.description;
+    const description  = body.description || existing.description; // Don't trim to preserve line breaks
     const country      = body.country?.trim() || existing.country;
     const city         = body.city?.trim() || existing.city;
     const neighborhood = body.neighborhood?.trim() || existing.neighborhood;

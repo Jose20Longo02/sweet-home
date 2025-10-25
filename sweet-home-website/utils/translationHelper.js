@@ -104,7 +104,8 @@ async function generateMissingTranslations(fields, existingI18n, sourceLang) {
       const parts = fieldValue.split('__');
       if (parts.length >= 2) {
         // Take only the first part (usually the source language)
-        cleanSourceContent = parts[0].trim();
+        // Don't trim to preserve line breaks and formatting
+        cleanSourceContent = parts[0];
         console.log(`[TranslationHelper] Detected mixed language content, using first part: "${cleanSourceContent.substring(0, 100)}..."`);
       }
     }
