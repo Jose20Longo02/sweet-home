@@ -356,6 +356,14 @@
   line-height: 1.7;
   margin: 0;
 }
+
+.description-text {
+  color: var(--gray-700);
+  line-height: 1.7;
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
 /* Collapsible description */
 .description-content.collapsed {
   max-height: 7.5rem;

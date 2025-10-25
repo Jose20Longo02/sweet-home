@@ -415,7 +415,7 @@
         <section class="property-description">
           <h2><%= t('properties.detail.description','Description') %></h2>
           <div class="description-content collapsed" id="descriptionContent">
-            <p><%= property.description || t('properties.detail.noDescription','No description available for this property.') %></p>
+            <div class="description-text"><%= property.description || t('properties.detail.noDescription','No description available for this property.') %></div>
           </div>
           <button class="btn btn-outline description-toggle" id="descriptionToggle"><%= t('properties.detail.readMore','Read more') %></button>
         </section>

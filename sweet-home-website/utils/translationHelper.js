@@ -96,9 +96,22 @@ async function generateMissingTranslations(fields, existingI18n, sourceLang) {
     // Start with existing translations
     results[i18nKey] = { ...existingFieldI18n };
     
+    // Clean up the source content before translation to avoid mixed languages
+    let cleanSourceContent = fieldValue;
+    
+    // If the content contains mixed languages separated by '__', extract only the source language part
+    if (fieldValue.includes('__')) {
+      const parts = fieldValue.split('__');
+      if (parts.length >= 2) {
+        // Take only the first part (usually the source language)
+        cleanSourceContent = parts[0].trim();
+        console.log(`[TranslationHelper] Detected mixed language content, using first part: "${cleanSourceContent.substring(0, 100)}..."`);
+      }
+    }
+    
     // ALWAYS ensure source language is set with current content
     // This is crucial for proper language switching
-    results[i18nKey][sourceLang] = fieldValue;
+    results[i18nKey][sourceLang] = cleanSourceContent;
     
     // Generate missing translations
     for (const targetLang of missingLangs) {
@@ -107,8 +120,8 @@ async function generateMissingTranslations(fields, existingI18n, sourceLang) {
             try {
               const { translateText } = require('../config/translator');
               console.log(`[TranslationHelper] Attempting to translate ${fieldName} from ${sourceLang} to ${targetLang}`);
-              console.log(`[TranslationHelper] Source text: "${fieldValue.substring(0, 100)}..."`);
-              const translated = await translateText(fieldValue, targetLang, { 
+              console.log(`[TranslationHelper] Source text: "${cleanSourceContent.substring(0, 100)}..."`);
+              const translated = await translateText(cleanSourceContent, targetLang, { 
                 sourceLang, 
                 isHtml: fieldName === 'description' 
               });
