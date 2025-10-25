@@ -159,7 +159,7 @@
           <div class="project-section">
             <h2><%= t('projects.detail.overview','Project Overview') %></h2>
             <div class="project-description">
-              <div class="project-description-text"><%= project.description %></div>
+              <div class="project-description-text"><%= project.description.replace(/\n/g, '<br>') %></div>
             </div>
           </div>
 

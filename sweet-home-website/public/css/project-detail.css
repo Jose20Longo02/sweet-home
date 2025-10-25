@@ -270,7 +270,6 @@
   color: var(--gray-700);
   font-size: var(--font-size-lg);
   line-height: 1.7;
-  white-space: pre-wrap;
   word-wrap: break-word;
 }
 
