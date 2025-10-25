@@ -789,12 +789,12 @@ exports.createProperty = async (req, res, next) => {
       console.log(`[createProperty] Starting translation process for new property ${newId}`);
       console.log(`[createProperty] Title: "${title}"`);
       console.log(`[createProperty] Description: "${description?.substring(0, 50)}..."`);
-      console.log(`[createProperty] Content language: "${form.content_language || 'auto'}"`);
+      console.log(`[createProperty] Content language: "${body.content_language || 'auto'}"`);
       
       // Determine source language: use user selection or auto-detect
       let sourceLang;
-      if (form.content_language && form.content_language !== 'auto') {
-        sourceLang = form.content_language;
+      if (body.content_language && body.content_language !== 'auto') {
+        sourceLang = body.content_language;
         console.log(`[createProperty] Using user-selected language: ${sourceLang}`);
       } else {
         sourceLang = detectLanguageFromFields({ title, description });
@@ -1405,13 +1405,13 @@ exports.updateProperty = async (req, res, next) => {
       
       console.log(`[updateProperty] Current title: "${currentTitle}"`);
       console.log(`[updateProperty] Current description: "${currentDescription.substring(0, 50)}..."`);
-      console.log(`[updateProperty] Content language: "${form.content_language || 'auto'}"`);
+      console.log(`[updateProperty] Content language: "${body.content_language || 'auto'}"`);
       console.log(`[updateProperty] Existing i18n:`, existingI18n);
       
       // Determine source language: use user selection or auto-detect
       let sourceLang;
-      if (form.content_language && form.content_language !== 'auto') {
-        sourceLang = form.content_language;
+      if (body.content_language && body.content_language !== 'auto') {
+        sourceLang = body.content_language;
         console.log(`[updateProperty] Using user-selected language: ${sourceLang}`);
       } else {
         sourceLang = detectLanguageFromFields({ title: currentTitle, description: currentDescription });
