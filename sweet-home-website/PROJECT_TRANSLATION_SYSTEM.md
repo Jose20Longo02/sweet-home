@@ -98,3 +98,4 @@ Implemented the same language selection and translation system for projects that
 4. **Verify language switching** works correctly on frontend
 
 The project translation system now works identically to the property translation system! 🎯
+

@@ -139,3 +139,4 @@ title_i18n: {
 ✅ **Mixed content**: Handled gracefully with appropriate defaults
 
 The system now provides true multi-language support for property and project uploads, automatically detecting the source language and generating appropriate translations for all supported languages.
+

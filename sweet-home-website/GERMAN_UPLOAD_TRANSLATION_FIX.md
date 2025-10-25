@@ -99,3 +99,4 @@ Added language selection dropdown with options:
 4. **Verify language switching** works correctly on frontend
 
 The system now properly handles multi-language content from the moment of upload! 🎯
+

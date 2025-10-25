@@ -98,3 +98,4 @@ Now when switching languages:
 4. **Test language switching** on edited properties
 
 The fix ensures that German properties (and any other language properties) will now properly switch languages when users change the language setting on the frontend.
+
