@@ -127,8 +127,33 @@ async function generateMissingTranslations(fields, existingI18n, sourceLang) {
                 isHtml: fieldName === 'description' 
               });
               if (translated) {
-                results[i18nKey][targetLang] = translated;
-                console.log(`[TranslationHelper] ✅ Generated ${sourceLang}→${targetLang} for ${fieldName}: "${translated.substring(0, 100)}..."`);
+                // Check if line breaks were preserved in translation
+                const hasLineBreaks = translated.includes('\n');
+                console.log(`[TranslationHelper] Translation has line breaks: ${hasLineBreaks}`);
+                if (!hasLineBreaks && cleanSourceContent.includes('\n')) {
+                  console.log(`[TranslationHelper] ⚠️ Line breaks lost in translation, attempting to restore...`);
+                  // Try to restore line breaks by translating line by line
+                  const lines = cleanSourceContent.split('\n');
+                  const translatedLines = [];
+                  for (const line of lines) {
+                    if (line.trim() === '') {
+                      translatedLines.push('');
+                    } else {
+                      try {
+                        const lineTranslation = await translateText(line.trim(), targetLang, { sourceLang });
+                        translatedLines.push(lineTranslation || line);
+                      } catch (error) {
+                        translatedLines.push(line);
+                      }
+                    }
+                  }
+                  const restoredTranslation = translatedLines.join('\n');
+                  results[i18nKey][targetLang] = restoredTranslation;
+                  console.log(`[TranslationHelper] ✅ Restored line breaks for ${sourceLang}→${targetLang}: "${restoredTranslation.substring(0, 100)}..."`);
+                } else {
+                  results[i18nKey][targetLang] = translated;
+                  console.log(`[TranslationHelper] ✅ Generated ${sourceLang}→${targetLang} for ${fieldName}: "${translated.substring(0, 100)}..."`);
+                }
               } else {
                 console.log(`[TranslationHelper] ❌ No translation generated for ${sourceLang}→${targetLang} (API not configured or failed)`);
               }
