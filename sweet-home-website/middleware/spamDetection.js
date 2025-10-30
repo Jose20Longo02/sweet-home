@@ -6,6 +6,84 @@ const { query } = require('../config/db');
  * Analyzes messages using multiple detection methods and silently discards spam
  */
 
+// Rental inquiry detection patterns (multi-language)
+// IMPORTANT: Only reject messages that CLEARLY indicate RENTAL interest (not purchase)
+// Buyers also "look for apartments" - we must be very specific to avoid false positives
+const RENTAL_PATTERNS = {
+  // CLEAR rental-only keywords (not purchase-related)
+  rentalOnlyKeywords: [
+    // English - rental-specific terms
+    'available for rent', 'apartments for rent', 'rental apartment', 'for rent',
+    'looking to rent', 'interested in renting', 'need to rent', 'willing to rent',
+    'monthly rent', 'rent per month', 'renting an apartment', 'rent a flat',
+    
+    // German - rental-specific terms
+    'wohnung zu mieten', 'wohnung mieten', 'möchte mieten', 'würde mieten',
+    'zur miete', 'mietwohnung', 'mieten möchte', 'zu vermieten',
+    'monatliche miete', 'miete pro monat',
+    
+    // Spanish - rental-specific terms
+    'apartamento en alquiler', 'disponible para alquilar', 'en alquiler',
+    'necesito alquilar', 'quiero alquilar', 'alquiler mensual',
+    'alquilar un apartamento', 'alquilar piso'
+  ],
+  
+  // Phrases that CLEARLY indicate rental (require monthly budget context)
+  rentalPhrases: [
+    // Monthly budget + apartment (very specific)
+    /\d+\s*eur\s+(per|a)\s+month/i,
+    /\d+\s*eur\s*\/\s*month/i,
+    /\d+\s*eur\s+(im|pro)\s+monat/i,
+    /\d+\s*eur\s+(al|por)\s+mes/i,
+    /monthly\s+rent/i,
+    /monatliche\s+miete/i,
+    /alquiler\s+mensual/i,
+    /rent\s+(is|of|per)\s+/i,
+    /miete\s+(ist|von|pro)/i,
+    /alquiler\s+(es|de|por)/i,
+    
+    // Temporary stay (rental indicator)
+    /staying\s+(until|till|for)/i,
+    /will\s+be\s+staying/i,
+    /will\s+stay/i,
+    /bleibe\s+bis/i,
+    /wohnen\s+bis/i,
+    /me\s+quedar[éa]\s+hasta/i,
+    /estar[éa]\s+hasta/i,
+    
+    // Available FOR RENT specifically
+    /available\s+for\s+rent/i,
+    /apartments?\s+for\s+rent/i,
+    /verfügbar\s+(für|zur)\s+miete/i,
+    /disponible\s+(para|en)\s+alquiler/i,
+    
+    // Rental-specific requests
+    /looking\s+to\s+rent/i,
+    /interested\s+in\s+renting/i,
+    /need\s+to\s+rent/i,
+    /möchte\s+mieten/i,
+    /würde\s+mieten/i,
+    /necesito\s+alquilar/i,
+    /quiero\s+alquilar/i
+  ],
+  
+  // Monthly budget patterns (must be clearly monthly, not purchase price)
+  monthlyBudgetPatterns: [
+    // Clear monthly indicators
+    /\d+\s*eur\s+(per|a)\s+month/gi,
+    /\d+\s*eur\s*\/\s*month/gi,
+    /\d+\s*eur\s+(im|pro)\s+monat/gi,
+    /\d+\s*eur\s+(al|por)\s+mes/gi,
+    /up\s+to\s+\d+\s*eur\s+(a|per)\s+month/gi,
+    /up\s+until\s+\d+\s*eur\s+(a|per)\s+month/gi,
+    /bis\s+(zu\s+)?\d+\s*eur\s+(im|pro)\s+monat/gi,
+    /hasta\s+\d+\s*eur\s+(al|por)\s+mes/gi,
+    /monthly\s+(budget|rent)/gi,
+    /monatliche\s+(budget|miete)/gi,
+    /alquiler\s+mensual/gi
+  ]
+};
+
 // Spam detection patterns
 const SPAM_PATTERNS = {
   // Promotional keywords (multi-language)
@@ -72,6 +150,65 @@ const SPAM_PATTERNS = {
     /(excellent|outstanding|perfect)\s*rating/gi
   ]
 };
+
+/**
+ * Check if message is a rental inquiry (should be rejected for sales-only business)
+ * @param {string} message - The message to analyze
+ * @param {string} name - The sender's name
+ * @param {string} email - The sender's email
+ * @param {string} phone - The sender's phone
+ * @returns {boolean} - True if rental inquiry
+ */
+function isRentalInquiry(message, name, email, phone) {
+  if (!message) return false;
+  
+  const text = message.toLowerCase();
+  const fullText = `${name || ''} ${email || ''} ${phone || ''} ${message}`.toLowerCase();
+  let rentalScore = 0;
+
+  // CRITICAL: We require CLEAR rental indicators, not generic "looking for apartment"
+  // Buyers also look for apartments! We must be very specific.
+
+  // 1. Check for RENTAL-ONLY keywords (not purchase-related) (25 points max)
+  const rentalOnlyMatches = RENTAL_PATTERNS.rentalOnlyKeywords.filter(keyword => 
+    text.includes(keyword.toLowerCase())
+  );
+  rentalScore += Math.min(rentalOnlyMatches.length * 8, 25);
+
+  // 2. Check for CLEAR monthly budget patterns (40 points - strongest indicator)
+  // This is the most reliable sign it's rental, not purchase
+  const monthlyBudgetMatches = RENTAL_PATTERNS.monthlyBudgetPatterns.reduce((count, pattern) => {
+    return count + (fullText.match(pattern) || []).length;
+  }, 0);
+  if (monthlyBudgetMatches > 0) {
+    // Monthly budget is a STRONG rental indicator (not purchase price)
+    rentalScore += 40;
+  }
+
+  // 3. Check for temporary stay language (rental-specific) (20 points max)
+  // "staying until December 2026" = rental, not purchase
+  const temporaryStayMatches = fullText.match(/(staying|will be staying|will stay|bleibe|wohnen|quedar|estar)\s+(until|till|for|bis|hasta)/gi);
+  if (temporaryStayMatches && temporaryStayMatches.length > 0) {
+    rentalScore += 20;
+  }
+
+  // 4. Check for clear rental phrases (25 points max)
+  const phraseMatches = RENTAL_PATTERNS.rentalPhrases.reduce((count, pattern) => {
+    return count + (fullText.match(pattern) || []).length;
+  }, 0);
+  rentalScore += Math.min(phraseMatches * 5, 25);
+
+  // 5. Multiple strong indicators boost confidence (10 points max)
+  // Require at least monthly budget OR rental-only keyword + temporary stay
+  if (monthlyBudgetMatches > 0 && (rentalOnlyMatches.length > 0 || temporaryStayMatches)) {
+    rentalScore += 10;
+  }
+
+  // CONSERVATIVE threshold: Require STRONG evidence (50+ points)
+  // This ensures we only reject CLEAR rental inquiries, not buyers
+  // Monthly budget alone (40 points) is not enough - need another indicator
+  return rentalScore >= 50;
+}
 
 /**
  * Calculate spam score for a message
@@ -243,9 +380,11 @@ const spamDetection = (options = {}) => {
 
       const spamScore = calculateSpamScore(message, name, email, phone);
       const isSpamMessage = isSpam(message, name, email, phone);
+      const isRental = isRentalInquiry(message, name, email, phone);
 
-      if (isSpamMessage) {
-        // Log the spam attempt for analysis
+      // Reject if spam OR rental inquiry
+      if (isSpamMessage || isRental) {
+        // Log the rejected attempt for analysis
         await logSpamAttempt({ name, email, phone, message }, spamScore);
         
         // Silently discard - return success response but don't process the lead
@@ -272,5 +411,6 @@ module.exports = {
   spamDetection,
   calculateSpamScore,
   isSpam,
+  isRentalInquiry,
   logSpamAttempt
 };
