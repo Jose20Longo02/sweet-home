@@ -151,6 +151,41 @@ const SPAM_PATTERNS = {
   ]
 };
 
+// Additional business outreach/promotion phrases (multi-language)
+const OUTREACH_PHRASES = [
+  // German sales/outreach
+  /wir\s+unterstützen\s+\w+unternehmen/gi,
+  /(vollständig|komplett)\s+zu\s+automatisieren/gi,
+  /zeit\s+und\s+aufwand\s+sparen/gi,
+  /neue\s+einnahmequellen/gi,
+  /gerne\s+zeige\s+ich\s+ihnen/gi,
+  /wie\s+(das|es)\s+(auch\s+)?bei\s+[^\n]+\s+funktionieren\s+kann/gi,
+  /(unverbindlich|kostenlos(e|es)\s+(demo|gespräch|beratung))/gi,
+  /(demo|vorführung|termin)\s+(vereinbaren|buchen)/gi,
+  /mietprozess/gi,
+  /terminvereinbarung/gi,
+
+  // English sales/outreach
+  /we\s+help\s+\w+\s+(companies|businesses)/gi,
+  /(fully|completely)\s+automate/gi,
+  /save\s+time\s+and\s+(effort|costs)/gi,
+  /new\s+revenue\s+(streams|sources)/gi,
+  /happy\s+to\s+show\s+you/gi,
+  /how\s+(this|it)\s+can\s+work\s+for\s+you/gi,
+  /(book|schedule)\s+(a\s+)?(demo|call|meeting)/gi,
+  /(no[-\s]?obligation|free)\s+(demo|consult(ation)?)/gi,
+
+  // Spanish sales/outreach
+  /ayudamos\s+a\s+\w+\s+(empresas|inmobiliarias)/gi,
+  /automatizar\s+(por\s+completo|totalmente)/gi,
+  /ahorrar\s+tiempo\s+y\s+(esfuerzo|costos)/gi,
+  /nuevas\s+fuentes\s+de\s+ingresos/gi,
+  /con\s+gusto\s+le\s+muestro/gi,
+  /c[oó]mo\s+(esto|ello)\s+puede\s+funcionar\s+(para\s+usted|en\s+su\s+caso)/gi,
+  /(agende|program(e|a))\s+una\s+(demo|llamada|reuni[oó]n)/gi,
+  /(sin\s+compromiso|gratis)\s+(demo|asesor[ií]a)/gi
+];
+
 /**
  * Check if message is a rental inquiry (should be rejected for sales-only business)
  * @param {string} message - The message to analyze
@@ -311,6 +346,13 @@ function calculateSpamScore(message, name, email, phone) {
     text.includes(phrase.toLowerCase())
   );
   score += Math.min(phraseMatches.length * 5, 10);
+
+  // 12. Outreach/sales pitch detection (30 points max)
+  // German/English/Spanish sales outreach patterns
+  const outreachMatches = OUTREACH_PHRASES.reduce((count, pattern) => {
+    return count + (text.match(pattern) || []).length;
+  }, 0);
+  score += Math.min(outreachMatches * 10, 30);
 
   // 11. Message length analysis (5 points max)
   if (message.length > 500) {
