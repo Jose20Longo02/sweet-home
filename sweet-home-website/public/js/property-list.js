@@ -200,8 +200,8 @@ function removeFilter(filterType, value = null) {
       currentUrl.searchParams.delete('year_built_min');
       currentUrl.searchParams.delete('year_built_max');
       break;
-    case 'bedrooms':
-      currentUrl.searchParams.delete('bedrooms');
+    case 'rooms':
+      currentUrl.searchParams.delete('rooms');
       break;
     case 'bathrooms':
       currentUrl.searchParams.delete('bathrooms');
@@ -437,7 +437,7 @@ function createMarkerPopup(property) {
         <p class="popup-location">${property.city}, ${property.country}</p>
         <p class="popup-price">€${formatPrice(property.price)}</p>
         <div class="popup-details">
-          <span>${property.bedrooms || 0} ${bedsLabel}</span>
+          <span>${property.rooms || 0} ${bedsLabel}</span>
           <span>${property.bathrooms || 0} ${bathsLabel}</span>
           <span>${property.size || 0} ${sqmLabel}</span>
         </div>
@@ -486,7 +486,7 @@ function compareProperty(propertyId) {
   // Prefer explicit data-* attributes to avoid layout/translation issues
   const dataType = propertyCard.getAttribute('data-type') || '';
   const dataSize = propertyCard.getAttribute('data-size') || '';
-  const dataBedrooms = propertyCard.getAttribute('data-bedrooms') || '';
+  const dataRooms = propertyCard.getAttribute('data-rooms') || '';
   const dataBathrooms = propertyCard.getAttribute('data-bathrooms') || '';
   const dataCountry = propertyCard.getAttribute('data-country') || '';
   const dataCity = propertyCard.getAttribute('data-city') || '';
@@ -494,7 +494,7 @@ function compareProperty(propertyId) {
 
   // Fallbacks from visible meta if data-* is missing
   const fallbackSize = metaItems && metaItems[0] ? metaItems[0].textContent : '';
-  const fallbackBedrooms = metaItems && metaItems[1] ? metaItems[1].textContent : '';
+  const fallbackRooms = metaItems && metaItems[1] ? metaItems[1].textContent : '';
   const fallbackBathrooms = metaItems && metaItems[2] ? metaItems[2].textContent : '';
   const fallbackLocation = locationEl ? locationEl.textContent.trim() : '';
 
@@ -511,7 +511,7 @@ function compareProperty(propertyId) {
     location: location,
     price: priceEl ? priceEl.textContent : '',
     type: dataType,
-    bedrooms: dataBedrooms || fallbackBedrooms,
+    rooms: dataRooms || fallbackRooms,
     bathrooms: dataBathrooms || fallbackBathrooms,
     size: dataSize || fallbackSize,
     image: imgEl ? imgEl.src : '',
@@ -658,7 +658,7 @@ function createComparisonTable() {
     [i18nGet('compare.headers.price','Price'), ...comparisonList.map(p => p.price)],
     [i18nGet('compare.headers.pricePerSqm','Price per m²'), ...comparisonList.map(p => formatPricePerSqm(p.priceNum, p.sizeNum))],
     [i18nGet('compare.headers.type','Type'), ...comparisonList.map(p => p.type)],
-    [i18nGet('compare.headers.bedrooms','Bedrooms'), ...comparisonList.map(p => p.bedrooms)],
+    [i18nGet('compare.headers.rooms','Rooms'), ...comparisonList.map(p => p.rooms)],
     [i18nGet('compare.headers.bathrooms','Bathrooms'), ...comparisonList.map(p => p.bathrooms)],
     [i18nGet('compare.headers.size','Size'), ...comparisonList.map(p => p.size)]
   ];
@@ -816,9 +816,9 @@ function generateSearchName(filters) {
       parts.push(`${filters.type.length} types`);
     }
   }
-  if (filters.bedrooms && filters.bedrooms.length > 0) {
-    const maxBeds = Math.max(...filters.bedrooms.map(b => parseInt(b)));
-    parts.push(`${maxBeds}+ bedroom`);
+  if (filters.rooms && filters.rooms.length > 0) {
+    const maxRooms = Math.max(...filters.rooms.map(r => parseInt(r)));
+    parts.push(`${maxRooms}+ room`);
   }
   if (filters.min_price || filters.max_price) {
     if (filters.min_price && filters.max_price) {
@@ -1172,14 +1172,14 @@ function updateFilters() {
   
   // Clear existing filter params
   const filterParams = ['country', 'city', 'neighborhood', 'type', 'min_price', 'max_price', 
-                       'bedrooms', 'bathrooms', 'featured', 'new_listing', 'min_size', 'max_size',
+                       'rooms', 'bathrooms', 'featured', 'new_listing', 'min_size', 'max_size',
                        'year_built_min', 'year_built_max', 'features', 'status'];
   filterParams.forEach(param => currentUrl.searchParams.delete(param));
   
   // Add new filter params
   for (let [key, value] of formData.entries()) {
     if (value && value.trim() !== '') {
-      if (key === 'type' || key === 'bedrooms' || key === 'features' || key === 'status') {
+      if (key === 'type' || key === 'rooms' || key === 'features' || key === 'status') {
         currentUrl.searchParams.append(key, value);
       } else {
         currentUrl.searchParams.set(key, value);
@@ -1204,7 +1204,7 @@ function updateConditionalFilterVisibility() {
   const isOnlyLand = checkedOnlyLand || urlOnlyLand;
 
   const groupsToToggle = [
-    '[data-filter-group="bedrooms"]',
+    '[data-filter-group="rooms"]',
     '[data-filter-group="bathrooms"]',
     '[data-filter-group="year_built"]',
     '[data-filter-group="features"]'

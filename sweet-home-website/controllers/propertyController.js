@@ -45,7 +45,7 @@ exports.listPropertiesPublic = async (req, res, next) => {
       type = [],
       min_price = '',
       max_price = '',
-      bedrooms = [],
+      rooms = [],
       bathrooms = '',
       min_size = '',
       max_size = '',
@@ -149,21 +149,21 @@ exports.listPropertiesPublic = async (req, res, next) => {
       paramIndex++;
     }
 
-    // Bedrooms filter
-    if (bedrooms) {
+    // Rooms filter
+    if (rooms) {
       // Handle both single string and array values
-      const bedroomsArray = Array.isArray(bedrooms) ? bedrooms : [bedrooms];
-      if (bedroomsArray.length > 0 && bedroomsArray[0] !== '') {
-        const bedroomConditions = bedroomsArray.map(bed => {
-          if (bed === '1') return `p.bedrooms >= 1`;
-          if (bed === '2') return `p.bedrooms >= 2`;
-          if (bed === '3') return `p.bedrooms >= 3`;
-          if (bed === '4') return `p.bedrooms >= 4`;
+      const roomsArray = Array.isArray(rooms) ? rooms : [rooms];
+      if (roomsArray.length > 0 && roomsArray[0] !== '') {
+        const roomConditions = roomsArray.map(room => {
+          if (room === '1') return `p.rooms >= 1`;
+          if (room === '2') return `p.rooms >= 2`;
+          if (room === '3') return `p.rooms >= 3`;
+          if (room === '4') return `p.rooms >= 4`;
           return null;
         }).filter(Boolean);
         
-        if (bedroomConditions.length > 0) {
-          whereConditions.push(`(${bedroomConditions.join(' OR ')})`);
+        if (roomConditions.length > 0) {
+          whereConditions.push(`(${roomConditions.join(' OR ')})`);
         }
       }
     }
@@ -210,7 +210,7 @@ exports.listPropertiesPublic = async (req, res, next) => {
     let baseQuery = `
       SELECT
         p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
-        p.price, p.photos, p.type, p.bedrooms, p.bathrooms,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
         p.rental_status, p.rental_income,
         CASE 
           WHEN p.type = 'Apartment' THEN p.apartment_size
@@ -338,7 +338,7 @@ exports.listPropertiesPublic = async (req, res, next) => {
       type: Array.isArray(type) ? type : (type ? [type] : []),
       min_price,
       max_price,
-      bedrooms: Array.isArray(bedrooms) ? bedrooms : (bedrooms ? [bedrooms] : []),
+      rooms: Array.isArray(rooms) ? rooms : (rooms ? [rooms] : []),
       bathrooms,
       min_size,
       max_size,
@@ -373,7 +373,7 @@ exports.showProperty = async (req, res, next) => {
     const sql = `
       SELECT
         p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
-        p.price, p.photos, p.type, p.bedrooms, p.bathrooms,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
         CASE 
           WHEN p.type = 'Apartment' THEN p.apartment_size
           WHEN p.type IN ('House', 'Villa') THEN p.living_space
@@ -591,7 +591,7 @@ exports.createProperty = async (req, res, next) => {
 
     // Type specific
     const apartmentSize = type === 'Apartment' ? parseNumberField(body.apartment_size) : null;
-    const bedrooms      = ['Apartment','House','Villa'].includes(type) ? parseNumberField(body.bedrooms) : null;
+    const rooms      = ['Apartment','House','Villa'].includes(type) ? parseNumberField(body.rooms) : null;
     const bathrooms     = ['Apartment','House','Villa'].includes(type) ? parseNumberField(body.bathrooms) : null;
     // To be set from uploaded file later
     let floorplanUrl  = null;
@@ -613,12 +613,12 @@ exports.createProperty = async (req, res, next) => {
     // Type-based validation
     if (type === 'Apartment') {
       if (!(apartmentSize > 0)) errors.push('Apartment size is required and must be positive');
-      if (!(bedrooms >= 0))     errors.push('Bedrooms (Apartment) is required');
+      if (!(rooms >= 0))     errors.push('Rooms (Apartment) is required');
       if (!(bathrooms >= 0))    errors.push('Bathrooms (Apartment) is required');
     }
     if (type === 'House' || type === 'Villa') {
       if (!(totalSize > 0))     errors.push('Total lot size is required and must be positive');
-      if (!(bedrooms >= 0))     errors.push('Bedrooms is required');
+      if (!(rooms >= 0))     errors.push('Rooms is required');
       if (!(bathrooms >= 0))    errors.push('Bathrooms is required');
     }
     if (type === 'Land') {
@@ -748,7 +748,7 @@ exports.createProperty = async (req, res, next) => {
          country, city, neighborhood, title, slug, description,
          type, price, status_tags, photos, video_url,
          floorplan_url, agent_id, created_by,
-         apartment_size, bedrooms, bathrooms,
+         apartment_size, rooms, bathrooms,
          total_size, living_space, land_size, plan_photo_url,
          is_in_project, project_id,
          map_link,
@@ -773,7 +773,7 @@ exports.createProperty = async (req, res, next) => {
         country, city, neighborhood, title, uniqueSlug, description,
         type, price, statusTags, photos, videoUrl,
         floorplanUrl, agentId, req.session.user.id,
-        apartmentSize, bedrooms, bathrooms,
+        apartmentSize, rooms, bathrooms,
         totalSize, livingSpace, landSize, planPhotoUrl,
         isInProject, projectId,
         mapLink,
@@ -1178,7 +1178,7 @@ exports.updateProperty = async (req, res, next) => {
 
     // Type specific
     const apartmentSize = type === 'Apartment' ? parseNumberField(body.apartment_size) : null;
-    const bedrooms      = ['Apartment','House','Villa'].includes(type) ? parseNumberField(body.bedrooms) : null;
+    const rooms      = ['Apartment','House','Villa'].includes(type) ? parseNumberField(body.rooms) : null;
     const bathrooms     = ['Apartment','House','Villa'].includes(type) ? parseNumberField(body.bathrooms) : null;
     let floorplanUrl    = existing.floorplan_url;
 
@@ -1264,12 +1264,12 @@ exports.updateProperty = async (req, res, next) => {
     if (!(price > 0))            errors.push('Price must be a positive number');
     if (type === 'Apartment') {
       if (!(apartmentSize > 0)) errors.push('Apartment size is required and must be positive');
-      if (!(bedrooms >= 0))     errors.push('Bedrooms (Apartment) is required');
+      if (!(rooms >= 0))     errors.push('Rooms (Apartment) is required');
       if (!(bathrooms >= 0))    errors.push('Bathrooms (Apartment) is required');
     }
     if (type === 'House' || type === 'Villa') {
       if (!(totalSize > 0))     errors.push('Total lot size is required and must be positive');
-      if (!(bedrooms >= 0))     errors.push('Bedrooms is required');
+      if (!(rooms >= 0))     errors.push('Rooms is required');
       if (!(bathrooms >= 0))    errors.push('Bathrooms is required');
     }
     if (type === 'Land') {
@@ -1361,7 +1361,7 @@ exports.updateProperty = async (req, res, next) => {
          title=$4, slug=$5, description=$6,
          type=$7, price=$8, status_tags=$9,
          photos=$10, video_url=$11,
-         apartment_size=$12, bedrooms=$13, bathrooms=$14, floorplan_url=$15,
+         apartment_size=$12, rooms=$13, bathrooms=$14, floorplan_url=$15,
          total_size=$16, living_space=$17,
          land_size=$18, plan_photo_url=$19,
          is_in_project=$20, project_id=$21,
@@ -1379,7 +1379,7 @@ exports.updateProperty = async (req, res, next) => {
         title, newSlug, description,
         type, price, statusTags,
         photos, videoUrl,
-        apartmentSize, bedrooms, bathrooms, floorplanUrl,
+        apartmentSize, rooms,山路bathrooms, floorplanUrl,
         totalSize, livingSpace,
         landSize, planPhotoUrl,
         isInProject, projectId,
@@ -2040,7 +2040,7 @@ exports.listMyProperties = async (req, res, next) => {
       SELECT
         p.id, p.slug, p.title, p.country, p.city, p.neighborhood,
         p.price, p.type, p.status_tags, p.photos,
-        p.bedrooms, p.bathrooms,
+        p.rooms, p.bathrooms,
         p.sold, p.sold_at,
         CASE 
           WHEN p.type = 'Apartment' THEN p.apartment_size
@@ -2097,7 +2097,7 @@ exports.getFeaturedProperties = async (req, res, next) => {
     const sql = `
       SELECT
         p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
-        p.price, p.photos, p.type, p.bedrooms, p.bathrooms,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
         CASE 
           WHEN p.type = 'Apartment' THEN p.apartment_size
           WHEN p.type IN ('House', 'Villa') THEN p.living_space

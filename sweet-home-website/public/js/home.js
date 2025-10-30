@@ -270,7 +270,7 @@ async function loadFeaturedProperties() {
       featuredSection.style.display = '';
       featuredContainer.innerHTML = properties.map(property => {
         const size = property.size ? `${property.size} m²` : null;
-        const beds = Number.isFinite(property.bedrooms) && property.bedrooms !== null ? `${property.bedrooms}` : null;
+        const beds = Number.isFinite(property.rooms) && property.rooms !== null ? `${property.rooms}` : null;
         const baths = Number.isFinite(property.bathrooms) && property.bathrooms !== null ? `${property.bathrooms}` : null;
         const priceText = property.price ? formatEuro(property.price) : '';
         return `

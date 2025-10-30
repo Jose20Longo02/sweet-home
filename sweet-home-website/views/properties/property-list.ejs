@@ -24,7 +24,7 @@
       price: t("properties.list.compare.headers.price","Price"),
       pricePerSqm: t("properties.list.compare.headers.pricePerSqm","Price per m²"),
       type: t("properties.list.compare.headers.type","Type"),
-      bedrooms: t("properties.list.compare.headers.bedrooms","Bedrooms"),
+      rooms: t("properties.list.compare.headers.rooms","Rooms"),
       bathrooms: t("properties.list.compare.headers.bathrooms","Bathrooms"),
       size: t("properties.list.compare.headers.size","Size")
     },
@@ -178,27 +178,27 @@
                 </div>
               </div>
 
-              <!-- Bedrooms -->
-              <div class="filter-group" data-filter-group="bedrooms">
-                <h4><%= t('properties.list.bedrooms','Bedrooms') %></h4>
+              <!-- Rooms -->
+              <div class="filter-group" data-filter-group="rooms">
+                <h4><%= t('properties.list.rooms','Rooms') %></h4>
                 <div class="checkbox-group">
                   <label class="checkbox-label">
-                    <input type="checkbox" name="bedrooms" value="1" <%= locals.filters?.bedrooms?.includes('1') ? 'checked' : '' %>>
+                    <input type="checkbox" name="rooms" value="1" <%= locals.filters?.rooms?.includes('1') ? 'checked' : '' %>>
                     <span class="checkmark"></span>
                     1+
                   </label>
                   <label class="checkbox-label">
-                    <input type="checkbox" name="bedrooms" value="2" <%= locals.filters?.bedrooms?.includes('2') ? 'checked' : '' %>>
+                    <input type="checkbox" name="rooms" value="2" <%= locals.filters?.rooms?.includes('2') ? 'checked' : '' %>>
                     <span class="checkmark"></span>
                     2+
                   </label>
                   <label class="checkbox-label">
-                    <input type="checkbox" name="bedrooms" value="3" <%= locals.filters?.bedrooms?.includes('3') ? 'checked' : '' %>>
+                    <input type="checkbox" name="rooms" value="3" <%= locals.filters?.rooms?.includes('3') ? 'checked' : '' %>>
                     <span class="checkmark"></span>
                     3+
                   </label>
                   <label class="checkbox-label">
-                    <input type="checkbox" name="bedrooms" value="4" <%= locals.filters?.bedrooms?.includes('4') ? 'checked' : '' %>>
+                    <input type="checkbox" name="rooms" value="4" <%= locals.filters?.rooms?.includes('4') ? 'checked' : '' %>>
                     <span class="checkmark"></span>
                     4+
                   </label>
@@ -457,7 +457,7 @@
                      data-slug="<%= property.slug %>"
                      data-type="<%= property.type || '' %>"
                      data-size="<%= property.size || '' %>"
-                     data-bedrooms="<%= (typeof property.bedrooms !== 'undefined' && property.bedrooms !== null) ? property.bedrooms : '' %>"
+                     data-rooms="<%= (typeof property.rooms !== 'undefined' && property.rooms !== null) ? property.rooms : '' %>"
                      data-bathrooms="<%= (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) ? property.bathrooms : '' %>"
                      data-price="<%= (typeof property.price !== 'undefined' && property.price !== null) ? property.price : '' %>">
                   
@@ -517,10 +517,10 @@
                           <%= property.size %> <%= t('properties.list.meta.sqm','m²') %>
                         </div>
                       <% } %>
-                      <% if (typeof property.bedrooms !== 'undefined' && property.bedrooms !== null) { %>
+                      <% if (typeof property.rooms !== 'undefined' && property.rooms !== null) { %>
                         <div class="detail-item">
                           <span class="icon icon-16 icon-inline icon-mask icon-bed" style="color: #000;"></span>
-                          <%= property.bedrooms %> <%= t('properties.list.meta.beds','beds') %>
+                          <%= property.rooms %> <%= t('properties.list.meta.rooms','rooms') %>
                         </div>
                       <% } %>
                       <% if (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) { %>

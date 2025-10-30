@@ -57,14 +57,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const land= t === 'Land';
 
     const aptSize = document.getElementById('apartment_size');
-    const bedA = document.getElementById('bedrooms_a');
+    const bedA = document.getElementById('rooms_a');
     const bathA = document.getElementById('bathrooms_a');
     if (aptSize) aptSize.required = apt;
     if (bedA) bedA.required = apt;
     if (bathA) bathA.required = apt;
 
     const totalSize = document.getElementById('total_size');
-    const bedHV = document.getElementById('bedrooms_hv');
+    const bedHV = document.getElementById('rooms_hv');
     const bathHV = document.getElementById('bathrooms_hv');
     if (totalSize) totalSize.required = hv;
     if (bedHV) bedHV.required = hv;
