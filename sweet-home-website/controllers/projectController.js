@@ -1293,7 +1293,7 @@ exports.showProject = async (req, res, next) => {
     // Get properties attached to this project
     const { rows: projectProperties } = await query(`
       SELECT 
-        p.id, p.title, p.title_i18n, p.slug, p.price, p.type, p.bedrooms, p.bathrooms,
+        p.id, p.title, p.title_i18n, p.slug, p.price, p.type, p.rooms, p.bathrooms,
         CASE 
           WHEN p.type = 'Apartment' THEN p.apartment_size
           WHEN p.type IN ('House', 'Villa') THEN p.living_space
