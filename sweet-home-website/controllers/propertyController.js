@@ -1077,6 +1077,51 @@ exports.editPropertyForm = async (req, res, next) => {
       `)
     ]);
 
+    // Detect source language from title and description to pre-fill content_language dropdown
+    // First check if i18n exists and find which language matches the current title/description
+    let detectedLang = 'auto';
+    let titleI18n = property.title_i18n;
+    
+    // Parse JSONB if it's a string (shouldn't happen with pg, but be safe)
+    if (titleI18n && typeof titleI18n === 'string') {
+      try {
+        titleI18n = JSON.parse(titleI18n);
+      } catch (_) {
+        titleI18n = null;
+      }
+    }
+    
+    if (titleI18n && typeof titleI18n === 'object') {
+      // Check which language in i18n matches the current title
+      const currentTitle = String(property.title || '').trim();
+      const currentDesc = String(property.description || '').trim();
+      
+      // Try to match exact content in i18n
+      for (const [lang, i18nTitle] of Object.entries(titleI18n)) {
+        if (String(i18nTitle).trim() === currentTitle) {
+          detectedLang = lang;
+          break;
+        }
+      }
+      
+      // If no exact match found, detect from text content
+      if (detectedLang === 'auto' && (currentTitle || currentDesc)) {
+        detectedLang = detectLanguageFromFields({
+          title: currentTitle,
+          description: currentDesc
+        });
+      }
+    } else if (property.title || property.description) {
+      // No i18n exists yet, detect from current content
+      detectedLang = detectLanguageFromFields({
+        title: property.title || '',
+        description: property.description || ''
+      });
+    }
+    
+    // Add detected language to property object for template
+    property.content_language = detectedLang;
+    
     // Capture the return URL from query parameter (preferred) or referrer (fallback)
     let backUrl = req.query.return_to || req.get('referer') || '';
     

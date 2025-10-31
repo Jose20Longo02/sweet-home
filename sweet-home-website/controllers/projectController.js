@@ -482,6 +482,51 @@ exports.editProjectForm = async (req, res, next) => {
          AND approved = true
        ORDER BY name
     `);
+    
+    // Detect source language from title and description to pre-fill content_language dropdown
+    let detectedLang = 'auto';
+    let titleI18n = project.title_i18n;
+    
+    // Parse JSONB if it's a string (shouldn't happen with pg, but be safe)
+    if (titleI18n && typeof titleI18n === 'string') {
+      try {
+        titleI18n = JSON.parse(titleI18n);
+      } catch (_) {
+        titleI18n = null;
+      }
+    }
+    
+    if (titleI18n && typeof titleI18n === 'object') {
+      // Check which language in i18n matches the current title
+      const currentTitle = String(project.title || '').trim();
+      const currentDesc = String(project.description || '').trim();
+      
+      // Try to match exact content in i18n
+      for (const [lang, i18nTitle] of Object.entries(titleI18n)) {
+        if (String(i18nTitle).trim() === currentTitle) {
+          detectedLang = lang;
+          break;
+        }
+      }
+      
+      // If no exact match found, detect from text content
+      if (detectedLang === 'auto' && (currentTitle || currentDesc)) {
+        detectedLang = detectLanguageFromFields({
+          title: currentTitle,
+          description: currentDesc
+        });
+      }
+    } else if (project.title || project.description) {
+      // No i18n exists yet, detect from current content
+      detectedLang = detectLanguageFromFields({
+        title: project.title || '',
+        description: project.description || ''
+      });
+    }
+    
+    // Add detected language to project object for template
+    project.content_language = detectedLang;
+    
     res.render('projects/edit-project', { project, locations, error: null, currentUser: req.session.user, teamMembers });
   } catch (err) {
     next(err);
