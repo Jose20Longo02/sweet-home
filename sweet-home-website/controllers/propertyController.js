@@ -1379,7 +1379,7 @@ exports.updateProperty = async (req, res, next) => {
         title, newSlug, description,
         type, price, statusTags,
         photos, videoUrl,
-        apartmentSize, rooms,山路bathrooms, floorplanUrl,
+        apartmentSize, rooms, bathrooms, floorplanUrl,
         totalSize, livingSpace,
         landSize, planPhotoUrl,
         isInProject, projectId,
