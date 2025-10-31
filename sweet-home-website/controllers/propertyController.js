@@ -1119,6 +1119,11 @@ exports.editPropertyForm = async (req, res, next) => {
       });
     }
     
+    // Fallback to English if detection failed or is still 'auto'
+    if (!detectedLang || detectedLang === 'auto') {
+      detectedLang = 'en';
+    }
+    
     // Add detected language to property object for template
     property.content_language = detectedLang;
     

@@ -51,12 +51,11 @@
         <label for="content_language">Content Language<span class="req">*</span></label>
         <select id="content_language" name="content_language" required>
           <option value="">Select language</option>
-          <option value="auto" <%= project.content_language==='auto'?'selected':'' %>>Auto-detect</option>
           <option value="en" <%= project.content_language==='en'?'selected':'' %>>English</option>
           <option value="de" <%= project.content_language==='de'?'selected':'' %>>German</option>
           <option value="es" <%= project.content_language==='es'?'selected':'' %>>Spanish</option>
         </select>
-        <small>Choose the language of your title and description. Auto-detect will try to determine it automatically.</small>
+        <small>Choose the language of your title and description.</small>
       </div>
     </div>
     <div class="grid-2">
