@@ -175,7 +175,7 @@ app.set('layout', 'layouts/main');   // this is your default layout
 const csrfProtection = csrf({ cookie: true });
 // Exempt test endpoints from CSRF for easier testing
 app.use((req, res, next) => {
-  if (req.path === '/api/leads/test-seller-webhook') {
+  if (req.path === '/api/leads/test-seller-webhook' && (req.method === 'GET' || req.method === 'POST')) {
     return next();
   }
   return csrfProtection(req, res, next);

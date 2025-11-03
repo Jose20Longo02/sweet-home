@@ -317,8 +317,153 @@ router.post('/api/leads/:id', ensureAuthenticated, leadController.updateLead);
 router.delete('/api/leads/:id', ensureAuthenticated, leadController.deleteLead);
 
 // Test endpoint for seller webhook (development/testing only)
-// This allows you to test the Zapier webhook without submitting a real form
-// Note: CSRF is required but can be bypassed for testing via query param
+// GET version for browser testing, POST version for API testing
+router.get('/api/leads/test-seller-webhook', async (req, res, next) => {
+  try {
+    const isSellerWebhookConfigured = !!process.env.ZAPIER_SELLER_WEBHOOK_URL;
+    const webhookUrl = process.env.ZAPIER_SELLER_WEBHOOK_URL || process.env.ZAPIER_WEBHOOK_URL;
+    
+    if (!webhookUrl) {
+      return res.status(400).send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Zapier Webhook Test - Configuration Error</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; background: #f5f5f5; }
+            .error { background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            code { background: #f8f9fa; padding: 2px 6px; border-radius: 3px; }
+            .btn { display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; margin-top: 20px; }
+          </style>
+        </head>
+        <body>
+          <h1>⚠️ Configuration Required</h1>
+          <div class="error">
+            <strong>Error:</strong> Zapier webhook URL not configured.<br><br>
+            Please set <code>ZAPIER_SELLER_WEBHOOK_URL</code> or <code>ZAPIER_WEBHOOK_URL</code> environment variable.
+          </div>
+          <a href="/owners" class="btn">Back to Sellers Page</a>
+        </body>
+        </html>
+      `);
+    }
+
+    const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+    
+    // Create test payload with sample seller lead data
+    const testPayload = {
+      lead_id: 999999,
+      name: 'Test Seller',
+      email: 'test-seller@example.com',
+      phone: '+49 123 456789',
+      message: 'For Sellers page SELLER lead',
+      source: 'seller_form',
+      preferred_language: 'en',
+      property_id: null,
+      project_id: null,
+      agent_id: null,
+      seller_neighborhood: 'Mitte',
+      seller_size: 75.5,
+      seller_rooms: 2.5,
+      seller_occupancy_status: 'empty',
+      created_at: new Date().toISOString(),
+      timestamp: new Date().toISOString()
+    };
+
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(testPayload)
+    });
+
+    if (response.ok) {
+      const responseText = await response.text();
+      // Return HTML for browser viewing
+      return res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Zapier Webhook Test - Success</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; background: #f5f5f5; }
+            .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            .info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; padding: 15px; border-radius: 8px; margin: 20px 0; }
+            .payload { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin: 20px 0; overflow-x: auto; }
+            pre { margin: 0; font-size: 12px; }
+            h1 { color: #333; }
+            .btn { display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; margin-top: 20px; }
+            .btn:hover { background: #0056b3; }
+          </style>
+        </head>
+        <body>
+          <h1>✅ Webhook Test Successful!</h1>
+          <div class="success">
+            <strong>Success:</strong> Test payload sent successfully to <strong>${isSellerWebhookConfigured ? 'SELLER' : 'GENERAL'}</strong> webhook
+          </div>
+          <div class="info">
+            <strong>Webhook Type:</strong> ${isSellerWebhookConfigured ? 'seller' : 'general'}<br>
+            <strong>Zapier Response:</strong> ${responseText || 'OK'}
+          </div>
+          <div class="payload">
+            <strong>Sent Payload:</strong>
+            <pre>${JSON.stringify(testPayload, null, 2)}</pre>
+          </div>
+          <a href="/api/leads/test-seller-webhook" class="btn">Test Again</a>
+          <a href="/owners" class="btn" style="background: #6c757d; margin-left: 10px;">Back to Sellers Page</a>
+        </body>
+        </html>
+      `);
+    } else {
+      const errorText = await response.text();
+      return res.status(response.status).send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Zapier Webhook Test - Error</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; background: #f5f5f5; }
+            .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            .btn { display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; margin-top: 20px; }
+          </style>
+        </head>
+        <body>
+          <h1>❌ Webhook Test Failed</h1>
+          <div class="error">
+            <strong>Error:</strong> Webhook returned ${response.status} ${response.statusText}<br>
+            ${errorText ? `<pre>${errorText}</pre>` : ''}
+          </div>
+          <a href="/api/leads/test-seller-webhook" class="btn">Try Again</a>
+        </body>
+        </html>
+      `);
+    }
+  } catch (error) {
+    return res.status(500).send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Zapier Webhook Test - Error</title>
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; background: #f5f5f5; }
+          .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 20px; border-radius: 8px; margin: 20px 0; }
+          .btn { display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; margin-top: 20px; }
+        </style>
+      </head>
+      <body>
+        <h1>❌ Error</h1>
+        <div class="error">
+          <strong>Error:</strong> ${error.message}
+        </div>
+        <a href="/api/leads/test-seller-webhook" class="btn">Try Again</a>
+      </body>
+      </html>
+    `);
+  }
+});
+
+// POST version for API testing (curl, Postman, etc.)
 router.post('/api/leads/test-seller-webhook', async (req, res, next) => {
   try {
     const isSellerWebhookConfigured = !!process.env.ZAPIER_SELLER_WEBHOOK_URL;
