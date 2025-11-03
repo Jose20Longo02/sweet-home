@@ -173,7 +173,13 @@ app.set('layout', 'layouts/main');   // this is your default layout
 
 // CSRF protection (cookie-based tokens)
 const csrfProtection = csrf({ cookie: true });
-app.use(csrfProtection);
+// Exempt test endpoints from CSRF for easier testing
+app.use((req, res, next) => {
+  if (req.path === '/api/leads/test-seller-webhook') {
+    return next();
+  }
+  return csrfProtection(req, res, next);
+});
 
 // Make csrfToken available to all views and expose for JS
 app.use((req, res, next) => {

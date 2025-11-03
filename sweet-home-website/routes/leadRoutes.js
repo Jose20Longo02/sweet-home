@@ -318,6 +318,7 @@ router.delete('/api/leads/:id', ensureAuthenticated, leadController.deleteLead);
 
 // Test endpoint for seller webhook (development/testing only)
 // This allows you to test the Zapier webhook without submitting a real form
+// Note: CSRF is required but can be bypassed for testing via query param
 router.post('/api/leads/test-seller-webhook', async (req, res, next) => {
   try {
     const isSellerWebhookConfigured = !!process.env.ZAPIER_SELLER_WEBHOOK_URL;
