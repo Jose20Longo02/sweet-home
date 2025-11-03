@@ -91,9 +91,14 @@ router.post(
       // Send to Zapier webhook (async)
       setImmediate(async () => {
         try {
-          const webhookUrl = process.env.ZAPIER_WEBHOOK_URL;
+          // Use dedicated seller webhook if this is a seller lead, otherwise use general webhook
+          const isSellerLead = lead_type === 'seller' || lead.source === 'seller_form';
+          const webhookUrl = isSellerLead 
+            ? (process.env.ZAPIER_SELLER_WEBHOOK_URL || process.env.ZAPIER_WEBHOOK_URL)
+            : process.env.ZAPIER_WEBHOOK_URL;
+          
           if (!webhookUrl) {
-            console.log('Zapier webhook URL not configured');
+            console.log(`Zapier ${isSellerLead ? 'seller ' : ''}webhook URL not configured`);
             return;
           }
 
@@ -125,13 +130,14 @@ router.post(
             body: JSON.stringify(payload)
           });
 
+          const webhookType = isSellerLead ? 'seller ' : '';
           if (response.ok) {
-            console.log('Lead sent to Zapier successfully');
+            console.log(`Lead sent to Zapier ${webhookType}webhook successfully`);
           } else {
-            console.error('Failed to send lead to Zapier:', response.status, response.statusText);
+            console.error(`Failed to send lead to Zapier ${webhookType}webhook:`, response.status, response.statusText);
           }
         } catch (error) {
-          console.error('Error sending lead to Zapier:', error.message);
+          console.error('Error sending lead to Zapier webhook:', error.message);
         }
       });
 
