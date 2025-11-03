@@ -174,16 +174,23 @@ app.set('layout', 'layouts/main');   // this is your default layout
 // CSRF protection (cookie-based tokens)
 const csrfProtection = csrf({ cookie: true });
 // Exempt test endpoints from CSRF for easier testing
+let csrfSkipped = false;
 app.use((req, res, next) => {
   if (req.path === '/api/leads/test-seller-webhook' && (req.method === 'GET' || req.method === 'POST')) {
+    csrfSkipped = true;
     return next();
   }
+  csrfSkipped = false;
   return csrfProtection(req, res, next);
 });
 
-// Make csrfToken available to all views and expose for JS
+// Make csrfToken available to all views and expose for JS (only if CSRF was applied)
 app.use((req, res, next) => {
-  res.locals.csrfToken = req.csrfToken();
+  if (req.csrfToken && typeof req.csrfToken === 'function') {
+    res.locals.csrfToken = req.csrfToken();
+  } else {
+    res.locals.csrfToken = null;
+  }
   next();
 });
 

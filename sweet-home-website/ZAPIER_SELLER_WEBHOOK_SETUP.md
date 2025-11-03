@@ -67,21 +67,30 @@ You have two options to test the webhook:
    ```
    http://localhost:3000/api/leads/test-seller-webhook
    ```
-   (Replace with your production URL if testing on production)
-3. **Send a POST request** using one of these methods:
+   **OR use your published domain:**
+   ```
+   https://yourdomain.com/api/leads/test-seller-webhook
+   ```
+   (Replace `yourdomain.com` with your actual domain)
+
+3. **Test in Browser (Easiest - GET request):**
+   - Simply open the URL above in your web browser
+   - You'll see a nice HTML page showing success/error
+   - No need for curl or Postman!
+
+4. **Or send a POST request** using one of these methods:
 
    **Using curl (Terminal/Command Prompt):**
    ```bash
    curl -X POST http://localhost:3000/api/leads/test-seller-webhook
+   # OR with your domain:
+   curl -X POST https://yourdomain.com/api/leads/test-seller-webhook
    ```
    
    **Using Postman:**
    - Create a new POST request
-   - URL: `http://localhost:3000/api/leads/test-seller-webhook`
+   - URL: `http://localhost:3000/api/leads/test-seller-webhook` or `https://yourdomain.com/api/leads/test-seller-webhook`
    - Send the request
-
-   **Using browser (if you have a browser extension like REST Client):**
-   - Simply visit the URL with a POST request
 
 4. **Check the response** - You should see:
    ```json
