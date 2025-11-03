@@ -126,6 +126,10 @@
       urlBody.append('message', 'For Sellers page SELLER lead');
       urlBody.append('lead_type', 'seller');
       urlBody.append('language', payload.language || '');
+      urlBody.append('neighborhood', payload.neighborhood || '');
+      urlBody.append('size', payload.size || '');
+      urlBody.append('rooms', payload.rooms || '');
+      urlBody.append('occupancy', payload.occupancy || '');
       urlBody.append('recaptchaToken', payload.recaptchaToken || '');
 
       const res = await fetch('/api/leads/contact', {

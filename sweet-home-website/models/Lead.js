@@ -2,20 +2,32 @@
 const { query } = require('../config/db');
 
 class Lead {
-  static async create({ property_id, project_id, agent_id, name, email, phone, message, source = 'property_form', preferred_language, utm_source, utm_medium, utm_campaign, utm_term, utm_content, referrer, page_path, ip_address, user_agent }) {
+  static async create({ property_id, project_id, agent_id, name, email, phone, message, source = 'property_form', preferred_language, utm_source, utm_medium, utm_campaign, utm_term, utm_content, referrer, page_path, ip_address, user_agent, seller_neighborhood, seller_size, seller_rooms, seller_occupancy_status }) {
     const hasProject = typeof project_id !== 'undefined';
-    const text = hasProject ? `
-      INSERT INTO leads (property_id, project_id, agent_id, name, email, phone, message, source, preferred_language, utm_source, utm_medium, utm_campaign, utm_term, utm_content, referrer, page_path, ip_address, user_agent)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
-      RETURNING *
-    ` : `
-      INSERT INTO leads (property_id, agent_id, name, email, phone, message, source, preferred_language, utm_source, utm_medium, utm_campaign, utm_term, utm_content, referrer, page_path, ip_address, user_agent)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
-      RETURNING *
-    `;
-    const values = hasProject
-      ? [property_id || null, project_id || null, agent_id || null, name, email, phone || null, message || null, source, preferred_language || null, utm_source || null, utm_medium || null, utm_campaign || null, utm_term || null, utm_content || null, referrer || null, page_path || null, ip_address || null, user_agent || null]
-      : [property_id || null, agent_id || null, name, email, phone || null, message || null, source, preferred_language || null, utm_source || null, utm_medium || null, utm_campaign || null, utm_term || null, utm_content || null, referrer || null, page_path || null, ip_address || null, user_agent || null];
+    const hasSellerFields = typeof seller_neighborhood !== 'undefined' || typeof seller_size !== 'undefined' || typeof seller_rooms !== 'undefined' || typeof seller_occupancy_status !== 'undefined';
+    
+    let text, values;
+    if (hasProject && hasSellerFields) {
+      text = `INSERT INTO leads (property_id, project_id, agent_id, name, email, phone, message, source, preferred_language, utm_source, utm_medium, utm_campaign, utm_term, utm_content, referrer, page_path, ip_address, user_agent, seller_neighborhood, seller_size, seller_rooms, seller_occupancy_status)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)
+        RETURNING *`;
+      values = [property_id || null, project_id || null, agent_id || null, name, email, phone || null, message || null, source, preferred_language || null, utm_source || null, utm_medium || null, utm_campaign || null, utm_term || null, utm_content || null, referrer || null, page_path || null, ip_address || null, user_agent || null, seller_neighborhood || null, seller_size || null, seller_rooms || null, seller_occupancy_status || null];
+    } else if (hasProject) {
+      text = `INSERT INTO leads (property_id, project_id, agent_id, name, email, phone, message, source, preferred_language, utm_source, utm_medium, utm_campaign, utm_term, utm_content, referrer, page_path, ip_address, user_agent)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
+        RETURNING *`;
+      values = [property_id || null, project_id || null, agent_id || null, name, email, phone || null, message || null, source, preferred_language || null, utm_source || null, utm_medium || null, utm_campaign || null, utm_term || null, utm_content || null, referrer || null, page_path || null, ip_address || null, user_agent || null];
+    } else if (hasSellerFields) {
+      text = `INSERT INTO leads (property_id, agent_id, name, email, phone, message, source, preferred_language, utm_source, utm_medium, utm_campaign, utm_term, utm_content, referrer, page_path, ip_address, user_agent, seller_neighborhood, seller_size, seller_rooms, seller_occupancy_status)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)
+        RETURNING *`;
+      values = [property_id || null, agent_id || null, name, email, phone || null, message || null, source, preferred_language || null, utm_source || null, utm_medium || null, utm_campaign || null, utm_term || null, utm_content || null, referrer || null, page_path || null, ip_address || null, user_agent || null, seller_neighborhood || null, seller_size || null, seller_rooms || null, seller_occupancy_status || null];
+    } else {
+      text = `INSERT INTO leads (property_id, agent_id, name, email, phone, message, source, preferred_language, utm_source, utm_medium, utm_campaign, utm_term, utm_content, referrer, page_path, ip_address, user_agent)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
+        RETURNING *`;
+      values = [property_id || null, agent_id || null, name, email, phone || null, message || null, source, preferred_language || null, utm_source || null, utm_medium || null, utm_campaign || null, utm_term || null, utm_content || null, referrer || null, page_path || null, ip_address || null, user_agent || null];
+    }
     const res = await query(text, values);
     return res.rows[0];
   }

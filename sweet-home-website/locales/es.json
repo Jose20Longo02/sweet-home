@@ -13,7 +13,7 @@
       },
       "altBerlin": "Horizonte de Berlín"
     },
-    "form": { "submit": "Enviar", "selectLanguage": "Selecciona un idioma", "fixErrors": "Corrige los errores arriba.", "sending": "Enviando...", "successShort": "¡Gracias! Nos pondremos en contacto pronto.", "submitted": "Envío recibido.", "successToast": "¡Gracias! Tu mensaje se envió correctamente.", "errorStatus": "Hubo un problema. Inténtalo de nuevo.", "errorToast": "Algo salió mal. Inténtalo de nuevo más tarde." },
+    "form": { "submit": "Enviar", "selectLanguage": "Selecciona un idioma", "fixErrors": "Corrige los errores arriba.", "sending": "Enviando...", "successShort": "¡Gracias! Nos pondremos en contacto pronto.", "submitted": "Envío recibido.", "successToast": "¡Gracias! Tu mensaje se envió correctamente.", "errorStatus": "Hubo un problema. Inténtalo de nuevo.", "errorToast": "Algo salió mal. Inténtalo de nuevo más tarde.", "neighborhood": "Barrio", "neighborhoodPlaceholder": "Introduce el barrio", "size": "Tamaño (m²)", "sizePlaceholder": "ej. 75,5", "rooms": "Número de habitaciones", "roomsPlaceholder": "ej. 2,5", "occupancy": "Estado de ocupación", "selectOccupancy": "Selecciona el estado", "empty": "Vacío", "tenanted": "Alquilado" },
     "validation": { "fullName": "Introduce tu nombre completo", "countryCode": "Introduce un código de país", "phone": "Introduce un número de teléfono", "email": "Introduce un correo válido", "language": "Selecciona un idioma" },
     "aria": { "hero": "Sección para vendedores", "primaryActions": "Acciones principales", "heroNote": "La imagen de fondo tiene una superposición oscura para mejorar el contraste", "reasons": "Lista de razones", "recentlySoldCarousel": "Carrusel de recientemente vendidos" }
   },

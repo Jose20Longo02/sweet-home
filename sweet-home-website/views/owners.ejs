@@ -163,6 +163,32 @@
         </select>
         <p class="error" data-for="language"></p>
       </div>
+      <div class="form-group">
+        <label for="neighborhood"><%= t('owners.form.neighborhood','Neighborhood') %></label>
+        <input id="neighborhood" name="neighborhood" type="text" placeholder="<%= t('owners.form.neighborhoodPlaceholder','Enter neighborhood') %>">
+        <p class="error" data-for="neighborhood"></p>
+      </div>
+      <div class="row-2">
+        <div class="form-group">
+          <label for="size"><%= t('owners.form.size','Size (sqm)') %></label>
+          <input id="size" name="size" type="number" step="0.01" min="0" placeholder="<%= t('owners.form.sizePlaceholder','e.g., 75.5') %>">
+          <p class="error" data-for="size"></p>
+        </div>
+        <div class="form-group">
+          <label for="rooms"><%= t('owners.form.rooms','Number of rooms') %></label>
+          <input id="rooms" name="rooms" type="number" step="0.5" min="0" placeholder="<%= t('owners.form.roomsPlaceholder','e.g., 2.5') %>">
+          <p class="error" data-for="rooms"></p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="occupancy"><%= t('owners.form.occupancy','Occupancy status') %></label>
+        <select id="occupancy" name="occupancy">
+          <option value=""><%= t('owners.form.selectOccupancy','Select status') %></option>
+          <option value="empty"><%= t('owners.form.empty','Empty') %></option>
+          <option value="tenanted"><%= t('owners.form.tenanted','Tenanted') %></option>
+        </select>
+        <p class="error" data-for="occupancy"></p>
+      </div>
       <button type="submit" class="btn-submit"><%= t('owners.form.submit','Send') %></button>
       <p class="form-status" role="status" aria-live="polite" style="display:none"></p>
     </form>

@@ -52,12 +52,18 @@ router.post(
   async (req, res, next) => {
     try {
       const Lead = require('../models/Lead');
-      const { name, email, message, lead_type, language } = req.body;
+      const { name, email, message, lead_type, language, neighborhood, size, rooms, occupancy } = req.body;
       // Combine countryCode + phone on server to be robust to client variations
       let phone = req.body.phone || '';
       const cc = (req.body.countryCode || '').trim();
       const ph = (req.body.phone || '').trim();
       if (cc || ph) phone = `${cc} ${ph}`.trim();
+      
+      // Parse seller property fields
+      const seller_neighborhood = neighborhood ? String(neighborhood).trim() : null;
+      const seller_size = size && !isNaN(parseFloat(size)) ? parseFloat(size) : null;
+      const seller_rooms = rooms && !isNaN(parseFloat(rooms)) ? parseFloat(rooms) : null;
+      const seller_occupancy_status = occupancy && ['empty', 'tenanted'].includes(occupancy) ? occupancy : null;
       // Extra throttle for seller leads: avoid duplicates per email within 15 minutes
       if (lead_type === 'seller' && email) {
         const { rows: existing } = await require('../config/db').query(
@@ -74,7 +80,11 @@ router.post(
         agent_id: null,
         name, email, phone, message,
         preferred_language: language || null,
-        source: lead_type === 'seller' ? 'seller_form' : 'contact_form'
+        source: lead_type === 'seller' ? 'seller_form' : 'contact_form',
+        seller_neighborhood,
+        seller_size,
+        seller_rooms,
+        seller_occupancy_status
       });
       res.json({ success: true, lead });
 
@@ -99,6 +109,10 @@ router.post(
             property_id: lead.property_id,
             project_id: lead.project_id,
             agent_id: lead.agent_id,
+            seller_neighborhood: lead.seller_neighborhood,
+            seller_size: lead.seller_size,
+            seller_rooms: lead.seller_rooms,
+            seller_occupancy_status: lead.seller_occupancy_status,
             created_at: lead.created_at,
             timestamp: new Date().toISOString()
           };
@@ -139,12 +153,16 @@ router.post(
                   <li><strong>Name:</strong> ${name}</li>
                   <li><strong>Email:</strong> ${email}</li>
                   ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
+                  ${seller_neighborhood ? `<li><strong>Neighborhood:</strong> ${seller_neighborhood}</li>` : ''}
+                  ${seller_size ? `<li><strong>Size:</strong> ${seller_size} sqm</li>` : ''}
+                  ${seller_rooms ? `<li><strong>Rooms:</strong> ${seller_rooms}</li>` : ''}
+                  ${seller_occupancy_status ? `<li><strong>Occupancy:</strong> ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}</li>` : ''}
                 </ul>
                 ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g,'<br/>')}</p>` : ''}
                 <p>Please review this lead from your SuperAdmin dashboard.</p>
                 <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
               `,
-              text: `New SELLER lead\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${message?`\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
+              text: `New SELLER lead\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${seller_neighborhood?`\nNeighborhood: ${seller_neighborhood}`:''}${seller_size?`\nSize: ${seller_size} sqm`:''}${seller_rooms?`\nRooms: ${seller_rooms}`:''}${seller_occupancy_status?`\nOccupancy: ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}`:''}${message?`\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
             });
           }
         } catch (_) {}
@@ -161,11 +179,15 @@ router.post(
                   <li><strong>Name:</strong> ${name}</li>
                   <li><strong>Email:</strong> ${email}</li>
                   ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
+                  ${seller_neighborhood ? `<li><strong>Neighborhood:</strong> ${seller_neighborhood}</li>` : ''}
+                  ${seller_size ? `<li><strong>Size:</strong> ${seller_size} sqm</li>` : ''}
+                  ${seller_rooms ? `<li><strong>Rooms:</strong> ${seller_rooms}</li>` : ''}
+                  ${seller_occupancy_status ? `<li><strong>Occupancy:</strong> ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}</li>` : ''}
                 </ul>
                 ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g,'<br/>')}</p>` : ''}
                 <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
               `,
-              text: `New SELLER lead\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${message?`\nMessage: ${message}`:''}`
+              text: `New SELLER lead\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${seller_neighborhood?`\nNeighborhood: ${seller_neighborhood}`:''}${seller_size?`\nSize: ${seller_size} sqm`:''}${seller_rooms?`\nRooms: ${seller_rooms}`:''}${seller_occupancy_status?`\nOccupancy: ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}`:''}${message?`\nMessage: ${message}`:''}`
             });
           }
         } catch (_) {}
