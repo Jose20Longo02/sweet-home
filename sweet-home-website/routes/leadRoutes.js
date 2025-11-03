@@ -159,16 +159,22 @@ router.post(
                   <li><strong>Name:</strong> ${name}</li>
                   <li><strong>Email:</strong> ${email}</li>
                   ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
+                  ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
+                </ul>
+                ${(seller_neighborhood || seller_size || seller_rooms || seller_occupancy_status) ? `
+                <p><strong>Property Information:</strong></p>
+                <ul>
                   ${seller_neighborhood ? `<li><strong>Neighborhood:</strong> ${seller_neighborhood}</li>` : ''}
                   ${seller_size ? `<li><strong>Size:</strong> ${seller_size} sqm</li>` : ''}
                   ${seller_rooms ? `<li><strong>Rooms:</strong> ${seller_rooms}</li>` : ''}
-                  ${seller_occupancy_status ? `<li><strong>Occupancy:</strong> ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}</li>` : ''}
+                  ${seller_occupancy_status ? `<li><strong>Occupancy Status:</strong> ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}</li>` : ''}
                 </ul>
+                ` : ''}
                 ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g,'<br/>')}</p>` : ''}
                 <p>Please review this lead from your SuperAdmin dashboard.</p>
                 <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
               `,
-              text: `New SELLER lead\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${seller_neighborhood?`\nNeighborhood: ${seller_neighborhood}`:''}${seller_size?`\nSize: ${seller_size} sqm`:''}${seller_rooms?`\nRooms: ${seller_rooms}`:''}${seller_occupancy_status?`\nOccupancy: ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}`:''}${message?`\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
+              text: `New SELLER lead\n\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${language?`\nPreferred Language: ${language}`:''}${(seller_neighborhood || seller_size || seller_rooms || seller_occupancy_status) ? `\n\nProperty Information:\n${seller_neighborhood?`Neighborhood: ${seller_neighborhood}\n`:''}${seller_size?`Size: ${seller_size} sqm\n`:''}${seller_rooms?`Rooms: ${seller_rooms}\n`:''}${seller_occupancy_status?`Occupancy Status: ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}\n`:''}`:''}${message?`\n\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
             });
           }
         } catch (_) {}
@@ -185,15 +191,21 @@ router.post(
                   <li><strong>Name:</strong> ${name}</li>
                   <li><strong>Email:</strong> ${email}</li>
                   ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
+                  ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
+                </ul>
+                ${(seller_neighborhood || seller_size || seller_rooms || seller_occupancy_status) ? `
+                <p><strong>Property Information:</strong></p>
+                <ul>
                   ${seller_neighborhood ? `<li><strong>Neighborhood:</strong> ${seller_neighborhood}</li>` : ''}
                   ${seller_size ? `<li><strong>Size:</strong> ${seller_size} sqm</li>` : ''}
                   ${seller_rooms ? `<li><strong>Rooms:</strong> ${seller_rooms}</li>` : ''}
-                  ${seller_occupancy_status ? `<li><strong>Occupancy:</strong> ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}</li>` : ''}
+                  ${seller_occupancy_status ? `<li><strong>Occupancy Status:</strong> ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}</li>` : ''}
                 </ul>
+                ` : ''}
                 ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g,'<br/>')}</p>` : ''}
                 <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
               `,
-              text: `New SELLER lead\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${seller_neighborhood?`\nNeighborhood: ${seller_neighborhood}`:''}${seller_size?`\nSize: ${seller_size} sqm`:''}${seller_rooms?`\nRooms: ${seller_rooms}`:''}${seller_occupancy_status?`\nOccupancy: ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}`:''}${message?`\nMessage: ${message}`:''}`
+              text: `New SELLER lead\n\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${language?`\nPreferred Language: ${language}`:''}${(seller_neighborhood || seller_size || seller_rooms || seller_occupancy_status) ? `\n\nProperty Information:\n${seller_neighborhood?`Neighborhood: ${seller_neighborhood}\n`:''}${seller_size?`Size: ${seller_size} sqm\n`:''}${seller_rooms?`Rooms: ${seller_rooms}\n`:''}${seller_occupancy_status?`Occupancy Status: ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}\n`:''}`:''}${message?`\n\nMessage: ${message}`:''}`
             });
           }
         } catch (_) {}

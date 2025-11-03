@@ -32,6 +32,8 @@ This guide explains how to set up a dedicated Zapier webhook specifically for se
 
 ## Step 2: Configure Your Server
 
+**Note:** You can do this either before or after testing in Zapier, but you'll need the webhook URL from Step 1.
+
 You need to add the Zapier webhook URL to your server's environment variables.
 
 ### Option A: Local Development (.env file)

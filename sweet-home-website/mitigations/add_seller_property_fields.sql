@@ -11,3 +11,4 @@ ALTER TABLE leads
 CREATE INDEX IF NOT EXISTS idx_leads_seller_occupancy ON leads(seller_occupancy_status)
   WHERE seller_occupancy_status IS NOT NULL;
 
+
