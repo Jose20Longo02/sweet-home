@@ -58,6 +58,48 @@ You need to add the Zapier webhook URL to your server's environment variables.
 
 ## Step 3: Test the Webhook
 
+You have two options to test the webhook:
+
+### Option A: Quick Test (Recommended - No Form Submission Needed)
+
+1. **Make sure your server is running** and the environment variable is set
+2. **Open your browser** and navigate to:
+   ```
+   http://localhost:3000/api/leads/test-seller-webhook
+   ```
+   (Replace with your production URL if testing on production)
+3. **Send a POST request** using one of these methods:
+
+   **Using curl (Terminal/Command Prompt):**
+   ```bash
+   curl -X POST http://localhost:3000/api/leads/test-seller-webhook
+   ```
+   
+   **Using Postman:**
+   - Create a new POST request
+   - URL: `http://localhost:3000/api/leads/test-seller-webhook`
+   - Send the request
+
+   **Using browser (if you have a browser extension like REST Client):**
+   - Simply visit the URL with a POST request
+
+4. **Check the response** - You should see:
+   ```json
+   {
+     "success": true,
+     "message": "Test payload sent successfully to SELLER webhook",
+     "webhook_type": "seller",
+     "payload": { ... }
+   }
+   ```
+
+5. **Go back to Zapier**
+   - In your Zap, click "Test trigger" or check the webhook step
+   - You should see the test data appear
+   - Review the data structure
+
+### Option B: Real Form Test
+
 1. **Go to your website's "For Sellers" page** (`/owners`)
 2. **Fill out and submit the form** with test data:
    - Name
@@ -66,8 +108,10 @@ You need to add the Zapier webhook URL to your server's environment variables.
    - Language
    - Optional: Neighborhood, Size, Rooms, Occupancy status
 3. **Go back to Zapier**
-   - You should see the webhook test receive data
+   - You should see the webhook receive the actual lead data
    - Review the data structure to understand what fields are available
+
+**Note:** Option A is faster and doesn't create a real lead in your database. Option B tests the full flow including form validation.
 
 ## Step 4: Configure Your Zap Action (What Happens Next)
 

@@ -316,6 +316,78 @@ router.post('/api/leads/:id', ensureAuthenticated, leadController.updateLead);
 // Delete lead (Admin: own leads; SuperAdmin: any)
 router.delete('/api/leads/:id', ensureAuthenticated, leadController.deleteLead);
 
+// Test endpoint for seller webhook (development/testing only)
+// This allows you to test the Zapier webhook without submitting a real form
+router.post('/api/leads/test-seller-webhook', async (req, res, next) => {
+  try {
+    const isSellerWebhookConfigured = !!process.env.ZAPIER_SELLER_WEBHOOK_URL;
+    const webhookUrl = process.env.ZAPIER_SELLER_WEBHOOK_URL || process.env.ZAPIER_WEBHOOK_URL;
+    
+    if (!webhookUrl) {
+      return res.status(400).json({
+        success: false,
+        message: 'Zapier webhook URL not configured. Please set ZAPIER_SELLER_WEBHOOK_URL or ZAPIER_WEBHOOK_URL environment variable.'
+      });
+    }
+
+    const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+    
+    // Create test payload with sample seller lead data
+    const testPayload = {
+      lead_id: 999999,
+      name: 'Test Seller',
+      email: 'test-seller@example.com',
+      phone: '+49 123 456789',
+      message: 'For Sellers page SELLER lead',
+      source: 'seller_form',
+      preferred_language: 'en',
+      property_id: null,
+      project_id: null,
+      agent_id: null,
+      seller_neighborhood: 'Mitte',
+      seller_size: 75.5,
+      seller_rooms: 2.5,
+      seller_occupancy_status: 'empty',
+      created_at: new Date().toISOString(),
+      timestamp: new Date().toISOString()
+    };
+
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(testPayload)
+    });
+
+    if (response.ok) {
+      const responseText = await response.text();
+      return res.json({
+        success: true,
+        message: `Test payload sent successfully to ${isSellerWebhookConfigured ? 'SELLER' : 'GENERAL'} webhook`,
+        webhook_url: webhookUrl.replace(/(\/hooks\/catch\/[^\/]+)\/[^\/]+(\/.*)?$/, '$1/XXXXX$2'), // Mask the URL
+        webhook_type: isSellerWebhookConfigured ? 'seller' : 'general',
+        payload: testPayload,
+        zapier_response: responseText || 'OK'
+      });
+    } else {
+      const errorText = await response.text();
+      return res.status(response.status).json({
+        success: false,
+        message: `Webhook returned error: ${response.status} ${response.statusText}`,
+        webhook_url: webhookUrl.replace(/(\/hooks\/catch\/[^\/]+)\/[^\/]+(\/.*)?$/, '$1/XXXXX$2'),
+        error: errorText
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Error sending test payload to webhook',
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;
 
 
