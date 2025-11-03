@@ -601,3 +601,19 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="/js/property-detail.js"></script>
 <!-- Inline reCAPTCHA execution removed to satisfy CSP; handled in property-detail.js -->
+<% if (typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) { %>
+<script>
+  // Track property view
+  document.addEventListener('DOMContentLoaded', function() {
+    if (window.analytics && window.analytics.trackPropertyView) {
+      window.analytics.trackPropertyView(
+        '<%= property.id %>',
+        '<%= property.title.replace(/'/g, "\\'") %>',
+        <%= property.price || 0 %>,
+        '<%= (property.neighborhood || "") + ", " + property.city + ", " + property.country %>',
+        '<%= property.type %>'
+      );
+    }
+  });
+</script>
+<% } %>

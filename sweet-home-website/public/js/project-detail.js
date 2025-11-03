@@ -483,6 +483,11 @@ async function submitContactForm() {
   .then(response => response.json())
   .then(data => {
     if (data.success) {
+      // Track form submission
+      if (window.analytics && window.analytics.trackFormSubmit) {
+        const projectId = payload.projectId || getProjectId();
+        window.analytics.trackFormSubmit('project_contact', null, projectId);
+      }
       showSuccessMessage('Thank you! Your message has been sent successfully.');
       form.reset();
     } else {

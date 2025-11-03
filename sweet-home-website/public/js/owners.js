@@ -142,6 +142,16 @@
       });
       if (!res.ok) throw new Error('Failed to submit');
       const data = await res.json();
+      if (data && data.success) {
+        // Track form submission
+        if (window.analytics && window.analytics.trackFormSubmit) {
+          window.analytics.trackFormSubmit('seller_form', null, null, {
+            neighborhood: payload.neighborhood || null,
+            size: payload.size || null,
+            rooms: payload.rooms || null
+          });
+        }
+      }
       status.textContent = data && data.success ? t('form.successShort','Thanks! We will reach out shortly.') : t('form.submitted','Submission received.');
       const toast = document.getElementById('toast');
       if (toast) {

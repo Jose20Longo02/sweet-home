@@ -522,6 +522,12 @@ class PropertyDetailPage {
     .then(response => response.json())
     .then(data => {
       if (data.success) {
+        // Track form submission
+        if (window.analytics && window.analytics.trackFormSubmit) {
+          window.analytics.trackFormSubmit('property_contact', this.propertyId, null, {
+            property_title: formDataObj.propertyTitle || ''
+          });
+        }
         this.showSuccessMessage('Thank you! Your inquiry was submitted. A team member will be in touch soon.');
         // Close the contact modal
         if (typeof closeContactModal === 'function') closeContactModal();
@@ -736,6 +742,13 @@ function playMainVideo() {
 function shareOnSocial(platform) {
   const propertyTitle = document.querySelector('.property-title').textContent;
   const propertyUrl = window.location.href;
+  const propertyData = document.getElementById('propertyData');
+  const propertyId = propertyData ? propertyData.getAttribute('data-id') : null;
+  
+  // Track share event
+  if (window.analytics && window.analytics.trackPropertyShare) {
+    window.analytics.trackPropertyShare(propertyId, platform);
+  }
   
   let shareUrl = '';
   
@@ -773,6 +786,13 @@ function shareOnSocial(platform) {
 
 function copyLink() {
   const propertyUrl = window.location.href;
+  const propertyData = document.getElementById('propertyData');
+  const propertyId = propertyData ? propertyData.getAttribute('data-id') : null;
+  
+  // Track share event (copy link)
+  if (window.analytics && window.analytics.trackPropertyShare) {
+    window.analytics.trackPropertyShare(propertyId, 'copy_link');
+  }
   
   if (navigator.clipboard) {
     navigator.clipboard.writeText(propertyUrl).then(() => {
@@ -818,6 +838,14 @@ function fallbackCopyTextToClipboard(text) {
 }
 
 function callAgent() {
+  // Track phone click
+  const propertyData = document.getElementById('propertyData');
+  const propertyId = propertyData ? propertyData.getAttribute('data-id') : null;
+  
+  if (window.analytics && window.analytics.trackContactAction) {
+    window.analytics.trackContactAction('phone', propertyId, null);
+  }
+  
   // This would typically open a phone dialer or show a phone number
   // For now, we'll show a message
   if (window.propertyDetailPage) {

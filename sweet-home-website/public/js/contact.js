@@ -101,6 +101,11 @@
       });
       const data = await res.json().catch(()=>({ success:false }));
       if (res.ok && data && data.success) {
+        // Track form submission
+        if (window.analytics && window.analytics.trackFormSubmit) {
+          const leadType = body.get('lead_type') || 'unknown';
+          window.analytics.trackFormSubmit(leadType === 'seller' ? 'seller_form' : 'contact_form', null, null);
+        }
         messageEl.classList.add('success');
         messageEl.textContent = (window.i18nGetHome ? i18nGetHome('contact.sent','Thank you! Your message has been sent successfully.') : 'Thank you! Your message has been sent successfully.');
         form.reset();
