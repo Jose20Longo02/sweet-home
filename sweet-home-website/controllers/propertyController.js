@@ -1252,16 +1252,47 @@ exports.updateProperty = async (req, res, next) => {
     // Uploaded files
     const uploadedPhotosFiles = (req.files && Array.isArray(req.files.photos)) ? req.files.photos : [];
     let photos = Array.isArray(existing.photos) ? [...existing.photos] : [];
-    const urlPhotos = Array.isArray(body.photos) ? body.photos.filter(Boolean) : (body.photos ? [body.photos] : []);
-    if (urlPhotos.length) photos = urlPhotos;
+    // Only replace with URL photos if NO files are being uploaded (URL-only edit scenario)
+    // If files are being uploaded, preserve existing photos and merge with uploads later
+    if (!uploadedPhotosFiles || uploadedPhotosFiles.length === 0) {
+      const urlPhotos = Array.isArray(body.photos) ? body.photos.filter(Boolean) : (body.photos ? [body.photos] : []).filter(Boolean);
+      if (urlPhotos.length) photos = urlPhotos;
+    }
     // Custom order tokens from client combining existing URLs and new file indices
     let orderTokens = body['photos_order'] || body['photos_order[]'] || [];
     if (typeof orderTokens === 'string') orderTokens = [orderTokens];
 
-    let videoUrl = (body.video_source === 'link' ? (body.video_url?.trim() || null) : null) || existing.video_url;
     const uploadedVideoFile = (req.files && Array.isArray(req.files.video) && req.files.video[0]) ? req.files.video[0] : null;
-    if (!videoUrl && uploadedVideoFile) {
+    const parseBool = (v) => {
+      const s = String(v ?? '').toLowerCase();
+      return s === 'true' || s === 'on' || s === '1' || s === 'yes';
+    };
+    const removeExistingVideoFlag = parseBool(body.remove_existing_video);
+    
+    // Determine video URL based on priority:
+    // 1. New uploaded video file (highest priority)
+    // 2. New video link URL
+    // 3. Explicit removal flag
+    // 4. Empty link (explicitly clearing video)
+    // 5. Keep existing (default)
+    let videoUrl = existing.video_url;
+    if (uploadedVideoFile) {
+      // New video file uploaded - use it
       videoUrl = uploadedVideoFile.url || '/uploads/properties/' + uploadedVideoFile.filename;
+    } else if (body.video_source === 'link') {
+      // Video source is link - check if URL provided
+      const linkUrl = body.video_url?.trim() || null;
+      if (linkUrl) {
+        // New URL provided - use it
+        videoUrl = linkUrl;
+      } else if (removeExistingVideoFlag || body.video_url === '') {
+        // Explicitly cleared (empty string) or removal flag set
+        videoUrl = null;
+      }
+      // If linkUrl is null but not explicitly cleared and no removal flag, keep existing (handled by default above)
+    } else if (removeExistingVideoFlag) {
+      // Removal flag set and no new video provided
+      videoUrl = null;
     }
 
     // Apply removals for existing media when editing
@@ -1278,20 +1309,8 @@ exports.updateProperty = async (req, res, next) => {
         photos = (photos || []).filter(p => !removedPhotosList.some(r => isSameUrl(p, r)));
       }
     } catch (_) {}
-    const parseBool = (v) => {
-      const s = String(v ?? '').toLowerCase();
-      return s === 'true' || s === 'on' || s === '1' || s === 'yes';
-    };
     const removeFloorplanFlag = parseBool(body.remove_existing_floorplan);
     const removePlanPhotoFlag = parseBool(body.remove_existing_plan_photo);
-    const removeExistingVideoFlag = parseBool(body.remove_existing_video);
-    if (!uploadedVideoFile && removeExistingVideoFlag) {
-      // If user requested to remove existing video and did not upload a new one or set a link
-      const isLinkProvided = body.video_source === 'link' && (body.video_url?.trim());
-      if (!isLinkProvided) {
-        videoUrl = null;
-      }
-    }
 
     if (req.files) {
       if (type === 'Apartment' && Array.isArray(req.files.floorplan) && req.files.floorplan[0]) {
@@ -1357,6 +1376,12 @@ exports.updateProperty = async (req, res, next) => {
       photos = ordered;
     }
 
+    // Merge uploaded files with existing photos BEFORE normalizing (for Spaces/CDN, URLs are already in uploadedPhotosFiles)
+    if (process.env.DO_SPACES_BUCKET && uploadedPhotosFiles && uploadedPhotosFiles.length) {
+      const newPhotoUrls = uploadedPhotosFiles.map(f => f.url || '/uploads/properties/' + f.filename).filter(Boolean);
+      photos = [...(photos || []), ...newPhotoUrls];
+    }
+    
     // Normalize photos; preserve remote and absolute URLs. Skip strict existence checks on Spaces/CDN.
     try {
       const list = (photos || []).filter(p => p && String(p).trim());
@@ -1404,45 +1429,87 @@ exports.updateProperty = async (req, res, next) => {
       }
     } catch (_) { /* fallback to computed newSlug */ }
 
-    // Update
-    await query(
-      `UPDATE properties SET
-         country=$1, city=$2, neighborhood=$3,
-         title=$4, slug=$5, description=$6,
-         type=$7, price=$8, status_tags=$9,
-         photos=$10, video_url=$11,
-         apartment_size=$12, rooms=$13, bathrooms=$14, floorplan_url=$15,
-         total_size=$16, living_space=$17,
-         land_size=$18, plan_photo_url=$19,
-         is_in_project=$20, project_id=$21,
-         agent_id=$22,
-         map_link=$23,
-         features=$24::jsonb,
-         year_built=$25,
-         sold=$26,
-         sold_at=$27,
-         occupancy_type=$28, rental_status=$29, rental_income=$30, housegeld=$31,
-         updated_at=NOW()
-       WHERE id=$32`,
-      [
-        country, city, neighborhood,
-        title, newSlug, description,
-        type, price, statusTags,
-        photos, videoUrl,
-        apartmentSize, rooms, bathrooms, floorplanUrl,
-        totalSize, livingSpace,
-        landSize, planPhotoUrl,
-        isInProject, projectId,
-        agentId,
-        mapLinkRaw,
-        JSON.stringify(featuresList || []),
-        yearBuilt,
-        soldChecked,
-        soldAt ? soldAt.toISOString() : null,
-        occupancyType, rentalStatus, rentalIncome, housegeld,
-        propId
-      ]
-    );
+    // Update - if files are being uploaded, photos/video_url will be updated separately after file processing
+    const hasFileUploads = (uploadedPhotosFiles && uploadedPhotosFiles.length > 0) || uploadedVideoFile;
+    if (hasFileUploads) {
+      // Update everything except photos/video_url (those are handled after file processing)
+      await query(
+        `UPDATE properties SET
+           country=$1, city=$2, neighborhood=$3,
+           title=$4, slug=$5, description=$6,
+           type=$7, price=$8, status_tags=$9,
+           apartment_size=$10, rooms=$11, bathrooms=$12, floorplan_url=$13,
+           total_size=$14, living_space=$15,
+           land_size=$16, plan_photo_url=$17,
+           is_in_project=$18, project_id=$19,
+           agent_id=$20,
+           map_link=$21,
+           features=$22::jsonb,
+           year_built=$23,
+           sold=$24,
+           sold_at=$25,
+           occupancy_type=$26, rental_status=$27, rental_income=$28, housegeld=$29,
+           updated_at=NOW()
+         WHERE id=$30`,
+        [
+          country, city, neighborhood,
+          title, newSlug, description,
+          type, price, statusTags,
+          apartmentSize, rooms, bathrooms, floorplanUrl,
+          totalSize, livingSpace,
+          landSize, planPhotoUrl,
+          isInProject, projectId,
+          agentId,
+          mapLinkRaw,
+          JSON.stringify(featuresList || []),
+          yearBuilt,
+          soldChecked,
+          soldAt ? soldAt.toISOString() : null,
+          occupancyType, rentalStatus, rentalIncome, housegeld,
+          propId
+        ]
+      );
+    } else {
+      // No file uploads, update photos/video_url normally
+      await query(
+        `UPDATE properties SET
+           country=$1, city=$2, neighborhood=$3,
+           title=$4, slug=$5, description=$6,
+           type=$7, price=$8, status_tags=$9,
+           photos=$10, video_url=$11,
+           apartment_size=$12, rooms=$13, bathrooms=$14, floorplan_url=$15,
+           total_size=$16, living_space=$17,
+           land_size=$18, plan_photo_url=$19,
+           is_in_project=$20, project_id=$21,
+           agent_id=$22,
+           map_link=$23,
+           features=$24::jsonb,
+           year_built=$25,
+           sold=$26,
+           sold_at=$27,
+           occupancy_type=$28, rental_status=$29, rental_income=$30, housegeld=$31,
+           updated_at=NOW()
+         WHERE id=$32`,
+        [
+          country, city, neighborhood,
+          title, newSlug, description,
+          type, price, statusTags,
+          photos, videoUrl,
+          apartmentSize, rooms, bathrooms, floorplanUrl,
+          totalSize, livingSpace,
+          landSize, planPhotoUrl,
+          isInProject, projectId,
+          agentId,
+          mapLinkRaw,
+          JSON.stringify(featuresList || []),
+          yearBuilt,
+          soldChecked,
+          soldAt ? soldAt.toISOString() : null,
+          occupancyType, rentalStatus, rentalIncome, housegeld,
+          propId
+        ]
+      );
+    }
 
     // Enhanced auto-translation for existing properties
     // This will detect missing translations and generate them automatically
@@ -1584,8 +1651,8 @@ exports.updateProperty = async (req, res, next) => {
         planPhotoUrl = `/uploads/properties/${propId}/${p.filename}`;
       }
 
-      // Persist updated media paths if anything changed
-        if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || removeFloorplanFlag || removePlanPhotoFlag || (req.files && (req.files.floorplan || req.files.plan_photo))) {
+      // Persist updated media paths if anything changed (including photo removals and video changes)
+        if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || removeExistingVideoFlag || removeFloorplanFlag || removePlanPhotoFlag || (req.files && (req.files.floorplan || req.files.plan_photo)) || (removedPhotosList && removedPhotosList.length > 0) || videoUrl !== existing.video_url) {
           await query(
             `UPDATE properties
                 SET photos = $1,
@@ -1602,8 +1669,11 @@ exports.updateProperty = async (req, res, next) => {
         console.error('File move/update error:', fileErr);
       }
     } else {
-      // Using Spaces: URLs already computed above, just persist when something changed
-      if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || removeFloorplanFlag || removePlanPhotoFlag || (req.files && (req.files.floorplan || req.files.plan_photo))) {
+      // Using Spaces: URLs already computed by upload middleware
+      // Note: photos array already has removals applied (line 1308) and new uploads merged (line 1367)
+      // No need to merge again here - it's already done before the main UPDATE query
+      // Persist when something changed (including photo removals and video changes)
+      if ((uploadedPhotosFiles && uploadedPhotosFiles.length) || uploadedVideoFile || removeExistingVideoFlag || removeFloorplanFlag || removePlanPhotoFlag || (req.files && (req.files.floorplan || req.files.plan_photo)) || (removedPhotosList && removedPhotosList.length > 0) || videoUrl !== existing.video_url) {
         await query(
           `UPDATE properties
               SET photos = $1,
