@@ -1361,6 +1361,16 @@ exports.updateProperty = async (req, res, next) => {
     }
 
     // If reordering only (no uploads yet), apply order of existing URLs now
+    // But first, we need to apply removals to ensure removed photos are excluded from order
+    // Note: removedPhotosList is defined below, but we need it here for order processing
+    const removedPhotosListForOrder = (body.remove_existing_photos || '').split(/[\n,]+/).map(s => s && s.trim()).filter(Boolean);
+    const isSameUrlForOrder = (a, b) => {
+      if (a === b) return true;
+      try { if (decodeURIComponent(a) === b) return true; } catch (_) {}
+      try { if (a === decodeURIComponent(b)) return true; } catch (_) {}
+      try { if (decodeURIComponent(a) === decodeURIComponent(b)) return true; } catch (_) {}
+      return false;
+    };
     if ((!uploadedPhotosFiles || uploadedPhotosFiles.length === 0) && Array.isArray(orderTokens) && orderTokens.length) {
       const ordered = [];
       const used = new Set();
@@ -1368,11 +1378,19 @@ exports.updateProperty = async (req, res, next) => {
         if (!t || typeof t !== 'string') continue;
         if (t.startsWith('url:')) {
           const u = t.slice(4);
-          if (u) { ordered.push(u); used.add(u); }
+          // Only include if not in removed list
+          if (u && !removedPhotosListForOrder.some(r => isSameUrlForOrder(u, r))) {
+            ordered.push(u);
+            used.add(u);
+          }
         }
       }
-      // append any remaining existing photos not referenced
-      for (const p of photos || []) { if (!used.has(p)) ordered.push(p); }
+      // append any remaining existing photos not referenced (and not removed)
+      for (const p of photos || []) {
+        if (!used.has(p) && !removedPhotosListForOrder.some(r => isSameUrlForOrder(p, r))) {
+          ordered.push(p);
+        }
+      }
       photos = ordered;
     }
 
@@ -1687,46 +1705,192 @@ exports.updateProperty = async (req, res, next) => {
       }
     }
 
-    // After DB changes and file moves, delete removed files from disk (best-effort)
+    // After DB changes and file moves, delete removed files from disk or Spaces (best-effort)
     try {
       // Delete removed photos (original + common variants)
       if (removedPhotosList && removedPhotosList.length) {
-        for (const url of removedPhotosList) {
-          if (!url) continue;
-          const publicPath = path.join(__dirname, '../public', String(url).replace(/^\//, ''));
-          try {
-            if (fs.existsSync(publicPath)) fs.unlinkSync(publicPath);
-          } catch (_) {}
-          // Try deleting responsive variants if they exist (jpg/webp/avif at common widths)
-          try {
-            const ext = path.extname(publicPath);
-            const base = publicPath.slice(0, -ext.length);
-            const widths = [320, 480, 640, 960, 1280, 1600];
-            const exts  = ['.jpg', '.jpeg', '.png', '.webp', '.avif'];
-            for (const w of widths) {
-              for (const e of exts) {
-                const variant = `${base}-${w}${e}`;
-                if (fs.existsSync(variant)) {
-                  try { fs.unlinkSync(variant); } catch (_) {}
+        if (process.env.DO_SPACES_BUCKET) {
+          // Delete from DigitalOcean Spaces
+          const bucket = process.env.DO_SPACES_BUCKET;
+          const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
+          const cdnBase = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : '';
+          const spacesBase = `https://${bucket}.${process.env.DO_SPACES_ENDPOINT?.replace(/^https?:\/\//, '') || 'nyc3.digitaloceanspaces.com'}`;
+          const objectsToDelete = [];
+          
+          for (const url of removedPhotosList) {
+            if (!url) continue;
+            // Extract key from Spaces URL (could be CDN URL or direct Spaces URL)
+            let key = null;
+            if (cdnBase && url.startsWith(cdnBase)) {
+              key = url.replace(cdnBase, '').replace(/^\//, '');
+            } else if (url.startsWith(spacesBase)) {
+              key = url.replace(spacesBase, '').replace(/^\//, '');
+            } else if (url.startsWith('http://') || url.startsWith('https://')) {
+              // Full URL - extract path after domain (fallback for any other URL format)
+              try {
+                const urlObj = new URL(url);
+                key = urlObj.pathname.replace(/^\//, '');
+              } catch (_) {}
+            }
+            
+            if (key) {
+              objectsToDelete.push({ Key: key });
+              // Also try to delete responsive variants
+              const ext = path.extname(key);
+              const base = key.slice(0, -ext.length);
+              const widths = [320, 480, 640, 960, 1280, 1600];
+              const exts = ['.jpg', '.jpeg', '.png', '.webp', '.avif'];
+              for (const w of widths) {
+                for (const e of exts) {
+                  objectsToDelete.push({ Key: `${base}-${w}${e}` });
                 }
               }
             }
-          } catch (_) {}
+          }
+          
+          // Delete in batches (S3 API limit is 1000 objects per request)
+          if (objectsToDelete.length > 0) {
+            const batchSize = 1000;
+            for (let i = 0; i < objectsToDelete.length; i += batchSize) {
+              const batch = objectsToDelete.slice(i, i + batchSize);
+              try {
+                await new Promise((resolve, reject) => {
+                  s3.deleteObjects({ Bucket: bucket, Delete: { Objects: batch } }, (err) => {
+                    if (err) reject(err);
+                    else resolve();
+                  });
+                });
+              } catch (err) {
+                console.error('Error deleting photos from Spaces:', err);
+              }
+            }
+          }
+        } else {
+          // Delete from local disk
+          for (const url of removedPhotosList) {
+            if (!url) continue;
+            const publicPath = path.join(__dirname, '../public', String(url).replace(/^\//, ''));
+            try {
+              if (fs.existsSync(publicPath)) fs.unlinkSync(publicPath);
+            } catch (_) {}
+            // Try deleting responsive variants if they exist (jpg/webp/avif at common widths)
+            try {
+              const ext = path.extname(publicPath);
+              const base = publicPath.slice(0, -ext.length);
+              const widths = [320, 480, 640, 960, 1280, 1600];
+              const exts  = ['.jpg', '.jpeg', '.png', '.webp', '.avif'];
+              for (const w of widths) {
+                for (const e of exts) {
+                  const variant = `${base}-${w}${e}`;
+                  if (fs.existsSync(variant)) {
+                    try { fs.unlinkSync(variant); } catch (_) {}
+                  }
+                }
+              }
+            } catch (_) {}
+          }
         }
       }
-      // Delete removed existing video if flagged and not replaced (local files only)
-      if (removeExistingVideoFlag && existing.video_url && existing.video_url !== (videoUrl || '') && String(existing.video_url).startsWith('/uploads/')) {
-        const videoPath = path.join(__dirname, '../public', String(existing.video_url).replace(/^\//, ''));
-        try { if (fs.existsSync(videoPath)) fs.unlinkSync(videoPath); } catch (_) {}
+      // Delete removed existing video if flagged and not replaced
+      if (removeExistingVideoFlag && existing.video_url && existing.video_url !== (videoUrl || '')) {
+        if (process.env.DO_SPACES_BUCKET) {
+          // Delete from Spaces
+          const bucket = process.env.DO_SPACES_BUCKET;
+          const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
+          const cdnBase = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : '';
+          const spacesBase = `https://${bucket}.${process.env.DO_SPACES_ENDPOINT?.replace(/^https?:\/\//, '') || 'nyc3.digitaloceanspaces.com'}`;
+          let key = null;
+          if (cdnBase && existing.video_url.startsWith(cdnBase)) {
+            key = existing.video_url.replace(cdnBase, '').replace(/^\//, '');
+          } else if (existing.video_url.startsWith(spacesBase)) {
+            key = existing.video_url.replace(spacesBase, '').replace(/^\//, '');
+          } else if (existing.video_url.startsWith('http://') || existing.video_url.startsWith('https://')) {
+            try {
+              const urlObj = new URL(existing.video_url);
+              key = urlObj.pathname.replace(/^\//, '');
+            } catch (_) {}
+          }
+          if (key) {
+            try {
+              await new Promise((resolve, reject) => {
+                s3.deleteObject({ Bucket: bucket, Key: key }, (err) => err ? reject(err) : resolve());
+              });
+            } catch (err) {
+              console.error('Error deleting video from Spaces:', err);
+            }
+          }
+        } else if (String(existing.video_url).startsWith('/uploads/')) {
+          // Delete from local disk
+          const videoPath = path.join(__dirname, '../public', String(existing.video_url).replace(/^\//, ''));
+          try { if (fs.existsSync(videoPath)) fs.unlinkSync(videoPath); } catch (_) {}
+        }
       }
       // Delete removed floorplan/plan photo if flagged and not replaced
-      if (removeFloorplanFlag && existing.floorplan_url && existing.floorplan_url !== (floorplanUrl || '') && String(existing.floorplan_url).startsWith('/uploads/')) {
-        const fp = path.join(__dirname, '../public', String(existing.floorplan_url).replace(/^\//, ''));
-        try { if (fs.existsSync(fp)) fs.unlinkSync(fp); } catch (_) {}
+      if (removeFloorplanFlag && existing.floorplan_url && existing.floorplan_url !== (floorplanUrl || '')) {
+        if (process.env.DO_SPACES_BUCKET) {
+          // Delete from Spaces
+          const bucket = process.env.DO_SPACES_BUCKET;
+          const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
+          const cdnBase = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : '';
+          const spacesBase = `https://${bucket}.${process.env.DO_SPACES_ENDPOINT?.replace(/^https?:\/\//, '') || 'nyc3.digitaloceanspaces.com'}`;
+          let key = null;
+          if (cdnBase && existing.floorplan_url.startsWith(cdnBase)) {
+            key = existing.floorplan_url.replace(cdnBase, '').replace(/^\//, '');
+          } else if (existing.floorplan_url.startsWith(spacesBase)) {
+            key = existing.floorplan_url.replace(spacesBase, '').replace(/^\//, '');
+          } else if (existing.floorplan_url.startsWith('http://') || existing.floorplan_url.startsWith('https://')) {
+            try {
+              const urlObj = new URL(existing.floorplan_url);
+              key = urlObj.pathname.replace(/^\//, '');
+            } catch (_) {}
+          }
+          if (key) {
+            try {
+              await new Promise((resolve, reject) => {
+                s3.deleteObject({ Bucket: bucket, Key: key }, (err) => err ? reject(err) : resolve());
+              });
+            } catch (err) {
+              console.error('Error deleting floorplan from Spaces:', err);
+            }
+          }
+        } else if (String(existing.floorplan_url).startsWith('/uploads/')) {
+          // Delete from local disk
+          const fp = path.join(__dirname, '../public', String(existing.floorplan_url).replace(/^\//, ''));
+          try { if (fs.existsSync(fp)) fs.unlinkSync(fp); } catch (_) {}
+        }
       }
-      if (removePlanPhotoFlag && existing.plan_photo_url && existing.plan_photo_url !== (planPhotoUrl || '') && String(existing.plan_photo_url).startsWith('/uploads/')) {
-        const pp = path.join(__dirname, '../public', String(existing.plan_photo_url).replace(/^\//, ''));
-        try { if (fs.existsSync(pp)) fs.unlinkSync(pp); } catch (_) {}
+      if (removePlanPhotoFlag && existing.plan_photo_url && existing.plan_photo_url !== (planPhotoUrl || '')) {
+        if (process.env.DO_SPACES_BUCKET) {
+          // Delete from Spaces
+          const bucket = process.env.DO_SPACES_BUCKET;
+          const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
+          const cdnBase = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : '';
+          const spacesBase = `https://${bucket}.${process.env.DO_SPACES_ENDPOINT?.replace(/^https?:\/\//, '') || 'nyc3.digitaloceanspaces.com'}`;
+          let key = null;
+          if (cdnBase && existing.plan_photo_url.startsWith(cdnBase)) {
+            key = existing.plan_photo_url.replace(cdnBase, '').replace(/^\//, '');
+          } else if (existing.plan_photo_url.startsWith(spacesBase)) {
+            key = existing.plan_photo_url.replace(spacesBase, '').replace(/^\//, '');
+          } else if (existing.plan_photo_url.startsWith('http://') || existing.plan_photo_url.startsWith('https://')) {
+            try {
+              const urlObj = new URL(existing.plan_photo_url);
+              key = urlObj.pathname.replace(/^\//, '');
+            } catch (_) {}
+          }
+          if (key) {
+            try {
+              await new Promise((resolve, reject) => {
+                s3.deleteObject({ Bucket: bucket, Key: key }, (err) => err ? reject(err) : resolve());
+              });
+            } catch (err) {
+              console.error('Error deleting plan photo from Spaces:', err);
+            }
+          }
+        } else if (String(existing.plan_photo_url).startsWith('/uploads/')) {
+          // Delete from local disk
+          const pp = path.join(__dirname, '../public', String(existing.plan_photo_url).replace(/^\//, ''));
+          try { if (fs.existsSync(pp)) fs.unlinkSync(pp); } catch (_) {}
+        }
       }
     } catch (_) { /* best-effort */ }
 

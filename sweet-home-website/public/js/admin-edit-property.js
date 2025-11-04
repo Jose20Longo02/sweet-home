@@ -148,6 +148,10 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       const item = photoBtn.closest('.item');
       if (item) item.remove();
+      // Update order tokens to exclude removed photo
+      if (window.persistPhotoOrder && typeof window.persistPhotoOrder === 'function') {
+        window.persistPhotoOrder();
+      }
     }
     const vidBtn = e.target.closest('[data-remove-video]');
     if (vidBtn) {
@@ -327,6 +331,9 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!orderedMount) return;
       // clear previous
       orderedMount.innerHTML = '';
+      // Get list of removed photos to exclude from order
+      const removeField = document.getElementById('remove_existing_photos');
+      const removedPhotos = removeField && removeField.value ? removeField.value.split('\n').filter(Boolean) : [];
       const items = Array.from(preview.querySelectorAll('.item'));
       items.forEach(it => {
         const img = it.querySelector('img.thumb');
@@ -340,6 +347,8 @@ document.addEventListener('DOMContentLoaded', function () {
           if (idx >= 0) input.value = 'file:' + idx; else return;
         } else {
           const url = img.getAttribute('src'); if (!url) return;
+          // Don't include removed photos in order
+          if (removedPhotos.includes(url)) return;
           input.value = 'url:' + url;
         }
         orderedMount.appendChild(input);
@@ -349,6 +358,9 @@ document.addEventListener('DOMContentLoaded', function () {
     initDragForExisting();
     persistOrder();
     photosInput.addEventListener('change', () => { rebuildNewPreviews(); initDragForExisting(); persistOrder(); });
+    
+    // Expose persistOrder globally so it can be called from photo removal handler
+    window.persistPhotoOrder = persistOrder;
   })();
 
   // Video source toggle + preview for newly selected video
