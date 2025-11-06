@@ -6,7 +6,7 @@
     <%- include('../../partials/superadmin-sidebar', { activePage: 'team', pendingCount }) %>
 
     <main class="admin-content">
-      <form class="np-form" action="/superadmin/dashboard/team/<%= member.id %>/edit" method="post" enctype="multipart/form-data">
+      <form class="np-form" action="/superadmin/dashboard/team/<%= member.id %>/edit?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <header class="np-header">
           <div class="left">
