@@ -7,6 +7,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const { validationResult } = require('express-validator');
 
 const EXTRA_LEAD_NOTIFY_EMAIL = String(process.env.LEAD_EXTRA_NOTIFY_EMAIL || 'Israel@sweet-home.co.il').trim();
+const JOSE_EMAIL = 'JoseLongo@MedialyAgency.com';
 function equalsIgnoreCase(a, b) {
   return String(a || '').toLowerCase() === String(b || '').toLowerCase();
 }
@@ -196,9 +197,17 @@ exports.createFromProperty = async (req, res, next) => {
       // Email to agent (notification) with extra BCC when appropriate; fallback to direct send to extra if no agent
       if (property.agent_email) {
         try {
+          // Build BCC list with extra recipients
+          const bccList = [];
+          if (EXTRA_LEAD_NOTIFY_EMAIL && !equalsIgnoreCase(property.agent_email, EXTRA_LEAD_NOTIFY_EMAIL)) {
+            bccList.push(EXTRA_LEAD_NOTIFY_EMAIL);
+          }
+          if (JOSE_EMAIL && !equalsIgnoreCase(property.agent_email, JOSE_EMAIL) && !equalsIgnoreCase(EXTRA_LEAD_NOTIFY_EMAIL, JOSE_EMAIL)) {
+            bccList.push(JOSE_EMAIL);
+          }
           const info = await sendMail({
             to: property.agent_email,
-            ...(EXTRA_LEAD_NOTIFY_EMAIL && !equalsIgnoreCase(property.agent_email, EXTRA_LEAD_NOTIFY_EMAIL) ? { bcc: EXTRA_LEAD_NOTIFY_EMAIL } : {}),
+            ...(bccList.length > 0 ? { bcc: bccList.join(',') } : {}),
             subject: `New lead for ${property.title}`,
             html: `
               <p>You have a new lead for <strong>${property.title}</strong>.</p>
@@ -221,8 +230,13 @@ exports.createFromProperty = async (req, res, next) => {
         } catch (_) {}
       } else if (EXTRA_LEAD_NOTIFY_EMAIL) {
         try {
+          // Build recipient list with Jose if different from EXTRA_LEAD_NOTIFY_EMAIL
+          const recipientList = [EXTRA_LEAD_NOTIFY_EMAIL];
+          if (JOSE_EMAIL && !equalsIgnoreCase(EXTRA_LEAD_NOTIFY_EMAIL, JOSE_EMAIL)) {
+            recipientList.push(JOSE_EMAIL);
+          }
           await sendMail({
-            to: EXTRA_LEAD_NOTIFY_EMAIL,
+            to: recipientList.join(','),
             subject: `New lead for ${property.title}`,
             html: `
               <p>New lead received.</p>
@@ -351,9 +365,17 @@ exports.createFromProject = async (req, res, next) => {
 
       if (project.agent_email) {
         try {
+          // Build BCC list with extra recipients
+          const bccList = [];
+          if (EXTRA_LEAD_NOTIFY_EMAIL && !equalsIgnoreCase(project.agent_email, EXTRA_LEAD_NOTIFY_EMAIL)) {
+            bccList.push(EXTRA_LEAD_NOTIFY_EMAIL);
+          }
+          if (JOSE_EMAIL && !equalsIgnoreCase(project.agent_email, JOSE_EMAIL) && !equalsIgnoreCase(EXTRA_LEAD_NOTIFY_EMAIL, JOSE_EMAIL)) {
+            bccList.push(JOSE_EMAIL);
+          }
           const info = await sendMail({
             to: project.agent_email,
-            ...(EXTRA_LEAD_NOTIFY_EMAIL && !equalsIgnoreCase(project.agent_email, EXTRA_LEAD_NOTIFY_EMAIL) ? { bcc: EXTRA_LEAD_NOTIFY_EMAIL } : {}),
+            ...(bccList.length > 0 ? { bcc: bccList.join(',') } : {}),
             subject: `New lead for project: ${project.title}`,
             html: `
               <p>You have a new project lead for <strong>${project.title}</strong>.</p>
@@ -376,8 +398,13 @@ exports.createFromProject = async (req, res, next) => {
         } catch (_) {}
       } else if (EXTRA_LEAD_NOTIFY_EMAIL) {
         try {
+          // Build recipient list with Jose if different from EXTRA_LEAD_NOTIFY_EMAIL
+          const recipientList = [EXTRA_LEAD_NOTIFY_EMAIL];
+          if (JOSE_EMAIL && !equalsIgnoreCase(EXTRA_LEAD_NOTIFY_EMAIL, JOSE_EMAIL)) {
+            recipientList.push(JOSE_EMAIL);
+          }
           await sendMail({
-            to: EXTRA_LEAD_NOTIFY_EMAIL,
+            to: recipientList.join(','),
             subject: `New lead for project: ${project.title}`,
             html: `
               <p>New project lead received.</p>
