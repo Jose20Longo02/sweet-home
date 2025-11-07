@@ -261,9 +261,11 @@
 
 .gallery-thumbnails {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   padding: 1rem;
   background: #f8f9fa;
+  max-width: 100%;
 }
 
 .thumbnail {
