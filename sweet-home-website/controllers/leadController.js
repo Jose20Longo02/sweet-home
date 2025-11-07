@@ -7,7 +7,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const { validationResult } = require('express-validator');
 
 const EXTRA_LEAD_NOTIFY_EMAIL = String(process.env.LEAD_EXTRA_NOTIFY_EMAIL || 'Israel@sweet-home.co.il').trim();
-const JOSE_EMAIL = 'JoseLongo@MedialyAgency.com';
+const JOSE_EMAIL = 'JoseLongo@Medialy.Agency';
 function equalsIgnoreCase(a, b) {
   return String(a || '').toLowerCase() === String(b || '').toLowerCase();
 }
@@ -43,7 +43,7 @@ const sendToZapier = async (leadData) => {
       if (leadData.agent_id) {
         const { rows } = await query('SELECT name, email FROM users WHERE id = $1 LIMIT 1', [leadData.agent_id]);
         if (rows && rows[0]) {
-          agent_name = rows[0].name || null;
+          agent_name = rows[0].name ? String(rows[0].name).toLowerCase() : null;
           agent_email = rows[0].email || null;
         }
       } else if (!leadData.property_id && !leadData.project_id) {

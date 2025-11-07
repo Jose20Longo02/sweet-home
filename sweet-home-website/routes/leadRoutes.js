@@ -110,7 +110,7 @@ router.post(
             if (lead.agent_id) {
               const { rows } = await query('SELECT name, email FROM users WHERE id = $1 LIMIT 1', [lead.agent_id]);
               if (rows && rows[0]) {
-                agent_name = rows[0].name || null;
+                agent_name = rows[0].name ? String(rows[0].name).toLowerCase() : null;
                 agent_email = rows[0].email || null;
               }
             } else if (!lead.property_id && !lead.project_id) {
