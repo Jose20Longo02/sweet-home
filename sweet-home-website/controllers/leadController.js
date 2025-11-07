@@ -36,6 +36,21 @@ const sendToZapier = async (leadData) => {
     const property_url = property_slug ? ((originBase ? originBase : '') + `/properties/${property_slug}`) : null;
     const project_url  = project_slug  ? ((originBase ? originBase : '') + `/projects/${project_slug}`)   : null;
 
+    // Fetch agent details if agent_id is present
+    let agent_name = null, agent_email = null;
+    try {
+      if (leadData.agent_id) {
+        const { rows } = await query('SELECT name, email FROM users WHERE id = $1 LIMIT 1', [leadData.agent_id]);
+        if (rows && rows[0]) {
+          agent_name = rows[0].name || null;
+          agent_email = rows[0].email || null;
+        }
+      } else if (!leadData.property_id && !leadData.project_id) {
+        // General contact form (not property or project specific) - assign default agent
+        agent_name = 'israel zeevi';
+      }
+    } catch (_) {}
+
     const payload = {
       lead_id: leadData.id,
       name: leadData.name,
@@ -53,6 +68,8 @@ const sendToZapier = async (leadData) => {
       project_slug,
       project_url,
       agent_id: leadData.agent_id,
+      agent_name,
+      agent_email,
       created_at: leadData.created_at,
       timestamp: new Date().toISOString()
     };
@@ -90,9 +107,13 @@ exports.createFromProperty = async (req, res, next) => {
     }
 
     // Determine agent from property
-    const { rows } = await query('SELECT p.id, p.title, p.agent_id, u.email AS agent_email, u.name AS agent_name FROM properties p LEFT JOIN users u ON u.id = p.agent_id WHERE p.id = $1', [propertyId]);
+    const { rows } = await query('SELECT p.id, p.title, p.slug, p.agent_id, u.email AS agent_email, u.name AS agent_name FROM properties p LEFT JOIN users u ON u.id = p.agent_id WHERE p.id = $1', [propertyId]);
     if (!rows.length) return res.status(404).json({ success: false, message: 'Property not found' });
     const property = rows[0];
+    
+    // Build property URL
+    const originBase = String(process.env.PUBLIC_BASE_URL || process.env.SITE_URL || process.env.APP_ORIGIN || '').replace(/\/$/, '');
+    const propertyUrl = property.slug ? `${originBase ? originBase : ''}/properties/${property.slug}` : null;
 
     // Prevent quick duplicates (same email, same property within 5 minutes)
     const dupCheck = await query(
@@ -181,6 +202,7 @@ exports.createFromProperty = async (req, res, next) => {
             subject: `New lead for ${property.title}`,
             html: `
               <p>You have a new lead for <strong>${property.title}</strong>.</p>
+              ${propertyUrl ? `<p><strong>Property:</strong> <a href="${propertyUrl}">${propertyUrl}</a></p>` : ''}
               <ul>
                 <li><strong>Name:</strong> ${name}</li>
                 <li><strong>Email:</strong> ${email}</li>
@@ -191,7 +213,7 @@ exports.createFromProperty = async (req, res, next) => {
               <p>You can view this lead in the CRM from your dashboard.</p>
               <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
             `,
-            text: `New lead for ${property.title}\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${language ? `\nPreferred language: ${language}` : ''}${message ? `\nMessage: ${message}` : ''}`
+            text: `New lead for ${property.title}${propertyUrl ? `\nProperty: ${propertyUrl}` : ''}\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${language ? `\nPreferred language: ${language}` : ''}${message ? `\nMessage: ${message}` : ''}`
           });
           if (process.env.SMTP_DEBUG === 'true') {
             console.log('Lead notification email dispatched:', info && info.messageId);
@@ -206,6 +228,7 @@ exports.createFromProperty = async (req, res, next) => {
               <p>New lead received.</p>
               <ul>
                 <li><strong>Property:</strong> ${property.title}</li>
+                ${propertyUrl ? `<li><strong>Property Link:</strong> <a href="${propertyUrl}">${propertyUrl}</a></li>` : ''}
                 <li><strong>Name:</strong> ${name}</li>
                 <li><strong>Email:</strong> ${email}</li>
                 ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
@@ -214,7 +237,7 @@ exports.createFromProperty = async (req, res, next) => {
               ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g, '<br/>')}</p>` : ''}
               <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
             `,
-            text: `New lead\nProperty: ${property.title}\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${language ? `\nPreferred language: ${language}` : ''}${message ? `\nMessage: ${message}` : ''}`
+            text: `New lead\nProperty: ${property.title}${propertyUrl ? `\nProperty Link: ${propertyUrl}` : ''}\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${language ? `\nPreferred language: ${language}` : ''}${message ? `\nMessage: ${message}` : ''}`
           });
         } catch (_) {}
       }
@@ -242,7 +265,7 @@ exports.createFromProject = async (req, res, next) => {
 
     // Determine agent from project
     const { rows } = await query(
-      `SELECT p.id, p.title, p.agent_id, u.email AS agent_email, u.name AS agent_name
+      `SELECT p.id, p.title, p.slug, p.agent_id, u.email AS agent_email, u.name AS agent_name
          FROM projects p
          LEFT JOIN users u ON u.id = p.agent_id
         WHERE p.id = $1`,
@@ -250,6 +273,10 @@ exports.createFromProject = async (req, res, next) => {
     );
     if (!rows.length) return res.status(404).json({ success: false, message: 'Project not found' });
     const project = rows[0];
+    
+    // Build project URL
+    const originBase = String(process.env.PUBLIC_BASE_URL || process.env.SITE_URL || process.env.APP_ORIGIN || '').replace(/\/$/, '');
+    const projectUrl = project.slug ? `${originBase ? originBase : ''}/projects/${project.slug}` : null;
 
     // Prevent quick duplicates (same email, same project within 5 minutes)
     const dupCheck = await query(
@@ -330,6 +357,7 @@ exports.createFromProject = async (req, res, next) => {
             subject: `New lead for project: ${project.title}`,
             html: `
               <p>You have a new project lead for <strong>${project.title}</strong>.</p>
+              ${projectUrl ? `<p><strong>Project:</strong> <a href="${projectUrl}">${projectUrl}</a></p>` : ''}
               <ul>
                 <li><strong>Name:</strong> ${name}</li>
                 <li><strong>Email:</strong> ${email}</li>
@@ -340,7 +368,7 @@ exports.createFromProject = async (req, res, next) => {
               <p>You can view this lead in the CRM from your dashboard.</p>
               <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
             `,
-            text: `New project lead for ${project.title}\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${language ? `\nPreferred language: ${language}` : ''}${message ? `\nMessage: ${message}` : ''}`
+            text: `New project lead for ${project.title}${projectUrl ? `\nProject: ${projectUrl}` : ''}\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${language ? `\nPreferred language: ${language}` : ''}${message ? `\nMessage: ${message}` : ''}`
           });
           if (process.env.SMTP_DEBUG === 'true') {
             console.log('Project lead notification email dispatched:', info && info.messageId);
@@ -355,6 +383,7 @@ exports.createFromProject = async (req, res, next) => {
               <p>New project lead received.</p>
               <ul>
                 <li><strong>Project:</strong> ${project.title}</li>
+                ${projectUrl ? `<li><strong>Project Link:</strong> <a href="${projectUrl}">${projectUrl}</a></li>` : ''}
                 <li><strong>Name:</strong> ${name}</li>
                 <li><strong>Email:</strong> ${email}</li>
                 ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
@@ -363,7 +392,7 @@ exports.createFromProject = async (req, res, next) => {
               ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g, '<br/>')}</p>` : ''}
               <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
             `,
-            text: `New project lead\nProject: ${project.title}\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${language ? `\nPreferred language: ${language}` : ''}${message ? `\nMessage: ${message}` : ''}`
+            text: `New project lead\nProject: ${project.title}${projectUrl ? `\nProject Link: ${projectUrl}` : ''}\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${language ? `\nPreferred language: ${language}` : ''}${message ? `\nMessage: ${message}` : ''}`
           });
         } catch (_) {}
       }

@@ -103,6 +103,22 @@ router.post(
           }
 
           const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+          
+          // Fetch agent details if agent_id is present
+          let agent_name = null, agent_email = null;
+          try {
+            if (lead.agent_id) {
+              const { rows } = await query('SELECT name, email FROM users WHERE id = $1 LIMIT 1', [lead.agent_id]);
+              if (rows && rows[0]) {
+                agent_name = rows[0].name || null;
+                agent_email = rows[0].email || null;
+              }
+            } else if (!lead.property_id && !lead.project_id) {
+              // General contact form (not property or project specific) - assign default agent
+              agent_name = 'israel zeevi';
+            }
+          } catch (_) {}
+          
           const payload = {
             lead_id: lead.id,
             name: lead.name,
@@ -114,6 +130,8 @@ router.post(
             property_id: lead.property_id,
             project_id: lead.project_id,
             agent_id: lead.agent_id,
+            agent_name,
+            agent_email,
             seller_neighborhood: lead.seller_neighborhood,
             seller_size: lead.seller_size,
             seller_rooms: lead.seller_rooms,
