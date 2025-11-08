@@ -661,9 +661,8 @@
     grid-template-columns: 1fr;
     gap: var(--spacing-6);
   }
-  
   .project-sidebar {
-    order: -1;
+    order: 1;
   }
 }
 
