@@ -30,7 +30,7 @@ exports.login = async (req, res, next) => {
 
     // 1) Look up user
     const { rows } = await query(
-      'SELECT id, name, email, password, role, approved, profile_picture, area, position, phone FROM users WHERE LOWER(email) = LOWER($1)',
+      'SELECT id, name, email, password, role, approved, profile_picture, area, position, phone, bmby_username FROM users WHERE LOWER(email) = LOWER($1)',
       [email]
     );
     if (rows.length === 0) {
@@ -125,7 +125,8 @@ exports.register = async (req, res, next) => {
       area,
       position,
       phone,
-      registrationKey
+      registrationKey,
+      bmby_username
     } = req.body;
 
     // Determine role by area
@@ -144,7 +145,7 @@ exports.register = async (req, res, next) => {
     }
 
     // Validate inputs
-    if (!name || !email || !password || !passwordConfirm || !area || !position || !phone) {
+    if (!name || !email || !password || !passwordConfirm || !area || !position || !phone || !bmby_username) {
       return res.render('auth/register', {
         areaRoles,
         pendingCount: 0,
@@ -173,8 +174,8 @@ exports.register = async (req, res, next) => {
     const hash = await bcrypt.hash(password, 10);
 
     // Build fields/values for INSERT
-    const fields = ['name','email','password','role','approved','area','position'];
-    const values = [name, email, hash, role, false, area, position];
+    const fields = ['name','email','password','role','approved','area','position','bmby_username'];
+    const values = [name, email, hash, role, false, area, position, bmby_username.trim()];
 
     // Handle optional phone number
     if (phone) {

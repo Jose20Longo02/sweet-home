@@ -41,9 +41,10 @@ const sendToZapier = async (leadData) => {
     let agent_name = null, agent_email = null;
     try {
       if (leadData.agent_id) {
-        const { rows } = await query('SELECT name, email FROM users WHERE id = $1 LIMIT 1', [leadData.agent_id]);
+        const { rows } = await query('SELECT name, email, bmby_username FROM users WHERE id = $1 LIMIT 1', [leadData.agent_id]);
         if (rows && rows[0]) {
-          agent_name = rows[0].name ? String(rows[0].name).toLowerCase() : null;
+          const rawName = rows[0].bmby_username || rows[0].name;
+          agent_name = rawName ? String(rawName).toLowerCase() : null;
           agent_email = rows[0].email || null;
         }
       } else if (!leadData.property_id && !leadData.project_id) {

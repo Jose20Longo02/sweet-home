@@ -37,6 +37,9 @@
                     />
                     <h3><%= member.name %></h3>
                     <p class="position"><%= member.position %></p>
+                    <% if (member.bmby_username) { %>
+                      <p class="bmby">BMBY: <%= member.bmby_username %></p>
+                    <% } %>
 
                     <div class="actions">
                       <p class="property-count"><%= member.property_count %> <%= member.property_count === 1 ? 'property' : 'properties' %> assigned</p>

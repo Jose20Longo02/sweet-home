@@ -35,6 +35,11 @@
       </div>
 
       <div class="form-group">
+        <label for="bmby_username">BMBY Username</label>
+        <input id="bmby_username" name="bmby_username" type="text" value="<%= user.bmby_username || '' %>" placeholder="Enter your BMBY username" required />
+      </div>
+
+      <div class="form-group">
         <label for="profile_picture">Profile Picture</label>
         <div class="thumb-wrapper">
           <% const __pic = (user.profile_picture && (/^https?:\/\//.test(user.profile_picture) ? user.profile_picture : (user.profile_picture.startsWith('/') ? user.profile_picture : '/' + user.profile_picture))) || null; %>

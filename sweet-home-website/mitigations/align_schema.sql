@@ -13,6 +13,7 @@ UPDATE users SET role = 'Admin' WHERE role = 'Agent';
 ALTER TABLE users
   ADD COLUMN IF NOT EXISTS area VARCHAR(100),
   ADD COLUMN IF NOT EXISTS position VARCHAR(100),
+  ADD COLUMN IF NOT EXISTS bmby_username VARCHAR(150),
   ADD COLUMN IF NOT EXISTS reset_token_hash TEXT,
   ADD COLUMN IF NOT EXISTS reset_token_expires_at TIMESTAMP,
   ADD COLUMN IF NOT EXISTS reset_requested_at TIMESTAMP;
