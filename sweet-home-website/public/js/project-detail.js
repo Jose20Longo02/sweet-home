@@ -565,22 +565,30 @@ function initializeRelatedProjects() {
 }
 
 function relocateProjectContactOnMobile() {
-  const card = document.getElementById('projectContactCard');
-  if (!card) return;
+  const sidebar = document.querySelector('.project-sidebar');
+  if (!sidebar) return;
+
+  let placeholder = document.querySelector('.project-sidebar-placeholder');
+  if (!placeholder) {
+    placeholder = document.createElement('div');
+    placeholder.className = 'project-sidebar-placeholder';
+    sidebar.parentNode.insertBefore(placeholder, sidebar);
+  }
+
   const doMove = () => {
     const isSmallScreen = window.matchMedia('(max-width: 1024px)').matches;
     if (isSmallScreen) {
       const footer = document.querySelector('footer');
-      if (footer && card.nextElementSibling !== footer) {
-        footer.parentNode.insertBefore(card, footer);
+      if (footer && sidebar.nextElementSibling !== footer) {
+        footer.parentNode.insertBefore(sidebar, footer);
       }
-    } else {
-      const sidebar = document.querySelector('.project-sidebar');
-      if (sidebar && !sidebar.contains(card)) {
-        sidebar.insertBefore(card, sidebar.firstChild);
+    } else if (placeholder.parentNode) {
+      if (placeholder.nextSibling !== sidebar) {
+        placeholder.parentNode.insertBefore(sidebar, placeholder.nextSibling);
       }
     }
   };
+
   doMove();
   window.addEventListener('resize', doMove);
 }
