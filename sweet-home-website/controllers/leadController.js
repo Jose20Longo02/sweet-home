@@ -8,6 +8,16 @@ const { validationResult } = require('express-validator');
 
 const EXTRA_LEAD_NOTIFY_EMAIL = String(process.env.LEAD_EXTRA_NOTIFY_EMAIL || 'Israel@sweet-home.co.il').trim();
 const JOSE_EMAIL = 'JoseLongo@Medialy.Agency';
+const DEFAULT_SITE_ORIGIN = 'https://sweet-home.co.il';
+
+function resolveOriginBase() {
+  const raw = String(process.env.PUBLIC_BASE_URL || process.env.SITE_URL || process.env.APP_ORIGIN || '').trim();
+  if (raw) {
+    return raw.replace(/\/$/, '');
+  }
+  return DEFAULT_SITE_ORIGIN;
+}
+
 function equalsIgnoreCase(a, b) {
   return String(a || '').toLowerCase() === String(b || '').toLowerCase();
 }
@@ -34,8 +44,8 @@ const sendToZapier = async (leadData) => {
       }
     } catch (_) {}
     const originBase = String(process.env.PUBLIC_BASE_URL || process.env.SITE_URL || process.env.APP_ORIGIN || '').replace(/\/$/, '');
-    const property_url = property_slug ? ((originBase ? originBase : '') + `/properties/${property_slug}`) : null;
-    const project_url  = project_slug  ? ((originBase ? originBase : '') + `/projects/${project_slug}`)   : null;
+    const property_url = property_slug ? `${originBase}/properties/${property_slug}` : null;
+    const project_url  = project_slug  ? `${originBase}/projects/${project_slug}`   : null;
 
     // Fetch agent details if agent_id is present
     let agent_name = null, agent_email = null;
@@ -114,8 +124,8 @@ exports.createFromProperty = async (req, res, next) => {
     const property = rows[0];
     
     // Build property URL
-    const originBase = String(process.env.PUBLIC_BASE_URL || process.env.SITE_URL || process.env.APP_ORIGIN || '').replace(/\/$/, '');
-    const propertyUrl = property.slug ? `${originBase ? originBase : ''}/properties/${property.slug}` : null;
+    const originBase = resolveOriginBase();
+    const propertyUrl = property.slug ? `${originBase}/properties/${property.slug}` : null;
 
     // Prevent quick duplicates (same email, same property within 5 minutes)
     const dupCheck = await query(
@@ -290,8 +300,8 @@ exports.createFromProject = async (req, res, next) => {
     const project = rows[0];
     
     // Build project URL
-    const originBase = String(process.env.PUBLIC_BASE_URL || process.env.SITE_URL || process.env.APP_ORIGIN || '').replace(/\/$/, '');
-    const projectUrl = project.slug ? `${originBase ? originBase : ''}/projects/${project.slug}` : null;
+    const originBase = resolveOriginBase();
+    const projectUrl = project.slug ? `${originBase}/projects/${project.slug}` : null;
 
     // Prevent quick duplicates (same email, same project within 5 minutes)
     const dupCheck = await query(
