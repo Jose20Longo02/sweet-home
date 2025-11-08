@@ -78,6 +78,12 @@
   font-weight: 500;
 }
 
+@media (max-width: 768px) {
+  .project-header .breadcrumb {
+    display: none;
+  }
+}
+
 .project-header-content {
   text-align: center;
 }
