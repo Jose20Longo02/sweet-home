@@ -259,12 +259,32 @@ function initializeSearch() {
 
 // Sorting Functionality
 function initializeSorting() {
-  const sortSelect = document.getElementById('sort');
+  const sortSelect = document.getElementById('sortBy') || document.getElementById('sort');
   if (!sortSelect) return;
   
   sortSelect.addEventListener('change', function() {
-    applyFilters();
+    if (typeof window.updateSort === 'function') {
+      window.updateSort();
+      return;
+    }
+
+    const currentUrl = new URL(window.location);
+    currentUrl.searchParams.set('sort', sortSelect.value);
+    currentUrl.searchParams.delete('page');
+    window.location.href = currentUrl.toString();
   });
+}
+
+if (typeof window.updateSort !== 'function') {
+  window.updateSort = function() {
+    const sortSelect = document.getElementById('sortBy') || document.getElementById('sort');
+    if (!sortSelect) return;
+
+    const currentUrl = new URL(window.location);
+    currentUrl.searchParams.set('sort', sortSelect.value);
+    currentUrl.searchParams.delete('page');
+    window.location.href = currentUrl.toString();
+  };
 }
 
 // Pagination

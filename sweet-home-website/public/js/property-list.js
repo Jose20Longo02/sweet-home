@@ -457,11 +457,14 @@ function formatPrice(price) {
 function updateSort() {
   const sortSelect = document.getElementById('sortBy');
   if (!sortSelect) return;
-  
+
   const currentUrl = new URL(window.location);
   currentUrl.searchParams.set('sort', sortSelect.value);
+  currentUrl.searchParams.delete('page');
   window.location.href = currentUrl.toString();
 }
+
+window.updateSort = updateSort;
 
 // No favorites system
 
