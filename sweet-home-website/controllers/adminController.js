@@ -157,7 +157,7 @@ exports.showSuperAdminProfile = async (req, res, next) => {
     const pendingCount = await getPendingCount();
     // Fetch fresh user to ensure area/position/profile_picture/phone are present on initial load
     const { rows } = await query(
-      `SELECT id, name, email, role, approved, area, position, profile_picture, phone, bmby_username
+      `SELECT id, name, email, role, approved, area, position, profile_picture, phone, bmby_id
          FROM users WHERE id = $1`,
       [req.session.user.id]
     );
@@ -181,7 +181,7 @@ exports.showSuperAdminProfile = async (req, res, next) => {
 
 exports.updateSuperAdminProfile = async (req, res, next) => {
   try {
-    const { name, email, password, passwordConfirm, area, position, phone, bmby_username } = req.body;
+    const { name, email, password, passwordConfirm, area, position, phone, bmby_id } = req.body;
 
     if ((password || passwordConfirm) && password !== passwordConfirm) {
       const pendingCount = await getPendingCount();
@@ -196,12 +196,12 @@ exports.updateSuperAdminProfile = async (req, res, next) => {
       });
     }
 
-    if (!bmby_username) {
+    if (!bmby_id) {
       const pendingCount = await getPendingCount();
       return res.render('superadmin/profile/edit-profile', {
         user: req.session.user,
         areaRoles,
-        error: 'BMBY username is required',
+        error: 'BMBY ID is required',
         success: null,
         pendingCount,
         currentUser: req.session.user,
@@ -218,7 +218,7 @@ exports.updateSuperAdminProfile = async (req, res, next) => {
     fields.push(`area = $${idx++}`);     values.push(area);
     fields.push(`position = $${idx++}`); values.push(position);
     fields.push(`phone = $${idx++}`);    values.push(phone || null);
-    fields.push(`bmby_username = $${idx++}`); values.push(bmby_username ? bmby_username.trim() : null);
+    fields.push(`bmby_id = $${idx++}`); values.push(bmby_id ? bmby_id.trim() : null);
 
     if (password) {
       const hash = await bcrypt.hash(password, 10);
@@ -248,7 +248,7 @@ exports.updateSuperAdminProfile = async (req, res, next) => {
     );
 
     const { rows } = await query(
-      `SELECT id,name,email,role,approved,area,position,profile_picture,phone,bmby_username
+      `SELECT id,name,email,role,approved,area,position,profile_picture,phone,bmby_id
          FROM users WHERE id = $1`,
       [req.session.user.id]
     );
@@ -272,7 +272,7 @@ exports.listTeam = async (req, res, next) => {
   try {
     const pendingCount = await getPendingCount();
     const result = await query(
-      `SELECT id, name, email, area, position, profile_picture, bmby_username
+      `SELECT id, name, email, area, position, profile_picture, bmby_id
          FROM users
         WHERE role IN ('Admin','SuperAdmin') AND approved = true
         ORDER BY name`
@@ -570,7 +570,7 @@ exports.showAdminProfile = (req, res) => {
 
 exports.updateAdminProfile = async (req, res, next) => {
   try {
-    const { name, email, password, passwordConfirm, phone, bmby_username } = req.body;
+    const { name, email, password, passwordConfirm, phone, bmby_id } = req.body;
 
     // Basic validation
     if (!name || !email) {
@@ -581,11 +581,15 @@ exports.updateAdminProfile = async (req, res, next) => {
       });
     }
 
-    if (!bmby_username) {
+    if (!bmby_id) {
+      const pendingCount = await getPendingCount();
       return res.render('admin/profile/edit-profile', {
         user: req.session.user,
-        error: 'BMBY username is required.',
-        success: null
+        error: 'BMBY ID is required.',
+        success: null,
+        pendingCount,
+        currentUser: req.session.user,
+        activePage: 'profile'
       });
     }
 
@@ -615,8 +619,8 @@ exports.updateAdminProfile = async (req, res, next) => {
     if (typeof phone !== 'undefined' && phone !== req.session.user.phone) {
       fields.push(`phone = $${idx++}`); values.push(phone || null);
     }
-    if (typeof bmby_username !== 'undefined' && bmby_username !== req.session.user.bmby_username) {
-      fields.push(`bmby_username = $${idx++}`); values.push(bmby_username ? bmby_username.trim() : null);
+    if (typeof bmby_id !== 'undefined' && bmby_id !== req.session.user.bmby_id) {
+      fields.push(`bmby_id = $${idx++}`); values.push(bmby_id ? bmby_id.trim() : null);
     }
     if (req.file) {
       // Remove previous Spaces object if replacing (Admin profile)
@@ -648,7 +652,7 @@ exports.updateAdminProfile = async (req, res, next) => {
 
     // Refresh session user
     const { rows } = await query(
-      `SELECT id, name, email, role, approved, area, position, profile_picture, phone, bmby_username
+      `SELECT id, name, email, role, approved, area, position, profile_picture, phone, bmby_id
          FROM users
         WHERE id = $1`,
       [req.session.user.id]

@@ -13,10 +13,29 @@ UPDATE users SET role = 'Admin' WHERE role = 'Agent';
 ALTER TABLE users
   ADD COLUMN IF NOT EXISTS area VARCHAR(100),
   ADD COLUMN IF NOT EXISTS position VARCHAR(100),
-  ADD COLUMN IF NOT EXISTS bmby_username VARCHAR(150),
+  ADD COLUMN IF NOT EXISTS bmby_id VARCHAR(150),
   ADD COLUMN IF NOT EXISTS reset_token_hash TEXT,
   ADD COLUMN IF NOT EXISTS reset_token_expires_at TIMESTAMP,
   ADD COLUMN IF NOT EXISTS reset_requested_at TIMESTAMP;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+     WHERE table_name = 'users'
+       AND column_name = 'bmby_username'
+  ) THEN
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns
+       WHERE table_name = 'users'
+         AND column_name = 'bmby_id'
+    ) THEN
+      EXECUTE 'ALTER TABLE users RENAME COLUMN bmby_username TO bmby_id';
+    ELSE
+      EXECUTE 'ALTER TABLE users DROP COLUMN bmby_username';
+    END IF;
+  END IF;
+END$$;
 
 -- 3) Ensure role constraint allows only Admin/SuperAdmin
 DO $$

@@ -48,18 +48,20 @@ const sendToZapier = async (leadData) => {
     const project_url  = project_slug  ? `${originBase}/projects/${project_slug}`   : null;
 
     // Fetch agent details if agent_id is present
-    let agent_name = null, agent_email = null;
+    let agent_name = null, agent_email = null, agent_bmby_id = null;
     try {
       if (leadData.agent_id) {
-        const { rows } = await query('SELECT name, email, bmby_username FROM users WHERE id = $1 LIMIT 1', [leadData.agent_id]);
+        const { rows } = await query('SELECT name, email, bmby_id FROM users WHERE id = $1 LIMIT 1', [leadData.agent_id]);
         if (rows && rows[0]) {
-          const rawName = rows[0].bmby_username || rows[0].name;
+          agent_bmby_id = rows[0].bmby_id ? String(rows[0].bmby_id).trim() : null;
+          const rawName = rows[0].name || agent_bmby_id;
           agent_name = rawName ? String(rawName).toLowerCase() : null;
           agent_email = rows[0].email || null;
         }
       } else if (!leadData.property_id && !leadData.project_id) {
         // General contact form (not property or project specific) - assign default agent
         agent_name = 'israel zeevi';
+        agent_bmby_id = 'israel zeevi';
       }
     } catch (_) {}
 
@@ -81,6 +83,7 @@ const sendToZapier = async (leadData) => {
       project_url,
       agent_id: leadData.agent_id,
       agent_name,
+      agent_bmby_id,
       agent_email,
       created_at: leadData.created_at,
       timestamp: new Date().toISOString()

@@ -60,7 +60,7 @@ router.get(
     try {
       const { query } = require('../config/db');
       const { rows } = await query(
-        'SELECT id, name, email, phone, profile_picture, role, area, position, bmby_username FROM users WHERE id = $1',
+        'SELECT id, name, email, phone, profile_picture, role, area, position, bmby_id FROM users WHERE id = $1',
         [req.params.id]
       );
       if (!rows.length) return res.status(404).send('User not found');
@@ -81,7 +81,7 @@ router.post(
   async (req, res, next) => {
     try {
       const { query } = require('../config/db');
-      const { name, email, phone, role, area, position, bmby_username } = req.body;
+      const { name, email, phone, role, area, position, bmby_id } = req.body;
       if (!['Admin','SuperAdmin'].includes(role)) return res.status(400).send('Invalid role');
       // Build dynamic update
       const fields = [];
@@ -94,9 +94,9 @@ router.post(
       fields.push(`role = $${idx++}`);      values.push(role);
       fields.push(`area = $${idx++}`);      values.push(area);
       fields.push(`position = $${idx++}`);  values.push(position);
-      if (typeof bmby_username !== 'undefined') {
-        fields.push(`bmby_username = $${idx++}`);
-        values.push(bmby_username ? bmby_username.trim() : null);
+      if (typeof bmby_id !== 'undefined') {
+        fields.push(`bmby_id = $${idx++}`);
+        values.push(bmby_id ? bmby_id.trim() : null);
       }
 
       // Optional profile picture update
