@@ -50,7 +50,9 @@ module.exports = {
       "Anavargos",
       "Tala",
       "Coral Bay",
-      "Pegeia"
+      "Pegeia",
+      "Konia",
+      "Chloraka"
     ]
   }
 };
