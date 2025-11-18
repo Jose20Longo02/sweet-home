@@ -173,6 +173,20 @@
   gap: var(--spacing-8);
 }
 
+/* Ensure 2-column layout on large screens */
+@media (min-width: 1025px) {
+  .project-layout {
+    grid-template-columns: 2fr 1fr;
+    display: grid;
+  }
+  
+  .project-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+  }
+}
+
 /* Main Content */
 .project-main {
   background: var(--white);
