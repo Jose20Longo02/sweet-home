@@ -568,28 +568,45 @@ function relocateProjectContactOnMobile() {
   const sidebar = document.querySelector('.project-sidebar');
   if (!sidebar) return;
 
-  let placeholder = document.querySelector('.project-sidebar-placeholder');
-  if (!placeholder) {
-    placeholder = document.createElement('div');
-    placeholder.className = 'project-sidebar-placeholder';
-    sidebar.parentNode.insertBefore(placeholder, sidebar);
-  }
+  const layout = document.querySelector('.project-layout');
+  if (!layout) return;
 
   const doMove = () => {
     const isSmallScreen = window.matchMedia('(max-width: 1024px)').matches;
+    
     if (isSmallScreen) {
+      // Only move on small screens - move to footer
       const footer = document.querySelector('footer');
-      if (footer && sidebar.nextElementSibling !== footer) {
+      if (footer && sidebar.parentNode === layout) {
+        // Only move if sidebar is currently in the layout
         footer.parentNode.insertBefore(sidebar, footer);
       }
-    } else if (placeholder.parentNode) {
-      if (placeholder.nextSibling !== sidebar) {
-        placeholder.parentNode.insertBefore(sidebar, placeholder.nextSibling);
+    } else {
+      // On large screens, do nothing - let CSS grid handle the layout
+      // Only restore if sidebar was moved to footer
+      if (sidebar.parentNode !== layout) {
+        const footer = document.querySelector('footer');
+        if (footer && sidebar.parentNode === footer.parentNode) {
+          // Sidebar was moved to footer, restore it to layout
+          const main = document.querySelector('.project-main');
+          if (main && main.parentNode === layout) {
+            layout.appendChild(sidebar);
+          }
+        }
       }
     }
   };
 
-  doMove();
+  // Only run on initial load if screen is small, otherwise let CSS handle it
+  const isSmallScreen = window.matchMedia('(max-width: 1024px)').matches;
+  if (isSmallScreen) {
+    // Use requestAnimationFrame to ensure DOM and CSS are ready
+    requestAnimationFrame(() => {
+      requestAnimationFrame(doMove);
+    });
+  }
+  
+  // Always listen for resize to handle screen size changes
   window.addEventListener('resize', doMove);
 }
 
