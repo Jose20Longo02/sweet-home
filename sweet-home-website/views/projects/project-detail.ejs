@@ -242,9 +242,9 @@
                         <div class="property-details">
                           <% if (property.price) { %>
                             <div class="property-price">
-                              $<%= Number(property.price).toLocaleString() %>
+                              €<%= Number(property.price).toLocaleString() %>
                               <% if (property.rental_income) { %>
-                                <span class="rental-income">| Rental: $<%= Number(property.rental_income).toLocaleString() %></span>
+                                <span class="rental-income">| Rental: €<%= Number(property.rental_income).toLocaleString() %></span>
                               <% } %>
                             </div>
                           <% } %>
