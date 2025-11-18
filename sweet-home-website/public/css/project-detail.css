@@ -169,22 +169,8 @@
 
 .project-layout {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: var(--spacing-8);
-}
-
-/* Ensure 2-column layout on large screens */
-@media (min-width: 1025px) {
-  .project-layout {
-    grid-template-columns: 2fr 1fr;
-    display: grid;
-  }
-  
-  .project-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-6);
-  }
+  grid-template-columns: 1fr 360px;
+  gap: 2rem;
 }
 
 /* Main Content */
@@ -377,6 +363,9 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-6);
+  position: sticky;
+  top: 1rem;
+  height: fit-content;
 }
 
 /* Contact Card */
@@ -672,11 +661,11 @@
 /* Responsive Design */
 @media (max-width: 1024px) {
   .project-layout {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-6);
+    display: block;
   }
   .project-sidebar {
-    order: 1;
+    position: static;
+    margin-top: 1.5rem;
   }
 }
 
