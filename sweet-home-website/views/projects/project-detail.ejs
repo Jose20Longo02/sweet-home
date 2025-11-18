@@ -94,10 +94,11 @@
                            id="main-image" class="main-image"
                            srcset="<%= project.main_variant_base %>-640.jpg 640w, <%= project.main_variant_base %>-960.jpg 960w, <%= project.main_variant_base %>-1280.jpg 1280w, <%= project.main_variant_base %>-1920.jpg 1920w"
                            sizes="(max-width: 768px) 100vw, 960px"
-                           decoding="async">
+                           decoding="async"
+                           onerror="this.onerror=null; this.src='/img/property-placeholder.jpg'; this.style.opacity='0.5';">
                     </picture>
                   <% } else { %>
-                    <img src="<%= first %>" alt="<%= project.title %>" id="main-image" class="main-image" decoding="async">
+                    <img src="<%= first %>" alt="<%= project.title %>" id="main-image" class="main-image" decoding="async" onerror="this.onerror=null; this.src='/img/property-placeholder.jpg'; this.style.opacity='0.5';">
                   <% } %>
                 <% } %>
                 <div class="photo-overlay">
@@ -118,7 +119,7 @@
                 <div class="gallery-thumbnails">
                   <% if (project.video_url) { %>
                     <div class="thumbnail video-thumb active" data-type="video" data-index="0" data-video-url="<%= project.video_url %>">
-                      <img src="<%= (project.photos && project.photos[0]) ? project.photos[0] : '/img/property-placeholder.jpg' %>" alt="<%= project.title %> - Video" loading="lazy" decoding="async">
+                      <img src="<%= (project.photos && project.photos[0]) ? project.photos[0] : '/img/property-placeholder.jpg' %>" alt="<%= project.title %> - Video" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='/img/property-placeholder.jpg'; this.style.opacity='0.5';">
                       <span class="play-badge" aria-hidden="true">
                         <svg viewBox="0 0 36 36" width="28" height="28">
                           <circle cx="18" cy="18" r="17" fill="rgba(0,0,0,0.55)" stroke="white" stroke-width="1.5" />
@@ -133,7 +134,7 @@
                          data-type="image"
                          data-photo="<%= photo %>"
                          data-index="<%= index + offset %>">
-                      <img src="<%= photo %>" alt="<%= project.title %> - Image <%= index + 1 %>" loading="lazy" decoding="async">
+                      <img src="<%= photo %>" alt="<%= project.title %> - Image <%= index + 1 %>" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='/img/property-placeholder.jpg'; this.style.opacity='0.5';">
                     </div>
                   <% }) %>
                 </div>

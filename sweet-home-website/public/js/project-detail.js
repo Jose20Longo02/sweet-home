@@ -88,6 +88,11 @@ function updateMainImage(photoSrc, photoIndex) {
     img.alt = document.querySelector('.project-title') ? document.querySelector('.project-title').textContent : 'Project photo';
     img.decoding = 'async';
     img.src = photoSrc;
+    img.onerror = function() {
+      this.onerror = null;
+      this.src = '/img/property-placeholder.jpg';
+      this.style.opacity = '0.5';
+    };
     container.insertBefore(img, container.firstChild);
 
     // Fade in
