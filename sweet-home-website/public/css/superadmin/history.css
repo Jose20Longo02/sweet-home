@@ -1,4 +1,8 @@
 /* History Page Styles */
+.admin-content {
+  padding: 2rem;
+}
+
 .history-header {
   margin-bottom: 2rem;
 }
