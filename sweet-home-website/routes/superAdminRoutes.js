@@ -153,6 +153,15 @@ router.get(
   adminController.listRequests
 );
 
+// HISTORY
+// Activity history page
+router.get(
+  '/history',
+  ensureAuthenticated,
+  ensureSuperAdmin,
+  adminController.history
+);
+
 // Update requested user’s role
 router.post(
   '/requests/:id/role',

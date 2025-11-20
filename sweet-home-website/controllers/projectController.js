@@ -242,6 +242,21 @@ exports.createProject = async (req, res, next) => {
 
     const newId = insert.rows[0].id;
 
+    // Log activity
+    try {
+      const ActivityLog = require('../models/ActivityLog');
+      await ActivityLog.log({
+        actionType: 'project_created',
+        entityType: 'project',
+        entityId: newId,
+        entityTitle: title,
+        userId: req.session.user.id,
+        userName: req.session.user.name || req.session.user.email
+      });
+    } catch (logErr) {
+      console.error('Failed to log project creation:', logErr);
+    }
+
     // Auto-translate and persist i18n JSON
     try {
       console.log(`[createProject] Starting translation process for new project ${newId}`);
@@ -732,6 +747,21 @@ exports.updateProject = async (req, res, next) => {
       ]
     );
 
+    // Log activity
+    try {
+      const ActivityLog = require('../models/ActivityLog');
+      await ActivityLog.log({
+        actionType: 'project_updated',
+        entityType: 'project',
+        entityId: parseInt(projId, 10),
+        entityTitle: title || existing.title,
+        userId: req.session.user.id,
+        userName: req.session.user.name || req.session.user.email
+      });
+    } catch (logErr) {
+      console.error('Failed to log project update:', logErr);
+    }
+
     // Enhanced auto-translation for existing projects
     // This will detect missing translations and generate them automatically
     try {
@@ -919,12 +949,31 @@ exports.updateProject = async (req, res, next) => {
 exports.deleteProject = async (req, res, next) => {
   try {
     const projId = String(req.params.id);
-    // Resolve slug BEFORE deleting row
+    // Resolve slug and title BEFORE deleting row
     let slug = null;
+    let projectTitle = null;
     try {
-      const { rows } = await query('SELECT slug FROM projects WHERE id = $1', [projId]);
-      slug = rows[0]?.slug || null;
+      const { rows } = await query('SELECT slug, title FROM projects WHERE id = $1', [projId]);
+      if (rows.length) {
+        slug = rows[0]?.slug || null;
+        projectTitle = rows[0]?.title || null;
+      }
     } catch (_) {}
+
+    // Log activity BEFORE deleting
+    try {
+      const ActivityLog = require('../models/ActivityLog');
+      await ActivityLog.log({
+        actionType: 'project_deleted',
+        entityType: 'project',
+        entityId: parseInt(projId, 10),
+        entityTitle: projectTitle || 'Unknown Project',
+        userId: req.session.user.id,
+        userName: req.session.user.name || req.session.user.email
+      });
+    } catch (logErr) {
+      console.error('Failed to log project deletion:', logErr);
+    }
 
     // Remove DB row
     await query(`DELETE FROM projects WHERE id = $1`, [projId]);

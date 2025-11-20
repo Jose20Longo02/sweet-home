@@ -514,6 +514,41 @@ If you believe this is a mistake, please contact support.
   }
 };
 
+/**
+ * Render the Activity History page for SuperAdmins
+ */
+exports.history = async (req, res, next) => {
+  try {
+    const pendingCount = await getPendingCount();
+    const ActivityLog = require('../models/ActivityLog');
+    
+    // Get pagination params
+    const page = parseInt(req.query.page || '1', 10);
+    const limit = 50;
+    const offset = (page - 1) * limit;
+    
+    // Fetch activity logs
+    const [logs, totalCount] = await Promise.all([
+      ActivityLog.findAll({ limit, offset }),
+      ActivityLog.count()
+    ]);
+    
+    const totalPages = Math.ceil(totalCount / limit);
+    
+    res.render('superadmin/history', {
+      logs,
+      currentPage: page,
+      totalPages,
+      totalCount,
+      pendingCount,
+      currentUser: req.session.user,
+      activePage: 'history'
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 
 
 

@@ -784,6 +784,21 @@ exports.createProperty = async (req, res, next) => {
     );
     const newId = insertRes.rows[0].id;
 
+    // Log activity
+    try {
+      const ActivityLog = require('../models/ActivityLog');
+      await ActivityLog.log({
+        actionType: 'property_created',
+        entityType: 'property',
+        entityId: newId,
+        entityTitle: title,
+        userId: req.session.user.id,
+        userName: req.session.user.name || req.session.user.email
+      });
+    } catch (logErr) {
+      console.error('Failed to log property creation:', logErr);
+    }
+
     // Auto-translate and persist i18n JSON
     try {
       console.log(`[createProperty] Starting translation process for new property ${newId}`);
@@ -1487,6 +1502,21 @@ exports.updateProperty = async (req, res, next) => {
           propId
         ]
       );
+
+      // Log activity
+      try {
+        const ActivityLog = require('../models/ActivityLog');
+        await ActivityLog.log({
+          actionType: 'property_updated',
+          entityType: 'property',
+          entityId: propId,
+          entityTitle: title || existing.title,
+          userId: req.session.user.id,
+          userName: req.session.user.name || req.session.user.email
+        });
+      } catch (logErr) {
+        console.error('Failed to log property update:', logErr);
+      }
     } else {
       // No file uploads, update photos/video_url normally
       await query(
@@ -1527,6 +1557,21 @@ exports.updateProperty = async (req, res, next) => {
           propId
         ]
       );
+
+      // Log activity
+      try {
+        const ActivityLog = require('../models/ActivityLog');
+        await ActivityLog.log({
+          actionType: 'property_updated',
+          entityType: 'property',
+          entityId: propId,
+          entityTitle: title || existing.title,
+          userId: req.session.user.id,
+          userName: req.session.user.name || req.session.user.email
+        });
+      } catch (logErr) {
+        console.error('Failed to log property update:', logErr);
+      }
     }
 
     // Enhanced auto-translation for existing properties
@@ -1929,10 +1974,29 @@ exports.deleteProperty = async (req, res, next) => {
   try {
     // Determine prefixes BEFORE deleting the DB row
     let slug = null;
+    let propertyTitle = null;
     try {
-      const { rows } = await query('SELECT slug FROM properties WHERE id = $1', [req.params.id]);
-      slug = rows[0]?.slug || null;
+      const { rows } = await query('SELECT slug, title FROM properties WHERE id = $1', [req.params.id]);
+      if (rows.length) {
+        slug = rows[0]?.slug || null;
+        propertyTitle = rows[0]?.title || null;
+      }
     } catch (_) {}
+
+    // Log activity BEFORE deleting
+    try {
+      const ActivityLog = require('../models/ActivityLog');
+      await ActivityLog.log({
+        actionType: 'property_deleted',
+        entityType: 'property',
+        entityId: parseInt(req.params.id, 10),
+        entityTitle: propertyTitle || 'Unknown Property',
+        userId: req.session.user.id,
+        userName: req.session.user.name || req.session.user.email
+      });
+    } catch (logErr) {
+      console.error('Failed to log property deletion:', logErr);
+    }
 
     // Delete DB row
     await query(`DELETE FROM properties WHERE id = $1`, [req.params.id]);
@@ -2233,12 +2297,31 @@ exports.reassignProperty = async (req, res, next) => {
 // Delete any property (SuperAdmin)
 exports.deletePropertyAdmin = async (req, res, next) => {
   try {
-    // Determine slug before deleting row
+    // Determine slug and title before deleting row
     let slug = null;
+    let propertyTitle = null;
     try {
-      const { rows } = await query('SELECT slug FROM properties WHERE id = $1', [req.params.id]);
-      slug = rows[0]?.slug || null;
+      const { rows } = await query('SELECT slug, title FROM properties WHERE id = $1', [req.params.id]);
+      if (rows.length) {
+        slug = rows[0]?.slug || null;
+        propertyTitle = rows[0]?.title || null;
+      }
     } catch (_) {}
+
+    // Log activity BEFORE deleting
+    try {
+      const ActivityLog = require('../models/ActivityLog');
+      await ActivityLog.log({
+        actionType: 'property_deleted',
+        entityType: 'property',
+        entityId: parseInt(req.params.id, 10),
+        entityTitle: propertyTitle || 'Unknown Property',
+        userId: req.session.user.id,
+        userName: req.session.user.name || req.session.user.email
+      });
+    } catch (logErr) {
+      console.error('Failed to log property deletion:', logErr);
+    }
 
     await query(`DELETE FROM properties WHERE id = $1`, [req.params.id]);
     try {

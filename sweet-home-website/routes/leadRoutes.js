@@ -167,69 +167,35 @@ router.post(
       const EXTRA_LEAD_NOTIFY_EMAIL = String(process.env.LEAD_EXTRA_NOTIFY_EMAIL || 'Israel@sweet-home.co.il').trim();
       const equalsIgnoreCase = (a, b) => String(a || '').toLowerCase() === String(b || '').toLowerCase();
       if (lead_type === 'seller') {
+        // Send seller form submissions only to Israel@sweet-home.co.il
         try {
-          const { rows: admins } = await query("SELECT email, name FROM users WHERE role = 'SuperAdmin' AND approved = true");
-          const recipients = admins.map(a => a.email).filter(Boolean);
-          if (recipients.length) {
-            await sendMail({
-              to: recipients.join(','),
-              ...(EXTRA_LEAD_NOTIFY_EMAIL && !recipients.some(e => equalsIgnoreCase(e, EXTRA_LEAD_NOTIFY_EMAIL)) ? { bcc: EXTRA_LEAD_NOTIFY_EMAIL } : {}),
-              subject: 'Sweet Home Real Estate Investments – New SELLER lead',
-              html: `
-                <p>New SELLER lead submitted on the For Sellers page.</p>
-                <ul>
-                  <li><strong>Name:</strong> ${name}</li>
-                  <li><strong>Email:</strong> ${email}</li>
-                  ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
-                  ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
-                </ul>
-                ${(seller_neighborhood || seller_size || seller_rooms || seller_occupancy_status) ? `
-                <p><strong>Property Information:</strong></p>
-                <ul>
-                  ${seller_neighborhood ? `<li><strong>Neighborhood:</strong> ${seller_neighborhood}</li>` : ''}
-                  ${seller_size ? `<li><strong>Size:</strong> ${seller_size} sqm</li>` : ''}
-                  ${seller_rooms ? `<li><strong>Rooms:</strong> ${seller_rooms}</li>` : ''}
-                  ${seller_occupancy_status ? `<li><strong>Occupancy Status:</strong> ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}</li>` : ''}
-                </ul>
-                ` : ''}
-                ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g,'<br/>')}</p>` : ''}
-                <p>Please review this lead from your SuperAdmin dashboard.</p>
-                <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
-              `,
-              text: `New SELLER lead\n\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${language?`\nPreferred Language: ${language}`:''}${(seller_neighborhood || seller_size || seller_rooms || seller_occupancy_status) ? `\n\nProperty Information:\n${seller_neighborhood?`Neighborhood: ${seller_neighborhood}\n`:''}${seller_size?`Size: ${seller_size} sqm\n`:''}${seller_rooms?`Rooms: ${seller_rooms}\n`:''}${seller_occupancy_status?`Occupancy Status: ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}\n`:''}`:''}${message?`\n\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
-            });
-          }
-        } catch (_) {}
-        // If no admins or recipients were found, fallback to direct send to extra email
-        try {
-          const { rows: adminsCheck } = await query("SELECT 1 FROM users WHERE role = 'SuperAdmin' AND approved = true LIMIT 1");
-          if (!adminsCheck.length && EXTRA_LEAD_NOTIFY_EMAIL) {
-            await sendMail({
-              to: EXTRA_LEAD_NOTIFY_EMAIL,
-              subject: 'Sweet Home Real Estate Investments – New SELLER lead',
-              html: `
-                <p>New SELLER lead submitted.</p>
-                <ul>
-                  <li><strong>Name:</strong> ${name}</li>
-                  <li><strong>Email:</strong> ${email}</li>
-                  ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
-                  ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
-                </ul>
-                ${(seller_neighborhood || seller_size || seller_rooms || seller_occupancy_status) ? `
-                <p><strong>Property Information:</strong></p>
-                <ul>
-                  ${seller_neighborhood ? `<li><strong>Neighborhood:</strong> ${seller_neighborhood}</li>` : ''}
-                  ${seller_size ? `<li><strong>Size:</strong> ${seller_size} sqm</li>` : ''}
-                  ${seller_rooms ? `<li><strong>Rooms:</strong> ${seller_rooms}</li>` : ''}
-                  ${seller_occupancy_status ? `<li><strong>Occupancy Status:</strong> ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}</li>` : ''}
-                </ul>
-                ` : ''}
-                ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g,'<br/>')}</p>` : ''}
-                <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
-              `,
-              text: `New SELLER lead\n\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${language?`\nPreferred Language: ${language}`:''}${(seller_neighborhood || seller_size || seller_rooms || seller_occupancy_status) ? `\n\nProperty Information:\n${seller_neighborhood?`Neighborhood: ${seller_neighborhood}\n`:''}${seller_size?`Size: ${seller_size} sqm\n`:''}${seller_rooms?`Rooms: ${seller_rooms}\n`:''}${seller_occupancy_status?`Occupancy Status: ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}\n`:''}`:''}${message?`\n\nMessage: ${message}`:''}`
-            });
-          }
+          const israelEmail = 'Israel@sweet-home.co.il';
+          await sendMail({
+            to: israelEmail,
+            subject: 'Sweet Home Real Estate Investments – New SELLER lead',
+            html: `
+              <p>New SELLER lead submitted on the For Sellers page.</p>
+              <ul>
+                <li><strong>Name:</strong> ${name}</li>
+                <li><strong>Email:</strong> ${email}</li>
+                ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
+                ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
+              </ul>
+              ${(seller_neighborhood || seller_size || seller_rooms || seller_occupancy_status) ? `
+              <p><strong>Property Information:</strong></p>
+              <ul>
+                ${seller_neighborhood ? `<li><strong>Neighborhood:</strong> ${seller_neighborhood}</li>` : ''}
+                ${seller_size ? `<li><strong>Size:</strong> ${seller_size} sqm</li>` : ''}
+                ${seller_rooms ? `<li><strong>Rooms:</strong> ${seller_rooms}</li>` : ''}
+                ${seller_occupancy_status ? `<li><strong>Occupancy Status:</strong> ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}</li>` : ''}
+              </ul>
+              ` : ''}
+              ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g,'<br/>')}</p>` : ''}
+              <p>Please review this lead from your SuperAdmin dashboard.</p>
+              <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
+            `,
+            text: `New SELLER lead\n\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${language?`\nPreferred Language: ${language}`:''}${(seller_neighborhood || seller_size || seller_rooms || seller_occupancy_status) ? `\n\nProperty Information:\n${seller_neighborhood?`Neighborhood: ${seller_neighborhood}\n`:''}${seller_size?`Size: ${seller_size} sqm\n`:''}${seller_rooms?`Rooms: ${seller_rooms}\n`:''}${seller_occupancy_status?`Occupancy Status: ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}\n`:''}`:''}${message?`\n\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
+          });
         } catch (_) {}
         // Thank-you to user (seller lead)
         try {
@@ -260,51 +226,26 @@ router.post(
         } catch(_) {}
       } else {
         // General (unknown/buyer) — Contact page/general inquiry
+        // Send only to Israel@sweet-home.co.il
         try {
-          const { rows: admins } = await query("SELECT email, name FROM users WHERE role = 'SuperAdmin' AND approved = true");
-          const recipients = admins.map(a => a.email).filter(Boolean);
-          if (recipients.length) {
-            await sendMail({
-              to: recipients.join(','),
-              ...(EXTRA_LEAD_NOTIFY_EMAIL && !recipients.some(e => equalsIgnoreCase(e, EXTRA_LEAD_NOTIFY_EMAIL)) ? { bcc: EXTRA_LEAD_NOTIFY_EMAIL } : {}),
-              subject: 'Sweet Home — New Contact form submission',
-              html: `
-                <p>You have a new inquiry from the <strong>Contact</strong> page.</p>
-                <ul>
-                  <li><strong>Name:</strong> ${name}</li>
-                  <li><strong>Email:</strong> ${email}</li>
-                  ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
-                  ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
-                </ul>
-                ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g,'<br/>')}</p>` : ''}
-                <p>Please review this lead from your SuperAdmin dashboard.</p>
-                <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
-              `,
-              text: `New Contact form submission\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${language?`\nPreferred language: ${language}`:''}${message?`\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
-            });
-          }
-        } catch(_) {}
-        // Fallback when no admins present
-        try {
-          const { rows: adminsCheck2 } = await query("SELECT 1 FROM users WHERE role = 'SuperAdmin' AND approved = true LIMIT 1");
-          if (!adminsCheck2.length && EXTRA_LEAD_NOTIFY_EMAIL) {
-            await sendMail({
-              to: EXTRA_LEAD_NOTIFY_EMAIL,
-              subject: 'Sweet Home — New Contact form submission',
-              html: `
-                <p>New contact inquiry received.</p>
-                <ul>
-                  <li><strong>Name:</strong> ${name}</li>
-                  <li><strong>Email:</strong> ${email}</li>
-                  ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
-                  ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
-                </ul>
-                ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g,'<br/>')}</p>` : ''}
-                <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
-              `,
-              text: `New Contact form submission\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${language?`\nPreferred language: ${language}`:''}${message?`\nMessage: ${message}`:''}`
-            });
-          }
+          const israelEmail = 'Israel@sweet-home.co.il';
+          await sendMail({
+            to: israelEmail,
+            subject: 'Sweet Home — New Contact form submission',
+            html: `
+              <p>You have a new inquiry from the <strong>Contact</strong> page.</p>
+              <ul>
+                <li><strong>Name:</strong> ${name}</li>
+                <li><strong>Email:</strong> ${email}</li>
+                ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
+                ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
+              </ul>
+              ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g,'<br/>')}</p>` : ''}
+              <p>Please review this lead from your SuperAdmin dashboard.</p>
+              <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
+            `,
+            text: `New Contact form submission\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${language?`\nPreferred language: ${language}`:''}${message?`\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
+          });
         } catch(_) {}
         // Thank-you to user — localized
         try {
