@@ -29,116 +29,51 @@ exports.dashboard = async (req, res, next) => {
   try {
     const pendingCount = await getPendingCount();
 
-    // 1) Basic counts
+    // 1) Basic counts and metrics
     const [
       totalTeamRes,
       totalPropsRes,
       totalProjectsRes,
-      newListingsRes
+      newListingsRes,
+      totalLeadsRes,
+      recentLeadsRes,
+      totalBlogPostsRes,
+      newProjectsRes
     ] = await Promise.all([
       query("SELECT COUNT(*) FROM users WHERE role IN ('Admin','SuperAdmin') AND approved = true"),
       query('SELECT COUNT(*) FROM properties'),
       query('SELECT COUNT(*) FROM projects'),
-      query("SELECT COUNT(*) FROM properties WHERE created_at >= NOW() - INTERVAL '7 days'")
+      query("SELECT COUNT(*) FROM properties WHERE created_at >= NOW() - INTERVAL '7 days'"),
+      query('SELECT COUNT(*) FROM leads'),
+      query(`
+        SELECT l.id, l.name, l.email, l.created_at, 
+               p.title AS property_title, p.slug AS property_slug,
+               pr.title AS project_title, pr.slug AS project_slug
+          FROM leads l
+          LEFT JOIN properties p ON p.id = l.property_id
+          LEFT JOIN projects pr ON pr.id = l.project_id
+         ORDER BY l.created_at DESC
+         LIMIT 5
+      `),
+      query('SELECT COUNT(*) FROM blog_posts'),
+      query("SELECT COUNT(*) FROM projects WHERE created_at >= NOW() - INTERVAL '7 days'")
     ]);
 
     const totalProps = parseInt(totalPropsRes.rows[0].count, 10);
+    const recentLeads = recentLeadsRes.rows || [];
 
-    // prepare empty placeholders
-    let topProperties = [], topAgents = [], topPlaces = [];
-
-    if (totalProps > 0) {
-      // 2) Top 5 properties by views
-      const topPropsPromise = query(`
-        SELECT p.id, p.slug, p.title, p.photos, ps.views
-          FROM properties p
-          JOIN property_stats ps ON p.id = ps.property_id
-         ORDER BY ps.views DESC
-         LIMIT 5
-      `);
-
-      // 3) Top 5 agents by # of properties assigned (only those with at least 1)
-      const topAgentsPromise = query(`
-        SELECT u.id, u.name, u.profile_picture, COUNT(p.id) AS property_count
-          FROM users u
-          LEFT JOIN properties p ON u.id = p.agent_id
-         WHERE u.role IN ('Admin','SuperAdmin') AND u.approved = true
-         GROUP BY u.id
-         HAVING COUNT(p.id) > 0
-         ORDER BY property_count DESC
-         LIMIT 5
-      `);
-
-      // 4) Top 5 places by summed property views
-      const useCountry = Object.keys(locations).length > 5;
-      const placeField = useCountry ? 'p.country' : 'p.city';
-      const topPlacesPromise = query(`
-        SELECT ${placeField} AS place,
-               SUM(ps.views) AS total_views
-          FROM properties p
-          JOIN property_stats ps ON p.id = ps.property_id
-         GROUP BY ${placeField}
-         ORDER BY total_views DESC
-         LIMIT 5
-      `);
-
-      const [propsRes, agentsRes, placesRes] = await Promise.all([
-        topPropsPromise,
-        topAgentsPromise,
-        topPlacesPromise
-      ]);
-
-      // Normalize photos to arrays for EJS and map field names to what the view expects
-      const normalizePhotos = (val) => {
-        if (Array.isArray(val)) return val;
-        if (typeof val === 'string') {
-          const str = val.trim();
-          if (!str) return [];
-          if (str.startsWith('[')) {
-            try { const arr = JSON.parse(str); return Array.isArray(arr) ? arr : []; } catch (_) { return []; }
-          }
-          if (str.startsWith('{') && str.endsWith('}')) {
-            return str.slice(1, -1).split(',').map(s => s.replace(/^\"|\"$/g, '').trim()).filter(Boolean);
-          }
-          return [str];
-        }
-        return [];
-      };
-
-      topProperties = (propsRes.rows || []).map(p => ({
-        id: p.id,
-        slug: p.slug,
-        title: p.title,
-        photos: normalizePhotos(p.photos),
-        views: Number(p.views || 0)
-      }));
-
-      topAgents = (agentsRes.rows || []).map(a => ({
-        id: a.id,
-        name: a.name,
-        profile_picture: a.profile_picture || null,
-        propertyCount: Number(a.property_count || 0)
-      }));
-
-      topPlaces = (placesRes.rows || []).map(pl => ({
-        name: pl.place,
-        totalViews: Number(pl.total_views || 0)
-      }));
-    }
-
-    // 5) Render view
+    // 2) Render view with enhanced data
     res.render('superadmin/super-admin-dashboard', {
       totalTeamMembers: totalTeamRes.rows[0].count,
       totalProperties:  totalProps,
       totalProjects:    totalProjectsRes.rows[0].count,
       newListings:      newListingsRes.rows[0].count,
+      newProjects:      newProjectsRes.rows[0].count,
+      totalLeads:       totalLeadsRes.rows[0].count,
+      totalBlogPosts:   totalBlogPostsRes.rows[0].count,
+      recentLeads,
       pendingCount,
       currentUser:      req.session.user,
-
-      // for the carousels
-      topProperties,
-      topAgents,
-      topPlaces,
       activePage: 'dashboard'
     });
   } catch (err) {

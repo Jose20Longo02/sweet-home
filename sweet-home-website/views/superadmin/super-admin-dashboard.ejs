@@ -8,91 +8,224 @@
   <div class="admin-body">
     <!-- Sidebar -->
     <%- include('../partials/superadmin-sidebar', {
-      activePage: 'dashboard',     // or 'projects', 'properties', etc.
-      pendingCount: pendingCount   // make sure you pass this in your controller
+      activePage: 'dashboard',
+      pendingCount: pendingCount
     }) %>
 
     <!-- Main Content -->
     <main class="admin-content">
-      <h1>Welcome to Admin Dashboard</h1>
-      <p class="subtitle">
-        Manage your platform with real-time insights and quick actions.
-      </p>
+      <header class="dashboard-header">
+        <div>
+          <h1>Dashboard Overview</h1>
+          <p class="subtitle">Welcome back, <%= currentUser.name || currentUser.email %>. Here's what's happening on your platform.</p>
+        </div>
+        <div class="header-actions">
+          <a href="/superadmin/dashboard/analytics" class="btn-analytics">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 3v18h18"></path>
+              <path d="M18 17V9"></path>
+              <path d="M13 17V5"></path>
+              <path d="M8 17v-3"></path>
+            </svg>
+            View Analytics
+          </a>
+        </div>
+      </header>
 
-      <!-- Stats Grid -->
-      <div class="stats-grid">
-        <div class="stat-card"><h2>Total Team Members</h2><p><%= totalTeamMembers %></p></div>
-        <div class="stat-card"><h2>Pending Team Members</h2><p><%= pendingCount %></p></div>
-        <div class="stat-card"><h2>Total Properties</h2><p><%= totalProperties %></p></div>
-        <div class="stat-card"><h2>Total Projects</h2><p><%= totalProjects %></p></div>
-        <div class="stat-card"><h2>New Listings (7d)</h2><p><%= newListings %></p></div>
-      </div>
+      <!-- Enhanced Stats Grid -->
+      <section class="stats-section">
+        <div class="stats-grid">
+          <a href="/superadmin/dashboard/team" class="stat-card stat-card-link">
+            <div class="stat-icon stat-icon-team">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h3>Team Members</h3>
+              <p class="stat-value"><%= totalTeamMembers %></p>
+            </div>
+          </a>
 
-      <!-- Top 5 Properties by Views -->
-      <section class="carousel-section">
-        <h2>🏆 Top 5 Properties</h2>
-        <% if (topProperties.length < 1) { %>
-          <p class="empty">No enough properties yet.</p>
-        <% } else { %>
-          <div class="carousel">
-            <% topProperties.forEach(prop => { %>
-              <a href="/properties/<%= prop.slug %>" class="card">
-                <img src="<%= prop.photos[0] || '/img/property-placeholder.png' %>" alt="" />
-                <div class="card-info">
-                  <h3><%= prop.title %></h3>
-                  <p><%= prop.views %> views</p>
-                </div>
-              </a>
-            <% }) %>
-          </div>
-        <% } %>
+          <a href="/superadmin/dashboard/requests" class="stat-card stat-card-link stat-card-alert">
+            <div class="stat-icon stat-icon-alert">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h3>Pending Requests</h3>
+              <p class="stat-value"><%= pendingCount %></p>
+              <% if (pendingCount > 0) { %>
+                <span class="stat-badge">Action Required</span>
+              <% } %>
+            </div>
+          </a>
+
+          <a href="/superadmin/dashboard/properties" class="stat-card stat-card-link">
+            <div class="stat-icon stat-icon-properties">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h3>Properties</h3>
+              <p class="stat-value"><%= totalProperties %></p>
+              <span class="stat-trend">+<%= newListings %> this week</span>
+            </div>
+          </a>
+
+          <a href="/superadmin/dashboard/projects" class="stat-card stat-card-link">
+            <div class="stat-icon stat-icon-projects">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h3>Projects</h3>
+              <p class="stat-value"><%= totalProjects %></p>
+              <span class="stat-trend">+<%= newProjects %> this week</span>
+            </div>
+          </a>
+
+          <a href="/superadmin/dashboard/leads" class="stat-card stat-card-link">
+            <div class="stat-icon stat-icon-leads">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h3>Total Leads</h3>
+              <p class="stat-value"><%= totalLeads %></p>
+            </div>
+          </a>
+
+          <a href="/superadmin/dashboard/blog" class="stat-card stat-card-link">
+            <div class="stat-icon stat-icon-blog">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h3>Blog Posts</h3>
+              <p class="stat-value"><%= totalBlogPosts %></p>
+            </div>
+          </a>
+        </div>
       </section>
 
-      <!-- Top 5 Agents by Listings -->
-      <section class="carousel-section">
-        <h2>🌟 Top 5 Agents</h2>
-        <% if (topAgents.length < 1) { %>
-          <p class="empty">No enough data yet.</p>
-        <% } else { %>
-          <div class="carousel">
-            <% topAgents.forEach(agent => { %>
-              <div class="card">
-                <img src="<%= agent.profile_picture || '/img/default-avatar.png' %>" alt="" class="avatar" />
-                <div class="card-info">
-                  <h3><%= agent.name %></h3>
-                  <p><%= agent.propertyCount %> listings</p>
-                </div>
-              </div>
-            <% }) %>
-          </div>
-        <% } %>
+      <!-- Quick Actions -->
+      <section class="quick-actions-section">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="quick-actions-grid">
+          <a href="/properties/new" class="quick-action-card">
+            <div class="quick-action-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </div>
+            <h3>Add Property</h3>
+            <p>Create a new property listing</p>
+          </a>
+
+          <a href="/superadmin/dashboard/projects/new" class="quick-action-card">
+            <div class="quick-action-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </div>
+            <h3>Add Project</h3>
+            <p>Create a new development project</p>
+          </a>
+
+          <a href="/superadmin/dashboard/blog/new" class="quick-action-card">
+            <div class="quick-action-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </div>
+            <h3>New Blog Post</h3>
+            <p>Write and publish a blog article</p>
+          </a>
+
+          <a href="/superadmin/dashboard/requests" class="quick-action-card">
+            <div class="quick-action-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <h3>Manage Requests</h3>
+            <p>Review and approve team requests</p>
+          </a>
+        </div>
       </section>
 
-      <!-- Top Places by Aggregated Views -->
-      <section class="carousel-section">
-        <h2>📍 Top 5 Places</h2>
-        <% if (topPlaces.length < 1) { %>
-          <p class="empty">No enough data yet.</p>
-        <% } else { %>
-          <div class="carousel">
-            <% topPlaces.forEach(place => { %>
-              <div class="card">
-                <div class="card-info">
-                  <h3><%= place.name %></h3>
-                  <p><%= place.totalViews %> views</p>
+      <!-- Recent Activity -->
+      <section class="recent-activity-section">
+        <div class="activity-header">
+          <h2 class="section-title">Recent Leads</h2>
+          <a href="/superadmin/dashboard/leads" class="view-all-link">View All Leads →</a>
+        </div>
+        <div class="activity-card">
+          <% if (recentLeads.length === 0) { %>
+            <div class="empty-state">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" opacity="0.3">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <p>No leads yet. They'll appear here as they come in.</p>
+            </div>
+          <% } else { %>
+            <div class="activity-list">
+              <% recentLeads.forEach(lead => { %>
+                <div class="activity-item">
+                  <div class="activity-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                  </div>
+                  <div class="activity-content">
+                    <div class="activity-main">
+                      <strong><%= lead.name %></strong>
+                      <span class="activity-email"><%= lead.email %></span>
+                    </div>
+                    <div class="activity-meta">
+                      <% if (lead.property_title) { %>
+                        <span class="activity-badge">Property: <a href="/properties/<%= lead.property_slug %>"><%= lead.property_title %></a></span>
+                      <% } else if (lead.project_title) { %>
+                        <span class="activity-badge">Project: <a href="/projects/<%= lead.project_slug %>"><%= lead.project_title %></a></span>
+                      <% } else { %>
+                        <span class="activity-badge">General Inquiry</span>
+                      <% } %>
+                      <span class="activity-time"><%= new Date(lead.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %></span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            <% }) %>
-          </div>
-        <% } %>
+              <% }) %>
+            </div>
+          <% } %>
+        </div>
       </section>
-
-      <div class="logout-area">
-        <form action="/auth/logout" method="post">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-          <button type="submit" class="btn-logout-center">Log out</button>
-        </form>
-      </div>
     </main>
   </div>
 </div>
