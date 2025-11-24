@@ -10,6 +10,29 @@ const EXTRA_LEAD_NOTIFY_EMAIL = String(process.env.LEAD_EXTRA_NOTIFY_EMAIL || 'I
 const JOSE_EMAIL = 'JoseLongo@Medialy.Agency';
 const DEFAULT_SITE_ORIGIN = 'https://sweet-home.co.il';
 
+function getRequestIp(req) {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (forwarded && typeof forwarded === 'string') {
+    return forwarded.split(',')[0].trim();
+  }
+  const ip = req.ip || req.connection?.remoteAddress || req.socket?.remoteAddress || null;
+  return ip ? ip.replace(/^::ffff:/, '') : null;
+}
+
+async function logAnalyticsFormSubmission(entityType, entityId, req) {
+  if (!entityType || !entityId) return;
+  const ipAddress = getRequestIp(req);
+  const userAgent = req.get('user-agent') || null;
+  const referrer = req.get('referer') || null;
+  try {
+    await query(
+      `INSERT INTO analytics_events (event_type, entity_type, entity_id, user_id, session_id, ip_address, user_agent, referrer)
+       VALUES ('contact_form_submit', $1, $2, NULL, NULL, $3, $4, $5)`,
+      [entityType, entityId, ipAddress, userAgent, referrer]
+    );
+  } catch (_) {}
+}
+
 function resolveOriginBase() {
   const raw = String(process.env.PUBLIC_BASE_URL || process.env.SITE_URL || process.env.APP_ORIGIN || '').trim();
   if (raw) {
@@ -166,6 +189,7 @@ exports.createFromProperty = async (req, res, next) => {
           await query(`INSERT INTO property_stats(property_id, views, email_clicks, last_updated) VALUES ($1, 0, 1, NOW()) ON CONFLICT DO NOTHING`, [property.id]);
         }
       } catch (_) {}
+      await logAnalyticsFormSubmission('property', property.id, req);
       // Email to lead (thank you) — localized by preferred language
       try {
         const lang = String(language || '').slice(0,2).toLowerCase();
@@ -334,8 +358,15 @@ exports.createFromProject = async (req, res, next) => {
       sendToZapier(lead);
     });
 
-    // Emails (async)
+    // Emails / analytics (async)
     setImmediate(async () => {
+      try {
+        const upd = await query(`UPDATE project_stats SET email_clicks = email_clicks + 1, last_updated = NOW() WHERE project_id = $1`, [project.id]);
+        if (upd.rowCount === 0) {
+          await query(`INSERT INTO project_stats(project_id, views, email_clicks, last_updated) VALUES ($1, 0, 1, NOW()) ON CONFLICT DO NOTHING`, [project.id]);
+        }
+      } catch (_) {}
+      await logAnalyticsFormSubmission('project', project.id, req);
       try {
         const lang = String(language || '').slice(0,2).toLowerCase();
         const L = ['en','es','de'].includes(lang) ? lang : 'en';
