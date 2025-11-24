@@ -19,9 +19,192 @@
         <p class="subtitle">Track all team actions on properties and projects</p>
       </div>
 
+      <!-- Filters Section -->
+      <div class="filters-section">
+        <form method="GET" action="/superadmin/dashboard/history" class="filters-form" id="filtersForm">
+          <div class="filters-grid">
+            <!-- Action Type Filter -->
+            <div class="filter-group">
+              <label for="action_type" class="filter-label">Action Type</label>
+              <select name="action_type" id="action_type" class="filter-select">
+                <option value="">All Actions</option>
+                <% actionTypes.forEach(action => { %>
+                  <option value="<%= action.value %>" <%= filters.actionType === action.value ? 'selected' : '' %>>
+                    <%= action.label %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+
+            <!-- Entity Type Filter -->
+            <div class="filter-group">
+              <label for="entity_type" class="filter-label">Entity Type</label>
+              <select name="entity_type" id="entity_type" class="filter-select">
+                <option value="">All Types</option>
+                <% entityTypes.forEach(entity => { %>
+                  <option value="<%= entity.value %>" <%= filters.entityType === entity.value ? 'selected' : '' %>>
+                    <%= entity.label %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+
+            <!-- User/Agent Filter -->
+            <div class="filter-group">
+              <label for="user_id" class="filter-label">Agent/User</label>
+              <select name="user_id" id="user_id" class="filter-select">
+                <option value="">All Users</option>
+                <% users.forEach(user => { %>
+                  <option value="<%= user.user_id %>" <%= filters.userId === user.user_id ? 'selected' : '' %>>
+                    <%= user.current_user_name || user.user_name || 'Unknown User' %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+
+            <!-- Search Filter -->
+            <div class="filter-group filter-group-full">
+              <label for="search" class="filter-label">Search</label>
+              <input 
+                type="text" 
+                name="search" 
+                id="search" 
+                class="filter-input" 
+                placeholder="Search by property/project title..."
+                value="<%= filters.search || '' %>"
+              />
+            </div>
+
+            <!-- Date Range Filters -->
+            <div class="filter-group">
+              <label for="date_from" class="filter-label">Date From</label>
+              <input 
+                type="date" 
+                name="date_from" 
+                id="date_from" 
+                class="filter-input" 
+                value="<%= filters.dateFrom || '' %>"
+              />
+            </div>
+
+            <div class="filter-group">
+              <label for="date_to" class="filter-label">Date To</label>
+              <input 
+                type="date" 
+                name="date_to" 
+                id="date_to" 
+                class="filter-input" 
+                value="<%= filters.dateTo || '' %>"
+              />
+            </div>
+          </div>
+
+          <div class="filters-actions">
+            <button type="submit" class="btn-filter-apply">Apply Filters</button>
+            <a href="/superadmin/dashboard/history" class="btn-filter-clear">Clear All</a>
+          </div>
+        </form>
+
+        <!-- Active Filters Display -->
+        <% 
+          const hasActiveFilters = filters.actionType || filters.entityType || filters.userId || filters.search || filters.dateFrom || filters.dateTo;
+          if (hasActiveFilters) { 
+        %>
+          <div class="active-filters">
+            <span class="active-filters-label">Active Filters:</span>
+            <div class="active-filters-tags">
+              <% if (filters.actionType) { %>
+                <% 
+                  let actionLabel = filters.actionType;
+                  for (let i = 0; i < actionTypes.length; i++) {
+                    if (actionTypes[i].value === filters.actionType) {
+                      actionLabel = actionTypes[i].label;
+                      break;
+                    }
+                  }
+                  const paramsWithoutAction = new URLSearchParams(filterParams || '');
+                  paramsWithoutAction.delete('action_type');
+                %>
+                <span class="filter-tag">
+                  Action: <%= actionLabel %>
+                  <a href="?<%= paramsWithoutAction.toString() %>" class="filter-tag-remove">×</a>
+                </span>
+              <% } %>
+              <% if (filters.entityType) { %>
+                <% 
+                  let entityLabel = filters.entityType;
+                  for (let i = 0; i < entityTypes.length; i++) {
+                    if (entityTypes[i].value === filters.entityType) {
+                      entityLabel = entityTypes[i].label;
+                      break;
+                    }
+                  }
+                  const paramsWithoutEntity = new URLSearchParams(filterParams || '');
+                  paramsWithoutEntity.delete('entity_type');
+                %>
+                <span class="filter-tag">
+                  Type: <%= entityLabel %>
+                  <a href="?<%= paramsWithoutEntity.toString() %>" class="filter-tag-remove">×</a>
+                </span>
+              <% } %>
+              <% if (filters.userId) { %>
+                <% 
+                  let userName = 'Unknown';
+                  for (let i = 0; i < users.length; i++) {
+                    if (users[i].user_id === filters.userId) {
+                      userName = users[i].current_user_name || users[i].user_name || 'Unknown';
+                      break;
+                    }
+                  }
+                  const paramsWithoutUser = new URLSearchParams(filterParams || '');
+                  paramsWithoutUser.delete('user_id');
+                %>
+                <span class="filter-tag">
+                  User: <%= userName %>
+                  <a href="?<%= paramsWithoutUser.toString() %>" class="filter-tag-remove">×</a>
+                </span>
+              <% } %>
+              <% if (filters.search) { %>
+                <% 
+                  const paramsWithoutSearch = new URLSearchParams(filterParams || '');
+                  paramsWithoutSearch.delete('search');
+                %>
+                <span class="filter-tag">
+                  Search: "<%= filters.search %>"
+                  <a href="?<%= paramsWithoutSearch.toString() %>" class="filter-tag-remove">×</a>
+                </span>
+              <% } %>
+              <% if (filters.dateFrom) { %>
+                <% 
+                  const paramsWithoutDateFrom = new URLSearchParams(filterParams || '');
+                  paramsWithoutDateFrom.delete('date_from');
+                %>
+                <span class="filter-tag">
+                  From: <%= filters.dateFrom %>
+                  <a href="?<%= paramsWithoutDateFrom.toString() %>" class="filter-tag-remove">×</a>
+                </span>
+              <% } %>
+              <% if (filters.dateTo) { %>
+                <% 
+                  const paramsWithoutDateTo = new URLSearchParams(filterParams || '');
+                  paramsWithoutDateTo.delete('date_to');
+                %>
+                <span class="filter-tag">
+                  To: <%= filters.dateTo %>
+                  <a href="?<%= paramsWithoutDateTo.toString() %>" class="filter-tag-remove">×</a>
+                </span>
+              <% } %>
+            </div>
+          </div>
+        <% } %>
+      </div>
+
       <% if (logs.length === 0) { %>
         <div class="empty-state">
-          <p>No activity logs yet.</p>
+          <p><%= hasActiveFilters ? 'No activities found matching your filters.' : 'No activity logs yet.' %></p>
+          <% if (hasActiveFilters) { %>
+            <a href="/superadmin/dashboard/history" class="btn-filter-clear">Clear Filters</a>
+          <% } %>
         </div>
       <% } else { %>
         <div class="history-stats">
@@ -29,6 +212,12 @@
             <span class="stat-label">Total Activities</span>
             <span class="stat-value"><%= totalCount %></span>
           </div>
+          <% if (hasActiveFilters) { %>
+            <div class="stat-item">
+              <span class="stat-label">Filtered Results</span>
+              <span class="stat-value"><%= logs.length %> shown</span>
+            </div>
+          <% } %>
         </div>
 
         <div class="activity-list">
@@ -90,8 +279,16 @@
 
         <% if (totalPages > 1) { %>
           <div class="pagination">
+            <% 
+              const prevParams = new URLSearchParams(filterParams || '');
+              prevParams.set('page', String(currentPage - 1));
+              const nextParams = new URLSearchParams(filterParams || '');
+              nextParams.set('page', String(currentPage + 1));
+              const prevUrl = prevParams.toString() ? '?' + prevParams.toString() : '?page=' + (currentPage - 1);
+              const nextUrl = nextParams.toString() ? '?' + nextParams.toString() : '?page=' + (currentPage + 1);
+            %>
             <% if (currentPage > 1) { %>
-              <a href="?page=<%= currentPage - 1 %>" class="pagination-btn">← Previous</a>
+              <a href="<%= prevUrl %>" class="pagination-btn">← Previous</a>
             <% } else { %>
               <span class="pagination-btn disabled">← Previous</span>
             <% } %>
@@ -101,7 +298,7 @@
             </span>
             
             <% if (currentPage < totalPages) { %>
-              <a href="?page=<%= currentPage + 1 %>" class="pagination-btn">Next →</a>
+              <a href="<%= nextUrl %>" class="pagination-btn">Next →</a>
             <% } else { %>
               <span class="pagination-btn disabled">Next →</span>
             <% } %>

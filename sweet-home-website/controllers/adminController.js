@@ -522,18 +522,55 @@ exports.history = async (req, res, next) => {
     const pendingCount = await getPendingCount();
     const ActivityLog = require('../models/ActivityLog');
     
+    // Get filter parameters
+    const {
+      action_type: actionType,
+      entity_type: entityType,
+      user_id: userId,
+      search,
+      date_from: dateFrom,
+      date_to: dateTo,
+      page: pageParam
+    } = req.query;
+    
     // Get pagination params
-    const page = parseInt(req.query.page || '1', 10);
+    const page = parseInt(pageParam || '1', 10);
     const limit = 50;
     const offset = (page - 1) * limit;
     
-    // Fetch activity logs
-    const [logs, totalCount] = await Promise.all([
-      ActivityLog.findAll({ limit, offset }),
-      ActivityLog.count()
+    // Build filter object
+    const filters = {
+      actionType: actionType || null,
+      entityType: entityType || null,
+      userId: userId ? parseInt(userId, 10) : null,
+      search: search || null,
+      dateFrom: dateFrom || null,
+      dateTo: dateTo || null
+    };
+    
+    // Fetch activity logs, total count, and distinct users in parallel
+    const [logs, totalCount, distinctUsers] = await Promise.all([
+      ActivityLog.findAll({ ...filters, limit, offset }),
+      ActivityLog.count(filters),
+      ActivityLog.getDistinctUsers()
     ]);
     
     const totalPages = Math.ceil(totalCount / limit);
+    
+    // Prepare filter options for the view
+    const actionTypes = [
+      { value: 'property_created', label: 'Created Property' },
+      { value: 'property_updated', label: 'Updated Property' },
+      { value: 'property_deleted', label: 'Deleted Property' },
+      { value: 'project_created', label: 'Created Project' },
+      { value: 'project_updated', label: 'Updated Project' },
+      { value: 'project_deleted', label: 'Deleted Project' }
+    ];
+    
+    const entityTypes = [
+      { value: 'property', label: 'Property' },
+      { value: 'project', label: 'Project' }
+    ];
     
     res.render('superadmin/history', {
       logs,
@@ -542,7 +579,23 @@ exports.history = async (req, res, next) => {
       totalCount,
       pendingCount,
       currentUser: req.session.user,
-      activePage: 'history'
+      activePage: 'history',
+      // Filter data
+      filters,
+      actionTypes,
+      entityTypes,
+      users: distinctUsers,
+      // Preserve filter params for pagination (as string)
+      filterParams: (() => {
+        const params = new URLSearchParams();
+        if (filters.actionType) params.set('action_type', filters.actionType);
+        if (filters.entityType) params.set('entity_type', filters.entityType);
+        if (filters.userId) params.set('user_id', String(filters.userId));
+        if (filters.search) params.set('search', filters.search);
+        if (filters.dateFrom) params.set('date_from', filters.dateFrom);
+        if (filters.dateTo) params.set('date_to', filters.dateTo);
+        return params.toString();
+      })()
     });
   } catch (err) {
     next(err);
