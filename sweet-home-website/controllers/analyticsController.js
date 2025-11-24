@@ -52,7 +52,7 @@ exports.dashboard = async (req, res, next) => {
       dateTo = today.toISOString().slice(0, 10);
     }
 
-    const [
+    let [
       summary,
       timeSeries,
       topProperties,
@@ -74,11 +74,22 @@ exports.dashboard = async (req, res, next) => {
       getPendingCount()
     ]);
 
+    const normalizedSummary = {
+      page_views: Number(summary.page_views || 0),
+      property_views: Number(summary.property_views || 0),
+      project_views: Number(summary.project_views || 0),
+      form_submissions: Number(summary.form_submissions || 0)
+    };
+    const fallbackVisits = normalizedSummary.property_views + normalizedSummary.project_views;
+    normalizedSummary.total_visits = normalizedSummary.page_views > 0
+      ? normalizedSummary.page_views
+      : fallbackVisits;
+
     res.render('superadmin/analytics/dashboard', {
       dateFrom,
       dateTo,
       metric,
-      summary,
+      summary: normalizedSummary,
       timeSeries,
       topProperties,
       topProjects,
