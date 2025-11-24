@@ -171,18 +171,20 @@ class ActivityLog {
 
   /**
    * Get distinct users who have performed actions (for filter dropdown)
+   * Groups by user_id to ensure each user appears only once
    */
   static async getDistinctUsers() {
     const text = `
-      SELECT DISTINCT 
+      SELECT 
         al.user_id,
-        al.user_name,
-        u.name as current_user_name,
-        u.email,
-        COALESCE(u.name, al.user_name) as display_name
+        MAX(al.user_name) as user_name,
+        MAX(u.name) as current_user_name,
+        MAX(u.email) as email,
+        MAX(COALESCE(u.name, al.user_name)) as display_name
       FROM activity_logs al
       LEFT JOIN users u ON al.user_id = u.id
       WHERE al.user_id IS NOT NULL
+      GROUP BY al.user_id
       ORDER BY display_name ASC
     `;
     const res = await query(text);
