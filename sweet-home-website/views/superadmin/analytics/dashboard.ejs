@@ -83,8 +83,9 @@
           </div>
         </div>
         <div class="chart-container" style="position: relative; height: 300px; margin-top: 1rem;">
-          <canvas id="trafficChart"></canvas>
-          <div id="chartLoading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #64748b; font-size: 14px;">Loading chart...</div>
+          <canvas id="trafficChart" style="display: none;"></canvas>
+          <div id="chartLoading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #64748b; font-size: 14px; text-align: center;">Loading chart...</div>
+          <div id="chartError" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #64748b; font-size: 14px; text-align: center; padding: 1rem;"></div>
         </div>
       </section>
 
@@ -324,62 +325,72 @@
   });
 
   function initChart() {
-    console.log('initChart called');
     const ctx = document.getElementById('trafficChart');
     const loadingEl = document.getElementById('chartLoading');
+    const errorEl = document.getElementById('chartError');
     
     if (!ctx) {
       console.error('Chart canvas not found');
-      if (loadingEl) loadingEl.textContent = 'Chart canvas not found';
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (errorEl) {
+        errorEl.textContent = 'Chart canvas not found';
+        errorEl.style.display = 'block';
+      }
       return;
     }
     
     // Wait for Chart.js to be available
-    if (typeof Chart === 'undefined') {
-      console.warn('Chart.js not loaded, retrying...', typeof Chart);
+    if (typeof Chart === 'undefined' || !Chart.Chart) {
       setTimeout(initChart, 100);
-      return;
-    }
-    
-    console.log('Chart.js is available');
-    
-    const series = <%- JSON.stringify(timeSeries || []) %>;
-    console.log('Time series data:', series);
-    
-    if (!series || series.length === 0) {
-      console.warn('No time series data available');
-      if (loadingEl) {
-        loadingEl.innerHTML = '<p style="text-align: center; color: #64748b; font-size: 14px; margin: 0;">No data available for the selected date range.</p>';
-        loadingEl.style.display = 'block';
-      }
       return;
     }
     
     // Hide loading message
     if (loadingEl) loadingEl.style.display = 'none';
+    if (errorEl) errorEl.style.display = 'none';
     
+    const series = <%- JSON.stringify(timeSeries || []) %>;
+    
+    if (!series || series.length === 0) {
+      if (loadingEl) {
+        loadingEl.innerHTML = '<p style="margin: 0; color: #64748b;">No data available for the selected date range.</p>';
+        loadingEl.style.display = 'block';
+      }
+      return;
+    }
+    
+    // Process data
     const labels = series.map(item => {
-      // Handle both string and Date object formats
       const dateStr = item.date;
       let date;
       if (typeof dateStr === 'string') {
         date = new Date(dateStr);
-      } else if (dateStr instanceof Date) {
-        date = dateStr;
       } else {
         date = new Date(dateStr);
       }
+      if (isNaN(date.getTime())) {
+        return dateStr; // Fallback to original string if date is invalid
+      }
       return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     });
+    
     const pageViews = series.map(item => Number(item.page_views || 0));
     const propertyViews = series.map(item => Number(item.property_views || 0));
     const projectViews = series.map(item => Number(item.project_views || 0));
     const formSubmissions = series.map(item => Number(item.form_submissions || 0));
-    
-    console.log('Chart data prepared:', { labels: labels.length, pageViews, propertyViews, projectViews, formSubmissions });
 
     try {
-      new Chart(ctx, {
+      // Show canvas
+      ctx.style.display = 'block';
+      
+      // Destroy existing chart if it exists
+      if (ctx.chart) {
+        ctx.chart.destroy();
+      }
+      
+      // Use Chart.Chart if available, otherwise Chart
+      const ChartConstructor = Chart.Chart || Chart;
+      ctx.chart = new ChartConstructor(ctx, {
       type: 'line',
       data: {
         labels,
@@ -518,35 +529,36 @@
       }
     });
     
-    console.log('Chart initialized successfully');
+    // Chart initialized successfully
     } catch (error) {
       console.error('Error initializing chart:', error);
-      const loadingEl = document.getElementById('chartLoading');
-      if (loadingEl) {
-        loadingEl.textContent = 'Error loading chart. Please refresh the page.';
-        loadingEl.style.display = 'block';
+      ctx.style.display = 'none';
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (errorEl) {
+        errorEl.innerHTML = '<p style="margin: 0; color: #ef4444;">Error loading chart: ' + error.message + '</p>';
+        errorEl.style.display = 'block';
       }
     }
   }
 
   // Initialize chart when DOM and Chart.js are ready
   function startChartInit() {
-    console.log('Starting chart initialization, Chart.js available:', typeof Chart !== 'undefined');
     let attempts = 0;
     const maxAttempts = 50; // 5 seconds max wait
+    const loadingEl = document.getElementById('chartLoading');
+    const errorEl = document.getElementById('chartError');
     
     function tryInit() {
       attempts++;
-      if (typeof Chart !== 'undefined') {
-        console.log('Chart.js loaded, initializing chart');
+      if (typeof Chart !== 'undefined' && Chart.Chart) {
         initChart();
       } else if (attempts < maxAttempts) {
         setTimeout(tryInit, 100);
       } else {
-        console.error('Chart.js failed to load after', maxAttempts, 'attempts');
-        const loadingEl = document.getElementById('chartLoading');
-        if (loadingEl) {
-          loadingEl.innerHTML = '<p style="text-align: center; color: #ef4444; font-size: 14px; margin: 0;">Failed to load chart library. Please refresh the page.</p>';
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (errorEl) {
+          errorEl.innerHTML = '<p style="margin: 0; color: #ef4444;">Failed to load chart library. Please check your internet connection and refresh the page.</p>';
+          errorEl.style.display = 'block';
         }
       }
     }
@@ -554,6 +566,7 @@
     tryInit();
   }
   
+  // Start initialization
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', startChartInit);
   } else {
