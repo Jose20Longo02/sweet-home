@@ -27,13 +27,13 @@ class Analytics {
 
     if (dateFrom) {
       dateFilter = ` AND ps.last_updated >= $${paramIndex}::date`;
-      eventDateFilter = ` AND ae.created_at >= $${paramIndex}::date`;
+      eventDateFilter = ` AND created_at >= $${paramIndex}::date`;
       values.push(dateFrom);
       paramIndex++;
     }
     if (dateTo) {
       dateFilter += ` AND ps.last_updated < ($${paramIndex}::date + INTERVAL '1 day')`;
-      eventDateFilter += ` AND ae.created_at < ($${paramIndex}::date + INTERVAL '1 day')`;
+      eventDateFilter += ` AND created_at < ($${paramIndex}::date + INTERVAL '1 day')`;
       values.push(dateTo);
       paramIndex++;
     }
@@ -96,13 +96,13 @@ class Analytics {
 
     if (dateFrom) {
       dateFilter = ` AND ps.last_updated >= $${paramIndex}::date`;
-      eventDateFilter = ` AND ae.created_at >= $${paramIndex}::date`;
+      eventDateFilter = ` AND created_at >= $${paramIndex}::date`;
       values.push(dateFrom);
       paramIndex++;
     }
     if (dateTo) {
       dateFilter += ` AND ps.last_updated < ($${paramIndex}::date + INTERVAL '1 day')`;
-      eventDateFilter += ` AND ae.created_at < ($${paramIndex}::date + INTERVAL '1 day')`;
+      eventDateFilter += ` AND created_at < ($${paramIndex}::date + INTERVAL '1 day')`;
       values.push(dateTo);
       paramIndex++;
     }
