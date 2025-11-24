@@ -178,11 +178,12 @@ class ActivityLog {
         al.user_id,
         al.user_name,
         u.name as current_user_name,
-        u.email
+        u.email,
+        COALESCE(u.name, al.user_name) as display_name
       FROM activity_logs al
       LEFT JOIN users u ON al.user_id = u.id
       WHERE al.user_id IS NOT NULL
-      ORDER BY COALESCE(u.name, al.user_name) ASC
+      ORDER BY display_name ASC
     `;
     const res = await query(text);
     return res.rows;
