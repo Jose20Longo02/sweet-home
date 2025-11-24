@@ -408,88 +408,73 @@ class Analytics {
    * Get total views across all properties and projects (filtered by date range)
    */
   static async getTotalViews({ dateFrom = null, dateTo = null } = {}) {
-    // First try to get from analytics_events (most accurate)
-    const eventValues = [];
-    let eventParamIndex = 1;
-    let eventDateFilter = '';
-
-    if (dateFrom) {
-      eventDateFilter = ` AND created_at >= $${eventParamIndex}::date`;
-      eventValues.push(dateFrom);
-      eventParamIndex++;
-    }
-    if (dateTo) {
-      eventDateFilter += ` AND created_at < ($${eventParamIndex}::date + INTERVAL '1 day')`;
-      eventValues.push(dateTo);
-      eventParamIndex++;
-    }
-
-    const eventQuery = `
-      SELECT 
-        COUNT(*) FILTER (WHERE event_type = 'property_view' AND entity_type = 'property') as property_views,
-        COUNT(*) FILTER (WHERE event_type = 'project_view' AND entity_type = 'project') as project_views,
-        COUNT(*) FILTER (WHERE (event_type = 'property_view' AND entity_type = 'property') OR (event_type = 'project_view' AND entity_type = 'project')) as total_views
-      FROM analytics_events
-      WHERE 1=1 ${eventDateFilter}
-    `;
-    
+    // First check if analytics_events has any data at all
+    let hasEventData = false;
     try {
-      const eventRes = await query(eventQuery, eventValues);
-      const eventRow = eventRes.rows[0] || {};
-      const totalFromEvents = Number(eventRow.total_views || 0);
+      const checkRes = await query('SELECT COUNT(*) as count FROM analytics_events LIMIT 1');
+      hasEventData = Number(checkRes.rows[0]?.count || 0) > 0;
+    } catch (err) {
+      // If analytics_events table doesn't exist, use stats
+      hasEventData = false;
+    }
+
+    // If analytics_events has data, use it for accurate date filtering
+    if (hasEventData) {
+      const eventValues = [];
+      let eventParamIndex = 1;
+      let eventDateFilter = '';
+
+      if (dateFrom) {
+        eventDateFilter = ` AND created_at >= $${eventParamIndex}::date`;
+        eventValues.push(dateFrom);
+        eventParamIndex++;
+      }
+      if (dateTo) {
+        eventDateFilter += ` AND created_at < ($${eventParamIndex}::date + INTERVAL '1 day')`;
+        eventValues.push(dateTo);
+        eventParamIndex++;
+      }
+
+      const eventQuery = `
+        SELECT 
+          COUNT(*) FILTER (WHERE event_type = 'property_view' AND entity_type = 'property') as property_views,
+          COUNT(*) FILTER (WHERE event_type = 'project_view' AND entity_type = 'project') as project_views,
+          COUNT(*) FILTER (WHERE (event_type = 'property_view' AND entity_type = 'property') OR (event_type = 'project_view' AND entity_type = 'project')) as total_views
+        FROM analytics_events
+        WHERE 1=1 ${eventDateFilter}
+      `;
       
-      // If we have data from analytics_events OR if a date filter is applied, use it
-      // (even if 0, because that means no views in that period)
-      if (totalFromEvents > 0 || dateFrom || dateTo) {
+      try {
+        const eventRes = await query(eventQuery, eventValues);
+        const eventRow = eventRes.rows[0] || {};
         return {
           property_views: Number(eventRow.property_views || 0),
           project_views: Number(eventRow.project_views || 0),
-          total_views: totalFromEvents
+          total_views: Number(eventRow.total_views || 0)
         };
+      } catch (err) {
+        // Fall through to stats if query fails
       }
-    } catch (err) {
-      // If analytics_events table doesn't exist or has issues, fall through to stats
     }
     
-    // Fallback to stats tables with date filtering
-    // Note: When using stats, date filtering is based on last_updated which only shows
-    // when the last view occurred. This is less accurate than analytics_events but
-    // still provides some date-based filtering.
-    const propertyValues = [];
-    const projectValues = [];
-    let psWhereFilter = '';
-    let pstWhereFilter = '';
-    let fallbackParamIndex = 1;
-
-    if (dateFrom) {
-      psWhereFilter = ` AND last_updated >= $${fallbackParamIndex}::date`;
-      pstWhereFilter = ` AND last_updated >= $${fallbackParamIndex}::date`;
-      propertyValues.push(dateFrom);
-      projectValues.push(dateFrom);
-      fallbackParamIndex++;
-    }
-    if (dateTo) {
-      psWhereFilter += ` AND last_updated < ($${fallbackParamIndex}::date + INTERVAL '1 day')`;
-      pstWhereFilter += ` AND last_updated < ($${fallbackParamIndex}::date + INTERVAL '1 day')`;
-      propertyValues.push(dateTo);
-      projectValues.push(dateTo);
-    }
-
+    // Fallback to stats tables
+    // When analytics_events is empty, we can't accurately filter by date because
+    // stats only store cumulative totals, not time-series data.
+    // So we show all-time totals from stats (better than showing 0)
+    // Note: Once analytics_events has data, date filtering will be accurate
     const propertyQuery = `
       SELECT COALESCE(SUM(views), 0) as views
       FROM property_stats
-      WHERE 1=1 ${psWhereFilter}
     `;
     
     const projectQuery = `
       SELECT COALESCE(SUM(views), 0) as views
       FROM project_stats
-      WHERE 1=1 ${pstWhereFilter}
     `;
     
     const [propertyRes, projectRes] = await Promise.all([
-      query(propertyQuery, propertyValues),
-      query(projectQuery, projectValues)
+      query(propertyQuery),
+      query(projectQuery)
     ]);
     
     const propertyViews = Number(propertyRes.rows[0]?.views || 0);
