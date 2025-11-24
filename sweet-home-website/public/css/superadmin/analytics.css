@@ -313,6 +313,17 @@
   font-size: 0.95rem;
 }
 
+.analytics-table .table-link {
+  color: #0f172a;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.analytics-table .table-link:hover {
+  color: #2ea862;
+}
+
 .analytics-table tbody tr:last-child td {
   border-bottom: none;
 }

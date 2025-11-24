@@ -1,12 +1,11 @@
 <head>
   <link rel="stylesheet" href="/css/superadmin/analytics.css?v=<%= assetVersion %>" />
-  <script src="https://unpkg.com/chart.js@4.4.1/dist/chart.umd.min.js" onerror="console.error('Failed to load Chart.js from unpkg.com'); document.getElementById('chartLoading').innerHTML = '<p style=\'margin: 0; color: #ef4444;\'>Failed to load chart library. Please refresh the page.</p>';"></script>
 </head>
 
 <% title = 'Analytics' %>
 
 <div class="admin-panel analytics-page"
-  data-time-series='<%= JSON.stringify(timeSeries || []) %>'
+  data-time-series='<%- JSON.stringify(timeSeries || []).replace(/'/g, '&#39;') %>'
   data-quick-range="<%= typeof quickRange !== 'undefined' ? quickRange : '' %>">
   <div class="admin-body">
     <%- include('../../partials/superadmin-sidebar', {
@@ -111,7 +110,18 @@
               <tbody>
                 <% topProperties.forEach(item => { %>
                   <tr>
-                    <td><span class="line-clamp"><%= item.title %></span></td>
+                    <td>
+                      <% if (item.slug) { %>
+                        <a
+                          href="/properties/<%= item.slug %>"
+                          target="_blank"
+                          rel="noopener"
+                          class="table-link line-clamp"
+                        ><%= item.title %></a>
+                      <% } else { %>
+                        <span class="line-clamp"><%= item.title %></span>
+                      <% } %>
+                    </td>
                     <td><%= item.city || '—' %>, <%= item.country || '—' %></td>
                     <td class="number"><%= (item.total_views || 0).toLocaleString() %></td>
                     <td class="number"><%= (item.total_leads || 0).toLocaleString() %></td>
@@ -141,7 +151,18 @@
               <tbody>
                 <% topProjects.forEach(item => { %>
                   <tr>
-                    <td><span class="line-clamp"><%= item.title %></span></td>
+                    <td>
+                      <% if (item.slug) { %>
+                        <a
+                          href="/projects/<%= item.slug %>"
+                          target="_blank"
+                          rel="noopener"
+                          class="table-link line-clamp"
+                        ><%= item.title %></a>
+                      <% } else { %>
+                        <span class="line-clamp"><%= item.title %></span>
+                      <% } %>
+                    </td>
                     <td><%= item.city || '—' %>, <%= item.country || '—' %></td>
                     <td class="number"><%= (item.total_views || 0).toLocaleString() %></td>
                     <td class="number"><%= (item.total_leads || 0).toLocaleString() %></td>

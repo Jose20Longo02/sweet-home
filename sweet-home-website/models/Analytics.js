@@ -57,6 +57,7 @@ async function getTopProperties({ startDate, endDate, limit = 5, sortBy = 'views
     `
       SELECT
         p.id,
+        p.slug,
         p.title,
         p.city,
         p.country,
@@ -84,6 +85,7 @@ async function getTopProjects({ startDate, endDate, limit = 5, sortBy = 'views' 
     `
       SELECT
         p.id,
+        p.slug,
         p.title,
         p.city,
         p.country,
