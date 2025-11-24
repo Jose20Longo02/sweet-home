@@ -170,22 +170,21 @@ class ActivityLog {
   }
 
   /**
-   * Get distinct users who have performed actions (for filter dropdown)
-   * Groups by user_id to ensure each user appears only once
+   * Get all users for filter dropdown (all Admin and SuperAdmin users)
+   * Returns all team members, not just those with activity logs
    */
   static async getDistinctUsers() {
     const text = `
       SELECT 
-        al.user_id,
-        MAX(al.user_name) as user_name,
-        MAX(u.name) as current_user_name,
-        MAX(u.email) as email,
-        MAX(COALESCE(u.name, al.user_name)) as display_name
-      FROM activity_logs al
-      LEFT JOIN users u ON al.user_id = u.id
-      WHERE al.user_id IS NOT NULL
-      GROUP BY al.user_id
-      ORDER BY display_name ASC
+        u.id as user_id,
+        u.name as current_user_name,
+        u.name as user_name,
+        u.email,
+        u.name as display_name
+      FROM users u
+      WHERE u.role IN ('Admin', 'SuperAdmin')
+        AND u.approved = true
+      ORDER BY u.name ASC
     `;
     const res = await query(text);
     return res.rows;
