@@ -57,6 +57,21 @@
   vertical-align: middle;
 }
 /* logout button in sidebar */
+.admin-sidebar .nav-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(135deg, #ff8f5a 0%, #ff4d4f 100%);
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
 .admin-sidebar .logout-btn {
   display: block;
   width: 100%;
