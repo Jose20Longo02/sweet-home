@@ -447,16 +447,33 @@ exports.showProperty = async (req, res, next) => {
   }
 };
 
-// Increment a property's view count (property_stats)
+// Increment a property's view count (property_stats) and log to analytics_events
 exports.incrementView = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id, 10);
     if (!Number.isFinite(id)) return res.status(400).json({ ok: false });
-    // Upsert-like: try update; if no row, insert
+    
+    // Update stats counter
     const upd = await query(`UPDATE property_stats SET views = views + 1, last_updated = NOW() WHERE property_id = $1`, [id]);
     if (upd.rowCount === 0) {
       await query(`INSERT INTO property_stats(property_id, views, last_updated) VALUES ($1, 1, NOW()) ON CONFLICT DO NOTHING`, [id]);
     }
+    
+    // Log to analytics_events for date-based filtering
+    const ipAddress = req.ip || req.connection.remoteAddress || null;
+    const userAgent = req.get('user-agent') || null;
+    const referrer = req.get('referer') || null;
+    
+    try {
+      await query(`
+        INSERT INTO analytics_events (event_type, entity_type, entity_id, ip_address, user_agent, referrer, created_at)
+        VALUES ('property_view', 'property', $1, $2, $3, $4, NOW())
+      `, [id, ipAddress, userAgent, referrer]);
+    } catch (analyticsErr) {
+      // Silently fail if analytics_events table doesn't exist or has issues
+      // This allows the view tracking to work even if analytics isn't fully set up
+    }
+    
     return res.json({ ok: true });
   } catch (err) { next(err); }
 };

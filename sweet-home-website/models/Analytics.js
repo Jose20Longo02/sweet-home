@@ -17,24 +17,28 @@ class Analytics {
   }
 
   /**
-   * Get most viewed properties
+   * Get most viewed properties (filtered by date range using analytics_events)
    */
   static async getTopProperties({ limit = 10, dateFrom = null, dateTo = null } = {}) {
-    let dateFilter = '';
     const values = [];
     let paramIndex = 1;
+    let dateFilter = '';
+    let eventDateFilter = '';
 
     if (dateFrom) {
-      dateFilter += ` AND ps.last_updated >= $${paramIndex}::date`;
+      dateFilter = ` AND ps.last_updated >= $${paramIndex}::date`;
+      eventDateFilter = ` AND ae.created_at >= $${paramIndex}::date`;
       values.push(dateFrom);
       paramIndex++;
     }
     if (dateTo) {
       dateFilter += ` AND ps.last_updated < ($${paramIndex}::date + INTERVAL '1 day')`;
+      eventDateFilter += ` AND ae.created_at < ($${paramIndex}::date + INTERVAL '1 day')`;
       values.push(dateTo);
       paramIndex++;
     }
 
+    // Use analytics_events for accurate date filtering, fallback to stats if no events
     const text = `
       SELECT 
         p.id,
@@ -45,17 +49,35 @@ class Analytics {
         p.neighborhood,
         p.price,
         p.photos,
-        ps.views,
-        ps.email_clicks,
-        ps.whatsapp_clicks,
-        ps.phone_clicks,
+        COALESCE(view_counts.view_count, ps.views, 0) as views,
+        COALESCE(click_counts.email_clicks, ps.email_clicks, 0) as email_clicks,
+        COALESCE(click_counts.whatsapp_clicks, ps.whatsapp_clicks, 0) as whatsapp_clicks,
+        COALESCE(click_counts.phone_clicks, ps.phone_clicks, 0) as phone_clicks,
         u.name as agent_name,
         u.id as agent_id
       FROM properties p
       LEFT JOIN property_stats ps ON p.id = ps.property_id
       LEFT JOIN users u ON p.agent_id = u.id
-      WHERE p.status = 'active' ${dateFilter}
-      ORDER BY COALESCE(ps.views, 0) DESC
+      LEFT JOIN (
+        SELECT 
+          entity_id,
+          COUNT(*) FILTER (WHERE event_type = 'property_view') as view_count
+        FROM analytics_events
+        WHERE entity_type = 'property' ${eventDateFilter || ''}
+        GROUP BY entity_id
+      ) view_counts ON p.id = view_counts.entity_id
+      LEFT JOIN (
+        SELECT 
+          entity_id,
+          COUNT(*) FILTER (WHERE event_type = 'email_click') as email_clicks,
+          COUNT(*) FILTER (WHERE event_type = 'whatsapp_click') as whatsapp_clicks,
+          COUNT(*) FILTER (WHERE event_type = 'phone_click') as phone_clicks
+        FROM analytics_events
+        WHERE entity_type = 'property' ${eventDateFilter || ''}
+        GROUP BY entity_id
+      ) click_counts ON p.id = click_counts.entity_id
+      WHERE p.status = 'active' ${dateFilter || ''}
+      ORDER BY COALESCE(view_counts.view_count, ps.views, 0) DESC
       LIMIT $${paramIndex}
     `;
     values.push(limit);
@@ -64,24 +86,28 @@ class Analytics {
   }
 
   /**
-   * Get most viewed projects
+   * Get most viewed projects (filtered by date range using analytics_events)
    */
   static async getTopProjects({ limit = 10, dateFrom = null, dateTo = null } = {}) {
-    let dateFilter = '';
     const values = [];
     let paramIndex = 1;
+    let dateFilter = '';
+    let eventDateFilter = '';
 
     if (dateFrom) {
-      dateFilter += ` AND ps.last_updated >= $${paramIndex}::date`;
+      dateFilter = ` AND ps.last_updated >= $${paramIndex}::date`;
+      eventDateFilter = ` AND ae.created_at >= $${paramIndex}::date`;
       values.push(dateFrom);
       paramIndex++;
     }
     if (dateTo) {
       dateFilter += ` AND ps.last_updated < ($${paramIndex}::date + INTERVAL '1 day')`;
+      eventDateFilter += ` AND ae.created_at < ($${paramIndex}::date + INTERVAL '1 day')`;
       values.push(dateTo);
       paramIndex++;
     }
 
+    // Use analytics_events for accurate date filtering, fallback to stats if no events
     const text = `
       SELECT 
         p.id,
@@ -91,17 +117,35 @@ class Analytics {
         p.city,
         p.neighborhood,
         p.photos,
-        ps.views,
-        ps.email_clicks,
-        ps.whatsapp_clicks,
-        ps.phone_clicks,
+        COALESCE(view_counts.view_count, ps.views, 0) as views,
+        COALESCE(click_counts.email_clicks, ps.email_clicks, 0) as email_clicks,
+        COALESCE(click_counts.whatsapp_clicks, ps.whatsapp_clicks, 0) as whatsapp_clicks,
+        COALESCE(click_counts.phone_clicks, ps.phone_clicks, 0) as phone_clicks,
         u.name as agent_name,
         u.id as agent_id
       FROM projects p
       LEFT JOIN project_stats ps ON p.id = ps.project_id
       LEFT JOIN users u ON p.agent_id = u.id
-      WHERE p.status = 'active' ${dateFilter}
-      ORDER BY COALESCE(ps.views, 0) DESC
+      LEFT JOIN (
+        SELECT 
+          entity_id,
+          COUNT(*) FILTER (WHERE event_type = 'project_view') as view_count
+        FROM analytics_events
+        WHERE entity_type = 'project' ${eventDateFilter || ''}
+        GROUP BY entity_id
+      ) view_counts ON p.id = view_counts.entity_id
+      LEFT JOIN (
+        SELECT 
+          entity_id,
+          COUNT(*) FILTER (WHERE event_type = 'email_click') as email_clicks,
+          COUNT(*) FILTER (WHERE event_type = 'whatsapp_click') as whatsapp_clicks,
+          COUNT(*) FILTER (WHERE event_type = 'phone_click') as phone_clicks
+        FROM analytics_events
+        WHERE entity_type = 'project' ${eventDateFilter || ''}
+        GROUP BY entity_id
+      ) click_counts ON p.id = click_counts.entity_id
+      WHERE p.status = 'active' ${dateFilter || ''}
+      ORDER BY COALESCE(view_counts.view_count, ps.views, 0) DESC
       LIMIT $${paramIndex}
     `;
     values.push(limit);
@@ -257,54 +301,87 @@ class Analytics {
   }
 
   /**
-   * Get total views across all properties and projects
+   * Get total views across all properties and projects (filtered by date range)
    */
   static async getTotalViews({ dateFrom = null, dateTo = null } = {}) {
-    const propertyValues = [];
-    const projectValues = [];
+    const values = [];
     let paramIndex = 1;
-    let psWhereFilter = '';
-    let pstWhereFilter = '';
+    let eventDateFilter = '';
 
     if (dateFrom) {
-      psWhereFilter = ` AND last_updated >= $${paramIndex}::date`;
-      pstWhereFilter = ` AND last_updated >= $${paramIndex}::date`;
-      propertyValues.push(dateFrom);
-      projectValues.push(dateFrom);
+      eventDateFilter = ` AND created_at >= $${paramIndex}::date`;
+      values.push(dateFrom);
       paramIndex++;
     }
     if (dateTo) {
-      psWhereFilter += ` AND last_updated < ($${paramIndex}::date + INTERVAL '1 day')`;
-      pstWhereFilter += ` AND last_updated < ($${paramIndex}::date + INTERVAL '1 day')`;
-      propertyValues.push(dateTo);
-      projectValues.push(dateTo);
+      eventDateFilter += ` AND created_at < ($${paramIndex}::date + INTERVAL '1 day')`;
+      values.push(dateTo);
       paramIndex++;
     }
 
-    const propertyQuery = `
-      SELECT COALESCE(SUM(views), 0) as views
-      FROM property_stats
-      WHERE 1=1 ${psWhereFilter}
+    // Use analytics_events for accurate date filtering
+    const text = `
+      SELECT 
+        COUNT(*) FILTER (WHERE event_type = 'property_view' AND entity_type = 'property') as property_views,
+        COUNT(*) FILTER (WHERE event_type = 'project_view' AND entity_type = 'project') as project_views,
+        COUNT(*) FILTER (WHERE (event_type = 'property_view' AND entity_type = 'property') OR (event_type = 'project_view' AND entity_type = 'project')) as total_views
+      FROM analytics_events
+      WHERE 1=1 ${eventDateFilter}
     `;
     
-    const projectQuery = `
-      SELECT COALESCE(SUM(views), 0) as views
-      FROM project_stats
-      WHERE 1=1 ${pstWhereFilter}
-    `;
+    const res = await query(text, values);
+    const row = res.rows[0] || {};
     
-    const [propertyRes, projectRes] = await Promise.all([
-      query(propertyQuery, propertyValues),
-      query(projectQuery, projectValues)
-    ]);
-    
-    const propertyViews = Number(propertyRes.rows[0]?.views || 0);
-    const projectViews = Number(projectRes.rows[0]?.views || 0);
+    // If no events in analytics_events, fallback to stats (less accurate but better than nothing)
+    if (!row.total_views || row.total_views === 0) {
+      const propertyValues = [];
+      const projectValues = [];
+      let psWhereFilter = '';
+      let pstWhereFilter = '';
+      let fallbackParamIndex = 1;
+
+      if (dateFrom) {
+        psWhereFilter = ` AND last_updated >= $${fallbackParamIndex}::date`;
+        pstWhereFilter = ` AND last_updated >= $${fallbackParamIndex}::date`;
+        propertyValues.push(dateFrom);
+        projectValues.push(dateFrom);
+        fallbackParamIndex++;
+      }
+      if (dateTo) {
+        psWhereFilter += ` AND last_updated < ($${fallbackParamIndex}::date + INTERVAL '1 day')`;
+        pstWhereFilter += ` AND last_updated < ($${fallbackParamIndex}::date + INTERVAL '1 day')`;
+        propertyValues.push(dateTo);
+        projectValues.push(dateTo);
+      }
+
+      const propertyQuery = `
+        SELECT COALESCE(SUM(views), 0) as views
+        FROM property_stats
+        WHERE 1=1 ${psWhereFilter}
+      `;
+      
+      const projectQuery = `
+        SELECT COALESCE(SUM(views), 0) as views
+        FROM project_stats
+        WHERE 1=1 ${pstWhereFilter}
+      `;
+      
+      const [propertyRes, projectRes] = await Promise.all([
+        query(propertyQuery, propertyValues),
+        query(projectQuery, projectValues)
+      ]);
+      
+      return {
+        property_views: Number(propertyRes.rows[0]?.views || 0),
+        project_views: Number(projectRes.rows[0]?.views || 0),
+        total_views: Number(propertyRes.rows[0]?.views || 0) + Number(projectRes.rows[0]?.views || 0)
+      };
+    }
     
     return {
-      property_views: propertyViews,
-      project_views: projectViews,
-      total_views: propertyViews + projectViews
+      property_views: Number(row.property_views || 0),
+      project_views: Number(row.project_views || 0),
+      total_views: Number(row.total_views || 0)
     };
   }
 
