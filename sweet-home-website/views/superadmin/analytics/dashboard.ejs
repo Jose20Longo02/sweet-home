@@ -285,8 +285,49 @@
       return date.toISOString().slice(0, 10);
     }
 
+    function parseDate(str) {
+      if (!str) return null;
+      return new Date(`${str}T00:00:00`);
+    }
+
+    function highlightRange(range) {
+      quickButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-range') === range);
+      });
+    }
+
+    function detectRange() {
+      const fromDate = parseDate(fromInput.value);
+      const toDate = parseDate(toInput.value);
+      if (!fromDate || !toDate) return null;
+
+      const today = new Date();
+      today.setHours(0,0,0,0);
+
+      const diffMs = toDate - fromDate;
+      const diffDays = Math.round(diffMs / 86400000) + 1;
+
+      if (diffDays === 1 && toDate.getTime() === today.getTime()) {
+        return 'today';
+      }
+
+      if (toDate.getTime() === today.getTime()) {
+        const presets = [7, 30, 90, 365];
+        const match = presets.find(days => diffDays === days);
+        if (match) return String(match);
+      }
+
+      const ytdStart = new Date(today.getFullYear(), 0, 1);
+      if (toDate.getTime() === today.getTime() && fromDate.getTime() === ytdStart.getTime()) {
+        return 'ytd';
+      }
+
+      return null;
+    }
+
     function applyQuickRange(range) {
       const today = new Date();
+      today.setHours(0,0,0,0);
       let start = new Date(today);
 
       if (range === 'today') {
@@ -302,6 +343,7 @@
 
       fromInput.value = formatDate(start);
       toInput.value = formatDate(today);
+      highlightRange(range);
       form.submit();
     }
 
@@ -311,6 +353,9 @@
         if (range) applyQuickRange(range);
       });
     });
+
+    const detected = detectRange();
+    if (detected) highlightRange(detected);
   });
 
   window.addEventListener('load', function() {

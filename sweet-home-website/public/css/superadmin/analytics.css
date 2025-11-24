@@ -137,6 +137,13 @@
   border-color: #94a3b8;
 }
 
+.quick-ranges button.active {
+  background: #2ea862;
+  color: #fff;
+  border-color: #2ea862;
+  box-shadow: 0 4px 12px rgba(46, 168, 98, 0.25);
+}
+
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
