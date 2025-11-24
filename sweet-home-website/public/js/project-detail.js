@@ -17,6 +17,23 @@ function initializeProjectDetail() {
   
   // Initialize related project interactions
   initializeRelatedProjects();
+  
+  // Track project view
+  incrementProjectView();
+}
+
+// Track project view
+function incrementProjectView() {
+  const sidebar = document.querySelector('.project-sidebar');
+  const projectId = sidebar ? sidebar.getAttribute('data-project-id') : null;
+  if (!projectId) return;
+  
+  fetch(`/projects/api/${encodeURIComponent(projectId)}/view`, {
+    method: 'POST',
+    headers: {
+      'CSRF-Token': (document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '')
+    }
+  }).catch(() => {});
 }
 
 // Gallery Functionality

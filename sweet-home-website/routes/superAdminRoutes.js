@@ -5,6 +5,7 @@ const router             = express.Router();
 const { ensureAuthenticated, ensureSuperAdmin } = require('../middleware/authorize');
 const sendMail           = require('../config/mailer');
 const adminController    = require('../controllers/adminController');
+const analyticsController = require('../controllers/analyticsController');
 const areaRoles          = require('../config/roles');
 const path               = require('path');
 const fs                 = require('fs');
@@ -160,6 +161,23 @@ router.get(
   ensureAuthenticated,
   ensureSuperAdmin,
   adminController.history
+);
+
+// ANALYTICS
+// Analytics dashboard
+router.get(
+  '/analytics',
+  ensureAuthenticated,
+  ensureSuperAdmin,
+  analyticsController.dashboard
+);
+
+// Export analytics data
+router.get(
+  '/analytics/export',
+  ensureAuthenticated,
+  ensureSuperAdmin,
+  analyticsController.export
 );
 
 // Update requested user’s role

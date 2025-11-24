@@ -2,7 +2,7 @@
 const express = require('express');
 const router  = express.Router();
 
-const { listProjectsPublic, showProject } = require('../controllers/projectController');
+const { listProjectsPublic, showProject, incrementView } = require('../controllers/projectController');
 
 // Public projects listing with filters and pagination
 router.get('/', listProjectsPublic);
@@ -14,6 +14,9 @@ router.get('/regions', (req, res) => {
 
 // Public project detail by slug
 router.get('/:slug', showProject);
+
+// Increment project view count
+router.post('/api/:id/view', incrementView);
 
 // Static pages
 router.get('/about', (req, res) => res.render('about', { title: 'About' }));

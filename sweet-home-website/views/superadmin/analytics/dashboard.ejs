@@ -1,0 +1,234 @@
+<head>
+  <link rel="stylesheet" href="/css/superadmin/analytics.css" />
+</head>
+
+<% title = 'Analytics Dashboard' %>
+
+<div class="admin-panel">
+  <div class="admin-body">
+    <!-- Sidebar -->
+    <%- include('../../partials/superadmin-sidebar', {
+      activePage: 'analytics',
+      pendingCount: pendingCount
+    }) %>
+
+    <!-- Main Content -->
+    <main class="admin-content">
+      <div class="analytics-header">
+        <h1>Analytics Dashboard</h1>
+        <p class="subtitle">Comprehensive insights into your properties, projects, and team performance</p>
+      </div>
+
+      <!-- Date Range Filter -->
+      <div class="date-filter-section">
+        <form method="GET" action="/superadmin/dashboard/analytics" class="date-filter-form">
+          <div class="date-inputs">
+            <label for="date_from">From:</label>
+            <input type="date" name="date_from" id="date_from" value="<%= dateFrom %>" />
+            <label for="date_to">To:</label>
+            <input type="date" name="date_to" id="date_to" value="<%= dateTo %>" />
+            <button type="submit" class="btn-filter">Apply</button>
+            <a href="/superadmin/dashboard/analytics" class="btn-clear">Reset</a>
+          </div>
+        </form>
+      </div>
+
+      <!-- Summary Stats -->
+      <div class="summary-stats">
+        <div class="stat-card">
+          <div class="stat-icon">👁️</div>
+          <div class="stat-content">
+            <h3>Total Views</h3>
+            <p class="stat-value"><%= summary.totalViews.toLocaleString() %></p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📧</div>
+          <div class="stat-content">
+            <h3>Total Leads</h3>
+            <p class="stat-value"><%= summary.totalLeads.toLocaleString() %></p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📊</div>
+          <div class="stat-content">
+            <h3>Avg Conversion Rate</h3>
+            <p class="stat-value"><%= summary.avgConversionRate %>%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Properties Section -->
+      <section class="analytics-section">
+        <div class="section-header">
+          <h2>🏆 Top Properties</h2>
+          <a href="/superadmin/dashboard/analytics/export?type=properties&format=csv&date_from=<%= dateFrom %>&date_to=<%= dateTo %>" class="btn-export">Export CSV</a>
+        </div>
+        <% if (topProperties.length === 0) { %>
+          <p class="empty-state">No property data available for the selected period.</p>
+        <% } else { %>
+          <div class="table-container">
+            <table class="analytics-table">
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>Location</th>
+                  <th>Agent</th>
+                  <th>Views</th>
+                  <th>Email Clicks</th>
+                  <th>WhatsApp</th>
+                  <th>Phone</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% topProperties.forEach(prop => { %>
+                  <tr>
+                    <td>
+                      <a href="/properties/<%= prop.slug %>" target="_blank" class="property-link">
+                        <%= prop.title %>
+                      </a>
+                    </td>
+                    <td><%= prop.city %>, <%= prop.country %></td>
+                    <td><%= prop.agent_name || 'N/A' %></td>
+                    <td class="number"><%= (prop.views || 0).toLocaleString() %></td>
+                    <td class="number"><%= (prop.email_clicks || 0).toLocaleString() %></td>
+                    <td class="number"><%= (prop.whatsapp_clicks || 0).toLocaleString() %></td>
+                    <td class="number"><%= (prop.phone_clicks || 0).toLocaleString() %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </section>
+
+      <!-- Top Projects Section -->
+      <section class="analytics-section">
+        <div class="section-header">
+          <h2>🏗️ Top Projects</h2>
+          <a href="/superadmin/dashboard/analytics/export?type=projects&format=csv&date_from=<%= dateFrom %>&date_to=<%= dateTo %>" class="btn-export">Export CSV</a>
+        </div>
+        <% if (topProjects.length === 0) { %>
+          <p class="empty-state">No project data available for the selected period.</p>
+        <% } else { %>
+          <div class="table-container">
+            <table class="analytics-table">
+              <thead>
+                <tr>
+                  <th>Project</th>
+                  <th>Location</th>
+                  <th>Agent</th>
+                  <th>Views</th>
+                  <th>Email Clicks</th>
+                  <th>WhatsApp</th>
+                  <th>Phone</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% topProjects.forEach(project => { %>
+                  <tr>
+                    <td>
+                      <a href="/projects/<%= project.slug %>" target="_blank" class="property-link">
+                        <%= project.title %>
+                      </a>
+                    </td>
+                    <td><%= project.city %>, <%= project.country %></td>
+                    <td><%= project.agent_name || 'N/A' %></td>
+                    <td class="number"><%= (project.views || 0).toLocaleString() %></td>
+                    <td class="number"><%= (project.email_clicks || 0).toLocaleString() %></td>
+                    <td class="number"><%= (project.whatsapp_clicks || 0).toLocaleString() %></td>
+                    <td class="number"><%= (project.phone_clicks || 0).toLocaleString() %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </section>
+
+      <!-- Agent Performance Section -->
+      <section class="analytics-section">
+        <div class="section-header">
+          <h2>👥 Agent Performance</h2>
+          <a href="/superadmin/dashboard/analytics/export?type=agents&format=csv&date_from=<%= dateFrom %>&date_to=<%= dateTo %>" class="btn-export">Export CSV</a>
+        </div>
+        <% if (agentPerformance.length === 0) { %>
+          <p class="empty-state">No agent performance data available for the selected period.</p>
+        <% } else { %>
+          <div class="table-container">
+            <table class="analytics-table">
+              <thead>
+                <tr>
+                  <th>Agent</th>
+                  <th>Properties</th>
+                  <th>Projects</th>
+                  <th>Total Views</th>
+                  <th>Email Clicks</th>
+                  <th>WhatsApp</th>
+                  <th>Phone</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% agentPerformance.forEach(agent => { %>
+                  <tr>
+                    <td>
+                      <div class="agent-cell">
+                        <% if (agent.profile_picture) { %>
+                          <img src="<%= agent.profile_picture %>" alt="<%= agent.name %>" class="agent-avatar" />
+                        <% } %>
+                        <span><%= agent.name %></span>
+                      </div>
+                    </td>
+                    <td class="number"><%= (agent.property_count || 0).toLocaleString() %></td>
+                    <td class="number"><%= (agent.project_count || 0).toLocaleString() %></td>
+                    <td class="number highlight"><%= (agent.total_views || 0).toLocaleString() %></td>
+                    <td class="number"><%= (agent.total_email_clicks || 0).toLocaleString() %></td>
+                    <td class="number"><%= (agent.total_whatsapp_clicks || 0).toLocaleString() %></td>
+                    <td class="number"><%= (agent.total_phone_clicks || 0).toLocaleString() %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </section>
+
+      <!-- Location Analytics Section -->
+      <section class="analytics-section">
+        <div class="section-header">
+          <h2>📍 Location Analytics</h2>
+          <a href="/superadmin/dashboard/analytics/export?type=locations&format=csv&date_from=<%= dateFrom %>&date_to=<%= dateTo %>" class="btn-export">Export CSV</a>
+        </div>
+        <% if (locationAnalytics.length === 0) { %>
+          <p class="empty-state">No location data available for the selected period.</p>
+        <% } else { %>
+          <div class="table-container">
+            <table class="analytics-table">
+              <thead>
+                <tr>
+                  <th>Country</th>
+                  <th>City</th>
+                  <th>Properties</th>
+                  <th>Projects</th>
+                  <th>Total Views</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% locationAnalytics.forEach(location => { %>
+                  <tr>
+                    <td><strong><%= location.country || 'N/A' %></strong></td>
+                    <td><%= location.city || 'N/A' %></td>
+                    <td class="number"><%= (location.property_count || 0).toLocaleString() %></td>
+                    <td class="number"><%= (location.project_count || 0).toLocaleString() %></td>
+                    <td class="number highlight"><%= (location.total_views || 0).toLocaleString() %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </section>
+    </main>
+  </div>
+</div>
+

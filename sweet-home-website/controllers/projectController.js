@@ -1457,3 +1457,17 @@ exports.listProjectsForAdmin = async (req, res, next) => {
     next(err);
   }
 };
+
+// Increment a project's view count (project_stats)
+exports.incrementView = async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (!Number.isFinite(id)) return res.status(400).json({ ok: false });
+    // Upsert-like: try update; if no row, insert
+    const upd = await query(`UPDATE project_stats SET views = views + 1, last_updated = NOW() WHERE project_id = $1`, [id]);
+    if (upd.rowCount === 0) {
+      await query(`INSERT INTO project_stats(project_id, views, last_updated) VALUES ($1, 1, NOW()) ON CONFLICT (project_id) DO UPDATE SET views = project_stats.views + 1, last_updated = NOW()`, [id]);
+    }
+    return res.json({ ok: true });
+  } catch (err) { next(err); }
+};
