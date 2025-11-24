@@ -260,17 +260,23 @@ class Analytics {
    * Get conversion metrics (views to leads)
    */
   static async getConversionMetrics({ dateFrom = null, dateTo = null } = {}) {
-    let dateFilter = '';
     const values = [];
     let paramIndex = 1;
+    let psWhereFilter = '';
+    let pstWhereFilter = '';
+    let leadsJoinFilter = '';
 
     if (dateFrom) {
-      dateFilter += ` AND (ps.last_updated >= $${paramIndex}::date OR pst.last_updated >= $${paramIndex}::date OR l.created_at >= $${paramIndex}::date)`;
+      psWhereFilter = ` AND ps.last_updated >= $${paramIndex}::date`;
+      pstWhereFilter = ` AND pst.last_updated >= $${paramIndex}::date`;
+      leadsJoinFilter = ` AND l.created_at >= $${paramIndex}::date`;
       values.push(dateFrom);
       paramIndex++;
     }
     if (dateTo) {
-      dateFilter += ` AND (ps.last_updated < ($${paramIndex}::date + INTERVAL '1 day') OR pst.last_updated < ($${paramIndex}::date + INTERVAL '1 day') OR l.created_at < ($${paramIndex}::date + INTERVAL '1 day'))`;
+      psWhereFilter += ` AND ps.last_updated < ($${paramIndex}::date + INTERVAL '1 day')`;
+      pstWhereFilter += ` AND pst.last_updated < ($${paramIndex}::date + INTERVAL '1 day')`;
+      leadsJoinFilter += ` AND l.created_at < ($${paramIndex}::date + INTERVAL '1 day')`;
       values.push(dateTo);
       paramIndex++;
     }
@@ -287,8 +293,8 @@ class Analytics {
           ELSE 0
         END as conversion_rate
       FROM property_stats ps
-      LEFT JOIN leads l ON ps.property_id = l.property_id ${dateFilter}
-      WHERE 1=1 ${dateFilter ? 'AND ps.last_updated >= $1::date' : ''}
+      LEFT JOIN leads l ON ps.property_id = l.property_id ${leadsJoinFilter}
+      WHERE 1=1 ${psWhereFilter}
       
       UNION ALL
       
@@ -296,15 +302,15 @@ class Analytics {
         'project' as entity_type,
         COUNT(DISTINCT pst.project_id) as total_entities,
         COALESCE(SUM(pst.views), 0) as total_views,
-        COUNT(DISTINCT l.id) as total_leads,
+        COUNT(DISTINCT l2.id) as total_leads,
         CASE 
           WHEN COALESCE(SUM(pst.views), 0) > 0 
-          THEN ROUND((COUNT(DISTINCT l.id)::numeric / COALESCE(SUM(pst.views), 1)) * 100, 2)
+          THEN ROUND((COUNT(DISTINCT l2.id)::numeric / COALESCE(SUM(pst.views), 1)) * 100, 2)
           ELSE 0
         END as conversion_rate
       FROM project_stats pst
-      LEFT JOIN leads l ON pst.project_id = l.project_id ${dateFilter}
-      WHERE 1=1 ${dateFilter ? 'AND pst.last_updated >= $1::date' : ''}
+      LEFT JOIN leads l2 ON pst.project_id = l2.project_id ${leadsJoinFilter}
+      WHERE 1=1 ${pstWhereFilter}
     `;
     const res = await query(text, values);
     return res.rows;
