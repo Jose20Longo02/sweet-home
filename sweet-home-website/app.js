@@ -135,8 +135,13 @@ app.use(i18nMiddleware);
 app.use((req, res, next) => { try { res.set('X-App-Lang', res.locals.lang || ''); } catch (_) {} next(); });
 // Expose GA Measurement ID to views
 app.use((req, res, next) => { res.locals.GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID || ''; next(); });
-// Expose default consent (dev only convenience)
-app.use((req, res, next) => { res.locals.GA_CONSENT_DEFAULT = process.env.GA_CONSENT_DEFAULT || (process.env.NODE_ENV !== 'production' ? 'granted' : 'denied'); next(); });
+// Expose default consent
+// Default to 'granted' for analytics_storage to enable proper user tracking
+// Set GA_CONSENT_DEFAULT=denied in .env if you need to implement a consent banner
+app.use((req, res, next) => { 
+  res.locals.GA_CONSENT_DEFAULT = process.env.GA_CONSENT_DEFAULT || 'granted'; 
+  next(); 
+});
 // Expose a simple asset version for cache busting of non-hashed files (e.g., CSS)
 app.use((req, res, next) => { res.locals.assetVersion = process.env.ASSET_VERSION || (process.env.NODE_ENV === 'production' ? '1' : String(Date.now())); next(); });
 app.use(session({

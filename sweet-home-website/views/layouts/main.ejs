@@ -27,8 +27,13 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      // Consent Mode: default from env (dev=granted, prod=denied unless a banner updates it)
-      gtag('consent', 'default', { 'ad_storage': '<%= GA_CONSENT_DEFAULT %>', 'analytics_storage': '<%= GA_CONSENT_DEFAULT %>' });
+      // Consent Mode: analytics_storage defaults to 'granted' for proper user tracking
+      // Set GA_CONSENT_DEFAULT=denied in .env if you need to implement a consent banner
+      const consentDefault = '<%= GA_CONSENT_DEFAULT %>' || 'granted';
+      gtag('consent', 'default', { 
+        'ad_storage': 'denied',  // Always deny ad storage by default
+        'analytics_storage': consentDefault  // Allow analytics for user tracking
+      });
       gtag('config', '<%= GA_MEASUREMENT_ID %>');
     </script>
   <% } %>
