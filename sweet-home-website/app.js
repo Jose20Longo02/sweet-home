@@ -129,6 +129,14 @@ app.use(express.static(path.join(__dirname, 'public'), {
     }
   }
 }));
+
+// Vendor bundles served locally to avoid CSP/network issues (e.g., Chart.js for analytics dashboard)
+app.use(
+  '/vendor/chartjs',
+  express.static(path.join(__dirname, 'node_modules', 'chart.js', 'dist'), {
+    maxAge: '7d'
+  })
+);
 app.use(cookieParser());
 // Internationalization: must come immediately after cookies so it can read lang
 app.use(i18nMiddleware);
