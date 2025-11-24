@@ -304,23 +304,23 @@ class Analytics {
    * Get total views across all properties and projects (filtered by date range)
    */
   static async getTotalViews({ dateFrom = null, dateTo = null } = {}) {
-    const values = [];
-    let paramIndex = 1;
+    // First try to get from analytics_events (most accurate)
+    const eventValues = [];
+    let eventParamIndex = 1;
     let eventDateFilter = '';
 
     if (dateFrom) {
-      eventDateFilter = ` AND created_at >= $${paramIndex}::date`;
-      values.push(dateFrom);
-      paramIndex++;
+      eventDateFilter = ` AND created_at >= $${eventParamIndex}::date`;
+      eventValues.push(dateFrom);
+      eventParamIndex++;
     }
     if (dateTo) {
-      eventDateFilter += ` AND created_at < ($${paramIndex}::date + INTERVAL '1 day')`;
-      values.push(dateTo);
-      paramIndex++;
+      eventDateFilter += ` AND created_at < ($${eventParamIndex}::date + INTERVAL '1 day')`;
+      eventValues.push(dateTo);
+      eventParamIndex++;
     }
 
-    // Use analytics_events for accurate date filtering
-    const text = `
+    const eventQuery = `
       SELECT 
         COUNT(*) FILTER (WHERE event_type = 'property_view' AND entity_type = 'property') as property_views,
         COUNT(*) FILTER (WHERE event_type = 'project_view' AND entity_type = 'project') as project_views,
@@ -329,59 +329,49 @@ class Analytics {
       WHERE 1=1 ${eventDateFilter}
     `;
     
-    const res = await query(text, values);
-    const row = res.rows[0] || {};
-    
-    // If no events in analytics_events, fallback to stats (less accurate but better than nothing)
-    if (!row.total_views || row.total_views === 0) {
-      const propertyValues = [];
-      const projectValues = [];
-      let psWhereFilter = '';
-      let pstWhereFilter = '';
-      let fallbackParamIndex = 1;
-
-      if (dateFrom) {
-        psWhereFilter = ` AND last_updated >= $${fallbackParamIndex}::date`;
-        pstWhereFilter = ` AND last_updated >= $${fallbackParamIndex}::date`;
-        propertyValues.push(dateFrom);
-        projectValues.push(dateFrom);
-        fallbackParamIndex++;
+    try {
+      const eventRes = await query(eventQuery, eventValues);
+      const eventRow = eventRes.rows[0] || {};
+      const totalFromEvents = Number(eventRow.total_views || 0);
+      
+      // If we have data from analytics_events, use it
+      if (totalFromEvents > 0) {
+        return {
+          property_views: Number(eventRow.property_views || 0),
+          project_views: Number(eventRow.project_views || 0),
+          total_views: totalFromEvents
+        };
       }
-      if (dateTo) {
-        psWhereFilter += ` AND last_updated < ($${fallbackParamIndex}::date + INTERVAL '1 day')`;
-        pstWhereFilter += ` AND last_updated < ($${fallbackParamIndex}::date + INTERVAL '1 day')`;
-        propertyValues.push(dateTo);
-        projectValues.push(dateTo);
-      }
-
-      const propertyQuery = `
-        SELECT COALESCE(SUM(views), 0) as views
-        FROM property_stats
-        WHERE 1=1 ${psWhereFilter}
-      `;
-      
-      const projectQuery = `
-        SELECT COALESCE(SUM(views), 0) as views
-        FROM project_stats
-        WHERE 1=1 ${pstWhereFilter}
-      `;
-      
-      const [propertyRes, projectRes] = await Promise.all([
-        query(propertyQuery, propertyValues),
-        query(projectQuery, projectValues)
-      ]);
-      
-      return {
-        property_views: Number(propertyRes.rows[0]?.views || 0),
-        project_views: Number(projectRes.rows[0]?.views || 0),
-        total_views: Number(propertyRes.rows[0]?.views || 0) + Number(projectRes.rows[0]?.views || 0)
-      };
+    } catch (err) {
+      // If analytics_events table doesn't exist or has issues, fall through to stats
     }
     
+    // Fallback to stats tables
+    // Note: When using stats, we can't accurately filter by date range because
+    // last_updated only shows when the last view occurred, not all views in a period.
+    // So we show all-time totals when analytics_events is not available.
+    const propertyQuery = `
+      SELECT COALESCE(SUM(views), 0) as views
+      FROM property_stats
+    `;
+    
+    const projectQuery = `
+      SELECT COALESCE(SUM(views), 0) as views
+      FROM project_stats
+    `;
+    
+    const [propertyRes, projectRes] = await Promise.all([
+      query(propertyQuery),
+      query(projectQuery)
+    ]);
+    
+    const propertyViews = Number(propertyRes.rows[0]?.views || 0);
+    const projectViews = Number(projectRes.rows[0]?.views || 0);
+    
     return {
-      property_views: Number(row.property_views || 0),
-      project_views: Number(row.project_views || 0),
-      total_views: Number(row.total_views || 0)
+      property_views: propertyViews,
+      project_views: projectViews,
+      total_views: propertyViews + projectViews
     };
   }
 
