@@ -1457,34 +1457,3 @@ exports.listProjectsForAdmin = async (req, res, next) => {
     next(err);
   }
 };
-
-// Increment a project's view count (project_stats) and log to analytics_events
-exports.incrementView = async (req, res, next) => {
-  try {
-    const id = parseInt(req.params.id, 10);
-    if (!Number.isFinite(id)) return res.status(400).json({ ok: false });
-    
-    // Update stats counter
-    const upd = await query(`UPDATE project_stats SET views = views + 1, last_updated = NOW() WHERE project_id = $1`, [id]);
-    if (upd.rowCount === 0) {
-      await query(`INSERT INTO project_stats(project_id, views, last_updated) VALUES ($1, 1, NOW()) ON CONFLICT (project_id) DO UPDATE SET views = project_stats.views + 1, last_updated = NOW()`, [id]);
-    }
-    
-    // Log to analytics_events for date-based filtering
-    const ipAddress = req.ip || req.connection.remoteAddress || null;
-    const userAgent = req.get('user-agent') || null;
-    const referrer = req.get('referer') || null;
-    
-    try {
-      await query(`
-        INSERT INTO analytics_events (event_type, entity_type, entity_id, ip_address, user_agent, referrer, created_at)
-        VALUES ('project_view', 'project', $1, $2, $3, $4, NOW())
-      `, [id, ipAddress, userAgent, referrer]);
-    } catch (analyticsErr) {
-      // Silently fail if analytics_events table doesn't exist or has issues
-      // This allows the view tracking to work even if analytics isn't fully set up
-    }
-    
-    return res.json({ ok: true });
-  } catch (err) { next(err); }
-};
