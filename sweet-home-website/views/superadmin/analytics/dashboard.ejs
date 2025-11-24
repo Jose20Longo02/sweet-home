@@ -35,6 +35,15 @@
             <button type="submit" class="btn-filter">Apply</button>
             <a href="/superadmin/dashboard/analytics" class="btn-clear">Reset</a>
           </div>
+          <div class="quick-range">
+            <span>Quick ranges:</span>
+            <button type="button" class="btn-chip" data-range="today">Today</button>
+            <button type="button" class="btn-chip" data-range="7">Last 7 days</button>
+            <button type="button" class="btn-chip" data-range="30">Last 30 days</button>
+            <button type="button" class="btn-chip" data-range="90">Last 90 days</button>
+            <button type="button" class="btn-chip" data-range="365">Last 12 months</button>
+            <button type="button" class="btn-chip" data-range="ytd">Year to date</button>
+          </div>
         </form>
       </div>
 
@@ -224,4 +233,49 @@
     </main>
   </div>
 </div>
+
+<script>
+  (function() {
+    const form = document.querySelector('.date-filter-form');
+    if (!form) return;
+    const fromInput = form.querySelector('#date_from');
+    const toInput = form.querySelector('#date_to');
+    const buttons = form.querySelectorAll('.btn-chip');
+
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function setRange(range) {
+      const today = new Date();
+      let start = new Date(today);
+      let end = new Date(today);
+
+      if (range === 'today') {
+        // already set
+      } else if (range === 'ytd') {
+        start = new Date(today.getFullYear(), 0, 1);
+      } else {
+        const days = parseInt(range, 10);
+        if (!Number.isNaN(days)) {
+          start.setDate(today.getDate() - (days - 1));
+        }
+      }
+
+      fromInput.value = formatDate(start);
+      toInput.value = formatDate(end);
+      form.submit();
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const range = btn.getAttribute('data-range');
+        if (range) setRange(range);
+      });
+    });
+  })();
+</script>
 

@@ -107,6 +107,38 @@
   color: #475569;
 }
 
+.quick-range {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.quick-range span {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+  margin-right: 0.5rem;
+}
+
+.btn-chip {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-chip:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
 /* Summary Stats */
 .summary-stats {
   display: grid;
