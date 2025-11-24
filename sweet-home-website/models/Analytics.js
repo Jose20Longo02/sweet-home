@@ -264,19 +264,22 @@ class Analytics {
     let paramIndex = 1;
     let psWhereFilter = '';
     let pstWhereFilter = '';
-    let leadsJoinFilter = '';
+    let leadsJoinFilter1 = '';
+    let leadsJoinFilter2 = '';
 
     if (dateFrom) {
       psWhereFilter = ` AND ps.last_updated >= $${paramIndex}::date`;
       pstWhereFilter = ` AND pst.last_updated >= $${paramIndex}::date`;
-      leadsJoinFilter = ` AND l.created_at >= $${paramIndex}::date`;
+      leadsJoinFilter1 = ` AND l.created_at >= $${paramIndex}::date`;
+      leadsJoinFilter2 = ` AND l2.created_at >= $${paramIndex}::date`;
       values.push(dateFrom);
       paramIndex++;
     }
     if (dateTo) {
       psWhereFilter += ` AND ps.last_updated < ($${paramIndex}::date + INTERVAL '1 day')`;
       pstWhereFilter += ` AND pst.last_updated < ($${paramIndex}::date + INTERVAL '1 day')`;
-      leadsJoinFilter += ` AND l.created_at < ($${paramIndex}::date + INTERVAL '1 day')`;
+      leadsJoinFilter1 += ` AND l.created_at < ($${paramIndex}::date + INTERVAL '1 day')`;
+      leadsJoinFilter2 += ` AND l2.created_at < ($${paramIndex}::date + INTERVAL '1 day')`;
       values.push(dateTo);
       paramIndex++;
     }
@@ -293,7 +296,7 @@ class Analytics {
           ELSE 0
         END as conversion_rate
       FROM property_stats ps
-      LEFT JOIN leads l ON ps.property_id = l.property_id ${leadsJoinFilter}
+      LEFT JOIN leads l ON ps.property_id = l.property_id ${leadsJoinFilter1}
       WHERE 1=1 ${psWhereFilter}
       
       UNION ALL
@@ -309,7 +312,7 @@ class Analytics {
           ELSE 0
         END as conversion_rate
       FROM project_stats pst
-      LEFT JOIN leads l2 ON pst.project_id = l2.project_id ${leadsJoinFilter}
+      LEFT JOIN leads l2 ON pst.project_id = l2.project_id ${leadsJoinFilter2}
       WHERE 1=1 ${pstWhereFilter}
     `;
     const res = await query(text, values);
