@@ -31,19 +31,20 @@ exports.dashboard = async (req, res, next) => {
       agentPerformance,
       locationAnalytics,
       timeBasedAnalytics,
-      conversionMetrics
+      conversionMetrics,
+      totalViewsData
     ] = await Promise.all([
       Analytics.getTopProperties({ limit: 10, dateFrom, dateTo }),
       Analytics.getTopProjects({ limit: 10, dateFrom, dateTo }),
       Analytics.getAgentPerformance({ dateFrom, dateTo }),
       Analytics.getLocationAnalytics({ dateFrom, dateTo }),
       Analytics.getTimeBasedAnalytics({ dateFrom, dateTo, groupBy: 'day' }),
-      Analytics.getConversionMetrics({ dateFrom, dateTo })
+      Analytics.getConversionMetrics({ dateFrom, dateTo }),
+      Analytics.getTotalViews({ dateFrom, dateTo })
     ]);
 
-    // Calculate summary stats
-    const totalViews = topProperties.reduce((sum, p) => sum + (Number(p.views) || 0), 0) +
-                      topProjects.reduce((sum, p) => sum + (Number(p.views) || 0), 0);
+    // Calculate summary stats using actual totals
+    const totalViews = totalViewsData.total_views;
     const totalLeads = conversionMetrics.reduce((sum, m) => sum + (Number(m.total_leads) || 0), 0);
     const avgConversionRate = conversionMetrics.length > 0
       ? conversionMetrics.reduce((sum, m) => sum + (Number(m.conversion_rate) || 0), 0) / conversionMetrics.length

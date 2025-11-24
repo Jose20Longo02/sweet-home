@@ -257,6 +257,58 @@ class Analytics {
   }
 
   /**
+   * Get total views across all properties and projects
+   */
+  static async getTotalViews({ dateFrom = null, dateTo = null } = {}) {
+    const propertyValues = [];
+    const projectValues = [];
+    let paramIndex = 1;
+    let psWhereFilter = '';
+    let pstWhereFilter = '';
+
+    if (dateFrom) {
+      psWhereFilter = ` AND last_updated >= $${paramIndex}::date`;
+      pstWhereFilter = ` AND last_updated >= $${paramIndex}::date`;
+      propertyValues.push(dateFrom);
+      projectValues.push(dateFrom);
+      paramIndex++;
+    }
+    if (dateTo) {
+      psWhereFilter += ` AND last_updated < ($${paramIndex}::date + INTERVAL '1 day')`;
+      pstWhereFilter += ` AND last_updated < ($${paramIndex}::date + INTERVAL '1 day')`;
+      propertyValues.push(dateTo);
+      projectValues.push(dateTo);
+      paramIndex++;
+    }
+
+    const propertyQuery = `
+      SELECT COALESCE(SUM(views), 0) as views
+      FROM property_stats
+      WHERE 1=1 ${psWhereFilter}
+    `;
+    
+    const projectQuery = `
+      SELECT COALESCE(SUM(views), 0) as views
+      FROM project_stats
+      WHERE 1=1 ${pstWhereFilter}
+    `;
+    
+    const [propertyRes, projectRes] = await Promise.all([
+      query(propertyQuery, propertyValues),
+      query(projectQuery, projectValues)
+    ]);
+    
+    const propertyViews = Number(propertyRes.rows[0]?.views || 0);
+    const projectViews = Number(projectRes.rows[0]?.views || 0);
+    
+    return {
+      property_views: propertyViews,
+      project_views: projectViews,
+      total_views: propertyViews + projectViews
+    };
+  }
+
+  /**
    * Get conversion metrics (views to leads)
    */
   static async getConversionMetrics({ dateFrom = null, dateTo = null } = {}) {
