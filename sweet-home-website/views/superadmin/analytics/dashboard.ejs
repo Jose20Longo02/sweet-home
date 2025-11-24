@@ -1,6 +1,5 @@
 <head>
   <link rel="stylesheet" href="/css/superadmin/analytics.css?v=<%= assetVersion %>" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
 </head>
 
 <% title = 'Analytics' %>
@@ -82,8 +81,9 @@
             <p>Daily breakdown of visits, property interest, and leads</p>
           </div>
         </div>
-        <div style="position: relative; height: 300px; margin-top: 1rem;">
+        <div class="chart-container" style="position: relative; height: 300px; margin-top: 1rem;">
           <canvas id="trafficChart"></canvas>
+          <div id="chartLoading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #64748b; font-size: 14px;">Loading chart...</div>
         </div>
       </section>
 
@@ -275,6 +275,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const fromInput = document.getElementById('date_from');
@@ -322,17 +323,56 @@
     }
   });
 
-  window.addEventListener('load', function() {
+  function initChart() {
     const ctx = document.getElementById('trafficChart');
-    if (!ctx || typeof Chart === 'undefined') return;
+    const loadingEl = document.getElementById('chartLoading');
+    
+    if (!ctx) {
+      console.error('Chart canvas not found');
+      if (loadingEl) loadingEl.textContent = 'Chart canvas not found';
+      return;
+    }
+    
+    // Wait for Chart.js to be available
+    if (typeof Chart === 'undefined') {
+      console.warn('Chart.js not loaded, retrying...');
+      setTimeout(initChart, 100);
+      return;
+    }
+    
+    // Hide loading message
+    if (loadingEl) loadingEl.style.display = 'none';
+    
     const series = <%- JSON.stringify(timeSeries || []) %>;
-    const labels = series.map(item => item.date);
+    if (!series || series.length === 0) {
+      console.warn('No time series data available');
+      if (loadingEl) {
+        loadingEl.textContent = 'No data available for the selected date range.';
+        loadingEl.style.display = 'block';
+      }
+      return;
+    }
+    
+    const labels = series.map(item => {
+      // Handle both string and Date object formats
+      const dateStr = item.date;
+      let date;
+      if (typeof dateStr === 'string') {
+        date = new Date(dateStr);
+      } else if (dateStr instanceof Date) {
+        date = dateStr;
+      } else {
+        date = new Date(dateStr);
+      }
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    });
     const pageViews = series.map(item => Number(item.page_views || 0));
     const propertyViews = series.map(item => Number(item.property_views || 0));
     const projectViews = series.map(item => Number(item.project_views || 0));
     const formSubmissions = series.map(item => Number(item.form_submissions || 0));
 
-    new Chart(ctx, {
+    try {
+      new Chart(ctx, {
       type: 'line',
       data: {
         labels,
@@ -470,6 +510,26 @@
         }
       }
     });
-  });
+    
+    console.log('Chart initialized successfully');
+    } catch (error) {
+      console.error('Error initializing chart:', error);
+      const loadingEl = document.getElementById('chartLoading');
+      if (loadingEl) {
+        loadingEl.textContent = 'Error loading chart. Please refresh the page.';
+        loadingEl.style.display = 'block';
+      }
+    }
+  }
+
+  // Initialize chart when DOM and Chart.js are ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      // Wait a bit for Chart.js to load
+      setTimeout(initChart, 200);
+    });
+  } else {
+    setTimeout(initChart, 200);
+  }
 </script>
 
