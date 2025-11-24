@@ -75,9 +75,7 @@
                   <th>Location</th>
                   <th>Agent</th>
                   <th>Views</th>
-                  <th>Email Clicks</th>
-                  <th>WhatsApp</th>
-                  <th>Phone</th>
+                  <th>Form Submissions</th>
                 </tr>
               </thead>
               <tbody>
@@ -91,9 +89,7 @@
                     <td><%= prop.city %>, <%= prop.country %></td>
                     <td><%= prop.agent_name || 'N/A' %></td>
                     <td class="number"><%= (prop.views || 0).toLocaleString() %></td>
-                    <td class="number"><%= (prop.email_clicks || 0).toLocaleString() %></td>
-                    <td class="number"><%= (prop.whatsapp_clicks || 0).toLocaleString() %></td>
-                    <td class="number"><%= (prop.phone_clicks || 0).toLocaleString() %></td>
+                    <td class="number"><%= (prop.form_submissions || 0).toLocaleString() %></td>
                   </tr>
                 <% }) %>
               </tbody>
@@ -119,9 +115,7 @@
                   <th>Location</th>
                   <th>Agent</th>
                   <th>Views</th>
-                  <th>Email Clicks</th>
-                  <th>WhatsApp</th>
-                  <th>Phone</th>
+                  <th>Form Submissions</th>
                 </tr>
               </thead>
               <tbody>
@@ -135,9 +129,7 @@
                     <td><%= project.city %>, <%= project.country %></td>
                     <td><%= project.agent_name || 'N/A' %></td>
                     <td class="number"><%= (project.views || 0).toLocaleString() %></td>
-                    <td class="number"><%= (project.email_clicks || 0).toLocaleString() %></td>
-                    <td class="number"><%= (project.whatsapp_clicks || 0).toLocaleString() %></td>
-                    <td class="number"><%= (project.phone_clicks || 0).toLocaleString() %></td>
+                    <td class="number"><%= (project.form_submissions || 0).toLocaleString() %></td>
                   </tr>
                 <% }) %>
               </tbody>
@@ -163,9 +155,7 @@
                   <th>Properties</th>
                   <th>Projects</th>
                   <th>Total Views</th>
-                  <th>Email Clicks</th>
-                  <th>WhatsApp</th>
-                  <th>Phone</th>
+                  <th>Form Submissions</th>
                 </tr>
               </thead>
               <tbody>
@@ -182,9 +172,7 @@
                     <td class="number"><%= (agent.property_count || 0).toLocaleString() %></td>
                     <td class="number"><%= (agent.project_count || 0).toLocaleString() %></td>
                     <td class="number highlight"><%= (agent.total_views || 0).toLocaleString() %></td>
-                    <td class="number"><%= (agent.total_email_clicks || 0).toLocaleString() %></td>
-                    <td class="number"><%= (agent.total_whatsapp_clicks || 0).toLocaleString() %></td>
-                    <td class="number"><%= (agent.total_phone_clicks || 0).toLocaleString() %></td>
+                    <td class="number"><%= (agent.total_form_submissions || 0).toLocaleString() %></td>
                   </tr>
                 <% }) %>
               </tbody>

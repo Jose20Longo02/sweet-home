@@ -50,9 +50,7 @@ class Analytics {
         p.price,
         p.photos,
         COALESCE(view_counts.view_count, ps.views, 0) as views,
-        COALESCE(click_counts.email_clicks, ps.email_clicks, 0) as email_clicks,
-        COALESCE(click_counts.whatsapp_clicks, ps.whatsapp_clicks, 0) as whatsapp_clicks,
-        COALESCE(click_counts.phone_clicks, ps.phone_clicks, 0) as phone_clicks,
+        COALESCE(form_counts.form_submissions, 0) as form_submissions,
         u.name as agent_name,
         u.id as agent_id
       FROM properties p
@@ -69,13 +67,11 @@ class Analytics {
       LEFT JOIN (
         SELECT 
           entity_id,
-          COUNT(*) FILTER (WHERE event_type = 'email_click') as email_clicks,
-          COUNT(*) FILTER (WHERE event_type = 'whatsapp_click') as whatsapp_clicks,
-          COUNT(*) FILTER (WHERE event_type = 'phone_click') as phone_clicks
+          COUNT(*) FILTER (WHERE event_type = 'contact_form_submit') as form_submissions
         FROM analytics_events
         WHERE entity_type = 'property' ${eventDateFilter || ''}
         GROUP BY entity_id
-      ) click_counts ON p.id = click_counts.entity_id
+      ) form_counts ON p.id = form_counts.entity_id
       WHERE p.status = 'active' ${dateFilter || ''}
       ORDER BY COALESCE(view_counts.view_count, ps.views, 0) DESC
       LIMIT $${paramIndex}
@@ -118,9 +114,7 @@ class Analytics {
         p.neighborhood,
         p.photos,
         COALESCE(view_counts.view_count, ps.views, 0) as views,
-        COALESCE(click_counts.email_clicks, ps.email_clicks, 0) as email_clicks,
-        COALESCE(click_counts.whatsapp_clicks, ps.whatsapp_clicks, 0) as whatsapp_clicks,
-        COALESCE(click_counts.phone_clicks, ps.phone_clicks, 0) as phone_clicks,
+        COALESCE(form_counts.form_submissions, 0) as form_submissions,
         u.name as agent_name,
         u.id as agent_id
       FROM projects p
@@ -137,13 +131,11 @@ class Analytics {
       LEFT JOIN (
         SELECT 
           entity_id,
-          COUNT(*) FILTER (WHERE event_type = 'email_click') as email_clicks,
-          COUNT(*) FILTER (WHERE event_type = 'whatsapp_click') as whatsapp_clicks,
-          COUNT(*) FILTER (WHERE event_type = 'phone_click') as phone_clicks
+          COUNT(*) FILTER (WHERE event_type = 'contact_form_submit') as form_submissions
         FROM analytics_events
         WHERE entity_type = 'project' ${eventDateFilter || ''}
         GROUP BY entity_id
-      ) click_counts ON p.id = click_counts.entity_id
+      ) form_counts ON p.id = form_counts.entity_id
       WHERE p.status = 'active' ${dateFilter || ''}
       ORDER BY COALESCE(view_counts.view_count, ps.views, 0) DESC
       LIMIT $${paramIndex}
@@ -184,9 +176,7 @@ class Analytics {
         COALESCE(SUM(CASE WHEN ae.event_type = 'property_view' AND ae.entity_type = 'property' THEN 1 ELSE 0 END), 0) as total_property_views,
         COALESCE(SUM(CASE WHEN ae.event_type = 'project_view' AND ae.entity_type = 'project' THEN 1 ELSE 0 END), 0) as total_project_views,
         COALESCE(SUM(CASE WHEN (ae.event_type = 'property_view' AND ae.entity_type = 'property') OR (ae.event_type = 'project_view' AND ae.entity_type = 'project') THEN 1 ELSE 0 END), 0) as total_views,
-        COALESCE(SUM(CASE WHEN ae.event_type = 'email_click' THEN 1 ELSE 0 END), 0) as total_email_clicks,
-        COALESCE(SUM(CASE WHEN ae.event_type = 'whatsapp_click' THEN 1 ELSE 0 END), 0) as total_whatsapp_clicks,
-        COALESCE(SUM(CASE WHEN ae.event_type = 'phone_click' THEN 1 ELSE 0 END), 0) as total_phone_clicks
+        COALESCE(SUM(CASE WHEN ae.event_type = 'contact_form_submit' THEN 1 ELSE 0 END), 0) as total_form_submissions
       FROM users u
       LEFT JOIN properties p ON u.id = p.agent_id AND p.status = 'active'
       LEFT JOIN projects pr ON u.id = pr.agent_id AND pr.status = 'active'
@@ -242,12 +232,7 @@ class Analytics {
         COALESCE(SUM(CASE WHEN pst.project_id IS NOT NULL THEN pst.views ELSE 0 END), 0) as total_project_views,
         COALESCE(SUM(CASE WHEN ps.property_id IS NOT NULL THEN ps.views ELSE 0 END), 0) + 
         COALESCE(SUM(CASE WHEN pst.project_id IS NOT NULL THEN pst.views ELSE 0 END), 0) as total_views,
-        COALESCE(SUM(CASE WHEN ps.property_id IS NOT NULL THEN ps.email_clicks ELSE 0 END), 0) + 
-        COALESCE(SUM(CASE WHEN pst.project_id IS NOT NULL THEN pst.email_clicks ELSE 0 END), 0) as total_email_clicks,
-        COALESCE(SUM(CASE WHEN ps.property_id IS NOT NULL THEN ps.whatsapp_clicks ELSE 0 END), 0) + 
-        COALESCE(SUM(CASE WHEN pst.project_id IS NOT NULL THEN pst.whatsapp_clicks ELSE 0 END), 0) as total_whatsapp_clicks,
-        COALESCE(SUM(CASE WHEN ps.property_id IS NOT NULL THEN ps.phone_clicks ELSE 0 END), 0) + 
-        COALESCE(SUM(CASE WHEN pst.project_id IS NOT NULL THEN pst.phone_clicks ELSE 0 END), 0) as total_phone_clicks
+        0 as total_form_submissions
       FROM users u
       LEFT JOIN properties p ON u.id = p.agent_id AND p.status = 'active'
       LEFT JOIN projects pr ON u.id = pr.agent_id AND pr.status = 'active'
