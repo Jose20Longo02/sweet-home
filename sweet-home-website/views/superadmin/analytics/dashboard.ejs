@@ -46,12 +46,12 @@
           </div>
           <div class="quick-ranges">
             <span>Quick ranges:</span>
-            <button type="button" data-range="today">Today</button>
-            <button type="button" data-range="7">Last 7 days</button>
-            <button type="button" data-range="30">Last 30 days</button>
-            <button type="button" data-range="90">Last 90 days</button>
-            <button type="button" data-range="365">Last 12 months</button>
-            <button type="button" data-range="ytd">Year to date</button>
+            <button type="submit" name="quick_range" value="today" data-range="today" class="<%= quickRange === 'today' ? 'active' : '' %>">Today</button>
+            <button type="submit" name="quick_range" value="7" data-range="7" class="<%= quickRange === '7' ? 'active' : '' %>">Last 7 days</button>
+            <button type="submit" name="quick_range" value="30" data-range="30" class="<%= quickRange === '30' ? 'active' : '' %>">Last 30 days</button>
+            <button type="submit" name="quick_range" value="90" data-range="90" class="<%= quickRange === '90' ? 'active' : '' %>">Last 90 days</button>
+            <button type="submit" name="quick_range" value="365" data-range="365" class="<%= quickRange === '365' ? 'active' : '' %>">Last 12 months</button>
+            <button type="submit" name="quick_range" value="ytd" data-range="ytd" class="<%= quickRange === 'ytd' ? 'active' : '' %>">Year to date</button>
           </div>
         </form>
       </section>
@@ -275,15 +275,9 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('analyticsFilterForm');
-    if (!form) return;
     const fromInput = document.getElementById('date_from');
     const toInput = document.getElementById('date_to');
-    const quickButtons = form.querySelectorAll('.quick-ranges button');
-
-    function formatDate(date) {
-      return date.toISOString().slice(0, 10);
-    }
+    const quickButtons = document.querySelectorAll('.quick-ranges button');
 
     function parseDate(str) {
       if (!str) return null;
@@ -300,62 +294,30 @@
       const fromDate = parseDate(fromInput.value);
       const toDate = parseDate(toInput.value);
       if (!fromDate || !toDate) return null;
-
       const today = new Date();
       today.setHours(0,0,0,0);
-
       const diffMs = toDate - fromDate;
       const diffDays = Math.round(diffMs / 86400000) + 1;
-
-      if (diffDays === 1 && toDate.getTime() === today.getTime()) {
-        return 'today';
-      }
-
+      if (diffDays === 1 && toDate.getTime() === today.getTime()) return 'today';
       if (toDate.getTime() === today.getTime()) {
         const presets = [7, 30, 90, 365];
         const match = presets.find(days => diffDays === days);
         if (match) return String(match);
       }
-
       const ytdStart = new Date(today.getFullYear(), 0, 1);
       if (toDate.getTime() === today.getTime() && fromDate.getTime() === ytdStart.getTime()) {
         return 'ytd';
       }
-
       return null;
     }
 
-    function applyQuickRange(range) {
-      const today = new Date();
-      today.setHours(0,0,0,0);
-      let start = new Date(today);
-
-      if (range === 'today') {
-        // start already today
-      } else if (range === 'ytd') {
-        start = new Date(today.getFullYear(), 0, 1);
-      } else {
-        const days = parseInt(range, 10);
-        if (!Number.isNaN(days)) {
-          start.setDate(today.getDate() - (days - 1));
-        }
-      }
-
-      fromInput.value = formatDate(start);
-      toInput.value = formatDate(today);
-      highlightRange(range);
-      form.submit();
+    const initialRange = "<%= (typeof quickRange !== 'undefined' ? quickRange : '') %>";
+    if (initialRange) {
+      highlightRange(initialRange);
+    } else {
+      const detected = detectRange();
+      if (detected) highlightRange(detected);
     }
-
-    quickButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const range = btn.getAttribute('data-range');
-        if (range) applyQuickRange(range);
-      });
-    });
-
-    const detected = detectRange();
-    if (detected) highlightRange(detected);
   });
 
   window.addEventListener('load', function() {

@@ -29,9 +29,28 @@ exports.dashboard = async (req, res, next) => {
     const defaultStartStr = defaultStart.toISOString().slice(0, 10);
     const defaultEndStr = today.toISOString().slice(0, 10);
 
-    const dateFrom = sanitizeDate(req.query.date_from, defaultStartStr);
-    const dateTo = sanitizeDate(req.query.date_to, defaultEndStr);
+    let dateFrom = sanitizeDate(req.query.date_from, defaultStartStr);
+    let dateTo = sanitizeDate(req.query.date_to, defaultEndStr);
+    const quickRange = req.query.quick_range || '';
     const metric = req.query.metric === 'forms' ? 'forms' : 'views';
+
+    if (quickRange) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      let start = new Date(today);
+      if (quickRange === 'today') {
+        // already today
+      } else if (quickRange === 'ytd') {
+        start = new Date(today.getFullYear(), 0, 1);
+      } else {
+        const days = parseInt(quickRange, 10);
+        if (!Number.isNaN(days)) {
+          start.setDate(today.getDate() - (days - 1));
+        }
+      }
+      dateFrom = start.toISOString().slice(0, 10);
+      dateTo = today.toISOString().slice(0, 10);
+    }
 
     const [
       summary,
@@ -68,6 +87,7 @@ exports.dashboard = async (req, res, next) => {
       topPages,
       recentLeads,
       pendingCount,
+      quickRange,
       activePage: 'analytics'
     });
   } catch (err) {
