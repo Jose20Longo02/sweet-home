@@ -82,7 +82,9 @@
             <p>Daily breakdown of visits, property interest, and leads</p>
           </div>
         </div>
-        <canvas id="trafficChart" height="110"></canvas>
+        <div style="position: relative; height: 300px; margin-top: 1rem;">
+          <canvas id="trafficChart"></canvas>
+        </div>
       </section>
 
       <section class="grid two-columns">
@@ -340,28 +342,56 @@
             data: pageViews,
             borderColor: '#0f62fe',
             backgroundColor: 'rgba(15, 98, 254, 0.1)',
-            tension: 0.3
+            borderWidth: 2.5,
+            tension: 0.4,
+            fill: true,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointBackgroundColor: '#0f62fe',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2
           },
           {
             label: 'Property views',
             data: propertyViews,
             borderColor: '#2ea862',
-            backgroundColor: 'rgba(46, 168, 98, 0.15)',
-            tension: 0.3
+            backgroundColor: 'rgba(46, 168, 98, 0.1)',
+            borderWidth: 2.5,
+            tension: 0.4,
+            fill: true,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointBackgroundColor: '#2ea862',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2
           },
           {
             label: 'Project views',
             data: projectViews,
             borderColor: '#ff7eb6',
-            backgroundColor: 'rgba(255, 126, 182, 0.15)',
-            tension: 0.3
+            backgroundColor: 'rgba(255, 126, 182, 0.1)',
+            borderWidth: 2.5,
+            tension: 0.4,
+            fill: true,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointBackgroundColor: '#ff7eb6',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2
           },
           {
             label: 'Form submissions',
             data: formSubmissions,
             borderColor: '#f18805',
-            backgroundColor: 'rgba(241, 136, 5, 0.15)',
-            tension: 0.3
+            backgroundColor: 'rgba(241, 136, 5, 0.1)',
+            borderWidth: 2.5,
+            tension: 0.4,
+            fill: true,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointBackgroundColor: '#f18805',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2
           }
         ]
       },
@@ -375,12 +405,45 @@
         scales: {
           y: {
             beginAtZero: true,
-            ticks: { stepSize: 1 }
+            ticks: { 
+              stepSize: 1,
+              font: { size: 11 },
+              color: '#64748b'
+            },
+            grid: {
+              color: 'rgba(148, 163, 184, 0.1)',
+              drawBorder: false
+            }
+          },
+          x: {
+            ticks: {
+              font: { size: 11 },
+              color: '#64748b'
+            },
+            grid: {
+              display: false
+            }
           }
         },
         plugins: {
           legend: {
-            position: 'bottom'
+            position: 'bottom',
+            labels: {
+              padding: 15,
+              font: { size: 12, weight: '500' },
+              usePointStyle: true,
+              pointStyle: 'circle'
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+            padding: 12,
+            titleFont: { size: 13, weight: '600' },
+            bodyFont: { size: 12 },
+            borderColor: 'rgba(255, 255, 255, 0.1)',
+            borderWidth: 1,
+            cornerRadius: 8,
+            displayColors: true
           }
         }
       }
