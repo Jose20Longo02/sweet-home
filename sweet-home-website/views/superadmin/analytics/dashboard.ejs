@@ -340,22 +340,42 @@
           {
             label: 'Page views',
             data: pageViews,
-            borderColor: '#0f62fe',
-            backgroundColor: 'rgba(15, 98, 254, 0.1)',
-            borderWidth: 2.5,
+            borderColor: '#2ea862',
+            backgroundColor: 'rgba(46, 168, 98, 0.08)',
+            borderWidth: 3,
             tension: 0.4,
             fill: true,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            pointBackgroundColor: '#0f62fe',
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            pointBackgroundColor: '#2ea862',
             pointBorderColor: '#ffffff',
-            pointBorderWidth: 2
+            pointBorderWidth: 2.5,
+            pointHoverBackgroundColor: '#23824b',
+            pointHoverBorderColor: '#ffffff',
+            pointHoverBorderWidth: 3
           },
           {
             label: 'Property views',
             data: propertyViews,
+            borderColor: '#23824b',
+            backgroundColor: 'rgba(35, 130, 75, 0.08)',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            pointBackgroundColor: '#23824b',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2.5,
+            pointHoverBackgroundColor: '#1e6b3f',
+            pointHoverBorderColor: '#ffffff',
+            pointHoverBorderWidth: 3
+          },
+          {
+            label: 'Project views',
+            data: projectViews,
             borderColor: '#2ea862',
-            backgroundColor: 'rgba(46, 168, 98, 0.1)',
+            backgroundColor: 'rgba(46, 168, 98, 0.06)',
             borderWidth: 2.5,
             tension: 0.4,
             fill: true,
@@ -363,35 +383,29 @@
             pointHoverRadius: 6,
             pointBackgroundColor: '#2ea862',
             pointBorderColor: '#ffffff',
-            pointBorderWidth: 2
-          },
-          {
-            label: 'Project views',
-            data: projectViews,
-            borderColor: '#ff7eb6',
-            backgroundColor: 'rgba(255, 126, 182, 0.1)',
-            borderWidth: 2.5,
-            tension: 0.4,
-            fill: true,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            pointBackgroundColor: '#ff7eb6',
-            pointBorderColor: '#ffffff',
-            pointBorderWidth: 2
+            pointBorderWidth: 2,
+            pointHoverBackgroundColor: '#23824b',
+            pointHoverBorderColor: '#ffffff',
+            pointHoverBorderWidth: 2.5,
+            borderDash: [5, 5]
           },
           {
             label: 'Form submissions',
             data: formSubmissions,
-            borderColor: '#f18805',
-            backgroundColor: 'rgba(241, 136, 5, 0.1)',
+            borderColor: '#23824b',
+            backgroundColor: 'rgba(35, 130, 75, 0.06)',
             borderWidth: 2.5,
             tension: 0.4,
             fill: true,
             pointRadius: 4,
             pointHoverRadius: 6,
-            pointBackgroundColor: '#f18805',
+            pointBackgroundColor: '#23824b',
             pointBorderColor: '#ffffff',
-            pointBorderWidth: 2
+            pointBorderWidth: 2,
+            pointHoverBackgroundColor: '#1e6b3f',
+            pointHoverBorderColor: '#ffffff',
+            pointHoverBorderWidth: 2.5,
+            borderDash: [8, 4]
           }
         ]
       },
@@ -407,18 +421,21 @@
             beginAtZero: true,
             ticks: { 
               stepSize: 1,
-              font: { size: 11 },
-              color: '#64748b'
+              font: { size: 12, weight: '500' },
+              color: '#64748b',
+              padding: 8
             },
             grid: {
-              color: 'rgba(148, 163, 184, 0.1)',
-              drawBorder: false
+              color: 'rgba(46, 168, 98, 0.08)',
+              drawBorder: false,
+              lineWidth: 1
             }
           },
           x: {
             ticks: {
-              font: { size: 11 },
-              color: '#64748b'
+              font: { size: 12, weight: '500' },
+              color: '#64748b',
+              padding: 8
             },
             grid: {
               display: false
@@ -436,14 +453,19 @@
             }
           },
           tooltip: {
-            backgroundColor: 'rgba(15, 23, 42, 0.95)',
-            padding: 12,
-            titleFont: { size: 13, weight: '600' },
-            bodyFont: { size: 12 },
-            borderColor: 'rgba(255, 255, 255, 0.1)',
-            borderWidth: 1,
-            cornerRadius: 8,
-            displayColors: true
+            backgroundColor: 'rgba(15, 23, 42, 0.98)',
+            padding: 14,
+            titleFont: { size: 13, weight: '700' },
+            bodyFont: { size: 12, weight: '500' },
+            borderColor: '#2ea862',
+            borderWidth: 2,
+            cornerRadius: 10,
+            displayColors: true,
+            titleColor: '#ffffff',
+            bodyColor: '#f1f5f9',
+            titleSpacing: 6,
+            bodySpacing: 4,
+            boxPadding: 8
           }
         }
       }
