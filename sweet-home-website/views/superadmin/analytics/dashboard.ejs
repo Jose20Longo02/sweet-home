@@ -1,5 +1,6 @@
 <head>
   <link rel="stylesheet" href="/css/superadmin/analytics.css?v=<%= assetVersion %>" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 
 <% title = 'Analytics' %>
@@ -275,7 +276,6 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const fromInput = document.getElementById('date_from');
@@ -324,6 +324,7 @@
   });
 
   function initChart() {
+    console.log('initChart called');
     const ctx = document.getElementById('trafficChart');
     const loadingEl = document.getElementById('chartLoading');
     
@@ -335,23 +336,27 @@
     
     // Wait for Chart.js to be available
     if (typeof Chart === 'undefined') {
-      console.warn('Chart.js not loaded, retrying...');
+      console.warn('Chart.js not loaded, retrying...', typeof Chart);
       setTimeout(initChart, 100);
+      return;
+    }
+    
+    console.log('Chart.js is available');
+    
+    const series = <%- JSON.stringify(timeSeries || []) %>;
+    console.log('Time series data:', series);
+    
+    if (!series || series.length === 0) {
+      console.warn('No time series data available');
+      if (loadingEl) {
+        loadingEl.innerHTML = '<p style="text-align: center; color: #64748b; font-size: 14px; margin: 0;">No data available for the selected date range.</p>';
+        loadingEl.style.display = 'block';
+      }
       return;
     }
     
     // Hide loading message
     if (loadingEl) loadingEl.style.display = 'none';
-    
-    const series = <%- JSON.stringify(timeSeries || []) %>;
-    if (!series || series.length === 0) {
-      console.warn('No time series data available');
-      if (loadingEl) {
-        loadingEl.textContent = 'No data available for the selected date range.';
-        loadingEl.style.display = 'block';
-      }
-      return;
-    }
     
     const labels = series.map(item => {
       // Handle both string and Date object formats
@@ -370,6 +375,8 @@
     const propertyViews = series.map(item => Number(item.property_views || 0));
     const projectViews = series.map(item => Number(item.project_views || 0));
     const formSubmissions = series.map(item => Number(item.form_submissions || 0));
+    
+    console.log('Chart data prepared:', { labels: labels.length, pageViews, propertyViews, projectViews, formSubmissions });
 
     try {
       new Chart(ctx, {
@@ -523,13 +530,34 @@
   }
 
   // Initialize chart when DOM and Chart.js are ready
+  function startChartInit() {
+    console.log('Starting chart initialization, Chart.js available:', typeof Chart !== 'undefined');
+    let attempts = 0;
+    const maxAttempts = 50; // 5 seconds max wait
+    
+    function tryInit() {
+      attempts++;
+      if (typeof Chart !== 'undefined') {
+        console.log('Chart.js loaded, initializing chart');
+        initChart();
+      } else if (attempts < maxAttempts) {
+        setTimeout(tryInit, 100);
+      } else {
+        console.error('Chart.js failed to load after', maxAttempts, 'attempts');
+        const loadingEl = document.getElementById('chartLoading');
+        if (loadingEl) {
+          loadingEl.innerHTML = '<p style="text-align: center; color: #ef4444; font-size: 14px; margin: 0;">Failed to load chart library. Please refresh the page.</p>';
+        }
+      }
+    }
+    
+    tryInit();
+  }
+  
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      // Wait a bit for Chart.js to load
-      setTimeout(initChart, 200);
-    });
+    document.addEventListener('DOMContentLoaded', startChartInit);
   } else {
-    setTimeout(initChart, 200);
+    startChartInit();
   }
 </script>
 
