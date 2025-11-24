@@ -1,0 +1,383 @@
+<head>
+  <link rel="stylesheet" href="/css/superadmin/analytics.css?v=<%= assetVersion %>" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+</head>
+
+<% title = 'Analytics' %>
+
+<div class="admin-panel analytics-page">
+  <div class="admin-body">
+    <%- include('../../partials/superadmin-sidebar', {
+      activePage: 'analytics',
+      pendingCount
+    }) %>
+
+    <main class="admin-content">
+      <header class="analytics-header">
+        <div>
+          <h1>Performance Analytics</h1>
+          <p class="subtitle">Track traffic, engagement, and lead activity across the site</p>
+        </div>
+        <span class="metric-pill">Ranking by <strong><%= metric === 'forms' ? 'Form Submissions' : 'Views' %></strong></span>
+      </header>
+
+      <section class="filters-card">
+        <form method="GET" action="/superadmin/dashboard/analytics" class="filters-form" id="analyticsFilterForm">
+          <div class="filters-row">
+            <div class="field">
+              <label for="date_from">From</label>
+              <input type="date" id="date_from" name="date_from" value="<%= dateFrom %>" required />
+            </div>
+            <div class="field">
+              <label for="date_to">To</label>
+              <input type="date" id="date_to" name="date_to" value="<%= dateTo %>" required />
+            </div>
+            <div class="field">
+              <label for="metric">Rank By</label>
+              <select id="metric" name="metric">
+                <option value="views" <%= metric === 'views' ? 'selected' : '' %>>Views</option>
+                <option value="forms" <%= metric === 'forms' ? 'selected' : '' %>>Form submissions</option>
+              </select>
+            </div>
+            <div class="field actions">
+              <button type="submit" class="btn-primary">Apply</button>
+              <a class="btn-secondary" href="/superadmin/dashboard/analytics">Reset</a>
+            </div>
+          </div>
+          <div class="quick-ranges">
+            <span>Quick ranges:</span>
+            <button type="button" data-range="today">Today</button>
+            <button type="button" data-range="7">Last 7 days</button>
+            <button type="button" data-range="30">Last 30 days</button>
+            <button type="button" data-range="90">Last 90 days</button>
+            <button type="button" data-range="365">Last 12 months</button>
+            <button type="button" data-range="ytd">Year to date</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="summary-grid">
+        <div class="summary-card">
+          <p class="label">Total visits</p>
+          <p class="value"><%= (summary.page_views || 0).toLocaleString() %></p>
+        </div>
+        <div class="summary-card">
+          <p class="label">Property views</p>
+          <p class="value"><%= (summary.property_views || 0).toLocaleString() %></p>
+        </div>
+        <div class="summary-card">
+          <p class="label">Project views</p>
+          <p class="value"><%= (summary.project_views || 0).toLocaleString() %></p>
+        </div>
+        <div class="summary-card">
+          <p class="label">Form submissions</p>
+          <p class="value"><%= (summary.form_submissions || 0).toLocaleString() %></p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Traffic overview</h2>
+            <p>Daily breakdown of visits, property interest, and leads</p>
+          </div>
+        </div>
+        <canvas id="trafficChart" height="110"></canvas>
+      </section>
+
+      <section class="grid two-columns">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Top properties (<%= metric === 'forms' ? 'Leads' : 'Views' %>)</h2>
+          </div>
+          <% if (!topProperties.length) { %>
+            <p class="empty-state">No property activity in this range.</p>
+          <% } else { %>
+            <table class="analytics-table">
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>Location</th>
+                  <th>Views</th>
+                  <th>Form submissions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% topProperties.forEach(item => { %>
+                  <tr>
+                    <td><span class="line-clamp"><%= item.title %></span></td>
+                    <td><%= item.city || '—' %>, <%= item.country || '—' %></td>
+                    <td class="number"><%= (item.total_views || 0).toLocaleString() %></td>
+                    <td class="number"><%= (item.total_leads || 0).toLocaleString() %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          <% } %>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Top projects (<%= metric === 'forms' ? 'Leads' : 'Views' %>)</h2>
+          </div>
+          <% if (!topProjects.length) { %>
+            <p class="empty-state">No project activity in this range.</p>
+          <% } else { %>
+            <table class="analytics-table">
+              <thead>
+                <tr>
+                  <th>Project</th>
+                  <th>Location</th>
+                  <th>Views</th>
+                  <th>Form submissions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% topProjects.forEach(item => { %>
+                  <tr>
+                    <td><span class="line-clamp"><%= item.title %></span></td>
+                    <td><%= item.city || '—' %>, <%= item.country || '—' %></td>
+                    <td class="number"><%= (item.total_views || 0).toLocaleString() %></td>
+                    <td class="number"><%= (item.total_leads || 0).toLocaleString() %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          <% } %>
+        </div>
+      </section>
+
+      <section class="grid two-columns">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Top agents</h2>
+          </div>
+          <% if (!agentPerformance.length) { %>
+            <p class="empty-state">No agent activity captured yet.</p>
+          <% } else { %>
+            <table class="analytics-table">
+              <thead>
+                <tr>
+                  <th>Agent</th>
+                  <th>Views</th>
+                  <th>Form submissions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% agentPerformance.forEach(agent => { %>
+                  <tr>
+                    <td><%= agent.name || 'N/A' %></td>
+                    <td class="number"><%= (agent.total_views || 0).toLocaleString() %></td>
+                    <td class="number"><%= (agent.total_form_submissions || 0).toLocaleString() %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          <% } %>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Top pages</h2>
+          </div>
+          <% if (!topPages.length) { %>
+            <p class="empty-state">No page views recorded yet.</p>
+          <% } else { %>
+            <table class="analytics-table">
+              <thead>
+                <tr>
+                  <th>Page</th>
+                  <th>Visits</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% topPages.forEach(page => { %>
+                  <tr>
+                    <td><span class="line-clamp"><%= page.path || '/' %></span></td>
+                    <td class="number"><%= (page.views || 0).toLocaleString() %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          <% } %>
+        </div>
+      </section>
+
+      <section class="grid two-columns">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Hot locations</h2>
+          </div>
+          <% if (!locationInsights.length) { %>
+            <p class="empty-state">No location activity yet.</p>
+          <% } else { %>
+            <table class="analytics-table">
+              <thead>
+                <tr>
+                  <th>Location</th>
+                  <th>Views</th>
+                  <th>Leads</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% locationInsights.forEach(row => { %>
+                  <tr>
+                    <td><%= (row.city || '—') %>, <%= row.country || '' %></td>
+                    <td class="number"><%= (row.total_views || 0).toLocaleString() %></td>
+                    <td class="number"><%= (row.total_leads || 0).toLocaleString() %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          <% } %>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Latest leads</h2>
+          </div>
+          <% if (!recentLeads.length) { %>
+            <p class="empty-state">No leads captured in this period.</p>
+          <% } else { %>
+            <table class="analytics-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Interest</th>
+                  <th>Source</th>
+                  <th>Created</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% recentLeads.forEach(lead => { %>
+                  <tr>
+                    <td><%= lead.name || 'Anonymous' %></td>
+                    <td>
+                      <% if (lead.property_title) { %>
+                        <span>Property: <%= lead.property_title %></span>
+                      <% } else if (lead.project_title) { %>
+                        <span>Project: <%= lead.project_title %></span>
+                      <% } else { %>
+                        <span>General inquiry</span>
+                      <% } %>
+                    </td>
+                    <td><%= (lead.source || 'contact_form').replace('_', ' ') %></td>
+                    <td><%= new Date(lead.created_at).toLocaleString() %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          <% } %>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('analyticsFilterForm');
+    if (!form) return;
+    const fromInput = document.getElementById('date_from');
+    const toInput = document.getElementById('date_to');
+    const quickButtons = form.querySelectorAll('.quick-ranges button');
+
+    function formatDate(date) {
+      return date.toISOString().slice(0, 10);
+    }
+
+    function applyQuickRange(range) {
+      const today = new Date();
+      let start = new Date(today);
+
+      if (range === 'today') {
+        // start already today
+      } else if (range === 'ytd') {
+        start = new Date(today.getFullYear(), 0, 1);
+      } else {
+        const days = parseInt(range, 10);
+        if (!Number.isNaN(days)) {
+          start.setDate(today.getDate() - (days - 1));
+        }
+      }
+
+      fromInput.value = formatDate(start);
+      toInput.value = formatDate(today);
+      form.submit();
+    }
+
+    quickButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const range = btn.getAttribute('data-range');
+        if (range) applyQuickRange(range);
+      });
+    });
+  });
+
+  window.addEventListener('load', function() {
+    const ctx = document.getElementById('trafficChart');
+    if (!ctx || typeof Chart === 'undefined') return;
+    const series = <%- JSON.stringify(timeSeries || []) %>;
+    const labels = series.map(item => item.date);
+    const pageViews = series.map(item => Number(item.page_views || 0));
+    const propertyViews = series.map(item => Number(item.property_views || 0));
+    const projectViews = series.map(item => Number(item.project_views || 0));
+    const formSubmissions = series.map(item => Number(item.form_submissions || 0));
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Page views',
+            data: pageViews,
+            borderColor: '#0f62fe',
+            backgroundColor: 'rgba(15, 98, 254, 0.1)',
+            tension: 0.3
+          },
+          {
+            label: 'Property views',
+            data: propertyViews,
+            borderColor: '#2ea862',
+            backgroundColor: 'rgba(46, 168, 98, 0.15)',
+            tension: 0.3
+          },
+          {
+            label: 'Project views',
+            data: projectViews,
+            borderColor: '#ff7eb6',
+            backgroundColor: 'rgba(255, 126, 182, 0.15)',
+            tension: 0.3
+          },
+          {
+            label: 'Form submissions',
+            data: formSubmissions,
+            borderColor: '#f18805',
+            backgroundColor: 'rgba(241, 136, 5, 0.15)',
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          mode: 'index',
+          intersect: false
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1 }
+          }
+        },
+        plugins: {
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+  });
+</script>
+

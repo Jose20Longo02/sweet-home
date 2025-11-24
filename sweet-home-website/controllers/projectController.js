@@ -7,6 +7,7 @@ const { ensureLocalizedFields } = require('../config/translator');
 const { detectLanguageFromFields, getTargetLanguages } = require('../utils/languageDetection');
 const { ensureCompleteTranslations } = require('../utils/translationHelper');
 const { generateSEOFileName } = require('../utils/imageNaming');
+const { logEvent } = require('../utils/analytics');
 const path = require('path');
 const s3   = require('../config/spaces');
 const fs   = require('fs');
@@ -1453,6 +1454,25 @@ exports.listProjectsForAdmin = async (req, res, next) => {
       locations,
       user: req.session.user
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.incrementView = async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (!Number.isFinite(id)) {
+      return res.status(400).json({ ok: false });
+    }
+    await logEvent({
+      eventType: 'project_view',
+      entityType: 'project',
+      entityId: id,
+      meta: { referrer: req.get('referer') || null },
+      req
+    });
+    return res.json({ ok: true });
   } catch (err) {
     next(err);
   }

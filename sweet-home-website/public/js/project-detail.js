@@ -17,6 +17,9 @@ function initializeProjectDetail() {
   
   // Initialize related project interactions
   initializeRelatedProjects();
+
+  // Track project view for analytics
+  trackProjectView();
 }
 
 // Gallery Functionality
@@ -202,6 +205,19 @@ function tryGeneratePoster(videoEl, seconds) {
   } else {
     onLoaded();
   }
+}
+
+function trackProjectView() {
+  const container = document.querySelector('.project-sidebar');
+  if (!container) return;
+  const projectId = container.getAttribute('data-project-id');
+  if (!projectId) return;
+  const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+  const csrf = tokenMeta ? tokenMeta.getAttribute('content') : '';
+  fetch(`/projects/api/${encodeURIComponent(projectId)}/view`, {
+    method: 'POST',
+    headers: { 'CSRF-Token': csrf }
+  }).catch(() => {});
 }
 
 function updateActiveThumbnail(photoIndex) {

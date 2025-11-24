@@ -3,12 +3,31 @@ const { query } = require('../config/db');
 const Lead = require('../models/Lead');
 const sendMail = require('../config/mailer');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const { logEvent } = require('../utils/analytics');
 
 const { validationResult } = require('express-validator');
 
 const EXTRA_LEAD_NOTIFY_EMAIL = String(process.env.LEAD_EXTRA_NOTIFY_EMAIL || 'Israel@sweet-home.co.il').trim();
 const JOSE_EMAIL = 'JoseLongo@Medialy.Agency';
 const DEFAULT_SITE_ORIGIN = 'https://sweet-home.co.il';
+
+function buildEventMeta(data = {}) {
+  return Object.fromEntries(
+    Object.entries(data || {}).filter(([, value]) => value !== undefined && value !== null && value !== '')
+  );
+}
+
+async function recordFormSubmission({ entityType, entityId = null, meta = {}, req }) {
+  try {
+    await logEvent({
+      eventType: 'contact_form_submit',
+      entityType,
+      entityId,
+      meta: buildEventMeta(meta),
+      req
+    });
+  } catch (_) {}
+}
 
 function resolveOriginBase() {
   const raw = String(process.env.PUBLIC_BASE_URL || process.env.SITE_URL || process.env.APP_ORIGIN || '').trim();
@@ -166,6 +185,16 @@ exports.createFromProperty = async (req, res, next) => {
           await query(`INSERT INTO property_stats(property_id, views, email_clicks, last_updated) VALUES ($1, 0, 1, NOW()) ON CONFLICT DO NOTHING`, [property.id]);
         }
       } catch (_) {}
+      await recordFormSubmission({
+        entityType: 'property',
+        entityId: property.id,
+        meta: {
+          form: 'property_detail',
+          property_slug: property.slug || null,
+          property_title: property.title || null
+        },
+        req
+      });
       // Email to lead (thank you) — localized by preferred language
       try {
         const lang = String(language || '').slice(0,2).toLowerCase();
@@ -336,6 +365,16 @@ exports.createFromProject = async (req, res, next) => {
 
     // Emails (async)
     setImmediate(async () => {
+      await recordFormSubmission({
+        entityType: 'project',
+        entityId: project.id,
+        meta: {
+          form: 'project_detail',
+          project_slug: project.slug || null,
+          project_title: project.title || null
+        },
+        req
+      });
       try {
         const lang = String(language || '').slice(0,2).toLowerCase();
         const L = ['en','es','de'].includes(lang) ? lang : 'en';

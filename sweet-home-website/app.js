@@ -27,6 +27,7 @@ const sendMail       = require('./config/mailer');
 const locations      = require('./config/locations');
 const { query }      = require('./config/db');
 const i18nMiddleware = require('./config/i18n');
+const { logEvent }   = require('./utils/analytics');
 
 // Sentry removed per request
 
@@ -195,6 +196,30 @@ app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken();
   } else {
     res.locals.csrfToken = null;
+  }
+  next();
+});
+
+// Passive analytics: log page views for HTML responses (non-API)
+app.use((req, res, next) => {
+  const isGet = req.method === 'GET';
+  const isApi = req.path.startsWith('/api/');
+  const hasExtension = /\.[a-z0-9]{2,8}$/i.test(req.path);
+  if (isGet && !isApi && !hasExtension) {
+    res.on('finish', () => {
+      const contentType = res.get('Content-Type') || '';
+      if (res.statusCode < 400 && contentType.includes('text/html')) {
+        logEvent({
+          eventType: 'page_view',
+          entityType: 'page',
+          meta: {
+            path: req.path,
+            query: Object.keys(req.query || {}).length ? req.query : undefined
+          },
+          req
+        });
+      }
+    });
   }
   next();
 });

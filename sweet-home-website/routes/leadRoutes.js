@@ -9,6 +9,7 @@ const rateLimit = require('express-rate-limit');
 const { body } = require('express-validator');
 const { recaptchaRequired } = require('../middleware/recaptcha');
 const { spamDetection } = require('../middleware/spamDetection');
+const { logEvent } = require('../utils/analytics');
 const recaptchaMinScore = (() => {
   const v = parseFloat(process.env.RECAPTCHA_MIN_SCORE || '0.5');
   return Number.isFinite(v) ? v : 0.5;
@@ -86,6 +87,20 @@ router.post(
         seller_rooms,
         seller_occupancy_status
       });
+      try {
+        await logEvent({
+          eventType: 'contact_form_submit',
+          entityType: lead_type === 'seller' ? 'seller' : 'general',
+          entityId: null,
+          meta: {
+            form: lead_type === 'seller' ? 'seller_form' : 'contact_form',
+            seller_neighborhood,
+            seller_size,
+            seller_rooms
+          },
+          req
+        });
+      } catch (_) {}
       res.json({ success: true, lead });
 
       // Send to Zapier webhook (async)

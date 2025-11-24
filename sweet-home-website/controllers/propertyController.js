@@ -13,6 +13,7 @@ const { ensureLocalizedFields } = require('../config/translator');
 const { detectLanguageFromFields, getTargetLanguages } = require('../utils/languageDetection');
 const { ensureCompleteTranslations } = require('../utils/translationHelper');
 const { generateSEOFileName } = require('../utils/imageNaming');
+const { logEvent } = require('../utils/analytics');
 
 // Extract coordinates from common map link formats or raw "lat,lng"
 function extractCoordsFromLink(input) {
@@ -457,6 +458,13 @@ exports.incrementView = async (req, res, next) => {
     if (upd.rowCount === 0) {
       await query(`INSERT INTO property_stats(property_id, views, last_updated) VALUES ($1, 1, NOW()) ON CONFLICT DO NOTHING`, [id]);
     }
+    await logEvent({
+      eventType: 'property_view',
+      entityType: 'property',
+      entityId: id,
+      meta: { path: req.get('referer') || req.headers?.referer || null },
+      req
+    });
     return res.json({ ok: true });
   } catch (err) { next(err); }
 };
