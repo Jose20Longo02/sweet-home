@@ -27,6 +27,11 @@
             <input type="date" name="date_from" id="date_from" value="<%= dateFrom %>" />
             <label for="date_to">To:</label>
             <input type="date" name="date_to" id="date_to" value="<%= dateTo %>" />
+            <label for="metric">Rank by:</label>
+            <select name="metric" id="metric">
+              <option value="views" <%= metric === 'views' ? 'selected' : '' %>>Views</option>
+              <option value="forms" <%= metric === 'forms' ? 'selected' : '' %>>Form submissions</option>
+            </select>
             <button type="submit" class="btn-filter">Apply</button>
             <a href="/superadmin/dashboard/analytics" class="btn-clear">Reset</a>
           </div>
@@ -62,7 +67,7 @@
       <section class="analytics-section">
         <div class="section-header">
           <h2>🏆 Top Properties</h2>
-          <a href="/superadmin/dashboard/analytics/export?type=properties&format=csv&date_from=<%= dateFrom %>&date_to=<%= dateTo %>" class="btn-export">Export CSV</a>
+          <a href="/superadmin/dashboard/analytics/export?type=properties&metric=<%= metric %>&format=csv&date_from=<%= dateFrom %>&date_to=<%= dateTo %>" class="btn-export">Export CSV</a>
         </div>
         <% if (topProperties.length === 0) { %>
           <p class="empty-state">No property data available for the selected period.</p>
@@ -102,7 +107,7 @@
       <section class="analytics-section">
         <div class="section-header">
           <h2>🏗️ Top Projects</h2>
-          <a href="/superadmin/dashboard/analytics/export?type=projects&format=csv&date_from=<%= dateFrom %>&date_to=<%= dateTo %>" class="btn-export">Export CSV</a>
+          <a href="/superadmin/dashboard/analytics/export?type=projects&metric=<%= metric %>&format=csv&date_from=<%= dateFrom %>&date_to=<%= dateTo %>" class="btn-export">Export CSV</a>
         </div>
         <% if (topProjects.length === 0) { %>
           <p class="empty-state">No project data available for the selected period.</p>
@@ -142,7 +147,7 @@
       <section class="analytics-section">
         <div class="section-header">
           <h2>👥 Agent Performance</h2>
-          <a href="/superadmin/dashboard/analytics/export?type=agents&format=csv&date_from=<%= dateFrom %>&date_to=<%= dateTo %>" class="btn-export">Export CSV</a>
+          <a href="/superadmin/dashboard/analytics/export?type=agents&metric=<%= metric %>&format=csv&date_from=<%= dateFrom %>&date_to=<%= dateTo %>" class="btn-export">Export CSV</a>
         </div>
         <% if (agentPerformance.length === 0) { %>
           <p class="empty-state">No agent performance data available for the selected period.</p>

@@ -23,6 +23,7 @@ exports.dashboard = async (req, res, next) => {
     // Get date range from query params (default to last 30 days)
     const dateFrom = req.query.date_from || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
     const dateTo = req.query.date_to || new Date().toISOString().split('T')[0];
+    const metric = req.query.metric === 'forms' ? 'forms' : 'views';
 
     // Fetch all analytics data in parallel
     const [
@@ -34,9 +35,9 @@ exports.dashboard = async (req, res, next) => {
       conversionMetrics,
       totalViewsData
     ] = await Promise.all([
-      Analytics.getTopProperties({ limit: 10, dateFrom, dateTo }),
-      Analytics.getTopProjects({ limit: 10, dateFrom, dateTo }),
-      Analytics.getAgentPerformance({ dateFrom, dateTo }),
+      Analytics.getTopProperties({ limit: 10, dateFrom, dateTo, sortBy: metric }),
+      Analytics.getTopProjects({ limit: 10, dateFrom, dateTo, sortBy: metric }),
+      Analytics.getAgentPerformance({ dateFrom, dateTo, sortBy: metric }),
       Analytics.getLocationAnalytics({ dateFrom, dateTo }),
       Analytics.getTimeBasedAnalytics({ dateFrom, dateTo, groupBy: 'day' }),
       Analytics.getConversionMetrics({ dateFrom, dateTo }),
@@ -62,6 +63,7 @@ exports.dashboard = async (req, res, next) => {
         totalLeads,
         avgConversionRate: Math.round(avgConversionRate * 100) / 100
       },
+      metric,
       dateFrom,
       dateTo,
       pendingCount,
@@ -81,21 +83,22 @@ exports.export = async (req, res, next) => {
     const { type, format } = req.query; // type: 'properties', 'projects', 'agents', 'locations'
     const dateFrom = req.query.date_from || null;
     const dateTo = req.query.date_to || null;
+    const metric = req.query.metric === 'forms' ? 'forms' : 'views';
 
     let data = [];
     let filename = 'analytics';
 
     switch (type) {
       case 'properties':
-        data = await Analytics.getTopProperties({ limit: 1000, dateFrom, dateTo });
+        data = await Analytics.getTopProperties({ limit: 1000, dateFrom, dateTo, sortBy: metric });
         filename = 'top-properties';
         break;
       case 'projects':
-        data = await Analytics.getTopProjects({ limit: 1000, dateFrom, dateTo });
+        data = await Analytics.getTopProjects({ limit: 1000, dateFrom, dateTo, sortBy: metric });
         filename = 'top-projects';
         break;
       case 'agents':
-        data = await Analytics.getAgentPerformance({ dateFrom, dateTo });
+        data = await Analytics.getAgentPerformance({ dateFrom, dateTo, sortBy: metric });
         filename = 'agent-performance';
         break;
       case 'locations':

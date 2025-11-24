@@ -19,7 +19,7 @@ class Analytics {
   /**
    * Get most viewed properties (filtered by date range using analytics_events)
    */
-  static async getTopProperties({ limit = 10, dateFrom = null, dateTo = null } = {}) {
+  static async getTopProperties({ limit = 10, dateFrom = null, dateTo = null, sortBy = 'views' } = {}) {
     const values = [];
     let paramIndex = 1;
     let dateFilter = '';
@@ -73,7 +73,11 @@ class Analytics {
         GROUP BY entity_id
       ) form_counts ON p.id = form_counts.entity_id
       WHERE p.status = 'active' ${dateFilter || ''}
-      ORDER BY COALESCE(view_counts.view_count, ps.views, 0) DESC
+      ORDER BY ${
+        sortBy === 'forms'
+          ? 'COALESCE(form_counts.form_submissions, 0)'
+          : 'COALESCE(view_counts.view_count, ps.views, 0)'
+      } DESC
       LIMIT $${paramIndex}
     `;
     values.push(limit);
@@ -84,7 +88,7 @@ class Analytics {
   /**
    * Get most viewed projects (filtered by date range using analytics_events)
    */
-  static async getTopProjects({ limit = 10, dateFrom = null, dateTo = null } = {}) {
+  static async getTopProjects({ limit = 10, dateFrom = null, dateTo = null, sortBy = 'views' } = {}) {
     const values = [];
     let paramIndex = 1;
     let dateFilter = '';
@@ -137,7 +141,11 @@ class Analytics {
         GROUP BY entity_id
       ) form_counts ON p.id = form_counts.entity_id
       WHERE p.status = 'active' ${dateFilter || ''}
-      ORDER BY COALESCE(view_counts.view_count, ps.views, 0) DESC
+      ORDER BY ${
+        sortBy === 'forms'
+          ? 'COALESCE(form_counts.form_submissions, 0)'
+          : 'COALESCE(view_counts.view_count, ps.views, 0)'
+      } DESC
       LIMIT $${paramIndex}
     `;
     values.push(limit);
@@ -148,7 +156,7 @@ class Analytics {
   /**
    * Get agent performance metrics (using analytics_events for accurate date filtering)
    */
-  static async getAgentPerformance({ dateFrom = null, dateTo = null } = {}) {
+  static async getAgentPerformance({ dateFrom = null, dateTo = null, sortBy = 'views' } = {}) {
     const values = [];
     let paramIndex = 1;
     let eventDateFilter = '';
@@ -187,7 +195,7 @@ class Analytics {
       WHERE u.role IN ('Admin', 'SuperAdmin') AND u.approved = true
       GROUP BY u.id, u.name, u.email, u.profile_picture
       HAVING COUNT(DISTINCT p.id) > 0 OR COUNT(DISTINCT pr.id) > 0
-      ORDER BY total_views DESC
+      ORDER BY ${sortBy === 'forms' ? 'total_form_submissions' : 'total_views'} DESC
     `;
     
     let res;
@@ -241,7 +249,7 @@ class Analytics {
       WHERE u.role IN ('Admin', 'SuperAdmin') AND u.approved = true
       GROUP BY u.id, u.name, u.email, u.profile_picture
       HAVING COUNT(DISTINCT p.id) > 0 OR COUNT(DISTINCT pr.id) > 0
-      ORDER BY total_views DESC
+      ORDER BY ${sortBy === 'forms' ? 'total_form_submissions' : 'total_views'} DESC
     `;
     res = await query(fallbackText, fallbackValues);
     return res.rows;
