@@ -1,6 +1,6 @@
 <head>
   <link rel="stylesheet" href="/css/superadmin/analytics.css?v=<%= assetVersion %>" />
-  <script src="https://unpkg.com/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/chart.js@4.4.1/dist/chart.umd.min.js" onerror="console.error('Failed to load Chart.js from unpkg.com'); document.getElementById('chartLoading').innerHTML = '<p style=\'margin: 0; color: #ef4444;\'>Failed to load chart library. Please refresh the page.</p>';"></script>
 </head>
 
 <% title = 'Analytics' %>
@@ -277,6 +277,7 @@
   </div>
 </div>
 
+<script src="https://unpkg.com/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const fromInput = document.getElementById('date_from');
@@ -339,8 +340,30 @@
       return;
     }
     
-    // Wait for Chart.js to be available
-    if (typeof Chart === 'undefined' || !Chart.Chart) {
+    // Debug: Check what Chart.js exports
+    console.log('Chart.js check:', {
+      'typeof Chart': typeof Chart,
+      'Chart.Chart': typeof Chart !== 'undefined' ? typeof Chart.Chart : 'N/A',
+      'window.Chart': typeof window !== 'undefined' && typeof window.Chart !== 'undefined' ? typeof window.Chart : 'N/A'
+    });
+    
+    // Wait for Chart.js to be available - try multiple ways
+    let ChartConstructor = null;
+    if (typeof Chart !== 'undefined') {
+      if (Chart.Chart) {
+        ChartConstructor = Chart.Chart;
+      } else if (typeof Chart === 'function') {
+        ChartConstructor = Chart;
+      }
+    } else if (typeof window !== 'undefined' && typeof window.Chart !== 'undefined') {
+      if (window.Chart.Chart) {
+        ChartConstructor = window.Chart.Chart;
+      } else if (typeof window.Chart === 'function') {
+        ChartConstructor = window.Chart;
+      }
+    }
+    
+    if (!ChartConstructor) {
       setTimeout(initChart, 100);
       return;
     }
@@ -388,8 +411,7 @@
         ctx.chart.destroy();
       }
       
-      // Use Chart.Chart if available, otherwise Chart
-      const ChartConstructor = Chart.Chart || Chart;
+      // Use the Chart constructor we found
       ctx.chart = new ChartConstructor(ctx, {
       type: 'line',
       data: {
@@ -550,14 +572,18 @@
     
     function tryInit() {
       attempts++;
-      if (typeof Chart !== 'undefined' && Chart.Chart) {
+      // Check if Chart.js is available (try multiple ways)
+      const chartAvailable = (typeof Chart !== 'undefined' && (Chart.Chart || typeof Chart === 'function'));
+      
+      if (chartAvailable) {
         initChart();
       } else if (attempts < maxAttempts) {
         setTimeout(tryInit, 100);
       } else {
+        console.error('Chart.js failed to load after', maxAttempts, 'attempts. Chart type:', typeof Chart);
         if (loadingEl) loadingEl.style.display = 'none';
         if (errorEl) {
-          errorEl.innerHTML = '<p style="margin: 0; color: #ef4444;">Failed to load chart library. Please check your internet connection and refresh the page.</p>';
+          errorEl.innerHTML = '<p style="margin: 0; color: #ef4444;">Failed to load chart library after 5 seconds. Please check your internet connection and refresh the page.</p><p style="margin: 0.5rem 0 0 0; color: #64748b; font-size: 12px;">If the problem persists, the CDN may be blocked. Contact your administrator.</p>';
           errorEl.style.display = 'block';
         }
       }
@@ -566,11 +592,13 @@
     tryInit();
   }
   
-  // Start initialization
+  // Start initialization when page is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startChartInit);
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(startChartInit, 100); // Small delay to ensure scripts are loaded
+    });
   } else {
-    startChartInit();
+    setTimeout(startChartInit, 100);
   }
 </script>
 
