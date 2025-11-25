@@ -43,6 +43,7 @@ module.exports = {
   },
   "Cyprus": {
     "Paphos": [
+      "City Center",
       "Kato Paphos",
       "Universal Area",
       "Geroskipou (Yeroskipou)",
