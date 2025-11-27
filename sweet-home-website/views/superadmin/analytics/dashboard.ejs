@@ -98,7 +98,7 @@
               <p>Showing <%= topProperties.length %> properties</p>
             </div>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <button type="button" class="btn-secondary" onclick="document.getElementById('propertyFilters').style.display=document.getElementById('propertyFilters').style.display==='none'?'block':'none'">Filters</button>
+              <button type="button" class="btn-secondary filter-toggle-btn" data-target="propertyFilters">Filters</button>
               <a href="/superadmin/dashboard/analytics/export/properties?<%= new URLSearchParams({date_from: dateFrom, date_to: dateTo, metric, limit: limit || 40, property_search: typeof propertyFilters !== 'undefined' ? propertyFilters.search || '' : '', property_country: typeof propertyFilters !== 'undefined' ? propertyFilters.country || '' : '', property_city: typeof propertyFilters !== 'undefined' ? propertyFilters.city || '' : '', property_type: typeof propertyFilters !== 'undefined' ? propertyFilters.type || '' : '', property_min_price: typeof propertyFilters !== 'undefined' && propertyFilters.minPrice ? propertyFilters.minPrice : '', property_max_price: typeof propertyFilters !== 'undefined' && propertyFilters.maxPrice ? propertyFilters.maxPrice : '', property_min_rooms: typeof propertyFilters !== 'undefined' && propertyFilters.minRooms ? propertyFilters.minRooms : ''}).toString() %>" class="btn-export" title="Export to CSV">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M8 2V10M8 10L5 7M8 10L11 7M2 12H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -202,7 +202,7 @@
               <p>Showing <%= topProjects.length %> projects</p>
             </div>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <button type="button" class="btn-secondary" onclick="document.getElementById('projectFilters').style.display=document.getElementById('projectFilters').style.display==='none'?'block':'none'">Filters</button>
+              <button type="button" class="btn-secondary filter-toggle-btn" data-target="projectFilters">Filters</button>
               <a href="/superadmin/dashboard/analytics/export/projects?<%= new URLSearchParams({date_from: dateFrom, date_to: dateTo, metric, limit: limit || 40, project_search: typeof projectFilters !== 'undefined' ? projectFilters.search || '' : '', project_country: typeof projectFilters !== 'undefined' ? projectFilters.country || '' : '', project_city: typeof projectFilters !== 'undefined' ? projectFilters.city || '' : '', project_min_price: typeof projectFilters !== 'undefined' && projectFilters.minPrice ? projectFilters.minPrice : '', project_max_price: typeof projectFilters !== 'undefined' && projectFilters.maxPrice ? projectFilters.maxPrice : ''}).toString() %>" class="btn-export" title="Export to CSV">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M8 2V10M8 10L5 7M8 10L11 7M2 12H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -294,7 +294,7 @@
               <p>Showing <%= agentPerformance.length %> agents</p>
             </div>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <button type="button" class="btn-secondary" onclick="document.getElementById('agentFilters').style.display=document.getElementById('agentFilters').style.display==='none'?'block':'none'">Filters</button>
+              <button type="button" class="btn-secondary filter-toggle-btn" data-target="agentFilters">Filters</button>
               <a href="/superadmin/dashboard/analytics/export/agents?<%= new URLSearchParams({date_from: dateFrom, date_to: dateTo, metric, limit: limit || 40, agent_search: typeof agentFilters !== 'undefined' && agentFilters.search ? agentFilters.search : ''}).toString() %>" class="btn-export" title="Export to CSV">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M8 2V10M8 10L5 7M8 10L11 7M2 12H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

@@ -365,11 +365,33 @@
     });
   }
 
+  function initFilterToggles() {
+    // Handle filter button clicks using data-target attribute
+    const filterButtons = document.querySelectorAll('.filter-toggle-btn');
+    
+    filterButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const targetId = button.getAttribute('data-target');
+        if (!targetId) return;
+        
+        const filterPanel = document.getElementById(targetId);
+        if (!filterPanel) return;
+        
+        const isHidden = filterPanel.style.display === 'none' || !filterPanel.style.display;
+        filterPanel.style.display = isHidden ? 'block' : 'none';
+      });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     parseMeta();
     setupQuickRangeControls();
     startChartInit();
     initTableSorting();
+    initFilterToggles();
   });
 })();
 
