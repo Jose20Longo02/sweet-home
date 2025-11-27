@@ -384,6 +384,49 @@
         filterPanel.style.display = isHidden ? 'block' : 'none';
       });
     });
+
+    // Handle Apply Filters buttons - collect all filter values and submit the main form
+    const mainForm = document.getElementById('analyticsFilterForm');
+    
+    if (mainForm) {
+      // Find all Apply Filters buttons
+      const applyButtons = document.querySelectorAll('.section-filters button[type="submit"].btn-primary');
+      
+      applyButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Start with main form values
+          const params = new URLSearchParams();
+          const mainFormData = new FormData(mainForm);
+          for (const [key, value] of mainFormData.entries()) {
+            if (value) {
+              params.set(key, value);
+            }
+          }
+          
+          // Collect all filter values from all filter sections
+          const filterSections = document.querySelectorAll('.section-filters');
+          filterSections.forEach(section => {
+            const inputs = section.querySelectorAll('input, select');
+            inputs.forEach(input => {
+              if (input.name) {
+                if (input.value && input.value.trim() !== '') {
+                  params.set(input.name, input.value);
+                } else {
+                  // Remove empty values
+                  params.delete(input.name);
+                }
+              }
+            });
+          });
+          
+          // Navigate to the URL with all parameters
+          window.location.href = mainForm.action + '?' + params.toString();
+        });
+      });
+    }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
