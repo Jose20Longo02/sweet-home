@@ -162,55 +162,53 @@
             {
               label: 'Property views',
               data: propertyViews,
-              borderColor: '#23824b',
-              backgroundColor: 'rgba(35, 130, 75, 0.08)',
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59, 130, 246, 0.08)',
               borderWidth: 3,
               tension: 0.4,
               fill: true,
               pointRadius: 5,
               pointHoverRadius: 7,
-              pointBackgroundColor: '#23824b',
+              pointBackgroundColor: '#3b82f6',
               pointBorderColor: '#ffffff',
               pointBorderWidth: 2.5,
-              pointHoverBackgroundColor: '#1e6b3f',
+              pointHoverBackgroundColor: '#2563eb',
               pointHoverBorderColor: '#ffffff',
               pointHoverBorderWidth: 3
             },
             {
               label: 'Project views',
               data: projectViews,
-              borderColor: '#2ea862',
-              backgroundColor: 'rgba(46, 168, 98, 0.06)',
-              borderWidth: 2.5,
+              borderColor: '#f59e0b',
+              backgroundColor: 'rgba(245, 158, 11, 0.08)',
+              borderWidth: 3,
               tension: 0.4,
               fill: true,
-              pointRadius: 4,
-              pointHoverRadius: 6,
-              pointBackgroundColor: '#2ea862',
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              pointBackgroundColor: '#f59e0b',
               pointBorderColor: '#ffffff',
-              pointBorderWidth: 2,
-              pointHoverBackgroundColor: '#23824b',
+              pointBorderWidth: 2.5,
+              pointHoverBackgroundColor: '#d97706',
               pointHoverBorderColor: '#ffffff',
-              pointHoverBorderWidth: 2.5,
-              borderDash: [5, 5]
+              pointHoverBorderWidth: 3
             },
             {
               label: 'Form submissions',
               data: formSubmissions,
-              borderColor: '#23824b',
-              backgroundColor: 'rgba(35, 130, 75, 0.06)',
-              borderWidth: 2.5,
+              borderColor: '#ef4444',
+              backgroundColor: 'rgba(239, 68, 68, 0.08)',
+              borderWidth: 3,
               tension: 0.4,
               fill: true,
-              pointRadius: 4,
-              pointHoverRadius: 6,
-              pointBackgroundColor: '#23824b',
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              pointBackgroundColor: '#ef4444',
               pointBorderColor: '#ffffff',
-              pointBorderWidth: 2,
-              pointHoverBackgroundColor: '#1e6b3f',
+              pointBorderWidth: 2.5,
+              pointHoverBackgroundColor: '#dc2626',
               pointHoverBorderColor: '#ffffff',
-              pointHoverBorderWidth: 2.5,
-              borderDash: [8, 4]
+              pointHoverBorderWidth: 3
             }
           ]
         },
@@ -310,10 +308,68 @@
     tryInit();
   }
 
+  function initTableSorting() {
+    const tables = document.querySelectorAll('.sortable-table');
+    
+    tables.forEach(table => {
+      const headers = table.querySelectorAll('th.sortable');
+      const tbody = table.querySelector('tbody');
+      
+      headers.forEach(header => {
+        header.addEventListener('click', () => {
+          const column = header.getAttribute('data-column');
+          const currentSort = header.getAttribute('data-sort');
+          const isNumeric = column === 'views' || column === 'leads';
+          
+          // Reset all headers
+          headers.forEach(h => {
+            h.removeAttribute('data-sort');
+            h.querySelector('.sort-indicator').textContent = '';
+          });
+          
+          // Set new sort direction
+          const newSort = currentSort === 'asc' ? 'desc' : 'asc';
+          header.setAttribute('data-sort', newSort);
+          
+          // Get all rows
+          const rows = Array.from(tbody.querySelectorAll('tr'));
+          
+          // Sort rows
+          rows.sort((a, b) => {
+            let aVal, bVal;
+            
+            if (column === 'title' || column === 'name') {
+              aVal = a.getAttribute(`data-${column}`) || '';
+              bVal = b.getAttribute(`data-${column}`) || '';
+            } else if (column === 'location') {
+              aVal = a.getAttribute('data-location') || '';
+              bVal = b.getAttribute('data-location') || '';
+            } else {
+              aVal = parseFloat(a.getAttribute(`data-${column}`) || 0);
+              bVal = parseFloat(b.getAttribute(`data-${column}`) || 0);
+            }
+            
+            if (isNumeric) {
+              return newSort === 'asc' ? aVal - bVal : bVal - aVal;
+            } else {
+              if (aVal < bVal) return newSort === 'asc' ? -1 : 1;
+              if (aVal > bVal) return newSort === 'asc' ? 1 : -1;
+              return 0;
+            }
+          });
+          
+          // Re-append sorted rows
+          rows.forEach(row => tbody.appendChild(row));
+        });
+      });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     parseMeta();
     setupQuickRangeControls();
     startChartInit();
+    initTableSorting();
   });
 })();
 

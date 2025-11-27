@@ -51,8 +51,62 @@ async function getTimeSeries({ startDate, endDate }) {
   return rows;
 }
 
-async function getTopProperties({ startDate, endDate, limit = 5, sortBy = 'views' }) {
+async function getTopProperties({ 
+  startDate, 
+  endDate, 
+  limit = 40, 
+  sortBy = 'views',
+  search = '',
+  country = '',
+  city = '',
+  type = '',
+  minPrice = null,
+  maxPrice = null,
+  minRooms = null
+}) {
   const orderColumn = sortBy === 'forms' ? 'total_leads' : 'total_views';
+  const conditions = ['p.status = \'active\''];
+  const params = [startDate, endDate];
+  let paramIndex = 3;
+
+  if (search) {
+    conditions.push(`(p.title ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex})`);
+    params.push(`%${search}%`);
+    paramIndex++;
+  }
+  if (country) {
+    conditions.push(`p.country = $${paramIndex}`);
+    params.push(country);
+    paramIndex++;
+  }
+  if (city) {
+    conditions.push(`p.city = $${paramIndex}`);
+    params.push(city);
+    paramIndex++;
+  }
+  if (type) {
+    conditions.push(`p.type = $${paramIndex}`);
+    params.push(type);
+    paramIndex++;
+  }
+  if (minPrice !== null) {
+    conditions.push(`p.price >= $${paramIndex}`);
+    params.push(minPrice);
+    paramIndex++;
+  }
+  if (maxPrice !== null) {
+    conditions.push(`p.price <= $${paramIndex}`);
+    params.push(maxPrice);
+    paramIndex++;
+  }
+  if (minRooms !== null) {
+    conditions.push(`p.bedrooms >= $${paramIndex}`);
+    params.push(minRooms);
+    paramIndex++;
+  }
+
+  params.push(limit);
+
   const { rows } = await query(
     `
       SELECT
@@ -61,6 +115,9 @@ async function getTopProperties({ startDate, endDate, limit = 5, sortBy = 'views
         p.title,
         p.city,
         p.country,
+        p.type,
+        p.price,
+        p.bedrooms,
         COUNT(e.*) FILTER (WHERE e.event_type = 'property_view') AS total_views,
         COUNT(e.*) FILTER (WHERE e.event_type = 'contact_form_submit') AS total_leads
       FROM properties p
@@ -69,18 +126,60 @@ async function getTopProperties({ startDate, endDate, limit = 5, sortBy = 'views
        AND e.entity_id = p.id
        AND e.created_at >= $1::date
        AND e.created_at < ($2::date + INTERVAL '1 day')
-      WHERE p.status = 'active'
+      WHERE ${conditions.join(' AND ')}
       GROUP BY p.id
       ORDER BY ${orderColumn} DESC, total_views DESC
-      LIMIT $3
+      LIMIT $${paramIndex}
     `,
-    [startDate, endDate, limit]
+    params
   );
   return rows;
 }
 
-async function getTopProjects({ startDate, endDate, limit = 5, sortBy = 'views' }) {
+async function getTopProjects({ 
+  startDate, 
+  endDate, 
+  limit = 40, 
+  sortBy = 'views',
+  search = '',
+  country = '',
+  city = '',
+  minPrice = null,
+  maxPrice = null
+}) {
   const orderColumn = sortBy === 'forms' ? 'total_leads' : 'total_views';
+  const conditions = ['p.status = \'active\''];
+  const params = [startDate, endDate];
+  let paramIndex = 3;
+
+  if (search) {
+    conditions.push(`(p.title ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex})`);
+    params.push(`%${search}%`);
+    paramIndex++;
+  }
+  if (country) {
+    conditions.push(`p.country = $${paramIndex}`);
+    params.push(country);
+    paramIndex++;
+  }
+  if (city) {
+    conditions.push(`p.city = $${paramIndex}`);
+    params.push(city);
+    paramIndex++;
+  }
+  if (minPrice !== null) {
+    conditions.push(`p.min_price >= $${paramIndex}`);
+    params.push(minPrice);
+    paramIndex++;
+  }
+  if (maxPrice !== null) {
+    conditions.push(`p.max_price <= $${paramIndex}`);
+    params.push(maxPrice);
+    paramIndex++;
+  }
+
+  params.push(limit);
+
   const { rows } = await query(
     `
       SELECT
@@ -89,6 +188,8 @@ async function getTopProjects({ startDate, endDate, limit = 5, sortBy = 'views' 
         p.title,
         p.city,
         p.country,
+        p.min_price,
+        p.max_price,
         COUNT(e.*) FILTER (WHERE e.event_type = 'project_view') AS total_views,
         COUNT(e.*) FILTER (WHERE e.event_type = 'contact_form_submit') AS total_leads
       FROM projects p
@@ -97,18 +198,39 @@ async function getTopProjects({ startDate, endDate, limit = 5, sortBy = 'views' 
        AND e.entity_id = p.id
        AND e.created_at >= $1::date
        AND e.created_at < ($2::date + INTERVAL '1 day')
-      WHERE p.status = 'active'
+      WHERE ${conditions.join(' AND ')}
       GROUP BY p.id
       ORDER BY ${orderColumn} DESC, total_views DESC
-      LIMIT $3
+      LIMIT $${paramIndex}
     `,
-    [startDate, endDate, limit]
+    params
   );
   return rows;
 }
 
-async function getAgentPerformance({ startDate, endDate, limit = 6, sortBy = 'views' }) {
+async function getAgentPerformance({ 
+  startDate, 
+  endDate, 
+  limit = 40, 
+  sortBy = 'views',
+  search = ''
+}) {
   const orderColumn = sortBy === 'forms' ? 'total_form_submissions' : 'total_views';
+  const conditions = [
+    '(pe.agent_id IS NOT NULL OR pre.agent_id IS NOT NULL)',
+    'u.role IN (\'Admin\',\'SuperAdmin\')'
+  ];
+  const params = [startDate, endDate];
+  let paramIndex = 3;
+
+  if (search) {
+    conditions.push(`(u.name ILIKE $${paramIndex} OR u.email ILIKE $${paramIndex})`);
+    params.push(`%${search}%`);
+    paramIndex++;
+  }
+
+  params.push(limit);
+
   const { rows } = await query(
     `
       WITH property_events AS (
@@ -150,12 +272,11 @@ async function getAgentPerformance({ startDate, endDate, limit = 6, sortBy = 'vi
       FROM users u
       LEFT JOIN property_events pe ON pe.agent_id = u.id
       LEFT JOIN project_events pre ON pre.agent_id = u.id
-      WHERE (pe.agent_id IS NOT NULL OR pre.agent_id IS NOT NULL)
-        AND u.role IN ('Admin','SuperAdmin')
+      WHERE ${conditions.join(' AND ')}
       ORDER BY ${orderColumn} DESC, total_views DESC
-      LIMIT $3
+      LIMIT $${paramIndex}
     `,
-    [startDate, endDate, limit]
+    params
   );
   return rows;
 }

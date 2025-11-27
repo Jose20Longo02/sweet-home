@@ -54,6 +54,57 @@
             <button type="submit" name="quick_range" value="365" data-range="365" class="<%= quickRange === '365' ? 'active' : '' %>">Last 12 months</button>
             <button type="submit" name="quick_range" value="ytd" data-range="ytd" class="<%= quickRange === 'ytd' ? 'active' : '' %>">Year to date</button>
           </div>
+          <div class="advanced-filters" id="advancedFilters" style="display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
+            <div class="filters-row">
+              <div class="field">
+                <label for="search">Search</label>
+                <input type="text" id="search" name="search" placeholder="Search properties, projects, agents..." value="<%= typeof filters !== 'undefined' && filters.search ? filters.search : '' %>" />
+              </div>
+              <div class="field">
+                <label for="filter_country">Country</label>
+                <select id="filter_country" name="filter_country">
+                  <option value="">All countries</option>
+                  <option value="Cyprus" <%= typeof filters !== 'undefined' && filters.country === 'Cyprus' ? 'selected' : '' %>>Cyprus</option>
+                  <option value="UAE" <%= typeof filters !== 'undefined' && filters.country === 'UAE' ? 'selected' : '' %>>UAE</option>
+                  <option value="Germany" <%= typeof filters !== 'undefined' && filters.country === 'Germany' ? 'selected' : '' %>>Germany</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="filter_city">City</label>
+                <input type="text" id="filter_city" name="filter_city" placeholder="City name" value="<%= typeof filters !== 'undefined' && filters.city ? filters.city : '' %>" />
+              </div>
+              <div class="field">
+                <label for="filter_type">Property Type</label>
+                <select id="filter_type" name="filter_type">
+                  <option value="">All types</option>
+                  <option value="Apartment" <%= typeof filters !== 'undefined' && filters.type === 'Apartment' ? 'selected' : '' %>>Apartment</option>
+                  <option value="House" <%= typeof filters !== 'undefined' && filters.type === 'House' ? 'selected' : '' %>>House</option>
+                  <option value="Villa" <%= typeof filters !== 'undefined' && filters.type === 'Villa' ? 'selected' : '' %>>Villa</option>
+                  <option value="Land" <%= typeof filters !== 'undefined' && filters.type === 'Land' ? 'selected' : '' %>>Land</option>
+                </select>
+              </div>
+            </div>
+            <div class="filters-row">
+              <div class="field">
+                <label for="filter_min_price">Min Price</label>
+                <input type="number" id="filter_min_price" name="filter_min_price" placeholder="0" value="<%= typeof filters !== 'undefined' && filters.minPrice ? filters.minPrice : '' %>" />
+              </div>
+              <div class="field">
+                <label for="filter_max_price">Max Price</label>
+                <input type="number" id="filter_max_price" name="filter_max_price" placeholder="No limit" value="<%= typeof filters !== 'undefined' && filters.maxPrice ? filters.maxPrice : '' %>" />
+              </div>
+              <div class="field">
+                <label for="filter_min_rooms">Min Rooms</label>
+                <input type="number" id="filter_min_rooms" name="filter_min_rooms" placeholder="0" min="0" value="<%= typeof filters !== 'undefined' && filters.minRooms ? filters.minRooms : '' %>" />
+              </div>
+              <div class="field actions">
+                <button type="button" class="btn-secondary" onclick="document.getElementById('advancedFilters').style.display='none'">Hide Filters</button>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 1rem; text-align: center;">
+            <button type="button" class="btn-secondary" onclick="document.getElementById('advancedFilters').style.display=document.getElementById('advancedFilters').style.display==='none'?'block':'none'">Show Advanced Filters</button>
+          </div>
         </form>
       </section>
 
@@ -93,83 +144,105 @@
       <section class="grid two-columns">
         <div class="panel">
           <div class="panel-header">
-            <h2>Top properties (<%= metric === 'forms' ? 'Leads' : 'Views' %>)</h2>
+            <div>
+              <h2>Top properties (<%= metric === 'forms' ? 'Leads' : 'Views' %>)</h2>
+              <p>Showing <%= topProperties.length %> properties</p>
+            </div>
+            <a href="/superadmin/dashboard/analytics/export/properties?<%= new URLSearchParams({date_from: dateFrom, date_to: dateTo, metric, limit: limit || 40, ...(typeof filters !== 'undefined' ? Object.fromEntries(Object.entries(filters).filter(([k,v]) => v !== null && v !== '')) : {})}).toString() %>" class="btn-export" title="Export to CSV">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 2V10M8 10L5 7M8 10L11 7M2 12H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Export CSV
+            </a>
           </div>
           <% if (!topProperties.length) { %>
             <p class="empty-state">No property activity in this range.</p>
           <% } else { %>
-            <table class="analytics-table">
-              <thead>
-                <tr>
-                  <th>Property</th>
-                  <th>Location</th>
-                  <th>Views</th>
-                  <th>Form submissions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% topProperties.forEach(item => { %>
+            <div class="table-wrapper">
+              <table class="analytics-table sortable-table" data-table="properties">
+                <thead>
                   <tr>
-                    <td>
-                      <% if (item.slug) { %>
-                        <a
-                          href="/properties/<%= item.slug %>"
-                          target="_blank"
-                          rel="noopener"
-                          class="table-link line-clamp"
-                        ><%= item.title %></a>
-                      <% } else { %>
-                        <span class="line-clamp"><%= item.title %></span>
-                      <% } %>
-                    </td>
-                    <td><%= item.city || '—' %>, <%= item.country || '—' %></td>
-                    <td class="number"><%= (item.total_views || 0).toLocaleString() %></td>
-                    <td class="number"><%= (item.total_leads || 0).toLocaleString() %></td>
+                    <th class="sortable" data-column="title">Property <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-column="location">Location <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-column="views">Views <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-column="leads">Form submissions <span class="sort-indicator"></span></th>
                   </tr>
-                <% }) %>
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  <% topProperties.forEach(item => { %>
+                    <tr data-title="<%= (item.title || '').toLowerCase() %>" data-location="<%= ((item.city || '') + ' ' + (item.country || '')).toLowerCase() %>" data-views="<%= item.total_views || 0 %>" data-leads="<%= item.total_leads || 0 %>">
+                      <td>
+                        <% if (item.slug) { %>
+                          <a
+                            href="/properties/<%= item.slug %>"
+                            target="_blank"
+                            rel="noopener"
+                            class="table-link line-clamp"
+                          ><%= item.title %></a>
+                        <% } else { %>
+                          <span class="line-clamp"><%= item.title %></span>
+                        <% } %>
+                      </td>
+                      <td><%= item.city || '—' %>, <%= item.country || '—' %></td>
+                      <td class="number"><%= (item.total_views || 0).toLocaleString() %></td>
+                      <td class="number"><%= (item.total_leads || 0).toLocaleString() %></td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
           <% } %>
         </div>
 
         <div class="panel">
           <div class="panel-header">
-            <h2>Top projects (<%= metric === 'forms' ? 'Leads' : 'Views' %>)</h2>
+            <div>
+              <h2>Top projects (<%= metric === 'forms' ? 'Leads' : 'Views' %>)</h2>
+              <p>Showing <%= topProjects.length %> projects</p>
+            </div>
+            <a href="/superadmin/dashboard/analytics/export/projects?<%= new URLSearchParams({date_from: dateFrom, date_to: dateTo, metric, limit: limit || 40, ...(typeof filters !== 'undefined' ? Object.fromEntries(Object.entries(filters).filter(([k,v]) => v !== null && v !== '')) : {})}).toString() %>" class="btn-export" title="Export to CSV">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 2V10M8 10L5 7M8 10L11 7M2 12H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Export CSV
+            </a>
           </div>
           <% if (!topProjects.length) { %>
             <p class="empty-state">No project activity in this range.</p>
           <% } else { %>
-            <table class="analytics-table">
-              <thead>
-                <tr>
-                  <th>Project</th>
-                  <th>Location</th>
-                  <th>Views</th>
-                  <th>Form submissions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% topProjects.forEach(item => { %>
+            <div class="table-wrapper">
+              <table class="analytics-table sortable-table" data-table="projects">
+                <thead>
                   <tr>
-                    <td>
-                      <% if (item.slug) { %>
-                        <a
-                          href="/projects/<%= item.slug %>"
-                          target="_blank"
-                          rel="noopener"
-                          class="table-link line-clamp"
-                        ><%= item.title %></a>
-                      <% } else { %>
-                        <span class="line-clamp"><%= item.title %></span>
-                      <% } %>
-                    </td>
-                    <td><%= item.city || '—' %>, <%= item.country || '—' %></td>
-                    <td class="number"><%= (item.total_views || 0).toLocaleString() %></td>
-                    <td class="number"><%= (item.total_leads || 0).toLocaleString() %></td>
+                    <th class="sortable" data-column="title">Project <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-column="location">Location <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-column="views">Views <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-column="leads">Form submissions <span class="sort-indicator"></span></th>
                   </tr>
-                <% }) %>
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  <% topProjects.forEach(item => { %>
+                    <tr data-title="<%= (item.title || '').toLowerCase() %>" data-location="<%= ((item.city || '') + ' ' + (item.country || '')).toLowerCase() %>" data-views="<%= item.total_views || 0 %>" data-leads="<%= item.total_leads || 0 %>">
+                      <td>
+                        <% if (item.slug) { %>
+                          <a
+                            href="/projects/<%= item.slug %>"
+                            target="_blank"
+                            rel="noopener"
+                            class="table-link line-clamp"
+                          ><%= item.title %></a>
+                        <% } else { %>
+                          <span class="line-clamp"><%= item.title %></span>
+                        <% } %>
+                      </td>
+                      <td><%= item.city || '—' %>, <%= item.country || '—' %></td>
+                      <td class="number"><%= (item.total_views || 0).toLocaleString() %></td>
+                      <td class="number"><%= (item.total_leads || 0).toLocaleString() %></td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
           <% } %>
         </div>
       </section>
@@ -177,29 +250,40 @@
       <section class="grid two-columns">
         <div class="panel">
           <div class="panel-header">
-            <h2>Top agents</h2>
+            <div>
+              <h2>Top agents</h2>
+              <p>Showing <%= agentPerformance.length %> agents</p>
+            </div>
+            <a href="/superadmin/dashboard/analytics/export/agents?<%= new URLSearchParams({date_from: dateFrom, date_to: dateTo, metric, limit: limit || 40, ...(typeof filters !== 'undefined' && filters.search ? {search: filters.search} : {})}).toString() %>" class="btn-export" title="Export to CSV">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 2V10M8 10L5 7M8 10L11 7M2 12H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Export CSV
+            </a>
           </div>
           <% if (!agentPerformance.length) { %>
             <p class="empty-state">No agent activity captured yet.</p>
           <% } else { %>
-            <table class="analytics-table">
-              <thead>
-                <tr>
-                  <th>Agent</th>
-                  <th>Views</th>
-                  <th>Form submissions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% agentPerformance.forEach(agent => { %>
+            <div class="table-wrapper">
+              <table class="analytics-table sortable-table" data-table="agents">
+                <thead>
                   <tr>
-                    <td><%= agent.name || 'N/A' %></td>
-                    <td class="number"><%= (agent.total_views || 0).toLocaleString() %></td>
-                    <td class="number"><%= (agent.total_form_submissions || 0).toLocaleString() %></td>
+                    <th class="sortable" data-column="name">Agent <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-column="views">Views <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-column="leads">Form submissions <span class="sort-indicator"></span></th>
                   </tr>
-                <% }) %>
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  <% agentPerformance.forEach(agent => { %>
+                    <tr data-name="<%= (agent.name || '').toLowerCase() %>" data-views="<%= agent.total_views || 0 %>" data-leads="<%= agent.total_form_submissions || 0 %>">
+                      <td><%= agent.name || 'N/A' %></td>
+                      <td class="number"><%= (agent.total_views || 0).toLocaleString() %></td>
+                      <td class="number"><%= (agent.total_form_submissions || 0).toLocaleString() %></td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
           <% } %>
         </div>
         <div class="panel">

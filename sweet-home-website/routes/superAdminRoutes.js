@@ -171,6 +171,28 @@ router.get(
   analyticsController.dashboard
 );
 
+// Analytics exports
+router.get(
+  '/analytics/export/properties',
+  ensureAuthenticated,
+  ensureSuperAdmin,
+  analyticsController.exportProperties
+);
+
+router.get(
+  '/analytics/export/projects',
+  ensureAuthenticated,
+  ensureSuperAdmin,
+  analyticsController.exportProjects
+);
+
+router.get(
+  '/analytics/export/agents',
+  ensureAuthenticated,
+  ensureSuperAdmin,
+  analyticsController.exportAgents
+);
+
 // Update requested user’s role
 router.post(
   '/requests/:id/role',
