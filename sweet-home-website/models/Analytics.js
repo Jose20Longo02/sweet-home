@@ -100,7 +100,7 @@ async function getTopProperties({
     paramIndex++;
   }
   if (minRooms !== null) {
-    conditions.push(`p.bedrooms >= $${paramIndex}`);
+    conditions.push(`p.rooms >= $${paramIndex}`);
     params.push(minRooms);
     paramIndex++;
   }
@@ -117,7 +117,7 @@ async function getTopProperties({
         p.country,
         p.type,
         p.price,
-        p.bedrooms,
+        p.rooms,
         COUNT(e.*) FILTER (WHERE e.event_type = 'property_view') AS total_views,
         COUNT(e.*) FILTER (WHERE e.event_type = 'contact_form_submit') AS total_leads
       FROM properties p
