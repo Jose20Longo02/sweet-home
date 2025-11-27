@@ -74,13 +74,17 @@
           <p class="label">Form submissions</p>
           <p class="value"><%= (summary.form_submissions || 0).toLocaleString() %></p>
         </div>
+        <div class="summary-card">
+          <p class="label">Other pages</p>
+          <p class="value"><%= (summary.page_views || 0).toLocaleString() %></p>
+        </div>
       </section>
 
       <section class="panel">
         <div class="panel-header">
           <div>
             <h2>Traffic overview</h2>
-            <p>Daily breakdown of visits, property interest, and leads</p>
+            <p>Daily breakdown of visits, property interest, and leads. <strong>Note:</strong> "Other pages" tracks general pages (homepage, blog, etc.), while property/project views track detail pages separately.</p>
           </div>
         </div>
         <div class="chart-container" style="position: relative; height: 300px; margin-top: 1rem;">

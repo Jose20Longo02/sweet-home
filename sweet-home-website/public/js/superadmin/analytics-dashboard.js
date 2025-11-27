@@ -143,7 +143,7 @@
           labels,
           datasets: [
             {
-              label: 'Page views',
+              label: 'Other pages',
               data: pageViews,
               borderColor: '#2ea862',
               backgroundColor: 'rgba(46, 168, 98, 0.08)',
