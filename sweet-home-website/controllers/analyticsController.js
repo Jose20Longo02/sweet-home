@@ -52,15 +52,27 @@ exports.dashboard = async (req, res, next) => {
       dateTo = today.toISOString().slice(0, 10);
     }
 
-    // Get filter parameters
+    // Get filter parameters - separate for each section
     const limit = parseInt(req.query.limit, 10) || 40;
-    const searchQuery = req.query.search || '';
-    const filterCountry = req.query.filter_country || '';
-    const filterCity = req.query.filter_city || '';
-    const filterType = req.query.filter_type || '';
-    const filterMinPrice = req.query.filter_min_price ? parseFloat(req.query.filter_min_price) : null;
-    const filterMaxPrice = req.query.filter_max_price ? parseFloat(req.query.filter_max_price) : null;
-    const filterMinRooms = req.query.filter_min_rooms ? parseInt(req.query.filter_min_rooms, 10) : null;
+    
+    // Property filters
+    const propertySearch = req.query.property_search || '';
+    const propertyCountry = req.query.property_country || '';
+    const propertyCity = req.query.property_city || '';
+    const propertyType = req.query.property_type || '';
+    const propertyMinPrice = req.query.property_min_price ? parseFloat(req.query.property_min_price) : null;
+    const propertyMaxPrice = req.query.property_max_price ? parseFloat(req.query.property_max_price) : null;
+    const propertyMinRooms = req.query.property_min_rooms ? parseInt(req.query.property_min_rooms, 10) : null;
+    
+    // Project filters
+    const projectSearch = req.query.project_search || '';
+    const projectCountry = req.query.project_country || '';
+    const projectCity = req.query.project_city || '';
+    const projectMinPrice = req.query.project_min_price ? parseFloat(req.query.project_min_price) : null;
+    const projectMaxPrice = req.query.project_max_price ? parseFloat(req.query.project_max_price) : null;
+    
+    // Agent filters
+    const agentSearch = req.query.agent_search || '';
 
     let [
       summary,
@@ -80,31 +92,31 @@ exports.dashboard = async (req, res, next) => {
         endDate: dateTo, 
         sortBy: metric,
         limit,
-        search: searchQuery,
-        country: filterCountry,
-        city: filterCity,
-        type: filterType,
-        minPrice: filterMinPrice,
-        maxPrice: filterMaxPrice,
-        minRooms: filterMinRooms
+        search: propertySearch,
+        country: propertyCountry,
+        city: propertyCity,
+        type: propertyType,
+        minPrice: propertyMinPrice,
+        maxPrice: propertyMaxPrice,
+        minRooms: propertyMinRooms
       }),
       getTopProjects({ 
         startDate: dateFrom, 
         endDate: dateTo, 
         sortBy: metric,
         limit,
-        search: searchQuery,
-        country: filterCountry,
-        city: filterCity,
-        minPrice: filterMinPrice,
-        maxPrice: filterMaxPrice
+        search: projectSearch,
+        country: projectCountry,
+        city: projectCity,
+        minPrice: projectMinPrice,
+        maxPrice: projectMaxPrice
       }),
       getAgentPerformance({ 
         startDate: dateFrom, 
         endDate: dateTo, 
         sortBy: metric,
         limit,
-        search: searchQuery
+        search: agentSearch
       }),
       getLocationInsights({ startDate: dateFrom, endDate: dateTo }),
       getTopPages({ startDate: dateFrom, endDate: dateTo }),
@@ -138,14 +150,24 @@ exports.dashboard = async (req, res, next) => {
       pendingCount,
       quickRange,
       limit,
-      filters: {
-        search: searchQuery,
-        country: filterCountry,
-        city: filterCity,
-        type: filterType,
-        minPrice: filterMinPrice,
-        maxPrice: filterMaxPrice,
-        minRooms: filterMinRooms
+      propertyFilters: {
+        search: propertySearch,
+        country: propertyCountry,
+        city: propertyCity,
+        type: propertyType,
+        minPrice: propertyMinPrice,
+        maxPrice: propertyMaxPrice,
+        minRooms: propertyMinRooms
+      },
+      projectFilters: {
+        search: projectSearch,
+        country: projectCountry,
+        city: projectCity,
+        minPrice: projectMinPrice,
+        maxPrice: projectMaxPrice
+      },
+      agentFilters: {
+        search: agentSearch
       },
       activePage: 'analytics'
     });
@@ -184,25 +206,26 @@ exports.exportProperties = async (req, res, next) => {
     const metric = req.query.metric === 'forms' ? 'forms' : 'views';
     const limit = parseInt(req.query.limit, 10) || 1000;
     const searchQuery = req.query.search || '';
-    const filterCountry = req.query.filter_country || '';
-    const filterCity = req.query.filter_city || '';
-    const filterType = req.query.filter_type || '';
-    const filterMinPrice = req.query.filter_min_price ? parseFloat(req.query.filter_min_price) : null;
-    const filterMaxPrice = req.query.filter_max_price ? parseFloat(req.query.filter_max_price) : null;
-    const filterMinRooms = req.query.filter_min_rooms ? parseInt(req.query.filter_min_rooms, 10) : null;
+    const propertySearch = req.query.property_search || '';
+    const propertyCountry = req.query.property_country || '';
+    const propertyCity = req.query.property_city || '';
+    const propertyType = req.query.property_type || '';
+    const propertyMinPrice = req.query.property_min_price ? parseFloat(req.query.property_min_price) : null;
+    const propertyMaxPrice = req.query.property_max_price ? parseFloat(req.query.property_max_price) : null;
+    const propertyMinRooms = req.query.property_min_rooms ? parseInt(req.query.property_min_rooms, 10) : null;
 
     const properties = await getTopProperties({ 
       startDate: dateFrom, 
       endDate: dateTo, 
       sortBy: metric,
       limit,
-      search: searchQuery,
-      country: filterCountry,
-      city: filterCity,
-      type: filterType,
-      minPrice: filterMinPrice,
-      maxPrice: filterMaxPrice,
-      minRooms: filterMinRooms
+      search: propertySearch,
+      country: propertyCountry,
+      city: propertyCity,
+      type: propertyType,
+      minPrice: propertyMinPrice,
+      maxPrice: propertyMaxPrice,
+      minRooms: propertyMinRooms
     });
 
     const csvData = properties.map(p => ({
@@ -239,21 +262,22 @@ exports.exportProjects = async (req, res, next) => {
     const metric = req.query.metric === 'forms' ? 'forms' : 'views';
     const limit = parseInt(req.query.limit, 10) || 1000;
     const searchQuery = req.query.search || '';
-    const filterCountry = req.query.filter_country || '';
-    const filterCity = req.query.filter_city || '';
-    const filterMinPrice = req.query.filter_min_price ? parseFloat(req.query.filter_min_price) : null;
-    const filterMaxPrice = req.query.filter_max_price ? parseFloat(req.query.filter_max_price) : null;
+    const projectSearch = req.query.project_search || '';
+    const projectCountry = req.query.project_country || '';
+    const projectCity = req.query.project_city || '';
+    const projectMinPrice = req.query.project_min_price ? parseFloat(req.query.project_min_price) : null;
+    const projectMaxPrice = req.query.project_max_price ? parseFloat(req.query.project_max_price) : null;
 
     const projects = await getTopProjects({ 
       startDate: dateFrom, 
       endDate: dateTo, 
       sortBy: metric,
       limit,
-      search: searchQuery,
-      country: filterCountry,
-      city: filterCity,
-      minPrice: filterMinPrice,
-      maxPrice: filterMaxPrice
+      search: projectSearch,
+      country: projectCountry,
+      city: projectCity,
+      minPrice: projectMinPrice,
+      maxPrice: projectMaxPrice
     });
 
     const csvData = projects.map(p => ({
@@ -288,14 +312,14 @@ exports.exportAgents = async (req, res, next) => {
     let dateTo = sanitizeDate(req.query.date_to, defaultEndStr);
     const metric = req.query.metric === 'forms' ? 'forms' : 'views';
     const limit = parseInt(req.query.limit, 10) || 1000;
-    const searchQuery = req.query.search || '';
+    const agentSearch = req.query.agent_search || '';
 
     const agents = await getAgentPerformance({ 
       startDate: dateFrom, 
       endDate: dateTo, 
       sortBy: metric,
       limit,
-      search: searchQuery
+      search: agentSearch
     });
 
     const csvData = agents.map(a => ({

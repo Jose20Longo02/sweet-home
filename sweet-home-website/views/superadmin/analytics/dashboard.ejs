@@ -54,57 +54,6 @@
             <button type="submit" name="quick_range" value="365" data-range="365" class="<%= quickRange === '365' ? 'active' : '' %>">Last 12 months</button>
             <button type="submit" name="quick_range" value="ytd" data-range="ytd" class="<%= quickRange === 'ytd' ? 'active' : '' %>">Year to date</button>
           </div>
-          <div class="advanced-filters" id="advancedFilters" style="display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
-            <div class="filters-row">
-              <div class="field">
-                <label for="search">Search</label>
-                <input type="text" id="search" name="search" placeholder="Search properties, projects, agents..." value="<%= typeof filters !== 'undefined' && filters.search ? filters.search : '' %>" />
-              </div>
-              <div class="field">
-                <label for="filter_country">Country</label>
-                <select id="filter_country" name="filter_country">
-                  <option value="">All countries</option>
-                  <option value="Cyprus" <%= typeof filters !== 'undefined' && filters.country === 'Cyprus' ? 'selected' : '' %>>Cyprus</option>
-                  <option value="UAE" <%= typeof filters !== 'undefined' && filters.country === 'UAE' ? 'selected' : '' %>>UAE</option>
-                  <option value="Germany" <%= typeof filters !== 'undefined' && filters.country === 'Germany' ? 'selected' : '' %>>Germany</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="filter_city">City</label>
-                <input type="text" id="filter_city" name="filter_city" placeholder="City name" value="<%= typeof filters !== 'undefined' && filters.city ? filters.city : '' %>" />
-              </div>
-              <div class="field">
-                <label for="filter_type">Property Type</label>
-                <select id="filter_type" name="filter_type">
-                  <option value="">All types</option>
-                  <option value="Apartment" <%= typeof filters !== 'undefined' && filters.type === 'Apartment' ? 'selected' : '' %>>Apartment</option>
-                  <option value="House" <%= typeof filters !== 'undefined' && filters.type === 'House' ? 'selected' : '' %>>House</option>
-                  <option value="Villa" <%= typeof filters !== 'undefined' && filters.type === 'Villa' ? 'selected' : '' %>>Villa</option>
-                  <option value="Land" <%= typeof filters !== 'undefined' && filters.type === 'Land' ? 'selected' : '' %>>Land</option>
-                </select>
-              </div>
-            </div>
-            <div class="filters-row">
-              <div class="field">
-                <label for="filter_min_price">Min Price</label>
-                <input type="number" id="filter_min_price" name="filter_min_price" placeholder="0" value="<%= typeof filters !== 'undefined' && filters.minPrice ? filters.minPrice : '' %>" />
-              </div>
-              <div class="field">
-                <label for="filter_max_price">Max Price</label>
-                <input type="number" id="filter_max_price" name="filter_max_price" placeholder="No limit" value="<%= typeof filters !== 'undefined' && filters.maxPrice ? filters.maxPrice : '' %>" />
-              </div>
-              <div class="field">
-                <label for="filter_min_rooms">Min Rooms</label>
-                <input type="number" id="filter_min_rooms" name="filter_min_rooms" placeholder="0" min="0" value="<%= typeof filters !== 'undefined' && filters.minRooms ? filters.minRooms : '' %>" />
-              </div>
-              <div class="field actions">
-                <button type="button" class="btn-secondary" onclick="document.getElementById('advancedFilters').style.display='none'">Hide Filters</button>
-              </div>
-            </div>
-          </div>
-          <div style="margin-top: 1rem; text-align: center;">
-            <button type="button" class="btn-secondary" onclick="document.getElementById('advancedFilters').style.display=document.getElementById('advancedFilters').style.display==='none'?'block':'none'">Show Advanced Filters</button>
-          </div>
         </form>
       </section>
 
@@ -148,12 +97,64 @@
               <h2>Top properties (<%= metric === 'forms' ? 'Leads' : 'Views' %>)</h2>
               <p>Showing <%= topProperties.length %> properties</p>
             </div>
-            <a href="/superadmin/dashboard/analytics/export/properties?<%= new URLSearchParams({date_from: dateFrom, date_to: dateTo, metric, limit: limit || 40, ...(typeof filters !== 'undefined' ? Object.fromEntries(Object.entries(filters).filter(([k,v]) => v !== null && v !== '')) : {})}).toString() %>" class="btn-export" title="Export to CSV">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 2V10M8 10L5 7M8 10L11 7M2 12H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              Export CSV
-            </a>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <button type="button" class="btn-secondary" onclick="document.getElementById('propertyFilters').style.display=document.getElementById('propertyFilters').style.display==='none'?'block':'none'">Filters</button>
+              <a href="/superadmin/dashboard/analytics/export/properties?<%= new URLSearchParams({date_from: dateFrom, date_to: dateTo, metric, limit: limit || 40, property_search: typeof propertyFilters !== 'undefined' ? propertyFilters.search || '' : '', property_country: typeof propertyFilters !== 'undefined' ? propertyFilters.country || '' : '', property_city: typeof propertyFilters !== 'undefined' ? propertyFilters.city || '' : '', property_type: typeof propertyFilters !== 'undefined' ? propertyFilters.type || '' : '', property_min_price: typeof propertyFilters !== 'undefined' && propertyFilters.minPrice ? propertyFilters.minPrice : '', property_max_price: typeof propertyFilters !== 'undefined' && propertyFilters.maxPrice ? propertyFilters.maxPrice : '', property_min_rooms: typeof propertyFilters !== 'undefined' && propertyFilters.minRooms ? propertyFilters.minRooms : ''}).toString() %>" class="btn-export" title="Export to CSV">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 2V10M8 10L5 7M8 10L11 7M2 12H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Export CSV
+              </a>
+            </div>
+          </div>
+          <div class="section-filters" id="propertyFilters" style="display: none; margin-bottom: 1.5rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+            <div class="filters-row">
+              <div class="field">
+                <label for="property_search">Search</label>
+                <input type="text" id="property_search" name="property_search" placeholder="Search properties..." value="<%= typeof propertyFilters !== 'undefined' && propertyFilters.search ? propertyFilters.search : '' %>" />
+              </div>
+              <div class="field">
+                <label for="property_country">Country</label>
+                <select id="property_country" name="property_country">
+                  <option value="">All countries</option>
+                  <option value="Cyprus" <%= typeof propertyFilters !== 'undefined' && propertyFilters.country === 'Cyprus' ? 'selected' : '' %>>Cyprus</option>
+                  <option value="UAE" <%= typeof propertyFilters !== 'undefined' && propertyFilters.country === 'UAE' ? 'selected' : '' %>>UAE</option>
+                  <option value="Germany" <%= typeof propertyFilters !== 'undefined' && propertyFilters.country === 'Germany' ? 'selected' : '' %>>Germany</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="property_city">City</label>
+                <input type="text" id="property_city" name="property_city" placeholder="City name" value="<%= typeof propertyFilters !== 'undefined' && propertyFilters.city ? propertyFilters.city : '' %>" />
+              </div>
+              <div class="field">
+                <label for="property_type">Property Type</label>
+                <select id="property_type" name="property_type">
+                  <option value="">All types</option>
+                  <option value="Apartment" <%= typeof propertyFilters !== 'undefined' && propertyFilters.type === 'Apartment' ? 'selected' : '' %>>Apartment</option>
+                  <option value="House" <%= typeof propertyFilters !== 'undefined' && propertyFilters.type === 'House' ? 'selected' : '' %>>House</option>
+                  <option value="Villa" <%= typeof propertyFilters !== 'undefined' && propertyFilters.type === 'Villa' ? 'selected' : '' %>>Villa</option>
+                  <option value="Land" <%= typeof propertyFilters !== 'undefined' && propertyFilters.type === 'Land' ? 'selected' : '' %>>Land</option>
+                </select>
+              </div>
+            </div>
+            <div class="filters-row">
+              <div class="field">
+                <label for="property_min_price">Min Price</label>
+                <input type="number" id="property_min_price" name="property_min_price" placeholder="0" value="<%= typeof propertyFilters !== 'undefined' && propertyFilters.minPrice ? propertyFilters.minPrice : '' %>" />
+              </div>
+              <div class="field">
+                <label for="property_max_price">Max Price</label>
+                <input type="number" id="property_max_price" name="property_max_price" placeholder="No limit" value="<%= typeof propertyFilters !== 'undefined' && propertyFilters.maxPrice ? propertyFilters.maxPrice : '' %>" />
+              </div>
+              <div class="field">
+                <label for="property_min_rooms">Min Rooms</label>
+                <input type="number" id="property_min_rooms" name="property_min_rooms" placeholder="0" min="0" value="<%= typeof propertyFilters !== 'undefined' && propertyFilters.minRooms ? propertyFilters.minRooms : '' %>" />
+              </div>
+              <div class="field actions">
+                <button type="submit" class="btn-primary">Apply Filters</button>
+                <button type="button" class="btn-secondary" onclick="document.getElementById('propertyFilters').style.display='none'">Cancel</button>
+              </div>
+            </div>
           </div>
           <% if (!topProperties.length) { %>
             <p class="empty-state">No property activity in this range.</p>
@@ -200,12 +201,50 @@
               <h2>Top projects (<%= metric === 'forms' ? 'Leads' : 'Views' %>)</h2>
               <p>Showing <%= topProjects.length %> projects</p>
             </div>
-            <a href="/superadmin/dashboard/analytics/export/projects?<%= new URLSearchParams({date_from: dateFrom, date_to: dateTo, metric, limit: limit || 40, ...(typeof filters !== 'undefined' ? Object.fromEntries(Object.entries(filters).filter(([k,v]) => v !== null && v !== '')) : {})}).toString() %>" class="btn-export" title="Export to CSV">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 2V10M8 10L5 7M8 10L11 7M2 12H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              Export CSV
-            </a>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <button type="button" class="btn-secondary" onclick="document.getElementById('projectFilters').style.display=document.getElementById('projectFilters').style.display==='none'?'block':'none'">Filters</button>
+              <a href="/superadmin/dashboard/analytics/export/projects?<%= new URLSearchParams({date_from: dateFrom, date_to: dateTo, metric, limit: limit || 40, project_search: typeof projectFilters !== 'undefined' ? projectFilters.search || '' : '', project_country: typeof projectFilters !== 'undefined' ? projectFilters.country || '' : '', project_city: typeof projectFilters !== 'undefined' ? projectFilters.city || '' : '', project_min_price: typeof projectFilters !== 'undefined' && projectFilters.minPrice ? projectFilters.minPrice : '', project_max_price: typeof projectFilters !== 'undefined' && projectFilters.maxPrice ? projectFilters.maxPrice : ''}).toString() %>" class="btn-export" title="Export to CSV">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 2V10M8 10L5 7M8 10L11 7M2 12H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Export CSV
+              </a>
+            </div>
+          </div>
+          <div class="section-filters" id="projectFilters" style="display: none; margin-bottom: 1.5rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+            <div class="filters-row">
+              <div class="field">
+                <label for="project_search">Search</label>
+                <input type="text" id="project_search" name="project_search" placeholder="Search projects..." value="<%= typeof projectFilters !== 'undefined' && projectFilters.search ? projectFilters.search : '' %>" />
+              </div>
+              <div class="field">
+                <label for="project_country">Country</label>
+                <select id="project_country" name="project_country">
+                  <option value="">All countries</option>
+                  <option value="Cyprus" <%= typeof projectFilters !== 'undefined' && projectFilters.country === 'Cyprus' ? 'selected' : '' %>>Cyprus</option>
+                  <option value="UAE" <%= typeof projectFilters !== 'undefined' && projectFilters.country === 'UAE' ? 'selected' : '' %>>UAE</option>
+                  <option value="Germany" <%= typeof projectFilters !== 'undefined' && projectFilters.country === 'Germany' ? 'selected' : '' %>>Germany</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="project_city">City</label>
+                <input type="text" id="project_city" name="project_city" placeholder="City name" value="<%= typeof projectFilters !== 'undefined' && projectFilters.city ? projectFilters.city : '' %>" />
+              </div>
+              <div class="field">
+                <label for="project_min_price">Min Price</label>
+                <input type="number" id="project_min_price" name="project_min_price" placeholder="0" value="<%= typeof projectFilters !== 'undefined' && projectFilters.minPrice ? projectFilters.minPrice : '' %>" />
+              </div>
+            </div>
+            <div class="filters-row">
+              <div class="field">
+                <label for="project_max_price">Max Price</label>
+                <input type="number" id="project_max_price" name="project_max_price" placeholder="No limit" value="<%= typeof projectFilters !== 'undefined' && projectFilters.maxPrice ? projectFilters.maxPrice : '' %>" />
+              </div>
+              <div class="field actions">
+                <button type="submit" class="btn-primary">Apply Filters</button>
+                <button type="button" class="btn-secondary" onclick="document.getElementById('projectFilters').style.display='none'">Cancel</button>
+              </div>
+            </div>
           </div>
           <% if (!topProjects.length) { %>
             <p class="empty-state">No project activity in this range.</p>
@@ -254,12 +293,27 @@
               <h2>Top agents</h2>
               <p>Showing <%= agentPerformance.length %> agents</p>
             </div>
-            <a href="/superadmin/dashboard/analytics/export/agents?<%= new URLSearchParams({date_from: dateFrom, date_to: dateTo, metric, limit: limit || 40, ...(typeof filters !== 'undefined' && filters.search ? {search: filters.search} : {})}).toString() %>" class="btn-export" title="Export to CSV">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 2V10M8 10L5 7M8 10L11 7M2 12H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              Export CSV
-            </a>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <button type="button" class="btn-secondary" onclick="document.getElementById('agentFilters').style.display=document.getElementById('agentFilters').style.display==='none'?'block':'none'">Filters</button>
+              <a href="/superadmin/dashboard/analytics/export/agents?<%= new URLSearchParams({date_from: dateFrom, date_to: dateTo, metric, limit: limit || 40, agent_search: typeof agentFilters !== 'undefined' && agentFilters.search ? agentFilters.search : ''}).toString() %>" class="btn-export" title="Export to CSV">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 2V10M8 10L5 7M8 10L11 7M2 12H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Export CSV
+              </a>
+            </div>
+          </div>
+          <div class="section-filters" id="agentFilters" style="display: none; margin-bottom: 1.5rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+            <div class="filters-row">
+              <div class="field">
+                <label for="agent_search">Search</label>
+                <input type="text" id="agent_search" name="agent_search" placeholder="Search agents..." value="<%= typeof agentFilters !== 'undefined' && agentFilters.search ? agentFilters.search : '' %>" />
+              </div>
+              <div class="field actions">
+                <button type="submit" class="btn-primary">Apply Filters</button>
+                <button type="button" class="btn-secondary" onclick="document.getElementById('agentFilters').style.display='none'">Cancel</button>
+              </div>
+            </div>
           </div>
           <% if (!agentPerformance.length) { %>
             <p class="empty-state">No agent activity captured yet.</p>

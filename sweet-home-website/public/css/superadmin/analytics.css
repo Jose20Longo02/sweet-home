@@ -454,7 +454,7 @@
   color: #2ea862;
 }
 
-.advanced-filters {
+.section-filters {
   animation: slideDown 0.3s ease;
 }
 
@@ -467,6 +467,24 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.section-filters .filters-row {
+  margin-bottom: 1rem;
+}
+
+.section-filters .filters-row:last-child {
+  margin-bottom: 0;
+}
+
+.section-filters .field {
+  min-width: 150px;
+}
+
+.section-filters .field.actions {
+  align-self: flex-end;
+  flex-direction: row;
+  gap: 0.5rem;
 }
 
 @media (max-width: 768px) {
