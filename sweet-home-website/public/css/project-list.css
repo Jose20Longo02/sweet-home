@@ -463,10 +463,29 @@
   margin-bottom: var(--spacing-8);
 }
 
+/* Make the last item span 2 columns if it's the only one in its row (odd number of items) */
+.projects-grid .project-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  max-width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Allow 3 columns on very large screens */
 @media (min-width: 1400px) {
   .projects-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+  
+  /* On 3-column layout, handle odd items differently */
+  .projects-grid .project-card:last-child:nth-child(3n+1) {
+    grid-column: 1 / -1;
+    max-width: calc(33.333% - var(--spacing-4));
+    margin: 0 auto;
+  }
+  
+  .projects-grid .project-card:last-child:nth-child(3n+2) {
+    grid-column: span 2;
   }
 }
 
@@ -694,6 +713,14 @@
 @media (min-width: 640px) and (max-width: 1024px) {
   .projects-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Make the last item span 2 columns if it's the only one in its row (odd number of items) */
+  .projects-grid .project-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    max-width: 50%;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
