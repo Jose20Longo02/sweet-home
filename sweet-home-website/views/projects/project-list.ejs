@@ -20,6 +20,11 @@
         </div>
         
         <form id="filtersForm" class="filters-form">
+          <!-- Apply Filters Button at Top -->
+          <div class="filters-actions-top">
+            <button type="submit" class="btn btn-primary btn-block"><%= t('projects.list.apply','Apply Filters') %></button>
+          </div>
+          
           <!-- Location Filters -->
           <div class="filter-group">
             <h4><%= t('properties.list.location','Location') %></h4>
@@ -91,10 +96,6 @@
               <input id="maxUnitPrice" name="max_price" type="hidden" value="<%= locals.filters?.max_price || '' %>">
             </div>
           </div>
-
-          <!-- Apply Filters Button -->
-          <button type="submit" class="btn btn-primary btn-block"><%= t('projects.list.apply','Apply Filters') %></button>
-          <button type="button" class="btn btn-light clear-filters" style="margin-top:8px;"><%= t('common.clearAll','Clear All') %></button>
         </form>
       </aside>
 

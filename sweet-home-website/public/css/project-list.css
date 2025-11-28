@@ -84,11 +84,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-6);
+  margin-bottom: var(--spacing-4);
   padding-bottom: var(--spacing-4);
   border-bottom: 1px solid var(--gray-200);
   position: relative;
   z-index: 100;
+}
+
+.filters-actions-top {
+  margin-bottom: var(--spacing-6);
+  padding-bottom: var(--spacing-4);
+  border-bottom: 1px solid var(--gray-200);
 }
 
 .filters-header h3 {
@@ -426,9 +432,16 @@
 
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-6);
   margin-bottom: var(--spacing-8);
+}
+
+/* Allow more columns on very large screens */
+@media (min-width: 1100px) {
+  .projects-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
 }
 
 /* Project Cards */
@@ -648,6 +661,13 @@
   
   .project-main {
     order: 1;
+  }
+}
+
+/* On tablets, show 2 columns */
+@media (min-width: 640px) and (max-width: 1024px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
