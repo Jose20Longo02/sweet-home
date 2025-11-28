@@ -73,11 +73,13 @@
 .filters-sidebar {
   background: var(--white);
   border-radius: var(--radius-xl);
-  padding: var(--spacing-6);
   box-shadow: var(--shadow-md);
-  height: fit-content;
   position: sticky;
   top: var(--spacing-8);
+  max-height: calc(100vh - var(--spacing-16));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 /* Mobile filters trigger */
@@ -106,8 +108,8 @@
 
 @media (max-width: 1024px) {
   .mobile-filters-trigger { display: block; }
-  #filtersSidebar { display: none; position: fixed !important; top: 0; left: -100%; width: 86%; max-width: 420px; height: 100vh; overflow-y: auto; z-index: 20001; padding: var(--spacing-6); background: var(--white); box-shadow: var(--shadow-xl); border-radius: 0 var(--radius-xl) var(--radius-xl) 0; }
-  #filtersSidebar.open { display: block; left: 0; }
+  #filtersSidebar { display: none; position: fixed !important; top: 0; left: -100%; width: 86%; max-width: 420px; height: 100vh; z-index: 20001; background: var(--white); box-shadow: var(--shadow-xl); border-radius: 0 var(--radius-xl) var(--radius-xl) 0; max-height: 100vh; }
+  #filtersSidebar.open { display: flex; left: 0; }
   .filters-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 20000; }
   .filters-overlay.open { display: block; }
   .filters-close { display: inline-block; }
@@ -124,11 +126,41 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-6);
-  padding-bottom: var(--spacing-4);
+  padding: var(--spacing-6) var(--spacing-6) var(--spacing-4);
   border-bottom: 1px solid var(--gray-200);
   position: relative;
   z-index: 100;
+  flex-shrink: 0;
+  background: var(--white);
+}
+
+.filters-form {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--spacing-6);
+  padding-top: var(--spacing-4);
+  /* Custom scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray-300) var(--gray-50);
+}
+
+.filters-form::-webkit-scrollbar {
+  width: 8px;
+}
+
+.filters-form::-webkit-scrollbar-track {
+  background: var(--gray-50);
+  border-radius: var(--radius-sm);
+}
+
+.filters-form::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: var(--radius-sm);
+}
+
+.filters-form::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-400);
 }
 
 .filters-header h3 {
@@ -313,11 +345,12 @@
     height: 100vh;
     z-index: 20001;
     transition: left var(--transition-fast);
-    overflow-y: auto;
+    max-height: 100vh;
   }
   
   .filters-sidebar.open {
     left: 0;
+    display: flex;
   }
   
   .filter-group {
