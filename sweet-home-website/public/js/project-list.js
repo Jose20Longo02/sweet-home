@@ -399,16 +399,6 @@ function renderProjects(projects) {
     projectsGrid.appendChild(projectCard);
   });
   
-  // Handle last item if odd number - ensure it spans both columns
-  const cards = projectsGrid.querySelectorAll('.project-card');
-  if (cards.length > 0 && cards.length % 2 === 1) {
-    const lastCard = cards[cards.length - 1];
-    lastCard.style.gridColumn = '1 / -1';
-    lastCard.style.maxWidth = '50%';
-    lastCard.style.marginLeft = 'auto';
-    lastCard.style.marginRight = 'auto';
-  }
-  
   // Reinitialize project cards
   initializeProjectCards();
 }

@@ -463,14 +463,6 @@
   margin-bottom: var(--spacing-8);
 }
 
-/* When there's an odd number of items, make the last one span both columns and center it */
-.projects-grid .project-card:last-child:nth-child(odd) {
-  grid-column: 1 / -1;
-  max-width: 50%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 /* Project Cards */
 .project-card {
   background: var(--white);

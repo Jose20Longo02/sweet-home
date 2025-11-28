@@ -1149,7 +1149,7 @@ exports.listProjectsPublic = async (req, res, next) => {
     const totalProjects = parseInt(countResult[0]?.count || '0', 10);
 
     // Add pagination
-    const itemsPerPage = 9;
+    const itemsPerPage = 10; // Even number to ensure 2 items per row
     const totalPages = Math.ceil(totalProjects / itemsPerPage);
     const offset = (parseInt(page) - 1) * itemsPerPage;
     
