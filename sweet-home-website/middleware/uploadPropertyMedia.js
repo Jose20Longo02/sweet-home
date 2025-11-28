@@ -9,6 +9,12 @@ const s3 = require('../config/spaces');
 const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
+  // Reject unexpected file fields immediately
+  const allowedFields = ['photos', 'video', 'floorplan', 'plan_photo'];
+  if (!allowedFields.includes(file.fieldname)) {
+    return cb(new Error(`Unexpected field: "${file.fieldname}". Allowed fields: ${allowedFields.join(', ')}`), false);
+  }
+  
   const mm = (file.mimetype || '').toLowerCase();
   const ext = path.extname(file.originalname || '').toLowerCase();
   const isImage = file.fieldname === 'photos' && (/^image\/(jpeg|png|webp|heic|heif)$/i.test(mm) || ext === '.heic' || ext === '.heif');
@@ -16,7 +22,16 @@ const fileFilter = (req, file, cb) => {
   const isFloor = file.fieldname === 'floorplan' && (/^image\/(jpeg|png|webp|heic|heif)$/i.test(mm) || ext === '.heic' || ext === '.heif');
   const isPlan  = file.fieldname === 'plan_photo' && (/^image\/(jpeg|png|webp|heic|heif)$/i.test(mm) || ext === '.heic' || ext === '.heif');
   if (isImage || isVideo || isFloor || isPlan) return cb(null, true);
-  return cb(new Error('Invalid file type'), false);
+  
+  // Provide specific error message based on field type
+  let errorMsg = `Invalid file type for "${file.fieldname}". `;
+  if (file.fieldname === 'photos' || file.fieldname === 'floorplan' || file.fieldname === 'plan_photo') {
+    errorMsg += 'Allowed formats: JPEG, PNG, WebP, HEIC/HEIF';
+  } else if (file.fieldname === 'video') {
+    errorMsg += 'Allowed formats: MP4, QuickTime (.mov), Matroska (.mkv)';
+  }
+  errorMsg += `. Received: ${file.mimetype || 'unknown'} (${ext || 'no extension'})`;
+  return cb(new Error(errorMsg), false);
 };
 
 const uploader = multer({
@@ -113,9 +128,21 @@ const processAndUploadFile = async (file, folder) => {
 };
 
 // Convert HEIC images to JPEG after upload so they render in browsers
+// Wrapper to handle Multer errors gracefully
 module.exports = async function uploadPropertyMedia(req, res, next) {
   uploader(req, res, async function (err) {
-    if (err) return next(err);
+    if (err) {
+      // Handle Multer "Unexpected field" error with better message
+      if (err.code === 'LIMIT_UNEXPECTED_FILE' || (err.message && err.message.includes('Unexpected field'))) {
+        const fieldName = err.field || 'unknown';
+        return next(new Error(`Unexpected file field: "${fieldName}". Allowed fields: photos, video, floorplan, plan_photo. Please check your form field names.`));
+      }
+      // Handle invalid file type errors (unsupported formats)
+      if (err.message && err.message.includes('Invalid file type')) {
+        return next(err); // Pass through the detailed error message from fileFilter
+      }
+      return next(err);
+    }
     try {
       const processedFiles = {};
 

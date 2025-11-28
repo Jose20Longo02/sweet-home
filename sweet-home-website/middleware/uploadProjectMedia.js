@@ -18,13 +18,30 @@ function sanitizeFilename(originalName) {
 }
 
 const fileFilter = (req, file, cb) => {
+  // Reject unexpected file fields immediately
+  const allowedFields = ['photos', 'video', 'brochure'];
+  if (!allowedFields.includes(file.fieldname)) {
+    return cb(new Error(`Unexpected field: "${file.fieldname}". Allowed fields: ${allowedFields.join(', ')}`), false);
+  }
+  
   const mm = (file.mimetype || '').toLowerCase();
   const ext = path.extname(file.originalname || '').toLowerCase();
   const isImage = file.fieldname === 'photos' && (/^image\/(jpeg|png|webp|heic|heif)$/i.test(mm) || ext === '.heic' || ext === '.heif');
   const isVideo = file.fieldname === 'video' && /^video\/(mp4|quicktime|x-matroska)$/i.test(file.mimetype);
   const isPdf   = file.fieldname === 'brochure' && (file.mimetype === 'application/pdf' || file.originalname.toLowerCase().endsWith('.pdf'));
   if (isImage || isVideo || isPdf) return cb(null, true);
-  return cb(new Error('Invalid file type'), false);
+  
+  // Provide specific error message based on field type
+  let errorMsg = `Invalid file type for "${file.fieldname}". `;
+  if (file.fieldname === 'photos') {
+    errorMsg += 'Allowed formats: JPEG, PNG, WebP, HEIC/HEIF';
+  } else if (file.fieldname === 'video') {
+    errorMsg += 'Allowed formats: MP4, QuickTime (.mov), Matroska (.mkv)';
+  } else if (file.fieldname === 'brochure') {
+    errorMsg += 'Allowed format: PDF';
+  }
+  errorMsg += `. Received: ${file.mimetype || 'unknown'} (${ext || 'no extension'})`;
+  return cb(new Error(errorMsg), false);
 };
 
 const uploader = multer({
@@ -119,7 +136,18 @@ const processAndUploadFile = async (file, folder) => {
 
 module.exports = async function uploadProjectMedia(req, res, next) {
   uploader(req, res, async function (err) {
-    if (err) return next(err);
+    if (err) {
+      // Handle Multer "Unexpected field" error with better message
+      if (err.code === 'LIMIT_UNEXPECTED_FILE' || (err.message && err.message.includes('Unexpected field'))) {
+        const fieldName = err.field || 'unknown';
+        return next(new Error(`Unexpected file field: "${fieldName}". Allowed fields: photos, video, brochure. Please check your form field names.`));
+      }
+      // Handle invalid file type errors (unsupported formats)
+      if (err.message && err.message.includes('Invalid file type')) {
+        return next(err); // Pass through the detailed error message from fileFilter
+      }
+      return next(err);
+    }
     try {
       const processedFiles = {};
 
