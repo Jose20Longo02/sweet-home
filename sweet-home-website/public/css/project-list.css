@@ -458,9 +458,16 @@
 
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-6);
   margin-bottom: var(--spacing-8);
+}
+
+/* Allow 3 columns on very large screens */
+@media (min-width: 1400px) {
+  .projects-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 /* Project Cards */
@@ -680,6 +687,13 @@
   
   .project-main {
     order: 1;
+  }
+}
+
+/* On tablets, maintain 2 columns */
+@media (min-width: 640px) and (max-width: 1024px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
