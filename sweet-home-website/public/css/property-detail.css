@@ -211,6 +211,24 @@
   object-fit: cover;
 }
 
+/* YouTube player and iframe styling */
+.main-photo #youtube-player,
+.main-photo #youtube-iframe,
+.main-photo iframe[src*="youtube.com"],
+.main-photo iframe[src*="youtu.be"] {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 0;
+}
+
+.main-photo #youtube-player {
+  width: 100% !important;
+  height: 100% !important;
+}
+
 /* removed overlay wrapper; nav buttons are direct children */
 
 /* keep visible at all times, no hover fade-in */

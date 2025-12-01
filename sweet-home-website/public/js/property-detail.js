@@ -60,6 +60,10 @@ class PropertyDetailPage {
     const errorFallback = document.getElementById('youtubeErrorFallback');
     if (errorFallback) errorFallback.style.display = 'none';
 
+    // Hide play overlay for YouTube videos
+    const overlay = document.querySelector('.video-play-overlay');
+    if (overlay) overlay.style.display = 'none';
+
     // Create div for YouTube player
     const playerDiv = document.createElement('div');
     playerDiv.id = 'youtube-player';
@@ -68,6 +72,8 @@ class PropertyDetailPage {
     try {
       this.youtubePlayer = new YT.Player('youtube-player', {
         videoId: videoId,
+        width: '100%',
+        height: '100%',
         playerVars: {
           autoplay: 0,
           rel: 0,
@@ -85,6 +91,12 @@ class PropertyDetailPage {
             if (this.youtubeErrorTimeout) {
               clearTimeout(this.youtubeErrorTimeout);
               this.youtubeErrorTimeout = null;
+            }
+            // Ensure player takes full size
+            const playerElement = document.getElementById('youtube-player');
+            if (playerElement) {
+              playerElement.style.width = '100%';
+              playerElement.style.height = '100%';
             }
           }
         }
@@ -113,11 +125,18 @@ class PropertyDetailPage {
     const errorFallback = document.getElementById('youtubeErrorFallback');
     if (errorFallback) errorFallback.style.display = 'none';
 
+    // Hide play overlay for YouTube videos
+    const overlay = document.querySelector('.video-play-overlay');
+    if (overlay) overlay.style.display = 'none';
+
     const iframe = document.createElement('iframe');
     iframe.id = 'youtube-iframe';
     iframe.width = '100%';
     iframe.height = '100%';
     iframe.style.border = '0';
+    iframe.style.position = 'absolute';
+    iframe.style.top = '0';
+    iframe.style.left = '0';
     iframe.allow = 'autoplay; fullscreen; picture-in-picture';
     iframe.allowFullscreen = true;
     iframe.src = embedUrl;
@@ -264,6 +283,10 @@ class PropertyDetailPage {
       if (kind !== 'file' && embed) {
         // Handle YouTube videos with IFrame API
         if (kind === 'youtube' && youtubeId && typeof YT !== 'undefined' && YT.Player) {
+          // Hide play overlay for YouTube videos
+          const overlay = document.querySelector('.video-play-overlay');
+          if (overlay) overlay.style.display = 'none';
+          
           // Destroy existing player
           if (this.youtubePlayer) {
             try {
@@ -290,6 +313,8 @@ class PropertyDetailPage {
           try {
             this.youtubePlayer = new YT.Player('youtube-player', {
               videoId: youtubeId,
+              width: '100%',
+              height: '100%',
               playerVars: {
                 autoplay: 0,
                 rel: 0,
@@ -301,6 +326,14 @@ class PropertyDetailPage {
               events: {
                 onError: (event) => {
                   this.handleYouTubeError(event, videoUrl);
+                },
+                onReady: () => {
+                  // Ensure player takes full size
+                  const playerElement = document.getElementById('youtube-player');
+                  if (playerElement) {
+                    playerElement.style.width = '100%';
+                    playerElement.style.height = '100%';
+                  }
                 }
               }
             });
@@ -314,11 +347,21 @@ class PropertyDetailPage {
           const existingPlayer = document.getElementById('youtube-player');
           if (existingPlayer) existingPlayer.remove();
           if (existingVideo) existingVideo.remove();
+          
+          // Hide play overlay for YouTube/Vimeo embeds
+          if (kind === 'youtube' || kind === 'vimeo') {
+            const overlay = document.querySelector('.video-play-overlay');
+            if (overlay) overlay.style.display = 'none';
+          }
+          
           if (!existingIframe) {
             const iframe = document.createElement('iframe');
             iframe.width = '100%';
             iframe.height = '100%';
             iframe.style.border = '0';
+            iframe.style.position = 'absolute';
+            iframe.style.top = '0';
+            iframe.style.left = '0';
             iframe.allow = 'autoplay; fullscreen; picture-in-picture';
             iframe.allowFullscreen = true;
             iframe.src = embed;

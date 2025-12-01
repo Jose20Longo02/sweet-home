@@ -103,6 +103,12 @@
                   <video id="mainVideo" controls style="width:100%; height:100%; object-fit:contain; border-radius: 0; background:#000" playsinline>
                     <source src="<%= property.video_url %>" type="video/mp4">
                   </video>
+                  <button class="video-play-overlay" type="button" aria-label="Play video">
+                    <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
+                      <circle cx="32" cy="32" r="31" fill="rgba(0,0,0,0.6)" stroke="white" stroke-width="2" />
+                      <polygon points="26,20 26,44 46,32" fill="white" />
+                    </svg>
+                  </button>
                 <% } else if (videoKind === 'youtube') { %>
                   <div id="youtubeErrorFallback" class="youtube-error-fallback" style="display: none;">
                     <div class="youtube-error-content">
@@ -124,12 +130,6 @@
                     </div>
                   </div>
                 <% } %>
-                <button class="video-play-overlay" type="button" aria-label="Play video">
-                  <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
-                    <circle cx="32" cy="32" r="31" fill="rgba(0,0,0,0.6)" stroke="white" stroke-width="2" />
-                    <polygon points="26,20 26,44 46,32" fill="white" />
-                  </svg>
-                </button>
               <% } else { %>
                 <% if (property.photos && property.photos.length > 0) { %>
                   <% if (property.has_main_variants && property.main_variant_base) { %>
