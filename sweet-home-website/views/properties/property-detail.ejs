@@ -2,6 +2,7 @@
 <%
   let videoKind = null;
   let videoEmbedUrl = null;
+  let youtubeVideoId = null;
   if (property.video_url) {
     const v = property.video_url;
     if (/youtu\.be|youtube\.com/.test(v)) {
@@ -9,8 +10,11 @@
       let id = null;
       const m1 = v.match(/youtu\.be\/([\w-]+)/);
       const m2 = v.match(/[?&]v=([\w-]+)/);
-      id = (m1 && m1[1]) || (m2 && m2[1]) || null;
-      if (id) videoEmbedUrl = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+      const m3 = v.match(/youtube\.com\/embed\/([\w-]+)/);
+      const m4 = v.match(/youtube\.com\/watch\?.*v=([\w-]+)/);
+      id = (m1 && m1[1]) || (m2 && m2[1]) || (m3 && m3[1]) || (m4 && m4[1]) || null;
+      youtubeVideoId = id;
+      if (id) videoEmbedUrl = `https://www.youtube.com/embed/${id}?enablejsapi=1&rel=0&modestbranding=1&playsinline=1&origin=${encodeURIComponent(req.protocol + '://' + req.get('host'))}`;
     } else if (/vimeo\.com/.test(v)) {
       videoKind = 'vimeo';
       const m = v.match(/vimeo\.com\/(?:video\/)?(\d+)/);
@@ -25,6 +29,9 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <% if (process.env.RECAPTCHA_SITE_KEY) { %>
 <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+<% } %>
+<% if (videoKind === 'youtube' && youtubeVideoId) { %>
+<script src="https://www.youtube.com/iframe_api"></script>
 <% } %>
 
 <div class="property-detail-page">
@@ -90,12 +97,32 @@
         <!-- Photo Gallery -->
         <section class="photo-gallery">
           <div class="gallery-main">
-            <div class="main-photo" id="mainPhoto" data-video-kind="<%= videoKind || '' %>" data-video-embed="<%= videoEmbedUrl || '' %>">
+            <div class="main-photo" id="mainPhoto" data-video-kind="<%= videoKind || '' %>" data-video-embed="<%= videoEmbedUrl || '' %>" data-video-url="<%= property.video_url || '' %>" data-youtube-id="<%= youtubeVideoId || '' %>">
               <% if (property.video_url) { %>
                 <% if (videoKind === 'file') { %>
                   <video id="mainVideo" controls style="width:100%; height:100%; object-fit:contain; border-radius: 0; background:#000" playsinline>
                     <source src="<%= property.video_url %>" type="video/mp4">
                   </video>
+                <% } else if (videoKind === 'youtube') { %>
+                  <div id="youtubeErrorFallback" class="youtube-error-fallback" style="display: none;">
+                    <div class="youtube-error-content">
+                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                      </svg>
+                      <h3>Video unavailable</h3>
+                      <p>This video cannot be embedded. It may be private, deleted, or embedding may be disabled.</p>
+                      <a href="<%= property.video_url %>" target="_blank" rel="noopener" class="btn btn-primary">
+                        Watch on YouTube
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                          <polyline points="15 3 21 3 21 9"></polyline>
+                          <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
                 <% } %>
                 <button class="video-play-overlay" type="button" aria-label="Play video">
                   <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
@@ -137,7 +164,7 @@
           <% if ((property.photos && property.photos.length > 0) || property.video_url) { %>
             <div class="gallery-thumbnails">
               <% if (property.video_url) { %>
-                <div class="thumbnail video-thumb active" data-type="video" data-index="0" data-video-url="<%= property.video_url %>" data-video-kind="<%= videoKind || '' %>" data-video-embed="<%= videoEmbedUrl || '' %>">
+                <div class="thumbnail video-thumb active" data-type="video" data-index="0" data-video-url="<%= property.video_url %>" data-video-kind="<%= videoKind || '' %>" data-video-embed="<%= videoEmbedUrl || '' %>" data-youtube-id="<%= youtubeVideoId || '' %>">
                   <img src="<%= (property.photos && property.photos[0]) ? property.photos[0] : '/img/property-placeholder.jpg' %>" alt="<%= property.title %> - Video" loading="lazy" decoding="async">
                   <span class="play-badge" aria-hidden="true">
                     <svg viewBox="0 0 36 36" width="28" height="28">

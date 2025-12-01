@@ -6,6 +6,8 @@ class PropertyDetailPage {
     this.map = null;
     this.propertyId = this.getPropertyIdFromUrl();
     this.isSubmittingLead = false;
+    this.youtubePlayer = null;
+    this.youtubeErrorTimeout = null;
     
     this.init();
   }
@@ -20,6 +22,174 @@ class PropertyDetailPage {
     this.initVideoOverlay();
     this.relocateContactFormOnMobile();
     this.initRecaptcha();
+    this.initYouTubePlayer();
+  }
+
+  initYouTubePlayer() {
+    const container = document.getElementById('mainPhoto');
+    if (!container) return;
+    
+    const videoKind = container.getAttribute('data-video-kind');
+    const youtubeId = container.getAttribute('data-youtube-id');
+    const videoUrl = container.getAttribute('data-video-url');
+    
+    if (videoKind === 'youtube' && youtubeId && typeof YT !== 'undefined') {
+      // Wait for YouTube IFrame API to be ready
+      if (YT.Player) {
+        this.createYouTubePlayer(youtubeId, videoUrl);
+      } else {
+        window.onYouTubeIframeAPIReady = () => {
+          this.createYouTubePlayer(youtubeId, videoUrl);
+        };
+      }
+    } else if (videoKind === 'youtube' && youtubeId) {
+      // Fallback: if YouTube API is not available, use regular iframe with error detection
+      this.initYouTubeIframeFallback(container, youtubeId, videoUrl);
+    }
+  }
+
+  createYouTubePlayer(videoId, videoUrl) {
+    const container = document.getElementById('mainPhoto');
+    if (!container) return;
+
+    // Remove existing iframe
+    const existingIframe = container.querySelector('iframe');
+    if (existingIframe) existingIframe.remove();
+
+    // Hide error fallback if visible
+    const errorFallback = document.getElementById('youtubeErrorFallback');
+    if (errorFallback) errorFallback.style.display = 'none';
+
+    // Create div for YouTube player
+    const playerDiv = document.createElement('div');
+    playerDiv.id = 'youtube-player';
+    container.insertBefore(playerDiv, container.firstChild);
+
+    try {
+      this.youtubePlayer = new YT.Player('youtube-player', {
+        videoId: videoId,
+        playerVars: {
+          autoplay: 0,
+          rel: 0,
+          modestbranding: 1,
+          playsinline: 1,
+          enablejsapi: 1,
+          origin: window.location.origin
+        },
+        events: {
+          onError: (event) => {
+            this.handleYouTubeError(event, videoUrl);
+          },
+          onReady: () => {
+            // Clear any error timeout
+            if (this.youtubeErrorTimeout) {
+              clearTimeout(this.youtubeErrorTimeout);
+              this.youtubeErrorTimeout = null;
+            }
+          }
+        }
+      });
+
+      // Set a timeout to detect if player fails to load (e.g., Error 153)
+      this.youtubeErrorTimeout = setTimeout(() => {
+        if (this.youtubePlayer && this.youtubePlayer.getPlayerState() === undefined) {
+          this.handleYouTubeError({ data: 153 }, videoUrl);
+        }
+      }, 5000);
+    } catch (error) {
+      console.error('Error creating YouTube player:', error);
+      this.handleYouTubeError({ data: 153 }, videoUrl);
+    }
+  }
+
+  initYouTubeIframeFallback(container, videoId, videoUrl) {
+    const embedUrl = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0&modestbranding=1&playsinline=1&origin=${encodeURIComponent(window.location.origin)}`;
+    
+    // Remove existing iframe
+    const existingIframe = container.querySelector('iframe');
+    if (existingIframe) existingIframe.remove();
+
+    // Hide error fallback if visible
+    const errorFallback = document.getElementById('youtubeErrorFallback');
+    if (errorFallback) errorFallback.style.display = 'none';
+
+    const iframe = document.createElement('iframe');
+    iframe.id = 'youtube-iframe';
+    iframe.width = '100%';
+    iframe.height = '100%';
+    iframe.style.border = '0';
+    iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.src = embedUrl;
+    
+    // Listen for load errors
+    iframe.onload = () => {
+      // Check if iframe loaded successfully by trying to access its content
+      // Note: This won't work due to CORS, but we can check for error messages
+      setTimeout(() => {
+        // If YouTube shows an error, it will be visible in the iframe
+        // We can't directly detect it, but we can show a fallback after a delay
+        // if the iframe seems to have issues
+      }, 3000);
+    };
+
+    iframe.onerror = () => {
+      this.handleYouTubeError({ data: 153 }, videoUrl);
+    };
+
+    container.insertBefore(iframe, container.firstChild);
+  }
+
+  handleYouTubeError(event, videoUrl) {
+    const container = document.getElementById('mainPhoto');
+    if (!container) return;
+
+    // Remove YouTube player/iframe
+    const player = document.getElementById('youtube-player');
+    if (player) player.remove();
+    const iframe = container.querySelector('iframe#youtube-iframe');
+    if (iframe) iframe.remove();
+    if (this.youtubePlayer) {
+      try {
+        this.youtubePlayer.destroy();
+      } catch (e) {
+        // Ignore destroy errors
+      }
+      this.youtubePlayer = null;
+    }
+
+    // Show error fallback
+    let errorFallback = document.getElementById('youtubeErrorFallback');
+    if (!errorFallback) {
+      errorFallback = document.createElement('div');
+      errorFallback.id = 'youtubeErrorFallback';
+      errorFallback.className = 'youtube-error-fallback';
+      errorFallback.innerHTML = `
+        <div class="youtube-error-content">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <h3>Video unavailable</h3>
+          <p>This video cannot be embedded. It may be private, deleted, or embedding may be disabled.</p>
+          <a href="${videoUrl}" target="_blank" rel="noopener" class="btn btn-primary">
+            Watch on YouTube
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+      `;
+      container.insertBefore(errorFallback, container.firstChild);
+    }
+    errorFallback.style.display = 'flex';
+
+    // Hide play overlay
+    const overlay = document.querySelector('.video-play-overlay');
+    if (overlay) overlay.style.display = 'none';
   }
 
   initVideoOverlay() {
@@ -88,20 +258,80 @@ class PropertyDetailPage {
       const container = document.getElementById('mainPhoto');
       const kind = container?.getAttribute('data-video-kind') || item.kind || 'file';
       const embed = container?.getAttribute('data-video-embed') || item.embed || '';
+      const youtubeId = container?.getAttribute('data-youtube-id') || item.youtubeId || '';
+      const videoUrl = container?.getAttribute('data-video-url') || item.videoUrl || '';
+      
       if (kind !== 'file' && embed) {
-        const existingIframe = mainContainer.querySelector('iframe');
-        if (existingVideo) existingVideo.remove();
-        if (!existingIframe) {
-          const iframe = document.createElement('iframe');
-          iframe.width = '100%';
-          iframe.height = '100%';
-          iframe.style.border = '0';
-          iframe.allow = 'autoplay; fullscreen; picture-in-picture';
-          iframe.allowFullscreen = true;
-          iframe.src = embed;
-          mainContainer.insertBefore(iframe, mainContainer.firstChild);
+        // Handle YouTube videos with IFrame API
+        if (kind === 'youtube' && youtubeId && typeof YT !== 'undefined' && YT.Player) {
+          // Destroy existing player
+          if (this.youtubePlayer) {
+            try {
+              this.youtubePlayer.destroy();
+            } catch (e) {
+              // Ignore destroy errors
+            }
+            this.youtubePlayer = null;
+          }
+          
+          // Remove existing iframe
+          const existingIframe = mainContainer.querySelector('iframe');
+          if (existingIframe) existingIframe.remove();
+          const existingPlayer = document.getElementById('youtube-player');
+          if (existingPlayer) existingPlayer.remove();
+          const existingError = document.getElementById('youtubeErrorFallback');
+          if (existingError) existingError.remove();
+          
+          // Create new player
+          const playerDiv = document.createElement('div');
+          playerDiv.id = 'youtube-player';
+          mainContainer.insertBefore(playerDiv, mainContainer.firstChild);
+          
+          try {
+            this.youtubePlayer = new YT.Player('youtube-player', {
+              videoId: youtubeId,
+              playerVars: {
+                autoplay: 0,
+                rel: 0,
+                modestbranding: 1,
+                playsinline: 1,
+                enablejsapi: 1,
+                origin: window.location.origin
+              },
+              events: {
+                onError: (event) => {
+                  this.handleYouTubeError(event, videoUrl);
+                }
+              }
+            });
+          } catch (error) {
+            console.error('Error creating YouTube player:', error);
+            this.handleYouTubeError({ data: 153 }, videoUrl);
+          }
         } else {
-          existingIframe.src = embed;
+          // Fallback for Vimeo or YouTube without API
+          const existingIframe = mainContainer.querySelector('iframe');
+          const existingPlayer = document.getElementById('youtube-player');
+          if (existingPlayer) existingPlayer.remove();
+          if (existingVideo) existingVideo.remove();
+          if (!existingIframe) {
+            const iframe = document.createElement('iframe');
+            iframe.width = '100%';
+            iframe.height = '100%';
+            iframe.style.border = '0';
+            iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+            iframe.allowFullscreen = true;
+            iframe.src = embed;
+            if (kind === 'youtube') {
+              iframe.id = 'youtube-iframe';
+              iframe.onerror = () => {
+                this.handleYouTubeError({ data: 153 }, videoUrl);
+              };
+            }
+            mainContainer.insertBefore(iframe, mainContainer.firstChild);
+          } else {
+            existingIframe.src = embed;
+          }
         }
       } else {
         if (!existingVideo) {
@@ -733,9 +963,25 @@ function closeLightbox() {
 function playMainVideo() {
   const video = document.getElementById('mainVideo');
   const overlay = document.querySelector('.video-play-overlay');
-  if (!video) return;
-  video.play();
-  if (overlay) overlay.style.display = 'none';
+  const container = document.getElementById('mainPhoto');
+  const videoKind = container?.getAttribute('data-video-kind');
+  
+  // Handle YouTube videos
+  if (videoKind === 'youtube' && window.propertyDetailPage && window.propertyDetailPage.youtubePlayer) {
+    try {
+      window.propertyDetailPage.youtubePlayer.playVideo();
+      if (overlay) overlay.style.display = 'none';
+    } catch (error) {
+      console.error('Error playing YouTube video:', error);
+    }
+    return;
+  }
+  
+  // Handle regular video files
+  if (video) {
+    video.play();
+    if (overlay) overlay.style.display = 'none';
+  }
 }
 
 // Social Sharing Functions

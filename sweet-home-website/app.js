@@ -65,8 +65,8 @@ app.use(
       // permit CDN images broadly; Spaces CDN is HTTPS
       "img-src": ["'self'", 'data:', 'blob:', 'https:', 'https://*.tile.openstreetmap.org', 'https://unpkg.com', 'https://www.google-analytics.com', 'https://*.google-analytics.com'],
       "media-src": ["'self'", 'blob:', 'https:'],
-      "script-src": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com'],
-      "script-src-elem": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com'],
+      "script-src": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com'],
+      "script-src-elem": ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com'],
       "script-src-attr": ["'none'"],
       "style-src": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
       "style-src-elem": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
