@@ -53,7 +53,12 @@ module.exports = {
       "Coral Bay",
       "Pegeia",
       "Konia",
-      "Chloraka"
+      "Chloraka",
+      "Petridia",
+      "Kissonerga",
+      "Exo Vrysi",
+      "Mandria",
+      "Empa"
     ]
   }
 };

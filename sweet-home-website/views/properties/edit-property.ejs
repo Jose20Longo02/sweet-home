@@ -19,7 +19,17 @@
   </header>
 
   <% if (error) { %>
-    <div class="alert alert-error"><%= error %></div>
+    <div class="alert alert-error">
+      <% 
+        // Convert URLs in error message to clickable links
+        let errorMsg = error;
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        if (urlRegex.test(errorMsg)) {
+          errorMsg = errorMsg.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: underline;">$1</a>');
+        }
+      %>
+      <%- errorMsg %>
+    </div>
   <% } %>
 
   <form id="propertyForm" class="np-form" method="post" action="/properties/<%= property.id %>?_csrf=<%= csrfToken %>" enctype="multipart/form-data">

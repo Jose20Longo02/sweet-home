@@ -25,7 +25,7 @@ const fileFilter = (req, file, cb) => {
   return cb(new Error('Invalid file type'), false);
 };
 
-const uploader = multer({ storage, fileFilter, limits: { fileSize: 10 * 1024 * 1024, files: 1 } }).single('image');
+const uploader = multer({ storage, fileFilter, limits: { fileSize: 20 * 1024 * 1024, files: 1 } }).single('image'); // 20 MB per file
 
 // Helper function to upload to Spaces
 const uploadToSpaces = async (buffer, filename, mimetype, folder) => {
@@ -67,7 +67,20 @@ const convertHeicToJpeg = async (buffer) => {
 
 module.exports = function uploadBlogInline(req, res, next) {
   uploader(req, res, async function (err) {
-    if (err) return next(err);
+    if (err) {
+      // Handle Multer errors with user-friendly messages
+      if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return next(new Error('File too large. Maximum file size is 20 MB. Please compress or resize your image before uploading. You can use an online compressor like https://www.iloveimg.com/compress-image'));
+        } else if (err.code === 'LIMIT_FILE_COUNT') {
+          return next(new Error('Too many files. Only one image is allowed.'));
+        } else if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+          return next(new Error(`Unexpected field: "${err.field}". Only "image" field is allowed.`));
+        }
+      }
+      // Handle other errors (e.g., invalid file type)
+      return next(err);
+    }
     try {
       if (!req.file) return next();
 

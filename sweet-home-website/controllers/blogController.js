@@ -169,7 +169,22 @@ exports.create = async (req, res, next) => {
       return res.redirect('/superadmin/dashboard/blog');
     }
     return res.redirect('/admin/dashboard/blog');
-  } catch (err) { next(err); }
+  } catch (err) {
+    // If it's an upload error, render the form with the error message
+    if (err.message && (err.message.includes('File too large') || err.message.includes('Invalid file type') || err.message.includes('Unexpected field'))) {
+      return res.render('admin/blog/new', {
+        error: err.message,
+        currentUser: req.session.user,
+        formData: {
+          title: req.body.title || '',
+          excerpt: req.body.excerpt || '',
+          content: req.body.content || '',
+          status: req.body.status || 'draft'
+        }
+      });
+    }
+    next(err);
+  }
 };
 
 exports.editForm = async (req, res, next) => {

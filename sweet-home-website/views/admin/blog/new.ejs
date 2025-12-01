@@ -12,28 +12,40 @@
         <a href="<%= (currentUser && currentUser.role === 'SuperAdmin') ? '/superadmin/dashboard' : '/admin/dashboard' %>" class="back-home">← Return to dashboard</a>
       </div>
 
-      <% if (error) { %><p class="error"><%= error %></p><% } %>
+      <% if (error) { %>
+        <p class="error">
+          <% 
+            // Convert URLs in error message to clickable links
+            let errorMsg = error;
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            if (urlRegex.test(errorMsg)) {
+              errorMsg = errorMsg.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: underline;">$1</a>');
+            }
+          %>
+          <%- errorMsg %>
+        </p>
+      <% } %>
 
       <form action="/admin/dashboard/blog?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
         <label for="title">Title</label>
-        <input id="title" type="text" name="title" maxlength="255" placeholder="e.g., Buying property in Cyprus: complete guide" required />
+        <input id="title" type="text" name="title" maxlength="255" placeholder="e.g., Buying property in Cyprus: complete guide" value="<%= (formData && formData.title) ? formData.title.replace(/"/g, '&quot;') : '' %>" required />
         <small class="hint">Max 255 characters. Use a clear, descriptive headline.</small>
 
         <label for="excerpt" style="margin-top:10px;">Excerpt</label>
-        <textarea id="excerpt" name="excerpt" rows="3" maxlength="500" placeholder="1–3 sentence summary for listings and previews"></textarea>
+        <textarea id="excerpt" name="excerpt" rows="3" maxlength="500" placeholder="1–3 sentence summary for listings and previews"><%= (formData && formData.excerpt) ? formData.excerpt : '' %></textarea>
         <small class="hint">Optional. Shown in lists and previews.</small>
 
         <label for="content" style="margin-top:10px;">Content</label>
         <div id="editor" style="height: 380px; background:#fff;"></div>
-        <textarea id="content" name="content" rows="14" style="display:none;"></textarea>
+        <textarea id="content" name="content" rows="14" style="display:none;"><%= (formData && formData.content) ? formData.content : '' %></textarea>
 
         <div style="display:flex; gap:20px; align-items:flex-start; margin-top:12px;">
           <div style="flex:1;">
             <label for="cover">Cover image</label>
             <input id="cover" type="file" name="cover" accept="image/*" />
-            <small class="hint">Optional. Large, landscape image recommended (min ~1200px width).</small>
+            <small class="hint">Optional. Large, landscape image recommended (min ~1200px width). Maximum file size: 20 MB.</small>
           </div>
           <div style="width:280px;">
             <div style="border:1px solid #eee; padding:8px; text-align:center;">
@@ -45,8 +57,8 @@
 
         <label for="status" style="margin-top:12px;">Status</label>
         <select id="status" name="status">
-          <option value="draft">Draft</option>
-          <option value="published">Published</option>
+          <option value="draft" <%= (formData && formData.status === 'draft') ? 'selected' : '' %>>Draft</option>
+          <option value="published" <%= (formData && formData.status === 'published') ? 'selected' : '' %>>Published</option>
         </select>
 
         <div style="margin-top:16px; display:flex; gap:12px;">

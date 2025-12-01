@@ -137,10 +137,27 @@ const processAndUploadFile = async (file, folder) => {
 module.exports = async function uploadProjectMedia(req, res, next) {
   uploader(req, res, async function (err) {
     if (err) {
-      // Handle Multer "Unexpected field" error with better message
-      if (err.code === 'LIMIT_UNEXPECTED_FILE' || (err.message && err.message.includes('Unexpected field'))) {
-        const fieldName = err.field || 'unknown';
-        return next(new Error(`Unexpected file field: "${fieldName}". Allowed fields: photos, video, brochure. Please check your form field names.`));
+      // Handle Multer errors with user-friendly messages
+      if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          const fieldName = err.field || '';
+          // Check if it's a video file
+          if (fieldName === 'video') {
+            return next(new Error('File too large. Maximum file size is 20 MB. Please compress your video before uploading. You can use an online video compressor like https://www.veed.io/tools/video-compressor'));
+          } else {
+            // It's an image file (photos) or PDF (brochure)
+            if (fieldName === 'brochure') {
+              return next(new Error('File too large. Maximum file size is 20 MB. Please compress your PDF before uploading.'));
+            } else {
+              return next(new Error('File too large. Maximum file size is 20 MB. Please compress or resize your image before uploading. You can use an online compressor like https://www.iloveimg.com/compress-image'));
+            }
+          }
+        } else if (err.code === 'LIMIT_FILE_COUNT') {
+          return next(new Error('Too many files. Maximum allowed: 20 photos, 1 video, 1 brochure.'));
+        } else if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+          const fieldName = err.field || 'unknown';
+          return next(new Error(`Unexpected file field: "${fieldName}". Allowed fields: photos, video, brochure. Please check your form field names.`));
+        }
       }
       // Handle invalid file type errors (unsupported formats)
       if (err.message && err.message.includes('Invalid file type')) {
