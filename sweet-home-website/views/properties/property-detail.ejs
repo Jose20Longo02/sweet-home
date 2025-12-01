@@ -14,7 +14,7 @@
       const m4 = v.match(/youtube\.com\/watch\?.*v=([\w-]+)/);
       id = (m1 && m1[1]) || (m2 && m2[1]) || (m3 && m3[1]) || (m4 && m4[1]) || null;
       youtubeVideoId = id;
-      if (id) videoEmbedUrl = `https://www.youtube.com/embed/${id}?enablejsapi=1&rel=0&modestbranding=1&playsinline=1&origin=${encodeURIComponent(req.protocol + '://' + req.get('host'))}`;
+      if (id) videoEmbedUrl = `https://www.youtube.com/embed/${id}?enablejsapi=1&rel=0&modestbranding=1&playsinline=1`;
     } else if (/vimeo\.com/.test(v)) {
       videoKind = 'vimeo';
       const m = v.match(/vimeo\.com\/(?:video\/)?(\d+)/);
