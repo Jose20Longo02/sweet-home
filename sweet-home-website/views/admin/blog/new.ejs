@@ -57,7 +57,7 @@
 
         <label for="status" style="margin-top:12px;">Status</label>
         <select id="status" name="status">
-          <option value="draft" <%= (formData && formData.status === 'draft') ? 'selected' : '' %>>Draft</option>
+          <option value="draft" <%= (formData && formData.status === 'draft') || (!formData || !formData.status) ? 'selected' : '' %>>Draft</option>
           <option value="published" <%= (formData && formData.status === 'published') ? 'selected' : '' %>>Published</option>
         </select>
 

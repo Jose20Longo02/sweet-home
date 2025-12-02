@@ -69,7 +69,11 @@ exports.listMine = async (req, res, next) => {
 };
 
 exports.newForm = (req, res) => {
-  res.render('admin/blog/new', { error: null, currentUser: req.session.user });
+  res.render('admin/blog/new', { 
+    error: null, 
+    currentUser: req.session.user,
+    formData: {}
+  });
 };
 
 exports.create = async (req, res, next) => {
