@@ -1040,6 +1040,14 @@ document.addEventListener('DOMContentLoaded', function() {
   // Hide certain filter groups when only Land type is selected
   updateConditionalFilterVisibility();
   
+  // Initialize sort functionality
+  const sortSelect = document.getElementById('sortBy');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', function() {
+      updateSort();
+    });
+  }
+
   // Add event listener for save search form
   const saveSearchForm = document.getElementById('saveSearchForm');
   if (saveSearchForm) {

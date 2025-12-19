@@ -416,7 +416,7 @@
           <div class="results-controls">
             <div class="sort-controls">
               <label for="sortBy"><%= t('common.sortBy','Sort by:') %></label>
-              <select id="sortBy" name="sort" class="form-select" onchange="updateSort()">
+              <select id="sortBy" name="sort" class="form-select">
                 <option value="relevance" <%= locals.sort === 'relevance' ? 'selected' : '' %>><%= t('common.sort.relevance','Relevance') %></option>
                 <option value="price_low" <%= locals.sort === 'price_low' ? 'selected' : '' %>><%= t('common.sort.priceLow','Price: Low to High') %></option>
                 <option value="price_high" <%= locals.sort === 'price_high' ? 'selected' : '' %>><%= t('common.sort.priceHigh','Price: High to Low') %></option>

@@ -1121,6 +1121,12 @@ exports.listProjectsPublic = async (req, res, next) => {
     // Add sorting
     let orderBy = 'p.created_at DESC';
     switch (sort) {
+      case 'price_low':
+        orderBy = 'COALESCE(p.min_price, 0) ASC';
+        break;
+      case 'price_high':
+        orderBy = 'COALESCE(p.max_price, p.min_price, 0) DESC';
+        break;
       case 'date_old':
         orderBy = 'p.created_at ASC';
         break;

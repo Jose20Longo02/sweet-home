@@ -149,9 +149,11 @@
           <div class="results-controls">
             <div class="sort-controls">
               <label for="sortBy"><%= t('common.sortBy','Sort by:') %></label>
-              <select id="sortBy" name="sort" class="form-select" onchange="updateSort()">
+              <select id="sortBy" name="sort" class="form-select">
                 <option value="date_new" <%= locals.sort === 'date_new' ? 'selected' : '' %>><%= t('common.sort.newest','Newest First') %></option>
                 <option value="date_old" <%= locals.sort === 'date_old' ? 'selected' : '' %>><%= t('common.sort.oldest','Oldest First') %></option>
+                <option value="price_low" <%= locals.sort === 'price_low' ? 'selected' : '' %>><%= t('common.sort.priceLow','Price: Low to High') %></option>
+                <option value="price_high" <%= locals.sort === 'price_high' ? 'selected' : '' %>><%= t('common.sort.priceHigh','Price: High to Low') %></option>
                 <option value="name_asc" <%= locals.sort === 'name_asc' ? 'selected' : '' %>><%= t('projects.list.sort.nameAsc','Name: A-Z') %></option>
                 <option value="name_desc" <%= locals.sort === 'name_desc' ? 'selected' : '' %>><%= t('projects.list.sort.nameDesc','Name: Z-A') %></option>
                 <option value="completion_date" <%= locals.sort === 'completion_date' ? 'selected' : '' %>><%= t('projects.list.sort.completion','Completion Date') %></option>
