@@ -2398,8 +2398,19 @@ exports.listMyProperties = async (req, res, next) => {
     if (country)  { conds.push(`p.country = $${idx++}`);      vals.push(country); }
     if (city)     { conds.push(`p.city = $${idx++}`);         vals.push(city); }
     if (type)     { conds.push(`p.type = $${idx++}`);         vals.push(type); }
-    if (minPrice) { conds.push(`p.price >= $${idx++}`);       vals.push(minPrice); }
-    if (maxPrice) { conds.push(`p.price <= $${idx++}`);       vals.push(maxPrice); }
+    
+    // Parse and validate price filters
+    const minPriceNum = minPrice && minPrice !== 'undefined' ? parseFloat(minPrice) : null;
+    const maxPriceNum = maxPrice && maxPrice !== 'undefined' ? parseFloat(maxPrice) : null;
+    if (minPriceNum !== null && !isNaN(minPriceNum)) {
+      conds.push(`p.price >= $${idx++}`);
+      vals.push(minPriceNum);
+    }
+    if (maxPriceNum !== null && !isNaN(maxPriceNum)) {
+      conds.push(`p.price <= $${idx++}`);
+      vals.push(maxPriceNum);
+    }
+    
     if (status)   { conds.push(`p.status_tags @> $${idx++}`); vals.push([status]); }
 
     const where = `WHERE ${conds.join(' AND ')}`;
@@ -2452,7 +2463,14 @@ exports.listMyProperties = async (req, res, next) => {
       properties,
       currentPage: page,
       totalPages,
-      filters: { country, city, type, minPrice, maxPrice, status },
+      filters: { 
+        country, 
+        city, 
+        type, 
+        minPrice: minPriceNum !== null && !isNaN(minPriceNum) ? minPriceNum : minPrice || '', 
+        maxPrice: maxPriceNum !== null && !isNaN(maxPriceNum) ? maxPriceNum : maxPrice || '', 
+        status 
+      },
       countryOptions,
       cityOptions,
       typeOptions,
