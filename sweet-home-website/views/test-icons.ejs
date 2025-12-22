@@ -1,0 +1,105 @@
+<% title = 'Icon Theme Test' %>
+<% useMainContainer = true %>
+
+<style>
+  .test-container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .test-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #f9fafb;
+    border-radius: 8px;
+  }
+  .icon-test {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: white;
+    border-radius: 4px;
+  }
+  .debug-info {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #666;
+    background: #fff;
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+  }
+</style>
+
+<div class="test-container">
+  <h1>Icon Theme Test Page</h1>
+  
+  <div class="test-section">
+    <h2>Current Theme: <strong><%= typeof getActiveTheme === 'function' ? getActiveTheme() : 'unknown' %></strong></h2>
+    
+    <div class="icon-test">
+      <%- include('partials/icon', { type: 'bed', size: 32, color: '#000' }) %>
+      <div>
+        <strong>Bed Icon</strong>
+        <div class="debug-info">Path: <%= typeof getIconPath === 'function' ? getIconPath('bed') : 'N/A' %></div>
+      </div>
+    </div>
+    
+    <div class="icon-test">
+      <%- include('partials/icon', { type: 'bath', size: 32, color: '#000' }) %>
+      <div>
+        <strong>Bath Icon</strong>
+        <div class="debug-info">Path: <%= typeof getIconPath === 'function' ? getIconPath('bath') : 'N/A' %></div>
+      </div>
+    </div>
+    
+    <div class="icon-test">
+      <%- include('partials/icon', { type: 'size', size: 32, color: '#000' }) %>
+      <div>
+        <strong>Size Icon</strong>
+        <div class="debug-info">Path: <%= typeof getIconPath === 'function' ? getIconPath('size') : 'N/A' %></div>
+      </div>
+    </div>
+    
+    <div class="icon-test">
+      <%- include('partials/icon', { type: 'location', size: 32, color: '#000' }) %>
+      <div>
+        <strong>Location Icon</strong>
+        <div class="debug-info">Path: <%= typeof getIconPath === 'function' ? getIconPath('location') : 'N/A' %></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Old CSS Class Method (for comparison)</h2>
+    <div class="icon-test">
+      <span class="icon icon-32 icon-mask icon-bed" style="color: #000;"></span>
+      <div>
+        <strong>Bed Icon (CSS class)</strong>
+        <div class="debug-info">Using CSS class: .icon-bed</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>CSS Variables Check</h2>
+    <div class="debug-info" id="css-vars"></div>
+    <script>
+      const root = getComputedStyle(document.documentElement);
+      const bedVar = root.getPropertyValue('--icon-bed');
+      const bathVar = root.getPropertyValue('--icon-bath');
+      const sizeVar = root.getPropertyValue('--icon-size');
+      const locationVar = root.getPropertyValue('--icon-location');
+      
+      document.getElementById('css-vars').innerHTML = `
+        --icon-bed: ${bedVar || 'NOT SET'}<br>
+        --icon-bath: ${bathVar || 'NOT SET'}<br>
+        --icon-size: ${sizeVar || 'NOT SET'}<br>
+        --icon-location: ${locationVar || 'NOT SET'}
+      `;
+    </script>
+  </div>
+</div>
+

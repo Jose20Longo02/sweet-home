@@ -268,6 +268,13 @@ app.get('/lang/:code', (req, res) => {
   return res.redirect(back);
 });
 
+// Icon theme test page (for debugging)
+app.get('/test-icons', (req, res) => {
+  res.render('test-icons', {
+    title: 'Icon Theme Test'
+  });
+});
+
 // Routes
 app.use('/auth', authRoutes);
 app.use('/superadmin/dashboard/projects', projectRoutes);
