@@ -214,6 +214,8 @@ app.use((req, res, next) => {
   } else {
     res.locals.csrfToken = null;
   }
+  // Expose user to all views
+  res.locals.user = req.session.user || null;
   next();
 });
 

@@ -10,8 +10,8 @@
   <!-- Fonts: Playfair Display for headings, Lato for body -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@600;700&display=swap">
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@600;700&family=Great+Vibes&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@600;700&family=Great+Vibes&display=swap" rel="stylesheet">
   <% if (typeof headPartial !== 'undefined' && headPartial) { try { %>
     <%- include(headPartial) %>
   <% } catch (e) { /* safely ignore optional head partial errors */ } } %>
@@ -232,6 +232,36 @@
   </main>
   <% if (!(isAdmin || isSuperAdmin) && !(typeof hideFooter !== 'undefined' && hideFooter === true)) { %>
     <%- include('../partials/footer') %>
+  <% } %>
+  
+  <!-- Christmas Popup -->
+  <% if (getActiveTheme && getActiveTheme() === 'christmas') { %>
+    <%
+      const isLoggedIn = typeof user !== 'undefined' && user !== null;
+      const currentTheme = getActiveTheme();
+      const logoPath = (currentTheme === 'christmas') 
+        ? '/images/Christmas%20assets/Logo%20-%20christmas.png' 
+        : '/images/Sweet%20Home%20Logo.png';
+    %>
+    <div id="christmas-popup" class="christmas-popup" style="display: none;" data-is-logged-in="<%= isLoggedIn ? 'true' : 'false' %>">
+      <div class="christmas-popup__overlay"></div>
+      <div class="christmas-popup__content">
+        <button class="christmas-popup__close" aria-label="Close popup">&times;</button>
+        <div class="christmas-popup__logo">
+          <img src="<%= logoPath %>" alt="Sweet Home" onerror="this.style.display='none'">
+        </div>
+        <h2 class="christmas-popup__main-message">We wish you a merry christmas and a happy 2026!</h2>
+        <p class="christmas-popup__secondary-message">
+          <% if (isLoggedIn) { %>
+            We are extremely grateful for your work this year, and very excited to continue succeeding with you the next year!
+          <% } else { %>
+            This 2026 we will be here, ready to help you in your next real estate investment.
+          <% } %>
+        </p>
+      </div>
+    </div>
+    <link rel="stylesheet" href="/css/christmas-popup.css">
+    <script src="/js/christmas-popup.js" defer></script>
   <% } %>
 </body>
 </html>
