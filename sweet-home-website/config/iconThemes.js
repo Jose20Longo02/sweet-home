@@ -18,7 +18,10 @@ const themes = {
       bed: '/icons/icon_bed.svg',
       bath: '/icons/icon_bath.svg',
       size: '/icons/icon_size.svg',
-      location: '/icons/icon_location.svg'
+      location: '/icons/icon_location.svg',
+      propertyType: null, // Uses inline SVG
+      occupancy: null, // Uses inline SVG
+      rental: null // Uses inline SVG
     }
   },
   holiday: {
@@ -28,7 +31,10 @@ const themes = {
       bed: '/icons/holiday/icon_bed.png',
       bath: '/icons/holiday/icon_bath.png',
       size: '/icons/holiday/icon_size.png',
-      location: '/icons/holiday/icon_location.png'
+      location: '/icons/holiday/icon_location.png',
+      propertyType: '/icons/holiday/icon_property_type.png',
+      occupancy: '/icons/holiday/icon_occupancy.png',
+      rental: '/icons/holiday/icon_rental.png'
     }
   },
   christmas: {
@@ -38,7 +44,10 @@ const themes = {
       bed: '/icons/holiday/icon_bed.png',
       bath: '/icons/holiday/icon_bath.png',
       size: '/icons/holiday/icon_size.png',
-      location: '/icons/holiday/icon_location.png'
+      location: '/icons/holiday/icon_location.png',
+      propertyType: '/icons/holiday/icon_property_type.png',
+      occupancy: '/icons/holiday/icon_occupancy.png',
+      rental: '/icons/holiday/icon_rental.png'
     }
   }
   // Add more themes here as needed

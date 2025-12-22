@@ -37,11 +37,22 @@
       var sizeIsPng = isPng(sizePath);
       var locationIsPng = isPng(locationPath);
     %>
+    <%
+      var propertyTypePath = iconPathFunc('propertyType');
+      var occupancyPath = iconPathFunc('occupancy');
+      var rentalPath = iconPathFunc('rental');
+      var propertyTypeIsPng = isPng(propertyTypePath);
+      var occupancyIsPng = isPng(occupancyPath);
+      var rentalIsPng = isPng(rentalPath);
+    %>
     :root {
       --icon-bed: url('<%= bedPath %>');
       --icon-bath: url('<%= bathPath %>');
       --icon-size: url('<%= sizePath %>');
       --icon-location: url('<%= locationPath %>');
+      <% if (propertyTypePath) { %>--icon-property-type: url('<%= propertyTypePath %>');<% } %>
+      <% if (occupancyPath) { %>--icon-occupancy: url('<%= occupancyPath %>');<% } %>
+      <% if (rentalPath) { %>--icon-rental: url('<%= rentalPath %>');<% } %>
     }
     /* Override icon paths with theme-specific values */
     .icon-bed { 
@@ -92,6 +103,48 @@
       background-color: transparent !important;
       <% } %>
     }
+    <% if (propertyTypePath) { %>
+    .icon-property-type { 
+      --icon: var(--icon-property-type) !important;
+      <% if (propertyTypeIsPng) { %>
+      background-image: var(--icon-property-type) !important;
+      background-size: contain !important;
+      background-repeat: no-repeat !important;
+      background-position: center !important;
+      -webkit-mask: none !important;
+      mask: none !important;
+      background-color: transparent !important;
+      <% } %>
+    }
+    <% } %>
+    <% if (occupancyPath) { %>
+    .icon-occupancy { 
+      --icon: var(--icon-occupancy) !important;
+      <% if (occupancyIsPng) { %>
+      background-image: var(--icon-occupancy) !important;
+      background-size: contain !important;
+      background-repeat: no-repeat !important;
+      background-position: center !important;
+      -webkit-mask: none !important;
+      mask: none !important;
+      background-color: transparent !important;
+      <% } %>
+    }
+    <% } %>
+    <% if (rentalPath) { %>
+    .icon-rental { 
+      --icon: var(--icon-rental) !important;
+      <% if (rentalIsPng) { %>
+      background-image: var(--icon-rental) !important;
+      background-size: contain !important;
+      background-repeat: no-repeat !important;
+      background-position: center !important;
+      -webkit-mask: none !important;
+      mask: none !important;
+      background-color: transparent !important;
+      <% } %>
+    }
+    <% } %>
   </style>
   <% if ((typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) && !(typeof currentPath !== 'undefined' && (/^\/(admin|superadmin)/).test(currentPath))) { %>
     <!-- Google tag (gtag.js) -->

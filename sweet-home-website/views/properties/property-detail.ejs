@@ -357,9 +357,13 @@
             
             <div class="detail-item">
               <div class="detail-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                </svg>
+                <% if (getIconPath && getIconPath('propertyType')) { %>
+                  <span class="icon icon-20 icon-inline icon-mask icon-property-type" style="color: var(--primary-color);"></span>
+                <% } else { %>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                  </svg>
+                <% } %>
               </div>
               <div class="detail-content">
                 <span class="detail-label"><%= t('properties.detail.type','Property Type') %></span>
@@ -386,9 +390,13 @@
             <% const occMap = { 'Empty': 'empty', 'Short-Term Rented': 'shortTerm', 'Suitable for Self Use': 'selfUse', 'Long-Term Rented': 'longTerm' }; const occKey = occMap[property.occupancy_type] || null; %>
             <div class="detail-item">
               <div class="detail-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-                </svg>
+                <% if (getIconPath && getIconPath('occupancy')) { %>
+                  <span class="icon icon-20 icon-inline icon-mask icon-occupancy" style="color: var(--primary-color);"></span>
+                <% } else { %>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                  </svg>
+                <% } %>
               </div>
               <div class="detail-content">
                 <span class="detail-label"><%= t('properties.detail.occupancy','Occupancy') %></span>
@@ -401,9 +409,13 @@
             <% const rentalKeyMap = { rented: 'rented', not_rented_potential: 'notRentedPotential', not_rented: 'notRented' }; const rentalKey = rentalKeyMap[property.rental_status] || null; %>
             <div class="detail-item">
               <div class="detail-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 1v22M3 12h18"></path>
-                </svg>
+                <% if (getIconPath && getIconPath('rental')) { %>
+                  <span class="icon icon-20 icon-inline icon-mask icon-rental" style="color: var(--primary-color);"></span>
+                <% } else { %>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 1v22M3 12h18"></path>
+                  </svg>
+                <% } %>
               </div>
               <div class="detail-content">
                 <span class="detail-label"><%= t('properties.detail.rental','Rental') %></span>
