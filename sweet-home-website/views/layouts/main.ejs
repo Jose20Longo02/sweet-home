@@ -145,6 +145,17 @@
       <% } %>
     }
     <% } %>
+    /* Make Christmas icons 1.5x bigger */
+    body[data-icon-theme="christmas"] .icon-bed,
+    body[data-icon-theme="christmas"] .icon-bath,
+    body[data-icon-theme="christmas"] .icon-size,
+    body[data-icon-theme="christmas"] .icon-location,
+    body[data-icon-theme="christmas"] .icon-property-type,
+    body[data-icon-theme="christmas"] .icon-occupancy,
+    body[data-icon-theme="christmas"] .icon-rental {
+      transform: scale(1.5);
+      transform-origin: center;
+    }
   </style>
   <% if ((typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) && !(typeof currentPath !== 'undefined' && (/^\/(admin|superadmin)/).test(currentPath))) { %>
     <!-- Google tag (gtag.js) -->
@@ -210,7 +221,7 @@
     });
   </script>
 </head>
-<body class="<%= (typeof stickyFooter !== 'undefined' && stickyFooter) ? 'layout-sticky' : '' %>">
+<body class="<%= (typeof stickyFooter !== 'undefined' && stickyFooter) ? 'layout-sticky' : '' %>" data-icon-theme="<%= getActiveTheme ? getActiveTheme() : 'default' %>">
   <a href="#main-content" class="skip-link">Skip to main content</a>
   <% const isAdmin = (typeof currentPath !== 'undefined' ? /^\/admin/.test(currentPath) : false); %>
   <% const isSuperAdmin = (typeof currentPath !== 'undefined' ? /^\/superadmin/.test(currentPath) : false); %>
