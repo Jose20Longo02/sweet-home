@@ -38,6 +38,18 @@
   
   <div class="test-section">
     <h2>Current Theme: <strong><%= getActiveTheme ? getActiveTheme() : 'unknown' %></strong></h2>
+    <% if (getActiveTheme && getActiveTheme() === 'default') { %>
+      <div style="margin-top: 1rem; padding: 1rem; background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px;">
+        <strong>⚠️ Theme Not Active</strong>
+        <p style="margin: 0.5rem 0 0 0; color: #78350f;">
+          The theme is showing as "default" instead of "holiday". This usually means:
+        </p>
+        <ul style="margin: 0.5rem 0 0 1.5rem; color: #78350f;">
+          <li><strong>If on Render/Production:</strong> Set <code>ICON_THEME=holiday</code> in your Render dashboard → Environment variables</li>
+          <li><strong>If local:</strong> Make sure <code>ICON_THEME=holiday</code> is in your <code>.env</code> file and restart the server</li>
+        </ul>
+      </div>
+    <% } %>
     
     <div class="icon-test">
       <span class="icon icon-32 icon-mask icon-bed" style="color: #000;"></span>
