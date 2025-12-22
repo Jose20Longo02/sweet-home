@@ -84,7 +84,7 @@
   });
 
   // Show popup if it hasn't been shown before
-  // Wait for DOM to be ready and then show after a short delay
+  // Wait for DOM to be ready and then show after a delay
   function initPopup() {
     setTimeout(function() {
       const hasBeenShown = hasPopupBeenShown();
@@ -95,7 +95,7 @@
       } else {
         console.log('Christmas popup: Popup already shown, skipping');
       }
-    }, 1000); // Show after 1 second delay
+    }, 3500); // Show after 3.5 seconds delay
   }
 
   // Try multiple ways to ensure the popup shows
