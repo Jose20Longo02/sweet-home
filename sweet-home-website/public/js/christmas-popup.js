@@ -7,6 +7,12 @@
   const isChristmasMode = body.getAttribute('data-icon-theme') === 'christmas';
   
   if (!isChristmasMode) {
+    // If Christmas mode is disabled, clear the popup flag so it can show again when reactivated
+    try {
+      localStorage.removeItem('christmasPopupShown_christmas');
+    } catch (e) {
+      // localStorage not available, ignore
+    }
     return; // Exit if not in Christmas mode
   }
 
@@ -15,11 +21,13 @@
     return; // Exit if popup doesn't exist
   }
 
-  const STORAGE_KEY = 'christmasPopupShown';
+  // Use a key specific to Christmas mode activation
+  // This allows the popup to show again when Christmas mode is reactivated
+  const STORAGE_KEY = 'christmasPopupShown_christmas';
   const closeBtn = popup.querySelector('.christmas-popup__close');
   const overlay = popup.querySelector('.christmas-popup__overlay');
 
-  // Check if popup has already been shown
+  // Check if popup has already been shown for this Christmas activation
   function hasPopupBeenShown() {
     try {
       return localStorage.getItem(STORAGE_KEY) === 'true';
