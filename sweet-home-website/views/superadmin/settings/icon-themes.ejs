@@ -16,7 +16,7 @@
       <header class="dashboard-header">
         <div>
           <h1>Icon Theme Settings</h1>
-          <p class="subtitle">Manage icon themes for your website. Switch between default and holiday-themed icons.</p>
+          <p class="subtitle">Manage icon themes for your website. Switch between default and holiday-themed icons (Christmas, Easter, etc.).</p>
         </div>
       </header>
 
@@ -81,17 +81,17 @@
               <p style="margin: 0; color: #78350f; font-size: 0.9rem; line-height: 1.6;">
                 To apply a theme change, you need to set the <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">ICON_THEME</code> environment variable in your <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">.env</code> file and restart the server.
                 <br><br>
-                Example: <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">ICON_THEME=holiday</code>
+                Example: <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">ICON_THEME=christmas</code>
               </p>
             </div>
 
             <div style="margin-top: 1.5rem; padding: 1.5rem; background: #eff6ff; border: 1px solid #3b82f6; border-radius: 8px;">
               <h4 style="margin: 0 0 0.75rem 0; color: #1e40af; font-size: 1rem;">ℹ️ How to Add Holiday Icons</h4>
               <p style="margin: 0; color: #1e3a8a; font-size: 0.9rem; line-height: 1.6;">
-                1. Export your holiday-themed icons from Illustrator as SVG files<br>
-                2. Place them in <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">public/icons/holiday/</code><br>
-                3. Name them: <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">icon_bed.svg</code>, <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">icon_bath.svg</code>, etc.<br>
-                4. The theme will automatically use these icons when activated.
+                1. Export your holiday-themed icons from Illustrator as PNG or SVG files<br>
+                2. Place them in <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">public/icons/{theme-name}/</code> (e.g., <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">public/icons/christmas/</code>)<br>
+                3. Name them: <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">icon_bed.png</code>, <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">icon_bath.png</code>, etc.<br>
+                4. Add the theme to <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">config/iconThemes.js</code> and set <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">ICON_THEME={theme-name}</code> in your environment variables.
               </p>
             </div>
           </div>

@@ -2,7 +2,7 @@
  * Icon Theme Configuration
  * 
  * This file manages icon themes for the website.
- * You can easily switch between default and holiday-themed icons.
+ * You can easily switch between default and holiday-themed icons (Christmas, Easter, etc.).
  * 
  * To add a new theme:
  * 1. Add a new theme object below
@@ -24,19 +24,6 @@ const themes = {
       rental: null // Uses inline SVG
     }
   },
-  holiday: {
-    name: 'Holiday',
-    description: 'Christmas and New Year themed icons',
-    icons: {
-      bed: '/icons/holiday/icon_bed.png',
-      bath: '/icons/holiday/icon_bath.png',
-      size: '/icons/holiday/icon_size.png',
-      location: '/icons/holiday/icon_location.png',
-      propertyType: '/icons/holiday/icon_property_type.png',
-      occupancy: '/icons/holiday/icon_occupancy.png',
-      rental: '/icons/holiday/icon_rental.png'
-    }
-  },
   christmas: {
     name: 'Christmas',
     description: 'Christmas themed icons',
@@ -50,6 +37,8 @@ const themes = {
       rental: '/icons/holiday/icon_rental.png'
     }
   }
+  // Note: 'holiday' theme removed - use 'christmas' for Christmas icons
+  // You can add other holiday themes here (e.g., 'easter', 'halloween', etc.)
   // Add more themes here as needed
   // example:
   // summer: {
