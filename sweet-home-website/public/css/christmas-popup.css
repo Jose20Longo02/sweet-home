@@ -49,12 +49,17 @@
   bottom: -4px;
   background: conic-gradient(
     from 0deg,
-    #dc2626 0deg,
-    #dc2626 90deg,
-    transparent 90deg,
-    transparent 270deg,
-    #dc2626 270deg,
-    #dc2626 360deg
+    transparent 0deg,
+    transparent 150deg,
+    rgba(220, 38, 38, 0.5) 180deg,
+    rgba(220, 38, 38, 0.8) 200deg,
+    #dc2626 210deg,
+    #ef4444 220deg,
+    #dc2626 230deg,
+    rgba(220, 38, 38, 0.8) 240deg,
+    rgba(220, 38, 38, 0.5) 250deg,
+    transparent 280deg,
+    transparent 360deg
   );
   border-radius: 20px;
   z-index: -2;
