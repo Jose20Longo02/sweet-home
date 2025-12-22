@@ -96,7 +96,10 @@
         <div class="badge-top-right"><%= t('home.recommendedProject.title','Recommended Project') %></div>
         <div class="meta">
           <h2 class="title"><%= recommendedProject.title %></h2>
-          <p class="location"><span>📍</span><%= recommendedProject.city %>, <%= recommendedProject.country %></p>
+          <p class="location">
+            <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+            <%= recommendedProject.city %>, <%= recommendedProject.country %>
+          </p>
           
           <div class="info-grid">
             <% if (recommendedProject.min_price) { %>

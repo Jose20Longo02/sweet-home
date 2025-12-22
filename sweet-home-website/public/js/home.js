@@ -281,7 +281,10 @@ async function loadFeaturedProperties() {
           <div class="meta">
             <div class="title">${property.title}</div>
             ${priceText ? `<div class="price">${priceText}</div>` : ''}
-            <div class="location">${property.city}, ${property.country}</div>
+            <div class="location">
+              <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+              ${property.city}, ${property.country}
+            </div>
             <div class="features-row">
               ${size ? `
               <div class="feature">
