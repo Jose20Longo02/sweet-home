@@ -19,7 +19,6 @@
   <link rel="stylesheet" href="/css/styles.css" />
   <link rel="preload" as="style" href="/css/variables.css" />
   <link rel="stylesheet" href="/css/variables.css" />
-  <link rel="stylesheet" href="/css/christmas-decorations.css" />
   <meta name="csrf-token" content="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
   <!-- Dynamic Icon Theme CSS Variables - Must come after styles.css to override -->
   <style id="icon-theme-styles">
@@ -228,60 +227,11 @@
   <% const isSuperAdmin = (typeof currentPath !== 'undefined' ? /^\/superadmin/.test(currentPath) : false); %>
   <% const isHomePage = (typeof currentPath !== 'undefined' ? currentPath === '/' : false); %>
   <%- include(isSuperAdmin ? '../partials/header-admin' : (isHomePage ? '../partials/header' : '../partials/header-main')) %>
-  
-  <!-- Christmas Decorations - Only visible when Christmas mode is active -->
-  <% if (getActiveTheme && getActiveTheme() === 'christmas') { %>
-    <!-- Floating Snowflakes -->
-    <div class="christmas-snowflakes" id="christmasSnowflakes" aria-hidden="true"></div>
-    
-    <!-- Corner Decorations -->
-    <div class="christmas-corner-decoration" style="top: 20px; right: 20px;">
-      <img src="/images/Christmas%20assets/Christmas%20-%20bell.png" alt="" aria-hidden="true">
-    </div>
-    <div class="christmas-corner-decoration" style="top: 20px; left: 20px;">
-      <img src="/images/Christmas%20assets/Christmas%20-%20hat.png" alt="" aria-hidden="true">
-    </div>
-    <div class="christmas-corner-decoration" style="bottom: 20px; right: 20px;">
-      <img src="/images/Christmas%20assets/Christmas%20-%20bulb.png" alt="" aria-hidden="true">
-    </div>
-    <div class="christmas-corner-decoration" style="bottom: 20px; left: 20px;">
-      <img src="/images/Christmas%20assets/Christmas%20-%20sock.png" alt="" aria-hidden="true">
-    </div>
-  <% } %>
-  
   <main id="main-content" class="<%= (typeof useMainContainer !== 'undefined' && useMainContainer === false) ? '' : 'container' %> <%= (isAdmin || isSuperAdmin || !isHomePage) ? 'main-offset' : '' %>" role="main">
     <%- body %>
   </main>
   <% if (!(isAdmin || isSuperAdmin) && !(typeof hideFooter !== 'undefined' && hideFooter === true)) { %>
     <%- include('../partials/footer') %>
-  <% } %>
-  
-  <!-- Christmas Decorations Script - Only runs when Christmas mode is active -->
-  <% if (getActiveTheme && getActiveTheme() === 'christmas') { %>
-    <script>
-      (function() {
-        // Create animated snowflakes
-        const snowflakesContainer = document.getElementById('christmasSnowflakes');
-        if (!snowflakesContainer) return;
-        
-        const snowflakeCount = 15;
-        const snowflakeImage = '/images/Christmas%20assets/Christmas%20-%20snowflake.png';
-        
-        for (let i = 0; i < snowflakeCount; i++) {
-          const snowflake = document.createElement('div');
-          snowflake.className = 'snowflake';
-          snowflake.innerHTML = '<img src="' + snowflakeImage + '" alt="" aria-hidden="true">';
-          
-          // Random starting position
-          snowflake.style.left = Math.random() * 100 + '%';
-          snowflake.style.animationDuration = (Math.random() * 3 + 5) + 's'; // 5-8 seconds
-          snowflake.style.animationDelay = Math.random() * 2 + 's';
-          snowflake.style.opacity = Math.random() * 0.5 + 0.3; // 0.3-0.8 opacity
-          
-          snowflakesContainer.appendChild(snowflake);
-        }
-      })();
-    </script>
   <% } %>
 </body>
 </html>

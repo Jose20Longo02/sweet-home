@@ -126,7 +126,7 @@
 <body>
   <div class="role-container">
     <div class="header-section">
-      <img src="/images/Sweet Home Logo.png" alt="Sweet Home Logo" class="logo" />
+      <img src="<%= (getActiveTheme && getActiveTheme() === 'christmas') ? '/images/Christmas%20assets/Logo%20-%20christmas.png' : '/images/Sweet Home Logo.png' %>" alt="Sweet Home Logo" class="logo" />
       <h1>Select Your Role</h1>
       <p class="subtitle">Welcome back, <%= user.name %>! Choose how you want to access the dashboard.</p>
     </div>

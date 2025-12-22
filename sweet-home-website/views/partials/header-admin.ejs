@@ -5,7 +5,7 @@
     </button>
 
     <a href="/" class="brand-mobile" aria-label="Sweet Home">
-      <img src="/images/Sweet Home Logo.png" alt="Sweet Home" onerror="this.style.display='none'">
+      <img src="<%= (getActiveTheme && getActiveTheme() === 'christmas') ? '/images/Christmas%20assets/Logo%20-%20christmas.png' : '/images/Sweet Home Logo.png' %>" alt="Sweet Home" onerror="this.style.display='none'">
     </a>
 
     <% const p = (typeof currentPath !== 'undefined' ? currentPath : ''); %>
@@ -14,7 +14,7 @@
       <a href="/properties" class="<%= p.startsWith('/properties') ? 'is-active' : '' %>"><%= t('nav.properties','Properties') %></a>
       <a href="/owners" class="<%= p.startsWith('/owners') ? 'is-active' : '' %>"><%= t('nav.owners','Owners') %></a>
       <a href="/" class="brand">
-        <img src="/images/Sweet Home Logo.png" alt="Sweet Home" onerror="this.style.display='none'">
+        <img src="<%= (getActiveTheme && getActiveTheme() === 'christmas') ? '/images/Christmas%20assets/Logo%20-%20christmas.png' : '/images/Sweet Home Logo.png' %>" alt="Sweet Home" onerror="this.style.display='none'">
       </a>
       <a href="/services" class="<%= p.startsWith('/services') ? 'is-active' : '' %>"><%= t('nav.services','Services') %></a>
       <a href="/about" class="<%= p.startsWith('/about') ? 'is-active' : '' %>"><%= t('nav.about','About') %></a>
