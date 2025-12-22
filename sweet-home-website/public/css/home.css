@@ -719,10 +719,7 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   align-items: center; 
   gap: 6px;
 }
-.property-card .location::before {
-  content: "📍";
-  font-size: 12px;
-}
+/* Removed ::before emoji - now using icon class instead */
 .property-card .features-row { 
   display: flex; 
   gap: 8px; 
