@@ -1060,6 +1060,12 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   display: block;
 }
 
+/* Christmas theme: Make social media icons bigger */
+body[data-icon-theme="christmas"] .social-link img {
+  width: 28px;
+  height: 28px;
+}
+
 /* Facebook */
 .social-link.facebook {
   color: #1877f2;
@@ -1153,6 +1159,12 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
     width: 20px;
     height: 20px;
   }
+  
+  /* Christmas theme: Make social media icons bigger on mobile */
+  body[data-icon-theme="christmas"] .social-link img {
+    width: 28px;
+    height: 28px;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -1170,5 +1182,11 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   .social-link img {
     width: 18px;
     height: 18px;
+  }
+  
+  /* Christmas theme: Make social media icons bigger on tablet */
+  body[data-icon-theme="christmas"] .social-link img {
+    width: 26px;
+    height: 26px;
   }
 }
