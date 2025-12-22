@@ -1,0 +1,37 @@
+<%#
+  Icon Partial Template
+  Usage: <%- include('partials/icon', { type: 'bed', size: 16, color: '#000', inline: true }) %>
+  
+  Parameters:
+  - type: 'bed' | 'bath' | 'size' | 'location' (required)
+  - size: 16 | 20 | 24 | 32 (default: 16)
+  - color: CSS color value (default: 'currentColor')
+  - inline: boolean - adds margin-right if true (default: false)
+  - class: additional CSS classes (optional)
+-%>
+<%
+  const iconType = typeof type !== 'undefined' ? type : 'bed';
+  const iconSize = typeof size !== 'undefined' ? size : 16;
+  const iconColor = typeof color !== 'undefined' ? color : 'currentColor';
+  const isInline = typeof inline !== 'undefined' ? inline : false;
+  const additionalClass = typeof class !== 'undefined' ? class : '';
+  
+  // Get icon path from theme system
+  const iconPath = typeof getIconPath === 'function' ? getIconPath(iconType) : `/icons/icon_${iconType}.svg`;
+  
+  // Build class string
+  const classes = [
+    'icon',
+    `icon-${iconSize}`,
+    isInline ? 'icon-inline' : '',
+    'icon-mask',
+    `icon-${iconType}`,
+    additionalClass
+  ].filter(Boolean).join(' ');
+%>
+<span 
+  class="<%= classes %>" 
+  style="color: <%= iconColor %>; --icon: url('<%= iconPath %>');"
+  aria-hidden="true"
+></span>
+

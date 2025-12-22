@@ -10,6 +10,7 @@ const areaRoles          = require('../config/roles');
 const path               = require('path');
 const fs                 = require('fs');
 const { generateVariants } = require('../middleware/imageVariants');
+const iconThemes = require('../config/iconThemes');
 
 
 // GET /superadmin/dashboard
@@ -217,8 +218,56 @@ router.post(
   adminController.rejectRequest
 );
 
+// Icon Theme Settings
+router.get(
+  '/settings/icons',
+  ensureAuthenticated,
+  ensureSuperAdmin,
+  (req, res) => {
+    const activeTheme = iconThemes.getActiveTheme();
+    const availableThemes = iconThemes.getAvailableThemes();
+    res.render('superadmin/settings/icon-themes', {
+      title: 'Icon Theme Settings',
+      activePage: 'settings',
+      currentUser: req.session.user,
+      activeTheme,
+      availableThemes,
+      iconThemes
+    });
+  }
+);
 
-
+router.post(
+  '/settings/icons',
+  ensureAuthenticated,
+  ensureSuperAdmin,
+  (req, res) => {
+    const { theme } = req.body;
+    if (iconThemes.themeExists(theme)) {
+      // Note: This requires setting ICON_THEME environment variable and restarting the server
+      // For a production system, you might want to store this in the database instead
+      res.render('superadmin/settings/icon-themes', {
+        title: 'Icon Theme Settings',
+        activePage: 'settings',
+        currentUser: req.session.user,
+        activeTheme: theme,
+        availableThemes: iconThemes.getAvailableThemes(),
+        iconThemes,
+        message: `Theme "${theme}" selected. Please set ICON_THEME=${theme} in your .env file and restart the server for changes to take effect.`
+      });
+    } else {
+      res.render('superadmin/settings/icon-themes', {
+        title: 'Icon Theme Settings',
+        activePage: 'settings',
+        currentUser: req.session.user,
+        activeTheme: iconThemes.getActiveTheme(),
+        availableThemes: iconThemes.getAvailableThemes(),
+        iconThemes,
+        error: 'Invalid theme selected.'
+      });
+    }
+  }
+);
 
 module.exports = router;
 

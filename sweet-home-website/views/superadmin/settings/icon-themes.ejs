@@ -1,0 +1,103 @@
+<% title = 'Icon Theme Settings' %>
+<% activePage = 'settings' %>
+
+<link rel="stylesheet" href="/css/superadmin/super-admin-dashboard.css" />
+
+<div class="admin-panel">
+  <div class="admin-body">
+    <!-- Sidebar -->
+    <%- include('../../partials/superadmin-sidebar', {
+      activePage: 'settings',
+      pendingCount: typeof pendingCount !== 'undefined' ? pendingCount : 0
+    }) %>
+
+    <!-- Main Content -->
+    <main class="admin-content">
+      <header class="dashboard-header">
+        <div>
+          <h1>Icon Theme Settings</h1>
+          <p class="subtitle">Manage icon themes for your website. Switch between default and holiday-themed icons.</p>
+        </div>
+      </header>
+
+      <% if (typeof message !== 'undefined' && message) { %>
+        <div class="alert alert-success" style="margin: 1.5rem 0; padding: 1rem; background: #d1fae5; border: 1px solid #10b981; border-radius: 8px; color: #065f46;">
+          <strong>✓</strong> <%= message %>
+        </div>
+      <% } %>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-error" style="margin: 1.5rem 0; padding: 1rem; background: #fee2e2; border: 1px solid #ef4444; border-radius: 8px; color: #991b1b;">
+          <strong>✗</strong> <%= error %>
+        </div>
+      <% } %>
+
+      <section class="stats-section" style="margin-top: 2rem;">
+        <div class="stat-card" style="max-width: 800px;">
+          <div class="stat-content" style="width: 100%;">
+            <h3 style="margin-bottom: 1.5rem; font-size: 1.25rem; color: #111;">Current Theme</h3>
+            <div style="padding: 1.5rem; background: #f9fafb; border-radius: 8px; margin-bottom: 2rem;">
+              <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                <strong style="font-size: 1.1rem; color: #111;"><%= availableThemes.find(t => t.key === activeTheme)?.name || 'Default' %></strong>
+                <span style="padding: 0.25rem 0.75rem; background: #10b981; color: white; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">Active</span>
+              </div>
+              <p style="color: #6b7280; margin: 0;"><%= availableThemes.find(t => t.key === activeTheme)?.description || 'Standard icons' %></p>
+            </div>
+
+            <h3 style="margin-bottom: 1.5rem; font-size: 1.25rem; color: #111;">Available Themes</h3>
+            
+            <form method="POST" action="/superadmin/dashboard/settings/icons" style="display: flex; flex-direction: column; gap: 1rem;">
+              <% availableThemes.forEach(theme => { %>
+                <label style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem; border: 2px solid <%= theme.key === activeTheme ? '#10b981' : '#e5e7eb' %>; border-radius: 12px; cursor: pointer; transition: all 0.2s; background: <%= theme.key === activeTheme ? '#f0fdf4' : '#fff' %>;"
+                       onmouseover="this.style.borderColor='#10b981'" 
+                       onmouseout="this.style.borderColor='<%= theme.key === activeTheme ? '#10b981' : '#e5e7eb' %>'">
+                  <input 
+                    type="radio" 
+                    name="theme" 
+                    value="<%= theme.key %>" 
+                    <%= theme.key === activeTheme ? 'checked' : '' %>
+                    style="width: 20px; height: 20px; cursor: pointer;"
+                    onchange="this.closest('form').submit()"
+                  />
+                  <div style="flex: 1;">
+                    <div style="font-weight: 600; color: #111; margin-bottom: 0.25rem;"><%= theme.name %></div>
+                    <div style="color: #6b7280; font-size: 0.9rem;"><%= theme.description %></div>
+                    <div style="margin-top: 0.75rem; font-size: 0.85rem; color: #9ca3af;">
+                      Icons: 
+                      <span style="color: #6b7280;">
+                        <%= Object.keys(theme.icons).join(', ') %>
+                      </span>
+                    </div>
+                  </div>
+                  <% if (theme.key === activeTheme) { %>
+                    <span style="color: #10b981; font-weight: 600;">✓</span>
+                  <% } %>
+                </label>
+              <% }) %>
+            </form>
+
+            <div style="margin-top: 2rem; padding: 1.5rem; background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px;">
+              <h4 style="margin: 0 0 0.75rem 0; color: #92400e; font-size: 1rem;">⚠️ Important</h4>
+              <p style="margin: 0; color: #78350f; font-size: 0.9rem; line-height: 1.6;">
+                To apply a theme change, you need to set the <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">ICON_THEME</code> environment variable in your <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">.env</code> file and restart the server.
+                <br><br>
+                Example: <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">ICON_THEME=holiday</code>
+              </p>
+            </div>
+
+            <div style="margin-top: 1.5rem; padding: 1.5rem; background: #eff6ff; border: 1px solid #3b82f6; border-radius: 8px;">
+              <h4 style="margin: 0 0 0.75rem 0; color: #1e40af; font-size: 1rem;">ℹ️ How to Add Holiday Icons</h4>
+              <p style="margin: 0; color: #1e3a8a; font-size: 0.9rem; line-height: 1.6;">
+                1. Export your holiday-themed icons from Illustrator as SVG files<br>
+                2. Place them in <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">public/icons/holiday/</code><br>
+                3. Name them: <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">icon_bed.svg</code>, <code style="background: #fff; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace;">icon_bath.svg</code>, etc.<br>
+                4. The theme will automatically use these icons when activated.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+

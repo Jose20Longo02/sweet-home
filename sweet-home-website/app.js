@@ -28,6 +28,7 @@ const locations      = require('./config/locations');
 const { query }      = require('./config/db');
 const i18nMiddleware = require('./config/i18n');
 const { logEvent }   = require('./utils/analytics');
+const iconThemes     = require('./config/iconThemes');
 
 // Sentry removed per request
 
@@ -153,6 +154,14 @@ app.use((req, res, next) => {
 });
 // Expose a simple asset version for cache busting of non-hashed files (e.g., CSS)
 app.use((req, res, next) => { res.locals.assetVersion = process.env.ASSET_VERSION || (process.env.NODE_ENV === 'production' ? '1' : String(Date.now())); next(); });
+
+// Icon theme helper - make getIconPath available to all views
+app.use((req, res, next) => {
+  res.locals.getIconPath = iconThemes.getIconPath;
+  res.locals.getActiveTheme = iconThemes.getActiveTheme;
+  res.locals.getAvailableThemes = iconThemes.getAvailableThemes;
+  next();
+});
 app.use(session({
   store: new PgSession({
     pool,
