@@ -1,0 +1,148 @@
+/* Christmas Decorations - Only visible when data-icon-theme="christmas" */
+
+/* Floating Snowflakes Animation */
+body[data-icon-theme="christmas"] .christmas-snowflakes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9998;
+  overflow: hidden;
+}
+
+body[data-icon-theme="christmas"] .snowflake {
+  position: absolute;
+  top: -50px;
+  animation: snowfall linear infinite;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+body[data-icon-theme="christmas"] .snowflake img {
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(100vh) translateX(50px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Header Christmas Decorations */
+body[data-icon-theme="christmas"] .site-header {
+  position: relative;
+}
+
+body[data-icon-theme="christmas"] .header-christmas-decoration {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1001;
+}
+
+body[data-icon-theme="christmas"] .header-christmas-decoration img {
+  width: 30px;
+  height: 30px;
+  opacity: 0.8;
+  animation: float 3s ease-in-out infinite;
+}
+
+@media (max-width: 900px) {
+  body[data-icon-theme="christmas"] .header-christmas-decoration {
+    display: none; /* Hide on mobile to avoid clutter */
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+}
+
+/* Footer Christmas Decorations */
+body[data-icon-theme="christmas"] .site-footer {
+  position: relative;
+}
+
+body[data-icon-theme="christmas"] .footer-christmas-decoration {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+body[data-icon-theme="christmas"] .footer-christmas-decoration img {
+  width: 40px;
+  height: 40px;
+  opacity: 0.6;
+  animation: gentle-sway 4s ease-in-out infinite;
+}
+
+@media (max-width: 900px) {
+  body[data-icon-theme="christmas"] .footer-christmas-decoration img {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@keyframes gentle-sway {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(5px) rotate(-5deg);
+  }
+}
+
+/* Corner Decorations */
+body[data-icon-theme="christmas"] .christmas-corner-decoration {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9997;
+}
+
+body[data-icon-theme="christmas"] .christmas-corner-decoration img {
+  width: 60px;
+  height: 60px;
+  opacity: 0.4;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@media (max-width: 900px) {
+  body[data-icon-theme="christmas"] .christmas-corner-decoration {
+    display: none; /* Hide on mobile to avoid clutter */
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+/* Hide all Christmas decorations when not in Christmas mode */
+body:not([data-icon-theme="christmas"]) .christmas-snowflakes,
+body:not([data-icon-theme="christmas"]) .header-christmas-decoration,
+body:not([data-icon-theme="christmas"]) .footer-christmas-decoration,
+body:not([data-icon-theme="christmas"]) .christmas-corner-decoration {
+  display: none !important;
+}
+
