@@ -37,37 +37,37 @@
   <h1>Icon Theme Test Page</h1>
   
   <div class="test-section">
-    <h2>Current Theme: <strong><%= typeof getActiveTheme === 'function' ? getActiveTheme() : 'unknown' %></strong></h2>
+    <h2>Current Theme: <strong><%= getActiveTheme ? getActiveTheme() : 'unknown' %></strong></h2>
     
     <div class="icon-test">
-      <%- include('partials/icon', { type: 'bed', size: 32, color: '#000' }) %>
+      <span class="icon icon-32 icon-mask icon-bed" style="color: #000;"></span>
       <div>
         <strong>Bed Icon</strong>
-        <div class="debug-info">Path: <%= typeof getIconPath === 'function' ? getIconPath('bed') : 'N/A' %></div>
+        <div class="debug-info">Path: <%= getIconPath ? getIconPath('bed') : 'N/A' %></div>
       </div>
     </div>
     
     <div class="icon-test">
-      <%- include('partials/icon', { type: 'bath', size: 32, color: '#000' }) %>
+      <span class="icon icon-32 icon-mask icon-bath" style="color: #000;"></span>
       <div>
         <strong>Bath Icon</strong>
-        <div class="debug-info">Path: <%= typeof getIconPath === 'function' ? getIconPath('bath') : 'N/A' %></div>
+        <div class="debug-info">Path: <%= getIconPath ? getIconPath('bath') : 'N/A' %></div>
       </div>
     </div>
     
     <div class="icon-test">
-      <%- include('partials/icon', { type: 'size', size: 32, color: '#000' }) %>
+      <span class="icon icon-32 icon-mask icon-size" style="color: #000;"></span>
       <div>
         <strong>Size Icon</strong>
-        <div class="debug-info">Path: <%= typeof getIconPath === 'function' ? getIconPath('size') : 'N/A' %></div>
+        <div class="debug-info">Path: <%= getIconPath ? getIconPath('size') : 'N/A' %></div>
       </div>
     </div>
     
     <div class="icon-test">
-      <%- include('partials/icon', { type: 'location', size: 32, color: '#000' }) %>
+      <span class="icon icon-32 icon-mask icon-location" style="color: #000;"></span>
       <div>
         <strong>Location Icon</strong>
-        <div class="debug-info">Path: <%= typeof getIconPath === 'function' ? getIconPath('location') : 'N/A' %></div>
+        <div class="debug-info">Path: <%= getIconPath ? getIconPath('location') : 'N/A' %></div>
       </div>
     </div>
   </div>

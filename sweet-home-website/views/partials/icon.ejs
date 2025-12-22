@@ -1,37 +1,31 @@
-<%#
-  Icon Partial Template
-  Usage: <%- include('partials/icon', { type: 'bed', size: 16, color: '#000', inline: true }) %>
-  
-  Parameters:
-  - type: 'bed' | 'bath' | 'size' | 'location' (required)
-  - size: 16 | 20 | 24 | 32 (default: 16)
-  - color: CSS color value (default: 'currentColor')
-  - inline: boolean - adds margin-right if true (default: false)
-  - class: additional CSS classes (optional)
--%>
 <%
-  const iconType = typeof type !== 'undefined' ? type : 'bed';
-  const iconSize = typeof size !== 'undefined' ? size : 16;
-  const iconColor = typeof color !== 'undefined' ? color : 'currentColor';
-  const isInline = typeof inline !== 'undefined' ? inline : false;
-  const additionalClass = typeof class !== 'undefined' ? class : '';
+  var iconType = 'bed';
+  var iconSize = 16;
+  var iconColor = 'currentColor';
+  var isInline = false;
+  var additionalClass = '';
+  
+  if (type) iconType = type;
+  if (size) iconSize = size;
+  if (color) iconColor = color;
+  if (inline) isInline = true;
+  if (class) additionalClass = class;
   
   // Get icon path from theme system
-  const iconPath = typeof getIconPath === 'function' ? getIconPath(iconType) : `/icons/icon_${iconType}.svg`;
+  var iconPath = '/icons/icon_' + iconType + '.svg';
+  if (getIconPath) {
+    iconPath = getIconPath(iconType);
+  }
   
   // Build class string
-  const classes = [
-    'icon',
-    `icon-${iconSize}`,
-    isInline ? 'icon-inline' : '',
-    'icon-mask',
-    `icon-${iconType}`,
-    additionalClass
-  ].filter(Boolean).join(' ');
+  var classParts = ['icon', 'icon-' + iconSize];
+  if (isInline) classParts.push('icon-inline');
+  classParts.push('icon-mask', 'icon-' + iconType);
+  if (additionalClass) classParts.push(additionalClass);
+  var classes = classParts.join(' ');
 %>
 <span 
   class="<%= classes %>" 
   style="color: <%= iconColor %>; --icon: url('<%= iconPath %>');"
   aria-hidden="true"
 ></span>
-

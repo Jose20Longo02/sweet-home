@@ -21,17 +21,20 @@
   <link rel="stylesheet" href="/css/variables.css" />
   <meta name="csrf-token" content="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
   <!-- Dynamic Icon Theme CSS Variables - Must come after styles.css to override -->
-  <style>
+  <style id="icon-theme-styles">
     :root {
       --icon-bed: url('<%= typeof getIconPath === 'function' ? getIconPath('bed') : '/icons/icon_bed.svg' %>');
       --icon-bath: url('<%= typeof getIconPath === 'function' ? getIconPath('bath') : '/icons/icon_bath.svg' %>');
       --icon-size: url('<%= typeof getIconPath === 'function' ? getIconPath('size') : '/icons/icon_size.svg' %>');
       --icon-location: url('<%= typeof getIconPath === 'function' ? getIconPath('location') : '/icons/icon_location.svg' %>');
     }
+    /* Override icon paths with theme-specific values */
     .icon-bed { --icon: var(--icon-bed) !important; }
     .icon-bath { --icon: var(--icon-bath) !important; }
     .icon-size { --icon: var(--icon-size) !important; }
     .icon-location { --icon: var(--icon-location) !important; }
+    /* Debug: Uncomment to see which theme is active */
+    /* body::before { content: 'Theme: <%= typeof getActiveTheme === "function" ? getActiveTheme() : "default" %>'; position: fixed; top: 0; left: 0; background: red; color: white; padding: 5px; z-index: 9999; } */
   </style>
   <% if ((typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) && !(typeof currentPath !== 'undefined' && (/^\/(admin|superadmin)/).test(currentPath))) { %>
     <!-- Google tag (gtag.js) -->
