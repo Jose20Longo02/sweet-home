@@ -113,5 +113,18 @@
     }
   });
 
+  // Debug helper: Expose reset function to window for easy testing
+  // Usage: window.resetChristmasPopup() in console
+  window.resetChristmasPopup = function() {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+      console.log('Christmas popup: Reset! Refresh the page to see it again.');
+      return true;
+    } catch (e) {
+      console.error('Christmas popup: Failed to reset', e);
+      return false;
+    }
+  };
+
 })();
 

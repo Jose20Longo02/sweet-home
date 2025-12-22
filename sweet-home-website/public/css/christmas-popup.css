@@ -34,7 +34,7 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   text-align: center;
   animation: slideUp 0.5s ease-out;
-  border: 4px solid transparent;
+  border: 4px solid #ffffff;
   position: relative;
   z-index: 1;
   overflow: visible;
@@ -47,20 +47,27 @@
   left: -4px;
   right: -4px;
   bottom: -4px;
-  background: linear-gradient(45deg, #dc2626, #ef4444, #dc2626, #ef4444, #dc2626);
-  background-size: 400% 400%;
+  background: conic-gradient(
+    from 0deg,
+    #dc2626 0deg,
+    #dc2626 90deg,
+    transparent 90deg,
+    transparent 270deg,
+    #dc2626 270deg,
+    #dc2626 360deg
+  );
   border-radius: 20px;
   z-index: -2;
-  animation: borderGlow 3s ease infinite;
+  animation: redTrail 3s linear infinite;
 }
 
 .christmas-popup__content::after {
   content: '';
   position: absolute;
-  top: 4px;
-  left: 4px;
-  right: 4px;
-  bottom: 4px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: #ffffff;
   border-radius: 16px;
   z-index: -1;
@@ -149,15 +156,12 @@
   }
 }
 
-@keyframes borderGlow {
+@keyframes redTrail {
   0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
+    transform: rotate(0deg);
   }
   100% {
-    background-position: 0% 50%;
+    transform: rotate(360deg);
   }
 }
 
