@@ -361,8 +361,8 @@ a:hover {
 .icon-inline { margin-right: 6px; }
 .icon { display:inline-block; vertical-align:middle; flex-shrink: 0; }
 .icon-mask { -webkit-mask: var(--icon) no-repeat center / contain; mask: var(--icon) no-repeat center / contain; background-color: currentColor; }
-/* Fallback icon paths (will be overridden by inline styles from icon partial when using theme system) */
-.icon-bed { --icon: url('/icons/icon_bed.svg'); }
-.icon-bath { --icon: url('/icons/icon_bath.svg'); }
-.icon-size { --icon: url('/icons/icon_size.svg'); }
-.icon-location { --icon: url('/icons/icon_location.svg'); }
+/* Fallback icon paths (will be overridden by dynamic CSS variables from theme system in main layout) */
+.icon-bed { --icon: var(--icon-bed, url('/icons/icon_bed.svg')); }
+.icon-bath { --icon: var(--icon-bath, url('/icons/icon_bath.svg')); }
+.icon-size { --icon: var(--icon-size, url('/icons/icon_size.svg')); }
+.icon-location { --icon: var(--icon-location, url('/icons/icon_location.svg')); }
