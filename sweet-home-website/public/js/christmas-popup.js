@@ -18,8 +18,11 @@
 
   const popup = document.getElementById('christmas-popup');
   if (!popup) {
+    console.log('Christmas popup: Popup element not found');
     return; // Exit if popup doesn't exist
   }
+  
+  console.log('Christmas popup: Found popup element, initializing...');
 
   // Use a key specific to Christmas mode activation
   // This allows the popup to show again when Christmas mode is reactivated
@@ -81,13 +84,33 @@
   });
 
   // Show popup if it hasn't been shown before
-  // Wait a bit for page to load
-  window.addEventListener('load', function() {
+  // Wait for DOM to be ready and then show after a short delay
+  function initPopup() {
     setTimeout(function() {
-      if (!hasPopupBeenShown()) {
+      const hasBeenShown = hasPopupBeenShown();
+      console.log('Christmas popup: Has been shown?', hasBeenShown);
+      if (!hasBeenShown) {
+        console.log('Christmas popup: Showing popup...');
         showPopup();
+      } else {
+        console.log('Christmas popup: Popup already shown, skipping');
       }
     }, 1000); // Show after 1 second delay
+  }
+
+  // Try multiple ways to ensure the popup shows
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPopup);
+  } else {
+    // DOM is already ready
+    initPopup();
+  }
+
+  // Also try on window load as a fallback
+  window.addEventListener('load', function() {
+    if (!hasPopupBeenShown() && popup.style.display === 'none') {
+      showPopup();
+    }
   });
 
 })();
