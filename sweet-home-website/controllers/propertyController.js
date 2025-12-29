@@ -2093,7 +2093,15 @@ exports.listPropertiesAdmin = async (req, res, next) => {
     if (maxPrice) { conditions.push(`p.price <= $${idx}`);       values.push(maxPrice);idx++; }
     if (status)   { conditions.push(`p.status_tags @> $${idx}`); values.push([status]);idx++; }
     if (sold)     { conditions.push(`p.sold = $${idx}`);         values.push(sold);    idx++; }
-    if (agent)    { conditions.push(`p.agent_id = $${idx}`);     values.push(parseInt(agent, 10)); idx++; }
+    if (agent) {
+      if (agent === 'unassigned') {
+        conditions.push(`p.agent_id IS NULL`);
+      } else {
+        conditions.push(`p.agent_id = $${idx}`);
+        values.push(parseInt(agent, 10));
+        idx++;
+      }
+    }
     const where = conditions.length
       ? `WHERE ${conditions.join(' AND ')}`
       : '';
@@ -2180,11 +2188,14 @@ exports.listPropertiesAdmin = async (req, res, next) => {
 
     // 8) If filtering by agent, get agent name for display
     let agentName = null;
-    if (agent) {
+    if (agent && agent !== 'unassigned') {
       try {
-        const { rows } = await query('SELECT name FROM users WHERE id = $1', [parseInt(agent, 10)]);
-        if (rows && rows[0]) {
-          agentName = rows[0].name;
+        const agentId = parseInt(agent, 10);
+        if (!isNaN(agentId)) {
+          const { rows } = await query('SELECT name FROM users WHERE id = $1', [agentId]);
+          if (rows && rows[0]) {
+            agentName = rows[0].name;
+          }
         }
       } catch (_) {}
     }

@@ -20,23 +20,27 @@
           <h1>
             <% if (agentName) { %>
               Properties by <%= agentName %>
+            <% } else if (filters.agent === 'unassigned') { %>
+              Unassigned Properties
             <% } else { %>
               All Properties
             <% } %>
           </h1>
           <div>
-            <% if (filters.agent) { %>
-              <a href="/superadmin/dashboard/properties" class="btn btn-secondary" style="margin-right: 10px;">Clear Agent Filter</a>
-            <% } %>
             <a href="/admin/properties/new" class="btn btn-primary">New Property</a>
           </div>
         </div>
 
         <!-- Filters -->
         <form class="properties-filters" id="filterForm" method="get">
-          <% if (filters.agent) { %>
-            <input type="hidden" name="agent" value="<%= filters.agent %>">
-          <% } %>
+          <select id="agentSelect" name="agent">
+            <option value="">All Agents</option>
+            <option value="unassigned" <%= filters.agent==='unassigned'?'selected':'' %>>Unassigned</option>
+            <% allAgents.forEach(a => { %>
+              <option value="<%= a.id %>" <%= filters.agent==String(a.id)?'selected':'' %>><%= a.name %></option>
+            <% }) %>
+          </select>
+
           <select id="countrySelect" name="country">
             <option value="">All Countries</option>
             <% countryOptions.forEach(c => { %>
@@ -81,7 +85,7 @@
                  value="<%= filters.maxPrice||'' %>" />
 
           <button type="submit" class="btn-filter-apply">Apply</button>
-          <a href="/superadmin/dashboard/properties<%= filters.agent ? '?agent=' + encodeURIComponent(filters.agent) : '' %>" class="btn-filter-reset">Reset</a>
+          <a href="/superadmin/dashboard/properties" class="btn-filter-reset">Reset</a>
         </form>
 
         <!-- Properties Grid -->
