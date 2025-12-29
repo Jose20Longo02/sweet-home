@@ -49,7 +49,14 @@
     <li class="<%= activePage==='settings' ? 'active' : '' %>">
       <a href="/superadmin/dashboard/settings/icons">Icon Themes</a>
     </li>
-    
   </ul>
+  
+  <!-- Logout Button -->
+  <div class="sidebar-logout">
+    <form action="/auth/logout" method="post" class="logout-form">
+      <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+      <button type="submit" class="sidebar-logout-btn">Log out</button>
+    </form>
+  </div>
 </aside>
 <div class="admin-overlay" data-close-sidebar></div>

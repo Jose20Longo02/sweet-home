@@ -23,7 +23,19 @@
 }
 
 /* Sidebar styling */
-.admin-sidebar { width: var(--sidebar-width); background: #ffffff; padding: 0; flex-shrink:0; box-shadow: 6px 0 24px rgba(0,0,0,.06); align-self: stretch; min-height: 100vh; margin:0; border-right: 1px solid rgba(17,24,39,0.08); }
+.admin-sidebar { 
+  width: var(--sidebar-width); 
+  background: #ffffff; 
+  padding: 0; 
+  flex-shrink:0; 
+  box-shadow: 6px 0 24px rgba(0,0,0,.06); 
+  align-self: stretch; 
+  min-height: 100vh; 
+  margin:0; 
+  border-right: 1px solid rgba(17,24,39,0.08);
+  display: flex;
+  flex-direction: column;
+}
 /* Ensure main content takes remaining width and can shrink */
 .admin-content { 
   flex: 1; 
@@ -33,7 +45,13 @@
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
-.admin-sidebar ul { list-style: none; padding-left: 0; margin: 0; }
+.admin-sidebar ul { 
+  list-style: none; 
+  padding-left: 0; 
+  margin: 0;
+  flex: 1;
+  padding-top: 1rem;
+}
 .admin-sidebar li + li {
   margin-top: 0.5rem;
 }
@@ -72,20 +90,39 @@
   letter-spacing: 0.04em;
 }
 
-.admin-sidebar .logout-btn {
+/* Logout section at bottom of sidebar */
+.admin-sidebar .sidebar-logout {
+  margin-top: auto;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(17,24,39,0.08);
+}
+
+.admin-sidebar .logout-form {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.admin-sidebar .sidebar-logout-btn {
   display: block;
   width: 100%;
-  padding: calc(var(--spacing) * 1.25) var(--spacing);
+  padding: 14px 16px;
   background: transparent;
-  color: #1c1f24;
+  color: #dc2626;
   border: none;
   border-left: 3px solid transparent;
   text-align: left;
-  font-size: 1rem;
+  font-size: 0.98rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s, color .2s;
+  transition: background 0.2s, color 0.2s, border-left-color 0.2s;
 }
-.admin-sidebar .logout-btn:hover { background: rgba(16,185,129,0.06); color: #111; }
+
+.admin-sidebar .sidebar-logout-btn:hover {
+  background: rgba(220, 38, 38, 0.06);
+  color: #b91c1c;
+  border-left-color: #dc2626;
+}
 /* Sidebar responsiveness */
 @media (max-width: 768px) {
   /* Make sidebar off-canvas on mobile */
