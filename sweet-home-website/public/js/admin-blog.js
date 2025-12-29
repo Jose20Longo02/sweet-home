@@ -8,8 +8,48 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!file) {
         if (preview) { preview.style.display = 'none'; preview.src = ''; }
         if (placeholder) { placeholder.style.display = 'block'; }
+        // Clear any previous error
+        var errorMsg = document.querySelector('.file-error');
+        if (errorMsg) errorMsg.remove();
         return;
       }
+      
+      // Validate file type
+      var validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
+      var fileType = file.type.toLowerCase();
+      var fileExt = file.name.split('.').pop().toLowerCase();
+      var isValidType = validTypes.includes(fileType) || ['heic', 'heif'].includes(fileExt);
+      
+      if (!isValidType) {
+        var errorDiv = document.createElement('div');
+        errorDiv.className = 'file-error';
+        errorDiv.style.cssText = 'color: #dc2626; font-size: 0.875rem; margin-top: 0.5rem; padding: 0.5rem; background: #fee2e2; border-radius: 4px;';
+        errorDiv.textContent = 'Invalid file type. Only JPEG, PNG, WebP, HEIC, and HEIF images are supported.';
+        input.parentNode.appendChild(errorDiv);
+        input.value = '';
+        if (preview) { preview.style.display = 'none'; preview.src = ''; }
+        if (placeholder) { placeholder.style.display = 'block'; }
+        return;
+      }
+      
+      // Validate file size (20 MB limit)
+      var maxSize = 20 * 1024 * 1024; // 20 MB
+      if (file.size > maxSize) {
+        var errorDiv = document.createElement('div');
+        errorDiv.className = 'file-error';
+        errorDiv.style.cssText = 'color: #dc2626; font-size: 0.875rem; margin-top: 0.5rem; padding: 0.5rem; background: #fee2e2; border-radius: 4px;';
+        errorDiv.innerHTML = 'File too large. Maximum file size is 20 MB. Please compress or resize your image. <a href="https://www.iloveimg.com/compress-image" target="_blank" style="color: #0066cc; text-decoration: underline;">Use an online compressor</a>.';
+        input.parentNode.appendChild(errorDiv);
+        input.value = '';
+        if (preview) { preview.style.display = 'none'; preview.src = ''; }
+        if (placeholder) { placeholder.style.display = 'block'; }
+        return;
+      }
+      
+      // Clear any previous error
+      var errorMsg = document.querySelector('.file-error');
+      if (errorMsg) errorMsg.remove();
+      
       var url = URL.createObjectURL(file);
       if (preview) {
         preview.src = url;
@@ -95,9 +135,38 @@ document.addEventListener('DOMContentLoaded', function () {
     const forms = document.querySelectorAll('form[method="post"]');
     forms.forEach(form => {
       let isSubmitting = false;
-      form.addEventListener('submit', function() {
-        if (isSubmitting) return false;
-        if (!form.checkValidity()) { return true; }
+      form.addEventListener('submit', function(e) {
+        if (isSubmitting) {
+          e.preventDefault();
+          return false;
+        }
+        
+        // Validate title if it's a create form
+        var titleInput = form.querySelector('input[name="title"]');
+        if (titleInput && !titleInput.value.trim()) {
+          e.preventDefault();
+          alert('Please enter a title for your blog post.');
+          titleInput.focus();
+          return false;
+        }
+        
+        // Validate file if cover image is selected
+        var coverInput = form.querySelector('input[name="cover"]');
+        if (coverInput && coverInput.files && coverInput.files[0]) {
+          var file = coverInput.files[0];
+          var maxSize = 20 * 1024 * 1024; // 20 MB
+          if (file.size > maxSize) {
+            e.preventDefault();
+            alert('File too large. Maximum file size is 20 MB. Please compress or resize your image before uploading.');
+            return false;
+          }
+        }
+        
+        if (!form.checkValidity()) {
+          e.preventDefault();
+          return false;
+        }
+        
         isSubmitting = true;
         
         const overlay = document.getElementById('uploadOverlay');

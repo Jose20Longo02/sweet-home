@@ -82,6 +82,10 @@ module.exports = function uploadBlogMedia(req, res, next) {
           return next(new Error(`Unexpected field: "${err.field}". Only "cover" field is allowed.`));
         }
       }
+      // Handle invalid file type error
+      if (err.message === 'Invalid file type') {
+        return next(new Error('Invalid file type. Only JPEG, PNG, WebP, HEIC, and HEIF images are supported for cover images.'));
+      }
       // Handle other errors (e.g., invalid file type)
       return next(err);
     }
@@ -94,17 +98,25 @@ module.exports = function uploadBlogMedia(req, res, next) {
 
       // Convert HEIC/HEIF to JPEG
       if (req.file.mimetype === 'image/heic' || req.file.mimetype === 'image/heif') {
-        buffer = await convertHeicToJpeg(buffer);
-        filename = filename.replace(/\.(heic|heif)$/i, '.jpg');
-        mimetype = 'image/jpeg';
+        try {
+          buffer = await convertHeicToJpeg(buffer);
+          filename = filename.replace(/\.(heic|heif)$/i, '.jpg');
+          mimetype = 'image/jpeg';
+        } catch (heicError) {
+          return next(new Error('Failed to convert HEIC image. Please try converting it to JPEG first using an online converter.'));
+        }
       }
 
       // Resize image if needed
       if (buffer.length > 2 * 1024 * 1024) { // If larger than 2MB
-        buffer = await sharp(buffer)
-          .resize(1200, 800, { fit: 'inside', withoutEnlargement: true })
-          .jpeg({ quality: 85 })
-          .toBuffer();
+        try {
+          buffer = await sharp(buffer)
+            .resize(1200, 800, { fit: 'inside', withoutEnlargement: true })
+            .jpeg({ quality: 85 })
+            .toBuffer();
+        } catch (sharpError) {
+          return next(new Error('Failed to process image. The file may be corrupted or in an unsupported format. Please try a different image.'));
+        }
       }
 
       // Generate sanitized filename
@@ -114,17 +126,26 @@ module.exports = function uploadBlogMedia(req, res, next) {
       const slugify = (s) => String(s || 'post').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
       const provisionalSlug = slugify(req.body?.title);
       const folder = `blog/${provisionalSlug}/cover`;
-      const { url: fileUrl, key } = await uploadToSpaces(buffer, finalFilename, mimetype, folder);
       
-      // Store the CDN URL in req.file for the controller
-      req.file.filename = finalFilename;
-      req.file.url = fileUrl;
-      req.file.key = key;
-      req.file.provisionalSlug = provisionalSlug;
+      try {
+        const { url: fileUrl, key } = await uploadToSpaces(buffer, finalFilename, mimetype, folder);
+        
+        // Store the CDN URL in req.file for the controller
+        req.file.filename = finalFilename;
+        req.file.url = fileUrl;
+        req.file.key = key;
+        req.file.provisionalSlug = provisionalSlug;
+      } catch (uploadError) {
+        return next(new Error('Failed to upload image to server. Please check your internet connection and try again. If the problem persists, the file may be too large or corrupted.'));
+      }
       
       next();
-    } catch (e) { 
-      next(e); 
+    } catch (e) {
+      // Catch any unexpected errors and provide user-friendly message
+      if (e.message && e.message.length < 200) {
+        return next(e);
+      }
+      return next(new Error('An unexpected error occurred while processing your image. Please try a different image or contact support if the problem persists.'));
     }
   });
 };

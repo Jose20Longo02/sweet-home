@@ -11,7 +11,19 @@
         </div>
         <a href="<%= (currentUser && currentUser.role === 'SuperAdmin') ? '/superadmin/dashboard' : '/admin/dashboard' %>" class="back-home">← Return to dashboard</a>
       </div>
-      <% if (error) { %><p class="error"><%= error %></p><% } %>
+      <% if (error) { %>
+        <p class="error">
+          <% 
+            // Convert URLs in error message to clickable links
+            let errorMsg = error;
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            if (urlRegex.test(errorMsg)) {
+              errorMsg = errorMsg.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: underline;">$1</a>');
+            }
+          %>
+          <%- errorMsg %>
+        </p>
+      <% } %>
       <form action="/admin/dashboard/blog/<%= post.id %>?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <label>Title</label>

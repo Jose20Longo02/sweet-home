@@ -79,6 +79,21 @@ exports.newForm = (req, res) => {
 exports.create = async (req, res, next) => {
   try {
     const { title, excerpt, content, status } = req.body;
+    
+    // Validate required fields
+    if (!title || !title.trim()) {
+      return res.render('admin/blog/new', {
+        error: 'Title is required. Please enter a title for your blog post.',
+        currentUser: req.session.user,
+        formData: {
+          title: req.body.title || '',
+          excerpt: req.body.excerpt || '',
+          content: req.body.content || '',
+          status: req.body.status || 'draft'
+        }
+      });
+    }
+    
     const cover_image = req.file ? (req.file.url || '/uploads/blog/' + req.file.filename) : null;
     const published_at = status === 'published' ? new Date() : null;
     const safeContent = (typeof content === 'string') ? content : '';
@@ -174,20 +189,42 @@ exports.create = async (req, res, next) => {
     }
     return res.redirect('/admin/dashboard/blog');
   } catch (err) {
-    // If it's an upload error, render the form with the error message
-    if (err.message && (err.message.includes('File too large') || err.message.includes('Invalid file type') || err.message.includes('Unexpected field'))) {
-      return res.render('admin/blog/new', {
-        error: err.message,
-        currentUser: req.session.user,
-        formData: {
-          title: req.body.title || '',
-          excerpt: req.body.excerpt || '',
-          content: req.body.content || '',
-          status: req.body.status || 'draft'
-        }
-      });
+    // Handle all types of errors and display user-friendly messages
+    let errorMessage = 'An error occurred while creating the blog post. Please try again.';
+    
+    if (err.message) {
+      // Upload-related errors
+      if (err.message.includes('File too large') || err.message.includes('LIMIT_FILE_SIZE')) {
+        errorMessage = 'File too large. Maximum file size is 20 MB. Please compress or resize your image before uploading. You can use an online compressor like https://www.iloveimg.com/compress-image';
+      } else if (err.message.includes('Invalid file type') || err.message.includes('Invalid file')) {
+        errorMessage = 'Invalid file type. Only JPEG, PNG, WebP, HEIC, and HEIF images are supported for cover images.';
+      } else if (err.message.includes('Unexpected field')) {
+        errorMessage = err.message;
+      } else if (err.message.includes('Failed to convert HEIC')) {
+        errorMessage = 'Failed to process HEIC image. Please try converting it to JPEG first.';
+      } else if (err.message.includes('upload') || err.message.includes('S3') || err.message.includes('Spaces')) {
+        errorMessage = 'Failed to upload image. Please check your file and try again. If the problem persists, try a different image.';
+      } else if (err.message.includes('duplicate key') || err.message.includes('unique constraint')) {
+        errorMessage = 'A blog post with this title already exists. Please use a different title.';
+      } else if (err.message.includes('database') || err.message.includes('connection')) {
+        errorMessage = 'Database error. Please try again in a moment.';
+      } else {
+        // Use the error message if it's user-friendly, otherwise use generic message
+        errorMessage = err.message.length < 200 ? err.message : errorMessage;
+      }
     }
-    next(err);
+    
+    // Render the form with error message and preserve form data
+    return res.render('admin/blog/new', {
+      error: errorMessage,
+      currentUser: req.session.user,
+      formData: {
+        title: req.body.title || '',
+        excerpt: req.body.excerpt || '',
+        content: req.body.content || '',
+        status: req.body.status || 'draft'
+      }
+    });
   }
 };
 
@@ -301,7 +338,38 @@ exports.update = async (req, res, next) => {
       return res.redirect('/superadmin/dashboard/blog');
     }
     return res.redirect('/admin/dashboard/blog');
-  } catch (err) { next(err); }
+  } catch (err) {
+    // Handle errors during update with user-friendly messages
+    let errorMessage = 'An error occurred while updating the blog post. Please try again.';
+    
+    if (err.message) {
+      if (err.message.includes('File too large') || err.message.includes('LIMIT_FILE_SIZE')) {
+        errorMessage = 'File too large. Maximum file size is 20 MB. Please compress or resize your image before uploading.';
+      } else if (err.message.includes('Invalid file type') || err.message.includes('Invalid file')) {
+        errorMessage = 'Invalid file type. Only JPEG, PNG, WebP, HEIC, and HEIF images are supported for cover images.';
+      } else if (err.message.includes('upload') || err.message.includes('S3') || err.message.includes('Spaces')) {
+        errorMessage = 'Failed to upload image. Please check your file and try again.';
+      } else if (err.message.length < 200) {
+        errorMessage = err.message;
+      }
+    }
+    
+    // Re-fetch the post to render edit form with error
+    try {
+      const id = parseInt(req.params.id, 10);
+      const rows = await query('SELECT * FROM blog_posts WHERE id = $1', [id]);
+      const post = rows.rows[0];
+      if (post) {
+        return res.render('admin/blog/edit', {
+          post,
+          error: errorMessage,
+          currentUser: req.session.user
+        });
+      }
+    } catch (_) {}
+    
+    next(err);
+  }
 };
 
 exports.delete = async (req, res, next) => {
