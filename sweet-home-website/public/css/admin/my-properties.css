@@ -15,18 +15,52 @@
 .btn.btn-primary { background: var(--color-primary); color:#fff; padding: .7rem 1.1rem; border-radius: 999px; border: 0; text-decoration:none; box-shadow: 0 8px 20px rgba(0,0,0,.12); transition: transform .16s, box-shadow .16s, opacity .16s; }
 .btn.btn-primary:hover { transform: translateY(-1px); opacity:.95; box-shadow: 0 12px 28px rgba(0,0,0,.16); }
 
-/* Filters row (auto-wrap, no Apply button) */
+/* Filters row */
 .filters { display:flex; flex-wrap:wrap; gap:.6rem; margin: .25rem 0 1.25rem 0; justify-content:center; background:#fff; border:1px solid rgba(0,0,0,.06); border-radius: 14px; padding: .75rem; box-shadow: 0 6px 18px rgba(0,0,0,.05); }
 .filters select, .filters input[type="number"] { padding: .55rem .75rem; border: 1px solid rgba(0,0,0,.12); border-radius: 999px; font-size: .95rem; transition: border-color .15s, box-shadow .15s, transform .08s; background:#fff; }
 .filters select:focus, .filters input[type="number"]:focus { outline:none; border-color: var(--color-primary); box-shadow: 0 0 0 4px rgba(0,0,0,.06); }
 .filters select:hover, .filters input[type="number"]:hover { transform: translateY(-1px); }
-.link-reset {
+
+/* Filter buttons */
+.filters .btn-filter-apply,
+.filters .btn-filter-reset {
+  padding: .55rem 1.1rem;
+  border-radius: 999px;
+  font-size: .95rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: background .15s, transform .15s, box-shadow .15s, opacity .15s;
+  white-space: nowrap;
   align-self: center;
-  margin-left: .25rem;
-  color: var(--color-tertiary);
+}
+
+.filters .btn-filter-apply {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.filters .btn-filter-apply:hover {
+  background: var(--color-tertiary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+  opacity: .95;
+}
+
+.filters .btn-filter-reset {
+  background: #fff;
+  color: var(--color-secondary);
+  border: 1px solid rgba(0,0,0,.12);
+}
+
+.filters .btn-filter-reset:hover {
+  background: #f5f5f5;
+  border-color: rgba(0,0,0,.24);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
   text-decoration: none;
 }
-.link-reset:hover { text-decoration: underline; }
 
 /* Empty state centered */
 .empty-state {

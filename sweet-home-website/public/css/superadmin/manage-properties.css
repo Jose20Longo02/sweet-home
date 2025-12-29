@@ -50,6 +50,44 @@ html, body {
 .properties-filters select:focus,
 .properties-filters input:focus { outline:none; border-color: var(--color-primary); box-shadow:0 0 0 4px rgba(0,0,0,.06); }
 
+/* Filter buttons */
+.properties-filters .btn-filter-apply,
+.properties-filters .btn-filter-reset {
+  padding: .6rem 1.2rem;
+  border-radius: 12px;
+  font-size: .95rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: background .15s, transform .15s, box-shadow .15s;
+  white-space: nowrap;
+}
+
+.properties-filters .btn-filter-apply {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.properties-filters .btn-filter-apply:hover {
+  background: var(--color-tertiary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+}
+
+.properties-filters .btn-filter-reset {
+  background: #fff;
+  color: var(--color-secondary);
+  border: 1px solid rgba(0,0,0,.16);
+}
+
+.properties-filters .btn-filter-reset:hover {
+  background: #f5f5f5;
+  border-color: rgba(0,0,0,.24);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+
 /* 6) Grid & cards */
 .properties-grid {
   display: grid;

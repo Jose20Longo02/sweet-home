@@ -51,20 +51,20 @@
             <% }) %>
           </select>
 
-          <select name="type" onchange="filterForm.submit()">
+          <select name="type">
             <option value="">All Types</option>
             <% typeOptions.forEach(t => { %>
               <option value="<%= t %>" <%= filters.type===t?'selected':'' %>><%= t %></option>
             <% }) %>
           </select>
 
-          <select name="status" onchange="filterForm.submit()">
+          <select name="status">
             <option value="">All Statuses</option>
             <% statusOptions.forEach(s => { %>
               <option value="<%= s %>" <%= filters.status===s?'selected':'' %>><%= s %></option>
             <% }) %>
           </select>
-          <select name="sold" onchange="filterForm.submit()">
+          <select name="sold">
             <option value="">All</option>
             <option value="true" <%= filters.sold==='true'?'selected':'' %>>Sold</option>
             <option value="false" <%= filters.sold==='false'?'selected':'' %>>Not sold</option>
@@ -73,14 +73,15 @@
           <input type="number"
                  name="minPrice"
                  placeholder="Min Price"
-                 value="<%= filters.minPrice||'' %>"
-                 onchange="filterForm.submit()" />
+                 value="<%= filters.minPrice||'' %>" />
 
           <input type="number"
                  name="maxPrice"
                  placeholder="Max Price"
-                 value="<%= filters.maxPrice||'' %>"
-                 onchange="filterForm.submit()" />
+                 value="<%= filters.maxPrice||'' %>" />
+
+          <button type="submit" class="btn-filter-apply">Apply</button>
+          <a href="/superadmin/dashboard/properties<%= filters.agent ? '?agent=' + encodeURIComponent(filters.agent) : '' %>" class="btn-filter-reset">Reset</a>
         </form>
 
         <!-- Properties Grid -->

@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         citySel.disabled = true;
       }
-      filterForm.submit();
+      // Clear city selection when country changes (don't auto-submit)
+      citySel.value = '';
     });
   }
 

@@ -14,28 +14,28 @@
 
   <!-- Filters -->
   <form id="filters" class="filters" method="get">
-    <select id="countrySelect" name="country" onchange="this.form.submit()">
+    <select id="countrySelect" name="country">
       <option value="">All Countries</option>
       <% countryOptions.forEach(c => { %>
         <option value="<%= c %>" <%= filters.country===c?'selected':'' %>><%= c %></option>
       <% }) %>
     </select>
 
-    <select id="citySelect" name="city" <%= !filters.country?'disabled':'' %> onchange="this.form.submit()">
+    <select id="citySelect" name="city" <%= !filters.country?'disabled':'' %>>
       <option value="">All Cities</option>
       <% (cityOptions || []).forEach(ct => { %>
         <option value="<%= ct %>" <%= filters.city===ct?'selected':'' %>><%= ct %></option>
       <% }) %>
     </select>
 
-    <select name="type" onchange="this.form.submit()">
+    <select name="type">
       <option value="">All Types</option>
       <% typeOptions.forEach(t => { %>
         <option value="<%= t %>" <%= filters.type===t?'selected':'' %>><%= t %></option>
       <% }) %>
     </select>
 
-    <select name="status" onchange="this.form.submit()">
+    <select name="status">
       <option value="">All Statuses</option>
       <% statusOptions.forEach(s => { %>
         <option value="<%= s %>" <%= filters.status===s?'selected':'' %>><%= s %></option>
@@ -43,16 +43,13 @@
     </select>
 
     <input type="number" name="minPrice" placeholder="Min Price"
-           value="<%= filters.minPrice||'' %>"
-           onblur="this.form.submit()" />
+           value="<%= filters.minPrice||'' %>" />
 
     <input type="number" name="maxPrice" placeholder="Max Price"
-           value="<%= filters.maxPrice||'' %>"
-           onblur="this.form.submit()" />
+           value="<%= filters.maxPrice||'' %>" />
 
-    <% if (Object.values(filters).some(v => v)) { %>
-      <a class="link-reset" href="/admin/my-properties">Reset</a>
-    <% } %>
+    <button type="submit" class="btn-filter-apply">Apply</button>
+    <a href="/admin/my-properties" class="btn-filter-reset">Reset</a>
   </form>
 
   <% if (!properties.length) { %>
@@ -145,13 +142,12 @@
 </div>
 
 <script>
-  // keep cities in sync with selected country
+  // keep cities in sync with selected country (without auto-submit)
   const dataNode   = document.getElementById('mp-data');
   let LOCATIONS = {};
   try { LOCATIONS = JSON.parse(dataNode.getAttribute('data-locations') || '{}'); } catch(_) { LOCATIONS = {}; }
   const countrySel = document.getElementById('countrySelect');
   const citySel    = document.getElementById('citySelect');
-  const form       = document.getElementById('filters');
 
   countrySel.addEventListener('change', () => {
     const cities = Object.keys(LOCATIONS[countrySel.value] || {});
@@ -163,6 +159,7 @@
       citySel.appendChild(opt);
     });
     citySel.disabled = cities.length === 0;
-    form.submit();
+    // Clear city selection when country changes
+    citySel.value = '';
   });
 </script>
