@@ -80,7 +80,15 @@ class Lead {
     if (status) { where.push(`l.status = $${idx}`); params.push(status); idx++; }
     if (from) { where.push(`l.created_at >= $${idx}`); params.push(from); idx++; }
     if (to) { where.push(`l.created_at <= $${idx}`); params.push(to); idx++; }
-    if (agentId) { where.push(`l.agent_id = $${idx}`); params.push(agentId); idx++; }
+    if (agentId) {
+      if (agentId === 'unassigned') {
+        where.push(`l.agent_id IS NULL`);
+      } else {
+        where.push(`l.agent_id = $${idx}`);
+        params.push(parseInt(agentId, 10));
+        idx++;
+      }
+    }
     if (propertyId) { where.push(`l.property_id = $${idx}`); params.push(propertyId); idx++; }
     if (projectId) { where.push(`l.project_id = $${idx}`); params.push(projectId); idx++; }
     if (leadType === 'property') { where.push(`l.property_id IS NOT NULL`); }
