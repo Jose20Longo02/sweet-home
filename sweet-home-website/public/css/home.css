@@ -620,8 +620,8 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 .hero-panels .panel { position: relative; overflow: hidden; transition: opacity .8s ease; isolation: isolate; }
 .hero-panels .panel img { width: 100%; height: 100%; object-fit: cover; transform: scale(1); transition: transform .6s ease; position: relative; z-index: 1; }
 /* constant dark overlay on each panel */
-.hero-panels .panel::before { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.72); pointer-events: none; transition: background .3s ease; z-index: 2; }
-.hero-panels .panel:hover::before { background: rgba(0,0,0,.68); }
+.hero-panels .panel::before { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.54); pointer-events: none; transition: background .3s ease; z-index: 2; }
+.hero-panels .panel:hover::before { background: rgba(0,0,0,.51); }
 .hero-panels .panel:hover img { transform: scale(1.03); }
 /* hover text only, slightly lower than center */
 .hero-panels .panel::after { content: attr(data-country); position: absolute; left: 50%; top: 75%; transform: translate(-50%, -50%); color: #fff; font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; font-size: 30px; font-weight: 300; letter-spacing: .6px; opacity: 0; transition: opacity .25s ease; z-index: 3; }
