@@ -1,4 +1,4 @@
-<% title = post.title %>
+<% title = post.title; headPartial = '../partials/seo/blog-detail-head'; %>
 <link rel="stylesheet" href="/css/blog.css" />
 <article class="container main blog-detail">
   <div class="blog-detail-grid">
@@ -12,7 +12,7 @@
             <li>
               <a class="rec-item" href="/blog/<%= r.slug %>">
                 <% if (r.cover_image) { %>
-                  <img src="<%= r.cover_image %>" alt="" />
+                  <img src="<%= r.cover_image %>" alt="<%= r.title %>" />
                 <% } %>
                 <div class="rec-info">
                   <span class="rec-title"><%= r.title %></span>
@@ -34,7 +34,7 @@
           <p class="meta"><%= t('blog.by','By') %> <%= post.author_name %></p>
         <% } %>
         <% if (post.cover_image) { %>
-          <img src="<%= post.cover_image %>" alt="" class="cover" />
+          <img src="<%= post.cover_image %>" alt="<%= post.title %>" class="cover" />
         <% } %>
       </header>
       <section class="content">

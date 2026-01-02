@@ -1,12 +1,19 @@
-<% const listDesc = (typeof locals !== 'undefined' && locals.query) ? `Search results for "${locals.query}"` : 'Browse property listings'; %>
+<%
+  const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
+  const listDesc = (typeof locals !== 'undefined' && locals.query) ? `Search results for "${locals.query}"` : 'Browse luxury property listings in Cyprus, Dubai, and Berlin. Find apartments, villas, and real estate investments.';
+  const queryString = (typeof locals !== 'undefined' && Object.keys(locals.query || {}).length) ? '?' + new URLSearchParams(locals.query).toString() : '';
+  const listUrl = `${siteBaseUrl}/properties${queryString}`;
+%>
 <meta name="description" content="<%= listDesc %>">
-<link rel="canonical" href="/properties<%= (typeof locals !== 'undefined' && Object.keys(locals.query || {}).length) ? '?' + new URLSearchParams(locals.query).toString() : '' %>">
+<link rel="canonical" href="<%= listUrl %>">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Property Search Results' %>">
 <meta property="og:description" content="<%= listDesc %>">
-<meta property="og:url" content="/properties<%= (typeof locals !== 'undefined' && Object.keys(locals.query || {}).length) ? '?' + new URLSearchParams(locals.query).toString() : '' %>">
+<meta property="og:url" content="<%= listUrl %>">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="en_US">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
@@ -21,7 +28,7 @@
   itemListElement: (typeof properties !== 'undefined' && properties ? properties : []).map((p, idx) => ({
     '@type': 'ListItem',
     position: idx + 1,
-    url: `/properties/${p.slug}`
+    url: `${siteBaseUrl}/properties/${p.slug}`
   }))
 }) %>
 </script>

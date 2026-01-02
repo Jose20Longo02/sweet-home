@@ -1,19 +1,27 @@
-<% if (typeof property !== 'undefined' && property) { %>
+<% if (typeof property !== 'undefined' && property) { 
+  const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
+  const propertyUrl = `${siteBaseUrl}/properties/${property.slug}`;
+  const propertyImage = (property.photos && property.photos[0]) 
+    ? (property.photos[0].startsWith('http') ? property.photos[0] : `${siteBaseUrl}${property.photos[0]}`)
+    : `${siteBaseUrl}/img/property-placeholder.jpg`;
+%>
   <meta name="description" content="<%= (property.description || '').slice(0, 160) %>">
-  <link rel="canonical" href="/properties/<%= property.slug %>">
+  <link rel="canonical" href="<%= propertyUrl %>">
 
   <!-- Open Graph -->
   <meta property="og:type" content="article">
   <meta property="og:title" content="<%= property.title %>">
   <meta property="og:description" content="<%= (property.description || '').slice(0, 200) %>">
-  <meta property="og:url" content="/properties/<%= property.slug %>">
-  <meta property="og:image" content="<%= property.photos && property.photos[0] ? property.photos[0] : '/img/property-placeholder.jpg' %>">
+  <meta property="og:url" content="<%= propertyUrl %>">
+  <meta property="og:image" content="<%= propertyImage %>">
+  <meta property="og:site_name" content="Sweet Home">
+  <meta property="og:locale" content="en_US">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="<%= property.title %>">
   <meta name="twitter:description" content="<%= (property.description || '').slice(0, 200) %>">
-  <meta name="twitter:image" content="<%= property.photos && property.photos[0] ? property.photos[0] : '/img/property-placeholder.jpg' %>">
+  <meta name="twitter:image" content="<%= propertyImage %>">
 
   <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">
@@ -22,8 +30,10 @@
     '@type': ['Residence'],
     name: property.title,
     description: property.description || '',
-    image: (property.photos && property.photos.length > 0) ? property.photos : ['/img/property-placeholder.jpg'],
-    url: `/properties/${property.slug}`,
+    image: (property.photos && property.photos.length > 0) 
+      ? property.photos.map(p => p.startsWith('http') ? p : `${siteBaseUrl}${p}`)
+      : [`${siteBaseUrl}/img/property-placeholder.jpg`],
+    url: propertyUrl,
     address: {
       '@type': 'PostalAddress',
       addressLocality: property.city,
@@ -40,6 +50,38 @@
       priceCurrency: 'EUR',
       availability: 'https://schema.org/InStock'
     }
+  }) %>
+  </script>
+  <script type="application/ld+json">
+  <%- JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+      name: 'Properties',
+      item: `${siteBaseUrl}/properties`
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: property.country,
+      item: `${siteBaseUrl}/properties?country=${encodeURIComponent(property.country)}`
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: property.city,
+      item: `${siteBaseUrl}/properties?country=${encodeURIComponent(property.country)}&city=${encodeURIComponent(property.city)}`
+    },
+      {
+        '@type': 'ListItem',
+        position: 4,
+        name: property.title,
+        item: propertyUrl
+      }
+    ]
   }) %>
   </script>
 <% } %>

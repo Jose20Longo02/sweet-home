@@ -1,0 +1,64 @@
+<%
+  const baseUrl = (typeof canonicalUrl !== 'undefined' && canonicalUrl) 
+    ? canonicalUrl.replace(/\/$/, '') 
+    : ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
+  const siteName = 'Sweet Home';
+  const defaultDescription = 'Find your dream property in Cyprus, Dubai, and Berlin. Browse luxury apartments, villas, and real estate investments. Expert guidance for buyers and sellers.';
+  const metaDescription = (typeof metaDescription !== 'undefined' && metaDescription) ? metaDescription : defaultDescription;
+%>
+<meta name="description" content="<%= metaDescription %>">
+<link rel="canonical" href="<%= baseUrl %>/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Sweet Home - Find Your Dream Property' %>">
+<meta property="og:description" content="<%= metaDescription %>">
+<meta property="og:url" content="<%= baseUrl %>/">
+<meta property="og:image" content="<%= baseUrl %>/images/dubai-hero.jpg">
+<meta property="og:site_name" content="<%= siteName %>">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'Sweet Home - Find Your Dream Property' %>">
+<meta name="twitter:description" content="<%= metaDescription %>">
+<meta name="twitter:image" content="<%= baseUrl %>/images/dubai-hero.jpg">
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+<%- JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: siteName,
+  url: baseUrl,
+  logo: `${baseUrl}/images/Sweet Home Logo.png`,
+  sameAs: [
+    // Add your social media URLs here when available
+    // 'https://www.facebook.com/sweethome',
+    // 'https://www.instagram.com/sweethome',
+    // 'https://www.linkedin.com/company/sweethome'
+  ],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'Customer Service',
+    availableLanguage: ['English', 'Spanish', 'German']
+  }
+}) %>
+</script>
+<script type="application/ld+json">
+<%- JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: siteName,
+  url: baseUrl,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${baseUrl}/properties?q={search_term_string}`
+    },
+    'query-input': 'required name=search_term_string'
+  }
+}) %>
+</script>
+

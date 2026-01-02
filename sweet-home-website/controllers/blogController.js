@@ -51,11 +51,13 @@ exports.showPublic = async (req, res, next) => {
         LIMIT 4`,
       [req.params.slug]
     );
+    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     res.render('blog/blog-detail', {
       title: localizedPost.title,
       post: localizedPost,
       recommendedPosts: recommendedPosts || [],
-      stickyFooter: true
+      stickyFooter: true,
+      baseUrl
     });
   } catch (err) { next(err); }
 };

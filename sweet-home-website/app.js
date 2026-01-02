@@ -441,7 +441,12 @@ app.get('/sitemap.xml', async (req, res, next) => {
 
     // Static pages
     const staticPaths = ['', 'about', 'contact', 'projects', 'properties', 'privacy', 'terms', 'cookies'];
-    const staticUrls = staticPaths.map(p => ({ loc: `${base}/${p}`.replace(/\/$/, '/'), lastmod: null }));
+    const staticUrls = staticPaths.map(p => ({ 
+      loc: `${base}/${p}`.replace(/\/$/, '/'), 
+      lastmod: null,
+      changefreq: p === '' ? 'daily' : 'weekly',
+      priority: p === '' ? '1.0' : '0.8'
+    }));
 
     // Dynamic properties
     const props = await query(`SELECT slug, updated_at, created_at FROM properties WHERE slug IS NOT NULL ORDER BY updated_at DESC NULLS LAST, created_at DESC NULLS LAST LIMIT 5000`);
@@ -449,7 +454,7 @@ app.get('/sitemap.xml', async (req, res, next) => {
       loc: `${base}/properties/${r.slug}`,
       lastmod: (r.updated_at || r.created_at) ? new Date(r.updated_at || r.created_at).toISOString() : null,
       changefreq: 'weekly',
-      priority: '0.8'
+      priority: '0.9'
     }));
 
     // Dynamic projects
@@ -457,8 +462,8 @@ app.get('/sitemap.xml', async (req, res, next) => {
     const projUrls = (projs.rows || []).map(r => ({
       loc: `${base}/projects/${r.slug}`,
       lastmod: (r.updated_at || r.created_at) ? new Date(r.updated_at || r.created_at).toISOString() : null,
-      changefreq: 'weekly',
-      priority: '0.7'
+      changefreq: 'monthly',
+      priority: '0.8'
     }));
 
     // Dynamic blog posts
@@ -466,8 +471,8 @@ app.get('/sitemap.xml', async (req, res, next) => {
     const blogUrls = (posts.rows || []).map(r => ({
       loc: `${base}/blog/${r.slug}`,
       lastmod: (r.updated_at || r.published_at || r.created_at) ? new Date(r.updated_at || r.published_at || r.created_at).toISOString() : null,
-      changefreq: 'weekly',
-      priority: '0.6'
+      changefreq: 'monthly',
+      priority: '0.7'
     }));
 
     const all = [...staticUrls, ...propUrls, ...projUrls, ...blogUrls];

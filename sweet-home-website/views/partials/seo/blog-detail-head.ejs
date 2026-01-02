@@ -1,0 +1,88 @@
+<% if (typeof post !== 'undefined' && post) { 
+  const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
+  const blogUrl = `${siteBaseUrl}/blog/${post.slug}`;
+  const blogImage = post.cover_image 
+    ? (post.cover_image.startsWith('http') ? post.cover_image : `${siteBaseUrl}${post.cover_image}`)
+    : `${siteBaseUrl}/img/property-placeholder.jpg`;
+  const blogDescription = (post.excerpt || post.description || '').slice(0, 160) || post.title;
+  const publishedDate = post.published_at || post.created_at;
+  const modifiedDate = post.updated_at || publishedDate;
+%>
+<meta name="description" content="<%= blogDescription %>">
+<link rel="canonical" href="<%= blogUrl %>">
+
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="<%= post.title %>">
+<meta property="og:description" content="<%= blogDescription %>">
+<meta property="og:url" content="<%= blogUrl %>">
+<meta property="og:image" content="<%= blogImage %>">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="en_US">
+<% if (publishedDate) { %>
+<meta property="article:published_time" content="<%= new Date(publishedDate).toISOString() %>">
+<% } %>
+<% if (modifiedDate) { %>
+<meta property="article:modified_time" content="<%= new Date(modifiedDate).toISOString() %>">
+<% } %>
+<% if (post.author_name) { %>
+<meta property="article:author" content="<%= post.author_name %>">
+<% } %>
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= post.title %>">
+<meta name="twitter:description" content="<%= blogDescription %>">
+<meta name="twitter:image" content="<%= blogImage %>">
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+<%- JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.title,
+  description: blogDescription,
+  image: blogImage,
+  url: blogUrl,
+  datePublished: publishedDate ? new Date(publishedDate).toISOString() : undefined,
+  dateModified: modifiedDate ? new Date(modifiedDate).toISOString() : undefined,
+  author: {
+    '@type': 'Person',
+    name: post.author_name || 'Sweet Home Team'
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Sweet Home',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteBaseUrl}/images/Sweet Home Logo.png`
+      }
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': blogUrl
+  }
+}) %>
+</script>
+<script type="application/ld+json">
+<%- JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Blog',
+      item: `${siteBaseUrl}/blog`
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: post.title,
+      item: blogUrl
+    }
+  ]
+}) %>
+</script>
+<% } %>
+

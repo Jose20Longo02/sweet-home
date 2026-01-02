@@ -1,6 +1,7 @@
 <% title = 'Home' %>
 <% useMainContainer = false %>
 <% hideFooter = false %>
+<% headPartial = '../partials/seo/home-head' %>
 <link rel="stylesheet" href="/css/home.css" />
 <link rel="stylesheet" href="/css/contact.css?v=<%= assetVersion %>" />
 <% if (process.env.RECAPTCHA_SITE_KEY) { %>
@@ -32,9 +33,9 @@
 
 <!-- 1) Header overlayed hero with 3 vertical panels and centered search -->
 <section class="hero-panels">
-  <div class="panel" data-country="Berlin"><img src="/images/berlin-hero.jpg" alt="" loading="lazy" decoding="async"></div>
-  <div class="panel" data-country="Dubai"><img src="/images/dubai-hero.jpg" alt="" fetchpriority="high" decoding="async"></div>
-  <div class="panel" data-country="Cyprus"><img src="/images/cyprus-hero.jpg" alt="" loading="lazy" decoding="async"></div>
+  <div class="panel" data-country="Berlin"><img src="/images/berlin-hero.jpg" alt="Luxury properties in Berlin, Germany" loading="lazy" decoding="async"></div>
+  <div class="panel" data-country="Dubai"><img src="/images/dubai-hero.jpg" alt="Luxury properties in Dubai, UAE" fetchpriority="high" decoding="async"></div>
+  <div class="panel" data-country="Cyprus"><img src="/images/cyprus-hero.jpg" alt="Luxury properties in Cyprus" loading="lazy" decoding="async"></div>
 
   <form class="hero-search" action="/properties" method="get">
     <div class="search-row">

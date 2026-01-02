@@ -1378,11 +1378,13 @@ exports.showProject = async (req, res, next) => {
       };
     });
 
+    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     res.render('projects/project-detail', {
       project,
       relatedProjects: normalizedRelatedProjects,
       projectProperties: normalizedProjectProperties,
-      locations
+      locations,
+      baseUrl
     });
   } catch (err) {
     next(err);
