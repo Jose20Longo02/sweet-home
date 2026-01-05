@@ -1,10 +1,17 @@
-<% title = 'Sign In' %>
+<% 
+  title = 'Sign In';
+  const siteBaseUrl = (process.env.APP_URL || 'https://sweethome.com').replace(/\/$/, '');
+  const loginUrl = `${siteBaseUrl}/auth/login`;
+%>
 
 <head>
+  <meta name="description" content="Sign in to your Sweet Home account to access your dashboard and manage your real estate listings.">
+  <link rel="canonical" href="<%= loginUrl %>">
   <link rel="stylesheet" href="/css/auth/login.css">
   <% if (process.env.RECAPTCHA_SITE_KEY) { %>
     <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
   <% } %>
+  <!-- No ItemList schema needed for login page as it doesn't have a carousel -->
 </head>
 
 <div class="login-wrap">
