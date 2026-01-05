@@ -1,0 +1,41 @@
+<%
+  const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
+  const blogListUrl = `${siteBaseUrl}/blog${(typeof page !== 'undefined' && page > 1) ? `?page=${page}` : ''}`;
+  const listDesc = 'Browse our real estate blog for insights on property markets in Cyprus, Dubai, and Berlin. Expert advice, market trends, and investment guides.';
+%>
+<meta name="description" content="<%= listDesc %>">
+<link rel="canonical" href="<%= blogListUrl %>">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Blog - Real Estate Insights' %>">
+<meta property="og:description" content="<%= listDesc %>">
+<meta property="og:url" content="<%= blogListUrl %>">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'Blog - Real Estate Insights' %>">
+<meta name="twitter:description" content="<%= listDesc %>">
+
+<!-- JSON-LD ItemList for blog posts (only if posts exist) -->
+<% if (typeof posts !== 'undefined' && posts && posts.length > 0) { %>
+<script type="application/ld+json">
+<%- JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: posts.map((post, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'BlogPosting',
+      '@id': `${siteBaseUrl}/blog/${post.slug}`,
+      name: post.title,
+      url: `${siteBaseUrl}/blog/${post.slug}`
+    }
+  }))
+}) %>
+</script>
+<% } %>
+

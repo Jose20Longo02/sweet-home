@@ -1,0 +1,41 @@
+<%
+  const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
+  const ownersUrl = `${siteBaseUrl}/owners`;
+  const pageDesc = 'Sell your property with Sweet Home. Expert real estate services for property owners in Cyprus, Dubai, and Berlin.';
+%>
+<meta name="description" content="<%= pageDesc %>">
+<link rel="canonical" href="<%= ownersUrl %>">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'For Sellers - Sweet Home' %>">
+<meta property="og:description" content="<%= pageDesc %>">
+<meta property="og:url" content="<%= ownersUrl %>">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'For Sellers - Sweet Home' %>">
+<meta name="twitter:description" content="<%= pageDesc %>">
+
+<!-- JSON-LD ItemList for sold properties carousel (only if properties exist) -->
+<% if (typeof soldProperties !== 'undefined' && soldProperties && soldProperties.length > 0) { %>
+<script type="application/ld+json">
+<%- JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: soldProperties.map((property, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'Residence',
+      '@id': `${siteBaseUrl}/properties/${property.slug}`,
+      name: property.title,
+      url: `${siteBaseUrl}/properties/${property.slug}`
+    }
+  }))
+}) %>
+</script>
+<% } %>
+

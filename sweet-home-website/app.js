@@ -418,11 +418,13 @@ app.get('/owners', async (req, res, next) => {
       ...p,
       photos: Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : [])
     }));
+    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     res.render('owners', {
       title: 'For Sellers',
       useMainContainer: false,
       soldProperties: properties,
-      canonicalUrl: (process.env.APP_URL || `${req.protocol}://${req.get('host')}`) + '/owners'
+      canonicalUrl: `${baseUrl}/owners`,
+      baseUrl
     });
   } catch (e) { next(e); }
 });

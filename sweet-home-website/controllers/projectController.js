@@ -1218,6 +1218,7 @@ exports.listProjectsPublic = async (req, res, next) => {
       return { ...p, has_variants: has, variant_base: base };
     });
 
+    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     res.render('projects/project-list', { 
       projects: projectsWithVariants,
       locations,
@@ -1227,7 +1228,8 @@ exports.listProjectsPublic = async (req, res, next) => {
       currentPage: parseInt(page),
       totalPages,
       totalProjects,
-      queryParams: req.query
+      queryParams: req.query,
+      baseUrl
     });
   } catch (err) {
     next(err);

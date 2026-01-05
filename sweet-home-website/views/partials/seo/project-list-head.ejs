@@ -1,0 +1,42 @@
+<%
+  const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
+  const queryString = (typeof queryParams !== 'undefined' && Object.keys(queryParams || {}).length) ? '?' + new URLSearchParams(queryParams).toString() : '';
+  const projectListUrl = `${siteBaseUrl}/projects${queryString}`;
+  const listDesc = 'Browse luxury development projects in Cyprus, Dubai, and Berlin. Find your perfect real estate investment opportunity.';
+%>
+<meta name="description" content="<%= listDesc %>">
+<link rel="canonical" href="<%= projectListUrl %>">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Development Projects' %>">
+<meta property="og:description" content="<%= listDesc %>">
+<meta property="og:url" content="<%= projectListUrl %>">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'Development Projects' %>">
+<meta name="twitter:description" content="<%= listDesc %>">
+
+<!-- JSON-LD ItemList for projects (only if projects exist) -->
+<% if (typeof projects !== 'undefined' && projects && projects.length > 0) { %>
+<script type="application/ld+json">
+<%- JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: projects.map((project, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'ResidentialComplex',
+      '@id': `${siteBaseUrl}/projects/${project.slug}`,
+      name: project.title,
+      url: `${siteBaseUrl}/projects/${project.slug}`
+    }
+  }))
+}) %>
+</script>
+<% } %>
+
