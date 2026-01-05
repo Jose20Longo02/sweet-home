@@ -1,6 +1,9 @@
-<% title = t('nav.contact','Contact') %>
-<% useMainContainer = false %>
-<% hideFooter = false %>
+<% 
+  title = t('nav.contact','Contact');
+  useMainContainer = false;
+  hideFooter = false;
+  headPartial = '../partials/seo/contact-head';
+%>
 <link rel="stylesheet" href="/css/contact.css?v=<%= assetVersion %>" />
 <script src="/js/contact.js" defer></script>
 <% if (process.env.RECAPTCHA_SITE_KEY) { %>

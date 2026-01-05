@@ -1,0 +1,44 @@
+<%
+  const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
+  const aboutUrl = `${siteBaseUrl}/about`;
+  const pageDesc = 'Learn about Sweet Home - your trusted real estate partner in Cyprus, Dubai, and Berlin. Meet our expert team dedicated to helping you find your dream property.';
+%>
+<meta name="description" content="<%= pageDesc %>">
+<link rel="canonical" href="<%= aboutUrl %>">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'About Us - Sweet Home' %>">
+<meta property="og:description" content="<%= pageDesc %>">
+<meta property="og:url" content="<%= aboutUrl %>">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'About Us - Sweet Home' %>">
+<meta name="twitter:description" content="<%= pageDesc %>">
+
+<!-- JSON-LD ItemList for team members carousel (only if team exists) -->
+<% if (typeof team !== 'undefined' && team && team.length > 0) { %>
+<script type="application/ld+json">
+<%- JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: team.map((member, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'Person',
+      name: member.name || (member.email || '').split('@')[0],
+      jobTitle: member.position || member.role || 'Team Member',
+      worksFor: {
+        '@type': 'Organization',
+        name: 'Sweet Home'
+      }
+    }
+  }))
+}) %>
+</script>
+<% } %>
+

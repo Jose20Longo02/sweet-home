@@ -1,0 +1,23 @@
+<%
+  const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
+  const contactUrl = `${siteBaseUrl}/contact`;
+  const pageDesc = 'Contact Sweet Home for expert real estate services in Cyprus, Dubai, and Berlin. Get in touch with our team for property inquiries and investment opportunities.';
+%>
+<meta name="description" content="<%= pageDesc %>">
+<link rel="canonical" href="<%= contactUrl %>">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Contact Us - Sweet Home' %>">
+<meta property="og:description" content="<%= pageDesc %>">
+<meta property="og:url" content="<%= contactUrl %>">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'Contact Us - Sweet Home' %>">
+<meta name="twitter:description" content="<%= pageDesc %>">
+
+<!-- No ItemList schema needed for contact page as it doesn't have a carousel -->
+

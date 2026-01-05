@@ -309,15 +309,20 @@ app.get('/about', async (req, res, next) => {
     try {
       areaOrder = Object.keys(require('./config/roles')) || [];
     } catch (_) { areaOrder = []; }
+    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     res.render('about', {
       title: 'About',
       team: filtered,
       useMainContainer: false,
-      areaOrder
+      areaOrder,
+      baseUrl
     });
   } catch (err) { next(err); }
 });
-app.get('/contact', (req, res) => res.render('contact', { title: 'Contact' }));
+app.get('/contact', (req, res) => {
+  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+  res.render('contact', { title: 'Contact', baseUrl });
+});
 app.get('/terms', (req, res) => res.render('terms', { title: 'Terms & Conditions' }));
 app.get('/privacy', (req, res) => res.render('privacy', { title: 'Privacy Policy' }));
 app.get('/cookies', (req, res) => res.render('cookies', { title: 'Cookies Policy' }));
