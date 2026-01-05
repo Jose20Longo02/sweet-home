@@ -196,11 +196,18 @@
   <% if (typeof canonicalUrl !== 'undefined' && canonicalUrl) { %>
     <link rel="canonical" href="<%= canonicalUrl %>">
   <% } %>
-  <% if (typeof canonicalUrl !== 'undefined' && canonicalUrl) { %>
-    <link rel="alternate" hreflang="en" href="<%= canonicalUrl.replace(/:\/\//, '://').replace(/\/es\//,'/').replace(/\/de\//,'/') %>">
-    <link rel="alternate" hreflang="es" href="<%= canonicalUrl.replace(/:\/\//, '://').replace(/:\/\//, '://').replace(/\/de\//,'/es/').replace(/\/en\//,'/es/').replace(/\/$/,'/').replace(/\/\/$/,'/') %>">
-    <link rel="alternate" hreflang="de" href="<%= canonicalUrl.replace(/:\/\//, '://').replace(/:\/\//, '://').replace(/\/es\//,'/de/').replace(/\/en\//,'/de/').replace(/\/$/,'/').replace(/\/\/$/,'/') %>">
-    <link rel="alternate" hreflang="x-default" href="<%= canonicalUrl.replace(/:\/\//, '://').replace(/\/es\//,'/').replace(/\/de\//,'/') %>">
+  <% if (typeof canonicalUrl !== 'undefined' && canonicalUrl) { 
+    // Since language is cookie-based (not URL-based), all hreflang tags point to the same URL
+    // The current language is determined by the cookie, so we include a self-referencing hreflang
+    const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+    const cleanCanonical = String(canonicalUrl).trim();
+    const supportedLangs = ['en', 'es', 'de'];
+  %>
+    <!-- All language alternatives point to the same URL (language is cookie-based) -->
+    <% supportedLangs.forEach(function(langCode) { %>
+    <link rel="alternate" hreflang="<%= langCode %>" href="<%= cleanCanonical %>">
+    <% }); %>
+    <link rel="alternate" hreflang="x-default" href="<%= cleanCanonical %>">
   <% } %>
   <% if ((typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) && !(typeof currentPath !== 'undefined' && (/^\/(admin|superadmin)/).test(currentPath))) { %>
     <script>
