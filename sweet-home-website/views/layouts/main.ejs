@@ -193,21 +193,19 @@
     /></noscript>
     <!-- End Meta Pixel Code -->
   <% } %>
-  <% if (typeof canonicalUrl !== 'undefined' && canonicalUrl) { %>
-    <link rel="canonical" href="<%= canonicalUrl %>">
-  <% } %>
   <% if (typeof canonicalUrl !== 'undefined' && canonicalUrl) { 
+    // Use the exact same URL for both canonical and hreflang to avoid conflicts
     // Since language is cookie-based (not URL-based), all hreflang tags point to the same URL
-    // The current language is determined by the cookie, so we include a self-referencing hreflang
-    const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
-    const cleanCanonical = String(canonicalUrl).trim();
+    const canonicalHref = String(canonicalUrl).trim();
     const supportedLangs = ['en', 'es', 'de'];
   %>
+    <link rel="canonical" href="<%= canonicalHref %>">
     <!-- All language alternatives point to the same URL (language is cookie-based) -->
+    <!-- This includes self-referencing hreflang since all point to the same URL -->
     <% supportedLangs.forEach(function(langCode) { %>
-    <link rel="alternate" hreflang="<%= langCode %>" href="<%= cleanCanonical %>">
+    <link rel="alternate" hreflang="<%= langCode %>" href="<%= canonicalHref %>">
     <% }); %>
-    <link rel="alternate" hreflang="x-default" href="<%= cleanCanonical %>">
+    <link rel="alternate" hreflang="x-default" href="<%= canonicalHref %>">
   <% } %>
   <% if ((typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) && !(typeof currentPath !== 'undefined' && (/^\/(admin|superadmin)/).test(currentPath))) { %>
     <script>

@@ -1,0 +1,8 @@
+Page URL,Hreflang,Issue Type,Discovered
+https://sweet-home.co.il/,,No self-referencing hreflang,02 Jan 2026 (14:22 UTC)
+https://sweet-home.co.il/owners,,No self-referencing hreflang,02 Jan 2026 (14:22 UTC)
+https://sweet-home.co.il/services,,No self-referencing hreflang,02 Jan 2026 (14:22 UTC)
+https://sweet-home.co.il/,de,Conflicting hreflang and rel=canonical,02 Jan 2026 (14:22 UTC)
+https://sweet-home.co.il/,en,Conflicting hreflang and rel=canonical,02 Jan 2026 (14:22 UTC)
+https://sweet-home.co.il/,es,Conflicting hreflang and rel=canonical,02 Jan 2026 (14:22 UTC)
+https://sweet-home.co.il/,x-default,Conflicting hreflang and rel=canonical,02 Jan 2026 (14:22 UTC)
