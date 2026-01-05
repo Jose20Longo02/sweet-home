@@ -197,13 +197,21 @@
     // Use the exact same URL for both canonical and hreflang to avoid conflicts
     // Since language is cookie-based (not URL-based), all hreflang tags point to the same URL
     const canonicalHref = String(canonicalUrl).trim();
-    const supportedLangs = ['en', 'es', 'de'];
+    // Use ISO 639-1 language codes with ISO 3166-1 alpha-2 country codes (as recommended by SEMrush)
+    const supportedHreflangs = [
+      { lang: 'en', country: 'US' },  // English - United States (ISO 639-1 + ISO 3166-1 alpha-2)
+      { lang: 'es', country: 'ES' },  // Spanish - Spain (ISO 639-1 + ISO 3166-1 alpha-2)
+      { lang: 'de', country: 'DE' }    // German - Germany (ISO 639-1 + ISO 3166-1 alpha-2)
+    ];
+    const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
   %>
     <link rel="canonical" href="<%= canonicalHref %>">
     <!-- All language alternatives point to the same URL (language is cookie-based) -->
-    <!-- This includes self-referencing hreflang since all point to the same URL -->
-    <% supportedLangs.forEach(function(langCode) { %>
-    <link rel="alternate" hreflang="<%= langCode %>" href="<%= canonicalHref %>">
+    <!-- Using ISO 639-1 language codes with ISO 3166-1 alpha-2 country codes as per SEMrush recommendations -->
+    <% supportedHreflangs.forEach(function(hreflang) { 
+      const hreflangValue = hreflang.lang + '-' + hreflang.country;
+    %>
+    <link rel="alternate" hreflang="<%= hreflangValue %>" href="<%= canonicalHref %>">
     <% }); %>
     <link rel="alternate" hreflang="x-default" href="<%= canonicalHref %>">
   <% } %>
