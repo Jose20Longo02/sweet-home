@@ -1312,6 +1312,25 @@ exports.showProject = async (req, res, next) => {
       console.warn('Error parsing project JSON fields:', e);
     }
 
+    // Validate brochure_url - only show if file exists (for local files)
+    if (project.brochure_url) {
+      const brochureUrl = String(project.brochure_url).trim();
+      // If it's a local file path (starts with /uploads/), check if it exists
+      if (brochureUrl.startsWith('/uploads/')) {
+        const brochurePath = path.join(__dirname, '../public', brochureUrl.replace(/^\//, ''));
+        if (!fs.existsSync(brochurePath)) {
+          // File doesn't exist, remove the brochure URL
+          console.warn(`Brochure file not found: ${brochurePath} (URL: ${brochureUrl})`);
+          project.brochure_url = null;
+        }
+      }
+      // If it's a full URL (http/https), assume it's valid (could be on DigitalOcean Spaces or external)
+      // If it's empty or invalid, set to null
+      else if (!brochureUrl.startsWith('http') || brochureUrl === '' || brochureUrl === '#') {
+        project.brochure_url = null;
+      }
+    }
+
     // Get related projects in the same area
     const { rows: relatedProjects } = await query(`
       SELECT id, title, slug, photos, city, country
