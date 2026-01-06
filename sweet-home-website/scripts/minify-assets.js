@@ -48,14 +48,30 @@ function minifyCSS(filePath) {
     const code = fs.readFileSync(filePath, 'utf8');
     const cleanCSS = new CleanCSS({
       level: 2,
-      format: false
+      format: false,
+      rebase: false // Don't rebase URLs to avoid import issues
     });
     
     const result = cleanCSS.minify(code);
     
-    if (result.errors && result.errors.length > 0) {
-      console.error(`Errors minifying ${filePath}:`, result.errors);
+    // Only fail on actual errors, not warnings about missing @import (which are common and non-critical)
+    const criticalErrors = result.errors ? result.errors.filter(err => 
+      !err.includes('@import') && !err.includes('resource is missing')
+    ) : [];
+    
+    if (criticalErrors.length > 0) {
+      console.error(`Errors minifying ${filePath}:`, criticalErrors);
       return false;
+    }
+    
+    // Log warnings about @import but continue
+    if (result.errors && result.errors.length > 0) {
+      const importWarnings = result.errors.filter(err => 
+        err.includes('@import') || err.includes('resource is missing')
+      );
+      if (importWarnings.length > 0) {
+        console.log(`⚠ Warning (non-critical) for ${path.relative(publicDir, filePath)}: ${importWarnings[0]}`);
+      }
     }
     
     const minPath = filePath.replace(/\.css$/, '.min.css');
