@@ -414,7 +414,12 @@ app.get('/admin', (req, res) => {
 
 // Services page
 app.get('/services', (req, res) => {
-  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+  // Ensure we use the correct domain, not staging URLs
+  let baseUrl = process.env.APP_URL;
+  if (!baseUrl || baseUrl.includes('onrender.com') || baseUrl.includes('localhost')) {
+    baseUrl = `${req.protocol}://${req.get('host')}`;
+  }
+  baseUrl = baseUrl.replace(/\/$/, '');
   res.render('services', {
     title: 'Services',
     useMainContainer: false,
