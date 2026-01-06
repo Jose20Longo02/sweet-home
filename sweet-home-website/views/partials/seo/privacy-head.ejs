@@ -1,0 +1,25 @@
+<%
+  const siteBaseUrl = (typeof baseUrl !== 'undefined' && baseUrl) 
+    ? baseUrl.replace(/\/$/, '') 
+    : (process.env.APP_URL || 'https://sweethome.com').replace(/\/$/, '');
+  const privacyUrl = `${siteBaseUrl}/privacy`;
+  const metaDescription = 'Read Sweet Home\'s Privacy Policy to understand how we collect, use, and protect your personal data. Learn about your rights and our data practices.';
+%>
+<meta name="description" content="<%= metaDescription %>">
+<link rel="canonical" href="<%= privacyUrl %>">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Privacy Policy | Sweet Home">
+<meta property="og:description" content="<%= metaDescription %>">
+<meta property="og:url" content="<%= privacyUrl %>">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Privacy Policy | Sweet Home">
+<meta name="twitter:description" content="<%= metaDescription %>">
+
+<!-- No ItemList schema needed for privacy page as it doesn't have a carousel -->
+

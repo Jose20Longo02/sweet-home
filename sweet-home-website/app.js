@@ -324,7 +324,15 @@ app.get('/contact', (req, res) => {
   res.render('contact', { title: 'Contact', baseUrl });
 });
 app.get('/terms', (req, res) => res.render('terms', { title: 'Terms & Conditions' }));
-app.get('/privacy', (req, res) => res.render('privacy', { title: 'Privacy Policy' }));
+app.get('/privacy', (req, res) => {
+  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+  res.render('privacy', { 
+    title: 'Privacy Policy', 
+    baseUrl,
+    headPartial: 'partials/seo/privacy-head',
+    canonicalUrl: `${baseUrl}/privacy`
+  });
+});
 app.get('/cookies', (req, res) => res.render('cookies', { title: 'Cookies Policy' }));
 app.use('/admin/dashboard', adminUserRoutes);
 app.use('/superadmin/dashboard', superAdminRoutes); // SuperAdmin landing
