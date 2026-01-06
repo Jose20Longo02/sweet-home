@@ -7,14 +7,21 @@
 <% } %>
 
 <!-- i18n for services panel -->
-<div id="i18n-services" data-i18n='<%- JSON.stringify({
+<div id="i18n-services" data-i18n='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   services: {
     cta: t("services.panel.cta","Contact Us!"),
     consulting: { title: t("services.panel.consulting.title","Property Consulting"), copy: t("services.panel.consulting.copy","") },
     management: { title: t("services.panel.management.title","Property Management"), copy: t("services.panel.management.copy","") },
     finance: { title: t("services.panel.finance.title","Financial Services"), copy: t("services.panel.finance.copy","") }
   }
-}).replace(/'/g, '&#39;') %>' style="display:none;"></div>
+}) : JSON.stringify({
+  services: {
+    cta: t("services.panel.cta","Contact Us!"),
+    consulting: { title: t("services.panel.consulting.title","Property Consulting"), copy: t("services.panel.consulting.copy","") },
+    management: { title: t("services.panel.management.title","Property Management"), copy: t("services.panel.management.copy","") },
+    finance: { title: t("services.panel.finance.title","Financial Services"), copy: t("services.panel.finance.copy","") }
+  }
+})).replace(/'/g, '&#39;') %>' style="display:none"></div>
 
 <!-- SECTION 1: Hero with Tabbed Services Panel -->
 <section class="services-hero" aria-label="<%= t('services.hero.aria','Services hero') %>">

@@ -3,11 +3,11 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
 <!-- Locations data for JavaScript -->
-<div id="locations-data" data-locations='<%- JSON.stringify(locations).replace(/'/g, '&#39;') %>' style="display: none;"></div>
+<div id="locations-data" data-locations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locations) : JSON.stringify(locations)).replace(/'/g, '&#39;') %>' style="display:none"></div>
 <!-- Location colors for JavaScript -->
-<div id="location-colors-data" data-location-colors='<%- JSON.stringify(locationColors).replace(/'/g, '&#39;') %>' style="display: none;"></div>
+<div id="location-colors-data" data-location-colors='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locationColors) : JSON.stringify(locationColors)).replace(/'/g, '&#39;') %>' style="display:none"></div>
 <!-- i18n strings for client-side JS -->
-<div id="i18n-property-list" data-i18n='<%- JSON.stringify({
+<div id="i18n-property-list" data-i18n='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   compare: {
     title: t("properties.list.compare.title","Properties to Compare"),
     cta: t("properties.list.compare.cta","Compare"),
@@ -59,7 +59,59 @@
     savedOk: t('properties.list.saved.savedOk','Search saved successfully!'),
     deletedOk: t('properties.list.saved.deletedOk','Search deleted successfully!')
   }
-}).replace(/'/g, '&#39;') %>' style="display:none;"></div>
+}) : JSON.stringify({
+    compare: {
+      title: t("properties.list.compare.title","Properties to Compare"),
+      cta: t("properties.list.compare.cta","Compare"),
+      modalTitle: t("properties.list.compare.modalTitle","Property Comparison"),
+      added: t("properties.list.compare.added","Property added to comparison"),
+      removed: t("properties.list.compare.removed","Property removed from comparison"),
+      max: t("properties.list.compare.max","You can only compare up to 3 properties at a time"),
+      cleared: t("properties.list.compare.cleared","Comparison cleared"),
+      needTwo: t("properties.list.compare.needTwo","Please select at least 2 properties to compare"),
+      headers: {
+        feature: t("properties.list.compare.headers.feature","Feature"),
+        image: t("properties.list.compare.headers.image","Image"),
+        location: t("properties.list.compare.headers.location","Location"),
+        price: t("properties.list.compare.headers.price","Price"),
+        pricePerSqm: t("properties.list.compare.headers.pricePerSqm","Price per m²"),
+        type: t("properties.list.compare.headers.type","Type"),
+        rooms: t("properties.list.compare.headers.rooms","Rooms"),
+        bathrooms: t("properties.list.compare.headers.bathrooms","Bathrooms"),
+        size: t("properties.list.compare.headers.size","Size")
+      },
+      remove: t("properties.list.compare.remove","Remove from comparison"),
+      removeAria: t("properties.list.compare.removeAria","Remove %s from comparison")
+    },
+    forms: {
+      anyCity: t('forms.anyCity','Any City'),
+      anyNeighborhood: t('forms.anyNeighborhood','Any Neighborhood')
+    },
+    meta: {
+      sqm: t('properties.list.meta.sqm','m²'),
+      beds: t('properties.list.meta.beds','beds'),
+      baths: t('properties.list.meta.baths','baths')
+    },
+    viewDetails: t('properties.list.viewDetails','View details'),
+    map: {
+      error: t('properties.list.map.error','Unable to load map. Please try refreshing the page.')
+    },
+    common: {
+      retry: t('common.retry','Retry')
+    },
+    saved: {
+      noneTitle: t('properties.list.saved.noneTitle','No Saved Searches'),
+      noneHint: t('properties.list.saved.noneHint','Save your property searches to quickly access them later.'),
+      noDescription: t('properties.list.saved.noDescription','No description'),
+      created: t('properties.list.saved.created','Created:'),
+      lastUsed: t('properties.list.saved.lastUsed','Last used:'),
+      emailAlerts: t('properties.list.saved.emailAlerts','Email Alerts'),
+      apply: t('properties.list.saved.apply','Apply Search'),
+      delete: t('properties.list.saved.delete','Delete'),
+      savedOk: t('properties.list.saved.savedOk','Search saved successfully!'),
+      deletedOk: t('properties.list.saved.deletedOk','Search deleted successfully!')
+    }
+  })).replace(/'/g, '&#39;') %>' style="display:none"></div>
 
 <div class="property-search-page">
   <!-- Search Header removed per design request; dark header enabled in layout -->

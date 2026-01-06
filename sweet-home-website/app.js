@@ -163,6 +163,10 @@ app.use((req, res, next) => {
   res.locals.getIconPath = iconThemes.getIconPath;
   res.locals.getActiveTheme = iconThemes.getActiveTheme;
   res.locals.getAvailableThemes = iconThemes.getAvailableThemes;
+  // Helper to minify JSON for data attributes (removes unnecessary whitespace)
+  res.locals.minifyJSON = function(obj) {
+    return JSON.stringify(obj).replace(/\s+/g, ' ').trim();
+  };
   next();
 });
 app.use(session({
@@ -454,6 +458,68 @@ app.get('/owners', async (req, res, next) => {
 });
 
 // robots.txt
+// Dynamic icon theme CSS endpoint - generates CSS based on active theme
+app.get('/css/icon-theme.css', (req, res) => {
+  try {
+    const iconPathFunc = iconThemes.getIconPath;
+    const bedPath = iconPathFunc('bed');
+    const bathPath = iconPathFunc('bath');
+    const sizePath = iconPathFunc('size');
+    const locationPath = iconPathFunc('location');
+    const propertyTypePath = iconPathFunc('propertyType');
+    const occupancyPath = iconPathFunc('occupancy');
+    const rentalPath = iconPathFunc('rental');
+    
+    const isPng = (path) => path && path.toLowerCase().indexOf('.png') !== -1;
+    const bedIsPng = isPng(bedPath);
+    const bathIsPng = isPng(bathPath);
+    const sizeIsPng = isPng(sizePath);
+    const locationIsPng = isPng(locationPath);
+    const propertyTypeIsPng = isPng(propertyTypePath);
+    const occupancyIsPng = isPng(occupancyPath);
+    const rentalIsPng = isPng(rentalPath);
+    
+    let css = ':root{';
+    css += `--icon-bed:url('${bedPath}');`;
+    css += `--icon-bath:url('${bathPath}');`;
+    css += `--icon-size:url('${sizePath}');`;
+    css += `--icon-location:url('${locationPath}');`;
+    if (propertyTypePath) css += `--icon-property-type:url('${propertyTypePath}');`;
+    if (occupancyPath) css += `--icon-occupancy:url('${occupancyPath}');`;
+    if (rentalPath) css += `--icon-rental:url('${rentalPath}');`;
+    css += '}';
+    
+    const generateIconClass = (name, path, isPng) => {
+      let result = `.icon-${name}{--icon:var(--icon-${name})!important;`;
+      if (isPng) {
+        result += `background-image:var(--icon-${name})!important;background-size:contain!important;background-repeat:no-repeat!important;background-position:center!important;-webkit-mask:none!important;mask:none!important;background-color:transparent!important;`;
+      }
+      result += '}';
+      return result;
+    };
+    
+    css += generateIconClass('bed', bedPath, bedIsPng);
+    css += generateIconClass('bath', bathPath, bathIsPng);
+    css += generateIconClass('size', sizePath, sizeIsPng);
+    css += generateIconClass('location', locationPath, locationIsPng);
+    if (propertyTypePath) css += generateIconClass('property-type', propertyTypePath, propertyTypeIsPng);
+    if (occupancyPath) css += generateIconClass('occupancy', occupancyPath, occupancyIsPng);
+    if (rentalPath) css += generateIconClass('rental', rentalPath, rentalIsPng);
+    
+    const activeTheme = iconThemes.getActiveTheme();
+    if (activeTheme === 'christmas') {
+      css += 'body[data-icon-theme="christmas"] .icon-bed,body[data-icon-theme="christmas"] .icon-bath,body[data-icon-theme="christmas"] .icon-size,body[data-icon-theme="christmas"] .icon-location,body[data-icon-theme="christmas"] .icon-property-type,body[data-icon-theme="christmas"] .icon-occupancy,body[data-icon-theme="christmas"] .icon-rental{transform:scale(1.5);transform-origin:center;}';
+    }
+    
+    res.setHeader('Content-Type', 'text/css');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.send(css);
+  } catch (err) {
+    console.error('Error generating icon theme CSS:', err);
+    res.status(500).send('/* Error generating CSS */');
+  }
+});
+
 app.get('/robots.txt', (req, res) => {
   res.type('text/plain');
   const allowAll = process.env.ROBOTS_ALLOW !== 'false';

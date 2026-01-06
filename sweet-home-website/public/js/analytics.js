@@ -6,6 +6,12 @@
 (function() {
   'use strict';
 
+  // Get GA_MEASUREMENT_ID from meta tag or window variable
+  const metaTag = document.querySelector('meta[name="ga-measurement-id"]');
+  if (metaTag) {
+    window.GA_MEASUREMENT_ID = metaTag.getAttribute('content');
+  }
+
   // Check if gtag is available
   const hasGA = typeof window.gtag === 'function';
 

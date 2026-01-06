@@ -10,7 +10,7 @@
 <% } %>
 
 <!-- Owners i18n for client JS -->
-<div id="i18n-owners" data-i18n='<%- JSON.stringify({
+<div id="i18n-owners" data-i18n='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   recentlySold: t("owners.recentlySold","Recently Sold"),
   validation: {
     fullName: t("owners.validation.fullName","Please enter your full name"),
@@ -28,7 +28,25 @@
     errorStatus: t("owners.form.errorStatus","There was a problem. Please try again."),
     errorToast: t("owners.form.errorToast","Something went wrong. Please try again later.")
   }
-}).replace(/'/g, '&#39;') %>' style="display:none;"></div>
+}) : JSON.stringify({
+  recentlySold: t("owners.recentlySold","Recently Sold"),
+  validation: {
+    fullName: t("owners.validation.fullName","Please enter your full name"),
+    countryCode: t("owners.validation.countryCode","Please enter a country code"),
+    phone: t("owners.validation.phone","Please enter a phone number"),
+    email: t("owners.validation.email","Enter a valid email address"),
+    language: t("owners.validation.language","Select a language")
+  },
+  form: {
+    fixErrors: t("owners.form.fixErrors","Please fix the errors above."),
+    sending: t("owners.form.sending","Sending..."),
+    successShort: t("owners.form.successShort","Thanks! We will reach out shortly."),
+    submitted: t("owners.form.submitted","Submission received."),
+    successToast: t("owners.form.successToast","Thank you! Your message was successfully sent."),
+    errorStatus: t("owners.form.errorStatus","There was a problem. Please try again."),
+    errorToast: t("owners.form.errorToast","Something went wrong. Please try again later.")
+  }
+})).replace(/'/g, '&#39;') %>' style="display:none"></div>
 
 <!-- Hero -->
 <section class="owners-hero" aria-label="<%= t('owners.aria.hero','Owners hero') %>">

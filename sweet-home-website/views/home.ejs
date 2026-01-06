@@ -11,9 +11,9 @@
 <!-- Preload the primary hero image for faster first paint -->
 <link rel="preload" as="image" href="/images/dubai-hero.jpg" imagesrcset="/images/dubai-hero.jpg" />
 
-<div id="locations-data" data-locations='<%- JSON.stringify(locations).replace(/'/g, '&#39;') %>' style="display:none;"></div>
+<div id="locations-data" data-locations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locations) : JSON.stringify(locations)).replace(/'/g, '&#39;') %>' style="display:none"></div>
 <!-- i18n strings for Home JS -->
-<div id="i18n-home" data-i18n='<%- JSON.stringify({
+<div id="i18n-home" data-i18n='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   calc: {
     placeholders: {
       price: t("home.calc.placeholders.price","e.g. €350,000"),
@@ -29,7 +29,23 @@
     prev: t('common.previous','Previous'),
     next: t('common.next','Next')
   }
-}).replace(/'/g, '&#39;') %>' style="display:none;"></div>
+}) : JSON.stringify({
+  calc: {
+    placeholders: {
+      price: t("home.calc.placeholders.price","e.g. €350,000"),
+      down: t("home.calc.placeholders.down","e.g. €70,000"),
+      rate: t("home.calc.placeholders.rate","e.g. 4.50")
+    },
+    errors: {
+      invalid: t("home.calc.errors.invalid","Please enter valid values for all fields."),
+      downTooHigh: t("home.calc.errors.downTooHigh","Down payment cannot be greater than or equal to property price.")
+    }
+  },
+  aria: {
+    prev: t('common.previous','Previous'),
+    next: t('common.next','Next')
+  }
+})).replace(/'/g, '&#39;') %>' style="display:none"></div>
 
 <!-- 1) Header overlayed hero with 3 vertical panels and centered search -->
 <section class="hero-panels">

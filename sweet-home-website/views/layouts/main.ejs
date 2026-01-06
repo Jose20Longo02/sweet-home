@@ -21,142 +21,7 @@
   <link rel="stylesheet" href="/css/variables.css" />
   <meta name="csrf-token" content="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
   <!-- Dynamic Icon Theme CSS Variables - Must come after styles.css to override -->
-  <style id="icon-theme-styles">
-    <%
-      // Get icon paths and determine if they're PNG (need background-image) or SVG (use mask)
-      var iconPathFunc = getIconPath || function(type) { return '/icons/icon_' + type + '.svg'; };
-      var bedPath = iconPathFunc('bed');
-      var bathPath = iconPathFunc('bath');
-      var sizePath = iconPathFunc('size');
-      var locationPath = iconPathFunc('location');
-      
-      // Check if paths are PNG (holiday themes like christmas) or SVG (default theme)
-      var isPng = function(path) { return path && path.toLowerCase().indexOf('.png') !== -1; };
-      var bedIsPng = isPng(bedPath);
-      var bathIsPng = isPng(bathPath);
-      var sizeIsPng = isPng(sizePath);
-      var locationIsPng = isPng(locationPath);
-    %>
-    <%
-      var propertyTypePath = iconPathFunc('propertyType');
-      var occupancyPath = iconPathFunc('occupancy');
-      var rentalPath = iconPathFunc('rental');
-      var propertyTypeIsPng = isPng(propertyTypePath);
-      var occupancyIsPng = isPng(occupancyPath);
-      var rentalIsPng = isPng(rentalPath);
-    %>
-    :root {
-      --icon-bed: url('<%= bedPath %>');
-      --icon-bath: url('<%= bathPath %>');
-      --icon-size: url('<%= sizePath %>');
-      --icon-location: url('<%= locationPath %>');
-      <% if (propertyTypePath) { %>--icon-property-type: url('<%= propertyTypePath %>');<% } %>
-      <% if (occupancyPath) { %>--icon-occupancy: url('<%= occupancyPath %>');<% } %>
-      <% if (rentalPath) { %>--icon-rental: url('<%= rentalPath %>');<% } %>
-    }
-    /* Override icon paths with theme-specific values */
-    .icon-bed { 
-      --icon: var(--icon-bed) !important;
-      <% if (bedIsPng) { %>
-      background-image: var(--icon-bed) !important;
-      background-size: contain !important;
-      background-repeat: no-repeat !important;
-      background-position: center !important;
-      -webkit-mask: none !important;
-      mask: none !important;
-      background-color: transparent !important;
-      <% } %>
-    }
-    .icon-bath { 
-      --icon: var(--icon-bath) !important;
-      <% if (bathIsPng) { %>
-      background-image: var(--icon-bath) !important;
-      background-size: contain !important;
-      background-repeat: no-repeat !important;
-      background-position: center !important;
-      -webkit-mask: none !important;
-      mask: none !important;
-      background-color: transparent !important;
-      <% } %>
-    }
-    .icon-size { 
-      --icon: var(--icon-size) !important;
-      <% if (sizeIsPng) { %>
-      background-image: var(--icon-size) !important;
-      background-size: contain !important;
-      background-repeat: no-repeat !important;
-      background-position: center !important;
-      -webkit-mask: none !important;
-      mask: none !important;
-      background-color: transparent !important;
-      <% } %>
-    }
-    .icon-location { 
-      --icon: var(--icon-location) !important;
-      <% if (locationIsPng) { %>
-      background-image: var(--icon-location) !important;
-      background-size: contain !important;
-      background-repeat: no-repeat !important;
-      background-position: center !important;
-      -webkit-mask: none !important;
-      mask: none !important;
-      background-color: transparent !important;
-      <% } %>
-    }
-    <% if (propertyTypePath) { %>
-    .icon-property-type { 
-      --icon: var(--icon-property-type) !important;
-      <% if (propertyTypeIsPng) { %>
-      background-image: var(--icon-property-type) !important;
-      background-size: contain !important;
-      background-repeat: no-repeat !important;
-      background-position: center !important;
-      -webkit-mask: none !important;
-      mask: none !important;
-      background-color: transparent !important;
-      <% } %>
-    }
-    <% } %>
-    <% if (occupancyPath) { %>
-    .icon-occupancy { 
-      --icon: var(--icon-occupancy) !important;
-      <% if (occupancyIsPng) { %>
-      background-image: var(--icon-occupancy) !important;
-      background-size: contain !important;
-      background-repeat: no-repeat !important;
-      background-position: center !important;
-      -webkit-mask: none !important;
-      mask: none !important;
-      background-color: transparent !important;
-      <% } %>
-    }
-    <% } %>
-    <% if (rentalPath) { %>
-    .icon-rental { 
-      --icon: var(--icon-rental) !important;
-      <% if (rentalIsPng) { %>
-      background-image: var(--icon-rental) !important;
-      background-size: contain !important;
-      background-repeat: no-repeat !important;
-      background-position: center !important;
-      -webkit-mask: none !important;
-      mask: none !important;
-      background-color: transparent !important;
-      <% } %>
-    }
-    <% } %>
-    /* Make Christmas icons 1.5x bigger */
-    body[data-icon-theme="christmas"] .icon-bed,
-    body[data-icon-theme="christmas"] .icon-bath,
-    body[data-icon-theme="christmas"] .icon-size,
-    body[data-icon-theme="christmas"] .icon-location,
-    body[data-icon-theme="christmas"] .icon-property-type,
-    body[data-icon-theme="christmas"] .icon-occupancy,
-    body[data-icon-theme="christmas"] .icon-rental {
-      transform: scale(1.5);
-      transform-origin: center;
-    }
-  </style>
+  <link rel="stylesheet" href="/css/icon-theme.css" />
   <% if ((typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) && !(typeof currentPath !== 'undefined' && (/^\/(admin|superadmin)/).test(currentPath))) { %>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=<%= GA_MEASUREMENT_ID %>"></script>
@@ -225,23 +90,11 @@
     <link rel="alternate" hreflang="x-default" href="<%= canonicalHref %>">
   <% } %>
   <% if ((typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) && !(typeof currentPath !== 'undefined' && (/^\/(admin|superadmin)/).test(currentPath))) { %>
-    <script>
-      window.GA_MEASUREMENT_ID = '<%= GA_MEASUREMENT_ID %>';
-    </script>
+    <meta name="ga-measurement-id" content="<%= GA_MEASUREMENT_ID %>">
     <script src="/js/analytics.js" defer></script>
   <% } %>
   <script src="/js/main.js" defer></script>
-  <script>
-    // Lazy-load non-critical scripts when idle
-    window.requestIdleCallback && requestIdleCallback(function(){
-      [
-        '/js/home.js'
-      ].forEach(function(src){
-        var s = document.createElement('script');
-        s.src = src; s.defer = true; document.body.appendChild(s);
-      });
-    });
-  </script>
+  <script src="/js/lazy-load.js" defer></script>
 </head>
 <body class="<%= (typeof stickyFooter !== 'undefined' && stickyFooter) ? 'layout-sticky' : '' %>" data-icon-theme="<%= getActiveTheme ? getActiveTheme() : 'default' %>">
   <a href="#main-content" class="skip-link">Skip to main content</a>
