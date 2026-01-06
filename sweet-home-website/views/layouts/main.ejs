@@ -195,8 +195,8 @@
   <% } %>
   <% if (typeof canonicalUrl !== 'undefined' && canonicalUrl) { 
     // Normalize the canonical URL to ensure exact consistency with hreflang
-    // Trim and ensure it's a string
-    let canonicalHref = String(canonicalUrl).trim();
+    // Trim and ensure it's a string - use exact same value for all tags
+    const canonicalHref = String(canonicalUrl).trim();
     // Use ISO 639-1 language codes with ISO 3166-1 alpha-2 country codes (as recommended by SEMrush)
     const supportedHreflangs = [
       { lang: 'en', country: 'US' },  // English - United States (ISO 639-1 + ISO 3166-1 alpha-2)
@@ -208,14 +208,14 @@
     const currentHreflang = supportedHreflangs.find(h => h.lang === currentLang) || supportedHreflangs[0];
     const currentHreflangValue = currentHreflang.lang + '-' + currentHreflang.country;
   %>
+    <!-- Canonical and hreflang must use EXACTLY the same URL to avoid conflicts -->
     <link rel="canonical" href="<%= canonicalHref %>">
-    <!-- Self-referencing hreflang: points to the current page with the current language (must match canonical exactly) -->
+    <!-- Self-referencing hreflang: MUST be present and point to the same URL as canonical -->
     <link rel="alternate" hreflang="<%= currentHreflangValue %>" href="<%= canonicalHref %>">
-    <!-- All language alternatives point to the same URL (language is cookie-based) -->
-    <!-- Using ISO 639-1 language codes with ISO 3166-1 alpha-2 country codes as per SEMrush recommendations -->
+    <!-- All language alternatives point to the same URL (language is cookie-based, not URL-based) -->
     <% supportedHreflangs.forEach(function(hreflang) { 
       const hreflangValue = hreflang.lang + '-' + hreflang.country;
-      // Skip if this is the current language (already added as self-referencing)
+      // Skip the current language as it's already added as self-referencing above
       if (hreflangValue !== currentHreflangValue) {
     %>
     <link rel="alternate" hreflang="<%= hreflangValue %>" href="<%= canonicalHref %>">
