@@ -14,15 +14,12 @@ const sendMail  = require('../config/mailer');
 exports.loginPage = (req, res) => {
   const awaitingApproval = req.query.awaitingApproval === 'true';
   const role             = req.query.role || null;
-  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
 
   res.render('auth/login', {
     title: 'Sign In',
     awaitingApproval,
     role,
-    error: null,
-    baseUrl,
-    loginUrl: `${baseUrl}/auth/login`
+    error: null
   });
 };
 

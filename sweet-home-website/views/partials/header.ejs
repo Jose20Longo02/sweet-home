@@ -23,10 +23,12 @@
     </nav>
     <div class="lang-switcher-wrap">
       <%- include('./lang-switcher') %>
+      <% if (typeof user !== 'undefined' && user) { %>
       <a href="/admin" class="staff-pill" aria-label="Staff dashboard">
         <span class="icon" aria-hidden="true">🔐</span>
         <span>Staff</span>
       </a>
+      <% } %>
     </div>
   </div>
 
