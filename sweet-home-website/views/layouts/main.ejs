@@ -194,9 +194,9 @@
     <!-- End Meta Pixel Code -->
   <% } %>
   <% if (typeof canonicalUrl !== 'undefined' && canonicalUrl) { 
-    // Use the exact same URL for both canonical and hreflang to avoid conflicts
-    // Since language is cookie-based (not URL-based), all hreflang tags point to the same URL
-    const canonicalHref = String(canonicalUrl).trim();
+    // Normalize the canonical URL to ensure exact consistency with hreflang
+    // Trim and ensure it's a string
+    let canonicalHref = String(canonicalUrl).trim();
     // Use ISO 639-1 language codes with ISO 3166-1 alpha-2 country codes (as recommended by SEMrush)
     const supportedHreflangs = [
       { lang: 'en', country: 'US' },  // English - United States (ISO 639-1 + ISO 3166-1 alpha-2)
@@ -209,7 +209,7 @@
     const currentHreflangValue = currentHreflang.lang + '-' + currentHreflang.country;
   %>
     <link rel="canonical" href="<%= canonicalHref %>">
-    <!-- Self-referencing hreflang: points to the current page with the current language -->
+    <!-- Self-referencing hreflang: points to the current page with the current language (must match canonical exactly) -->
     <link rel="alternate" hreflang="<%= currentHreflangValue %>" href="<%= canonicalHref %>">
     <!-- All language alternatives point to the same URL (language is cookie-based) -->
     <!-- Using ISO 639-1 language codes with ISO 3166-1 alpha-2 country codes as per SEMrush recommendations -->

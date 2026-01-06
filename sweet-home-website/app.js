@@ -390,12 +390,13 @@ app.get('/', async (req, res, next) => {
       };
     }
 
+    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     res.render('home', { 
       title: 'Find Your Dream Home',
       user: req.session.user || null,
       locations,
       recommendedProject,
-      canonicalUrl: (process.env.APP_URL || `${req.protocol}://${req.get('host')}`) + '/'
+      canonicalUrl: `${baseUrl}/`
     });
   } catch (e) { next(e); }
 });
@@ -410,10 +411,11 @@ app.get('/admin', (req, res) => {
 
 // Services page
 app.get('/services', (req, res) => {
+  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
   res.render('services', {
     title: 'Services',
     useMainContainer: false,
-    canonicalUrl: (process.env.APP_URL || `${req.protocol}://${req.get('host')}`) + '/services'
+    canonicalUrl: `${baseUrl}/services`
   });
 });
 
