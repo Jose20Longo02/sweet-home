@@ -1,7 +1,11 @@
 <% 
   title = 'Sign In';
-  const siteBaseUrl = (process.env.APP_URL || 'https://sweethome.com').replace(/\/$/, '');
-  const loginUrl = `${siteBaseUrl}/auth/login`;
+  // Use the loginUrl passed from controller, or fallback to constructing it
+  const loginUrl = (typeof loginUrl !== 'undefined' && loginUrl) 
+    ? loginUrl 
+    : ((typeof baseUrl !== 'undefined' && baseUrl) 
+      ? `${baseUrl}/auth/login` 
+      : 'https://sweet-home.co.il/auth/login');
 %>
 
 <head>
