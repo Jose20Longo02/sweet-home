@@ -118,6 +118,9 @@ app.use(compression());
 // Built-in middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// Minify assets middleware: serve .min.js/.min.css when available
+const minifyAssets = require('./middleware/minify-assets');
+app.use(minifyAssets);
 // Static assets: long caching for hashed assets, shorter for others
 app.use(express.static(path.join(__dirname, 'public'), {
   setHeaders: (res, filePath) => {
