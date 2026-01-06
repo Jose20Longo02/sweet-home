@@ -195,8 +195,8 @@
   <% } %>
   <% if (typeof canonicalUrl !== 'undefined' && canonicalUrl) { 
     // Normalize the canonical URL to ensure exact consistency with hreflang
-    // Trim and ensure it's a string - use exact same value for all tags
-    const canonicalHref = String(canonicalUrl).trim();
+    // Use exact same value for canonical and all hreflang tags - no modifications
+    let canonicalHref = String(canonicalUrl).trim();
     // Use ISO 639-1 language codes with ISO 3166-1 alpha-2 country codes (as recommended by SEMrush)
     const supportedHreflangs = [
       { lang: 'en', country: 'US' },  // English - United States (ISO 639-1 + ISO 3166-1 alpha-2)
@@ -208,11 +208,11 @@
     const currentHreflang = supportedHreflangs.find(h => h.lang === currentLang) || supportedHreflangs[0];
     const currentHreflangValue = currentHreflang.lang + '-' + currentHreflang.country;
   %>
-    <!-- Canonical and hreflang must use EXACTLY the same URL to avoid conflicts -->
+    <!-- Canonical URL - must match hreflang URLs exactly -->
     <link rel="canonical" href="<%= canonicalHref %>">
-    <!-- Self-referencing hreflang: MUST be present and point to the same URL as canonical -->
+    <!-- Self-referencing hreflang: MUST match canonical URL exactly (this is the current page's language) -->
     <link rel="alternate" hreflang="<%= currentHreflangValue %>" href="<%= canonicalHref %>">
-    <!-- All language alternatives point to the same URL (language is cookie-based, not URL-based) -->
+    <!-- All other language alternatives - must match canonical URL exactly -->
     <% supportedHreflangs.forEach(function(hreflang) { 
       const hreflangValue = hreflang.lang + '-' + hreflang.country;
       // Skip the current language as it's already added as self-referencing above
@@ -221,6 +221,7 @@
     <link rel="alternate" hreflang="<%= hreflangValue %>" href="<%= canonicalHref %>">
     <%   }
     }); %>
+    <!-- x-default must also match canonical URL exactly -->
     <link rel="alternate" hreflang="x-default" href="<%= canonicalHref %>">
   <% } %>
   <% if ((typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) && !(typeof currentPath !== 'undefined' && (/^\/(admin|superadmin)/).test(currentPath))) { %>
