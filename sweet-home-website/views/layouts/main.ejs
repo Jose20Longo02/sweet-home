@@ -204,15 +204,23 @@
       { lang: 'de', country: 'DE' }    // German - Germany (ISO 639-1 + ISO 3166-1 alpha-2)
     ];
     const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+    // Find the current language's country code for self-referencing hreflang
+    const currentHreflang = supportedHreflangs.find(h => h.lang === currentLang) || supportedHreflangs[0];
+    const currentHreflangValue = currentHreflang.lang + '-' + currentHreflang.country;
   %>
     <link rel="canonical" href="<%= canonicalHref %>">
+    <!-- Self-referencing hreflang: points to the current page with the current language -->
+    <link rel="alternate" hreflang="<%= currentHreflangValue %>" href="<%= canonicalHref %>">
     <!-- All language alternatives point to the same URL (language is cookie-based) -->
     <!-- Using ISO 639-1 language codes with ISO 3166-1 alpha-2 country codes as per SEMrush recommendations -->
     <% supportedHreflangs.forEach(function(hreflang) { 
       const hreflangValue = hreflang.lang + '-' + hreflang.country;
+      // Skip if this is the current language (already added as self-referencing)
+      if (hreflangValue !== currentHreflangValue) {
     %>
     <link rel="alternate" hreflang="<%= hreflangValue %>" href="<%= canonicalHref %>">
-    <% }); %>
+    <%   }
+    }); %>
     <link rel="alternate" hreflang="x-default" href="<%= canonicalHref %>">
   <% } %>
   <% if ((typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) && !(typeof currentPath !== 'undefined' && (/^\/(admin|superadmin)/).test(currentPath))) { %>

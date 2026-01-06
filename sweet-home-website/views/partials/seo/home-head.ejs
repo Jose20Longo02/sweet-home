@@ -7,7 +7,7 @@
   const metaDescription = (typeof metaDescription !== 'undefined' && metaDescription) ? metaDescription : defaultDescription;
 %>
 <meta name="description" content="<%= metaDescription %>">
-<link rel="canonical" href="<%= baseUrl %>/">
+<!-- Canonical URL is handled by main layout to avoid conflicts with hreflang -->
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
