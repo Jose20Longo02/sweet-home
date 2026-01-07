@@ -56,6 +56,30 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 0);
       }
     });
+    
+    // Handle language switching via JavaScript to avoid server redirects
+    menu.addEventListener('click', function(e){
+      const langOption = e.target.closest('.lang-option');
+      if (!langOption) return;
+      const langCode = langOption.getAttribute('data-lang');
+      if (!langCode) return;
+      
+      // Check if language is already active
+      if (langOption.classList.contains('is-active')) {
+        e.preventDefault();
+        closeMenu();
+        return;
+      }
+      
+      e.preventDefault();
+      
+      // Set cookie
+      const maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
+      document.cookie = `lang=${langCode}; path=/; max-age=${maxAge}; SameSite=Lax`;
+      
+      // Reload page to apply new language
+      window.location.reload();
+    });
   })();
 
   // Delegated fallback (in case markup loads differently)
@@ -76,31 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
   }, false);
-
-  // Language dropdown (no inline JS)
-  (function initLanguageDropdown(){
-    const trigger = document.querySelector('.lang-switcher .lang-trigger');
-    const menu = document.getElementById('lang-menu');
-    if (!trigger || !menu) return;
-    function closeMenu(){
-      menu.classList.remove('open');
-      trigger.setAttribute('aria-expanded','false');
-      menu.setAttribute('aria-hidden','true');
-      document.removeEventListener('click', outside, true);
-      document.removeEventListener('keydown', onKey, true);
-    }
-    function outside(e){ if (!menu.contains(e.target) && !trigger.contains(e.target)) closeMenu(); }
-    function onKey(e){ if (e.key === 'Escape') closeMenu(); }
-    trigger.addEventListener('click', function(){
-      const open = menu.classList.toggle('open');
-      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
-      menu.setAttribute('aria-hidden', open ? 'false' : 'true');
-      if (open) {
-        document.addEventListener('click', outside, true);
-        document.addEventListener('keydown', onKey, true);
-      }
-    });
-  })();
 
   const panel = document.querySelector('.admin-panel');
   const toggle = document.querySelector('.mobile-nav-toggle');
