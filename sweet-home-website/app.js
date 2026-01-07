@@ -397,15 +397,43 @@ app.use('/admin/properties', propertyRoutes);
 // Home page route
 app.get('/', async (req, res, next) => {
   try {
-    // Pick one random active project to highlight
-    const { rows } = await query(`
-      SELECT id, title, slug, country, city, neighborhood, photos,
-             min_price, max_price, min_unit_size, max_unit_size, unit_types, status
-        FROM projects
-       WHERE status = 'active'
-       ORDER BY random()
-       LIMIT 1
-    `);
+    // Pick one random active project to highlight (optimized: use TABLESAMPLE for better performance)
+    // Fallback to ORDER BY id DESC if TABLESAMPLE not available
+    let rows;
+    try {
+      const { rows: sampleRows } = await query(`
+        SELECT id, title, slug, country, city, neighborhood, photos,
+               min_price, max_price, min_unit_size, max_unit_size, unit_types, status
+          FROM projects
+         WHERE status = 'active'
+         TABLESAMPLE SYSTEM (10)
+         LIMIT 1
+      `);
+      rows = sampleRows;
+      // If TABLESAMPLE returns no rows, fall back to simple query
+      if (!rows || rows.length === 0) {
+        const { rows: fallbackRows } = await query(`
+          SELECT id, title, slug, country, city, neighborhood, photos,
+                 min_price, max_price, min_unit_size, max_unit_size, unit_types, status
+            FROM projects
+           WHERE status = 'active'
+           ORDER BY id DESC
+           LIMIT 1
+        `);
+        rows = fallbackRows;
+      }
+    } catch (_) {
+      // If TABLESAMPLE fails, use simple ORDER BY id DESC (much faster than random())
+      const { rows: fallbackRows } = await query(`
+        SELECT id, title, slug, country, city, neighborhood, photos,
+               min_price, max_price, min_unit_size, max_unit_size, unit_types, status
+          FROM projects
+         WHERE status = 'active'
+         ORDER BY id DESC
+         LIMIT 1
+      `);
+      rows = fallbackRows;
+    }
 
     let recommendedProject = null;
     if (rows && rows[0]) {

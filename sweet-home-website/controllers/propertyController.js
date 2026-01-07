@@ -275,10 +275,22 @@ exports.listPropertiesPublic = async (req, res, next) => {
 
     baseQuery += ` ORDER BY ${orderBy}`;
 
-    // Get total count for pagination (handle multiline SQL safely)
-    const countQuery = baseQuery
-      .replace(/SELECT[\s\S]*?FROM/i, 'SELECT COUNT(*) as count FROM')
-      .replace(/ORDER BY[\s\S]*$/i, '');
+    // Get total count for pagination (optimized: use COUNT(*) with same WHERE conditions)
+    // Build simplified count query without JOINs if not needed for filtering
+    let countQuery;
+    const needsJoinForCount = whereConditions.some(cond => cond.includes('u.') || cond.includes('agent'));
+    if (needsJoinForCount) {
+      countQuery = baseQuery
+        .replace(/SELECT[\s\S]*?FROM/i, 'SELECT COUNT(DISTINCT p.id) as count FROM')
+        .replace(/ORDER BY[\s\S]*$/i, '');
+    } else {
+      // Simplified count query without JOIN for better performance
+      countQuery = `
+        SELECT COUNT(*) as count
+        FROM properties p
+        ${whereConditions.length > 0 ? 'WHERE ' + whereConditions.join(' AND ') : ''}
+      `;
+    }
     const { rows: countResult } = await query(countQuery, queryParams);
     const totalProperties = parseInt(countResult[0]?.count || '0', 10);
 
