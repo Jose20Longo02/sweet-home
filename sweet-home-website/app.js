@@ -562,7 +562,7 @@ app.get('/robots.txt', (req, res) => {
   const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
   const allowAll = process.env.ROBOTS_ALLOW !== 'false';
   const robotsContent = allowAll 
-    ? `User-agent: *\nAllow: /\n\nSitemap: ${baseUrl}/sitemap.xml` 
+    ? `User-agent: *\nAllow: /\nDisallow: /lang/\n\nSitemap: ${baseUrl}/sitemap.xml` 
     : `User-agent: *\nDisallow: /\n\nSitemap: ${baseUrl}/sitemap.xml`;
   res.send(robotsContent);
 });
