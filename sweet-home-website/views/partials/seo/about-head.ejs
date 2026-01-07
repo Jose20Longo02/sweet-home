@@ -21,8 +21,7 @@
 
 <!-- JSON-LD ItemList for team members carousel (only if team exists) -->
 <% if (typeof team !== 'undefined' && team && team.length > 0) { %>
-<script type="application/ld+json">
-<%- JSON.stringify({
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
   itemListElement: team.map((member, idx) => ({
@@ -38,7 +37,22 @@
       }
     }
   }))
-}) %>
-</script>
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: team.map((member, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'Person',
+      name: member.name || (member.email || '').split('@')[0],
+      jobTitle: member.position || member.role || 'Team Member',
+      worksFor: {
+        '@type': 'Organization',
+        name: 'Sweet Home'
+      }
+    }
+  }))
+})) %></script>
 <% } %>
 

@@ -21,8 +21,7 @@
 <meta name="twitter:description" content="<%= listDesc %>">
 
 <!-- JSON-LD ItemList -->
-<script type="application/ld+json">
-<%- JSON.stringify({
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
   itemListElement: (typeof properties !== 'undefined' && properties ? properties : []).map((p, idx) => ({
@@ -30,6 +29,13 @@
     position: idx + 1,
     url: `${siteBaseUrl}/properties/${p.slug}`
   }))
-}) %>
-</script>
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: (typeof properties !== 'undefined' && properties ? properties : []).map((p, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    url: `${siteBaseUrl}/properties/${p.slug}`
+  }))
+})) %></script>
 

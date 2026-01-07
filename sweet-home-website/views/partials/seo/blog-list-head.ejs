@@ -21,8 +21,7 @@
 
 <!-- JSON-LD ItemList for blog posts (only if posts exist) -->
 <% if (typeof posts !== 'undefined' && posts && posts.length > 0) { %>
-<script type="application/ld+json">
-<%- JSON.stringify({
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
   itemListElement: posts.map((post, idx) => ({
@@ -35,7 +34,19 @@
       url: `${siteBaseUrl}/blog/${post.slug}`
     }
   }))
-}) %>
-</script>
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: posts.map((post, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'BlogPosting',
+      '@id': `${siteBaseUrl}/blog/${post.slug}`,
+      name: post.title,
+      url: `${siteBaseUrl}/blog/${post.slug}`
+    }
+  }))
+})) %></script>
 <% } %>
 

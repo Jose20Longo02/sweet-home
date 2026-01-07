@@ -36,8 +36,7 @@
 <meta name="twitter:image" content="<%= blogImage %>">
 
 <!-- JSON-LD Structured Data -->
-<script type="application/ld+json">
-<%- JSON.stringify({
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
   headline: post.title,
@@ -53,19 +52,42 @@
   publisher: {
     '@type': 'Organization',
     name: 'Sweet Home',
-      logo: {
-        '@type': 'ImageObject',
-        url: `${siteBaseUrl}/images/Sweet Home Logo.png`
-      }
+    logo: {
+      '@type': 'ImageObject',
+      url: `${siteBaseUrl}/images/Sweet Home Logo.png`
+    }
   },
   mainEntityOfPage: {
     '@type': 'WebPage',
     '@id': blogUrl
   }
-}) %>
-</script>
-<script type="application/ld+json">
-<%- JSON.stringify({
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.title,
+  description: blogDescription,
+  image: blogImage,
+  url: blogUrl,
+  datePublished: publishedDate ? new Date(publishedDate).toISOString() : undefined,
+  dateModified: modifiedDate ? new Date(modifiedDate).toISOString() : undefined,
+  author: {
+    '@type': 'Person',
+    name: post.author_name || 'Sweet Home Team'
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Sweet Home',
+    logo: {
+      '@type': 'ImageObject',
+      url: `${siteBaseUrl}/images/Sweet Home Logo.png`
+    }
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': blogUrl
+  }
+})) %></script>
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
@@ -82,7 +104,23 @@
       item: blogUrl
     }
   ]
-}) %>
-</script>
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Blog',
+      item: `${siteBaseUrl}/blog`
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: post.title,
+      item: blogUrl
+    }
+  ]
+})) %></script>
 <% } %>
 

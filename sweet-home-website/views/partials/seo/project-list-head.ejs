@@ -22,8 +22,7 @@
 
 <!-- JSON-LD ItemList for projects (only if projects exist) -->
 <% if (typeof projects !== 'undefined' && projects && projects.length > 0) { %>
-<script type="application/ld+json">
-<%- JSON.stringify({
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
   itemListElement: projects.map((project, idx) => ({
@@ -36,7 +35,19 @@
       url: `${siteBaseUrl}/projects/${project.slug}`
     }
   }))
-}) %>
-</script>
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: projects.map((project, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'ResidentialComplex',
+      '@id': `${siteBaseUrl}/projects/${project.slug}`,
+      name: project.title,
+      url: `${siteBaseUrl}/projects/${project.slug}`
+    }
+  }))
+})) %></script>
 <% } %>
 

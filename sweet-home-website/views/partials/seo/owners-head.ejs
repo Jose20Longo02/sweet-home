@@ -21,8 +21,7 @@
 
 <!-- JSON-LD ItemList for sold properties carousel (only if properties exist) -->
 <% if (typeof soldProperties !== 'undefined' && soldProperties && soldProperties.length > 0) { %>
-<script type="application/ld+json">
-<%- JSON.stringify({
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
   itemListElement: soldProperties.map((property, idx) => ({
@@ -35,7 +34,19 @@
       url: `${siteBaseUrl}/properties/${property.slug}`
     }
   }))
-}) %>
-</script>
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: soldProperties.map((property, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'Residence',
+      '@id': `${siteBaseUrl}/properties/${property.slug}`,
+      name: property.title,
+      url: `${siteBaseUrl}/properties/${property.slug}`
+    }
+  }))
+})) %></script>
 <% } %>
 
