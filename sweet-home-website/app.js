@@ -287,14 +287,15 @@ app.use((req, res, next) => {
 });
 
 // Language setter (CSP-safe): sets cookie and redirects back
-// Use 301 (permanent redirect) instead of 302 (temporary) for SEO
+// Use 302 (temporary redirect) for language switching as it's a user preference, not a permanent page move
+// This avoids creating unnecessary redirect chains that crawlers detect
 app.get('/lang/:code', (req, res) => {
   const code = String(req.params.code || '').slice(0,2).toLowerCase();
   const supported = ['en','es','de'];
   const back = req.get('referer') || '/';
-  if (!supported.includes(code)) return res.redirect(301, back);
+  if (!supported.includes(code)) return res.redirect(302, back);
   try { res.cookie('lang', code, { httpOnly: false, sameSite: 'lax', maxAge: 30 * 24 * 60 * 60 * 1000 }); } catch (_) {}
-  return res.redirect(301, back);
+  return res.redirect(302, back);
 });
 
 // Icon theme test page (for debugging)

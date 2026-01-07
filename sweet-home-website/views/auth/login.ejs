@@ -1,17 +1,35 @@
-<% 
+<!DOCTYPE html><% 
   title = 'Sign In';
   const siteBaseUrl = (typeof baseUrl !== 'undefined' && baseUrl) 
     ? baseUrl.replace(/\/$/, '') 
     : ((process.env.APP_URL || 'https://sweethome.com').replace(/\/$/, ''));
   const loginUrl = `${siteBaseUrl}/auth/login`;
+  const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+  const supportedHreflangs = [
+    { lang: 'en', country: 'US' },
+    { lang: 'es', country: 'ES' },
+    { lang: 'de', country: 'DE' }
+  ];
+  const currentHreflang = supportedHreflangs.find(h => h.lang === currentLang) || supportedHreflangs[0];
+  const currentHreflangValue = currentHreflang.lang + '-' + currentHreflang.country;
 %>
-
+<html lang="<%= currentLang %>">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><%= title %> | Sweet Home</title>
   <meta name="description" content="Sign in to your Sweet Home account to access your dashboard and manage your real estate listings.">
   <link rel="canonical" href="<%= loginUrl %>">
+  <!-- Hreflang tags -->
+  <link rel="alternate" hreflang="<%= currentHreflangValue %>" href="<%= loginUrl %>">
+  <% supportedHreflangs.forEach(function(hreflang) { 
+    const hreflangValue = hreflang.lang + '-' + hreflang.country;
+    if (hreflangValue !== currentHreflangValue) {
+  %>
+  <link rel="alternate" hreflang="<%= hreflangValue %>" href="<%= loginUrl %>">
+  <%   }
+  }); %>
+  <link rel="alternate" hreflang="x-default" href="<%= loginUrl %>">
   <link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
   <link rel="stylesheet" href="/css/auth/login.css">
   <% if (process.env.RECAPTCHA_SITE_KEY) { %>
@@ -80,3 +98,5 @@
     });
   </script>
 <% } %>
+</body>
+</html>
