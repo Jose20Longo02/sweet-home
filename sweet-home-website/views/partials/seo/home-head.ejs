@@ -4,15 +4,15 @@
     : ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
   const siteName = 'Sweet Home';
   const defaultDescription = 'Find your dream property in Cyprus, Dubai, and Berlin. Browse luxury apartments, villas, and real estate investments. Expert guidance for buyers and sellers.';
-  const metaDescription = (typeof metaDescription !== 'undefined' && metaDescription) ? metaDescription : defaultDescription;
+  const pageMetaDescription = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : defaultDescription;
 %>
-<meta name="description" content="<%= metaDescription %>">
+<meta name="description" content="<%= pageMetaDescription %>">
 <!-- Canonical URL is handled by main layout to avoid conflicts with hreflang -->
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Sweet Home - Find Your Dream Property' %>">
-<meta property="og:description" content="<%= metaDescription %>">
+<meta property="og:description" content="<%= pageMetaDescription %>">
 <meta property="og:url" content="<%= baseUrl %>/">
 <meta property="og:image" content="<%= baseUrl %>/images/dubai-hero.jpg">
 <meta property="og:site_name" content="<%= siteName %>">
@@ -21,7 +21,7 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'Sweet Home - Find Your Dream Property' %>">
-<meta name="twitter:description" content="<%= metaDescription %>">
+<meta name="twitter:description" content="<%= pageMetaDescription %>">
 <meta name="twitter:image" content="<%= baseUrl %>/images/dubai-hero.jpg">
 
 <!-- JSON-LD Structured Data -->

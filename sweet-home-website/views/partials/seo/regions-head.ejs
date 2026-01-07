@@ -1,0 +1,23 @@
+<%
+  const siteBaseUrl = (typeof baseUrl !== 'undefined' && baseUrl) 
+    ? baseUrl.replace(/\/$/, '') 
+    : (process.env.APP_URL || 'https://sweethome.com').replace(/\/$/, '');
+  const regionsUrl = `${siteBaseUrl}/projects/regions`;
+  const metaDescription = 'Browse luxury real estate development projects in Cyprus and Dubai. Explore our curated selection of premium properties and find your perfect investment opportunity.';
+%>
+<meta name="description" content="<%= metaDescription %>">
+<link rel="canonical" href="<%= regionsUrl %>">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Projects by Region | Sweet Home">
+<meta property="og:description" content="<%= metaDescription %>">
+<meta property="og:url" content="<%= regionsUrl %>">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Projects by Region | Sweet Home">
+<meta name="twitter:description" content="<%= metaDescription %>">
+

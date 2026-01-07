@@ -9,7 +9,12 @@ router.get('/', listProjectsPublic);
 
 // Split hero for Cyprus vs Dubai
 router.get('/regions', (req, res) => {
-  res.render('projects/regions');
+  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+  res.render('projects/regions', {
+    baseUrl,
+    headPartial: '../partials/seo/regions-head',
+    canonicalUrl: `${baseUrl}/projects/regions`
+  });
 });
 
 // Public project detail by slug

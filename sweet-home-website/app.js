@@ -350,7 +350,15 @@ app.get('/contact', (req, res) => {
   const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
   res.render('contact', { title: 'Contact', baseUrl });
 });
-app.get('/terms', (req, res) => res.render('terms', { title: 'Terms & Conditions' }));
+app.get('/terms', (req, res) => {
+  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+  res.render('terms', { 
+    title: 'Terms & Conditions',
+    baseUrl,
+    headPartial: 'partials/seo/terms-head',
+    canonicalUrl: `${baseUrl}/terms`
+  });
+});
 app.get('/privacy', (req, res) => {
   const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
   res.render('privacy', { 

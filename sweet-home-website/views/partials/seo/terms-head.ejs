@@ -1,0 +1,23 @@
+<%
+  const siteBaseUrl = (typeof baseUrl !== 'undefined' && baseUrl) 
+    ? baseUrl.replace(/\/$/, '') 
+    : (process.env.APP_URL || 'https://sweethome.com').replace(/\/$/, '');
+  const termsUrl = `${siteBaseUrl}/terms`;
+  const metaDescription = 'Read Sweet Home\'s Terms of Service to understand the terms and conditions governing your use of our website and real estate services.';
+%>
+<meta name="description" content="<%= metaDescription %>">
+<!-- Canonical URL is handled by main layout to avoid conflicts with hreflang -->
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Terms of Service | Sweet Home">
+<meta property="og:description" content="<%= metaDescription %>">
+<meta property="og:url" content="<%= termsUrl %>">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Terms of Service | Sweet Home">
+<meta name="twitter:description" content="<%= metaDescription %>">
+
