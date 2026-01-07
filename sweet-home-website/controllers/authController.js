@@ -14,12 +14,15 @@ const sendMail  = require('../config/mailer');
 exports.loginPage = (req, res) => {
   const awaitingApproval = req.query.awaitingApproval === 'true';
   const role             = req.query.role || null;
-
+  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+  // login.ejs has its own <head>, so use layout: false to avoid conflicts
   res.render('auth/login', {
     title: 'Sign In',
     awaitingApproval,
     role,
-    error: null
+    error: null,
+    baseUrl,
+    layout: false // Don't use main layout since login.ejs has its own <head>
   });
 };
 

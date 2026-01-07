@@ -448,15 +448,14 @@ app.get('/admin', (req, res) => {
 // Services page
 app.get('/services', (req, res) => {
   // Ensure we use the correct domain, not staging URLs
-  let baseUrl = process.env.APP_URL;
-  if (!baseUrl || baseUrl.includes('onrender.com') || baseUrl.includes('localhost')) {
-    baseUrl = `${req.protocol}://${req.get('host')}`;
-  }
-  baseUrl = baseUrl.replace(/\/$/, '');
+  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+  // Validate to prevent staging URLs in production
+  const isValidUrl = baseUrl && !baseUrl.includes('onrender.com') && !baseUrl.includes('localhost');
+  const finalBaseUrl = isValidUrl ? baseUrl : `${req.protocol}://${req.get('host')}`.replace(/\/$/, '');
   res.render('services', {
     title: 'Services',
     useMainContainer: false,
-    canonicalUrl: `${baseUrl}/services`
+    canonicalUrl: `${finalBaseUrl}/services`
   });
 });
 
