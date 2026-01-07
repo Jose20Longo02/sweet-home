@@ -3,6 +3,45 @@ const BlogPost = require('../models/BlogPost');
 const { query } = require('../config/db');
 const { ensureLocalizedFields } = require('../config/translator');
 
+// Helper function to add ALT attributes to images in HTML content
+function addAltToImages(htmlContent, fallbackAlt = 'Blog post image') {
+  if (!htmlContent || typeof htmlContent !== 'string') return htmlContent;
+  
+  // Regex to match img tags without alt attribute or with empty alt
+  return htmlContent.replace(/<img([^>]*?)(?:\s+alt=["']\s*["']|\s+alt=["']\s*["']|)([^>]*?)>/gi, (match, before, after) => {
+    // Check if alt attribute already exists with a value
+    if (/alt=["'][^"']+["']/i.test(match)) {
+      return match; // Already has a non-empty alt attribute
+    }
+    
+    // Extract src to generate descriptive alt text
+    const srcMatch = match.match(/src=["']([^"']+)["']/i);
+    let altText = fallbackAlt;
+    
+    if (srcMatch && srcMatch[1]) {
+      const src = srcMatch[1];
+      // Extract filename from URL
+      const filename = src.split('/').pop().split('?')[0];
+      // Remove extension and generate readable alt text
+      const nameWithoutExt = filename.replace(/\.[^.]+$/, '');
+      // Convert underscores and hyphens to spaces, capitalize words
+      altText = nameWithoutExt
+        .replace(/[_-]/g, ' ')
+        .replace(/\b\w/g, l => l.toUpperCase())
+        .trim() || fallbackAlt;
+    }
+    
+    // Insert alt attribute before the closing >
+    if (/alt=["']\s*["']/i.test(match)) {
+      // Replace empty alt attribute
+      return match.replace(/alt=["']\s*["']/i, `alt="${altText.replace(/"/g, '&quot;')}"`);
+    } else {
+      // Add alt attribute before closing >
+      return match.replace(/>$/, ` alt="${altText.replace(/"/g, '&quot;')}">`);
+    }
+  });
+}
+
 // Public
 exports.listPublic = async (req, res, next) => {
   try {
@@ -37,11 +76,13 @@ exports.showPublic = async (req, res, next) => {
     const post = await BlogPost.findBySlug(req.params.slug);
     if (!post || post.status !== 'published') return res.status(404).render('errors/404');
     const lang = res.locals.lang || 'en';
+    const postTitle = (post.title_i18n && post.title_i18n[lang]) || post.title;
+    const postContent = (post.content_i18n && post.content_i18n[lang]) || post.content;
     const localizedPost = {
       ...post,
-      title: (post.title_i18n && post.title_i18n[lang]) || post.title,
+      title: postTitle,
       excerpt: (post.excerpt_i18n && post.excerpt_i18n[lang]) || post.excerpt,
-      content: (post.content_i18n && post.content_i18n[lang]) || post.content
+      content: addAltToImages(postContent, `Image from ${postTitle}`)
     };
     // Recent/recommended posts (up to 4, excluding current)
     const { rows: recommendedPosts } = await query(

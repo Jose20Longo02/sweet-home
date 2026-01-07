@@ -12,7 +12,7 @@
     <% (posts || []).forEach(p => { %>
       <article class="blog-card">
         <% if (p.cover_image) { %>
-          <img src="<%= p.cover_image %>" alt="" class="cover" />
+          <img src="<%= p.cover_image %>" alt="<%= p.title || 'Blog post cover image' %>" class="cover" />
         <% } %>
         <div class="info">
           <h2><a href="/blog/<%= p.slug %>"><%= p.title %></a></h2>
