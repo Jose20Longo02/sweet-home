@@ -550,8 +550,12 @@ app.get('/css/icon-theme.css', (req, res) => {
 
 app.get('/robots.txt', (req, res) => {
   res.type('text/plain');
+  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
   const allowAll = process.env.ROBOTS_ALLOW !== 'false';
-  res.send(allowAll ? 'User-agent: *\nAllow: /' : 'User-agent: *\nDisallow: /');
+  const robotsContent = allowAll 
+    ? `User-agent: *\nAllow: /\n\nSitemap: ${baseUrl}/sitemap.xml` 
+    : `User-agent: *\nDisallow: /\n\nSitemap: ${baseUrl}/sitemap.xml`;
+  res.send(robotsContent);
 });
 
 // sitemap.xml (basic; can be expanded to pull from DB)
