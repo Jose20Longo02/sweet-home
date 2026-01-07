@@ -115,8 +115,14 @@
 
 <div class="property-search-page">
   <!-- Search Header removed per design request; dark header enabled in layout -->
-
   <div class="container-wide">
+    <h1 class="sr-only"><%= 
+      (locals.filters?.country && locals.filters?.city) 
+        ? t('properties.list.h1.city', 'Properties for Sale in {city}, {country}', {city: locals.filters.city, country: locals.filters.country})
+        : (locals.filters?.country)
+          ? t('properties.list.h1.country', 'Properties for Sale in {country}', {country: locals.filters.country})
+          : t('properties.list.h1.default', 'Properties for Sale - Find Your Dream Home')
+    %></h1>
     <div class="property-layout">
       <!-- Filters Sidebar -->
       <aside class="filters-sidebar" id="filtersSidebar" aria-hidden="true">

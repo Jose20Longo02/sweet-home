@@ -9,8 +9,14 @@
 
 <div class="project-search-page">
   <!-- Search Header removed per design request; dark header enabled in layout -->
-
   <div class="container-wide">
+    <h1 class="sr-only"><%= 
+      (locals.filters?.country && locals.filters?.city) 
+        ? t('projects.list.h1.city', 'Development Projects in {city}, {country}', {city: locals.filters.city, country: locals.filters.country})
+        : (locals.filters?.country)
+          ? t('projects.list.h1.country', 'Development Projects in {country}', {country: locals.filters.country})
+          : t('projects.list.h1.default', 'Development Projects - Luxury Real Estate')
+    %></h1>
     <div class="project-layout">
       <!-- Filters Sidebar -->
       <aside class="filters-sidebar" id="filtersSidebar" aria-hidden="true">
