@@ -560,6 +560,53 @@ app.get('/robots.txt', (req, res) => {
   res.send(robotsContent);
 });
 
+// llms.txt for AI search engines
+app.get('/llms.txt', (req, res) => {
+  res.type('text/plain');
+  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+  const llmsContent = `# Sweet Home Real Estate Platform
+
+## About
+Sweet Home is a real estate agency platform specializing in luxury properties in Cyprus, Dubai, and Berlin. We help buyers find their dream homes and assist sellers with property management and sales services.
+
+## Main Content Areas
+- **Properties**: Browse luxury apartments, villas, and real estate investments with advanced search and filtering
+- **Projects**: Explore real estate development projects in Cyprus and Dubai
+- **Blog**: Real estate insights, market analysis, and investment guides
+- **Services**: Property consulting, management, and financial services
+- **About**: Learn about our team and expertise
+
+## Languages
+The website is available in three languages:
+- English (en)
+- Spanish (es)
+- German (de)
+
+## Key Features
+- Property listings with detailed information, photos, and interactive maps
+- Project showcases with pricing, unit types, and amenities
+- Blog posts covering real estate trends and investment advice
+- Mortgage calculator for property financing
+- Multi-language support for international clients
+
+## Important Pages
+- Home: ${baseUrl}/
+- Properties: ${baseUrl}/properties
+- Projects: ${baseUrl}/projects
+- Blog: ${baseUrl}/blog
+- Services: ${baseUrl}/services
+- About: ${baseUrl}/about
+- Contact: ${baseUrl}/contact
+
+## Sitemap
+For a complete list of all pages, see: ${baseUrl}/sitemap.xml
+
+## Contact
+For inquiries, visit: ${baseUrl}/contact
+`;
+  res.send(llmsContent);
+});
+
 // sitemap.xml (basic; can be expanded to pull from DB)
 app.get('/sitemap.xml', async (req, res, next) => {
   try {
