@@ -431,6 +431,7 @@ app.get('/', async (req, res, next) => {
       user: req.session.user || null,
       locations,
       recommendedProject,
+      baseUrl,
       canonicalUrl: `${baseUrl}/`
     });
   } catch (e) { next(e); }

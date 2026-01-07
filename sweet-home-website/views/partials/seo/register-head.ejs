@@ -1,0 +1,23 @@
+<%
+  const siteBaseUrl = (typeof baseUrl !== 'undefined' && baseUrl) 
+    ? baseUrl.replace(/\/$/, '') 
+    : (process.env.APP_URL || 'https://sweethome.com').replace(/\/$/, '');
+  const registerUrl = `${siteBaseUrl}/auth/register`;
+  const metaDescription = 'Create your staff account on Sweet Home. Register as an agent or administrator to access your dashboard and manage real estate properties.';
+%>
+<meta name="description" content="<%= metaDescription %>">
+<link rel="canonical" href="<%= registerUrl %>">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Register | Sweet Home">
+<meta property="og:description" content="<%= metaDescription %>">
+<meta property="og:url" content="<%= registerUrl %>">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Register | Sweet Home">
+<meta name="twitter:description" content="<%= metaDescription %>">
+

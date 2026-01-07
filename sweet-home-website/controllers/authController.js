@@ -102,10 +102,12 @@ exports.registerPage = async (req, res, next) => {
           AND approved = false`
     );
     const pendingCount = parseInt(rows[0].count, 10);
+    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     res.render('auth/register', {
       areaRoles,
       pendingCount,
-      error: null
+      error: null,
+      baseUrl
     });
   } catch (err) {
     next(err);
