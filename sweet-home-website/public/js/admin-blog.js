@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var qInput = document.getElementById('content');
   if (qRoot && window.Quill) {
     var toolbarOptions = [
-      [{ 'header': [1, 2, 3, false] }],
+      [{ 'header': [2, 3, 4, 5, 6, false] }], // Only H2-H6 (H1 is used automatically for the post title)
       ['bold', 'italic', 'underline', 'strike'],
       [{ 'align': [] }],
       [{ 'list': 'ordered'}, { 'list': 'bullet' }],

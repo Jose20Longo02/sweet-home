@@ -33,6 +33,7 @@
         <textarea name="excerpt" rows="3"><%- post.excerpt || '' %></textarea>
 
         <label>Content</label>
+        <small class="hint" style="display:block; margin-bottom:8px;">Note: Use H2-H6 for headings within your content. H1 is automatically used for the post title. Any H1 tags in content will be converted to H2 when published.</small>
         <div id="editor" style="height: 380px; background:#fff;"></div>
         <textarea id="content" name="content" rows="12" style="display:none;" required><%- post.content %></textarea>
 

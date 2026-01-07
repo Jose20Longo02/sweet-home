@@ -38,6 +38,7 @@
         <small class="hint">Optional. Shown in lists and previews.</small>
 
         <label for="content" style="margin-top:10px;">Content</label>
+        <small class="hint" style="display:block; margin-bottom:8px;">Note: Use H2-H6 for headings within your content. H1 is automatically used for the post title. Any H1 tags in content will be converted to H2 when published.</small>
         <div id="editor" style="height: 380px; background:#fff;"></div>
         <textarea id="content" name="content" rows="14" style="display:none;"><%= (formData && formData.content) ? formData.content : '' %></textarea>
 

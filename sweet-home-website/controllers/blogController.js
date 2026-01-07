@@ -42,6 +42,17 @@ function addAltToImages(htmlContent, fallbackAlt = 'Blog post image') {
   });
 }
 
+// Helper function to convert H1 tags in content to H2 (to avoid multiple H1s per page)
+function convertH1ToH2(htmlContent) {
+  if (!htmlContent || typeof htmlContent !== 'string') return htmlContent;
+  
+  // Convert both opening and closing H1 tags to H2
+  // Handle both lowercase and uppercase, and various attribute patterns
+  return htmlContent
+    .replace(/<h1([^>]*?)>/gi, '<h2$1>')  // Opening tags with any attributes
+    .replace(/<\/h1>/gi, '</h2>');        // Closing tags
+}
+
 // Public
 exports.listPublic = async (req, res, next) => {
   try {
@@ -78,11 +89,15 @@ exports.showPublic = async (req, res, next) => {
     const lang = res.locals.lang || 'en';
     const postTitle = (post.title_i18n && post.title_i18n[lang]) || post.title;
     const postContent = (post.content_i18n && post.content_i18n[lang]) || post.content;
+    // Process content: add ALT attributes and convert H1 tags to H2 to avoid multiple H1s
+    let processedContent = addAltToImages(postContent, `Image from ${postTitle}`);
+    processedContent = convertH1ToH2(processedContent);
+    
     const localizedPost = {
       ...post,
       title: postTitle,
       excerpt: (post.excerpt_i18n && post.excerpt_i18n[lang]) || post.excerpt,
-      content: addAltToImages(postContent, `Image from ${postTitle}`)
+      content: processedContent
     };
     // Recent/recommended posts (up to 4, excluding current)
     const { rows: recommendedPosts } = await query(
