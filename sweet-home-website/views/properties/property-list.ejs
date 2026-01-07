@@ -1,6 +1,6 @@
 <% title = 'Property Search Results'; headPartial = '../partials/seo/property-list-head' %>
 <link rel="stylesheet" href="/css/property-list.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="/css/libs/leaflet.min.css" />
 
 <!-- Locations data for JavaScript -->
 <div id="locations-data" data-locations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locations) : JSON.stringify(locations)).replace(/'/g, '&#39;') %>' style="display:none"></div>
