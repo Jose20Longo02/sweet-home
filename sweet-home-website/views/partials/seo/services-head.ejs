@@ -1,0 +1,23 @@
+<%
+  const siteBaseUrl = (typeof canonicalUrl !== 'undefined' && canonicalUrl) 
+    ? canonicalUrl.replace(/\/services$/, '').replace(/\/$/, '') 
+    : ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
+  const servicesUrl = `${siteBaseUrl}/services`;
+  const metaDescription = 'Expert real estate services in Cyprus, Dubai, and Berlin. Property consulting, management, and financial services to help you with your real estate investments.';
+%>
+<meta name="description" content="<%= metaDescription %>">
+<!-- Canonical URL is handled by main layout to avoid conflicts with hreflang -->
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Services | Sweet Home">
+<meta property="og:description" content="<%= metaDescription %>">
+<meta property="og:url" content="<%= servicesUrl %>">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Services | Sweet Home">
+<meta name="twitter:description" content="<%= metaDescription %>">
+

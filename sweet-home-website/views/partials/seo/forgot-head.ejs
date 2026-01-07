@@ -1,0 +1,24 @@
+<%
+  const siteBaseUrl = (typeof baseUrl !== 'undefined' && baseUrl) 
+    ? baseUrl.replace(/\/$/, '') 
+    : ((process.env.APP_URL || 'https://sweethome.com').replace(/\/$/, ''));
+  const forgotUrl = `${siteBaseUrl}/auth/forgot`;
+  const metaDescription = 'Reset your password for your Sweet Home account. Enter your email to receive a password reset code.';
+%>
+<meta name="description" content="<%= metaDescription %>">
+<!-- Canonical URL is handled by main layout to avoid conflicts with hreflang -->
+<!-- No ItemList/Carousel structured data - this is a simple password reset form -->
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Forgot Password | Sweet Home">
+<meta property="og:description" content="<%= metaDescription %>">
+<meta property="og:url" content="<%= forgotUrl %>">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Forgot Password | Sweet Home">
+<meta name="twitter:description" content="<%= metaDescription %>">
+

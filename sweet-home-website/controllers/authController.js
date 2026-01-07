@@ -276,10 +276,13 @@ exports.thankYouPage = (req, res) => {
 // Password reset: request form (GET /auth/forgot)
 // ———————————————————————————————————————————————
 exports.forgotPasswordPage = (req, res) => {
+  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
   res.render('auth/forgot', {
     title: 'Forgot your password?',
     error: null,
-    sent: false
+    sent: false,
+    baseUrl,
+    canonicalUrl: `${baseUrl}/auth/forgot`
   });
 };
 

@@ -7,8 +7,12 @@
 %>
 
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | Sweet Home</title>
   <meta name="description" content="Sign in to your Sweet Home account to access your dashboard and manage your real estate listings.">
   <link rel="canonical" href="<%= loginUrl %>">
+  <link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
   <link rel="stylesheet" href="/css/auth/login.css">
   <% if (process.env.RECAPTCHA_SITE_KEY) { %>
     <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
