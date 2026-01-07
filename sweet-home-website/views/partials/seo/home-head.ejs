@@ -25,28 +25,32 @@
 <meta name="twitter:image" content="<%= baseUrl %>/images/dubai-hero.jpg">
 
 <!-- JSON-LD Structured Data -->
-<script type="application/ld+json">
-<%- JSON.stringify({
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: siteName,
   url: baseUrl,
   logo: `${baseUrl}/images/Sweet Home Logo.png`,
-  sameAs: [
-    // Add your social media URLs here when available
-    // 'https://www.facebook.com/sweethome',
-    // 'https://www.instagram.com/sweethome',
-    // 'https://www.linkedin.com/company/sweethome'
-  ],
+  sameAs: [],
   contactPoint: {
     '@type': 'ContactPoint',
     contactType: 'Customer Service',
     availableLanguage: ['English', 'Spanish', 'German']
   }
-}) %>
-</script>
-<script type="application/ld+json">
-<%- JSON.stringify({
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: siteName,
+  url: baseUrl,
+  logo: `${baseUrl}/images/Sweet Home Logo.png`,
+  sameAs: [],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'Customer Service',
+    availableLanguage: ['English', 'Spanish', 'German']
+  }
+})) %></script>
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: siteName,
@@ -59,6 +63,18 @@
     },
     'query-input': 'required name=search_term_string'
   }
-}) %>
-</script>
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: siteName,
+  url: baseUrl,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${baseUrl}/properties?q={search_term_string}`
+    },
+    'query-input': 'required name=search_term_string'
+  }
+})) %></script>
 

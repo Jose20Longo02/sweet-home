@@ -163,9 +163,28 @@ app.use((req, res, next) => {
   res.locals.getIconPath = iconThemes.getIconPath;
   res.locals.getActiveTheme = iconThemes.getActiveTheme;
   res.locals.getAvailableThemes = iconThemes.getAvailableThemes;
-  // Helper to minify JSON for data attributes (removes unnecessary whitespace)
+  // Helper to minify JSON for data attributes (removes unnecessary whitespace and undefined/null values)
   res.locals.minifyJSON = function(obj) {
-    return JSON.stringify(obj).replace(/\s+/g, ' ').trim();
+    // Remove undefined and null values recursively
+    const clean = function(o) {
+      if (Array.isArray(o)) {
+        return o.map(clean).filter(v => v !== undefined && v !== null);
+      } else if (o && typeof o === 'object') {
+        const cleaned = {};
+        for (const key in o) {
+          if (o.hasOwnProperty(key)) {
+            const value = clean(o[key]);
+            if (value !== undefined && value !== null) {
+              cleaned[key] = value;
+            }
+          }
+        }
+        return cleaned;
+      }
+      return o;
+    };
+    const cleaned = clean(obj);
+    return JSON.stringify(cleaned).replace(/\s+/g, ' ').trim();
   };
   next();
 });

@@ -24,8 +24,7 @@
   <meta name="twitter:image" content="<%= propertyImage %>">
 
   <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json">
-  <%- JSON.stringify({
+  <script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
     '@context': 'https://schema.org',
     '@type': ['Residence'],
     name: property.title,
@@ -50,31 +49,54 @@
       priceCurrency: 'EUR',
       availability: 'https://schema.org/InStock'
     }
-  }) %>
-  </script>
-  <script type="application/ld+json">
-  <%- JSON.stringify({
+  }) : JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': ['Residence'],
+    name: property.title,
+    description: property.description || '',
+    image: (property.photos && property.photos.length > 0) 
+      ? property.photos.map(p => p.startsWith('http') ? p : `${siteBaseUrl}${p}`)
+      : [`${siteBaseUrl}/img/property-placeholder.jpg`],
+    url: propertyUrl,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: property.city,
+      addressCountry: property.country
+    },
+    geo: (property.latitude && property.longitude) ? {
+      '@type': 'GeoCoordinates',
+      latitude: Number(property.latitude),
+      longitude: Number(property.longitude)
+    } : undefined,
+    offers: {
+      '@type': 'Offer',
+      price: Number(property.price || 0),
+      priceCurrency: 'EUR',
+      availability: 'https://schema.org/InStock'
+    }
+  })) %></script>
+  <script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
       {
         '@type': 'ListItem',
         position: 1,
-      name: 'Properties',
-      item: `${siteBaseUrl}/properties`
-    },
-    {
-      '@type': 'ListItem',
-      position: 2,
-      name: property.country,
-      item: `${siteBaseUrl}/properties?country=${encodeURIComponent(property.country)}`
-    },
-    {
-      '@type': 'ListItem',
-      position: 3,
-      name: property.city,
-      item: `${siteBaseUrl}/properties?country=${encodeURIComponent(property.country)}&city=${encodeURIComponent(property.city)}`
-    },
+        name: 'Properties',
+        item: `${siteBaseUrl}/properties`
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: property.country,
+        item: `${siteBaseUrl}/properties?country=${encodeURIComponent(property.country)}`
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: property.city,
+        item: `${siteBaseUrl}/properties?country=${encodeURIComponent(property.country)}&city=${encodeURIComponent(property.city)}`
+      },
       {
         '@type': 'ListItem',
         position: 4,
@@ -82,7 +104,35 @@
         item: propertyUrl
       }
     ]
-  }) %>
-  </script>
+  }) : JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Properties',
+        item: `${siteBaseUrl}/properties`
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: property.country,
+        item: `${siteBaseUrl}/properties?country=${encodeURIComponent(property.country)}`
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: property.city,
+        item: `${siteBaseUrl}/properties?country=${encodeURIComponent(property.country)}&city=${encodeURIComponent(property.city)}`
+      },
+      {
+        '@type': 'ListItem',
+        position: 4,
+        name: property.title,
+        item: propertyUrl
+      }
+    ]
+  })) %></script>
 <% } %>
 
