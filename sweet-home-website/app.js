@@ -288,7 +288,18 @@ app.use((req, res, next) => {
 
 // Language setter (CSP-safe): sets cookie and redirects back
 // Avoid redirect if language is already set to the requested code
+// Block search engine bots - these are functional endpoints, not indexable pages
 app.get('/lang/:code', (req, res) => {
+  // Detect if this is a search engine bot/crawler
+  const userAgent = (req.get('user-agent') || '').toLowerCase();
+  const isBot = /bot|crawler|spider|crawling|semrush|ahrefs|moz|screaming/i.test(userAgent);
+  
+  // If it's a bot, return 403 Forbidden (these endpoints are not for indexing)
+  if (isBot) {
+    return res.status(403).send('Forbidden - This is a functional endpoint, not an indexable page.');
+  }
+  
+  // For real users, proceed with language switching
   const code = String(req.params.code || '').slice(0,2).toLowerCase();
   const supported = ['en','es','de'];
   const back = req.get('referer') || '/';
