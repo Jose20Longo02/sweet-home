@@ -68,24 +68,31 @@
       { lang: 'es', country: 'ES' },  // Spanish - Spain (ISO 639-1 + ISO 3166-1 alpha-2)
       { lang: 'de', country: 'DE' }    // German - Germany (ISO 639-1 + ISO 3166-1 alpha-2)
     ];
-    const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+    // Get current language from res.locals.lang (set by i18n middleware) or fallback to 'en'
+    let currentLang = 'en';
+    if (typeof lang !== 'undefined' && lang) {
+      currentLang = String(lang).toLowerCase().slice(0, 2);
+    }
+    // Ensure currentLang is in the supported list
+    if (!supportedHreflangs.some(h => h.lang === currentLang)) {
+      currentLang = 'en';
+    }
     // Find the current language's country code for self-referencing hreflang
     const currentHreflang = supportedHreflangs.find(h => h.lang === currentLang) || supportedHreflangs[0];
     const currentHreflangValue = currentHreflang.lang + '-' + currentHreflang.country;
   %>
     <!-- Canonical URL - must match hreflang URLs exactly -->
     <link rel="canonical" href="<%= canonicalHref %>">
-    <!-- Self-referencing hreflang: MUST match canonical URL exactly (this is the current page's language) -->
+    <!-- Self-referencing hreflang: MUST match canonical URL exactly and use the current page's language code -->
     <link rel="alternate" hreflang="<%= currentHreflangValue %>" href="<%= canonicalHref %>">
-    <!-- All other language alternatives - must match canonical URL exactly -->
+    <!-- All other language alternatives - all point to same URL (cookie-based language switching) -->
     <% supportedHreflangs.forEach(function(hreflang) { 
       const hreflangValue = hreflang.lang + '-' + hreflang.country;
-      // Skip the current language as it's already added as self-referencing above
-      if (hreflangValue !== currentHreflangValue) {
+      // Include all language alternatives (including current one for clarity, though self-referencing is above)
+      // This ensures all hreflang tags are present and consistent
     %>
     <link rel="alternate" hreflang="<%= hreflangValue %>" href="<%= canonicalHref %>">
-    <%   }
-    }); %>
+    <% }); %>
     <!-- x-default must also match canonical URL exactly -->
     <link rel="alternate" hreflang="x-default" href="<%= canonicalHref %>">
   <% } %>
