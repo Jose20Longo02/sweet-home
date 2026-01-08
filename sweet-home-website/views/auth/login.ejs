@@ -20,16 +20,15 @@
   <title><%= title %> | Sweet Home</title>
   <meta name="description" content="Sign in to your Sweet Home account to access your dashboard and manage your real estate listings.">
   <link rel="canonical" href="<%= loginUrl %>">
-  <!-- Hreflang tags: Self-referencing hreflang for current language -->
+  <!-- Hreflang tags -->
   <link rel="alternate" hreflang="<%= currentHreflangValue %>" href="<%= loginUrl %>">
-  <!-- All other language alternatives - all point to same URL (cookie-based language switching) -->
   <% supportedHreflangs.forEach(function(hreflang) { 
     const hreflangValue = hreflang.lang + '-' + hreflang.country;
-    // Include all language alternatives (including current one for clarity, though self-referencing is above)
+    if (hreflangValue !== currentHreflangValue) {
   %>
   <link rel="alternate" hreflang="<%= hreflangValue %>" href="<%= loginUrl %>">
-  <% }); %>
-  <!-- x-default must also match canonical URL exactly -->
+  <%   }
+  }); %>
   <link rel="alternate" hreflang="x-default" href="<%= loginUrl %>">
   <link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
   <link rel="stylesheet" href="/css/auth/login.css">
