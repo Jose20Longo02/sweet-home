@@ -290,11 +290,20 @@ app.use((req, res, next) => {
 // Avoid redirect if language is already set to the requested code
 // Block search engine bots - these are functional endpoints, not indexable pages
 app.get('/lang/:code', (req, res) => {
-  // Detect if this is a search engine bot/crawler
+  // Detect if this is a known search engine bot/crawler (very specific pattern)
   const userAgent = (req.get('user-agent') || '').toLowerCase();
-  const isBot = /bot|crawler|spider|crawling|semrush|ahrefs|moz|screaming/i.test(userAgent);
+  // Only match known search engine bots explicitly - avoid false positives
+  const knownBots = [
+    'googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 'yandexbot',
+    'sogou', 'exabot', 'facebot', 'ia_archiver', 'semrushbot', 'ahrefsbot',
+    'mj12bot', 'dotbot', 'petalbot', 'applebot', 'facebookexternalhit',
+    'twitterbot', 'linkedinbot', 'whatsapp', 'telegrambot', 'discordbot',
+    'slackbot', 'pinterest', 'redditbot', 'msnbot', 'adsbot', 'mediapartners',
+    'adsbot-google', 'feedfetcher', 'semrush', 'ahrefs', 'screaming frog'
+  ];
+  const isBot = knownBots.some(bot => userAgent.includes(bot));
   
-  // If it's a bot, return 403 Forbidden (these endpoints are not for indexing)
+  // If it's a known bot, return 403 Forbidden (these endpoints are not for indexing)
   if (isBot) {
     return res.status(403).send('Forbidden - This is a functional endpoint, not an indexable page.');
   }
