@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const trigger = document.querySelector('.lang-switcher .lang-trigger');
     const menu = document.getElementById('lang-menu');
     if (!trigger || !menu) return;
+    
     function closeMenu(){
       menu.classList.remove('open');
       trigger.setAttribute('aria-expanded','false');
@@ -44,7 +45,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     function outside(e){ if (!menu.contains(e.target) && !trigger.contains(e.target)) closeMenu(); }
     function onKey(e){ if (e.key === 'Escape') closeMenu(); }
-    trigger.addEventListener('click', function(){
+    
+    // Toggle menu on trigger click
+    trigger.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
       const open = menu.classList.toggle('open');
       trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
       menu.setAttribute('aria-hidden', open ? 'false' : 'true');
@@ -57,12 +62,11 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
     
-    // Handle language switching via JavaScript to avoid server redirects
-    menu.addEventListener('click', function(e){
+    // Handle language switching - use delegation on document to catch all clicks
+    document.addEventListener('click', function(e){
       const langOption = e.target.closest('.lang-option');
-      if (!langOption) return;
+      if (!langOption || !menu.contains(langOption)) return;
       
-      // Prevent default and stop propagation immediately
       e.preventDefault();
       e.stopPropagation();
       
@@ -78,39 +82,17 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
       
-      // Close menu immediately
+      // Close menu
       closeMenu();
       
-      // Set cookie with proper encoding
-      const maxAge = 30 * 24 * 60 * 60; // 30 days in seconds (for max-age)
-      const expires = new Date(Date.now() + (30 * 24 * 60 * 60 * 1000)).toUTCString();
-      document.cookie = `lang=${langCode}; path=/; max-age=${maxAge}; expires=${expires}; SameSite=Lax`;
+      // Set cookie (use max-age only)
+      const maxAge = 30 * 24 * 60 * 60; // 30 days in seconds
+      document.cookie = 'lang=' + encodeURIComponent(langCode) + '; path=/; max-age=' + maxAge + '; SameSite=Lax';
       
-      // Small delay to ensure cookie is set before reload
-      setTimeout(function(){
-        window.location.reload();
-      }, 50);
-    }, true); // Use capture phase to catch event earlier
+      // Force reload immediately
+      window.location.reload();
+    }, true); // Use capture phase
   })();
-
-  // Delegated fallback (in case markup loads differently)
-  document.addEventListener('click', function(e){
-    const trg = e.target.closest && e.target.closest('.lang-trigger');
-    const menu = document.getElementById('lang-menu');
-    if (trg && menu) {
-      e.preventDefault();
-      const isOpen = menu.classList.contains('open');
-      if (isOpen) {
-        menu.classList.remove('open');
-        trg.setAttribute('aria-expanded','false');
-        menu.setAttribute('aria-hidden','true');
-      } else {
-        menu.classList.add('open');
-        trg.setAttribute('aria-expanded','true');
-        menu.setAttribute('aria-hidden','false');
-      }
-    }
-  }, false);
 
   const panel = document.querySelector('.admin-panel');
   const toggle = document.querySelector('.mobile-nav-toggle');
