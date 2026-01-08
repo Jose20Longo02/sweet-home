@@ -61,25 +61,36 @@ document.addEventListener('DOMContentLoaded', function () {
     menu.addEventListener('click', function(e){
       const langOption = e.target.closest('.lang-option');
       if (!langOption) return;
-      const langCode = langOption.getAttribute('data-lang');
-      if (!langCode) return;
       
-      // Check if language is already active
-      if (langOption.classList.contains('is-active')) {
-        e.preventDefault();
+      // Prevent default and stop propagation immediately
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const langCode = langOption.getAttribute('data-lang');
+      if (!langCode) {
         closeMenu();
         return;
       }
       
-      e.preventDefault();
+      // Check if language is already active
+      if (langOption.classList.contains('is-active')) {
+        closeMenu();
+        return;
+      }
       
-      // Set cookie
-      const maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
-      document.cookie = `lang=${langCode}; path=/; max-age=${maxAge}; SameSite=Lax`;
+      // Close menu immediately
+      closeMenu();
       
-      // Reload page to apply new language
-      window.location.reload();
-    });
+      // Set cookie with proper encoding
+      const maxAge = 30 * 24 * 60 * 60; // 30 days in seconds (for max-age)
+      const expires = new Date(Date.now() + (30 * 24 * 60 * 60 * 1000)).toUTCString();
+      document.cookie = `lang=${langCode}; path=/; max-age=${maxAge}; expires=${expires}; SameSite=Lax`;
+      
+      // Small delay to ensure cookie is set before reload
+      setTimeout(function(){
+        window.location.reload();
+      }, 50);
+    }, true); // Use capture phase to catch event earlier
   })();
 
   // Delegated fallback (in case markup loads differently)
