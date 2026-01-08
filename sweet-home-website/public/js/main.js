@@ -62,36 +62,23 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
     
-    // Handle language switching - use delegation on document to catch all clicks
-    document.addEventListener('click', function(e){
+    // Handle language switching - close menu when clicking an option
+    // The actual language change is handled by the server via /lang/:code route
+    menu.addEventListener('click', function(e){
       const langOption = e.target.closest('.lang-option');
-      if (!langOption || !menu.contains(langOption)) return;
+      if (!langOption) return;
       
-      e.preventDefault();
-      e.stopPropagation();
-      
-      const langCode = langOption.getAttribute('data-lang');
-      if (!langCode) {
-        closeMenu();
-        return;
-      }
-      
-      // Check if language is already active
+      // Check if language is already active - if so, just close menu and prevent navigation
       if (langOption.classList.contains('is-active')) {
+        e.preventDefault();
         closeMenu();
         return;
       }
       
-      // Close menu
+      // For other languages, let the link navigate normally to /lang/:code
+      // The server will handle the cookie and redirect
       closeMenu();
-      
-      // Set cookie (use max-age only)
-      const maxAge = 30 * 24 * 60 * 60; // 30 days in seconds
-      document.cookie = 'lang=' + encodeURIComponent(langCode) + '; path=/; max-age=' + maxAge + '; SameSite=Lax';
-      
-      // Force reload immediately
-      window.location.reload();
-    }, true); // Use capture phase
+    });
   })();
 
   const panel = document.querySelector('.admin-panel');
