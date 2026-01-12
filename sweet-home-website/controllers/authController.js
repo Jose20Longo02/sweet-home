@@ -15,13 +15,16 @@ exports.loginPage = (req, res) => {
   const awaitingApproval = req.query.awaitingApproval === 'true';
   const role             = req.query.role || null;
   const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
-  // login.ejs has its own <head>, so use layout: false to avoid conflicts
+  // login.ejs has its own <head> and body structure, so use layout: false to avoid conflicts
+  // But we include header and footer manually in the template
   res.render('auth/login', {
     title: 'Sign In',
     awaitingApproval,
     role,
     error: null,
     baseUrl,
+    lang: res.locals.lang || 'en', // Ensure lang is passed for header/footer
+    csrfToken: req.csrfToken ? req.csrfToken() : '', // Ensure csrfToken is available
     layout: false // Don't use main layout since login.ejs has its own <head>
   });
 };
@@ -37,11 +40,16 @@ exports.login = async (req, res, next) => {
       [email]
     );
     if (rows.length === 0) {
+      const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
       return res.render('auth/login', {
         title: 'Sign In',
         awaitingApproval: false,
         role: null,
-        error: "This account doesn't exist"
+        error: "This account doesn't exist",
+        baseUrl,
+        lang: res.locals.lang || 'en',
+        csrfToken: req.csrfToken ? req.csrfToken() : '',
+        layout: false
       });
     }
     const user = rows[0];
@@ -49,21 +57,31 @@ exports.login = async (req, res, next) => {
     // 2) Check password
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
+      const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
       return res.render('auth/login', {
         title: 'Sign In',
         awaitingApproval: false,
         role: null,
-        error: 'The password is incorrect'
+        error: 'The password is incorrect',
+        baseUrl,
+        lang: res.locals.lang || 'en',
+        csrfToken: req.csrfToken ? req.csrfToken() : '',
+        layout: false
       });
     }
 
     // 3) Check approval
     if (!user.approved) {
+      const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
       return res.render('auth/login', {
         title: 'Sign In',
         awaitingApproval: false,
         role: null,
-        error: 'This account is still waiting for approval'
+        error: 'This account is still waiting for approval',
+        baseUrl,
+        lang: res.locals.lang || 'en',
+        csrfToken: req.csrfToken ? req.csrfToken() : '',
+        layout: false
       });
     }
 

@@ -31,14 +31,31 @@
   }); %>
   <link rel="alternate" hreflang="x-default" href="<%= loginUrl %>">
   <link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
+  <!-- Fonts: Playfair Display for headings, Lato for body -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@600;700&family=Great+Vibes&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+  <!-- Main CSS files -->
+  <link rel="preload" as="style" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="preload" as="style" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/icon-theme.css" />
+  <!-- Login specific CSS -->
   <link rel="stylesheet" href="/css/auth/login.css">
+  <meta name="csrf-token" content="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
   <% if (process.env.RECAPTCHA_SITE_KEY) { %>
     <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
   <% } %>
   <!-- No ItemList schema needed for login page as it doesn't have a carousel -->
+  <script src="/js/main.js" defer></script>
 </head>
-
-<div class="login-wrap">
+<body class="layout-sticky" data-icon-theme="<%= (typeof getActiveTheme !== 'undefined' && getActiveTheme) ? getActiveTheme() : 'default' %>">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <%- include('../partials/header-main') %>
+  <main id="main-content" class="container main-offset" role="main">
+    <div class="login-wrap">
   <form action="/auth/login" method="post" class="auth-form">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <% if (process.env.RECAPTCHA_SITE_KEY) { %>
@@ -68,6 +85,8 @@
     </p>
   </form>
 </div>
+  </main>
+  <%- include('../partials/footer') %>
 
 <% if (awaitingApproval) { %>
   <!-- The overlay -->
