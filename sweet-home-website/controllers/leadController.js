@@ -5,7 +5,6 @@ const sendMail = require('../config/mailer');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const { logEvent } = require('../utils/analytics');
 const XLSX = require('xlsx');
-const XLSX = require('xlsx');
 
 const { validationResult } = require('express-validator');
 
