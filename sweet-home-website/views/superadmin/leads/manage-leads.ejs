@@ -14,7 +14,7 @@
       <p class="subtitle">All inquiries across all properties</p>
     </div>
     <div class="right">
-      <button id="exportLeadsBtn" class="btn btn-primary" style="margin-right: 10px;">📥 Export Leads</button>
+      <button type="button" id="exportLeadsBtn" class="btn btn-primary" style="margin-right: 10px;">📥 Export Leads</button>
       <a href="/superadmin/dashboard" class="btn btn-light">← Return to dashboard</a>
     </div>
   </header>
@@ -218,7 +218,7 @@
 </div>
 
 <!-- Export Modal -->
-<div id="exportModal" style="display: none !important; position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100vw !important; height: 100vh !important; background: rgba(0,0,0,0.45) !important; z-index: 10000 !important; align-items: center !important; justify-content: center !important; margin: 0 !important; padding: 20px !important; box-sizing: border-box !important;">
+<div id="exportModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.45); z-index: 10000; align-items: center; justify-content: center; margin: 0; padding: 20px; box-sizing: border-box;">
   <div class="modal-content" style="background: #fff !important; width: 100% !important; max-width: 420px !important; border-radius: 12px !important; box-shadow: 0 20px 40px rgba(0,0,0,.2) !important; border: 1px solid var(--gray-200) !important; margin: 0 auto !important; position: relative !important;">
     <div class="modal-header" style="padding: 16px 18px; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;">
       <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--gray-900);">Export Leads</h3>
@@ -237,19 +237,28 @@
 
 <script src="/js/superadmin-leads.js?v=2" defer></script>
 <script>
-  // Export functionality - wait for DOM to be ready
-  (function() {
-    function initExport() {
-      const exportBtn = document.getElementById('exportLeadsBtn');
-      const exportModal = document.getElementById('exportModal');
-      const exportModalClose = document.getElementById('exportModalClose');
-      const exportCsvBtn = document.getElementById('exportCsvBtn');
-      const exportExcelBtn = document.getElementById('exportExcelBtn');
+  // Export functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('Initializing export functionality...');
+    
+    const exportBtn = document.getElementById('exportLeadsBtn');
+    const exportModal = document.getElementById('exportModal');
+    const exportModalClose = document.getElementById('exportModalClose');
+    const exportCsvBtn = document.getElementById('exportCsvBtn');
+    const exportExcelBtn = document.getElementById('exportExcelBtn');
 
-      if (!exportBtn || !exportModal) {
-        console.warn('Export elements not found');
-        return;
-      }
+    console.log('Export button found:', !!exportBtn);
+    console.log('Export modal found:', !!exportModal);
+
+    if (!exportBtn) {
+      console.error('Export button not found!');
+      return;
+    }
+
+    if (!exportModal) {
+      console.error('Export modal not found!');
+      return;
+    }
 
     // Get current filter parameters from URL
     function getFilterParams() {
@@ -265,55 +274,54 @@
       return params.toString();
     }
 
-      // Open export modal
-      exportBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        exportModal.style.setProperty('display', 'flex', 'important');
+    // Open export modal
+    exportBtn.addEventListener('click', function(e) {
+      console.log('Export button clicked!');
+      e.preventDefault();
+      e.stopPropagation();
+      exportModal.style.display = 'flex';
+      console.log('Modal display set to flex, current display:', exportModal.style.display);
+      console.log('Modal element:', exportModal);
+    });
+
+    // Close export modal
+    if (exportModalClose) {
+      exportModalClose.addEventListener('click', function() {
+        exportModal.style.display = 'none';
       });
-
-      // Close export modal
-      if (exportModalClose) {
-        exportModalClose.addEventListener('click', function() {
-          exportModal.style.setProperty('display', 'none', 'important');
-        });
-      }
-
-      // Close modal when clicking outside
-      exportModal.addEventListener('click', function(e) {
-        if (e.target === exportModal) {
-          exportModal.style.setProperty('display', 'none', 'important');
-        }
-      });
-
-      // Export as CSV
-      if (exportCsvBtn) {
-        exportCsvBtn.addEventListener('click', function() {
-          const filterParams = getFilterParams();
-          const url = '/superadmin/dashboard/leads/export?format=csv' + (filterParams ? '&' + filterParams : '');
-          window.location.href = url;
-          exportModal.style.setProperty('display', 'none', 'important');
-        });
-      }
-
-      // Export as Excel
-      if (exportExcelBtn) {
-        exportExcelBtn.addEventListener('click', function() {
-          const filterParams = getFilterParams();
-          const url = '/superadmin/dashboard/leads/export?format=excel' + (filterParams ? '&' + filterParams : '');
-          window.location.href = url;
-          exportModal.style.setProperty('display', 'none', 'important');
-        });
-      }
     }
 
-    // Initialize when DOM is ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initExport);
-    } else {
-      initExport();
+    // Close modal when clicking outside
+    exportModal.addEventListener('click', function(e) {
+      if (e.target === exportModal) {
+        exportModal.style.display = 'none';
+      }
+    });
+
+    // Export as CSV
+    if (exportCsvBtn) {
+      exportCsvBtn.addEventListener('click', function() {
+        const filterParams = getFilterParams();
+        const url = '/superadmin/dashboard/leads/export?format=csv' + (filterParams ? '&' + filterParams : '');
+        console.log('Exporting CSV:', url);
+        window.location.href = url;
+        exportModal.style.display = 'none';
+      });
     }
-  })();
+
+    // Export as Excel
+    if (exportExcelBtn) {
+      exportExcelBtn.addEventListener('click', function() {
+        const filterParams = getFilterParams();
+        const url = '/superadmin/dashboard/leads/export?format=excel' + (filterParams ? '&' + filterParams : '');
+        console.log('Exporting Excel:', url);
+        window.location.href = url;
+        exportModal.style.display = 'none';
+      });
+    }
+
+    console.log('Export functionality initialized successfully');
+  });
 </script>
 
 
