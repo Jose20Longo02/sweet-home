@@ -218,34 +218,38 @@
 </div>
 
 <!-- Export Modal -->
-<div id="exportModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-  <div class="modal-content" style="background: white; padding: 2rem; border-radius: 8px; max-width: 400px; width: 90%;">
-    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-      <h3 style="margin: 0;">Export Leads</h3>
-      <button class="modal-close" id="exportModalClose" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
+<div id="exportModal" style="display: none !important; position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100vw !important; height: 100vh !important; background: rgba(0,0,0,0.45) !important; z-index: 10000 !important; align-items: center !important; justify-content: center !important; margin: 0 !important; padding: 20px !important; box-sizing: border-box !important;">
+  <div class="modal-content" style="background: #fff !important; width: 100% !important; max-width: 420px !important; border-radius: 12px !important; box-shadow: 0 20px 40px rgba(0,0,0,.2) !important; border: 1px solid var(--gray-200) !important; margin: 0 auto !important; position: relative !important;">
+    <div class="modal-header" style="padding: 16px 18px; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--gray-900);">Export Leads</h3>
+      <button class="modal-close" id="exportModalClose" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-500); padding: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">&times;</button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" style="padding: 18px; color: var(--gray-800);">
       <p style="margin-bottom: 1rem;">Choose the export format:</p>
       <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
         <button id="exportCsvBtn" class="btn btn-primary" style="flex: 1;">📄 Export as CSV</button>
         <button id="exportExcelBtn" class="btn btn-primary" style="flex: 1;">📊 Export as Excel</button>
       </div>
-      <p style="font-size: 0.9rem; color: #666; margin: 0;">The export will include all leads matching your current filters.</p>
+      <p style="font-size: 0.9rem; color: var(--gray-600); margin: 0;">The export will include all leads matching your current filters.</p>
     </div>
   </div>
 </div>
 
 <script src="/js/superadmin-leads.js?v=2" defer></script>
 <script>
-  // Export functionality
+  // Export functionality - wait for DOM to be ready
   (function() {
-    const exportBtn = document.getElementById('exportLeadsBtn');
-    const exportModal = document.getElementById('exportModal');
-    const exportModalClose = document.getElementById('exportModalClose');
-    const exportCsvBtn = document.getElementById('exportCsvBtn');
-    const exportExcelBtn = document.getElementById('exportExcelBtn');
+    function initExport() {
+      const exportBtn = document.getElementById('exportLeadsBtn');
+      const exportModal = document.getElementById('exportModal');
+      const exportModalClose = document.getElementById('exportModalClose');
+      const exportCsvBtn = document.getElementById('exportCsvBtn');
+      const exportExcelBtn = document.getElementById('exportExcelBtn');
 
-    if (!exportBtn) return;
+      if (!exportBtn || !exportModal) {
+        console.warn('Export elements not found');
+        return;
+      }
 
     // Get current filter parameters from URL
     function getFilterParams() {
@@ -261,38 +265,54 @@
       return params.toString();
     }
 
-    // Open export modal
-    exportBtn.addEventListener('click', function() {
-      exportModal.style.display = 'flex';
-    });
+      // Open export modal
+      exportBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        exportModal.style.setProperty('display', 'flex', 'important');
+      });
 
-    // Close export modal
-    exportModalClose.addEventListener('click', function() {
-      exportModal.style.display = 'none';
-    });
-
-    // Close modal when clicking outside
-    exportModal.addEventListener('click', function(e) {
-      if (e.target === exportModal) {
-        exportModal.style.display = 'none';
+      // Close export modal
+      if (exportModalClose) {
+        exportModalClose.addEventListener('click', function() {
+          exportModal.style.setProperty('display', 'none', 'important');
+        });
       }
-    });
 
-    // Export as CSV
-    exportCsvBtn.addEventListener('click', function() {
-      const filterParams = getFilterParams();
-      const url = '/superadmin/dashboard/leads/export?format=csv' + (filterParams ? '&' + filterParams : '');
-      window.location.href = url;
-      exportModal.style.display = 'none';
-    });
+      // Close modal when clicking outside
+      exportModal.addEventListener('click', function(e) {
+        if (e.target === exportModal) {
+          exportModal.style.setProperty('display', 'none', 'important');
+        }
+      });
 
-    // Export as Excel
-    exportExcelBtn.addEventListener('click', function() {
-      const filterParams = getFilterParams();
-      const url = '/superadmin/dashboard/leads/export?format=excel' + (filterParams ? '&' + filterParams : '');
-      window.location.href = url;
-      exportModal.style.display = 'none';
-    });
+      // Export as CSV
+      if (exportCsvBtn) {
+        exportCsvBtn.addEventListener('click', function() {
+          const filterParams = getFilterParams();
+          const url = '/superadmin/dashboard/leads/export?format=csv' + (filterParams ? '&' + filterParams : '');
+          window.location.href = url;
+          exportModal.style.setProperty('display', 'none', 'important');
+        });
+      }
+
+      // Export as Excel
+      if (exportExcelBtn) {
+        exportExcelBtn.addEventListener('click', function() {
+          const filterParams = getFilterParams();
+          const url = '/superadmin/dashboard/leads/export?format=excel' + (filterParams ? '&' + filterParams : '');
+          window.location.href = url;
+          exportModal.style.setProperty('display', 'none', 'important');
+        });
+      }
+    }
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initExport);
+    } else {
+      initExport();
+    }
   })();
 </script>
 
