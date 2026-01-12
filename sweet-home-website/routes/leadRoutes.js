@@ -300,6 +300,9 @@ router.get('/admin/dashboard/leads', ensureAdmin, leadController.listForAdmin);
 // SuperAdmin leads page (all leads)
 router.get('/superadmin/dashboard/leads', ensureSuperAdmin, leadController.listAll);
 
+// SuperAdmin export leads (CSV or Excel)
+router.get('/superadmin/dashboard/leads/export', ensureSuperAdmin, leadController.exportAll);
+
 // Update lead (status/notes)
 router.post('/api/leads/:id', ensureAuthenticated, leadController.updateLead);
 

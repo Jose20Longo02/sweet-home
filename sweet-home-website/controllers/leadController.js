@@ -4,6 +4,8 @@ const Lead = require('../models/Lead');
 const sendMail = require('../config/mailer');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const { logEvent } = require('../utils/analytics');
+const XLSX = require('xlsx');
+const XLSX = require('xlsx');
 
 const { validationResult } = require('express-validator');
 
@@ -545,6 +547,215 @@ exports.listAll = async (req, res, next) => {
       pendingCount,
       allAgents
     });
+  } catch (err) { next(err); }
+};
+
+// SuperAdmin: Export all leads (respects filters, no pagination)
+exports.exportAll = async (req, res, next) => {
+  try {
+    const format = req.query.format || 'csv'; // 'csv' or 'excel'
+    if (!['csv', 'excel'].includes(format)) {
+      return res.status(400).json({ success: false, message: 'Invalid format. Use "csv" or "excel"' });
+    }
+
+    // Use the same filters as listAll, but without pagination
+    const filters = {
+      q: req.query.q || '',
+      status: req.query.status || '',
+      from: req.query.from || '',
+      to: req.query.to || '',
+      agentId: req.query.agentId || '',
+      propertyId: req.query.propertyId || '',
+      projectId: req.query.projectId || '',
+      leadType: req.query.leadType || '',
+      leadKind: req.query.leadKind || ''
+    };
+
+    // Get all leads matching filters (no pagination)
+    const where = ['TRUE'];
+    const params = [];
+    let idx = 1;
+    if (filters.q) { where.push(`(LOWER(l.name) LIKE LOWER($${idx}) OR LOWER(l.email) LIKE LOWER($${idx}) OR LOWER(l.phone) LIKE LOWER($${idx}) OR LOWER(l.message) LIKE LOWER($${idx}))`); params.push(`%${filters.q}%`); idx++; }
+    if (filters.status) { where.push(`l.status = $${idx}`); params.push(filters.status); idx++; }
+    if (filters.from) { where.push(`l.created_at >= $${idx}`); params.push(filters.from); idx++; }
+    if (filters.to) { where.push(`l.created_at <= $${idx}`); params.push(filters.to); idx++; }
+    if (filters.agentId) {
+      if (filters.agentId === 'unassigned') {
+        where.push(`l.agent_id IS NULL`);
+      } else {
+        where.push(`l.agent_id = $${idx}`);
+        params.push(parseInt(filters.agentId, 10));
+        idx++;
+      }
+    }
+    if (filters.propertyId) { where.push(`l.property_id = $${idx}`); params.push(filters.propertyId); idx++; }
+    if (filters.projectId) { where.push(`l.project_id = $${idx}`); params.push(filters.projectId); idx++; }
+    if (filters.leadType === 'property') { where.push(`l.property_id IS NOT NULL`); }
+    if (filters.leadType === 'project')  { where.push(`l.project_id IS NOT NULL`); }
+    if (filters.leadKind === 'buyer')    { where.push(`(l.source = 'property_form' OR l.source = 'project_form')`); }
+    if (filters.leadKind === 'seller')   { where.push(`l.source = 'seller_form'`); }
+    if (filters.leadKind === 'unknown')  { where.push(`(l.source IS NULL OR l.source NOT IN ('property_form','project_form','seller_form'))`); }
+
+    const exportSql = `
+      SELECT l.*, 
+             p.title AS property_title, p.slug AS property_slug, p.neighborhood AS property_neighborhood, p.city AS property_city, p.country AS property_country,
+             pr.title AS project_title, pr.slug AS project_slug, pr.neighborhood AS project_neighborhood, pr.city AS project_city, pr.country AS project_country,
+             u.name AS agent_name
+        FROM leads l
+        LEFT JOIN properties p ON p.id = l.property_id
+        LEFT JOIN projects pr ON pr.id = l.project_id
+        LEFT JOIN users u ON u.id = l.agent_id
+       WHERE ${where.join(' AND ')}
+       ORDER BY l.created_at DESC
+    `;
+    const { rows: leads } = await query(exportSql, params);
+
+    // Prepare data for export
+    const exportData = leads.map(lead => {
+      // Determine source text
+      let sourceText = '';
+      switch(lead.source) {
+        case 'seller_form': sourceText = 'Sellers Form'; break;
+        case 'contact_form': sourceText = 'General Contact Form'; break;
+        case 'property_form': sourceText = 'Property Form'; break;
+        case 'project_form': sourceText = 'Project Form'; break;
+        default: sourceText = lead.source || 'Unknown';
+      }
+
+      // Determine location for property
+      let propertyLocation = '';
+      if (lead.property_id && (lead.property_neighborhood || lead.property_city)) {
+        propertyLocation = `${lead.property_neighborhood || lead.property_city}, ${lead.property_city || lead.property_country}`;
+      }
+
+      // Determine location for project
+      let projectLocation = '';
+      if (lead.project_id && (lead.project_neighborhood || lead.project_city)) {
+        projectLocation = `${lead.project_neighborhood || lead.project_city}, ${lead.project_city || lead.project_country}`;
+      }
+
+      // Format dates
+      const createdDate = lead.created_at ? new Date(lead.created_at).toLocaleString() : '';
+      const lastContactDate = lead.last_contact_at ? new Date(lead.last_contact_at).toLocaleString() : '';
+
+      // Parse internal notes count
+      const notesCount = lead.internal_notes ? String(lead.internal_notes).split(/\n\n+/).filter(Boolean).length : 0;
+
+      return {
+        'ID': lead.id,
+        'Created Date': createdDate,
+        'Name': lead.name || '',
+        'Email': lead.email || '',
+        'Phone': lead.phone || '',
+        'Message': lead.message || '',
+        'Status': lead.status || 'New',
+        'Source': sourceText,
+        'Preferred Language': lead.preferred_language ? String(lead.preferred_language).toUpperCase() : '',
+        'Property ID': lead.property_id || '',
+        'Property Title': lead.property_title || '',
+        'Property Location': propertyLocation,
+        'Project ID': lead.project_id || '',
+        'Project Title': lead.project_title || '',
+        'Project Location': projectLocation,
+        'Agent Name': lead.agent_name || 'Unassigned',
+        'Agent ID': lead.agent_id || '',
+        'Last Contact Date': lastContactDate,
+        'Internal Notes Count': notesCount,
+        'Internal Notes': lead.internal_notes || '',
+        'Seller Neighborhood': lead.seller_neighborhood || '',
+        'Seller Size (sqm)': lead.seller_size || '',
+        'Seller Rooms': lead.seller_rooms || '',
+        'Seller Occupancy Status': lead.seller_occupancy_status || '',
+        'UTM Source': lead.utm_source || '',
+        'UTM Medium': lead.utm_medium || '',
+        'UTM Campaign': lead.utm_campaign || '',
+        'UTM Term': lead.utm_term || '',
+        'UTM Content': lead.utm_content || '',
+        'Referrer': lead.referrer || '',
+        'Page Path': lead.page_path || ''
+      };
+    });
+
+    if (format === 'csv') {
+      // Generate CSV
+      if (exportData.length === 0) {
+        return res.status(404).json({ success: false, message: 'No leads found matching the filters' });
+      }
+
+      // Get headers from first row
+      const headers = Object.keys(exportData[0]);
+      const csvRows = [headers.join(',')];
+
+      // Add data rows
+      exportData.forEach(row => {
+        const values = headers.map(header => {
+          const value = row[header] || '';
+          // Escape commas and quotes in CSV
+          const stringValue = String(value).replace(/"/g, '""');
+          return `"${stringValue}"`;
+        });
+        csvRows.push(values.join(','));
+      });
+
+      const csvContent = csvRows.join('\n');
+      const filename = `leads_export_${new Date().toISOString().split('T')[0]}.csv`;
+
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      res.send('\ufeff' + csvContent); // BOM for Excel UTF-8 compatibility
+    } else {
+      // Generate Excel
+      if (exportData.length === 0) {
+        return res.status(404).json({ success: false, message: 'No leads found matching the filters' });
+      }
+
+      const worksheet = XLSX.utils.json_to_sheet(exportData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Leads');
+
+      // Set column widths for better readability
+      const colWidths = [
+        { wch: 8 },  // ID
+        { wch: 20 }, // Created Date
+        { wch: 20 }, // Name
+        { wch: 30 }, // Email
+        { wch: 20 }, // Phone
+        { wch: 40 }, // Message
+        { wch: 15 }, // Status
+        { wch: 20 }, // Source
+        { wch: 18 }, // Preferred Language
+        { wch: 12 }, // Property ID
+        { wch: 30 }, // Property Title
+        { wch: 30 }, // Property Location
+        { wch: 12 }, // Project ID
+        { wch: 30 }, // Project Title
+        { wch: 30 }, // Project Location
+        { wch: 20 }, // Agent Name
+        { wch: 10 }, // Agent ID
+        { wch: 20 }, // Last Contact Date
+        { wch: 18 }, // Internal Notes Count
+        { wch: 50 }, // Internal Notes
+        { wch: 20 }, // Seller Neighborhood
+        { wch: 15 }, // Seller Size
+        { wch: 12 }, // Seller Rooms
+        { wch: 20 }, // Seller Occupancy Status
+        { wch: 15 }, // UTM Source
+        { wch: 15 }, // UTM Medium
+        { wch: 20 }, // UTM Campaign
+        { wch: 15 }, // UTM Term
+        { wch: 15 }, // UTM Content
+        { wch: 40 }, // Referrer
+        { wch: 40 }  // Page Path
+      ];
+      worksheet['!cols'] = colWidths;
+
+      const filename = `leads_export_${new Date().toISOString().split('T')[0]}.xlsx`;
+      const buffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      res.send(buffer);
+    }
   } catch (err) { next(err); }
 };
 

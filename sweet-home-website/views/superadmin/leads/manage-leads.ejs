@@ -14,6 +14,7 @@
       <p class="subtitle">All inquiries across all properties</p>
     </div>
     <div class="right">
+      <button id="exportLeadsBtn" class="btn btn-primary" style="margin-right: 10px;">📥 Export Leads</button>
       <a href="/superadmin/dashboard" class="btn btn-light">← Return to dashboard</a>
     </div>
   </header>
@@ -216,6 +217,83 @@
   </div>
 </div>
 
+<!-- Export Modal -->
+<div id="exportModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+  <div class="modal-content" style="background: white; padding: 2rem; border-radius: 8px; max-width: 400px; width: 90%;">
+    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+      <h3 style="margin: 0;">Export Leads</h3>
+      <button class="modal-close" id="exportModalClose" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-bottom: 1rem;">Choose the export format:</p>
+      <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+        <button id="exportCsvBtn" class="btn btn-primary" style="flex: 1;">📄 Export as CSV</button>
+        <button id="exportExcelBtn" class="btn btn-primary" style="flex: 1;">📊 Export as Excel</button>
+      </div>
+      <p style="font-size: 0.9rem; color: #666; margin: 0;">The export will include all leads matching your current filters.</p>
+    </div>
+  </div>
+</div>
+
 <script src="/js/superadmin-leads.js?v=2" defer></script>
+<script>
+  // Export functionality
+  (function() {
+    const exportBtn = document.getElementById('exportLeadsBtn');
+    const exportModal = document.getElementById('exportModal');
+    const exportModalClose = document.getElementById('exportModalClose');
+    const exportCsvBtn = document.getElementById('exportCsvBtn');
+    const exportExcelBtn = document.getElementById('exportExcelBtn');
+
+    if (!exportBtn) return;
+
+    // Get current filter parameters from URL
+    function getFilterParams() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const params = new URLSearchParams();
+      
+      // Copy all filter parameters
+      ['q', 'status', 'from', 'to', 'agentId', 'propertyId', 'projectId', 'leadType', 'leadKind'].forEach(key => {
+        const value = urlParams.get(key);
+        if (value) params.set(key, value);
+      });
+      
+      return params.toString();
+    }
+
+    // Open export modal
+    exportBtn.addEventListener('click', function() {
+      exportModal.style.display = 'flex';
+    });
+
+    // Close export modal
+    exportModalClose.addEventListener('click', function() {
+      exportModal.style.display = 'none';
+    });
+
+    // Close modal when clicking outside
+    exportModal.addEventListener('click', function(e) {
+      if (e.target === exportModal) {
+        exportModal.style.display = 'none';
+      }
+    });
+
+    // Export as CSV
+    exportCsvBtn.addEventListener('click', function() {
+      const filterParams = getFilterParams();
+      const url = '/superadmin/dashboard/leads/export?format=csv' + (filterParams ? '&' + filterParams : '');
+      window.location.href = url;
+      exportModal.style.display = 'none';
+    });
+
+    // Export as Excel
+    exportExcelBtn.addEventListener('click', function() {
+      const filterParams = getFilterParams();
+      const url = '/superadmin/dashboard/leads/export?format=excel' + (filterParams ? '&' + filterParams : '');
+      window.location.href = url;
+      exportModal.style.display = 'none';
+    });
+  })();
+</script>
 
 
