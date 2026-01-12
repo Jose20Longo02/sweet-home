@@ -33,9 +33,15 @@
       e.stopPropagation();
       exportModal.classList.add('show');
       exportModal.style.setProperty('display', 'flex', 'important');
+      exportModal.style.setProperty('position', 'fixed', 'important');
+      exportModal.style.setProperty('z-index', '10000', 'important');
       console.log('[export-leads] modal display:', exportModal.style.display);
       console.log('[export-leads] modal computed display:', window.getComputedStyle(exportModal).display);
+      console.log('[export-leads] modal computed position:', window.getComputedStyle(exportModal).position);
+      console.log('[export-leads] modal computed z-index:', window.getComputedStyle(exportModal).zIndex);
       console.log('[export-leads] modal has show class:', exportModal.classList.contains('show'));
+      console.log('[export-leads] modal offsetWidth:', exportModal.offsetWidth);
+      console.log('[export-leads] modal offsetHeight:', exportModal.offsetHeight);
     });
 
     // Close export modal
