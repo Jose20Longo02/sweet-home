@@ -14,7 +14,7 @@
       <p class="subtitle">All inquiries across all properties</p>
     </div>
     <div class="right">
-      <button type="button" id="exportLeadsBtn" class="btn btn-primary" style="margin-right: 10px;" onclick="var m=document.getElementById('exportModal');if(m){m.style.display='flex';m.classList.add('show');}">📥 Export Leads</button>
+      <button type="button" id="exportLeadsBtn" class="btn btn-primary" style="margin-right: 10px;">📥 Export Leads</button>
       <a href="/superadmin/dashboard" class="btn btn-light">← Return to dashboard</a>
     </div>
   </header>
@@ -236,93 +236,6 @@
 </div>
 
 <script src="/js/superadmin-leads.js?v=2" defer></script>
-<script>
-  // Export functionality
-  document.addEventListener('DOMContentLoaded', function() {
-    console.log('Initializing export functionality...');
-    
-    const exportBtn = document.getElementById('exportLeadsBtn');
-    const exportModal = document.getElementById('exportModal');
-    const exportModalClose = document.getElementById('exportModalClose');
-    const exportCsvBtn = document.getElementById('exportCsvBtn');
-    const exportExcelBtn = document.getElementById('exportExcelBtn');
-
-    console.log('Export button found:', !!exportBtn);
-    console.log('Export modal found:', !!exportModal);
-
-    if (!exportBtn) {
-      console.error('Export button not found!');
-      return;
-    }
-
-    if (!exportModal) {
-      console.error('Export modal not found!');
-      return;
-    }
-
-    // Get current filter parameters from URL
-    function getFilterParams() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const params = new URLSearchParams();
-      
-      // Copy all filter parameters
-      ['q', 'status', 'from', 'to', 'agentId', 'propertyId', 'projectId', 'leadType', 'leadKind'].forEach(key => {
-        const value = urlParams.get(key);
-        if (value) params.set(key, value);
-      });
-      
-      return params.toString();
-    }
-
-    // Open export modal
-    exportBtn.addEventListener('click', function(e) {
-      console.log('Export button clicked!');
-      e.preventDefault();
-      e.stopPropagation();
-      exportModal.classList.add('show');
-      exportModal.style.display = 'flex';
-      console.log('Modal display set to flex, current display:', exportModal.style.display);
-      console.log('Modal element:', exportModal);
-    });
-
-    // Close export modal
-    if (exportModalClose) {
-      exportModalClose.addEventListener('click', function() {
-        exportModal.style.display = 'none';
-      });
-    }
-
-    // Close modal when clicking outside
-    exportModal.addEventListener('click', function(e) {
-      if (e.target === exportModal) {
-        exportModal.style.display = 'none';
-      }
-    });
-
-    // Export as CSV
-    if (exportCsvBtn) {
-      exportCsvBtn.addEventListener('click', function() {
-        const filterParams = getFilterParams();
-        const url = '/superadmin/dashboard/leads/export?format=csv' + (filterParams ? '&' + filterParams : '');
-        console.log('Exporting CSV:', url);
-        window.location.href = url;
-        exportModal.style.display = 'none';
-      });
-    }
-
-    // Export as Excel
-    if (exportExcelBtn) {
-      exportExcelBtn.addEventListener('click', function() {
-        const filterParams = getFilterParams();
-        const url = '/superadmin/dashboard/leads/export?format=excel' + (filterParams ? '&' + filterParams : '');
-        console.log('Exporting Excel:', url);
-        window.location.href = url;
-        exportModal.style.display = 'none';
-      });
-    }
-
-    console.log('Export functionality initialized successfully');
-  });
-</script>
+<script src="/js/superadmin-export-leads.js?v=1" defer></script>
 
 
