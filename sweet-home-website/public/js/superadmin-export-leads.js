@@ -31,17 +31,27 @@
       console.log('[export-leads] open modal');
       e.preventDefault();
       e.stopPropagation();
+      
+      // Move modal to body if it's not already there (to avoid container issues)
+      if (exportModal.parentElement !== document.body) {
+        document.body.appendChild(exportModal);
+        console.log('[export-leads] moved modal to body');
+      }
+      
+      // Set all styles explicitly
+      exportModal.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100vw !important; height: 100vh !important; background: rgba(0,0,0,0.45) !important; z-index: 10000 !important; display: flex !important; align-items: center !important; justify-content: center !important; margin: 0 !important; padding: 20px !important; box-sizing: border-box !important; visibility: visible !important; opacity: 1 !important;';
       exportModal.classList.add('show');
-      exportModal.style.setProperty('display', 'flex', 'important');
-      exportModal.style.setProperty('position', 'fixed', 'important');
-      exportModal.style.setProperty('z-index', '10000', 'important');
+      
       console.log('[export-leads] modal display:', exportModal.style.display);
       console.log('[export-leads] modal computed display:', window.getComputedStyle(exportModal).display);
       console.log('[export-leads] modal computed position:', window.getComputedStyle(exportModal).position);
       console.log('[export-leads] modal computed z-index:', window.getComputedStyle(exportModal).zIndex);
-      console.log('[export-leads] modal has show class:', exportModal.classList.contains('show'));
+      console.log('[export-leads] modal computed visibility:', window.getComputedStyle(exportModal).visibility);
+      console.log('[export-leads] modal computed opacity:', window.getComputedStyle(exportModal).opacity);
       console.log('[export-leads] modal offsetWidth:', exportModal.offsetWidth);
       console.log('[export-leads] modal offsetHeight:', exportModal.offsetHeight);
+      console.log('[export-leads] modal parent:', exportModal.parentElement);
+      console.log('[export-leads] modal getBoundingClientRect:', exportModal.getBoundingClientRect());
     });
 
     // Close export modal
