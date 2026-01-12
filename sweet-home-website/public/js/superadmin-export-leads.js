@@ -1,21 +1,16 @@
 // Export functionality for superadmin leads page
 (function() {
   function initExport() {
+    console.log('[export-leads] init start');
     const exportBtn = document.getElementById('exportLeadsBtn');
     const exportModal = document.getElementById('exportModal');
     const exportModalClose = document.getElementById('exportModalClose');
     const exportCsvBtn = document.getElementById('exportCsvBtn');
     const exportExcelBtn = document.getElementById('exportExcelBtn');
 
-    if (!exportBtn) {
-      console.warn('Export button not found');
-      return;
-    }
-
-    if (!exportModal) {
-      console.warn('Export modal not found');
-      return;
-    }
+    if (!exportBtn) { console.warn('[export-leads] button not found'); return; }
+    if (!exportModal) { console.warn('[export-leads] modal not found'); return; }
+    console.log('[export-leads] elements found');
 
     // Get current filter parameters from URL
     function getFilterParams() {
@@ -37,6 +32,7 @@
       e.stopPropagation();
       exportModal.classList.add('show');
       exportModal.style.display = 'flex';
+      console.log('[export-leads] open modal');
     });
 
     // Close export modal
@@ -46,6 +42,7 @@
         e.stopPropagation();
         exportModal.classList.remove('show');
         exportModal.style.display = 'none';
+        console.log('[export-leads] close modal via X');
       });
     }
 
@@ -54,6 +51,7 @@
       if (e.target === exportModal) {
         exportModal.classList.remove('show');
         exportModal.style.display = 'none';
+        console.log('[export-leads] close modal via overlay');
       }
     });
 
@@ -67,6 +65,7 @@
         window.location.href = url;
         exportModal.classList.remove('show');
         exportModal.style.display = 'none';
+        console.log('[export-leads] export CSV', url);
       });
     }
 
@@ -80,6 +79,7 @@
         window.location.href = url;
         exportModal.classList.remove('show');
         exportModal.style.display = 'none';
+        console.log('[export-leads] export Excel', url);
       });
     }
   }
@@ -90,5 +90,6 @@
   } else {
     initExport();
   }
+  console.log('[export-leads] script loaded');
 })();
 
