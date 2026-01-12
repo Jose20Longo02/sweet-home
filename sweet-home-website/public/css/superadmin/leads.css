@@ -209,8 +209,9 @@
 }
 
 .export-modal-overlay[style*="display: flex"],
-.export-modal-overlay.show {
-  display: flex;
+.export-modal-overlay.show,
+.export-modal-overlay[style*="display:flex"] {
+  display: flex !important;
 }
 
 @media (max-width: 640px) {

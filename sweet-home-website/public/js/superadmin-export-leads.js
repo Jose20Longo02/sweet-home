@@ -28,11 +28,14 @@
 
     // Open export modal
     exportBtn.addEventListener('click', function(e) {
+      console.log('[export-leads] open modal');
       e.preventDefault();
       e.stopPropagation();
       exportModal.classList.add('show');
-      exportModal.style.display = 'flex';
-      console.log('[export-leads] open modal');
+      exportModal.style.setProperty('display', 'flex', 'important');
+      console.log('[export-leads] modal display:', exportModal.style.display);
+      console.log('[export-leads] modal computed display:', window.getComputedStyle(exportModal).display);
+      console.log('[export-leads] modal has show class:', exportModal.classList.contains('show'));
     });
 
     // Close export modal
