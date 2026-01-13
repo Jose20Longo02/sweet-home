@@ -130,12 +130,26 @@
 
     <!-- Pagination -->
     <nav class="pagination">
+      <% 
+        // Helper function to build pagination URL with all current filters
+        function buildPaginationUrl(pageNum) {
+          const params = [];
+          if (filters.country) params.push('country=' + encodeURIComponent(filters.country));
+          if (filters.city) params.push('city=' + encodeURIComponent(filters.city));
+          if (filters.type) params.push('type=' + encodeURIComponent(filters.type));
+          if (filters.status) params.push('status=' + encodeURIComponent(filters.status));
+          if (filters.minPrice) params.push('minPrice=' + encodeURIComponent(filters.minPrice));
+          if (filters.maxPrice) params.push('maxPrice=' + encodeURIComponent(filters.maxPrice));
+          params.push('page=' + pageNum);
+          return '?' + params.join('&');
+        }
+      %>
       <% if (currentPage > 1) { %>
-        <a class="page-link" href="?<%= new URLSearchParams({ ...filters, page: currentPage-1 }).toString() %>">« Prev</a>
+        <a class="page-link" href="<%= buildPaginationUrl(currentPage - 1) %>">« Prev</a>
       <% } %>
       <span class="page-info">Page <%= currentPage %> of <%= totalPages %></span>
       <% if (currentPage < totalPages) { %>
-        <a class="page-link" href="?<%= new URLSearchParams({ ...filters, page: currentPage+1 }).toString() %>">Next »</a>
+        <a class="page-link" href="<%= buildPaginationUrl(currentPage + 1) %>">Next »</a>
       <% } %>
     </nav>
   <% } %>
