@@ -45,10 +45,19 @@ html, body {
   justify-content: space-between;
   align-items: baseline;
   margin-bottom: 7rem;   /* extra spacing below header */
+  gap: 2rem;             /* space between greeting and back link */
+}
+.admin-header > div {
+  flex: 1;
+  min-width: 0;          /* allow flex item to shrink below content size */
 }
 .admin-header h1 {
   font-size: 2.25rem;
   color: var(--color-primary);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.2;
 }
 .admin-header .subtitle {
   margin-top: 0.25rem;
@@ -147,9 +156,13 @@ html, body {
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: 2rem;
+    gap: 1rem;
+  }
+  .admin-header h1 {
+    font-size: 1.75rem;   /* slightly smaller on mobile */
   }
   .admin-header .back-home {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
   }
   .cards-grid {
     grid-template-columns: 1fr;
