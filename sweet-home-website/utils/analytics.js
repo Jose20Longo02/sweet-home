@@ -10,7 +10,45 @@ function getRequestIp(req) {
   return ip ? ip.replace(/^::ffff:/, '') : null;
 }
 
+/**
+ * Check if the request is from a bot/crawler
+ * This helps filter out non-human traffic to match Google Analytics behavior
+ */
+function isBot(req) {
+  if (!req) return false;
+  
+  const userAgent = (req.get('user-agent') || '').toLowerCase();
+  if (!userAgent) return true; // No user agent = likely a bot
+  
+  // List of known bots and crawlers (similar to what GA filters)
+  const botPatterns = [
+    // Search engine crawlers
+    'googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 'yandexbot',
+    'sogou', 'exabot', 'facebot', 'ia_archiver', 'scoutjet', 'gosospider',
+    'msnbot', 'ahrefsbot', 'semrushbot', 'mozbot', 'dotbot', 'mj12bot',
+    'petalbot', 'applebot', 'facebookexternalhit', 'twitterbot', 'linkedinbot',
+    'pinterest', 'whatsapp', 'telegrambot', 'discordbot', 'slackbot',
+    // Other bots
+    'bot', 'crawler', 'spider', 'scraper', 'crawling', 'headless', 'phantom',
+    'selenium', 'webdriver', 'curl', 'wget', 'python-requests', 'http',
+    'apache', 'nginx', 'monitor', 'uptime', 'pingdom', 'status', 'check',
+    'health', 'probe', 'scanner', 'security', 'validator', 'test'
+  ];
+  
+  // Check if user agent contains any bot pattern
+  const isBot = botPatterns.some(pattern => userAgent.includes(pattern));
+  
+  // Also exclude admin/internal traffic
+  const isAdmin = req.path && /^\/(admin|superadmin)/.test(req.path);
+  
+  return isBot || isAdmin;
+}
+
 async function logEvent({ eventType, entityType = null, entityId = null, meta = null, req = null }) {
+  // Skip logging if this is a bot request (to match GA behavior)
+  if (req && isBot(req)) {
+    return;
+  }
   try {
     const sessionId = req?.sessionID || null;
     const userId = req?.session?.user?.id || null;
