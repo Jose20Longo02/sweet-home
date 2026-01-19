@@ -8,9 +8,67 @@ const XLSX = require('xlsx');
 
 const { validationResult } = require('express-validator');
 
-const EXTRA_LEAD_NOTIFY_EMAIL = String(process.env.LEAD_EXTRA_NOTIFY_EMAIL || 'Israel@sweet-home.co.il').trim();
+// Parse extra notification emails from environment variable (comma-separated)
+// Supports both single email and multiple emails: "email1@example.com,email2@example.com"
+function getExtraLeadNotifyEmails() {
+  const envValue = String(process.env.LEAD_EXTRA_NOTIFY_EMAIL || 'Israel@sweet-home.co.il').trim();
+  if (!envValue) return [];
+  return envValue.split(',')
+    .map(email => email.trim())
+    .filter(email => email.length > 0);
+}
+
+const EXTRA_LEAD_NOTIFY_EMAILS = getExtraLeadNotifyEmails();
 const JOSE_EMAIL = 'JoseLongo@Medialy.Agency';
 const DEFAULT_SITE_ORIGIN = 'https://sweet-home.co.il';
+
+// Helper: case-insensitive email comparison
+function equalsIgnoreCase(a, b) {
+  return String(a || '').toLowerCase() === String(b || '').toLowerCase();
+}
+
+// Helper: check if email is in array (case-insensitive)
+function emailInArray(email, emailArray) {
+  if (!email || !emailArray || emailArray.length === 0) return false;
+  return emailArray.some(e => equalsIgnoreCase(e, email));
+}
+
+// Helper: add extra notification emails to BCC list, avoiding duplicates with existing recipients
+function addExtraNotifyEmailsToBcc(bccList, excludeEmails = []) {
+  const excludeLower = excludeEmails.map(e => String(e || '').toLowerCase());
+  EXTRA_LEAD_NOTIFY_EMAILS.forEach(email => {
+    const emailLower = String(email).toLowerCase();
+    if (!excludeLower.includes(emailLower) && !bccList.some(e => equalsIgnoreCase(e, email))) {
+      bccList.push(email);
+    }
+  });
+  // Also add Jose email if not already excluded
+  if (JOSE_EMAIL && !excludeLower.includes(JOSE_EMAIL.toLowerCase()) && !bccList.some(e => equalsIgnoreCase(e, JOSE_EMAIL))) {
+    bccList.push(JOSE_EMAIL);
+  }
+  return bccList;
+}
+
+// Helper: build recipient list with extra notification emails, avoiding duplicates
+function buildRecipientListWithExtras(baseEmails = []) {
+  const recipientList = [...baseEmails];
+  const existingLower = recipientList.map(e => String(e || '').toLowerCase());
+  
+  EXTRA_LEAD_NOTIFY_EMAILS.forEach(email => {
+    const emailLower = String(email).toLowerCase();
+    if (!existingLower.includes(emailLower)) {
+      recipientList.push(email);
+      existingLower.push(emailLower);
+    }
+  });
+  
+  // Also add Jose email if not already in list
+  if (JOSE_EMAIL && !existingLower.includes(JOSE_EMAIL.toLowerCase())) {
+    recipientList.push(JOSE_EMAIL);
+  }
+  
+  return recipientList;
+}
 
 function buildEventMeta(data = {}) {
   return Object.fromEntries(
@@ -243,12 +301,7 @@ exports.createFromProperty = async (req, res, next) => {
         try {
           // Build BCC list with extra recipients
           const bccList = [];
-          if (EXTRA_LEAD_NOTIFY_EMAIL && !equalsIgnoreCase(property.agent_email, EXTRA_LEAD_NOTIFY_EMAIL)) {
-            bccList.push(EXTRA_LEAD_NOTIFY_EMAIL);
-          }
-          if (JOSE_EMAIL && !equalsIgnoreCase(property.agent_email, JOSE_EMAIL) && !equalsIgnoreCase(EXTRA_LEAD_NOTIFY_EMAIL, JOSE_EMAIL)) {
-            bccList.push(JOSE_EMAIL);
-          }
+          addExtraNotifyEmailsToBcc(bccList, [property.agent_email]);
           const info = await sendMail({
             to: property.agent_email,
             ...(bccList.length > 0 ? { bcc: bccList.join(',') } : {}),
@@ -272,13 +325,10 @@ exports.createFromProperty = async (req, res, next) => {
             console.log('Lead notification email dispatched:', info && info.messageId);
           }
         } catch (_) {}
-      } else if (EXTRA_LEAD_NOTIFY_EMAIL) {
+      } else if (EXTRA_LEAD_NOTIFY_EMAILS.length > 0) {
         try {
-          // Build recipient list with Jose if different from EXTRA_LEAD_NOTIFY_EMAIL
-          const recipientList = [EXTRA_LEAD_NOTIFY_EMAIL];
-          if (JOSE_EMAIL && !equalsIgnoreCase(EXTRA_LEAD_NOTIFY_EMAIL, JOSE_EMAIL)) {
-            recipientList.push(JOSE_EMAIL);
-          }
+          // Build recipient list with all extra notification emails
+          const recipientList = buildRecipientListWithExtras();
           await sendMail({
             to: recipientList.join(','),
             subject: `New lead for ${property.title}`,
@@ -421,12 +471,7 @@ exports.createFromProject = async (req, res, next) => {
         try {
           // Build BCC list with extra recipients
           const bccList = [];
-          if (EXTRA_LEAD_NOTIFY_EMAIL && !equalsIgnoreCase(project.agent_email, EXTRA_LEAD_NOTIFY_EMAIL)) {
-            bccList.push(EXTRA_LEAD_NOTIFY_EMAIL);
-          }
-          if (JOSE_EMAIL && !equalsIgnoreCase(project.agent_email, JOSE_EMAIL) && !equalsIgnoreCase(EXTRA_LEAD_NOTIFY_EMAIL, JOSE_EMAIL)) {
-            bccList.push(JOSE_EMAIL);
-          }
+          addExtraNotifyEmailsToBcc(bccList, [project.agent_email]);
           const info = await sendMail({
             to: project.agent_email,
             ...(bccList.length > 0 ? { bcc: bccList.join(',') } : {}),
@@ -450,13 +495,10 @@ exports.createFromProject = async (req, res, next) => {
             console.log('Project lead notification email dispatched:', info && info.messageId);
           }
         } catch (_) {}
-      } else if (EXTRA_LEAD_NOTIFY_EMAIL) {
+      } else if (EXTRA_LEAD_NOTIFY_EMAILS.length > 0) {
         try {
-          // Build recipient list with Jose if different from EXTRA_LEAD_NOTIFY_EMAIL
-          const recipientList = [EXTRA_LEAD_NOTIFY_EMAIL];
-          if (JOSE_EMAIL && !equalsIgnoreCase(EXTRA_LEAD_NOTIFY_EMAIL, JOSE_EMAIL)) {
-            recipientList.push(JOSE_EMAIL);
-          }
+          // Build recipient list with all extra notification emails
+          const recipientList = buildRecipientListWithExtras();
           await sendMail({
             to: recipientList.join(','),
             subject: `New lead for project: ${project.title}`,
