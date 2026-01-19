@@ -197,4 +197,18 @@ document.addEventListener('change', function(e) {
   }
 });
 
+// Handle page size selector
+document.addEventListener('DOMContentLoaded', function() {
+  const pageSizeSelect = document.getElementById('pageSizeSelect');
+  if (pageSizeSelect) {
+    pageSizeSelect.addEventListener('change', function() {
+      const newPageSize = this.value;
+      const url = new URL(window.location.href);
+      url.searchParams.set('pageSize', newPageSize);
+      url.searchParams.set('page', '1'); // Reset to first page when changing page size
+      window.location.href = url.toString();
+    });
+  }
+});
+
 
