@@ -20,7 +20,7 @@
   </header>
 
   <section class="card" style="margin-top: 1rem;">
-    <form method="get" class="filters-grid">
+    <form method="get" class="filters-grid" id="filtersForm">
       <input type="text" name="q" placeholder="Search name/email/phone/message" value="<%= filters.q || '' %>" />
       <select name="status">
         <option value="">All Statuses</option>
@@ -52,6 +52,8 @@
       </select>
       <input type="number" name="propertyId" placeholder="Property ID" value="<%= filters.propertyId || '' %>" />
       <input type="number" name="projectId" placeholder="Project ID" value="<%= filters.projectId || '' %>" />
+      <input type="hidden" name="page" value="1" />
+      <input type="hidden" name="pageSize" value="<%= filters.pageSize || 20 %>" />
       <button class="btn btn-primary" type="submit">Filter</button>
     </form>
   </section>
@@ -198,6 +200,72 @@
           <% }) %>
         </tbody>
       </table>
+    </div>
+    
+    <!-- Pagination -->
+    <% 
+      const currentPage = parseInt(filters.page) || 1;
+      const pageSize = parseInt(filters.pageSize) || 20;
+      const totalPages = Math.max(1, Math.ceil((total || 0) / pageSize));
+      const startRecord = total > 0 ? ((currentPage - 1) * pageSize) + 1 : 0;
+      const endRecord = Math.min(currentPage * pageSize, total || 0);
+      
+      function buildPaginationUrl(pageNum, currentFilters) {
+        const params = new URLSearchParams();
+        if (currentFilters.q) params.set('q', currentFilters.q);
+        if (currentFilters.status) params.set('status', currentFilters.status);
+        if (currentFilters.leadKind) params.set('leadKind', currentFilters.leadKind);
+        if (currentFilters.leadType) params.set('leadType', currentFilters.leadType);
+        if (currentFilters.from) params.set('from', currentFilters.from);
+        if (currentFilters.to) params.set('to', currentFilters.to);
+        if (currentFilters.agentId) params.set('agentId', currentFilters.agentId);
+        if (currentFilters.propertyId) params.set('propertyId', currentFilters.propertyId);
+        if (currentFilters.projectId) params.set('projectId', currentFilters.projectId);
+        params.set('page', pageNum);
+        params.set('pageSize', pageSize);
+        return '?' + params.toString();
+      }
+    %>
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; padding: 1rem; border-top: 1px solid var(--gray-200);">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <span style="color: var(--gray-600);">
+          Showing <%= startRecord %>-<%= endRecord %> of <%= total || 0 %> leads
+        </span>
+        <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--gray-600);">
+          <span>Per page:</span>
+          <select id="pageSizeSelect" style="padding: 0.375rem 0.75rem; border: 1px solid var(--gray-300); border-radius: 4px;">
+            <option value="20" <%= pageSize === 20 ? 'selected' : '' %>>20</option>
+            <option value="50" <%= pageSize === 50 ? 'selected' : '' %>>50</option>
+            <option value="100" <%= pageSize === 100 ? 'selected' : '' %>>100</option>
+            <option value="200" <%= pageSize === 200 ? 'selected' : '' %>>200</option>
+          </select>
+        </label>
+      </div>
+      
+      <% if (totalPages > 1) { %>
+        <nav class="pagination" style="display: flex; gap: 0.5rem; align-items: center;">
+          <% if (currentPage > 1) { %>
+            <a href="<%= buildPaginationUrl(1, filters) %>" class="btn btn-light" title="First page">««</a>
+            <a href="<%= buildPaginationUrl(currentPage - 1, filters) %>" class="btn btn-light" title="Previous page">« Prev</a>
+          <% } else { %>
+            <span class="btn btn-light" style="opacity: 0.5; cursor: not-allowed;" disabled>««</span>
+            <span class="btn btn-light" style="opacity: 0.5; cursor: not-allowed;" disabled>« Prev</span>
+          <% } %>
+          
+          <span style="padding: 0 1rem; color: var(--gray-700);">
+            Page <%= currentPage %> of <%= totalPages %>
+          </span>
+          
+          <% if (currentPage < totalPages) { %>
+            <a href="<%= buildPaginationUrl(currentPage + 1, filters) %>" class="btn btn-light" title="Next page">Next »</a>
+            <a href="<%= buildPaginationUrl(totalPages, filters) %>" class="btn btn-light" title="Last page">»»</a>
+          <% } else { %>
+            <span class="btn btn-light" style="opacity: 0.5; cursor: not-allowed;" disabled>Next »</span>
+            <span class="btn btn-light" style="opacity: 0.5; cursor: not-allowed;" disabled>»»</span>
+          <% } %>
+        </nav>
+      <% } %>
     </div>
   </section>
     </main>
