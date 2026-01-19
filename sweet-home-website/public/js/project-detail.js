@@ -333,6 +333,8 @@ function initializeContactForm() {
 function validateContactForm() {
   const name = document.getElementById('contact-name').value.trim();
   const email = document.getElementById('contact-email').value.trim();
+  const phone = document.getElementById('contact-phone').value.trim();
+  const countryCode = document.getElementById('contact-cc').value.trim();
   const message = document.getElementById('contact-message').value.trim();
   
   // Clear previous error states
@@ -350,6 +352,16 @@ function validateContactForm() {
     isValid = false;
   } else if (!isValidEmail(email)) {
     showFieldError('contact-email', 'Please enter a valid email address');
+    isValid = false;
+  }
+  
+  if (!countryCode) {
+    showFieldError('contact-cc', 'Country code is required');
+    isValid = false;
+  }
+  
+  if (!phone) {
+    showFieldError('contact-phone', 'Phone number is required');
     isValid = false;
   }
   

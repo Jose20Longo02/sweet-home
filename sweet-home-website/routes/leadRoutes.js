@@ -27,7 +27,7 @@ const createLeadLimiter = rateLimit({
 const leadValidations = [
   body('name').isString().trim().isLength({ min: 2, max: 100 }),
   body('email').isString().trim().isEmail().normalizeEmail(),
-  body('phone').optional({ checkFalsy: true }).isString().trim().isLength({ max: 30 }),
+  body('phone').isString().trim().isLength({ min: 1, max: 30 }).withMessage('Phone number is required'),
   body('message').optional({ checkFalsy: true }).isString().trim().isLength({ max: 2000 }),
   body('propertyId').optional({ checkFalsy: true }).isInt({ min: 1 }),
   body('projectId').optional({ checkFalsy: true }).isInt({ min: 1 })
@@ -46,7 +46,7 @@ router.post(
   [
     body('name').isString().trim().isLength({ min: 2, max: 100 }),
     body('email').isString().trim().isEmail().normalizeEmail(),
-    body('phone').optional({ checkFalsy: true }).isString().trim().isLength({ max: 30 }),
+    body('phone').isString().trim().isLength({ min: 1, max: 30 }).withMessage('Phone number is required'),
     body('message').isString().trim().isLength({ min: 5, max: 2000 }),
     body('lead_type').optional({ checkFalsy: true }).isIn(['seller','buyer','unknown'])
   ],
@@ -55,10 +55,12 @@ router.post(
       const Lead = require('../models/Lead');
       const { name, email, message, lead_type, language, neighborhood, size, rooms, occupancy } = req.body;
       // Combine countryCode + phone on server to be robust to client variations
-      let phone = req.body.phone || '';
       const cc = (req.body.countryCode || '').trim();
       const ph = (req.body.phone || '').trim();
-      if (cc || ph) phone = `${cc} ${ph}`.trim();
+      const phone = `${cc} ${ph}`.trim();
+      if (!phone) {
+        return res.status(400).json({ success: false, message: 'Phone number is required' });
+      }
       
       // Parse seller property fields
       const seller_neighborhood = neighborhood ? String(neighborhood).trim() : null;

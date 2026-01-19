@@ -194,8 +194,8 @@ exports.createFromProperty = async (req, res, next) => {
     }
     const { name, email, message, propertyId, language } = req.body;
     // Robustly combine country code + phone if sent separately
-    const phone = `${(req.body.countryCode || '').trim()} ${(req.body.phone || '').trim()}`.trim() || null;
-    if (!name || !email || !propertyId) {
+    const phone = `${(req.body.countryCode || '').trim()} ${(req.body.phone || '').trim()}`.trim();
+    if (!name || !email || !phone || !propertyId) {
       return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
 
@@ -366,8 +366,8 @@ exports.createFromProject = async (req, res, next) => {
     }
     const { name, email, message, projectId, language } = req.body;
     // Robustly combine country code + phone if sent separately
-    const phone = `${(req.body.countryCode || '').trim()} ${(req.body.phone || '').trim()}`.trim() || null;
-    if (!name || !email || !projectId) {
+    const phone = `${(req.body.countryCode || '').trim()} ${(req.body.phone || '').trim()}`.trim();
+    if (!name || !email || !phone || !projectId) {
       return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
 

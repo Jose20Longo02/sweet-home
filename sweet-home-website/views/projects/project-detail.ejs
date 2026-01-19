@@ -343,11 +343,11 @@
               <div class="form-group" style="display:grid; grid-template-columns: 140px 1fr; gap: 8px; align-items:end;">
                 <div>
                   <label for="contact-cc"><%= t('forms.countryCode','Country code') %></label>
-                  <input type="text" id="contact-cc" name="countryCode" class="form-input" placeholder="+49">
+                  <input type="text" id="contact-cc" name="countryCode" class="form-input" placeholder="+49" required>
                 </div>
                 <div>
                   <label for="contact-phone"><%= t('forms.phoneNumber','Phone Number') %></label>
-                  <input type="tel" id="contact-phone" name="phone" class="form-input" placeholder="<%= t('forms.phoneNumber','Phone Number') %>">
+                  <input type="tel" id="contact-phone" name="phone" class="form-input" placeholder="<%= t('forms.phoneNumber','Phone Number') %>" required>
                 </div>
               </div>
 
