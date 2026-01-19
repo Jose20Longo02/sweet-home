@@ -3,6 +3,7 @@ const express = require('express');
 const router  = express.Router();
 
 const { listProjectsPublic, showProject, incrementView: incrementProjectView } = require('../controllers/projectController');
+const pdfController = require('../controllers/pdfController');
 
 // Public projects listing with filters and pagination
 router.get('/', listProjectsPublic);
@@ -16,6 +17,9 @@ router.get('/regions', (req, res) => {
     canonicalUrl: `${baseUrl}/projects/regions`
   });
 });
+
+// PDF expose generation (must be before slug route)
+router.get('/:slug/pdf', pdfController.generateProjectPDF);
 
 // Public project detail by slug
 router.get('/:slug', showProject);

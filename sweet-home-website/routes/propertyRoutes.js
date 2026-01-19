@@ -3,6 +3,7 @@ const express                 = require('express');
 const { ensureAuthenticated, ensureAdmin, ensureSuperAdmin } = require('../middleware/authorize');
 const uploadPropertyMedia     = require('../middleware/uploadPropertyMedia');
 const propertyController      = require('../controllers/propertyController');
+const pdfController           = require('../controllers/pdfController');
 const { body } = require('express-validator');
 
 const {
@@ -63,6 +64,9 @@ publicRouter.post('/api/:id/view', (req, res, next) => propertyController.increm
 
 // Backward-compatible alias for client code expecting /api/properties/similar
 publicRouter.get('/api/properties/similar',  propertyController.getSimilarProperties);
+
+// PDF expose generation (must be before slug route)
+publicRouter.get('/:slug/pdf',   pdfController.generatePropertyPDF);
 
 // Keep slug route last
 publicRouter.get('/:slug',        showProperty);
