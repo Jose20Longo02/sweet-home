@@ -109,14 +109,14 @@
 }
 
 .property-actions-row-full {
-  width: 100%;
-  display: flex !important;
-  flex-direction: column;
+  width: 100% !important;
+  display: block !important;
+  margin-top: 0;
 }
 
 .property-actions-row-full .btn {
   width: 100% !important;
-  flex: 1 1 100% !important;
+  display: flex !important;
   justify-content: center;
   box-sizing: border-box;
 }
