@@ -1,5 +1,12 @@
 // controllers/pdfController.js
-const puppeteer = require('puppeteer');
+let puppeteer;
+try {
+  puppeteer = require('puppeteer');
+} catch (err) {
+  console.error('[PDF] Puppeteer not found:', err.message);
+  puppeteer = null;
+}
+
 const { query } = require('../config/db');
 const path = require('path');
 const fs = require('fs');
@@ -9,8 +16,24 @@ const fs = require('fs');
  */
 exports.generatePropertyPDF = async (req, res, next) => {
   let browser = null;
+  let page = null;
+  
+  // Ensure we send a proper response even on errors
+  const sendError = (message, status = 500) => {
+    if (!res.headersSent) {
+      console.error('[PDF] Sending error response:', message);
+      res.status(status).type('text/plain').send(`PDF Generation Error: ${message}`);
+    }
+  };
+  
   try {
     console.log('[PDF] Starting property PDF generation for slug:', req.params.slug);
+    console.log('[PDF] Puppeteer available:', !!puppeteer);
+    
+    if (!puppeteer) {
+      return sendError('PDF generation service not available. Puppeteer not installed.', 503);
+    }
+    
     const { slug } = req.params;
     
     // Get property data (similar to showProperty)
@@ -153,19 +176,27 @@ exports.generatePropertyPDF = async (req, res, next) => {
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.send(pdf);
   } catch (err) {
+    console.error('[PDF] Error caught in generatePropertyPDF:', err);
+    console.error('[PDF] Error stack:', err.stack);
+    
+    // Clean up browser
+    if (page) {
+      try {
+        await page.close().catch(() => {});
+      } catch (e) {}
+    }
     if (browser) {
       try {
-        await browser.close();
-      } catch (e) {
-        // Ignore close errors
-      }
+        await browser.close().catch(() => {});
+      } catch (e) {}
     }
-    console.error('[PDF] Unhandled error in generatePropertyPDF:', err);
-    // Send a proper error response instead of just calling next
+    
+    // Send error response - never call next() for PDF routes to avoid HTML error pages
     if (!res.headersSent) {
-      return res.status(500).send(`Error generating PDF: ${err.message}`);
+      console.error('[PDF] Sending error response - headers not sent yet');
+      return res.status(500).type('text/plain').send(`Error generating PDF: ${err.message || 'Unknown error'}\n\nStack: ${err.stack || 'No stack trace'}`);
     } else {
-      next(err);
+      console.error('[PDF] Headers already sent, cannot send error response');
     }
   }
 };
@@ -175,8 +206,19 @@ exports.generatePropertyPDF = async (req, res, next) => {
  */
 exports.generateProjectPDF = async (req, res, next) => {
   let browser = null;
+  let page = null;
+  
   try {
     console.log('[PDF] Starting project PDF generation for slug:', req.params.slug);
+    console.log('[PDF] Puppeteer available:', !!puppeteer);
+    
+    if (!puppeteer) {
+      if (!res.headersSent) {
+        return res.status(503).type('text/plain').send('PDF generation service not available. Puppeteer not installed.');
+      }
+      return;
+    }
+    
     const { slug } = req.params;
     
     // Get project data
@@ -313,19 +355,27 @@ exports.generateProjectPDF = async (req, res, next) => {
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.send(pdf);
   } catch (err) {
+    console.error('[PDF] Error caught in generateProjectPDF:', err);
+    console.error('[PDF] Error stack:', err.stack);
+    
+    // Clean up browser
+    if (page) {
+      try {
+        await page.close().catch(() => {});
+      } catch (e) {}
+    }
     if (browser) {
       try {
-        await browser.close();
-      } catch (e) {
-        // Ignore close errors
-      }
+        await browser.close().catch(() => {});
+      } catch (e) {}
     }
-    console.error('PDF generation error:', err);
-    // Send a proper error response instead of just calling next
+    
+    // Send error response - never call next() for PDF routes to avoid HTML error pages
     if (!res.headersSent) {
-      res.status(500).send(`Error generating PDF: ${err.message}`);
+      console.error('[PDF] Sending error response - headers not sent yet');
+      return res.status(500).type('text/plain').send(`Error generating PDF: ${err.message || 'Unknown error'}\n\nStack: ${err.stack || 'No stack trace'}`);
     } else {
-      next(err);
+      console.error('[PDF] Headers already sent, cannot send error response');
     }
   }
 };
