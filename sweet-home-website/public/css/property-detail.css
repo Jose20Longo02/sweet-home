@@ -181,32 +181,26 @@
   transform: translateY(-1px);
 }
 
-/* Share button specific hover - must come after .btn-outline:hover */
-button.btn-outline.js-share-btn:hover,
-.btn-outline.js-share-btn:hover {
+/* Share button specific hover - force white text and icon */
+.property-actions .btn-outline.js-share-btn:hover {
   background-color: var(--primary-color) !important;
   border-color: var(--primary-color) !important;
   color: var(--white) !important;
 }
 
-button.btn-outline.js-share-btn:hover svg,
-.btn-outline.js-share-btn:hover svg {
+.property-actions .btn-outline.js-share-btn:hover svg {
   stroke: var(--white) !important;
   color: var(--white) !important;
 }
 
-button.btn-outline.js-share-btn:hover svg path,
-button.btn-outline.js-share-btn:hover svg polyline,
-button.btn-outline.js-share-btn:hover svg line,
-.btn-outline.js-share-btn:hover svg path,
-.btn-outline.js-share-btn:hover svg polyline,
-.btn-outline.js-share-btn:hover svg line {
+.property-actions .btn-outline.js-share-btn:hover svg path,
+.property-actions .btn-outline.js-share-btn:hover svg polyline,
+.property-actions .btn-outline.js-share-btn:hover svg line {
   stroke: var(--white) !important;
-  fill: none !important;
 }
 
-button.btn-outline.js-share-btn:hover .btn-text,
-.btn-outline.js-share-btn:hover .btn-text {
+.property-actions .btn-outline.js-share-btn:hover .btn-text,
+.property-actions .btn-outline.js-share-btn:hover span {
   color: var(--white) !important;
 }
 
