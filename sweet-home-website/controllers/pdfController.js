@@ -89,8 +89,8 @@ exports.generatePropertyPDF = async (req, res, next) => {
     if (process.env.DO_SPACES_CDN_ENDPOINT) {
       const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
       const cdnBase = cdn.startsWith('http') ? cdn : `https://${cdn}`;
-      // Check if logo exists in Spaces (email-assets folder)
-      logoUrl = `${cdnBase}/email-assets/sweet-home-logo.png`;
+      // Logo is in the root of the Spaces bucket
+      logoUrl = `${cdnBase}/Sweet%20Home%20Logo.png`;
     }
     
     // Render HTML template
@@ -341,8 +341,8 @@ exports.generateProjectPDF = async (req, res, next) => {
     if (process.env.DO_SPACES_CDN_ENDPOINT) {
       const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
       const cdnBase = cdn.startsWith('http') ? cdn : `https://${cdn}`;
-      // Check if logo exists in Spaces (email-assets folder)
-      logoUrl = `${cdnBase}/email-assets/sweet-home-logo.png`;
+      // Logo is in the root of the Spaces bucket
+      logoUrl = `${cdnBase}/Sweet%20Home%20Logo.png`;
     }
     
     // Render HTML template
