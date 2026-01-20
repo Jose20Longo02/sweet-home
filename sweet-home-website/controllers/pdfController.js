@@ -104,17 +104,50 @@ exports.generatePropertyPDF = async (req, res, next) => {
 
     // Launch browser and generate PDF
     console.log('[PDF] Launching Puppeteer...');
-    browser = await puppeteer.launch({
+    
+    // Configure Puppeteer for Render/hosting environments
+    const launchOptions = {
       headless: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
         '--disable-web-security',
-        '--disable-features=IsolateOrigins,site-per-process'
+        '--disable-features=IsolateOrigins,site-per-process',
+        '--disable-gpu',
+        '--single-process', // Important for Render
+        '--no-zygote'
       ]
-    });
-    console.log('[PDF] Browser launched successfully');
+    };
+    
+    // Try to launch Puppeteer, with fallback to install Chrome if needed
+    try {
+      browser = await puppeteer.launch(launchOptions);
+      console.log('[PDF] Browser launched successfully');
+    } catch (launchError) {
+      console.error('[PDF] First launch attempt failed:', launchError.message);
+      
+      // On Render, Chrome needs to be installed first
+      // Try to install it programmatically if possible
+      if (launchError.message.includes('Could not find Chrome')) {
+        try {
+          const { execSync } = require('child_process');
+          console.log('[PDF] Attempting to install Chrome...');
+          execSync('npx puppeteer browsers install chrome', { 
+            stdio: 'inherit',
+            timeout: 120000 // 2 minutes timeout
+          });
+          browser = await puppeteer.launch(launchOptions);
+          console.log('[PDF] Browser launched after Chrome installation');
+        } catch (installError) {
+          console.error('[PDF] Chrome installation failed:', installError.message);
+          throw new Error(`Chrome not found. The build process should install Chrome. Please redeploy or check that the postinstall script runs. Original error: ${launchError.message}`);
+        }
+      } else {
+        throw launchError;
+      }
+    }
+    
     const page = await browser.newPage();
     
     // Set a longer timeout for page operations
@@ -286,17 +319,50 @@ exports.generateProjectPDF = async (req, res, next) => {
 
     // Launch browser and generate PDF
     console.log('[PDF] Launching Puppeteer...');
-    browser = await puppeteer.launch({
+    
+    // Configure Puppeteer for Render/hosting environments
+    const launchOptions = {
       headless: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
         '--disable-web-security',
-        '--disable-features=IsolateOrigins,site-per-process'
+        '--disable-features=IsolateOrigins,site-per-process',
+        '--disable-gpu',
+        '--single-process', // Important for Render
+        '--no-zygote'
       ]
-    });
-    console.log('[PDF] Browser launched successfully');
+    };
+    
+    // Try to launch Puppeteer, with fallback to install Chrome if needed
+    try {
+      browser = await puppeteer.launch(launchOptions);
+      console.log('[PDF] Browser launched successfully');
+    } catch (launchError) {
+      console.error('[PDF] First launch attempt failed:', launchError.message);
+      
+      // On Render, Chrome needs to be installed first
+      // Try to install it programmatically if possible
+      if (launchError.message.includes('Could not find Chrome')) {
+        try {
+          const { execSync } = require('child_process');
+          console.log('[PDF] Attempting to install Chrome...');
+          execSync('npx puppeteer browsers install chrome', { 
+            stdio: 'inherit',
+            timeout: 120000 // 2 minutes timeout
+          });
+          browser = await puppeteer.launch(launchOptions);
+          console.log('[PDF] Browser launched after Chrome installation');
+        } catch (installError) {
+          console.error('[PDF] Chrome installation failed:', installError.message);
+          throw new Error(`Chrome not found. The build process should install Chrome. Please redeploy or check that the postinstall script runs. Original error: ${launchError.message}`);
+        }
+      } else {
+        throw launchError;
+      }
+    }
+    
     const page = await browser.newPage();
     
     // Set a longer timeout for page operations
