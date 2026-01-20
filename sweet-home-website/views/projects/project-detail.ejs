@@ -148,14 +148,14 @@
           </div>
 
           <div class="brochure-wrap">
-            <a href="/projects/<%= project.slug %>/pdf" class="btn btn-primary btn-block" style="margin-bottom: 10px;" download>
+            <button type="button" class="btn btn-primary btn-block js-download-expose" style="margin-bottom: 10px;" data-slug="<%= project.slug %>" data-type="project">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="7,10 12,15 17,10"></polyline>
                 <line x1="12" y1="15" x2="12" y2="3"></line>
               </svg>
               <%= t('common.downloadExpose','Download Expose') || 'Download Expose' %>
-            </a>
+            </button>
             <% if (project.brochure_url) { %>
               <a href="<%= project.brochure_url %>" target="_blank" rel="noopener" class="btn btn-brochure btn-block">
                 <i class="fas fa-file-pdf"></i>
@@ -464,4 +464,14 @@
 <div class="mobile-project-contact" aria-hidden="true" style="display:none"></div>
 
 <script src="/js/project-recaptcha.js"></script>
+<!-- PDF Download Loading Modal -->
+<div id="pdfLoadingModal" class="pdf-loading-modal" style="display: none;">
+  <div class="pdf-loading-content">
+    <div class="pdf-loading-spinner"></div>
+    <p>Generating PDF expose...</p>
+    <p class="pdf-loading-subtitle">Please wait, this may take a few moments</p>
+  </div>
+</div>
+
 <script src="/js/project-detail.js" defer></script>
+<script src="/js/pdf-download.js"></script>
