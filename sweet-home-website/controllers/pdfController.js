@@ -97,6 +97,32 @@ exports.generatePropertyPDF = async (req, res, next) => {
     }
     console.log('[PDF] Logo URL:', logoUrl);
     
+    // Download logo and convert to base64 for headerTemplate (more reliable than external URL)
+    let logoBase64 = '';
+    try {
+      const https = require('https');
+      const http = require('http');
+      const urlModule = require('url');
+      const logoData = await new Promise((resolve, reject) => {
+        const url = urlModule.parse(logoUrl);
+        const protocol = url.protocol === 'https:' ? https : http;
+        protocol.get(logoUrl, (res) => {
+          if (res.statusCode !== 200) {
+            reject(new Error(`Failed to download logo: ${res.statusCode}`));
+            return;
+          }
+          const chunks = [];
+          res.on('data', (chunk) => chunks.push(chunk));
+          res.on('end', () => resolve(Buffer.concat(chunks)));
+          res.on('error', reject);
+        }).on('error', reject);
+      });
+      logoBase64 = logoData.toString('base64');
+      console.log('[PDF] Logo downloaded and converted to base64, size:', logoBase64.length);
+    } catch (logoError) {
+      console.error('[PDF] Failed to download logo, will use URL instead:', logoError.message);
+    }
+    
     // Render HTML template
     console.log('[PDF] Rendering HTML template...');
     const html = await new Promise((resolve, reject) => {
@@ -212,7 +238,11 @@ exports.generatePropertyPDF = async (req, res, next) => {
         left: '15mm'
       },
       displayHeaderFooter: true,
-      headerTemplate: `
+      headerTemplate: logoBase64 ? `
+        <div style="position: absolute; top: 0; right: 15mm; width: auto; height: auto; padding: 12mm 0;">
+          <img src="data:image/png;base64,${logoBase64}" alt="Sweet Home" style="max-height: 60px; width: auto; display: block;" />
+        </div>
+      ` : `
         <div style="position: absolute; top: 0; right: 15mm; width: auto; height: auto; padding: 12mm 0;">
           <img src="${logoUrl}" alt="Sweet Home" style="max-height: 60px; width: auto; display: block;" />
         </div>
@@ -360,6 +390,32 @@ exports.generateProjectPDF = async (req, res, next) => {
     }
     console.log('[PDF] Logo URL:', logoUrl);
     
+    // Download logo and convert to base64 for headerTemplate (more reliable than external URL)
+    let logoBase64 = '';
+    try {
+      const https = require('https');
+      const http = require('http');
+      const urlModule = require('url');
+      const logoData = await new Promise((resolve, reject) => {
+        const url = urlModule.parse(logoUrl);
+        const protocol = url.protocol === 'https:' ? https : http;
+        protocol.get(logoUrl, (res) => {
+          if (res.statusCode !== 200) {
+            reject(new Error(`Failed to download logo: ${res.statusCode}`));
+            return;
+          }
+          const chunks = [];
+          res.on('data', (chunk) => chunks.push(chunk));
+          res.on('end', () => resolve(Buffer.concat(chunks)));
+          res.on('error', reject);
+        }).on('error', reject);
+      });
+      logoBase64 = logoData.toString('base64');
+      console.log('[PDF] Logo downloaded and converted to base64, size:', logoBase64.length);
+    } catch (logoError) {
+      console.error('[PDF] Failed to download logo, will use URL instead:', logoError.message);
+    }
+    
     // Render HTML template
     console.log('[PDF] Rendering HTML template...');
     let html;
@@ -481,7 +537,11 @@ exports.generateProjectPDF = async (req, res, next) => {
         left: '15mm'
       },
       displayHeaderFooter: true,
-      headerTemplate: `
+      headerTemplate: logoBase64 ? `
+        <div style="position: absolute; top: 0; right: 15mm; width: auto; height: auto; padding: 12mm 0;">
+          <img src="data:image/png;base64,${logoBase64}" alt="Sweet Home" style="max-height: 60px; width: auto; display: block;" />
+        </div>
+      ` : `
         <div style="position: absolute; top: 0; right: 15mm; width: auto; height: auto; padding: 12mm 0;">
           <img src="${logoUrl}" alt="Sweet Home" style="max-height: 60px; width: auto; display: block;" />
         </div>
