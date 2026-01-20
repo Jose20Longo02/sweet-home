@@ -185,7 +185,11 @@
       <% if (property.type) { %>
         <div class="info-card">
           <h3><%= typeof t !== 'undefined' ? t('common.pdf.type', 'Type') : 'Type' %></h3>
-          <div class="value"><%= property.type %></div>
+          <% 
+            const typeKey = property.type.toLowerCase();
+            const translatedType = typeof t !== 'undefined' ? t(`forms.types.${typeKey}`, property.type) : property.type;
+          %>
+          <div class="value"><%= translatedType %></div>
         </div>
       <% } %>
       <% if (property.rooms) { %>
@@ -215,7 +219,12 @@
       <% if (property.occupancy_type) { %>
         <div class="info-card">
           <h3><%= typeof t !== 'undefined' ? t('common.pdf.occupancy', 'Occupancy') : 'Occupancy' %></h3>
-          <div class="value"><%= property.occupancy_type %></div>
+          <% 
+            const occMap = { 'Empty': 'empty', 'Short-Term Rented': 'shortTerm', 'Suitable for Self Use': 'selfUse', 'Long-Term Rented': 'longTerm' };
+            const occKey = occMap[property.occupancy_type] || null;
+            const translatedOccupancy = (typeof t !== 'undefined' && occKey) ? t(`properties.detail.occupancyTypes.${occKey}`, property.occupancy_type) : property.occupancy_type;
+          %>
+          <div class="value"><%= translatedOccupancy %></div>
         </div>
       <% } %>
     </div>

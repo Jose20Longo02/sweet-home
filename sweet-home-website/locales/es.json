@@ -56,7 +56,20 @@
       "completionDate": "Fecha de finalización",
       "status": "Estado",
       "amenities": "Comodidades",
-      "specifications": "Especificaciones"
+      "specifications": "Especificaciones",
+      "unitTypes": "Tipos de Unidades",
+      "priceRange": "Rango de Precios",
+      "sizeRange": "Rango de Tamaño",
+      "bedroomsBathrooms": "Habitaciones / Baños",
+      "bedrooms": "Habitaciones",
+      "bathrooms": "Baños",
+      "fromPrice": "Desde",
+      "upToPrice": "Hasta",
+      "fromSize": "Desde",
+      "upToSize": "Hasta",
+      "from": "Desde",
+      "upTo": "Hasta",
+      "propertiesInProject": "Propiedades en este Proyecto"
     }
   },
   "properties": {

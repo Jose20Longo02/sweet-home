@@ -170,11 +170,67 @@
       color: #2c5530;
       margin-bottom: 10px;
     }
+    .properties-section {
+      margin: 30px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    .properties-section h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #2c5530;
+    }
+    .properties-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .property-item {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .property-item-image {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+    .property-item-content {
+      padding: 15px;
+    }
+    .property-item-content h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .property-item-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+    .property-item-meta span {
+      padding: 4px 8px;
+      background: #f0f0f0;
+      border-radius: 4px;
+    }
+    .property-item-meta .property-price {
+      background: #2c5530;
+      color: white;
+      font-weight: 600;
+    }
     @media print {
       .header {
         page-break-after: avoid;
       }
       .gallery-item {
+        page-break-inside: avoid;
+      }
+      .property-item {
         page-break-inside: avoid;
       }
     }
@@ -219,12 +275,74 @@
           <div class="value"><%= project.status %></div>
         </div>
       <% } %>
+      <% if (project.unit_types && Array.isArray(project.unit_types) && project.unit_types.length > 0) { %>
+        <div class="info-card">
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.unitTypes', 'Unit Types') : 'Unit Types' %></h3>
+          <div class="value"><%= project.unit_types.join(', ') %></div>
+        </div>
+      <% } %>
+      <% if (project.min_price || project.max_price) { %>
+        <div class="info-card">
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.priceRange', 'Price Range') : 'Price Range' %></h3>
+          <div class="value">
+            <% if (project.min_price && project.max_price) { %>
+              €<%= Number(project.min_price).toLocaleString('en-US') %> - €<%= Number(project.max_price).toLocaleString('en-US') %>
+            <% } else if (project.min_price) { %>
+              <%= typeof t !== 'undefined' ? t('common.pdf.fromPrice', 'From') : 'From' %> €<%= Number(project.min_price).toLocaleString('en-US') %>
+            <% } else if (project.max_price) { %>
+              <%= typeof t !== 'undefined' ? t('common.pdf.upToPrice', 'Up to') : 'Up to' %> €<%= Number(project.max_price).toLocaleString('en-US') %>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+      <% if (project.min_unit_size || project.max_unit_size) { %>
+        <div class="info-card">
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.sizeRange', 'Size Range') : 'Size Range' %></h3>
+          <div class="value">
+            <% if (project.min_unit_size && project.max_unit_size) { %>
+              <%= project.min_unit_size %> - <%= project.max_unit_size %> m²
+            <% } else if (project.min_unit_size) { %>
+              <%= typeof t !== 'undefined' ? t('common.pdf.fromSize', 'From') : 'From' %> <%= project.min_unit_size %> m²
+            <% } else if (project.max_unit_size) { %>
+              <%= typeof t !== 'undefined' ? t('common.pdf.upToSize', 'Up to') : 'Up to' %> <%= project.max_unit_size %> m²
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+      <% if ((project.min_bedrooms || project.max_bedrooms) || (project.min_bathrooms || project.max_bathrooms)) { %>
+        <div class="info-card">
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.bedroomsBathrooms', 'Bedrooms / Bathrooms') : 'Bedrooms / Bathrooms' %></h3>
+          <div class="value">
+            <% if (project.min_bedrooms || project.max_bedrooms) { %>
+              <%= typeof t !== 'undefined' ? t('common.pdf.bedrooms', 'Bedrooms') : 'Bedrooms' %>: 
+              <% if (project.min_bedrooms && project.max_bedrooms) { %>
+                <%= project.min_bedrooms %>-<%= project.max_bedrooms %>
+              <% } else if (project.min_bedrooms) { %>
+                <%= typeof t !== 'undefined' ? t('common.pdf.from', 'From') : 'From' %> <%= project.min_bedrooms %>
+              <% } else if (project.max_bedrooms) { %>
+                <%= typeof t !== 'undefined' ? t('common.pdf.upTo', 'Up to') : 'Up to' %> <%= project.max_bedrooms %>
+              <% } %>
+            <% } %>
+            <% if ((project.min_bedrooms || project.max_bedrooms) && (project.min_bathrooms || project.max_bathrooms)) { %> / <% } %>
+            <% if (project.min_bathrooms || project.max_bathrooms) { %>
+              <%= typeof t !== 'undefined' ? t('common.pdf.bathrooms', 'Bathrooms') : 'Bathrooms' %>: 
+              <% if (project.min_bathrooms && project.max_bathrooms) { %>
+                <%= project.min_bathrooms %>-<%= project.max_bathrooms %>
+              <% } else if (project.min_bathrooms) { %>
+                <%= typeof t !== 'undefined' ? t('common.pdf.from', 'From') : 'From' %> <%= project.min_bathrooms %>
+              <% } else if (project.max_bathrooms) { %>
+                <%= typeof t !== 'undefined' ? t('common.pdf.upTo', 'Up to') : 'Up to' %> <%= project.max_bathrooms %>
+              <% } %>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
     </div>
 
     <% if (project.description) { %>
       <div class="description">
         <h2><%= typeof t !== 'undefined' ? t('common.pdf.description', 'Description') : 'Description' %></h2>
-        <p><%= project.description.replace(/\n/g, '<br>') %></p>
+        <p><%= project.description.replace(/<br\s*\/?>/gi, '\n').replace(/\n/g, '<br>') %></p>
       </div>
     <% } %>
 
@@ -243,6 +361,43 @@
       <div class="specifications">
         <h2><%= typeof t !== 'undefined' ? t('common.pdf.specifications', 'Specifications') : 'Specifications' %></h2>
         <div class="specifications-content"><%= project.specifications %></div>
+      </div>
+    <% } %>
+
+    <% if (project.properties && Array.isArray(project.properties) && project.properties.length > 0) { %>
+      <div class="properties-section">
+        <h2><%= typeof t !== 'undefined' ? t('common.pdf.propertiesInProject', 'Properties in this Project') : 'Properties in this Project' %></h2>
+        <div class="properties-grid">
+          <% project.properties.slice(0, 6).forEach(property => { %>
+            <div class="property-item">
+              <% if (property.photos && property.photos.length > 0) { %>
+                <% const photoUrl = property.photos[0].startsWith('http') ? property.photos[0] : `${baseUrl}${property.photos[0]}`; %>
+                <img src="<%= photoUrl %>" alt="<%= property.title %>" class="property-item-image" onerror="this.style.display='none';" />
+              <% } %>
+              <div class="property-item-content">
+                <h4><%= property.title %></h4>
+                <div class="property-item-meta">
+                  <% if (property.type) { %>
+                    <% 
+                      const typeKey = property.type.toLowerCase();
+                      const translatedType = typeof t !== 'undefined' ? t(`forms.types.${typeKey}`, property.type) : property.type;
+                    %>
+                    <span><%= translatedType %></span>
+                  <% } %>
+                  <% if (property.rooms) { %>
+                    <span><%= typeof t !== 'undefined' ? t('common.pdf.rooms', 'Rooms') : 'Rooms' %>: <%= property.rooms %></span>
+                  <% } %>
+                  <% if (property.size) { %>
+                    <span><%= property.size %> m²</span>
+                  <% } %>
+                  <% if (property.price) { %>
+                    <span class="property-price">€<%= Number(property.price).toLocaleString('en-US') %></span>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
       </div>
     <% } %>
 

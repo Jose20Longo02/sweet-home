@@ -40,7 +40,20 @@
       "completionDate": "Completion Date",
       "status": "Status",
       "amenities": "Amenities",
-      "specifications": "Specifications"
+      "specifications": "Specifications",
+      "unitTypes": "Unit Types",
+      "priceRange": "Price Range",
+      "sizeRange": "Size Range",
+      "bedroomsBathrooms": "Bedrooms / Bathrooms",
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms",
+      "fromPrice": "From",
+      "upToPrice": "Up to",
+      "fromSize": "From",
+      "upToSize": "Up to",
+      "from": "From",
+      "upTo": "Up to",
+      "propertiesInProject": "Properties in this Project"
     }
   },
   "owners": {

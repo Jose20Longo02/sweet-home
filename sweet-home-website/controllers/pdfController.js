@@ -255,14 +255,18 @@ exports.generateProjectPDF = async (req, res, next) => {
     
     const { slug } = req.params;
     
-    // Get project data
+    // Get project data with all relevant information
     const { rows: projects } = await query(`
       SELECT
         p.id, p.title, p.title_i18n, p.slug, p.country, p.city, p.neighborhood,
         p.description, p.description_i18n, p.photos, p.video_url, p.brochure_url, 
         p.created_at, p.status,
         p.total_units, p.completion_date, p.price_range, p.features,
-        p.amenities, p.specifications, p.location_details
+        p.amenities, p.specifications, p.location_details,
+        p.unit_types, p.min_price, p.max_price,
+        p.min_unit_size, p.max_unit_size,
+        p.min_bedrooms, p.max_bedrooms,
+        p.min_bathrooms, p.max_bathrooms
       FROM projects p
       WHERE p.slug = $1 AND p.status = 'active'
     `, [slug]);
@@ -287,6 +291,37 @@ exports.generateProjectPDF = async (req, res, next) => {
       }
       return `/uploads/projects/${project.id}/${phStr}`;
     });
+    
+    // Get properties in this project
+    const { rows: projectProperties } = await query(`
+      SELECT 
+        p.id, p.title, p.title_i18n, p.slug, p.price, p.type, p.rooms, p.bathrooms,
+        CASE 
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.photos
+      FROM properties p
+      WHERE p.is_in_project = true AND p.project_id = $1 AND p.slug IS NOT NULL
+      ORDER BY p.created_at DESC
+      LIMIT 12
+    `, [project.id]);
+    
+    // Normalize project properties
+    const normalizedProjectProperties = projectProperties.map(prop => {
+      const lang = res.locals.lang || 'en';
+      const localizedTitle = (prop.title_i18n && prop.title_i18n[lang]) || prop.title;
+      const photos = Array.isArray(prop.photos) ? prop.photos : (prop.photos ? [prop.photos] : []);
+      return {
+        ...prop,
+        title: localizedTitle,
+        photos: photos.length > 0 ? photos.slice(0, 1) : []
+      };
+    });
+    
+    project.properties = normalizedProjectProperties;
 
     const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     console.log('[PDF] Base URL:', baseUrl);

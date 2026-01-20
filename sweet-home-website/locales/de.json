@@ -65,7 +65,20 @@
       "completionDate": "Fertigstellungsdatum",
       "status": "Status",
       "amenities": "Ausstattung",
-      "specifications": "Spezifikationen"
+      "specifications": "Spezifikationen",
+      "unitTypes": "Einheitstypen",
+      "priceRange": "Preisspanne",
+      "sizeRange": "Größenspanne",
+      "bedroomsBathrooms": "Schlafzimmer / Badezimmer",
+      "bedrooms": "Schlafzimmer",
+      "bathrooms": "Badezimmer",
+      "fromPrice": "Ab",
+      "upToPrice": "Bis zu",
+      "fromSize": "Ab",
+      "upToSize": "Bis zu",
+      "from": "Ab",
+      "upTo": "Bis zu",
+      "propertiesInProject": "Immobilien in diesem Projekt"
     }
   },
   "properties": {
