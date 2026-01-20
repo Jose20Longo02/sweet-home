@@ -202,11 +202,18 @@ exports.generatePropertyPDF = async (req, res, next) => {
       format: 'A4',
       printBackground: true,
       margin: {
-        top: '0mm',
+        top: '35mm',
         right: '15mm',
         bottom: '20mm',
         left: '15mm'
       },
+      displayHeaderFooter: true,
+      headerTemplate: `
+        <div style="position: absolute; top: 12mm; right: 15mm; width: auto; height: auto;">
+          <img src="${logoUrl}" alt="Sweet Home" style="max-height: 60px; width: auto;" onerror="this.style.display='none';" />
+        </div>
+      `,
+      footerTemplate: '<div></div>',
       timeout: 30000
     });
 
@@ -460,11 +467,18 @@ exports.generateProjectPDF = async (req, res, next) => {
       format: 'A4',
       printBackground: true,
       margin: {
-        top: '0mm',
+        top: '35mm',
         right: '15mm',
         bottom: '20mm',
         left: '15mm'
       },
+      displayHeaderFooter: true,
+      headerTemplate: `
+        <div style="position: absolute; top: 12mm; right: 15mm; width: auto; height: auto;">
+          <img src="${logoUrl}" alt="Sweet Home" style="max-height: 60px; width: auto;" onerror="this.style.display='none';" />
+        </div>
+      `,
+      footerTemplate: '<div></div>',
       timeout: 30000
     });
 
