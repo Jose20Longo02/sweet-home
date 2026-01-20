@@ -202,7 +202,7 @@ exports.generatePropertyPDF = async (req, res, next) => {
       format: 'A4',
       printBackground: true,
       margin: {
-        top: '0mm',
+        top: '35mm',
         right: '15mm',
         bottom: '20mm',
         left: '15mm'
@@ -460,7 +460,7 @@ exports.generateProjectPDF = async (req, res, next) => {
       format: 'A4',
       printBackground: true,
       margin: {
-        top: '0mm',
+        top: '35mm',
         right: '15mm',
         bottom: '20mm',
         left: '15mm'
