@@ -10,67 +10,105 @@
       padding: 0;
       box-sizing: border-box;
     }
+    @page {
+      margin: 0;
+      size: A4;
+    }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       color: #333;
-      line-height: 1.6;
+      line-height: 1.7;
       background: #fff;
       margin: 0;
       padding: 0;
+    }
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      padding: 20mm 15mm;
       position: relative;
-      padding-top: 140px;
+      page-break-after: always;
+      page-break-inside: avoid;
+    }
+    .page:last-child {
+      page-break-after: auto;
     }
     .page-logo {
-      position: fixed;
-      top: 10px;
-      right: 15px;
+      position: absolute;
+      top: 20mm;
+      right: 15mm;
       z-index: 1000;
-      width: auto;
-      height: auto;
     }
     .page-logo img {
-      max-height: 120px;
+      max-height: 80px;
       width: auto;
       display: block;
-      height: auto;
     }
-    .header {
+    
+    /* PAGE 1: HERO + GALLERY */
+    .page-hero {
       background: linear-gradient(135deg, #2ea862 0%, #23804b 100%);
       color: white;
-      padding: 20px 20px 30px 20px;
+      padding: 40px 30px;
       text-align: center;
+      border-radius: 12px;
       margin-bottom: 30px;
-      margin-top: 0;
+      margin-top: 100px;
     }
-    .header h1 {
-      font-size: 28px;
-      margin-bottom: 10px;
-      font-weight: 700;
-      margin-top: 0;
-    }
-    .header .location {
-      font-size: 16px;
-      opacity: 0.9;
-      margin-bottom: 15px;
-    }
-    .header .price {
+    .page-hero h1 {
       font-size: 32px;
+      margin-bottom: 12px;
       font-weight: 700;
-      margin-top: 10px;
+      line-height: 1.2;
     }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 0 20px;
-      position: relative;
+    .page-hero .location {
+      font-size: 18px;
+      opacity: 0.95;
+      margin-bottom: 20px;
     }
-    .main-image {
+    .page-hero .price {
+      font-size: 36px;
+      font-weight: 700;
+      margin-top: 15px;
+    }
+    .gallery-section {
+      margin-top: 30px;
+    }
+    .gallery-section h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #2ea862;
+      font-weight: 600;
+      text-align: center;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+    .gallery-item {
       width: 100%;
-      max-height: 400px;
+      height: 180px;
       object-fit: cover;
       border-radius: 8px;
-      margin-bottom: 30px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    /* PAGE 2: GALLERY ONLY (if many images) */
+    .gallery-page {
+      padding-top: 100px;
+    }
+    .gallery-page .gallery-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .gallery-page .gallery-item {
+      height: 160px;
+    }
+    
+    /* PAGE 3: INFO SECTION */
+    .info-page {
+      padding-top: 100px;
     }
     .info-grid {
       display: grid;
@@ -85,74 +123,60 @@
       border-left: 4px solid #2ea862;
     }
     .info-card h3 {
-      font-size: 14px;
+      font-size: 11px;
       color: #666;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       margin-bottom: 8px;
+      font-weight: 600;
     }
     .info-card .value {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 600;
       color: #333;
     }
-    .description {
+    .description-section {
       margin: 30px 0;
-      padding: 20px;
+      padding: 25px;
       background: #f8f9fa;
       border-radius: 8px;
+      page-break-inside: avoid;
     }
-    .description h2 {
+    .description-section h2 {
       font-size: 20px;
       margin-bottom: 15px;
       color: #2ea862;
+      font-weight: 600;
     }
-    .description p {
+    .description-section p {
       font-size: 14px;
-      line-height: 1.8;
+      line-height: 1.9;
       color: #555;
     }
-    .gallery {
+    .features-section {
       margin: 30px 0;
-    }
-    .gallery h2 {
-      font-size: 20px;
-      margin-bottom: 20px;
-      color: #2ea862;
-    }
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-    }
-    .gallery-item {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .features {
-      margin: 30px 0;
-      padding: 20px;
+      padding: 25px;
       background: #f8f9fa;
       border-radius: 8px;
+      page-break-inside: avoid;
     }
-    .features h2 {
+    .features-section h2 {
       font-size: 20px;
       margin-bottom: 15px;
       color: #2ea862;
+      font-weight: 600;
     }
     .features-list {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      gap: 12px;
       list-style: none;
     }
     .features-list li {
       padding: 8px 0;
       font-size: 14px;
       color: #555;
+      line-height: 1.8;
     }
     .features-list li:before {
       content: "✓ ";
@@ -160,54 +184,141 @@
       font-weight: bold;
       margin-right: 8px;
     }
-    .footer {
-      margin-top: 40px;
-      padding: 20px;
+    
+    /* PAGE 4: CLOSING */
+    .closing-page {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
+      padding-top: 100px;
+      min-height: calc(297mm - 40mm);
+    }
+    .closing-logo {
+      margin-bottom: 30px;
+    }
+    .closing-logo img {
+      max-height: 100px;
+      width: auto;
+    }
+    .closing-content {
+      max-width: 600px;
+    }
+    .closing-content h2 {
+      font-size: 28px;
+      color: #2ea862;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+    .closing-content p {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #2ea862 0%, #23804b 100%);
+      color: white;
+      padding: 15px 40px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 20px;
+    }
+    .footer-info {
+      margin-top: 40px;
+      padding-top: 20px;
       border-top: 2px solid #e0e0e0;
       color: #666;
       font-size: 12px;
     }
-    .footer .logo {
-      font-size: 18px;
-      font-weight: 700;
-      color: #2ea862;
-      margin-bottom: 10px;
-    }
+    
     @media print {
-      .header {
-        page-break-after: avoid;
+      .page {
+        page-break-after: always;
       }
-      .gallery-item {
+      .page:last-child {
+        page-break-after: auto;
+      }
+      .description-section,
+      .features-section {
         page-break-inside: avoid;
       }
     }
   </style>
 </head>
 <body>
-  <div class="page-logo">
-    <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
-      <img src="<%= logoUrl %>" alt="Sweet Home" style="max-height: 120px; width: auto;" />
-    <% } else { %>
-      <img src="<%= baseUrl %>/images/Sweet%20Home%20Logo.png" alt="Sweet Home" style="max-height: 120px; width: auto;" />
-    <% } %>
-  </div>
-  <div class="header">
-    <h1><%= property.title %></h1>
-    <div class="location">
-      <%= property.neighborhood || '' %><%= property.neighborhood && property.city ? ', ' : '' %><%= property.city || '' %><%= property.city && property.country ? ', ' : '' %><%= property.country || '' %>
+  <!-- PAGE 1: HERO + GALLERY -->
+  <div class="page">
+    <div class="page-logo">
+      <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
+        <img src="<%= logoUrl %>" alt="Sweet Home" />
+      <% } else { %>
+        <img src="<%= baseUrl %>/images/Sweet%20Home%20Logo.png" alt="Sweet Home" />
+      <% } %>
     </div>
-    <div class="price">€<%= Number(property.price || 0).toLocaleString('en-US') %></div>
+    
+    <div class="page-hero">
+      <h1><%= property.title %></h1>
+      <div class="location">
+        <%= property.neighborhood || '' %><%= property.neighborhood && property.city ? ', ' : '' %><%= property.city || '' %><%= property.city && property.country ? ', ' : '' %><%= property.country || '' %>
+      </div>
+      <div class="price">€<%= Number(property.price || 0).toLocaleString('en-US') %></div>
+    </div>
+
+    <% if (property.photos && property.photos.length > 0) { %>
+      <div class="gallery-section">
+        <h2><%= typeof t !== 'undefined' ? t('common.pdf.gallery', 'Gallery') : 'Gallery' %></h2>
+        <div class="gallery-grid">
+          <% 
+            const photosToShow = property.photos.slice(0, 4);
+            photosToShow.forEach(photo => { 
+              const photoUrl = photo.startsWith('http') ? photo : `${baseUrl}${photo}`;
+          %>
+            <img src="<%= photoUrl %>" alt="<%= property.title %>" class="gallery-item" onerror="this.style.display='none';" />
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
   </div>
 
-  <div class="container">
-    <% if (property.photos && property.photos.length > 0) { %>
-      <% 
-        const firstPhoto = property.photos[0];
-        const photoUrl = firstPhoto.startsWith('http') ? firstPhoto : `${baseUrl}${firstPhoto}`;
-      %>
-      <img src="<%= photoUrl %>" alt="<%= property.title %>" class="main-image" onerror="this.style.display='none';" />
-    <% } %>
+  <!-- PAGE 2: GALLERY ONLY (if more than 4 images) -->
+  <% if (property.photos && property.photos.length > 4) { %>
+    <div class="page gallery-page">
+      <div class="page-logo">
+        <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
+          <img src="<%= logoUrl %>" alt="Sweet Home" />
+        <% } else { %>
+          <img src="<%= baseUrl %>/images/Sweet%20Home%20Logo.png" alt="Sweet Home" />
+        <% } %>
+      </div>
+      
+      <div class="gallery-section">
+        <h2><%= typeof t !== 'undefined' ? t('common.pdf.gallery', 'Gallery') : 'Gallery' %></h2>
+        <div class="gallery-grid">
+          <% 
+            property.photos.slice(4, 13).forEach(photo => { 
+              const photoUrl = photo.startsWith('http') ? photo : `${baseUrl}${photo}`;
+          %>
+            <img src="<%= photoUrl %>" alt="<%= property.title %>" class="gallery-item" onerror="this.style.display='none';" />
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- PAGE 3: INFO SECTION -->
+  <div class="page info-page">
+    <div class="page-logo">
+      <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
+        <img src="<%= logoUrl %>" alt="Sweet Home" />
+      <% } else { %>
+        <img src="<%= baseUrl %>/images/Sweet%20Home%20Logo.png" alt="Sweet Home" />
+      <% } %>
+    </div>
 
     <div class="info-grid">
       <% if (property.type) { %>
@@ -258,14 +369,14 @@
     </div>
 
     <% if (property.description) { %>
-      <div class="description">
+      <div class="description-section">
         <h2><%= typeof t !== 'undefined' ? t('common.pdf.description', 'Description') : 'Description' %></h2>
         <p><%= property.description.replace(/\n/g, '<br>') %></p>
       </div>
     <% } %>
 
     <% if (property.features && Array.isArray(property.features) && property.features.length > 0) { %>
-      <div class="features">
+      <div class="features-section">
         <h2><%= typeof t !== 'undefined' ? t('common.pdf.features', 'Features') : 'Features' %></h2>
         <ul class="features-list">
           <% property.features.forEach(feature => { %>
@@ -274,22 +385,33 @@
         </ul>
       </div>
     <% } %>
+  </div>
 
-    <% if (property.photos && property.photos.length > 1) { %>
-      <div class="gallery">
-        <h2><%= typeof t !== 'undefined' ? t('common.pdf.gallery', 'Gallery') : 'Gallery' %></h2>
-        <div class="gallery-grid">
-          <% property.photos.slice(1, 7).forEach(photo => { %>
-            <% const photoUrl = photo.startsWith('http') ? photo : `${baseUrl}${photo}`; %>
-            <img src="<%= photoUrl %>" alt="<%= property.title %>" class="gallery-item" onerror="this.style.display='none';" />
-          <% }); %>
-        </div>
+  <!-- PAGE 4: CLOSING -->
+  <div class="page closing-page">
+    <div class="page-logo">
+      <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
+        <img src="<%= logoUrl %>" alt="Sweet Home" />
+      <% } else { %>
+        <img src="<%= baseUrl %>/images/Sweet%20Home%20Logo.png" alt="Sweet Home" />
+      <% } %>
+    </div>
+    
+    <div class="closing-content">
+      <div class="closing-logo">
+        <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
+          <img src="<%= logoUrl %>" alt="Sweet Home" />
+        <% } else { %>
+          <img src="<%= baseUrl %>/images/Sweet%20Home%20Logo.png" alt="Sweet Home" />
+        <% } %>
       </div>
-    <% } %>
-
-    <div class="footer">
-      <div class="logo">Sweet Home Real Estate Investments</div>
-      <div><%= typeof t !== 'undefined' ? t('common.pdf.generatedOn', 'Generated on') : 'Generated on' %> <%= new Date().toLocaleDateString(lang === 'de' ? 'de-DE' : (lang === 'es' ? 'es-ES' : 'en-US'), { year: 'numeric', month: 'long', day: 'numeric' }) %></div>
+      
+      <h2>Sweet Home Real Estate Investments</h2>
+      <p><%= typeof t !== 'undefined' ? t('common.pdf.contactUs', 'Contact us for more information about this property') : 'Contact us for more information about this property' %></p>
+      
+      <div class="footer-info">
+        <div><%= typeof t !== 'undefined' ? t('common.pdf.generatedOn', 'Generated on') : 'Generated on' %> <%= new Date().toLocaleDateString(lang === 'de' ? 'de-DE' : (lang === 'es' ? 'es-ES' : 'en-US'), { year: 'numeric', month: 'long', day: 'numeric' }) %></div>
+      </div>
     </div>
   </div>
 </body>
