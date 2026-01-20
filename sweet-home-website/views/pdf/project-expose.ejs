@@ -235,13 +235,16 @@
     }
     
     .closing-page {
-      min-height: 100vh;
+      min-height: calc(100vh - 35mm);
+      height: calc(100vh - 35mm);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 40px 20px;
+      padding: 0 20px;
+      page-break-before: always;
+      margin-top: -35mm;
     }
     .closing-logo {
       margin-bottom: 30px;
@@ -291,6 +294,9 @@
       .specifications-section h2,
       .properties-section h2 {
         page-break-after: avoid;
+      }
+      .closing-page {
+        margin-top: -35mm;
       }
     }
   </style>
