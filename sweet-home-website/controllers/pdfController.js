@@ -84,12 +84,22 @@ exports.generatePropertyPDF = async (req, res, next) => {
     const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     console.log('[PDF] Base URL:', baseUrl);
     
+    // Get logo URL - check if it's in Digital Ocean Spaces, otherwise use server URL
+    let logoUrl = `${baseUrl}/images/Sweet%20Home%20Logo.png`;
+    if (process.env.DO_SPACES_CDN_ENDPOINT) {
+      const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
+      const cdnBase = cdn.startsWith('http') ? cdn : `https://${cdn}`;
+      // Check if logo exists in Spaces (email-assets folder)
+      logoUrl = `${cdnBase}/email-assets/sweet-home-logo.png`;
+    }
+    
     // Render HTML template
     console.log('[PDF] Rendering HTML template...');
     const html = await new Promise((resolve, reject) => {
       res.app.render('pdf/property-expose', {
         property,
         baseUrl,
+        logoUrl,
         lang,
         t: res.locals.t || ((key, fallback) => fallback || '')
       }, (err, html) => {
@@ -326,6 +336,15 @@ exports.generateProjectPDF = async (req, res, next) => {
     const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     console.log('[PDF] Base URL:', baseUrl);
     
+    // Get logo URL - check if it's in Digital Ocean Spaces, otherwise use server URL
+    let logoUrl = `${baseUrl}/images/Sweet%20Home%20Logo.png`;
+    if (process.env.DO_SPACES_CDN_ENDPOINT) {
+      const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
+      const cdnBase = cdn.startsWith('http') ? cdn : `https://${cdn}`;
+      // Check if logo exists in Spaces (email-assets folder)
+      logoUrl = `${cdnBase}/email-assets/sweet-home-logo.png`;
+    }
+    
     // Render HTML template
     console.log('[PDF] Rendering HTML template...');
     let html;
@@ -334,6 +353,7 @@ exports.generateProjectPDF = async (req, res, next) => {
         res.app.render('pdf/project-expose', {
           project,
           baseUrl,
+          logoUrl,
           lang,
           t: res.locals.t || ((key, fallback) => fallback || '')
         }, (err, html) => {

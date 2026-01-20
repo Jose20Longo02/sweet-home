@@ -185,7 +185,11 @@
 </head>
 <body>
   <div class="page-logo">
-    <img src="<%= baseUrl %>/images/Sweet%20Home%20Logo.png" alt="Sweet Home" style="max-height: 40px; width: auto;" />
+    <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
+      <img src="<%= logoUrl %>" alt="Sweet Home" style="max-height: 40px; width: auto;" />
+    <% } else { %>
+      <img src="<%= baseUrl %>/images/Sweet%20Home%20Logo.png" alt="Sweet Home" style="max-height: 40px; width: auto;" />
+    <% } %>
   </div>
   <div class="header">
     <h1><%= property.title %></h1>
