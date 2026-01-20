@@ -175,33 +175,10 @@
   border: 2px solid var(--gray-200);
 }
 
-.btn-outline:hover:not(.js-share-btn) {
+.btn-outline:hover {
   border-color: var(--primary-color);
   color: var(--primary-color);
   transform: translateY(-1px);
-}
-
-/* Share button hover - must have higher specificity to override styles.css */
-.property-actions .btn-outline.js-share-btn:hover {
-  background-color: var(--primary-color) !important;
-  border-color: var(--primary-color) !important;
-  color: #ffffff !important;
-}
-
-.property-actions .btn-outline.js-share-btn:hover .btn-text,
-.property-actions .btn-outline.js-share-btn:hover span {
-  color: #ffffff !important;
-}
-
-.property-actions .btn-outline.js-share-btn:hover svg {
-  stroke: #ffffff !important;
-  color: #ffffff !important;
-}
-
-.property-actions .btn-outline.js-share-btn:hover svg path,
-.property-actions .btn-outline.js-share-btn:hover svg polyline,
-.property-actions .btn-outline.js-share-btn:hover svg line {
-  stroke: #ffffff !important;
 }
 
 .btn-secondary {
