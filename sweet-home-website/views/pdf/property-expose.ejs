@@ -114,7 +114,7 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
-      margin-bottom: 18px;
+      margin-bottom: 12px;
     }
     .info-card {
       background: #f8f9fa;
@@ -136,15 +136,14 @@
       color: #333;
     }
     .description-section {
-      margin: 18px 0;
-      padding: 18px;
+      margin: 12px 0;
+      padding: 15px;
       background: #f8f9fa;
       border-radius: 6px;
-      page-break-inside: avoid;
     }
     .description-section h2 {
       font-size: 16px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       color: #2ea862;
       font-weight: 600;
     }
@@ -154,15 +153,14 @@
       color: #555;
     }
     .features-section {
-      margin: 18px 0;
-      padding: 18px;
+      margin: 12px 0;
+      padding: 15px;
       background: #f8f9fa;
       border-radius: 6px;
-      page-break-inside: avoid;
     }
     .features-section h2 {
       font-size: 16px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       color: #2ea862;
       font-weight: 600;
     }
@@ -243,9 +241,9 @@
       .page:last-child {
         page-break-after: auto;
       }
-      .description-section,
-      .features-section {
-        page-break-inside: avoid;
+      .description-section h2,
+      .features-section h2 {
+        page-break-after: avoid;
       }
     }
   </style>
