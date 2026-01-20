@@ -207,6 +207,13 @@ exports.generatePropertyPDF = async (req, res, next) => {
         bottom: '20mm',
         left: '15mm'
       },
+      displayHeaderFooter: true,
+      headerTemplate: `
+        <div style="position: absolute; top: 0; right: 15mm; width: auto; height: auto; padding: 12mm 0;">
+          <img src="${logoUrl}" alt="Sweet Home" style="max-height: 60px; width: auto; display: block;" onerror="this.style.display='none';" />
+        </div>
+      `,
+      footerTemplate: '<div></div>',
       timeout: 30000
     });
 
@@ -465,6 +472,13 @@ exports.generateProjectPDF = async (req, res, next) => {
         bottom: '20mm',
         left: '15mm'
       },
+      displayHeaderFooter: true,
+      headerTemplate: `
+        <div style="position: absolute; top: 0; right: 15mm; width: auto; height: auto; padding: 12mm 0;">
+          <img src="${logoUrl}" alt="Sweet Home" style="max-height: 60px; width: auto; display: block;" onerror="this.style.display='none';" />
+        </div>
+      `,
+      footerTemplate: '<div></div>',
       timeout: 30000
     });
 
