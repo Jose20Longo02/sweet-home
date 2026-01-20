@@ -59,24 +59,33 @@ exports.generatePropertyPDF = async (req, res, next) => {
     };
 
     const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+    console.log('[PDF] Base URL:', baseUrl);
     
     // Render HTML template
+    console.log('[PDF] Rendering HTML template...');
     const html = await new Promise((resolve, reject) => {
       res.app.render('pdf/property-expose', {
         property,
         baseUrl,
         lang
       }, (err, html) => {
-        if (err) reject(err);
-        else resolve(html);
+        if (err) {
+          console.error('[PDF] Error rendering template:', err);
+          reject(err);
+        } else {
+          console.log('[PDF] Template rendered successfully, length:', html.length);
+          resolve(html);
+        }
       });
     });
 
     // Launch browser and generate PDF
+    console.log('[PDF] Launching Puppeteer...');
     browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
     });
+    console.log('[PDF] Browser launched successfully');
     const page = await browser.newPage();
     
     // Set a longer timeout for page operations
@@ -84,6 +93,7 @@ exports.generatePropertyPDF = async (req, res, next) => {
     
     // Set content with full base URL for images
     // Use 'domcontentloaded' instead of 'networkidle0' to avoid hanging on slow images
+    console.log('[PDF] Setting page content...');
     await page.setContent(html, {
       waitUntil: 'domcontentloaded',
       baseURL: baseUrl
@@ -91,9 +101,11 @@ exports.generatePropertyPDF = async (req, res, next) => {
     
     // Wait a bit for images to load, but don't fail if some don't
     // Use a Promise-based delay instead of waitForTimeout
+    console.log('[PDF] Waiting for images to load...');
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     // Generate PDF
+    console.log('[PDF] Generating PDF...');
     const pdf = await page.pdf({
       format: 'A4',
       printBackground: true,
@@ -123,10 +135,10 @@ exports.generatePropertyPDF = async (req, res, next) => {
         // Ignore close errors
       }
     }
-    console.error('PDF generation error:', err);
+    console.error('[PDF] Unhandled error in generatePropertyPDF:', err);
     // Send a proper error response instead of just calling next
     if (!res.headersSent) {
-      res.status(500).send(`Error generating PDF: ${err.message}`);
+      return res.status(500).send(`Error generating PDF: ${err.message}`);
     } else {
       next(err);
     }
@@ -180,16 +192,30 @@ exports.generateProjectPDF = async (req, res, next) => {
     
     // Render HTML template
     console.log('[PDF] Rendering HTML template...');
-    const html = await new Promise((resolve, reject) => {
-      res.app.render('pdf/project-expose', {
-        project,
-        baseUrl,
-        lang
-      }, (err, html) => {
-        if (err) reject(err);
-        else resolve(html);
+    let html;
+    try {
+      html = await new Promise((resolve, reject) => {
+        res.app.render('pdf/project-expose', {
+          project,
+          baseUrl,
+          lang
+        }, (err, html) => {
+          if (err) {
+            console.error('[PDF] Error rendering template:', err);
+            reject(err);
+          } else {
+            console.log('[PDF] Template rendered successfully, length:', html.length);
+            resolve(html);
+          }
+        });
       });
-    });
+    } catch (renderErr) {
+      console.error('[PDF] Failed to render template:', renderErr);
+      if (!res.headersSent) {
+        return res.status(500).send(`Error rendering PDF template: ${renderErr.message}`);
+      }
+      throw renderErr;
+    }
 
     // Launch browser and generate PDF
     console.log('[PDF] Launching Puppeteer...');
