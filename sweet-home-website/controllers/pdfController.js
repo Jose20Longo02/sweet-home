@@ -232,22 +232,12 @@ exports.generatePropertyPDF = async (req, res, next) => {
       format: 'A4',
       printBackground: true,
       margin: {
-        top: '35mm',
+        top: '0mm',
         right: '15mm',
         bottom: '20mm',
         left: '15mm'
       },
-      displayHeaderFooter: true,
-      headerTemplate: logoBase64 ? `
-        <div style="position: absolute; top: 0; right: 15mm; width: auto; height: auto; padding: 12mm 0;">
-          <img src="data:image/png;base64,${logoBase64}" alt="Sweet Home" style="max-height: 60px; width: auto; display: block;" />
-        </div>
-      ` : `
-        <div style="position: absolute; top: 0; right: 15mm; width: auto; height: auto; padding: 12mm 0;">
-          <img src="${logoUrl}" alt="Sweet Home" style="max-height: 60px; width: auto; display: block;" />
-        </div>
-      `,
-      footerTemplate: '<div></div>',
+      displayHeaderFooter: false,
       timeout: 30000
     });
 
@@ -531,22 +521,12 @@ exports.generateProjectPDF = async (req, res, next) => {
       format: 'A4',
       printBackground: true,
       margin: {
-        top: '35mm',
+        top: '0mm',
         right: '15mm',
         bottom: '20mm',
         left: '15mm'
       },
-      displayHeaderFooter: true,
-      headerTemplate: logoBase64 ? `
-        <div style="position: absolute; top: 0; right: 15mm; width: auto; height: auto; padding: 12mm 0;">
-          <img src="data:image/png;base64,${logoBase64}" alt="Sweet Home" style="max-height: 60px; width: auto; display: block;" />
-        </div>
-      ` : `
-        <div style="position: absolute; top: 0; right: 15mm; width: auto; height: auto; padding: 12mm 0;">
-          <img src="${logoUrl}" alt="Sweet Home" style="max-height: 60px; width: auto; display: block;" />
-        </div>
-      `,
-      footerTemplate: '<div></div>',
+      displayHeaderFooter: false,
       timeout: 30000
     });
 
