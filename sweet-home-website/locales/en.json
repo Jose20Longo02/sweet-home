@@ -21,7 +21,27 @@
     "previous": "Previous",
     "next": "Next",
     "any": "Any",
-    "retry": "Retry"
+    "retry": "Retry",
+    "downloadExpose": "Download Expose",
+    "pdfGenerating": "Generating PDF expose...",
+    "pdfPleaseWait": "Please wait, this may take a few moments",
+    "pdf": {
+      "type": "Type",
+      "rooms": "Rooms",
+      "bathrooms": "Bathrooms",
+      "size": "Size",
+      "yearBuilt": "Year Built",
+      "occupancy": "Occupancy",
+      "description": "Description",
+      "features": "Features",
+      "gallery": "Gallery",
+      "generatedOn": "Generated on",
+      "totalUnits": "Total Units",
+      "completionDate": "Completion Date",
+      "status": "Status",
+      "amenities": "Amenities",
+      "specifications": "Specifications"
+    }
   },
   "owners": {
     "recentlySold": "Recently Sold",

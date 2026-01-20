@@ -184,37 +184,37 @@
     <div class="info-grid">
       <% if (property.type) { %>
         <div class="info-card">
-          <h3>Type</h3>
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.type', 'Type') : 'Type' %></h3>
           <div class="value"><%= property.type %></div>
         </div>
       <% } %>
       <% if (property.rooms) { %>
         <div class="info-card">
-          <h3>Rooms</h3>
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.rooms', 'Rooms') : 'Rooms' %></h3>
           <div class="value"><%= property.rooms %></div>
         </div>
       <% } %>
       <% if (property.bathrooms) { %>
         <div class="info-card">
-          <h3>Bathrooms</h3>
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.bathrooms', 'Bathrooms') : 'Bathrooms' %></h3>
           <div class="value"><%= property.bathrooms %></div>
         </div>
       <% } %>
       <% if (property.size) { %>
         <div class="info-card">
-          <h3>Size</h3>
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.size', 'Size') : 'Size' %></h3>
           <div class="value"><%= property.size %> m²</div>
         </div>
       <% } %>
       <% if (property.year_built) { %>
         <div class="info-card">
-          <h3>Year Built</h3>
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.yearBuilt', 'Year Built') : 'Year Built' %></h3>
           <div class="value"><%= property.year_built %></div>
         </div>
       <% } %>
       <% if (property.occupancy_type) { %>
         <div class="info-card">
-          <h3>Occupancy</h3>
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.occupancy', 'Occupancy') : 'Occupancy' %></h3>
           <div class="value"><%= property.occupancy_type %></div>
         </div>
       <% } %>
@@ -222,14 +222,14 @@
 
     <% if (property.description) { %>
       <div class="description">
-        <h2>Description</h2>
+        <h2><%= typeof t !== 'undefined' ? t('common.pdf.description', 'Description') : 'Description' %></h2>
         <p><%= property.description.replace(/\n/g, '<br>') %></p>
       </div>
     <% } %>
 
     <% if (property.features && Array.isArray(property.features) && property.features.length > 0) { %>
       <div class="features">
-        <h2>Features</h2>
+        <h2><%= typeof t !== 'undefined' ? t('common.pdf.features', 'Features') : 'Features' %></h2>
         <ul class="features-list">
           <% property.features.forEach(feature => { %>
             <li><%= feature %></li>
@@ -240,7 +240,7 @@
 
     <% if (property.photos && property.photos.length > 1) { %>
       <div class="gallery">
-        <h2>Gallery</h2>
+        <h2><%= typeof t !== 'undefined' ? t('common.pdf.gallery', 'Gallery') : 'Gallery' %></h2>
         <div class="gallery-grid">
           <% property.photos.slice(1, 7).forEach(photo => { %>
             <% const photoUrl = photo.startsWith('http') ? photo : `${baseUrl}${photo}`; %>
@@ -252,7 +252,7 @@
 
     <div class="footer">
       <div class="logo">Sweet Home Real Estate Investments</div>
-      <div>Generated on <%= new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></div>
+      <div><%= typeof t !== 'undefined' ? t('common.pdf.generatedOn', 'Generated on') : 'Generated on' %> <%= new Date().toLocaleDateString(lang === 'de' ? 'de-DE' : (lang === 'es' ? 'es-ES' : 'en-US'), { year: 'numeric', month: 'long', day: 'numeric' }) %></div>
     </div>
   </div>
 </body>

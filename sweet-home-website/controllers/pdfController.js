@@ -90,7 +90,8 @@ exports.generatePropertyPDF = async (req, res, next) => {
       res.app.render('pdf/property-expose', {
         property,
         baseUrl,
-        lang
+        lang,
+        t: res.locals.t || ((key, fallback) => fallback || '')
       }, (err, html) => {
         if (err) {
           console.error('[PDF] Error rendering template:', err);
@@ -298,7 +299,8 @@ exports.generateProjectPDF = async (req, res, next) => {
         res.app.render('pdf/project-expose', {
           project,
           baseUrl,
-          lang
+          lang,
+          t: res.locals.t || ((key, fallback) => fallback || '')
         }, (err, html) => {
           if (err) {
             console.error('[PDF] Error rendering template:', err);

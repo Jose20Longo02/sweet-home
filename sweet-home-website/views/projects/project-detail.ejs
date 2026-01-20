@@ -154,7 +154,7 @@
                 <polyline points="7,10 12,15 17,10"></polyline>
                 <line x1="12" y1="15" x2="12" y2="3"></line>
               </svg>
-              <%= t('common.downloadExpose','Download Expose') || 'Download Expose' %>
+              <%= t('common.downloadExpose','Download Expose') %>
             </button>
             <% if (project.brochure_url) { %>
               <a href="<%= project.brochure_url %>" target="_blank" rel="noopener" class="btn btn-brochure btn-block">
@@ -468,8 +468,8 @@
 <div id="pdfLoadingModal" class="pdf-loading-modal" style="display: none;">
   <div class="pdf-loading-content">
     <div class="pdf-loading-spinner"></div>
-    <p>Generating PDF expose...</p>
-    <p class="pdf-loading-subtitle">Please wait, this may take a few moments</p>
+    <p><%= t('common.pdfGenerating','Generating PDF expose...') %></p>
+    <p class="pdf-loading-subtitle"><%= t('common.pdfPleaseWait','Please wait, this may take a few moments') %></p>
   </div>
 </div>
 

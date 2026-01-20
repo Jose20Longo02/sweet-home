@@ -46,7 +46,27 @@
     "sortBy": "Sortieren nach:",
     "sort": { "relevance": "Relevanz", "priceLow": "Preis: aufsteigend", "priceHigh": "Preis: absteigend", "newest": "Neueste zuerst", "oldest": "Älteste zuerst" },
     "previous": "Zurück",
-    "next": "Weiter"
+    "next": "Weiter",
+    "downloadExpose": "Exposé herunterladen",
+    "pdfGenerating": "PDF-Exposé wird erstellt...",
+    "pdfPleaseWait": "Bitte warten Sie, dies kann einen Moment dauern",
+    "pdf": {
+      "type": "Typ",
+      "rooms": "Zimmer",
+      "bathrooms": "Badezimmer",
+      "size": "Größe",
+      "yearBuilt": "Baujahr",
+      "occupancy": "Belegung",
+      "description": "Beschreibung",
+      "features": "Ausstattung",
+      "gallery": "Galerie",
+      "generatedOn": "Erstellt am",
+      "totalUnits": "Gesamteinheiten",
+      "completionDate": "Fertigstellungsdatum",
+      "status": "Status",
+      "amenities": "Ausstattung",
+      "specifications": "Spezifikationen"
+    }
   },
   "properties": {
     "status": { "new": "Neu", "reduced": "Reduziert", "exclusive": "Exklusiv" },

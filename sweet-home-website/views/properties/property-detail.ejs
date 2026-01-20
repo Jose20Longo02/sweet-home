@@ -83,7 +83,7 @@
             <polyline points="7,10 12,15 17,10"></polyline>
             <line x1="12" y1="15" x2="12" y2="3"></line>
           </svg>
-          <span class="btn-text"><%= t('common.downloadExpose','Download Expose') || 'Download Expose' %></span>
+          <span class="btn-text"><%= t('common.downloadExpose','Download Expose') %></span>
         </button>
         <button class="btn btn-outline js-share-btn">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -652,8 +652,8 @@
 <div id="pdfLoadingModal" class="pdf-loading-modal" style="display: none;">
   <div class="pdf-loading-content">
     <div class="pdf-loading-spinner"></div>
-    <p>Generating PDF expose...</p>
-    <p class="pdf-loading-subtitle">Please wait, this may take a few moments</p>
+    <p><%= t('common.pdfGenerating','Generating PDF expose...') %></p>
+    <p class="pdf-loading-subtitle"><%= t('common.pdfPleaseWait','Please wait, this may take a few moments') %></p>
   </div>
 </div>
 

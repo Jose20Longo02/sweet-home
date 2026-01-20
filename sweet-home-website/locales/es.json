@@ -37,7 +37,27 @@
     "sortBy": "Ordenar por:",
     "sort": { "relevance": "Relevancia", "priceLow": "Precio: menor a mayor", "priceHigh": "Precio: mayor a menor", "newest": "Más nuevos", "oldest": "Más antiguos" },
     "previous": "Anterior",
-    "next": "Siguiente"
+    "next": "Siguiente",
+    "downloadExpose": "Descargar Exposé",
+    "pdfGenerating": "Generando exposé PDF...",
+    "pdfPleaseWait": "Por favor espere, esto puede tardar unos momentos",
+    "pdf": {
+      "type": "Tipo",
+      "rooms": "Habitaciones",
+      "bathrooms": "Baños",
+      "size": "Tamaño",
+      "yearBuilt": "Año de construcción",
+      "occupancy": "Ocupación",
+      "description": "Descripción",
+      "features": "Características",
+      "gallery": "Galería",
+      "generatedOn": "Generado el",
+      "totalUnits": "Unidades totales",
+      "completionDate": "Fecha de finalización",
+      "status": "Estado",
+      "amenities": "Comodidades",
+      "specifications": "Especificaciones"
+    }
   },
   "properties": {
     "status": { "new": "Nuevo", "reduced": "Reducido", "exclusive": "Exclusivo" },
