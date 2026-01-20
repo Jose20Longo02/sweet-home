@@ -371,7 +371,7 @@
     <% if (property.description) { %>
       <div class="description-section">
         <h2><%= typeof t !== 'undefined' ? t('common.pdf.description', 'Description') : 'Description' %></h2>
-        <p><%= property.description.replace(/\n/g, '<br>') %></p>
+        <p><%- property.description.replace(/<br\s*\/?>/gi, '<br>').replace(/\n/g, '<br>') %></p>
       </div>
     <% } %>
 

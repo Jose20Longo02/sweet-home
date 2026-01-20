@@ -484,7 +484,7 @@
     <% if (project.description) { %>
       <div class="description-section">
         <h2><%= typeof t !== 'undefined' ? t('common.pdf.description', 'Description') : 'Description' %></h2>
-        <p><%= project.description.replace(/<br\s*\/?>/gi, '\n').replace(/\n/g, '<br>') %></p>
+        <p><%- project.description.replace(/<br\s*\/?>/gi, '<br>').replace(/\n/g, '<br>') %></p>
       </div>
     <% } %>
 
