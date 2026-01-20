@@ -357,6 +357,34 @@
         </div>
       </div>
     <% } %>
+
+    <!-- Key Info on First Page -->
+    <div class="info-grid" style="margin-top: 20px;">
+      <% if (project.total_units) { %>
+        <div class="info-card">
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.totalUnits', 'Total Units') : 'Total Units' %></h3>
+          <div class="value"><%= project.total_units %></div>
+        </div>
+      <% } %>
+      <% if (project.completion_date) { %>
+        <div class="info-card">
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.completionDate', 'Completion Date') : 'Completion Date' %></h3>
+          <div class="value"><%= project.completion_date %></div>
+        </div>
+      <% } %>
+      <% if (project.status) { %>
+        <div class="info-card">
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.status', 'Status') : 'Status' %></h3>
+          <div class="value"><%= project.status %></div>
+        </div>
+      <% } %>
+      <% if (project.unit_types && Array.isArray(project.unit_types) && project.unit_types.length > 0) { %>
+        <div class="info-card">
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.unitTypes', 'Unit Types') : 'Unit Types' %></h3>
+          <div class="value"><%= project.unit_types.join(', ') %></div>
+        </div>
+      <% } %>
+    </div>
   </div>
 
   <!-- PAGE 2: GALLERY ONLY (if more than 4 images) -->
@@ -395,30 +423,6 @@
     </div>
 
     <div class="info-grid">
-      <% if (project.total_units) { %>
-        <div class="info-card">
-          <h3><%= typeof t !== 'undefined' ? t('common.pdf.totalUnits', 'Total Units') : 'Total Units' %></h3>
-          <div class="value"><%= project.total_units %></div>
-        </div>
-      <% } %>
-      <% if (project.completion_date) { %>
-        <div class="info-card">
-          <h3><%= typeof t !== 'undefined' ? t('common.pdf.completionDate', 'Completion Date') : 'Completion Date' %></h3>
-          <div class="value"><%= project.completion_date %></div>
-        </div>
-      <% } %>
-      <% if (project.status) { %>
-        <div class="info-card">
-          <h3><%= typeof t !== 'undefined' ? t('common.pdf.status', 'Status') : 'Status' %></h3>
-          <div class="value"><%= project.status %></div>
-        </div>
-      <% } %>
-      <% if (project.unit_types && Array.isArray(project.unit_types) && project.unit_types.length > 0) { %>
-        <div class="info-card">
-          <h3><%= typeof t !== 'undefined' ? t('common.pdf.unitTypes', 'Unit Types') : 'Unit Types' %></h3>
-          <div class="value"><%= project.unit_types.join(', ') %></div>
-        </div>
-      <% } %>
       <% if (project.min_price || project.max_price) { %>
         <div class="info-card">
           <h3><%= typeof t !== 'undefined' ? t('common.pdf.priceRange', 'Price Range') : 'Price Range' %></h3>

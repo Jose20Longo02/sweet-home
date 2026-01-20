@@ -281,6 +281,38 @@
         </div>
       </div>
     <% } %>
+
+    <!-- Key Info on First Page -->
+    <div class="info-grid" style="margin-top: 20px;">
+      <% if (property.type) { %>
+        <div class="info-card">
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.type', 'Type') : 'Type' %></h3>
+          <% 
+            const typeKey = property.type.toLowerCase();
+            const translatedType = typeof t !== 'undefined' ? t(`forms.types.${typeKey}`, property.type) : property.type;
+          %>
+          <div class="value"><%= translatedType %></div>
+        </div>
+      <% } %>
+      <% if (property.rooms) { %>
+        <div class="info-card">
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.rooms', 'Rooms') : 'Rooms' %></h3>
+          <div class="value"><%= property.rooms %></div>
+        </div>
+      <% } %>
+      <% if (property.bathrooms) { %>
+        <div class="info-card">
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.bathrooms', 'Bathrooms') : 'Bathrooms' %></h3>
+          <div class="value"><%= property.bathrooms %></div>
+        </div>
+      <% } %>
+      <% if (property.size) { %>
+        <div class="info-card">
+          <h3><%= typeof t !== 'undefined' ? t('common.pdf.size', 'Size') : 'Size' %></h3>
+          <div class="value"><%= property.size %> m²</div>
+        </div>
+      <% } %>
+    </div>
   </div>
 
   <!-- PAGE 2: GALLERY ONLY (if more than 4 images) -->
@@ -319,34 +351,6 @@
     </div>
 
     <div class="info-grid">
-      <% if (property.type) { %>
-        <div class="info-card">
-          <h3><%= typeof t !== 'undefined' ? t('common.pdf.type', 'Type') : 'Type' %></h3>
-          <% 
-            const typeKey = property.type.toLowerCase();
-            const translatedType = typeof t !== 'undefined' ? t(`forms.types.${typeKey}`, property.type) : property.type;
-          %>
-          <div class="value"><%= translatedType %></div>
-        </div>
-      <% } %>
-      <% if (property.rooms) { %>
-        <div class="info-card">
-          <h3><%= typeof t !== 'undefined' ? t('common.pdf.rooms', 'Rooms') : 'Rooms' %></h3>
-          <div class="value"><%= property.rooms %></div>
-        </div>
-      <% } %>
-      <% if (property.bathrooms) { %>
-        <div class="info-card">
-          <h3><%= typeof t !== 'undefined' ? t('common.pdf.bathrooms', 'Bathrooms') : 'Bathrooms' %></h3>
-          <div class="value"><%= property.bathrooms %></div>
-        </div>
-      <% } %>
-      <% if (property.size) { %>
-        <div class="info-card">
-          <h3><%= typeof t !== 'undefined' ? t('common.pdf.size', 'Size') : 'Size' %></h3>
-          <div class="value"><%= property.size %> m²</div>
-        </div>
-      <% } %>
       <% if (property.year_built) { %>
         <div class="info-card">
           <h3><%= typeof t !== 'undefined' ? t('common.pdf.yearBuilt', 'Year Built') : 'Year Built' %></h3>
