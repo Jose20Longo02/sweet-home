@@ -94,25 +94,31 @@
 .property-price-header { font-size: var(--font-size-2xl); font-weight: 800; color: var(--success-color); }
 
 .property-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important;
   flex-shrink: 0;
   min-width: 200px;
+  align-items: stretch;
 }
 
 .property-actions-row {
   display: flex;
   gap: 1rem;
+  width: 100%;
 }
 
 .property-actions-row-full {
   width: 100%;
+  display: flex !important;
+  flex-direction: column;
 }
 
 .property-actions-row-full .btn {
-  width: 100%;
+  width: 100% !important;
+  flex: 1 1 100% !important;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 /* Buttons */
