@@ -79,7 +79,9 @@
       "from": "Ab",
       "upTo": "Bis zu",
       "propertiesInProject": "Immobilien in diesem Projekt",
-      "contactUs": "Kontaktieren Sie uns für weitere Informationen zu dieser Immobilie"
+      "contactUs": "Kontaktieren Sie uns für weitere Informationen zu dieser Immobilie",
+      "viewProperty": "Immobilie online ansehen",
+      "viewProject": "Projekt online ansehen"
     }
   },
   "properties": {

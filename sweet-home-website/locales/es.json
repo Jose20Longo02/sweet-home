@@ -70,7 +70,9 @@
       "from": "Desde",
       "upTo": "Hasta",
       "propertiesInProject": "Propiedades en este Proyecto",
-      "contactUs": "Contáctenos para obtener más información sobre esta propiedad"
+      "contactUs": "Contáctenos para obtener más información sobre esta propiedad",
+      "viewProperty": "Ver Propiedad en Línea",
+      "viewProject": "Ver Proyecto en Línea"
     }
   },
   "properties": {

@@ -234,37 +234,55 @@
       font-weight: 600;
     }
     
-    .closing-section {
-      margin-top: 40px;
-      padding-top: 30px;
-      border-top: 2px solid #e0e0e0;
+    .closing-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
+      padding: 40px 20px;
     }
     .closing-logo {
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
     .closing-logo img {
-      max-height: 70px;
+      max-height: 80px;
       width: auto;
     }
-    .closing-section h2 {
-      font-size: 22px;
+    .closing-page h2 {
+      font-size: 26px;
       color: #2ea862;
-      margin-bottom: 12px;
+      margin-bottom: 20px;
       font-weight: 700;
     }
-    .closing-section p {
-      font-size: 13px;
+    .closing-page p {
+      font-size: 16px;
       color: #666;
       line-height: 1.7;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
+      max-width: 600px;
     }
-    .footer-info {
-      margin-top: 25px;
-      padding-top: 15px;
-      border-top: 1px solid #e0e0e0;
-      color: #666;
-      font-size: 11px;
+    .closing-cta {
+      display: inline-block;
+      background: linear-gradient(135deg, #2ea862 0%, #23804b 100%);
+      color: white;
+      padding: 15px 40px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      transition: transform 0.2s;
+    }
+    .closing-link {
+      font-size: 14px;
+      color: #2ea862;
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .closing-link:hover {
+      text-decoration: underline;
     }
     
     @media print {
@@ -448,7 +466,7 @@
       </div>
     <% } %>
 
-    <div class="closing-section">
+    <div class="closing-page">
       <div class="closing-logo">
         <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
           <img src="<%= logoUrl %>" alt="Sweet Home" />
@@ -460,9 +478,13 @@
       <h2>Sweet Home Real Estate Investments</h2>
       <p><%= typeof t !== 'undefined' ? t('common.pdf.contactUs', 'Contact us for more information about this project') : 'Contact us for more information about this project' %></p>
       
-      <div class="footer-info">
-        <div><%= typeof t !== 'undefined' ? t('common.pdf.generatedOn', 'Generated on') : 'Generated on' %> <%= new Date().toLocaleDateString(lang === 'de' ? 'de-DE' : (lang === 'es' ? 'es-ES' : 'en-US'), { year: 'numeric', month: 'long', day: 'numeric' }) %></div>
-      </div>
+      <a href="<%= baseUrl %>/projects/<%= project.slug %>" class="closing-cta">
+        <%= typeof t !== 'undefined' ? t('common.pdf.viewProject', 'View Project Online') : 'View Project Online' %>
+      </a>
+      
+      <a href="<%= baseUrl %>/projects/<%= project.slug %>" class="closing-link">
+        <%= baseUrl %>/projects/<%= project.slug %>
+      </a>
     </div>
   </div>
 </body>

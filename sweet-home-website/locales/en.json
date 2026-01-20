@@ -54,7 +54,9 @@
       "from": "From",
       "upTo": "Up to",
       "propertiesInProject": "Properties in this Project",
-      "contactUs": "Contact us for more information about this property"
+      "contactUs": "Contact us for more information about this property",
+      "viewProperty": "View Property Online",
+      "viewProject": "View Project Online"
     }
   },
   "owners": {
