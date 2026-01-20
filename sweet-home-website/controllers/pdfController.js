@@ -10,6 +10,7 @@ const fs = require('fs');
 exports.generatePropertyPDF = async (req, res, next) => {
   let browser = null;
   try {
+    console.log('[PDF] Starting property PDF generation for slug:', req.params.slug);
     const { slug } = req.params;
     
     // Get property data (similar to showProperty)
@@ -74,15 +75,23 @@ exports.generatePropertyPDF = async (req, res, next) => {
     // Launch browser and generate PDF
     browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
     });
     const page = await browser.newPage();
     
+    // Set a longer timeout for page operations
+    page.setDefaultTimeout(30000);
+    
     // Set content with full base URL for images
+    // Use 'domcontentloaded' instead of 'networkidle0' to avoid hanging on slow images
     await page.setContent(html, {
-      waitUntil: 'networkidle0',
+      waitUntil: 'domcontentloaded',
       baseURL: baseUrl
     });
+    
+    // Wait a bit for images to load, but don't fail if some don't
+    // Use a Promise-based delay instead of waitForTimeout
+    await new Promise(resolve => setTimeout(resolve, 2000));
     
     // Generate PDF
     const pdf = await page.pdf({
@@ -93,20 +102,34 @@ exports.generatePropertyPDF = async (req, res, next) => {
         right: '15mm',
         bottom: '20mm',
         left: '15mm'
-      }
+      },
+      timeout: 30000
     });
 
     await browser.close();
     browser = null;
 
     // Send PDF
+    console.log('[PDF] PDF generated successfully, size:', pdf.length, 'bytes');
     const filename = `property-${slug}-expose.pdf`;
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.send(pdf);
   } catch (err) {
-    if (browser) await browser.close();
-    next(err);
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (e) {
+        // Ignore close errors
+      }
+    }
+    console.error('PDF generation error:', err);
+    // Send a proper error response instead of just calling next
+    if (!res.headersSent) {
+      res.status(500).send(`Error generating PDF: ${err.message}`);
+    } else {
+      next(err);
+    }
   }
 };
 
@@ -116,6 +139,7 @@ exports.generatePropertyPDF = async (req, res, next) => {
 exports.generateProjectPDF = async (req, res, next) => {
   let browser = null;
   try {
+    console.log('[PDF] Starting project PDF generation for slug:', req.params.slug);
     const { slug } = req.params;
     
     // Get project data
@@ -152,8 +176,10 @@ exports.generateProjectPDF = async (req, res, next) => {
     });
 
     const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+    console.log('[PDF] Base URL:', baseUrl);
     
     // Render HTML template
+    console.log('[PDF] Rendering HTML template...');
     const html = await new Promise((resolve, reject) => {
       res.app.render('pdf/project-expose', {
         project,
@@ -166,18 +192,29 @@ exports.generateProjectPDF = async (req, res, next) => {
     });
 
     // Launch browser and generate PDF
+    console.log('[PDF] Launching Puppeteer...');
     browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
     });
+    console.log('[PDF] Browser launched, creating page...');
     const page = await browser.newPage();
     
+    // Set a longer timeout for page operations
+    page.setDefaultTimeout(30000);
+    
+    console.log('[PDF] Setting page content...');
     await page.setContent(html, {
-      waitUntil: 'networkidle0',
+      waitUntil: 'domcontentloaded',
       baseURL: baseUrl
     });
     
+    // Wait a bit for images to load, but don't fail if some don't
+    // Use a Promise-based delay instead of waitForTimeout
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
     // Generate PDF
+    console.log('[PDF] Generating PDF...');
     const pdf = await page.pdf({
       format: 'A4',
       printBackground: true,
@@ -186,19 +223,33 @@ exports.generateProjectPDF = async (req, res, next) => {
         right: '15mm',
         bottom: '20mm',
         left: '15mm'
-      }
+      },
+      timeout: 30000
     });
 
     await browser.close();
     browser = null;
 
     // Send PDF
+    console.log('[PDF] PDF generated successfully, size:', pdf.length, 'bytes');
     const filename = `project-${slug}-expose.pdf`;
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.send(pdf);
   } catch (err) {
-    if (browser) await browser.close();
-    next(err);
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (e) {
+        // Ignore close errors
+      }
+    }
+    console.error('PDF generation error:', err);
+    // Send a proper error response instead of just calling next
+    if (!res.headersSent) {
+      res.status(500).send(`Error generating PDF: ${err.message}`);
+    } else {
+      next(err);
+    }
   }
 };

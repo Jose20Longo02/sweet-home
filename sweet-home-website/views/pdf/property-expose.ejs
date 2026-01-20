@@ -174,7 +174,11 @@
 
   <div class="container">
     <% if (property.photos && property.photos.length > 0) { %>
-      <img src="<%= baseUrl %><%= property.photos[0] %>" alt="<%= property.title %>" class="main-image" />
+      <% 
+        const firstPhoto = property.photos[0];
+        const photoUrl = firstPhoto.startsWith('http') ? firstPhoto : `${baseUrl}${firstPhoto}`;
+      %>
+      <img src="<%= photoUrl %>" alt="<%= property.title %>" class="main-image" onerror="this.style.display='none';" />
     <% } %>
 
     <div class="info-grid">
@@ -239,7 +243,8 @@
         <h2>Gallery</h2>
         <div class="gallery-grid">
           <% property.photos.slice(1, 7).forEach(photo => { %>
-            <img src="<%= baseUrl %><%= photo %>" alt="<%= property.title %>" class="gallery-item" />
+            <% const photoUrl = photo.startsWith('http') ? photo : `${baseUrl}${photo}`; %>
+            <img src="<%= photoUrl %>" alt="<%= property.title %>" class="gallery-item" onerror="this.style.display='none';" />
           <% }); %>
         </div>
       </div>
