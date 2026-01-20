@@ -181,6 +181,21 @@
   transform: translateY(-1px);
 }
 
+.js-share-btn:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--white);
+}
+
+.js-share-btn:hover svg {
+  stroke: var(--white);
+  color: var(--white);
+}
+
+.js-share-btn:hover .btn-text {
+  color: var(--white);
+}
+
 .btn-secondary {
   background-color: #6c757d;
   color: white;
