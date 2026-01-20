@@ -11,7 +11,7 @@
       box-sizing: border-box;
     }
     @page {
-      margin-top: 0mm;
+      margin-top: 35mm;
       margin-right: 15mm;
       margin-bottom: 12mm;
       margin-left: 15mm;
@@ -25,13 +25,13 @@
       margin: 0;
       padding: 0;
     }
-    .header-logo-on-pages {
+    .page-logo {
       position: fixed;
       top: 12mm;
       right: 15mm;
       z-index: 1000;
     }
-    .header-logo-on-pages img {
+    .page-logo img {
       max-height: 60px;
       width: auto;
       display: block;
@@ -40,30 +40,6 @@
     .content-wrapper {
       width: 100%;
       padding: 0;
-    }
-    
-    /* Add top padding to account for fixed header logo */
-    .content-wrapper > *:not(.closing-page) {
-      padding-top: 35mm;
-    }
-    
-    /* Hide header logo when closing page is visible on screen */
-    .closing-page {
-      position: relative;
-    }
-    
-    /* Use a workaround to hide fixed logo: add large negative margin to closing page */
-    .closing-page::before {
-      content: '';
-      display: block;
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 100mm;
-      height: 80mm;
-      background: white;
-      z-index: 1001;
-      pointer-events: none;
     }
     
     .page-hero {
@@ -187,16 +163,16 @@
     }
     
     .closing-page {
-      min-height: calc(100vh);
-      height: calc(100vh);
+      min-height: calc(100vh - 35mm);
+      height: calc(100vh - 35mm);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 0 20px;
+      padding: 40px 20px;
       page-break-before: always;
-      margin-top: 0;
+      margin-top: -35mm;
     }
     .closing-logo {
       margin-bottom: 30px;
@@ -249,15 +225,6 @@
   </style>
 </head>
 <body>
-  <!-- Header logo for all pages except closing -->
-  <div class="header-logo-on-pages">
-    <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
-      <img src="<%= logoUrl %>" alt="Sweet Home" />
-    <% } else { %>
-      <img src="<%= baseUrl %>/images/Sweet%20Home%20Logo.png" alt="Sweet Home" />
-    <% } %>
-  </div>
-
   <div class="content-wrapper">
     <div class="page-hero">
       <h1><%= property.title %></h1>
