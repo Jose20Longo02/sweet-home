@@ -175,23 +175,37 @@
   border: 2px solid var(--gray-200);
 }
 
-.btn-outline:hover {
+.btn-outline:hover:not(.js-share-btn) {
   border-color: var(--primary-color);
   color: var(--primary-color);
   transform: translateY(-1px);
 }
 
+/* Share button specific hover - must come after .btn-outline:hover */
+button.btn-outline.js-share-btn:hover,
 .btn-outline.js-share-btn:hover {
   background-color: var(--primary-color) !important;
   border-color: var(--primary-color) !important;
   color: var(--white) !important;
 }
 
+button.btn-outline.js-share-btn:hover svg,
 .btn-outline.js-share-btn:hover svg {
+  stroke: var(--white) !important;
+  color: var(--white) !important;
+}
+
+button.btn-outline.js-share-btn:hover svg path,
+button.btn-outline.js-share-btn:hover svg polyline,
+button.btn-outline.js-share-btn:hover svg line,
+.btn-outline.js-share-btn:hover svg path,
+.btn-outline.js-share-btn:hover svg polyline,
+.btn-outline.js-share-btn:hover svg line {
   stroke: var(--white) !important;
   fill: none !important;
 }
 
+button.btn-outline.js-share-btn:hover .btn-text,
 .btn-outline.js-share-btn:hover .btn-text {
   color: var(--white) !important;
 }
