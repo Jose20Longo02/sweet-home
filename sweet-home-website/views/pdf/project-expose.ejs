@@ -10,56 +10,33 @@
       padding: 0;
       box-sizing: border-box;
     }
-    @page {
-      margin: 15mm 15mm 20mm 15mm;
-    }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       color: #333;
-      line-height: 1.8;
+      line-height: 1.6;
       background: #fff;
-      font-size: 11px;
-    }
-    .page-logo {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 40px;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px 0;
-      z-index: 1000;
-      border-bottom: 1px solid #e0e0e0;
-    }
-    .page-logo img {
-      max-height: 30px;
-      width: auto;
     }
     .header {
       background: linear-gradient(135deg, #2c5530 0%, #4a7c59 100%);
       color: white;
-      padding: 15px 20px;
+      padding: 30px 20px;
       text-align: center;
-      margin-top: 40px;
-      margin-bottom: 15px;
+      margin-bottom: 30px;
     }
     .header h1 {
-      font-size: 20px;
-      margin-bottom: 6px;
+      font-size: 28px;
+      margin-bottom: 10px;
       font-weight: 700;
     }
     .header .location {
-      font-size: 12px;
+      font-size: 16px;
       opacity: 0.9;
-      margin-bottom: 8px;
+      margin-bottom: 15px;
     }
     .header .price-range {
-      font-size: 18px;
+      font-size: 24px;
       font-weight: 600;
-      margin-top: 6px;
+      margin-top: 10px;
     }
     .container {
       max-width: 800px;
@@ -68,162 +45,146 @@
     }
     .main-image {
       width: 100%;
-      max-height: 250px;
+      max-height: 400px;
       object-fit: cover;
       border-radius: 8px;
-      margin-bottom: 15px;
+      margin-bottom: 30px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .info-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-bottom: 15px;
+      gap: 20px;
+      margin-bottom: 30px;
     }
     .info-card {
       background: #f8f9fa;
-      padding: 12px;
+      padding: 20px;
       border-radius: 8px;
       border-left: 4px solid #2c5530;
     }
     .info-card h3 {
-      font-size: 10px;
+      font-size: 14px;
       color: #666;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
     .info-card .value {
-      font-size: 14px;
+      font-size: 20px;
       font-weight: 600;
       color: #333;
     }
-    .content-section {
-      page-break-inside: avoid;
-      break-inside: avoid;
-    }
     .description {
-      margin: 15px 0;
-      padding: 15px;
+      margin: 30px 0;
+      padding: 20px;
       background: #f8f9fa;
       border-radius: 8px;
-      page-break-inside: avoid;
-      break-inside: avoid;
     }
     .description h2 {
-      font-size: 14px;
-      margin-bottom: 10px;
+      font-size: 20px;
+      margin-bottom: 15px;
       color: #2c5530;
-      font-weight: 600;
     }
     .description p {
-      font-size: 11px;
-      line-height: 1.9;
+      font-size: 14px;
+      line-height: 1.8;
       color: #555;
     }
     .gallery {
-      margin: 15px 0;
+      margin: 30px 0;
     }
     .gallery h2 {
-      font-size: 14px;
-      margin-bottom: 12px;
+      font-size: 20px;
+      margin-bottom: 20px;
       color: #2c5530;
-      font-weight: 600;
     }
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      gap: 15px;
     }
     .gallery-item {
       width: 100%;
-      height: 150px;
+      height: 200px;
       object-fit: cover;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     .amenities {
-      margin: 15px 0;
-      padding: 15px;
+      margin: 30px 0;
+      padding: 20px;
       background: #f8f9fa;
       border-radius: 8px;
-      page-break-inside: avoid;
-      break-inside: avoid;
     }
     .amenities h2 {
-      font-size: 14px;
-      margin-bottom: 10px;
+      font-size: 20px;
+      margin-bottom: 15px;
       color: #2c5530;
-      font-weight: 600;
     }
     .amenities-list {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
+      gap: 10px;
       list-style: none;
     }
     .amenities-list li {
-      padding: 4px 0;
-      font-size: 11px;
+      padding: 8px 0;
+      font-size: 14px;
       color: #555;
-      line-height: 1.8;
     }
     .amenities-list li:before {
       content: "✓ ";
       color: #2c5530;
       font-weight: bold;
-      margin-right: 6px;
+      margin-right: 8px;
     }
     .specifications {
-      margin: 15px 0;
-      padding: 15px;
+      margin: 30px 0;
+      padding: 20px;
       background: #f8f9fa;
       border-radius: 8px;
-      page-break-inside: avoid;
-      break-inside: avoid;
     }
     .specifications h2 {
-      font-size: 14px;
-      margin-bottom: 10px;
+      font-size: 20px;
+      margin-bottom: 15px;
       color: #2c5530;
-      font-weight: 600;
     }
     .specifications-content {
-      font-size: 11px;
-      line-height: 1.9;
+      font-size: 14px;
+      line-height: 1.8;
       color: #555;
       white-space: pre-wrap;
     }
     .footer {
-      margin-top: 20px;
-      padding: 15px;
+      margin-top: 40px;
+      padding: 20px;
       text-align: center;
       border-top: 2px solid #e0e0e0;
       color: #666;
-      font-size: 10px;
+      font-size: 12px;
     }
     .footer .logo {
-      font-size: 14px;
+      font-size: 18px;
       font-weight: 700;
       color: #2c5530;
-      margin-bottom: 6px;
+      margin-bottom: 10px;
     }
     .properties-section {
-      margin: 15px 0;
-      padding: 15px;
+      margin: 30px 0;
+      padding: 20px;
       background: #f8f9fa;
       border-radius: 8px;
     }
     .properties-section h2 {
-      font-size: 14px;
-      margin-bottom: 12px;
+      font-size: 20px;
+      margin-bottom: 20px;
       color: #2c5530;
-      font-weight: 600;
     }
     .properties-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
+      gap: 20px;
     }
     .property-item {
       background: white;
@@ -233,27 +194,27 @@
     }
     .property-item-image {
       width: 100%;
-      height: 120px;
+      height: 150px;
       object-fit: cover;
     }
     .property-item-content {
-      padding: 10px;
+      padding: 15px;
     }
     .property-item-content h4 {
-      font-size: 12px;
+      font-size: 16px;
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 10px;
       color: #333;
     }
     .property-item-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      font-size: 10px;
+      gap: 10px;
+      font-size: 12px;
       color: #666;
     }
     .property-item-meta span {
-      padding: 3px 6px;
+      padding: 4px 8px;
       background: #f0f0f0;
       border-radius: 4px;
     }
@@ -272,24 +233,10 @@
       .property-item {
         page-break-inside: avoid;
       }
-      .description,
-      .amenities,
-      .specifications {
-        page-break-inside: avoid;
-        break-inside: avoid;
-      }
     }
   </style>
 </head>
 <body>
-  <div class="page-logo">
-    <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
-      <img src="<%= logoUrl %>" alt="Sweet Home" onerror="this.style.display='none';" />
-    <% } else { %>
-      <div style="font-size: 16px; font-weight: 700; color: #2c5530;">Sweet Home</div>
-    <% } %>
-  </div>
-
   <div class="header">
     <h1><%= project.title %></h1>
     <div class="location">
@@ -392,32 +339,30 @@
       <% } %>
     </div>
 
-    <div class="content-section">
-      <% if (project.description) { %>
-        <div class="description">
-          <h2><%= typeof t !== 'undefined' ? t('common.pdf.description', 'Description') : 'Description' %></h2>
-          <p><%= project.description.replace(/<br\s*\/?>/gi, '\n').replace(/\n/g, '<br>') %></p>
-        </div>
-      <% } %>
+    <% if (project.description) { %>
+      <div class="description">
+        <h2><%= typeof t !== 'undefined' ? t('common.pdf.description', 'Description') : 'Description' %></h2>
+        <p><%= project.description.replace(/<br\s*\/?>/gi, '\n').replace(/\n/g, '<br>') %></p>
+      </div>
+    <% } %>
 
-      <% if (project.amenities && Array.isArray(project.amenities) && project.amenities.length > 0) { %>
-        <div class="amenities">
-          <h2><%= typeof t !== 'undefined' ? t('common.pdf.amenities', 'Amenities') : 'Amenities' %></h2>
-          <ul class="amenities-list">
-            <% project.amenities.forEach(amenity => { %>
-              <li><%= amenity %></li>
-            <% }); %>
-          </ul>
-        </div>
-      <% } %>
+    <% if (project.amenities && Array.isArray(project.amenities) && project.amenities.length > 0) { %>
+      <div class="amenities">
+        <h2><%= typeof t !== 'undefined' ? t('common.pdf.amenities', 'Amenities') : 'Amenities' %></h2>
+        <ul class="amenities-list">
+          <% project.amenities.forEach(amenity => { %>
+            <li><%= amenity %></li>
+          <% }); %>
+        </ul>
+      </div>
+    <% } %>
 
-      <% if (project.specifications) { %>
-        <div class="specifications">
-          <h2><%= typeof t !== 'undefined' ? t('common.pdf.specifications', 'Specifications') : 'Specifications' %></h2>
-          <div class="specifications-content"><%= project.specifications %></div>
-        </div>
-      <% } %>
-    </div>
+    <% if (project.specifications) { %>
+      <div class="specifications">
+        <h2><%= typeof t !== 'undefined' ? t('common.pdf.specifications', 'Specifications') : 'Specifications' %></h2>
+        <div class="specifications-content"><%= project.specifications %></div>
+      </div>
+    <% } %>
 
     <% if (project.properties && Array.isArray(project.properties) && project.properties.length > 0) { %>
       <div class="properties-section">

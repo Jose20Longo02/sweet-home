@@ -86,12 +86,10 @@ exports.generatePropertyPDF = async (req, res, next) => {
     
     // Render HTML template
     console.log('[PDF] Rendering HTML template...');
-    const logoUrl = `${baseUrl}/images/Sweet Home Logo.png`;
     const html = await new Promise((resolve, reject) => {
       res.app.render('pdf/property-expose', {
         property,
         baseUrl,
-        logoUrl,
         lang,
         t: res.locals.t || ((key, fallback) => fallback || '')
       }, (err, html) => {
@@ -330,14 +328,12 @@ exports.generateProjectPDF = async (req, res, next) => {
     
     // Render HTML template
     console.log('[PDF] Rendering HTML template...');
-    const logoUrl = `${baseUrl}/images/Sweet Home Logo.png`;
     let html;
     try {
       html = await new Promise((resolve, reject) => {
         res.app.render('pdf/project-expose', {
           project,
           baseUrl,
-          logoUrl,
           lang,
           t: res.locals.t || ((key, fallback) => fallback || '')
         }, (err, html) => {
