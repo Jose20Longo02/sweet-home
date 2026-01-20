@@ -96,26 +96,36 @@
 .property-actions {
   display: flex !important;
   flex-direction: column !important;
+  flex-wrap: nowrap !important;
   gap: 1rem !important;
   flex-shrink: 0;
   min-width: 200px;
   align-items: stretch;
 }
 
+.property-actions > * {
+  flex-shrink: 0;
+}
+
 .property-actions-row {
-  display: flex;
+  display: flex !important;
+  flex-direction: row !important;
   gap: 1rem;
   width: 100%;
+  flex-wrap: nowrap;
 }
 
 .property-actions-row-full {
   width: 100% !important;
   display: block !important;
+  flex: 0 0 auto !important;
+  clear: both;
   margin-top: 0;
 }
 
 .property-actions-row-full .btn {
   width: 100% !important;
+  max-width: 100% !important;
   display: flex !important;
   justify-content: center;
   box-sizing: border-box;
