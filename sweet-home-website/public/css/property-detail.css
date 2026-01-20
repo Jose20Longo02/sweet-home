@@ -181,19 +181,19 @@
   transform: translateY(-1px);
 }
 
-.js-share-btn:hover {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-  color: var(--white);
+.btn-outline.js-share-btn:hover {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--white) !important;
 }
 
-.js-share-btn:hover svg {
-  stroke: var(--white);
-  color: var(--white);
+.btn-outline.js-share-btn:hover svg {
+  stroke: var(--white) !important;
+  fill: none !important;
 }
 
-.js-share-btn:hover .btn-text {
-  color: var(--white);
+.btn-outline.js-share-btn:hover .btn-text {
+  color: var(--white) !important;
 }
 
 .btn-secondary {
