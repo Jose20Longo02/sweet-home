@@ -11,31 +11,41 @@
       box-sizing: border-box;
     }
     @page {
-      margin-top: 35mm;
-      margin-right: 15mm;
-      margin-bottom: 12mm;
-      margin-left: 15mm;
+      margin: 0;
       size: A4;
     }
-    html, body {
+    body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       color: #333;
       line-height: 1.7;
       background: #fff;
       margin: 0;
       padding: 0;
-      width: 100%;
-      height: 100%;
     }
-    body {
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      padding: 12mm 15mm;
       position: relative;
+      page-break-after: always;
+      page-break-inside: avoid;
     }
-    .content-wrapper {
-      width: 100%;
-      padding: 0;
-      position: relative;
+    .page:last-child {
+      page-break-after: auto;
+    }
+    .page-logo {
+      position: absolute;
+      top: 12mm;
+      right: 15mm;
+      z-index: 1000;
+    }
+    .page-logo img {
+      max-height: 60px;
+      width: auto;
+      display: block;
     }
     
+    /* PAGE 1: HERO + GALLERY */
     .page-hero {
       background: linear-gradient(135deg, #2ea862 0%, #23804b 100%);
       color: white;
@@ -43,7 +53,7 @@
       text-align: center;
       border-radius: 8px;
       margin-bottom: 20px;
-      margin-top: 0;
+      margin-top: 70px;
     }
     .page-hero h1 {
       font-size: 26px;
@@ -62,7 +72,7 @@
       margin-top: 8px;
     }
     .gallery-section {
-      margin: 20px 0;
+      margin-top: 20px;
     }
     .gallery-section h2 {
       font-size: 18px;
@@ -84,11 +94,27 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     
+    /* PAGE 2: GALLERY ONLY (if many images) */
+    .gallery-page {
+      padding-top: 70px;
+    }
+    .gallery-page .gallery-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .gallery-page .gallery-item {
+      height: 120px;
+    }
+    
+    /* PAGE 3: INFO SECTION */
+    .info-page {
+      padding-top: 70px;
+    }
     .info-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
-      margin: 20px 0 12px 0;
+      margin-bottom: 12px;
     }
     .info-card {
       background: #f8f9fa;
@@ -229,11 +255,15 @@
       font-weight: 600;
     }
     
-    .closing-section {
-      margin-top: 40px;
-      padding-top: 30px;
-      border-top: 2px solid #e0e0e0;
+    /* PAGE 4: CLOSING */
+    .closing-page {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
+      padding-top: 70px;
+      min-height: calc(297mm - 24mm);
     }
     .closing-logo {
       margin-bottom: 20px;
@@ -242,17 +272,31 @@
       max-height: 70px;
       width: auto;
     }
-    .closing-section h2 {
+    .closing-content {
+      max-width: 600px;
+    }
+    .closing-content h2 {
       font-size: 22px;
       color: #2ea862;
       margin-bottom: 12px;
       font-weight: 700;
     }
-    .closing-section p {
+    .closing-content p {
       font-size: 13px;
       color: #666;
       line-height: 1.7;
       margin-bottom: 20px;
+    }
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #2ea862 0%, #23804b 100%);
+      color: white;
+      padding: 12px 30px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 15px;
     }
     .footer-info {
       margin-top: 25px;
@@ -263,6 +307,12 @@
     }
     
     @media print {
+      .page {
+        page-break-after: always;
+      }
+      .page:last-child {
+        page-break-after: auto;
+      }
       .description-section h2,
       .amenities-section h2,
       .specifications-section h2,
@@ -273,7 +323,16 @@
   </style>
 </head>
 <body>
-  <div class="content-wrapper">
+  <!-- PAGE 1: HERO + GALLERY -->
+  <div class="page">
+    <div class="page-logo">
+      <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
+        <img src="<%= logoUrl %>" alt="Sweet Home" />
+      <% } else { %>
+        <img src="<%= baseUrl %>/images/Sweet%20Home%20Logo.png" alt="Sweet Home" />
+      <% } %>
+    </div>
+    
     <div class="page-hero">
       <h1><%= project.title %></h1>
       <div class="location">
@@ -289,7 +348,8 @@
         <h2><%= typeof t !== 'undefined' ? t('common.pdf.gallery', 'Gallery') : 'Gallery' %></h2>
         <div class="gallery-grid">
           <% 
-            project.photos.forEach(photo => { 
+            const photosToShow = project.photos.slice(0, 4);
+            photosToShow.forEach(photo => { 
               const photoUrl = photo.startsWith('http') ? photo : `${baseUrl}${photo}`;
           %>
             <img src="<%= photoUrl %>" alt="<%= project.title %>" class="gallery-item" onerror="this.style.display='none';" />
@@ -297,6 +357,42 @@
         </div>
       </div>
     <% } %>
+  </div>
+
+  <!-- PAGE 2: GALLERY ONLY (if more than 4 images) -->
+  <% if (project.photos && project.photos.length > 4) { %>
+    <div class="page gallery-page">
+      <div class="page-logo">
+        <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
+          <img src="<%= logoUrl %>" alt="Sweet Home" />
+        <% } else { %>
+          <img src="<%= baseUrl %>/images/Sweet%20Home%20Logo.png" alt="Sweet Home" />
+        <% } %>
+      </div>
+      
+      <div class="gallery-section">
+        <h2><%= typeof t !== 'undefined' ? t('common.pdf.gallery', 'Gallery') : 'Gallery' %></h2>
+        <div class="gallery-grid">
+          <% 
+            project.photos.slice(4, 13).forEach(photo => { 
+              const photoUrl = photo.startsWith('http') ? photo : `${baseUrl}${photo}`;
+          %>
+            <img src="<%= photoUrl %>" alt="<%= project.title %>" class="gallery-item" onerror="this.style.display='none';" />
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- PAGE 3: INFO SECTION -->
+  <div class="page info-page">
+    <div class="page-logo">
+      <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
+        <img src="<%= logoUrl %>" alt="Sweet Home" />
+      <% } else { %>
+        <img src="<%= baseUrl %>/images/Sweet%20Home%20Logo.png" alt="Sweet Home" />
+      <% } %>
+    </div>
 
     <div class="info-grid">
       <% if (project.total_units) { %>
@@ -410,7 +506,7 @@
       <div class="properties-section">
         <h2><%= typeof t !== 'undefined' ? t('common.pdf.propertiesInProject', 'Properties in this Project') : 'Properties in this Project' %></h2>
         <div class="properties-grid">
-          <% project.properties.forEach(property => { %>
+          <% project.properties.slice(0, 4).forEach(property => { %>
             <div class="property-item">
               <% if (property.photos && property.photos.length > 0) { %>
                 <% const photoUrl = property.photos[0].startsWith('http') ? property.photos[0] : `${baseUrl}${property.photos[0]}`; %>
@@ -442,8 +538,19 @@
         </div>
       </div>
     <% } %>
+  </div>
 
-    <div class="closing-section">
+  <!-- PAGE 4: CLOSING -->
+  <div class="page closing-page">
+    <div class="page-logo">
+      <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
+        <img src="<%= logoUrl %>" alt="Sweet Home" />
+      <% } else { %>
+        <img src="<%= baseUrl %>/images/Sweet%20Home%20Logo.png" alt="Sweet Home" />
+      <% } %>
+    </div>
+    
+    <div class="closing-content">
       <div class="closing-logo">
         <% if (typeof logoUrl !== 'undefined' && logoUrl) { %>
           <img src="<%= logoUrl %>" alt="Sweet Home" />
