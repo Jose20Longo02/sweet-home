@@ -83,7 +83,13 @@ exports.generatePropertyPDF = async (req, res, next) => {
     console.log('[PDF] Launching Puppeteer...');
     browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-web-security',
+        '--disable-features=IsolateOrigins,site-per-process'
+      ]
     });
     console.log('[PDF] Browser launched successfully');
     const page = await browser.newPage();
@@ -91,12 +97,31 @@ exports.generatePropertyPDF = async (req, res, next) => {
     // Set a longer timeout for page operations
     page.setDefaultTimeout(30000);
     
+    // Disable CSP and other security features for PDF generation
+    await page.setBypassCSP(true);
+    
+    // Block unnecessary resources to speed up rendering
+    await page.setRequestInterception(true);
+    page.on('request', (req) => {
+      const resourceType = req.resourceType();
+      const url = req.url();
+      // Block scripts, stylesheets from external sources (we only need images)
+      if (resourceType === 'script' && !url.startsWith('data:')) {
+        req.abort();
+      } else if (resourceType === 'stylesheet' && url.includes('unpkg.com')) {
+        req.abort();
+      } else if (resourceType === 'font') {
+        req.abort();
+      } else {
+        req.continue();
+      }
+    });
+    
     // Set content with full base URL for images
     // Use 'domcontentloaded' instead of 'networkidle0' to avoid hanging on slow images
     console.log('[PDF] Setting page content...');
     await page.setContent(html, {
-      waitUntil: 'domcontentloaded',
-      baseURL: baseUrl
+      waitUntil: 'domcontentloaded'
     });
     
     // Wait a bit for images to load, but don't fail if some don't
@@ -221,18 +246,43 @@ exports.generateProjectPDF = async (req, res, next) => {
     console.log('[PDF] Launching Puppeteer...');
     browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-web-security',
+        '--disable-features=IsolateOrigins,site-per-process'
+      ]
     });
-    console.log('[PDF] Browser launched, creating page...');
+    console.log('[PDF] Browser launched successfully');
     const page = await browser.newPage();
     
     // Set a longer timeout for page operations
     page.setDefaultTimeout(30000);
     
+    // Disable CSP and other security features for PDF generation
+    await page.setBypassCSP(true);
+    
+    // Block unnecessary resources to speed up rendering
+    await page.setRequestInterception(true);
+    page.on('request', (req) => {
+      const resourceType = req.resourceType();
+      const url = req.url();
+      // Block scripts, stylesheets from external sources (we only need images)
+      if (resourceType === 'script' && !url.startsWith('data:')) {
+        req.abort();
+      } else if (resourceType === 'stylesheet' && url.includes('unpkg.com')) {
+        req.abort();
+      } else if (resourceType === 'font') {
+        req.abort();
+      } else {
+        req.continue();
+      }
+    });
+    
     console.log('[PDF] Setting page content...');
     await page.setContent(html, {
-      waitUntil: 'domcontentloaded',
-      baseURL: baseUrl
+      waitUntil: 'domcontentloaded'
     });
     
     // Wait a bit for images to load, but don't fail if some don't
