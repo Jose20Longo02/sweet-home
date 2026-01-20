@@ -84,14 +84,18 @@ exports.generatePropertyPDF = async (req, res, next) => {
     const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     console.log('[PDF] Base URL:', baseUrl);
     
-    // Get logo URL - check if it's in Digital Ocean Spaces, otherwise use server URL
-    let logoUrl = `${baseUrl}/images/Sweet%20Home%20Logo.png`;
+    // Get logo URL - use Digital Ocean Spaces CDN URL directly
+    // The logo is at: https://sweet-home-spaces.fra1.cdn.digitaloceanspaces.com/Sweet%20Home%20Logo.png
+    let logoUrl = 'https://sweet-home-spaces.fra1.cdn.digitaloceanspaces.com/Sweet%20Home%20Logo.png';
     if (process.env.DO_SPACES_CDN_ENDPOINT) {
       const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
-      const cdnBase = cdn.startsWith('http') ? cdn : `https://${cdn}`;
+      let cdnBase = cdn.startsWith('http') ? cdn : `https://${cdn}`;
+      // Remove trailing slash if present
+      cdnBase = cdnBase.replace(/\/$/, '');
       // Logo is in the root of the Spaces bucket
       logoUrl = `${cdnBase}/Sweet%20Home%20Logo.png`;
     }
+    console.log('[PDF] Logo URL:', logoUrl);
     
     // Render HTML template
     console.log('[PDF] Rendering HTML template...');
@@ -210,7 +214,7 @@ exports.generatePropertyPDF = async (req, res, next) => {
       displayHeaderFooter: true,
       headerTemplate: `
         <div style="position: absolute; top: 0; right: 15mm; width: auto; height: auto; padding: 12mm 0;">
-          <img src="${logoUrl}" alt="Sweet Home" style="max-height: 60px; width: auto; display: block;" onerror="this.style.display='none';" />
+          <img src="${logoUrl}" alt="Sweet Home" style="max-height: 60px; width: auto; display: block;" />
         </div>
       `,
       footerTemplate: '<div></div>',
@@ -343,14 +347,18 @@ exports.generateProjectPDF = async (req, res, next) => {
     const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     console.log('[PDF] Base URL:', baseUrl);
     
-    // Get logo URL - check if it's in Digital Ocean Spaces, otherwise use server URL
-    let logoUrl = `${baseUrl}/images/Sweet%20Home%20Logo.png`;
+    // Get logo URL - use Digital Ocean Spaces CDN URL directly
+    // The logo is at: https://sweet-home-spaces.fra1.cdn.digitaloceanspaces.com/Sweet%20Home%20Logo.png
+    let logoUrl = 'https://sweet-home-spaces.fra1.cdn.digitaloceanspaces.com/Sweet%20Home%20Logo.png';
     if (process.env.DO_SPACES_CDN_ENDPOINT) {
       const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
-      const cdnBase = cdn.startsWith('http') ? cdn : `https://${cdn}`;
+      let cdnBase = cdn.startsWith('http') ? cdn : `https://${cdn}`;
+      // Remove trailing slash if present
+      cdnBase = cdnBase.replace(/\/$/, '');
       // Logo is in the root of the Spaces bucket
       logoUrl = `${cdnBase}/Sweet%20Home%20Logo.png`;
     }
+    console.log('[PDF] Logo URL:', logoUrl);
     
     // Render HTML template
     console.log('[PDF] Rendering HTML template...');
@@ -475,7 +483,7 @@ exports.generateProjectPDF = async (req, res, next) => {
       displayHeaderFooter: true,
       headerTemplate: `
         <div style="position: absolute; top: 0; right: 15mm; width: auto; height: auto; padding: 12mm 0;">
-          <img src="${logoUrl}" alt="Sweet Home" style="max-height: 60px; width: auto; display: block;" onerror="this.style.display='none';" />
+          <img src="${logoUrl}" alt="Sweet Home" style="max-height: 60px; width: auto; display: block;" />
         </div>
       `,
       footerTemplate: '<div></div>',
