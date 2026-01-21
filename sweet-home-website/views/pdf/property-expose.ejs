@@ -172,6 +172,33 @@
       margin-right: 8px;
     }
     
+    .floorplan-section {
+      page-break-before: always;
+      page-break-after: always;
+      min-height: calc(100vh - 35mm);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      margin-top: -35mm;
+    }
+    .floorplan-section h2 {
+      font-size: 20px;
+      color: #2ea862;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .floorplan-section img {
+      max-width: 100%;
+      max-height: calc(100vh - 100mm);
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
     .closing-page {
       min-height: calc(100vh - 35mm);
       height: calc(100vh - 35mm);
@@ -321,6 +348,19 @@
             <img src="<%= photoUrl %>" alt="<%= property.title %>" class="gallery-item" onerror="this.style.display='none';" />
           <% }); %>
         </div>
+      </div>
+    <% } %>
+
+    <% 
+      const isApartment = property.type === 'Apartment';
+      const planUrl = isApartment ? property.floorplan_url : property.plan_photo_url;
+      const planLabel = isApartment ? (typeof t !== 'undefined' ? t('properties.detail.viewFloorplan', 'Floorplan') : 'Floorplan') : (typeof t !== 'undefined' ? t('properties.detail.viewPlan', 'Plan') : 'Plan');
+    %>
+    <% if (planUrl) { %>
+      <div class="floorplan-section">
+        <h2><%= planLabel %></h2>
+        <% const planImageUrl = planUrl.startsWith('http') ? planUrl : `${baseUrl}${planUrl}`; %>
+        <img src="<%= planImageUrl %>" alt="<%= planLabel %>" onerror="this.style.display='none';" />
       </div>
     <% } %>
 
