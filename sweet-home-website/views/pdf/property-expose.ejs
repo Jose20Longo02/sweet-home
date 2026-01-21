@@ -346,7 +346,7 @@
     <% 
       const isApartment = property.type === 'Apartment';
       const planUrl = isApartment ? property.floorplan_url : property.plan_photo_url;
-      const planLabel = isApartment ? (typeof t !== 'undefined' ? t('properties.detail.viewFloorplan', 'Floorplan') : 'Floorplan') : (typeof t !== 'undefined' ? t('properties.detail.viewPlan', 'Plan') : 'Plan');
+      const planLabel = isApartment ? 'Floorplan' : 'Plan';
     %>
     <% if (planUrl) { %>
       <div class="floorplan-section">
