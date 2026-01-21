@@ -68,8 +68,6 @@
     }
     .gallery-section {
       margin: 20px 0;
-      page-break-inside: avoid;
-      break-inside: avoid;
     }
     .gallery-section h2 {
       font-size: 18px;
@@ -89,6 +87,8 @@
       object-fit: cover;
       border-radius: 6px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
     
     .info-grid {
@@ -327,20 +327,6 @@
       <% } %>
     </div>
 
-    <% if (project.photos && project.photos.length > 0) { %>
-      <div class="gallery-section">
-        <h2><%= typeof t !== 'undefined' ? t('common.pdf.gallery', 'Gallery') : 'Gallery' %></h2>
-        <div class="gallery-grid">
-          <% 
-            project.photos.forEach(photo => { 
-              const photoUrl = photo.startsWith('http') ? photo : `${baseUrl}${photo}`;
-          %>
-            <img src="<%= photoUrl %>" alt="<%= project.title %>" class="gallery-item" onerror="this.style.display='none';" />
-          <% }); %>
-        </div>
-      </div>
-    <% } %>
-
     <div class="info-grid">
       <% if (project.total_units) { %>
         <div class="info-card">
@@ -481,6 +467,20 @@
                 </div>
               </div>
             </div>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+
+    <% if (project.photos && project.photos.length > 0) { %>
+      <div class="gallery-section">
+        <h2><%= typeof t !== 'undefined' ? t('common.pdf.gallery', 'Gallery') : 'Gallery' %></h2>
+        <div class="gallery-grid">
+          <% 
+            project.photos.forEach(photo => { 
+              const photoUrl = photo.startsWith('http') ? photo : `${baseUrl}${photo}`;
+          %>
+            <img src="<%= photoUrl %>" alt="<%= project.title %>" class="gallery-item" onerror="this.style.display='none';" />
           <% }); %>
         </div>
       </div>
