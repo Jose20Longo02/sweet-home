@@ -68,8 +68,6 @@
     }
     .gallery-section {
       margin: 25px 0;
-      page-break-inside: avoid;
-      break-inside: avoid;
     }
     .gallery-section h2 {
       font-size: 20px;
@@ -79,11 +77,16 @@
       text-align: center;
       letter-spacing: 0.5px;
       text-transform: uppercase;
+      page-break-after: avoid;
+      orphans: 2;
+      widows: 2;
     }
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 15px;
+      orphans: 2;
+      widows: 2;
     }
     .gallery-item {
       width: 100%;
