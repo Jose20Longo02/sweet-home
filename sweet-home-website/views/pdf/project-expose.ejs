@@ -474,7 +474,8 @@
         <h2><%= typeof t !== 'undefined' ? t('common.pdf.gallery', 'Gallery') : 'Gallery' %></h2>
         <div class="gallery-grid">
           <% 
-            project.photos.forEach(photo => { 
+            const galleryPhotos = project.photos.slice(0, 6);
+            galleryPhotos.forEach(photo => { 
               const photoUrl = photo.startsWith('http') ? photo : `${baseUrl}${photo}`;
           %>
             <img src="<%= photoUrl %>" alt="<%= project.title %>" class="gallery-item" onerror="this.style.display='none';" />
