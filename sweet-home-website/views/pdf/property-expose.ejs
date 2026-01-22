@@ -174,31 +174,32 @@
     }
     
     .floorplan-section {
-      page-break-before: always;
       page-break-after: always;
-      min-height: calc(100vh - 35mm);
+      margin: 20px 0;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       padding: 20px;
-      margin-top: -35mm;
     }
     .floorplan-section h2 {
       font-size: 20px;
       color: #2ea862;
       font-weight: 600;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       text-align: center;
+      page-break-after: avoid;
     }
     .floorplan-section img {
       max-width: 100%;
-      max-height: calc(100vh - 100mm);
+      max-height: 500px;
       width: auto;
       height: auto;
       object-fit: contain;
       border-radius: 6px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
     .closing-page {
       min-height: calc(100vh - 35mm);
