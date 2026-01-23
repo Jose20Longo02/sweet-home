@@ -582,7 +582,7 @@ class PropertyDetailPage {
     if (!similarContainer) return;
 
     similarContainer.innerHTML = properties.map(property => `
-      <div class="similar-property" onclick="window.location.href='/properties/${property.slug}'">
+      <a href="/properties/${property.slug}" class="similar-property">
         <div class="similar-property-image">
           <img src="${property.photos && property.photos.length > 0 ? property.photos[0] : '/img/property-placeholder.jpg'}" 
                alt="${property.title}" loading="lazy" decoding="async">
@@ -592,7 +592,7 @@ class PropertyDetailPage {
           <p class="similar-property-location">${property.neighborhood}, ${property.city}</p>
           <p class="similar-property-price">€${Number(property.price || 0).toLocaleString('en-US')}</p>
         </div>
-      </div>
+      </a>
     `).join('');
   }
 
@@ -1188,11 +1188,16 @@ messageStyles.textContent = `
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s;
+    text-decoration: none;
+    color: inherit;
+    pointer-events: auto;
   }
   
   .similar-property:hover {
     background: #e9ecef;
     transform: translateY(-2px);
+    text-decoration: none;
+    color: inherit;
   }
   
   .similar-property-image {
