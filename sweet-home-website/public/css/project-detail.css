@@ -566,6 +566,31 @@
   font-size: var(--font-size-sm);
 }
 
+/* Button styling for related projects - ensure visibility on white background */
+.related-project-content .btn {
+  align-self: flex-start;
+  margin-top: var(--spacing-2);
+}
+
+.related-project-content .btn-outline {
+  background: transparent;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+  font-weight: 500;
+}
+
+.related-project-content .btn-outline:hover {
+  background: var(--primary-color);
+  color: var(--white);
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(46, 168, 98, 0.2);
+}
+
+.related-project-content .btn-outline:active {
+  transform: translateY(0);
+}
+
 /* Call to Action */
 .project-cta {
   background: linear-gradient(135deg, var(--gray-900), var(--gray-800));
