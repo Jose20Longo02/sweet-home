@@ -59,23 +59,41 @@ async function logEvent({ eventType, entityType = null, entityId = null, meta = 
     // Date component ensures unique visits reset daily (same person = 1 visit per day)
     if (!sessionId && req) {
       const ipAddress = getRequestIp(req);
-      const userAgent = req?.get?.('user-agent') || '';
-      if (ipAddress && userAgent) {
-        // Include date so unique visits reset daily
-        const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-        const crypto = require('crypto');
-        const fingerprint = crypto.createHash('sha256')
-          .update(ipAddress + userAgent + today)
-          .digest('hex')
-          .substring(0, 32);
-        sessionId = 'fp_' + fingerprint;
-      }
+      const userAgent = req?.get?.('user-agent') || req?.headers?.['user-agent'] || 'unknown';
+      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      
+      // Always create a fingerprint, even if IP is missing (use 'unknown' as fallback)
+      const crypto = require('crypto');
+      const fingerprintInput = (ipAddress || 'unknown') + (userAgent || 'unknown') + today;
+      const fingerprint = crypto.createHash('sha256')
+        .update(fingerprintInput)
+        .digest('hex')
+        .substring(0, 32);
+      sessionId = 'fp_' + fingerprint;
+    }
+    
+    // If still no sessionId, create a random one as last resort
+    if (!sessionId) {
+      const crypto = require('crypto');
+      sessionId = 'rand_' + crypto.randomBytes(16).toString('hex');
     }
     
     const userId = req?.session?.user?.id || null;
     const ipAddress = getRequestIp(req);
     const userAgent = req?.get?.('user-agent') || null;
     const referrer = req?.get?.('referer') || null;
+    
+    // Debug logging in development
+    if (process.env.NODE_ENV !== 'production' && eventType === 'page_view') {
+      console.log('[analytics] Logging page_view:', {
+        sessionId: sessionId ? sessionId.substring(0, 20) + '...' : 'NULL',
+        hasSession: !!req?.session,
+        sessionID: req?.sessionID ? req.sessionID.substring(0, 20) + '...' : 'NULL',
+        ipAddress: ipAddress || 'NULL',
+        userAgent: userAgent ? userAgent.substring(0, 50) + '...' : 'NULL'
+      });
+    }
+    
     await query(
       `INSERT INTO analytics_events (event_type, entity_type, entity_id, user_id, session_id, ip_address, user_agent, referrer, meta)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,

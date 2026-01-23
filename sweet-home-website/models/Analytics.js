@@ -18,7 +18,14 @@ async function getSummary({ startDate, endDate }) {
         COUNT(*) FILTER (WHERE event_type = 'property_view') AS property_views,
         COUNT(*) FILTER (WHERE event_type = 'project_view') AS project_views,
         COUNT(*) FILTER (WHERE event_type = 'contact_form_submit') AS form_submissions,
-        COUNT(DISTINCT session_id) FILTER (WHERE event_type = 'page_view' AND session_id IS NOT NULL) AS unique_visits
+        (
+          SELECT COUNT(DISTINCT session_id)
+          FROM analytics_events
+          WHERE event_type = 'page_view'
+            AND session_id IS NOT NULL
+            AND created_at >= $1::date
+            AND created_at < ($2::date + INTERVAL '1 day')
+        ) AS unique_visits
       FROM analytics_events
       WHERE created_at >= $1::date
         AND created_at < ($2::date + INTERVAL '1 day')
@@ -40,7 +47,14 @@ async function getTimeSeries({ startDate, endDate }) {
         COUNT(e.*) FILTER (WHERE e.event_type = 'property_view') AS property_views,
         COUNT(e.*) FILTER (WHERE e.event_type = 'project_view') AS project_views,
         COUNT(e.*) FILTER (WHERE e.event_type = 'contact_form_submit') AS form_submissions,
-        COUNT(DISTINCT e.session_id) FILTER (WHERE e.event_type = 'page_view' AND e.session_id IS NOT NULL) AS unique_visits
+        (
+          SELECT COUNT(DISTINCT session_id)
+          FROM analytics_events e2
+          WHERE e2.event_type = 'page_view'
+            AND e2.session_id IS NOT NULL
+            AND e2.created_at >= ds.day
+            AND e2.created_at < ds.day + INTERVAL '1 day'
+        ) AS unique_visits
       FROM date_series ds
       LEFT JOIN analytics_events e
         ON e.created_at >= ds.day
