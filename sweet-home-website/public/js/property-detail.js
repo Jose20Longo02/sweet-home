@@ -404,7 +404,7 @@ class PropertyDetailPage {
         overlay.className = 'video-play-overlay';
         overlay.type = 'button';
         overlay.setAttribute('aria-label', 'Play video');
-        overlay.onclick = playMainVideo;
+        overlay.addEventListener('click', playMainVideo);
         overlay.innerHTML = '<svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="rgba(0,0,0,0.6)" stroke="white" stroke-width="2" /><polygon points="26,20 26,44 46,32" fill="white" /></svg>';
         mainContainer.appendChild(overlay);
       }
@@ -430,7 +430,7 @@ class PropertyDetailPage {
           const newImg = document.createElement('img');
           newImg.id = 'mainPhotoImg';
           newImg.alt = document.querySelector('.property-title')?.textContent || 'Photo';
-          newImg.onclick = openLightbox;
+          newImg.addEventListener('click', openLightbox);
           newImg.decoding = 'async';
           pictureEl.parentElement.replaceChild(newImg, pictureEl);
           img = newImg;
@@ -440,7 +440,7 @@ class PropertyDetailPage {
         img = document.createElement('img');
         img.id = 'mainPhotoImg';
         img.alt = document.querySelector('.property-title')?.textContent || 'Photo';
-        img.onclick = openLightbox;
+        img.addEventListener('click', openLightbox);
         img.decoding = 'async';
         mainContainer.insertBefore(img, mainContainer.firstChild);
       }
