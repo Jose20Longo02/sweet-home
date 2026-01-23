@@ -252,7 +252,11 @@ app.use((req, res, next) => {
   const hasExtension = /\.[a-z0-9]{2,8}$/i.test(req.path);
   if (isGet && !isApi && !hasExtension) {
     // Ensure session is initialized for tracking (needed when saveUninitialized: false)
-    if (req.session && !req.session.analyticsInitialized) {
+    // Setting a property forces session creation and ensures sessionID exists
+    if (!req.session) {
+      req.session = {};
+    }
+    if (!req.session.analyticsInitialized) {
       req.session.analyticsInitialized = true;
     }
     res.on('finish', () => {

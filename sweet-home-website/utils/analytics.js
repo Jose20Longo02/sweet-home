@@ -50,7 +50,16 @@ async function logEvent({ eventType, entityType = null, entityId = null, meta = 
     return;
   }
   try {
-    const sessionId = req?.sessionID || null;
+    // Get session ID - try multiple methods to ensure we capture it
+    let sessionId = req?.sessionID || req?.session?.id || null;
+    // If session exists but ID is not set, ensure session is initialized
+    if (req?.session && !sessionId) {
+      // Force session creation by touching it (if saveUninitialized: false, this ensures session is created)
+      if (!req.session._tracking) {
+        req.session._tracking = true;
+      }
+      sessionId = req.sessionID || null;
+    }
     const userId = req?.session?.user?.id || null;
     const ipAddress = getRequestIp(req);
     const userAgent = req?.get?.('user-agent') || null;
