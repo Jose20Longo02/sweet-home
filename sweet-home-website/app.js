@@ -251,6 +251,10 @@ app.use((req, res, next) => {
   const isApi = req.path.startsWith('/api/');
   const hasExtension = /\.[a-z0-9]{2,8}$/i.test(req.path);
   if (isGet && !isApi && !hasExtension) {
+    // Ensure session is initialized for tracking (needed when saveUninitialized: false)
+    if (req.session && !req.session.analyticsInitialized) {
+      req.session.analyticsInitialized = true;
+    }
     res.on('finish', () => {
       const contentType = res.get('Content-Type') || '';
       if (res.statusCode < 400 && contentType.includes('text/html')) {
