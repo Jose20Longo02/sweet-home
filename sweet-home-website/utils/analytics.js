@@ -94,13 +94,16 @@ async function logEvent({ eventType, entityType = null, entityId = null, meta = 
       });
     }
     
+    // For page_view events, entity_id should be NULL, but if DB has NOT NULL constraint, use 0
+    const finalEntityId = entityId !== null && entityId !== undefined ? entityId : null;
+    
     await query(
       `INSERT INTO analytics_events (event_type, entity_type, entity_id, user_id, session_id, ip_address, user_agent, referrer, meta)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
       [
         eventType,
-        entityType,
-        entityId || null,
+        entityType || null,
+        finalEntityId,
         userId,
         sessionId,
         ipAddress,

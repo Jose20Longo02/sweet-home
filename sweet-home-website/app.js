@@ -250,7 +250,10 @@ app.use((req, res, next) => {
   const isGet = req.method === 'GET';
   const isApi = req.path.startsWith('/api/');
   const hasExtension = /\.[a-z0-9]{2,8}$/i.test(req.path);
-  if (isGet && !isApi && !hasExtension) {
+  // Explicitly exclude admin/superadmin pages from analytics
+  const isAdminPage = req.path && /^\/(admin|superadmin)/.test(req.path);
+  
+  if (isGet && !isApi && !hasExtension && !isAdminPage) {
     // Ensure session is initialized for tracking (needed when saveUninitialized: false)
     // Setting a property forces session creation and ensures sessionID exists
     if (req.session) {
