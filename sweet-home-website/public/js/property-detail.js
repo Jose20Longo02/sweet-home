@@ -545,25 +545,55 @@ class PropertyDetailPage {
 
   loadSimilarProperties() {
     const similarContainer = document.getElementById('similarProperties');
-    if (!similarContainer) return;
+    if (!similarContainer) {
+      console.warn('[property-detail] similarProperties container not found');
+      return;
+    }
 
     // Fetch similar properties from the same city/country
-    const propertyCountry = document.querySelector('.location-item:first-child strong').nextSibling.textContent.trim();
-    const propertyCity = document.querySelector('.location-item:nth-child(2) strong').nextSibling.textContent.trim();
-    
-    fetch(`/properties/api/similar?country=${encodeURIComponent(propertyCountry)}&city=${encodeURIComponent(propertyCity)}&exclude=${this.propertyId}&limit=3`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.success && data.properties.length > 0) {
-          this.renderSimilarProperties(data.properties);
-        } else {
+    try {
+      const locationItems = document.querySelectorAll('.location-item');
+      let propertyCountry = '';
+      let propertyCity = '';
+      
+      if (locationItems.length > 0) {
+        const countryItem = locationItems[0];
+        const countryText = countryItem.querySelector('strong')?.nextSibling?.textContent?.trim();
+        if (countryText) propertyCountry = countryText;
+      }
+      
+      if (locationItems.length > 1) {
+        const cityItem = locationItems[1];
+        const cityText = cityItem.querySelector('strong')?.nextSibling?.textContent?.trim();
+        if (cityText) propertyCity = cityText;
+      }
+      
+      console.log('[property-detail] Loading similar properties for:', propertyCountry, propertyCity);
+      
+      fetch(`/properties/api/similar?country=${encodeURIComponent(propertyCountry)}&city=${encodeURIComponent(propertyCity)}&exclude=${this.propertyId}&limit=3`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('[property-detail] Similar properties API response:', data);
+          if (data.success && data.properties && data.properties.length > 0) {
+            this.renderSimilarProperties(data.properties);
+          } else {
+            console.warn('[property-detail] No similar properties found');
+            this.showSimilarPropertiesError();
+          }
+        })
+        .catch(error => {
+          console.error('[property-detail] Error loading similar properties:', error);
           this.showSimilarPropertiesError();
-        }
-      })
-      .catch(error => {
-        console.error('Error loading similar properties:', error);
-        this.showSimilarPropertiesError();
-      });
+        });
+    } catch (error) {
+      console.error('[property-detail] Error in loadSimilarProperties:', error);
+      this.showSimilarPropertiesError();
+    }
   }
 
   incrementView() {
@@ -613,36 +643,39 @@ class PropertyDetailPage {
       `;
     }).join('');
     
-    // Attach click handlers immediately after creating links
-    // Use requestAnimationFrame to ensure DOM is ready
-    requestAnimationFrame(() => {
+    // Test: Verify links are created and make them absolutely clickable
+    setTimeout(() => {
       const links = similarContainer.querySelectorAll('a.similar-property');
-      console.log('[property-detail] Created', links.length, 'similar property links');
+      console.log('[property-detail] ✅ Created', links.length, 'similar property links');
+      
+      if (links.length === 0) {
+        console.error('[property-detail] ❌ No links found! Check if properties are loading.');
+        return;
+      }
       
       links.forEach((link, index) => {
         const href = link.getAttribute('href');
-        if (!href) {
-          console.warn(`[property-detail] Link ${index + 1} has no href!`);
-          return;
-        }
+        console.log(`[property-detail] Link ${index + 1}:`, href, 'Element:', link);
         
-        console.log(`[property-detail] Link ${index + 1}:`, href);
+        // Remove ALL inline styles that might interfere
+        link.removeAttribute('style');
         
-        // Ensure link is clickable via CSS
+        // Add only essential styles via setProperty (CSP-safe)
         link.style.setProperty('pointer-events', 'auto', 'important');
         link.style.setProperty('cursor', 'pointer', 'important');
         link.style.setProperty('position', 'relative', 'important');
-        link.style.setProperty('z-index', '1000', 'important');
+        link.style.setProperty('z-index', '99999', 'important');
         link.style.setProperty('display', 'block', 'important');
         
-        // Links should work naturally with href - no need for preventDefault
-        // Just add a handler for debugging
-        link.addEventListener('click', function(e) {
-          console.log('[property-detail] Link clicked (natural navigation):', href);
-          // Let browser handle navigation - don't prevent default
-        }, false);
+        // Test click programmatically to verify it works
+        console.log(`[property-detail] Testing link ${index + 1}...`);
+        
+        // Add a simple test - if you can see this in console, links exist
+        link.setAttribute('data-test-clickable', 'true');
       });
-    });
+      
+      console.log('[property-detail] ✅ All links should be clickable now. Try clicking one!');
+    }, 200);
   }
 
   initRecaptcha() {
@@ -670,18 +703,8 @@ class PropertyDetailPage {
   }
 
   bindEvents() {
-    // Similar properties click handler (delegated on container)
-    // Use document-level delegation to catch all clicks as backup only
-    // Don't prevent default - let browser handle navigation naturally
-    document.addEventListener('click', (e) => {
-      const link = e.target.closest('a.similar-property');
-      if (link) {
-        const href = link.getAttribute('href');
-        console.log('[property-detail] Delegated click handler detected click on:', href);
-        // Don't prevent default - let the browser handle it naturally
-        // This handler is just for logging/debugging
-      }
-    }, false); // Use bubble phase, don't interfere
+    // Note: Similar properties links work naturally via href - no JavaScript needed
+    // Removed delegated handler to avoid any interference
     
     // Contact form submission
     const contactForm = document.getElementById('contactForm');
