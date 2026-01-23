@@ -665,7 +665,8 @@ class PropertyDetailPage {
         link.style.setProperty('cursor', 'pointer', 'important');
         link.style.setProperty('position', 'relative', 'important');
         link.style.setProperty('z-index', '99999', 'important');
-        link.style.setProperty('display', 'block', 'important');
+        link.style.setProperty('display', 'flex', 'important');
+        link.style.setProperty('flex-direction', 'row', 'important');
         
         // Test click programmatically to verify it works
         console.log(`[property-detail] Testing link ${index + 1}...`);

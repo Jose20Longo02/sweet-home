@@ -1007,6 +1007,8 @@
 
 .similar-property {
   display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start;
   gap: 1rem;
   padding: 1rem;
   background: var(--gray-50);
