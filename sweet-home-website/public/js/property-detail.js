@@ -636,6 +636,22 @@ class PropertyDetailPage {
   }
 
   bindEvents() {
+    // Similar properties click handler (delegated on container)
+    const similarContainer = document.getElementById('similarProperties');
+    if (similarContainer) {
+      similarContainer.addEventListener('click', (e) => {
+        const link = e.target.closest('a.similar-property');
+        if (link) {
+          e.preventDefault();
+          e.stopPropagation();
+          const href = link.getAttribute('href');
+          if (href) {
+            window.location.href = href;
+          }
+        }
+      }, true); // Use capture phase
+    }
+    
     // Contact form submission
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
