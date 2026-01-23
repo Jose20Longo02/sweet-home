@@ -253,23 +253,25 @@ app.use((req, res, next) => {
   if (isGet && !isApi && !hasExtension) {
     // Ensure session is initialized for tracking (needed when saveUninitialized: false)
     // Setting a property forces session creation and ensures sessionID exists
-    if (!req.session) {
-      req.session = {};
-    }
-    if (!req.session.analyticsInitialized) {
-      req.session.analyticsInitialized = true;
+    if (req.session) {
+      if (!req.session.analyticsInitialized) {
+        req.session.analyticsInitialized = true;
+      }
     }
     res.on('finish', () => {
       const contentType = res.get('Content-Type') || '';
       if (res.statusCode < 400 && contentType.includes('text/html')) {
-        logEvent({
-          eventType: 'page_view',
-          entityType: 'page',
-          meta: {
-            path: req.path,
-            query: Object.keys(req.query || {}).length ? req.query : undefined
-          },
-          req
+        // Use setImmediate to ensure session is saved before logging
+        setImmediate(() => {
+          logEvent({
+            eventType: 'page_view',
+            entityType: 'page',
+            meta: {
+              path: req.path,
+              query: Object.keys(req.query || {}).length ? req.query : undefined
+            },
+            req
+          });
         });
       }
     });

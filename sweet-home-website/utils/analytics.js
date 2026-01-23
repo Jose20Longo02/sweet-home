@@ -50,16 +50,28 @@ async function logEvent({ eventType, entityType = null, entityId = null, meta = 
     return;
   }
   try {
-    // Get session ID - try multiple methods to ensure we capture it
-    let sessionId = req?.sessionID || req?.session?.id || null;
-    // If session exists but ID is not set, ensure session is initialized
-    if (req?.session && !sessionId) {
-      // Force session creation by touching it (if saveUninitialized: false, this ensures session is created)
-      if (!req.session._tracking) {
-        req.session._tracking = true;
+    // Get session ID - primary method
+    let sessionId = req?.sessionID || null;
+    
+    // Fallback: If no session ID available (common with saveUninitialized: false),
+    // create a fingerprint based on IP + User-Agent + Date for anonymous tracking
+    // This ensures we can still track unique visits even when sessions aren't created
+    // Date component ensures unique visits reset daily (same person = 1 visit per day)
+    if (!sessionId && req) {
+      const ipAddress = getRequestIp(req);
+      const userAgent = req?.get?.('user-agent') || '';
+      if (ipAddress && userAgent) {
+        // Include date so unique visits reset daily
+        const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        const crypto = require('crypto');
+        const fingerprint = crypto.createHash('sha256')
+          .update(ipAddress + userAgent + today)
+          .digest('hex')
+          .substring(0, 32);
+        sessionId = 'fp_' + fingerprint;
       }
-      sessionId = req.sessionID || null;
     }
+    
     const userId = req?.session?.user?.id || null;
     const ipAddress = getRequestIp(req);
     const userAgent = req?.get?.('user-agent') || null;
