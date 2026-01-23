@@ -581,19 +581,34 @@ class PropertyDetailPage {
     const similarContainer = document.getElementById('similarProperties');
     if (!similarContainer) return;
 
-    similarContainer.innerHTML = properties.map(property => `
-      <a href="/properties/${property.slug}" class="similar-property">
-        <div class="similar-property-image">
-          <img src="${property.photos && property.photos.length > 0 ? property.photos[0] : '/img/property-placeholder.jpg'}" 
-               alt="${property.title}" loading="lazy" decoding="async">
-        </div>
-        <div class="similar-property-content">
-          <h4>${property.title}</h4>
-          <p class="similar-property-location">${property.neighborhood}, ${property.city}</p>
-          <p class="similar-property-price">€${Number(property.price || 0).toLocaleString('en-US')}</p>
-        </div>
-      </a>
-    `).join('');
+    // Clear any existing content
+    similarContainer.innerHTML = properties.map(property => {
+      // Escape the slug to prevent XSS
+      const slug = String(property.slug || '').replace(/[<>"']/g, '');
+      const title = String(property.title || '').replace(/[<>]/g, '');
+      const neighborhood = String(property.neighborhood || '').replace(/[<>]/g, '');
+      const city = String(property.city || '').replace(/[<>]/g, '');
+      const photo = property.photos && property.photos.length > 0 
+        ? String(property.photos[0]).replace(/[<>"]/g, '')
+        : '/img/property-placeholder.jpg';
+      const price = Number(property.price || 0).toLocaleString('en-US');
+      
+      return `
+        <a href="/properties/${slug}" class="similar-property" data-slug="${slug}">
+          <div class="similar-property-image">
+            <img src="${photo}" 
+                 alt="${title}" 
+                 loading="lazy" 
+                 decoding="async">
+          </div>
+          <div class="similar-property-content">
+            <h4>${title}</h4>
+            <p class="similar-property-location">${neighborhood}, ${city}</p>
+            <p class="similar-property-price">€${price}</p>
+          </div>
+        </a>
+      `;
+    }).join('');
   }
 
   initRecaptcha() {
