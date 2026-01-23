@@ -8,7 +8,8 @@ const {
   getAgentPerformance,
   getLocationInsights,
   getTopPages,
-  getRecentLeads
+  getRecentLeads,
+  getCountryBreakdown
 } = require('../models/Analytics');
 
 async function getPendingCount() {
@@ -83,7 +84,8 @@ exports.dashboard = async (req, res, next) => {
       locationInsights,
       topPages,
       recentLeads,
-      pendingCount
+      pendingCount,
+      countryBreakdown
     ] = await Promise.all([
       getSummary({ startDate: dateFrom, endDate: dateTo }),
       getTimeSeries({ startDate: dateFrom, endDate: dateTo }),
@@ -121,7 +123,8 @@ exports.dashboard = async (req, res, next) => {
       getLocationInsights({ startDate: dateFrom, endDate: dateTo }),
       getTopPages({ startDate: dateFrom, endDate: dateTo }),
       getRecentLeads(8),
-      getPendingCount()
+      getPendingCount(),
+      getCountryBreakdown({ startDate: dateFrom, endDate: dateTo, limit: 10 })
     ]);
 
     const normalizedSummary = {
@@ -149,6 +152,7 @@ exports.dashboard = async (req, res, next) => {
       topPages,
       recentLeads,
       pendingCount,
+      countryBreakdown,
       quickRange,
       limit,
       propertyFilters: {

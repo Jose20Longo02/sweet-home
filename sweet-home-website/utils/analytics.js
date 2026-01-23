@@ -1,4 +1,5 @@
 const { query } = require('../config/db');
+const { getCountryFromIp } = require('./geolocation');
 
 function getRequestIp(req) {
   if (!req) return null;
@@ -83,6 +84,9 @@ async function logEvent({ eventType, entityType = null, entityId = null, meta = 
     const userAgent = req?.get?.('user-agent') || null;
     const referrer = req?.get?.('referer') || null;
     
+    // Get country from IP address
+    const country = ipAddress ? getCountryFromIp(ipAddress) : null;
+    
     // Debug logging in development
     if (process.env.NODE_ENV !== 'production' && eventType === 'page_view') {
       console.log('[analytics] Logging page_view:', {
@@ -90,6 +94,7 @@ async function logEvent({ eventType, entityType = null, entityId = null, meta = 
         hasSession: !!req?.session,
         sessionID: req?.sessionID ? req.sessionID.substring(0, 20) + '...' : 'NULL',
         ipAddress: ipAddress || 'NULL',
+        country: country || 'NULL',
         userAgent: userAgent ? userAgent.substring(0, 50) + '...' : 'NULL'
       });
     }
@@ -98,8 +103,8 @@ async function logEvent({ eventType, entityType = null, entityId = null, meta = 
     const finalEntityId = entityId !== null && entityId !== undefined ? entityId : null;
     
     await query(
-      `INSERT INTO analytics_events (event_type, entity_type, entity_id, user_id, session_id, ip_address, user_agent, referrer, meta)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      `INSERT INTO analytics_events (event_type, entity_type, entity_id, user_id, session_id, ip_address, user_agent, referrer, meta, country)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
       [
         eventType,
         entityType || null,
@@ -109,7 +114,8 @@ async function logEvent({ eventType, entityType = null, entityId = null, meta = 
         ipAddress,
         userAgent,
         referrer,
-        meta ? JSON.stringify(meta) : null
+        meta ? JSON.stringify(meta) : null,
+        country
       ]
     );
   } catch (err) {

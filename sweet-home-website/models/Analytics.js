@@ -386,6 +386,29 @@ async function getRecentLeads(limit = 10) {
   return rows;
 }
 
+async function getCountryBreakdown({ startDate, endDate, limit = 10 }) {
+  const { rows } = await query(
+    `
+      SELECT
+        country,
+        COUNT(*) FILTER (WHERE event_type = 'page_view') AS page_views,
+        COUNT(DISTINCT session_id) FILTER (WHERE event_type = 'page_view' AND session_id IS NOT NULL) AS unique_visits,
+        COUNT(*) FILTER (WHERE event_type = 'property_view') AS property_views,
+        COUNT(*) FILTER (WHERE event_type = 'project_view') AS project_views,
+        COUNT(*) FILTER (WHERE event_type = 'contact_form_submit') AS form_submissions
+      FROM analytics_events
+      WHERE created_at >= $1::date
+        AND created_at < ($2::date + INTERVAL '1 day')
+        AND country IS NOT NULL
+      GROUP BY country
+      ORDER BY unique_visits DESC, page_views DESC
+      LIMIT $3
+    `,
+    [startDate, endDate, limit]
+  );
+  return rows;
+}
+
 module.exports = {
   sanitizeDate,
   getSummary,
@@ -396,6 +419,7 @@ module.exports = {
   getLocationInsights,
   getTopPages,
   getRecentLeads,
+  getCountryBreakdown,
   metricColumn
 };
 

@@ -29,11 +29,17 @@ const { query }      = require('./config/db');
 const i18nMiddleware = require('./config/i18n');
 const { logEvent }   = require('./utils/analytics');
 const iconThemes     = require('./config/iconThemes');
+const { initializeGeolocation } = require('./utils/geolocation');
 
 // Sentry removed per request
 
 const app = express();
 connectDB();
+
+// Initialize geolocation database (non-blocking)
+initializeGeolocation().catch(err => {
+  console.warn('[app] Failed to initialize geolocation:', err.message);
+});
 
 // Sentry integration removed
 

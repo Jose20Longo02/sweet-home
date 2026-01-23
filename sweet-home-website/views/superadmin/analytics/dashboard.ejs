@@ -442,6 +442,45 @@
           <% } %>
         </div>
       </section>
+
+      <% if (typeof countryBreakdown !== 'undefined' && countryBreakdown && countryBreakdown.length > 0) { %>
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Visitors by country</h2>
+            <p>Top countries based on unique visits and page views</p>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="analytics-table">
+            <thead>
+              <tr>
+                <th>Country</th>
+                <th class="number">Unique visits</th>
+                <th class="number">Page views</th>
+                <th class="number">Property views</th>
+                <th class="number">Project views</th>
+                <th class="number">Form submissions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% countryBreakdown.forEach(country => { %>
+                <tr>
+                  <td>
+                    <strong><%= country.country || 'Unknown' %></strong>
+                  </td>
+                  <td class="number"><%= (country.unique_visits || 0).toLocaleString() %></td>
+                  <td class="number"><%= (country.page_views || 0).toLocaleString() %></td>
+                  <td class="number"><%= (country.property_views || 0).toLocaleString() %></td>
+                  <td class="number"><%= (country.project_views || 0).toLocaleString() %></td>
+                  <td class="number"><%= (country.form_submissions || 0).toLocaleString() %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <% } %>
     </main>
   </div>
 </div>
