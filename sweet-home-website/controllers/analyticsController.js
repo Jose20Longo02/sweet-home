@@ -128,7 +128,8 @@ exports.dashboard = async (req, res, next) => {
       page_views: Number(summary.page_views || 0),
       property_views: Number(summary.property_views || 0),
       project_views: Number(summary.project_views || 0),
-      form_submissions: Number(summary.form_submissions || 0)
+      form_submissions: Number(summary.form_submissions || 0),
+      unique_visits: Number(summary.unique_visits || 0)
     };
     const fallbackVisits = normalizedSummary.property_views + normalizedSummary.project_views;
     normalizedSummary.total_visits = normalizedSummary.page_views > 0

@@ -93,6 +93,7 @@
     const propertyViews = [];
     const projectViews = [];
     const formSubmissions = [];
+    const uniqueVisits = [];
 
     analyticsTimeSeries.forEach((item) => {
       labels.push(formatDateLabel(item.date));
@@ -100,9 +101,10 @@
       propertyViews.push(Number(item.property_views || 0));
       projectViews.push(Number(item.project_views || 0));
       formSubmissions.push(Number(item.form_submissions || 0));
+      uniqueVisits.push(Number(item.unique_visits || 0));
     });
 
-    return { labels, pageViews, propertyViews, projectViews, formSubmissions };
+    return { labels, pageViews, propertyViews, projectViews, formSubmissions, uniqueVisits };
   }
 
   function initChart() {
@@ -126,7 +128,7 @@
       return;
     }
 
-    const { labels, pageViews, propertyViews, projectViews, formSubmissions } = buildChartSeries();
+    const { labels, pageViews, propertyViews, projectViews, formSubmissions, uniqueVisits } = buildChartSeries();
 
     if (loadingEl) loadingEl.style.display = 'none';
     if (errorEl) errorEl.style.display = 'none';
@@ -207,6 +209,23 @@
               pointBorderColor: '#ffffff',
               pointBorderWidth: 2.5,
               pointHoverBackgroundColor: '#dc2626',
+              pointHoverBorderColor: '#ffffff',
+              pointHoverBorderWidth: 3
+            },
+            {
+              label: 'Unique visits',
+              data: uniqueVisits,
+              borderColor: '#8b5cf6',
+              backgroundColor: 'rgba(139, 92, 246, 0.08)',
+              borderWidth: 3,
+              tension: 0.4,
+              fill: true,
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              pointBackgroundColor: '#8b5cf6',
+              pointBorderColor: '#ffffff',
+              pointBorderWidth: 2.5,
+              pointHoverBackgroundColor: '#7c3aed',
               pointHoverBorderColor: '#ffffff',
               pointHoverBorderWidth: 3
             }

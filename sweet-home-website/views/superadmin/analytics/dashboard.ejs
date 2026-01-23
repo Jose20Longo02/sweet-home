@@ -63,6 +63,10 @@
           <p class="value"><%= (summary.total_visits || 0).toLocaleString() %></p>
         </div>
         <div class="summary-card">
+          <p class="label">Unique visits</p>
+          <p class="value"><%= (summary.unique_visits || 0).toLocaleString() %></p>
+        </div>
+        <div class="summary-card">
           <p class="label">Property views</p>
           <p class="value"><%= (summary.property_views || 0).toLocaleString() %></p>
         </div>
