@@ -431,7 +431,7 @@
               
               <div class="related-projects-list">
                 <% relatedProjects.forEach(relatedProject => { %>
-                  <div class="related-project-item">
+                  <a href="/projects/<%= relatedProject.slug %>" class="related-project-item">
                     <div class="related-project-image">
                       <% if (relatedProject.photos && relatedProject.photos.length > 0) { %>
                         <img src="<%= relatedProject.photos[0] %>" 
@@ -446,9 +446,8 @@
                     <div class="related-project-content">
                       <h4><%= relatedProject.title %></h4>
                       <p class="location"><%= relatedProject.city %>, <%= relatedProject.country %></p>
-                      <a href="/projects/<%= relatedProject.slug %>" class="btn btn-outline btn-sm"><%= t('projects.viewDetails','View project details') %></a>
                     </div>
-                  </div>
+                  </a>
                 <% }) %>
               </div>
             </div>

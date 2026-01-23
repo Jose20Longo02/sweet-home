@@ -515,11 +515,32 @@
   gap: var(--spacing-4);
   padding: var(--spacing-4);
   border-radius: var(--radius-lg);
-  transition: background-color var(--transition-fast);
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .related-project-item:hover {
   background: var(--gray-50);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: inherit;
+}
+
+.related-project-item:link,
+.related-project-item:visited {
+  color: inherit;
+  text-decoration: none;
+}
+
+.related-project-item:active,
+.related-project-item:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  text-decoration: none;
+  color: inherit;
 }
 
 .related-project-image {
@@ -566,29 +587,14 @@
   font-size: var(--font-size-sm);
 }
 
-/* Button styling for related projects - ensure visibility on white background */
-.related-project-content .btn {
-  align-self: flex-start;
-  margin-top: var(--spacing-2);
-}
-
-.related-project-content .btn-outline {
-  background: transparent;
-  color: var(--primary-color);
-  border-color: var(--primary-color);
-  font-weight: 500;
-}
-
-.related-project-content .btn-outline:hover {
-  background: var(--primary-color);
-  color: var(--white);
-  border-color: var(--primary-color);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(46, 168, 98, 0.2);
-}
-
-.related-project-content .btn-outline:active {
-  transform: translateY(0);
+/* Ensure child elements don't block clicks */
+.related-project-item .related-project-image,
+.related-project-item .related-project-content,
+.related-project-item .related-project-image img,
+.related-project-item .related-project-content h4,
+.related-project-item .related-project-content p {
+  pointer-events: none;
+  user-select: none;
 }
 
 /* Call to Action */
