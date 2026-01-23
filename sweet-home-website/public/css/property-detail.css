@@ -2,6 +2,12 @@
 .property-detail-page {
   background-color: var(--gray-50);
   min-height: 100vh;
+  position: relative;
+}
+
+.property-detail-page .container {
+  position: relative;
+  z-index: 1;
 }
 
 /* Breadcrumb Navigation */
@@ -976,7 +982,16 @@
 .contact-card .form-actions { margin-top: 0.5rem; }
 
 /* Full width similar properties */
-.similar-properties-wide { background: var(--white); border-radius: var(--card-radius); padding: 2rem; box-shadow: var(--card-shadow); margin-top: 2rem; }
+.similar-properties-wide { 
+  background: var(--white); 
+  border-radius: var(--card-radius); 
+  padding: 2rem; 
+  box-shadow: var(--card-shadow); 
+  margin-top: 2rem;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto !important;
+}
 .similar-properties-wide h2 { margin: 0 0 1rem 0; color: var(--gray-800); font-size: var(--font-size-2xl); }
 
 .similar-list {
@@ -984,7 +999,8 @@
   flex-direction: column;
   gap: 1rem;
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  pointer-events: auto !important;
 }
 
 .similar-property {
@@ -998,9 +1014,10 @@
   text-decoration: none;
   color: inherit;
   position: relative;
-  z-index: 10;
+  z-index: 100 !important;
   width: 100%;
   pointer-events: auto !important;
+  isolation: isolate;
 }
 
 .similar-property:link,

@@ -579,7 +579,10 @@ class PropertyDetailPage {
 
   renderSimilarProperties(properties) {
     const similarContainer = document.getElementById('similarProperties');
-    if (!similarContainer) return;
+    if (!similarContainer) {
+      console.warn('[property-detail] similarProperties container not found');
+      return;
+    }
 
     // Clear any existing content
     similarContainer.innerHTML = properties.map(property => {
@@ -594,7 +597,7 @@ class PropertyDetailPage {
       const price = Number(property.price || 0).toLocaleString('en-US');
       
       return `
-        <a href="/properties/${slug}" class="similar-property" data-slug="${slug}">
+        <a href="/properties/${slug}" class="similar-property" data-slug="${slug}" style="display: block; position: relative; z-index: 1000;">
           <div class="similar-property-image">
             <img src="${photo}" 
                  alt="${title}" 
@@ -609,6 +612,42 @@ class PropertyDetailPage {
         </a>
       `;
     }).join('');
+    
+    // Debug: Log that links were created
+    const links = similarContainer.querySelectorAll('a.similar-property');
+    console.log('[property-detail] Created', links.length, 'similar property links');
+    
+    // Force ensure links are clickable
+    links.forEach((link, index) => {
+      const href = link.getAttribute('href');
+      console.log(`[property-detail] Link ${index + 1}:`, href, 'Element:', link);
+      
+      // Make absolutely sure it's clickable
+      link.style.pointerEvents = 'auto';
+      link.style.cursor = 'pointer';
+      link.style.position = 'relative';
+      link.style.zIndex = '1000';
+      
+      // Add multiple event handlers
+      const handleClick = (e) => {
+        console.log('[property-detail] Link clicked:', href);
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        window.location.href = href;
+        return false;
+      };
+      
+      link.addEventListener('click', handleClick, true);
+      link.addEventListener('mousedown', (e) => {
+        if (e.button === 0) {
+          console.log('[property-detail] Link mousedown:', href);
+          e.preventDefault();
+          e.stopPropagation();
+          window.location.href = href;
+        }
+      }, true);
+    });
   }
 
   initRecaptcha() {
@@ -637,20 +676,21 @@ class PropertyDetailPage {
 
   bindEvents() {
     // Similar properties click handler (delegated on container)
-    const similarContainer = document.getElementById('similarProperties');
-    if (similarContainer) {
-      similarContainer.addEventListener('click', (e) => {
-        const link = e.target.closest('a.similar-property');
-        if (link) {
-          e.preventDefault();
-          e.stopPropagation();
-          const href = link.getAttribute('href');
-          if (href) {
-            window.location.href = href;
-          }
+    // Use document-level delegation to catch all clicks
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a.similar-property');
+      if (link) {
+        console.log('[property-detail] Delegated click handler caught click on:', link.getAttribute('href'));
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        const href = link.getAttribute('href');
+        if (href) {
+          window.location.href = href;
         }
-      }, true); // Use capture phase
-    }
+        return false;
+      }
+    }, true); // Use capture phase with highest priority
     
     // Contact form submission
     const contactForm = document.getElementById('contactForm');
