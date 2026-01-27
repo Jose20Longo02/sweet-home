@@ -140,6 +140,9 @@ app.use(express.static(path.join(__dirname, 'public'), {
   }
 }));
 
+// Local uploads (e.g. profile pictures when DO_SPACES_BUCKET is not set)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), { maxAge: '1d' }));
+
 // Vendor bundles served locally to avoid CSP/network issues (e.g., Chart.js for analytics dashboard)
 app.use(
   '/vendor/chartjs',

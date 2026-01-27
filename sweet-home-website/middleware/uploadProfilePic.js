@@ -1,11 +1,12 @@
 // middleware/uploadProfilePic.js
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const sharp = require('sharp');
 const heicConvert = require('heic-convert');
 const s3 = require('../config/spaces');
 
-// Use memory storage since we'll upload to Spaces
+// Use memory storage since we'll upload to Spaces or write locally
 const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
@@ -22,32 +23,46 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }
 }).single('profile_picture');
 
-// Helper function to upload to Spaces
+// Helper: slugify for folder names
 const slugify = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
+// Upload to DigitalOcean Spaces (only when DO_SPACES_BUCKET is set)
+// Use putObject (core S3 API) so it works in all environments; upload() can be missing in some setups
 const uploadToSpaces = async (buffer, filename, mimetype, userId, displayName) => {
   const nameSlug = slugify(displayName);
   const folder = userId ? (nameSlug ? `profiles/${userId}-${nameSlug}` : `profiles/${userId}`) : `profiles`;
+  const key = `${folder}/${filename}`;
   const params = {
     Bucket: process.env.DO_SPACES_BUCKET,
-    Key: `${folder}/${filename}`,
+    Key: key,
     Body: buffer,
     ContentType: mimetype,
     ACL: 'public-read'
   };
-  
+
   return new Promise((resolve, reject) => {
-    s3.upload(params, (err, data) => {
+    s3.putObject(params, (err) => {
       if (err) {
         reject(err);
       } else {
         const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
         const base = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : null;
-        const url = base ? `${base}/${params.Key}` : data.Location;
-        resolve({ url, key: params.Key, folder });
+        const url = base ? `${base}/${key}` : `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT || 'nyc3.digitaloceanspaces.com'}/${key}`;
+        resolve({ url, key, folder });
       }
     });
   });
+};
+
+// Local fallback when Spaces is not configured (e.g. dev)
+const saveToLocal = (buffer, finalFilename) => {
+  const dir = path.join(process.cwd(), 'uploads', 'profiles');
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  const filePath = path.join(dir, finalFilename);
+  fs.writeFileSync(filePath, buffer);
+  return `/uploads/profiles/${finalFilename}`;
 };
 
 // Helper function to convert HEIC to JPEG
@@ -98,17 +113,22 @@ module.exports = async function uploadProfilePic(req, res, next) {
       const random = Math.random().toString(36).substring(2, 8);
       const finalFilename = `profile-${timestamp}-${random}${ext}`;
 
-      // Upload to Spaces
-      const userId = req.session?.user?.id || null;
-      const displayName = req.body?.name || req.session?.user?.name || '';
-      const { url: fileUrl, key, folder } = await uploadToSpaces(buffer, finalFilename, mimetype, userId, displayName);
-      
-      // Store the CDN URL in req.file for the controller
       req.file.filename = finalFilename;
-      req.file.url = fileUrl;
-      req.file.key = key;
-      req.file.folder = folder;
-      
+
+      // When DigitalOcean Spaces is configured, upload there; otherwise save locally
+      if (process.env.DO_SPACES_BUCKET) {
+        const userId = req.session?.user?.id || null;
+        const displayName = req.body?.name || req.session?.user?.name || '';
+        const { url: fileUrl, key, folder } = await uploadToSpaces(buffer, finalFilename, mimetype, userId, displayName);
+        req.file.url = fileUrl;
+        req.file.key = key;
+        req.file.folder = folder;
+      } else {
+        req.file.url = saveToLocal(buffer, finalFilename);
+        req.file.key = null;
+        req.file.folder = 'profiles';
+      }
+
       next();
     } catch (e) {
       return next(e);
