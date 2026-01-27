@@ -57,25 +57,26 @@ const uploader = multer({
   { name: 'brochure', maxCount: 1  }
 ]);
 
-// Helper function to upload to Spaces
+// Helper: upload to Spaces using putObject (core S3 API; upload() can be missing in some setups)
 const uploadToSpaces = async (buffer, filename, mimetype, folder) => {
+  const key = `${folder}/${filename}`;
   const params = {
     Bucket: process.env.DO_SPACES_BUCKET,
-    Key: `${folder}/${filename}`,
+    Key: key,
     Body: buffer,
     ContentType: mimetype,
     ACL: 'public-read'
   };
-  
+
   return new Promise((resolve, reject) => {
-    s3.upload(params, (err, data) => {
+    s3.putObject(params, (err) => {
       if (err) {
         reject(err);
       } else {
         const cdn = process.env.DO_SPACES_CDN_ENDPOINT;
         const base = cdn ? (cdn.startsWith('http') ? cdn : `https://${cdn}`) : null;
-        const url = base ? `${base}/${params.Key}` : data.Location;
-        resolve({ url, key: params.Key });
+        const url = base ? `${base}/${key}` : `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_ENDPOINT || 'nyc3.digitaloceanspaces.com'}/${key}`;
+        resolve({ url, key });
       }
     });
   });

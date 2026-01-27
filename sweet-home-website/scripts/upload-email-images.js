@@ -48,14 +48,14 @@ async function uploadImage(localPath, remoteKey, contentType) {
       CacheControl: 'public, max-age=31536000, immutable'
     };
 
-    s3.upload(params, (err, data) => {
+    s3.putObject(params, (err) => {
       if (err) {
         reject(err);
       } else {
-        const cdnBase = CDN_ENDPOINT 
+        const cdnBase = CDN_ENDPOINT
           ? (CDN_ENDPOINT.startsWith('http') ? CDN_ENDPOINT : `https://${CDN_ENDPOINT}`)
           : null;
-        const url = cdnBase ? `${cdnBase}/${remoteKey}` : data.Location;
+        const url = cdnBase ? `${cdnBase}/${remoteKey}` : `https://${BUCKET}.${process.env.DO_SPACES_ENDPOINT || 'nyc3.digitaloceanspaces.com'}/${remoteKey}`;
         resolve({ url, key: remoteKey });
       }
     });
