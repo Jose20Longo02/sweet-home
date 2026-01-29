@@ -23,7 +23,7 @@
   <!-- Dynamic Icon Theme CSS Variables - Must come after styles.css to override -->
   <link rel="stylesheet" href="/css/icon-theme.css" />
   <% if ((typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) && !(typeof currentPath !== 'undefined' && (/^\/(admin|superadmin)/).test(currentPath))) { %>
-    <!-- Google tag (gtag.js) -->
+    <!-- Google tag (gtag.js) - GA4 Measurement ID is set -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=<%= GA_MEASUREMENT_ID %>"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -38,6 +38,8 @@
       });
       gtag('config', '<%= GA_MEASUREMENT_ID %>');
     </script>
+  <% } else { %>
+    <!-- Google Analytics NOT loaded: set GA_MEASUREMENT_ID in env (e.g. Render) to a GA4 ID (G-XXXXXXXXXX). Admin/superadmin pages are excluded by design. -->
   <% } %>
   <% if (!(typeof currentPath !== 'undefined' && (/^\/(admin|superadmin)/).test(currentPath))) { %>
     <!-- Meta Pixel Code -->
@@ -93,6 +95,7 @@
     <meta name="ga-measurement-id" content="<%= GA_MEASUREMENT_ID %>">
     <script src="/js/analytics.js" defer></script>
   <% } %>
+  <!-- GA: <%= (typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) ? 'Measurement ID is set' : 'NOT SET - add GA_MEASUREMENT_ID to env (see GA_FIX_CHECKLIST.md)' %> -->
   <script src="/js/main.js" defer></script>
   <script src="/js/lazy-load.js" defer></script>
 </head>
