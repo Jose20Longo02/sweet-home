@@ -79,16 +79,16 @@ app.use(
       // permit CDN images broadly; Spaces CDN is HTTPS
       "img-src": ["'self'", 'data:', 'blob:', 'https:', 'https://*.tile.openstreetmap.org', 'https://unpkg.com', 'https://www.google-analytics.com', 'https://*.google-analytics.com'],
       "media-src": ["'self'", 'blob:', 'https:'],
-      "script-src": [(req, res) => {
+      "script-src": (req, res) => {
         const base = ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com'];
-        if (res.locals && res.locals.cspNonce) base.push(`'nonce-${res.locals.cspNonce}'`);
+        if (res.locals && res.locals.cspNonce) base.push(`'nonce-${String(res.locals.cspNonce)}'`);
         return base;
-      }],
-      "script-src-elem": [(req, res) => {
+      },
+      "script-src-elem": (req, res) => {
         const base = ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com'];
-        if (res.locals && res.locals.cspNonce) base.push(`'nonce-${res.locals.cspNonce}'`);
+        if (res.locals && res.locals.cspNonce) base.push(`'nonce-${String(res.locals.cspNonce)}'`);
         return base;
-      }],
+      },
       "script-src-attr": ["'none'"],
       "style-src": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
       "style-src-elem": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
