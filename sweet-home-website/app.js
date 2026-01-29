@@ -60,15 +60,9 @@ sendMail.verify && sendMail.verify()
 
 // Security headers + CSP
 const isProd = process.env.NODE_ENV === 'production';
-const crypto = require('crypto');
-// Generate CSP nonce per request so inline scripts (GA, Meta Pixel) are allowed without 'unsafe-inline'
-app.use((req, res, next) => {
-  res.locals.cspNonce = crypto.randomBytes(16).toString('base64');
-  next();
-});
 app.use(helmet());
 // Apply the same CSP in all envs (no reportOnly) to avoid mixed behavior
-// script-src and script-src-elem use nonce so GA and Meta Pixel inline scripts are allowed
+// script-src and script-src-elem allow 'unsafe-inline' so GA and Meta Pixel inline scripts run (helmet does not support function directives for nonce in this version)
 app.use(
   helmet.contentSecurityPolicy({
     useDefaults: true,
@@ -79,16 +73,8 @@ app.use(
       // permit CDN images broadly; Spaces CDN is HTTPS
       "img-src": ["'self'", 'data:', 'blob:', 'https:', 'https://*.tile.openstreetmap.org', 'https://unpkg.com', 'https://www.google-analytics.com', 'https://*.google-analytics.com'],
       "media-src": ["'self'", 'blob:', 'https:'],
-      "script-src": (req, res) => {
-        const base = ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com'];
-        if (res.locals && res.locals.cspNonce) base.push(`'nonce-${String(res.locals.cspNonce)}'`);
-        return base;
-      },
-      "script-src-elem": (req, res) => {
-        const base = ["'self'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com'];
-        if (res.locals && res.locals.cspNonce) base.push(`'nonce-${String(res.locals.cspNonce)}'`);
-        return base;
-      },
+      "script-src": ["'self'", "'unsafe-inline'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com'],
+      "script-src-elem": ["'self'", "'unsafe-inline'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com'],
       "script-src-attr": ["'none'"],
       "style-src": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
       "style-src-elem": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
