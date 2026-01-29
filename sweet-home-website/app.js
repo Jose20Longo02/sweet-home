@@ -765,22 +765,24 @@ app.get('/health', async (req, res) => {
 });
 
 // 404 handler (last non-error middleware)
+// Ensure error views always have t() (in case they're rendered before i18n ran)
+const fallbackT = (key, fallback) => (typeof fallback !== 'undefined' ? fallback : '');
 app.use((req, res, next) => {
   if (res.headersSent) return next();
-  return res.status(404).render('errors/404');
+  return res.status(404).render('errors/404', { t: res.locals.t || fallbackT });
 });
 
 // Global error handler (must have 4 args)
 app.use((err, req, res, next) => {
   if (err && err.code === 'EBADCSRFTOKEN') {
-    return res.status(403).render('errors/500', { error: new Error('Invalid CSRF token') });
+    return res.status(403).render('errors/500', { error: new Error('Invalid CSRF token'), t: res.locals.t || fallbackT });
   }
   const status = err && err.status ? err.status : 500;
   const error = err || new Error('Internal Server Error');
   if (process.env.NODE_ENV !== 'production') {
     try { console.error(error.stack || error); } catch (_) {}
   }
-  return res.status(status).render('errors/500', { error });
+  return res.status(status).render('errors/500', { error, t: res.locals.t || fallbackT });
 });
 
 const PORT = process.env.PORT || 3000;
