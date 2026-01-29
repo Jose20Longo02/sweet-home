@@ -1334,23 +1334,29 @@ messageStyles.textContent = `
 document.head.appendChild(messageStyles);
 
 // Auto-track property view on page load (if analytics is available)
+// Small delay so analytics.js (defer) is always loaded before we fire
 document.addEventListener('DOMContentLoaded', function() {
   const propertyData = document.getElementById('propertyData');
-  if (!propertyData || !window.analytics || !window.analytics.trackPropertyView) return;
-  
-  try {
-    const id = propertyData.getAttribute('data-id');
-    const title = propertyData.getAttribute('data-title') || '';
-    const price = parseInt(propertyData.getAttribute('data-price') || '0', 10) || 0;
-    const country = propertyData.getAttribute('data-country') || '';
-    const city = propertyData.getAttribute('data-city') || '';
-    const neighborhood = propertyData.getAttribute('data-neighborhood') || '';
-    const type = propertyData.getAttribute('data-type') || '';
-    
-    const location = [neighborhood, city, country].filter(Boolean).join(', ');
-    
-    window.analytics.trackPropertyView(id, title, price, location, type);
-  } catch (e) {
-    console.error('Error tracking property view:', e);
+  if (!propertyData) return;
+
+  function sendViewProperty() {
+    if (!window.analytics || typeof window.analytics.trackPropertyView !== 'function') return;
+    try {
+      const id = propertyData.getAttribute('data-id');
+      const title = propertyData.getAttribute('data-title') || '';
+      const price = parseInt(propertyData.getAttribute('data-price') || '0', 10) || 0;
+      const country = propertyData.getAttribute('data-country') || '';
+      const city = propertyData.getAttribute('data-city') || '';
+      const neighborhood = propertyData.getAttribute('data-neighborhood') || '';
+      const type = propertyData.getAttribute('data-type') || '';
+      const location = [neighborhood, city, country].filter(Boolean).join(', ');
+      window.analytics.trackPropertyView(id, title, price, location, type);
+    } catch (e) {
+      console.error('Error tracking property view:', e);
+    }
   }
+
+  sendViewProperty();
+  // Retry once after 500ms in case analytics.js loaded after this script
+  setTimeout(sendViewProperty, 500);
 });
