@@ -14,7 +14,8 @@ router.get('/regions', (req, res) => {
   res.render('projects/regions', {
     baseUrl,
     headPartial: '../partials/seo/regions-head',
-    canonicalUrl: `${baseUrl}/projects/regions`
+    canonicalUrl: `${baseUrl}/projects/regions`,
+    useHomeHeader: true
   });
 });
 
