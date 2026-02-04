@@ -677,9 +677,9 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 
 /* 3) Featured properties – cards carousel */
-.section.featured { padding: 72px 16px 32px; background: #fff; content-visibility: auto; contain-intrinsic-size: 600px; }
+.section.featured { padding: 72px 16px 48px; background: #fff; content-visibility: auto; contain-intrinsic-size: 600px; }
 .cards-carousel { position: relative; max-width: 1200px; margin: 0 auto; }
-.cards-track { display: flex; gap: 24px; overflow-x: auto; scroll-behavior: smooth; padding: 16px 6px; }
+.cards-track { display: flex; gap: 24px; overflow-x: auto; scroll-behavior: smooth; padding: 32px 6px; }
 .cards-track > .property-card, .cards-track > .testimonial-card { flex: 0 0 calc(33.333% - 16px); }
 .cards-track > .edge-spacer { flex: 0 0 0; }
 .property-card { background: #fff; border-radius: 16px; box-shadow: 0 10px 24px rgba(0,0,0,.08); overflow: hidden; transform: scale(.94); opacity: .7; transition: transform .35s ease, opacity .35s ease, box-shadow .35s ease; }
@@ -810,7 +810,7 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 .see-link { color: #fff; text-decoration: underline; }
 
 /* Recommended Project */
-.section.recommended-project { padding: 56px 0 64px; }
+.section.recommended-project { padding: 96px 0 64px; }
 .section.recommended-project .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
 .project-hero { position: relative; height: 70vh; min-height: 520px; max-height: 820px; overflow: hidden; border-radius: 14px; margin: 0; }
 .project-hero .slides { position: absolute; inset: 0; }
