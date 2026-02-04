@@ -678,8 +678,8 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 
 /* 3) Featured properties – cards carousel */
 .section.featured { padding: 72px 16px 48px; background: #fff; content-visibility: auto; contain-intrinsic-size: 600px; }
-.cards-carousel { position: relative; max-width: 1200px; margin: 0 auto; }
-.cards-track { display: flex; gap: 24px; overflow-x: auto; scroll-behavior: smooth; padding: 32px 6px; }
+.cards-carousel { position: relative; max-width: 1200px; margin: 0 auto; padding: 24px 0; }
+.cards-track { display: flex; align-items: flex-start; gap: 24px; overflow-x: auto; scroll-behavior: smooth; padding: 16px 6px; }
 .cards-track > .property-card, .cards-track > .testimonial-card { flex: 0 0 calc(33.333% - 16px); }
 .cards-track > .edge-spacer { flex: 0 0 0; }
 .property-card { background: #fff; border-radius: 16px; box-shadow: 0 10px 24px rgba(0,0,0,.08); overflow: hidden; transform: scale(.94); opacity: .7; transition: transform .35s ease, opacity .35s ease, box-shadow .35s ease; }
