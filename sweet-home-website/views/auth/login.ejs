@@ -6,12 +6,12 @@
   const loginUrl = `${siteBaseUrl}/auth/login`;
   const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
   const supportedHreflangs = [
-    { lang: 'en', country: 'US' },
-    { lang: 'es', country: 'ES' },
-    { lang: 'de', country: 'DE' }
+    { lang: 'en', region: 'us' },
+    { lang: 'es', region: 'es' },
+    { lang: 'de', region: 'de' }
   ];
   const currentHreflang = supportedHreflangs.find(h => h.lang === currentLang) || supportedHreflangs[0];
-  const currentHreflangValue = currentHreflang.lang + '-' + currentHreflang.country;
+  const currentHreflangValue = currentHreflang.lang + '-' + currentHreflang.region;
 %>
 <html lang="<%= currentLang %>">
 <head>
@@ -20,10 +20,10 @@
   <title><%= title %> | Sweet Home</title>
   <meta name="description" content="Sign in to your Sweet Home account to access your dashboard and manage your real estate listings.">
   <link rel="canonical" href="<%= loginUrl %>">
-  <!-- Hreflang tags -->
+  <!-- Self-referencing hreflang and alternates: same href as canonical to avoid conflicts -->
   <link rel="alternate" hreflang="<%= currentHreflangValue %>" href="<%= loginUrl %>">
   <% supportedHreflangs.forEach(function(hreflang) { 
-    const hreflangValue = hreflang.lang + '-' + hreflang.country;
+    const hreflangValue = hreflang.lang + '-' + hreflang.region;
     if (hreflangValue !== currentHreflangValue) {
   %>
   <link rel="alternate" hreflang="<%= hreflangValue %>" href="<%= loginUrl %>">
