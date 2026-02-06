@@ -311,12 +311,15 @@ app.use((req, res, next) => {
 });
 
 // Language setter (CSP-safe): sets cookie and redirects back
-// Avoid redirect if language is already set to the requested code
-// Block search engine bots - these are functional endpoints, not indexable pages
+// For crawlers: redirect with 302 so links are not reported as broken (no 403)
 app.get('/lang/:code', (req, res) => {
-  // Detect if this is a known search engine bot/crawler (very specific pattern)
+  const code = String(req.params.code || '').slice(0,2).toLowerCase();
+  const supported = ['en','es','de'];
+  const referer = req.get('referer') || '';
+  const back = (referer && referer.startsWith(req.protocol + '://' + req.get('host'))) ? referer : '/';
+  if (!supported.includes(code)) return res.redirect(302, back);
+
   const userAgent = (req.get('user-agent') || '').toLowerCase();
-  // Only match known search engine bots explicitly - avoid false positives
   const knownBots = [
     'googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 'yandexbot',
     'sogou', 'exabot', 'facebot', 'ia_archiver', 'semrushbot', 'ahrefsbot',
@@ -326,25 +329,12 @@ app.get('/lang/:code', (req, res) => {
     'adsbot-google', 'feedfetcher', 'semrush', 'ahrefs', 'screaming frog'
   ];
   const isBot = knownBots.some(bot => userAgent.includes(bot));
-  
-  // If it's a known bot, return 403 Forbidden (these endpoints are not for indexing)
   if (isBot) {
-    return res.status(403).send('Forbidden - This is a functional endpoint, not an indexable page.');
-  }
-  
-  // For real users, proceed with language switching
-  const code = String(req.params.code || '').slice(0,2).toLowerCase();
-  const supported = ['en','es','de'];
-  const back = req.get('referer') || '/';
-  if (!supported.includes(code)) return res.redirect(302, back);
-  
-  // Check if language is already set to the requested code
-  const currentLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase() : 'en';
-  if (currentLang === code) {
-    // Language already set, no need to redirect
     return res.redirect(302, back);
   }
-  
+
+  const currentLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase() : 'en';
+  if (currentLang === code) return res.redirect(302, back);
   try { res.cookie('lang', code, { httpOnly: false, sameSite: 'lax', maxAge: 30 * 24 * 60 * 60 * 1000 }); } catch (_) {}
   return res.redirect(302, back);
 });
