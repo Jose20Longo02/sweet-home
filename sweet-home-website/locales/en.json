@@ -218,7 +218,7 @@
       "sizeRange": "Size range",
       "viewProject": "View project"
     },
-    "about": { "title": "About Sweet Home", "copy": "At Sweet Home, we turn property goals into real-life keys. From your first chat to closing day, our friendly experts guide you with clear advice, curated options, and stress-free support. Ready to move forward with confidence? Let's find the place that truly feels like home." },
+    "about": { "title": "About Sweet Home", "copy": "At Sweet Home, we turn property goals into real-life keys. From your first chat to closing day, our friendly experts guide you with clear advice, curated options, and stress-free support. Ready to move forward with confidence? Let's find the place that truly feels like home.", "cta": "Learn more about Sweet Home" },
     "services": { "title": "Our Services", "brief": "From tailored consulting to hands‑on management and financing guidance, our team helps you buy, sell and manage property with confidence." },
     "calc": {
       "title": "Mortgage Calculator",

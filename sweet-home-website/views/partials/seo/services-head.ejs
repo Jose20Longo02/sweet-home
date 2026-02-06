@@ -4,20 +4,24 @@
     : ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
   const servicesUrl = `${siteBaseUrl}/services`;
   const metaDescription = 'Expert real estate services in Cyprus, Dubai, and Berlin. Property consulting, management, and financial services to help you with your real estate investments.';
+  const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+  const ogLocaleMap = { en: 'en_US', es: 'es_ES', de: 'de_DE' };
+  const ogLocale = ogLocaleMap[currentLang] || 'en_US';
+  const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Services';
 %>
 <meta name="description" content="<%= metaDescription %>">
 <!-- Canonical URL is handled by main layout to avoid conflicts with hreflang -->
 
-<!-- Open Graph -->
+<!-- Open Graph (locale matches page lang for hreflang consistency) -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Services | Sweet Home">
+<meta property="og:title" content="<%= pageTitle %> | Sweet Home">
 <meta property="og:description" content="<%= metaDescription %>">
 <meta property="og:url" content="<%= servicesUrl %>">
 <meta property="og:site_name" content="Sweet Home">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="<%= ogLocale %>">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Services | Sweet Home">
+<meta name="twitter:title" content="<%= pageTitle %> | Sweet Home">
 <meta name="twitter:description" content="<%= metaDescription %>">
 

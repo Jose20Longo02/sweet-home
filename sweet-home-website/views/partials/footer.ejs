@@ -20,6 +20,19 @@
       <ul>
         <li><a href="/properties"><%= t('footer.realEstate','Real Estate') %></a></li>
         <li><a href="/projects"><%= t('footer.mapSearch','Map Search') %></a></li>
+        <li><a href="/blog"><%= t('nav.blog','Blog') %></a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4><%= t('footer.regions','Regions') %></h4>
+      <ul>
+        <li><a href="/properties?country=Cyprus"><%= t('footer.propertiesCyprus','Properties in Cyprus') %></a></li>
+        <li><a href="/properties?country=UAE&city=Dubai"><%= t('footer.propertiesDubai','Properties in Dubai') %></a></li>
+        <li><a href="/properties?country=Germany&city=Berlin"><%= t('footer.propertiesBerlin','Properties in Berlin') %></a></li>
+        <li><a href="/projects?country=Cyprus"><%= t('footer.projectsCyprus','Projects in Cyprus') %></a></li>
+        <li><a href="/projects?country=UAE&city=Dubai"><%= t('footer.projectsDubai','Projects in Dubai') %></a></li>
+        <li><a href="/projects?country=Germany&city=Berlin"><%= t('footer.projectsBerlin','Projects in Berlin') %></a></li>
       </ul>
     </div>
 
@@ -28,6 +41,9 @@
       <ul>
         <li><a href="/about"><%= t('footer.about','About Us') %></a></li>
         <li><a href="/contact"><%= t('footer.contact','Contact Us') %></a></li>
+        <li><a href="/auth/login"><%= t('footer.staffLogin','Log in') %></a></li>
+        <li><a href="/auth/register"><%= t('footer.staffRegister','Register') %></a></li>
+        <li><a href="/auth/forgot"><%= t('footer.staffForgot','Forgot password?') %></a></li>
       </ul>
     </div>
   </div>
@@ -69,8 +85,8 @@
     margin: 0 auto; 
     padding: 0 20px 40px; 
     display: grid; 
-    grid-template-columns: 2fr 1fr 1fr 1.5fr; 
-    gap: 40px; 
+    grid-template-columns: 2fr 1fr 1fr 1.2fr 1.2fr; 
+    gap: 32px; 
   }
   
   .footer-col h4 { 
@@ -207,6 +223,12 @@
     }
     .site-footer {
       padding: 40px 0 0;
+    }
+  }
+  @media (max-width: 700px) {
+    .footer-wrapper { 
+      grid-template-columns: 1fr; 
+      gap: 28px;
     }
   }
   

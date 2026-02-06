@@ -1,6 +1,6 @@
 <% title = project.title; hideFooter = false; headPartial = '../partials/seo/project-detail-head'; %>
-<link rel="stylesheet" href="/css/project-detail.css" />
-<link rel="stylesheet" href="/css/pdf-loading.css" />
+<link rel="stylesheet" href="/css/project-detail.min.css" />
+<link rel="stylesheet" href="/css/pdf-loading.min.css" />
 <% if (process.env.RECAPTCHA_SITE_KEY) { %>
 <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
 <% } %>
@@ -474,4 +474,4 @@
 </div>
 
 <script src="/js/project-detail.js" defer></script>
-<script src="/js/pdf-download.js"></script>
+<script src="/js/pdf-download.min.js"></script>

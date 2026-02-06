@@ -615,6 +615,15 @@
 body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
 .section-title { font-family: 'Playfair Display', serif; text-align: center; margin: 40px 0 24px; font-weight: 600; }
 
+/* Blog preview (internal linking) */
+.section.blog-preview { padding: 48px 16px 56px; background: var(--gray-50, #f8f9fa); }
+.blog-preview-list { list-style: none; padding: 0; margin: 0 auto 24px; max-width: 640px; }
+.blog-preview-list li { margin-bottom: 10px; }
+.blog-preview-list a { color: var(--gray-800, #1a1a1a); text-decoration: none; font-weight: 500; }
+.blog-preview-list a:hover { color: var(--primary-color, #2ea862); text-decoration: underline; }
+.blog-preview-cta { text-align: center; margin: 0; }
+.blog-preview-cta .btn-green { display: inline-block; }
+
 /* 1) Hero with 3 vertical panels */
 .hero-panels { position: relative; height: 90vh; display: grid; grid-template-columns: 1fr 1fr 1fr; }
 .hero-panels .panel { position: relative; overflow: hidden; transition: opacity .8s ease; isolation: isolate; }

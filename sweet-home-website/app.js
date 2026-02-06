@@ -26,6 +26,7 @@ const { connectDB }  = require('./config/db');
 const sendMail       = require('./config/mailer');
 const locations      = require('./config/locations');
 const { query }      = require('./config/db');
+const BlogPost       = require('./models/BlogPost');
 const i18nMiddleware = require('./config/i18n');
 const { logEvent }   = require('./utils/analytics');
 const iconThemes     = require('./config/iconThemes');
@@ -406,7 +407,7 @@ app.get('/terms', (req, res) => {
   res.render('terms', { 
     title: 'Terms & Conditions',
     baseUrl,
-    headPartial: 'partials/seo/terms-head',
+    headPartial: '../partials/seo/terms-head',
     canonicalUrl: `${baseUrl}/terms`
   });
 });
@@ -415,7 +416,7 @@ app.get('/privacy', (req, res) => {
   res.render('privacy', { 
     title: 'Privacy Policy', 
     baseUrl,
-    headPartial: 'partials/seo/privacy-head',
+    headPartial: '../partials/seo/privacy-head',
     canonicalUrl: `${baseUrl}/privacy`
   });
 });
@@ -504,14 +505,26 @@ app.get('/', async (req, res, next) => {
       };
     }
 
+    const lang = (res.locals && res.locals.lang) ? res.locals.lang : (req.cookies && req.cookies.lang) ? req.cookies.lang : 'en';
+    let recentBlogPosts = [];
+    try {
+      const posts = await BlogPost.findPublic({ limit: 6, offset: 0 });
+      recentBlogPosts = (posts || []).map(p => ({
+        slug: p.slug,
+        title: (p.title_i18n && p.title_i18n[lang]) || p.title
+      }));
+    } catch (_) { /* non-fatal */ }
+
     const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     res.render('home', { 
       title: 'Find Your Dream Home',
       user: req.session.user || null,
       locations,
       recommendedProject,
+      recentBlogPosts,
       baseUrl,
-      canonicalUrl: `${baseUrl}/`
+      canonicalUrl: `${baseUrl}/`,
+      headPartial: '../partials/seo/home-head'
     });
   } catch (e) { next(e); }
 });
@@ -533,8 +546,9 @@ app.get('/services', (req, res) => {
   }
   baseUrl = baseUrl.replace(/\/$/, '');
   const canonicalUrl = `${baseUrl}/services`;
+  const title = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('nav.services', 'Services') : 'Services';
   res.render('services', {
-    title: 'Services',
+    title,
     useMainContainer: false,
     canonicalUrl
   });
@@ -633,7 +647,7 @@ app.get('/robots.txt', (req, res) => {
   const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
   const allowAll = process.env.ROBOTS_ALLOW !== 'false';
   const robotsContent = allowAll 
-    ? `User-agent: *\nAllow: /\nDisallow: /lang/\n\nSitemap: ${baseUrl}/sitemap.xml` 
+    ? `User-agent: *\nAllow: /\n\nSitemap: ${baseUrl}/sitemap.xml` 
     : `User-agent: *\nDisallow: /\n\nSitemap: ${baseUrl}/sitemap.xml`;
   res.send(robotsContent);
 });
