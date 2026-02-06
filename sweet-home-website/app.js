@@ -330,7 +330,7 @@ app.get('/lang/:code', (req, res) => {
   ];
   const isBot = knownBots.some(bot => userAgent.includes(bot));
   if (isBot) {
-    return res.redirect(302, back);
+    return res.redirect(301, '/');
   }
 
   const currentLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase() : 'en';
@@ -514,7 +514,8 @@ app.get('/', async (req, res, next) => {
       recentBlogPosts,
       baseUrl,
       canonicalUrl: `${baseUrl}/`,
-      headPartial: '../partials/seo/home-head'
+      headPartial: '../partials/seo/home-head',
+      pageMetaDescription: 'Find your dream property in Cyprus, Dubai, and Berlin. Browse luxury apartments, villas, and real estate investments. Expert guidance for buyers and sellers.'
     });
   } catch (e) { next(e); }
 });

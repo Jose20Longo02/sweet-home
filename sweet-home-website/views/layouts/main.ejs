@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><%= title %> | Sweet Home</title>
+  <% if (typeof currentPath !== 'undefined' && currentPath === '/') { %>
+  <meta name="description" content="<%= (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : 'Find your dream property in Cyprus, Dubai, and Berlin. Browse luxury apartments, villas, and real estate investments. Expert guidance for buyers and sellers.' %>">
+  <% } %>
   <link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
   <link rel="icon" type="image/png" href="/images/favicon.png" sizes="16x16">
   <link rel="apple-touch-icon" href="/images/favicon.png">
