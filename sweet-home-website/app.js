@@ -311,12 +311,13 @@ app.use((req, res, next) => {
 });
 
 // Language setter (CSP-safe): sets cookie and redirects back
-// For crawlers: redirect with 302 so links are not reported as broken (no 403)
+// For crawlers: return 200 with minimal noindex page (no 301/302 so no redirect reports, no 403 so no broken links)
 app.get('/lang/:code', (req, res) => {
   const code = String(req.params.code || '').slice(0,2).toLowerCase();
   const supported = ['en','es','de'];
   const referer = req.get('referer') || '';
-  const back = (referer && referer.startsWith(req.protocol + '://' + req.get('host'))) ? referer : '/';
+  const origin = req.protocol + '://' + req.get('host');
+  const back = (referer && referer.startsWith(origin)) ? referer : '/';
   if (!supported.includes(code)) return res.redirect(302, back);
 
   const userAgent = (req.get('user-agent') || '').toLowerCase();
@@ -330,7 +331,8 @@ app.get('/lang/:code', (req, res) => {
   ];
   const isBot = knownBots.some(bot => userAgent.includes(bot));
   if (isBot) {
-    return res.redirect(301, '/');
+    res.status(200).contentType('text/html').send('<!DOCTYPE html><html lang="' + code + '"><head><meta charset="utf-8"><title>Sweet Home</title><link rel="canonical" href="' + origin + '/"><meta name="robots" content="noindex, follow"></head><body><p><a href="' + origin + '/">Sweet Home</a></p></body></html>');
+    return;
   }
 
   const currentLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase() : 'en';
