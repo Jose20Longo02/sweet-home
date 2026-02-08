@@ -1,3 +1,9 @@
+<%
+  var navLang = typeof lang !== 'undefined' ? lang : 'en';
+  var propBerlin = navLang === 'de' ? '/de/immobilien-berlin-kaufen' : (navLang === 'es' ? '/es/propiedades-en-venta-berlin' : '/properties-for-sale-berlin');
+  var propDubai = navLang === 'de' ? '/de/immobilien-dubai-kaufen' : (navLang === 'es' ? '/es/propiedades-en-venta-dubai' : '/properties-for-sale-dubai');
+  var propCyprus = navLang === 'de' ? '/de/immobilien-zypern-kaufen' : (navLang === 'es' ? '/es/propiedades-en-venta-chipre' : '/properties-for-sale-cyprus');
+%>
 <header class="site-header main" role="banner">
   <div class="nav-container">
     <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -10,7 +16,14 @@
 
     <nav class="nav-grid" aria-label="Primary">
       <a href="/projects/regions"><%= t('nav.projects','Projects') %></a>
-      <a href="/properties"><%= t('nav.properties','Properties') %></a>
+      <div class="nav-properties-wrap">
+        <button type="button" class="nav-properties-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="nav-properties-menu" id="nav-properties-btn"><%= t('nav.properties','Properties') %></button>
+        <div id="nav-properties-menu" class="nav-properties-menu" role="menu" aria-labelledby="nav-properties-btn" hidden>
+          <a href="<%= propBerlin %>" role="menuitem"><%= t('nav.propertiesBerlin','Berlin') %></a>
+          <a href="<%= propDubai %>" role="menuitem"><%= t('nav.propertiesDubai','Dubai') %></a>
+          <a href="<%= propCyprus %>" role="menuitem"><%= t('nav.propertiesCyprus','Cyprus') %></a>
+        </div>
+      </div>
       <a href="/owners"><%= t('nav.owners','Owners') %></a>
       <a href="/" class="brand">
         <img src="<%= (getActiveTheme && getActiveTheme() === 'christmas') ? '/images/Christmas%20assets/Logo%20-%20christmas.png' : '/images/Sweet Home Logo.png' %>" alt="Sweet Home" onerror="this.style.display='none'">
@@ -31,7 +44,14 @@
   <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
     <nav class="mobile-links" aria-label="Mobile">
       <a href="/projects/regions"><%= t('nav.projects','Projects') %></a>
-      <a href="/properties"><%= t('nav.properties','Properties') %></a>
+      <div class="mobile-properties-wrap">
+        <button type="button" class="mobile-properties-trigger" aria-expanded="false" aria-controls="mobile-properties-list"><%= t('nav.properties','Properties') %></button>
+        <div id="mobile-properties-list" class="mobile-properties-list" hidden>
+          <a href="<%= propBerlin %>"><%= t('nav.propertiesBerlin','Berlin') %></a>
+          <a href="<%= propDubai %>"><%= t('nav.propertiesDubai','Dubai') %></a>
+          <a href="<%= propCyprus %>"><%= t('nav.propertiesCyprus','Cyprus') %></a>
+        </div>
+      </div>
       <a href="/owners"><%= t('nav.owners','Owners') %></a>
       <a href="/services"><%= t('nav.services','Services') %></a>
       <a href="/about"><%= t('nav.about','About') %></a>
@@ -51,6 +71,22 @@
   .nav-grid a:hover { opacity: .8; }
   .nav-grid .brand { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
   .nav-grid .brand img { height: 130px; width: auto; }
+
+  /* Properties dropdown (desktop) */
+  .nav-properties-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
+  .nav-properties-trigger { display: inline-flex; align-items: center; justify-content: center; background: none; border: 0; color: #111; font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; letter-spacing: .2px; font-size: inherit; cursor: pointer; padding: 0; text-align: center; }
+  .nav-properties-trigger:hover { opacity: .8; }
+  .nav-properties-menu { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 6px; min-width: 140px; background: #fff; border: 1px solid rgba(0,0,0,.1); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.12); padding: 6px 0; z-index: 1100; display: flex; flex-direction: column; }
+  .nav-properties-menu[hidden] { display: none !important; }
+  .nav-properties-menu a { display: block; padding: 8px 16px; color: #111; text-decoration: none; text-align: left; white-space: nowrap; }
+  .nav-properties-menu a:hover { background: rgba(0,0,0,.06); }
+
+  /* Mobile properties submenu */
+  .mobile-properties-wrap { display: flex; flex-direction: column; gap: 4px; }
+  .mobile-properties-trigger { display: flex; align-items: center; justify-content: space-between; width: 100%; background: none; border: 0; color: #111; font-size: inherit; font-family: inherit; padding: 10px 0; text-align: left; cursor: pointer; }
+  .mobile-properties-list { padding-left: 12px; display: flex; flex-direction: column; gap: 4px; }
+  .mobile-properties-list[hidden] { display: none !important; }
+  .mobile-properties-list a { padding: 8px 0; text-decoration: none; color: #111; }
 
   /* Language switcher placement */
   .lang-switcher-wrap { position: absolute; right: 16px; top: 18px; display: flex; flex-direction: row; align-items: center; gap: 8px; }
@@ -84,6 +120,7 @@
   @media (max-width: 900px) {
     .nav-container { display: flex; align-items: center; justify-content: center; padding: 4px 12px; position: relative; }
     .nav-grid { display: none; }
+    .nav-properties-menu { left: 50%; }
     .brand-mobile { display: inline-flex; align-items: center; gap: 8px; margin: 0; line-height: 0; }
     .brand-mobile img { display: block; }
     .menu-toggle { display: inline-flex; position: absolute; right: 12px; top: 10px; flex-direction: column; }
@@ -93,4 +130,27 @@
     .staff-pill { padding: 6px 10px; font-size: 12px; margin: 0; }
   }
 </style>
+<script>
+(function() {
+  var btn = document.getElementById('nav-properties-btn');
+  var menu = document.getElementById('nav-properties-menu');
+  if (btn && menu) {
+    function open() { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); }
+    function close() { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+    function toggle() { if (menu.hidden) open(); else close(); }
+    btn.addEventListener('click', function(e) { e.stopPropagation(); toggle(); });
+    document.addEventListener('click', function() { if (!menu.hidden) close(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+  }
+  var mobileTrigger = document.querySelector('.mobile-properties-trigger');
+  var mobileList = document.getElementById('mobile-properties-list');
+  if (mobileTrigger && mobileList) {
+    mobileTrigger.addEventListener('click', function() {
+      var open = mobileList.hidden;
+      mobileList.hidden = !open;
+      mobileTrigger.setAttribute('aria-expanded', open);
+    });
+  }
+})();
+</script>
 
