@@ -47,7 +47,7 @@
 .berlin-hero__title {
   font-family: 'Playfair Display', serif;
   font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.2;
   margin: 0 0 20px;
   color: #fff;
