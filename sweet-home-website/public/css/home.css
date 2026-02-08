@@ -626,6 +626,9 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 
 /* 1) Hero with 3 vertical panels */
 .hero-panels { position: relative; height: 90vh; display: grid; grid-template-columns: 1fr 1fr 1fr; }
+/* Single-panel hero (e.g. Berlin landing) */
+.hero-panels--single { grid-template-columns: 1fr; }
+.hero-panels--single .panel { grid-column: 1; }
 .hero-panels .panel { position: relative; overflow: hidden; transition: opacity .8s ease; isolation: isolate; }
 .hero-panels .panel img { width: 100%; height: 100%; object-fit: cover; transform: scale(1); transition: transform .6s ease; position: relative; z-index: 1; }
 /* constant dark overlay on each panel */
@@ -687,7 +690,17 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 
 /* 3) Featured properties – cards carousel */
 .section.featured { padding: 72px 16px 48px; background: #fff; content-visibility: auto; contain-intrinsic-size: 600px; }
+.section-featured .section-cta { text-align: center; margin-top: 24px; }
+.section-featured .section-empty { text-align: center; color: var(--gray-600); }
 .cards-carousel { position: relative; max-width: 1200px; margin: 0 auto; padding: 24px 0; }
+.cards-carousel--grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.cards-carousel--grid .property-card { transform: none; opacity: 1; transition: box-shadow 0.25s ease, transform 0.25s ease; }
+.cards-carousel--grid .property-card-link { display: block; text-decoration: none; color: inherit; }
+.cards-carousel--grid .property-card:hover { box-shadow: 0 18px 40px rgba(0,0,0,.12); transform: translateY(-2px); }
+@media (max-width: 1024px) { .cards-carousel--grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) {
+  .cards-carousel--grid { grid-template-columns: 1fr; gap: 20px; }
+}
 .cards-track { display: flex; align-items: flex-start; gap: 24px; overflow-x: auto; scroll-behavior: smooth; padding: 16px 6px; }
 .cards-track > .property-card, .cards-track > .testimonial-card { flex: 0 0 calc(33.333% - 16px); }
 .cards-track > .edge-spacer { flex: 0 0 0; }
@@ -973,6 +986,8 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   /* show a single full-bleed panel; others hidden via opacity */
   .hero-panels .panel { position: absolute; inset: 0; opacity: 0; }
   .hero-panels .panel.is-active { opacity: 1; }
+  /* Berlin (and any single-panel) hero: keep the one panel visible on mobile */
+  .hero-panels--single .panel { position: relative; opacity: 1; }
   .hero-search { top: 52%; width: calc(100% - 28px); }
   /* stack only at very small widths */
   .hero-search .search-row { display: grid; grid-template-columns: 1fr; }

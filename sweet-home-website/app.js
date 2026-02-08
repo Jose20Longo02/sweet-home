@@ -20,6 +20,7 @@ const publicProjectRoutes = require('./routes/publicProjectRoutes');
 const adminUserRoutes    = require('./routes/adminUserRoutes');
 const superAdminRoutes   = require('./routes/superAdminRoutes');
 const { publicRouter: propertyRoutes, adminRouter: adminPropertyRoutes } = require('./routes/propertyRoutes');
+const propertyController = require('./controllers/propertyController');
 const { publicRouter: blogPublicRoutes, adminRouter: blogAdminRoutes, superAdminRouter: blogSuperAdminRoutes } = require('./routes/blogRoutes');
 const leadRoutes     = require('./routes/leadRoutes');
 const { connectDB }  = require('./config/db');
@@ -435,6 +436,9 @@ app.use('/', leadRoutes); // mount lead routes (public API + pages)
 app.use('/blog', blogPublicRoutes);
 app.use('/admin/dashboard/blog', blogAdminRoutes);
 app.use('/superadmin/dashboard/blog', blogSuperAdminRoutes);
+
+// Berlin landing page (before /properties so path is explicit)
+app.get('/properties-for-sale-berlin', propertyController.berlinPropertiesPage);
 
 // Public & agent routes
 app.use('/properties', propertyRoutes);

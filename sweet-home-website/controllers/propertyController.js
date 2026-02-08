@@ -2550,3 +2550,57 @@ exports.getFeaturedProperties = async (req, res, next) => {
     next(err);
   }
 };
+
+// Berlin landing page: Properties for Sale Berlin (8 most-viewed in Germany)
+exports.berlinPropertiesPage = async (req, res, next) => {
+  try {
+    const sql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE 
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.featured, p.created_at, p.description,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name, u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'Germany'
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 8
+    `;
+    const { rows: properties } = await query(sql);
+    const lang = res.locals.lang || 'en';
+    const recommendedProperties = (properties || []).map(p => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: (p.title_i18n && p.title_i18n[lang]) || p.title,
+        description: (p.description_i18n && p.description_i18n[lang]) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+
+    const baseUrl = res.locals.baseUrl;
+    const canonicalUrl = `${baseUrl}/properties-for-sale-berlin`;
+    res.render('properties-for-sale-berlin', {
+      title: 'Properties for Sale in Berlin',
+      useMainContainer: false,
+      useHomeHeader: true,
+      headPartial: '../partials/seo/berlin-properties-head',
+      canonicalUrl,
+      pageMetaDescription: 'Find properties for sale in Berlin, Germany. Browse the most viewed apartments, houses, and villas. Expert real estate guidance from Sweet Home.',
+      locations,
+      recommendedProperties,
+      baseUrl: res.locals.baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+};
