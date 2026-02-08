@@ -461,35 +461,36 @@ app.use('/superadmin/dashboard/properties', adminPropertyRoutes);
 // Alias admin create route so buttons like "/admin/properties/new" work
 app.use('/admin/properties', propertyRoutes);
 
-// Shared home page render logic
+// In-memory cache for home page data (reduces HTML generation time for crawlers and repeat visits)
+const HOME_PAGE_CACHE_TTL_MS = 60 * 1000; // 60 seconds
+let homePageCache = { data: null, expires: 0 };
+
+function getHomePageData() {
+  if (homePageCache.data && Date.now() < homePageCache.expires) {
+    return homePageCache.data;
+  }
+  return null;
+}
+
+function setHomePageData(data) {
+  homePageCache = { data, expires: Date.now() + HOME_PAGE_CACHE_TTL_MS };
+}
+
+// Shared home page render logic (optimized: parallel queries, simple project query, optional cache)
 async function renderHomePage(req, res, langPath, next) {
   try {
-    let rows;
-    try {
-      const { rows: sampleRows } = await query(`
-        SELECT id, title, slug, country, city, neighborhood, photos,
-               min_price, max_price, min_unit_size, max_unit_size, unit_types, status
-          FROM projects
-         WHERE status = 'active'
-         TABLESAMPLE SYSTEM (10)
-         LIMIT 1
-      `);
-      rows = sampleRows;
-      // If TABLESAMPLE returns no rows, fall back to simple query
-      if (!rows || rows.length === 0) {
-        const { rows: fallbackRows } = await query(`
-          SELECT id, title, slug, country, city, neighborhood, photos,
-                 min_price, max_price, min_unit_size, max_unit_size, unit_types, status
-            FROM projects
-           WHERE status = 'active'
-           ORDER BY id DESC
-           LIMIT 1
-        `);
-        rows = fallbackRows;
-      }
-    } catch (_) {
-      // If TABLESAMPLE fails, use simple ORDER BY id DESC (much faster than random())
-      const { rows: fallbackRows } = await query(`
+    const lang = (res.locals && res.locals.lang) ? res.locals.lang : (req.cookies && req.cookies.lang) ? req.cookies.lang : 'en';
+
+    let recommendedProject = null;
+    let blogRows = [];
+
+    const cached = getHomePageData();
+    if (cached) {
+      recommendedProject = cached.recommendedProject;
+      blogRows = cached.blogRows || [];
+    } else {
+      // Parallel fetch: single fast project query + blog posts (no TABLESAMPLE)
+      const projectsPromise = query(`
         SELECT id, title, slug, country, city, neighborhood, photos,
                min_price, max_price, min_unit_size, max_unit_size, unit_types, status
           FROM projects
@@ -497,44 +498,44 @@ async function renderHomePage(req, res, langPath, next) {
          ORDER BY id DESC
          LIMIT 1
       `);
-      rows = fallbackRows;
+      const blogPromise = BlogPost.findPublic({ limit: 6, offset: 0 }).catch(() => []);
+
+      const [projectsResult, posts] = await Promise.all([projectsPromise, blogPromise]);
+      const rows = (projectsResult && projectsResult.rows) ? projectsResult.rows : [];
+      blogRows = Array.isArray(posts) ? posts : [];
+
+      if (rows.length > 0) {
+        const p = rows[0];
+        const arr = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+        const photos = arr.map(ph => {
+          if (!ph) return ph;
+          const s = String(ph);
+          if (s.startsWith('/uploads/') || s.startsWith('http')) return s;
+          return `/uploads/projects/${p.id}/${s}`;
+        });
+        recommendedProject = {
+          id: p.id,
+          title: p.title,
+          slug: p.slug,
+          country: p.country,
+          city: p.city,
+          neighborhood: p.neighborhood,
+          photos,
+          min_price: p.min_price,
+          max_price: p.max_price,
+          min_unit_size: p.min_unit_size,
+          max_unit_size: p.max_unit_size,
+          unit_types: Array.isArray(p.unit_types) ? p.unit_types : (p.unit_types ? [p.unit_types] : [])
+        };
+      }
+
+      setHomePageData({ recommendedProject, blogRows });
     }
 
-    let recommendedProject = null;
-    if (rows && rows[0]) {
-      const p = rows[0];
-      const arr = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
-      const photos = arr.map(ph => {
-        if (!ph) return ph;
-        const s = String(ph);
-        if (s.startsWith('/uploads/') || s.startsWith('http')) return s;
-        return `/uploads/projects/${p.id}/${s}`;
-      });
-      recommendedProject = {
-        id: p.id,
-        title: p.title,
-        slug: p.slug,
-        country: p.country,
-        city: p.city,
-        neighborhood: p.neighborhood,
-        photos,
-        min_price: p.min_price,
-        max_price: p.max_price,
-        min_unit_size: p.min_unit_size,
-        max_unit_size: p.max_unit_size,
-        unit_types: Array.isArray(p.unit_types) ? p.unit_types : (p.unit_types ? [p.unit_types] : [])
-      };
-    }
-
-    const lang = (res.locals && res.locals.lang) ? res.locals.lang : (req.cookies && req.cookies.lang) ? req.cookies.lang : 'en';
-    let recentBlogPosts = [];
-    try {
-      const posts = await BlogPost.findPublic({ limit: 6, offset: 0 });
-      recentBlogPosts = (posts || []).map(p => ({
-        slug: p.slug,
-        title: (p.title_i18n && p.title_i18n[lang]) || p.title
-      }));
-    } catch (_) { /* non-fatal */ }
+    const recentBlogPosts = blogRows.map(p => ({
+      slug: p.slug,
+      title: (p.title_i18n && p.title_i18n[lang]) || p.title
+    }));
 
     const baseUrl = res.locals.baseUrl;
     const canonicalUrl = `${baseUrl}${langPath}`;
