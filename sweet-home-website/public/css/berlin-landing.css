@@ -33,7 +33,7 @@
 .berlin-hero__overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 1;
 }
 
@@ -59,30 +59,6 @@
   line-height: 1.5;
   margin: 0 0 28px;
   color: rgba(255, 255, 255, 0.85);
-}
-
-.berlin-hero__cta {
-  display: inline-block;
-  background: var(--primary-color, #2ea862);
-  color: #fff;
-  padding: 14px 28px;
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: 600;
-  box-shadow: 0 8px 22px rgba(46, 168, 98, 0.35);
-  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-}
-
-.berlin-hero__cta:hover {
-  background: var(--primary-dark, #23804b);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(46, 168, 98, 0.4);
-  color: #fff;
-}
-
-.berlin-hero__cta:focus-visible {
-  outline: 2px solid var(--primary-light, #58c27d);
-  outline-offset: 3px;
 }
 
 /* 2) Search bar section – white bg + animated green border only */
