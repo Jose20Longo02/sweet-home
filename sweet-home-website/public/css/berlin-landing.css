@@ -5,16 +5,17 @@
   background: var(--gray-50, #f8fafc);
 }
 
-/* 1) Hero section: title, description, CTA */
+/* 1) Hero section: title, description, CTA – tall hero, content kept lower to separate from header */
 .berlin-hero {
   position: relative;
-  min-height: 56vh;
+  min-height: 75vh;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   text-align: center;
   color: var(--white);
   overflow: hidden;
+  padding-bottom: 14vh;
 }
 
 .berlin-hero__bg {
@@ -40,7 +41,7 @@
   position: relative;
   z-index: 2;
   max-width: 720px;
-  padding: 48px 24px 56px;
+  padding: 0 24px;
 }
 
 .berlin-hero__title {
@@ -155,8 +156,8 @@
 }
 
 @media (max-width: 768px) {
-  .berlin-hero { min-height: 50vh; }
-  .berlin-hero__content { padding: 40px 20px 48px; }
+  .berlin-hero { min-height: 70vh; padding-bottom: 12vh; }
+  .berlin-hero__content { padding: 0 20px; }
   .berlin-search { margin: -24px 12px 0; padding: 20px 16px; border-radius: 14px; }
   .berlin-search .berlin-search__row { flex-wrap: wrap; gap: 10px; justify-content: stretch; }
   .berlin-search .berlin-search__row > select { flex: 1 1 calc(50% - 8px); max-width: none; }
