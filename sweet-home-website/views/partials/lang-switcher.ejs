@@ -12,7 +12,7 @@
   </button>
   <div id="lang-menu" class="lang-menu" role="menu" aria-hidden="true">
     <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
-      <a role="menuitem" class="lang-option <%= (lang===code ? 'is-active' : '') %>" href="<%= (typeof berlinPagePaths !== 'undefined' && berlinPagePaths && berlinPagePaths[code]) ? berlinPagePaths[code] : (typeof homeLangPaths !== 'undefined' && homeLangPaths) ? (code === 'en' ? '/' : '/' + code) : '/lang/' + code %>">
+      <a role="menuitem" class="lang-option <%= (lang===code ? 'is-active' : '') %>" href="<%= (typeof berlinPagePaths !== 'undefined' && berlinPagePaths && berlinPagePaths[code]) ? berlinPagePaths[code] : (typeof dubaiPagePaths !== 'undefined' && dubaiPagePaths && dubaiPagePaths[code]) ? dubaiPagePaths[code] : (typeof homeLangPaths !== 'undefined' && homeLangPaths) ? (code === 'en' ? '/' : '/' + code) : '/lang/' + code %>">
         <%= (languageLabels && languageLabels[code]) || code.toUpperCase() %>
       </a>
     <% }) %>

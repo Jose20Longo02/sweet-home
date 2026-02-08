@@ -442,6 +442,11 @@ app.get('/properties-for-sale-berlin', propertyController.berlinPropertiesPage);
 app.get('/de/immobilien-berlin-kaufen', propertyController.berlinPropertiesPage);
 app.get('/es/propiedades-en-venta-berlin', propertyController.berlinPropertiesPage);
 
+// Dubai landing page
+app.get('/properties-for-sale-dubai', propertyController.dubaiPropertiesPage);
+app.get('/de/immobilien-dubai-kaufen', propertyController.dubaiPropertiesPage);
+app.get('/es/propiedades-en-venta-dubai', propertyController.dubaiPropertiesPage);
+
 // Public & agent routes
 app.use('/properties', propertyRoutes);
 

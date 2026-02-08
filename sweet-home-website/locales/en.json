@@ -96,6 +96,25 @@
     "faqQ5": "Is now a good time to buy property in Berlin?",
     "faqA5": "Current conditions can be favourable for certain investors: purchase prices for condominiums and apartment buildings have adjusted from previous highs, while demand for housing and rental growth remain strong. The recalibration of the market to a new price level is seen as largely complete, and institutional interest in residential assets has increased again due to housing shortage and the resilience of the sector. Whether it's the right time for you depends on your goals, financing, and target area. Sweet Home can help you explore carefully selected properties and provide expert guidance for buying or investing in Berlin."
   },
+  "dubai": {
+    "heroTitle": "Properties for Sale in Dubai",
+    "heroDescription": "Discover carefully selected properties for sale in Dubai, one of the world's most dynamic real estate markets. Sweet Home supports international buyers and investors with expert guidance and access to off-plan and ready residential opportunities.",
+    "heroImgAlt": "Dubai skyline – properties for sale in Dubai, UAE",
+    "featuredTitle": "Featured properties",
+    "viewAll": "View all properties in Dubai",
+    "faqTitle": "Frequently asked questions about buying property in Dubai",
+    "faqSource": "Sources: Savills Research, Dubai Residential Market Report Q3 2025.",
+    "faqQ1": "Why invest in Dubai real estate?",
+    "faqA1": "Dubai's residential market reached record levels again in Q3 2025, supported by population growth (over four million), strong UAE GDP growth (4.9%), and an influx of high net worth individuals. The tax-free ecosystem, ease of securing mortgages, and lower cost of prime ownership versus other global cities are driving a clear shift toward homeownership among expatriates and continued appeal for investors. Savills ranked Dubai as the top global city for attracting and developing individual wealth, with the Golden Visa and quality of life reinforcing long-term demand.",
+    "faqQ2": "How active is the Dubai residential market?",
+    "faqA2": "Q3 2025 maintained residential transaction volumes over 50,000 for a second consecutive quarter. Average quarterly volumes have risen from circa 22,750 in 2022 to 31,200 in 2023, 43,500 in 2024 and 49,500 year-to-date in 2025. Apartments dominated with 86% of all transactions. Off-plan sales represented 69% of all deals in Q3 2025, with nearly 37,000 off-plan transactions. The ready market remained stable with over 16,500 transactions in the quarter.",
+    "faqQ3": "Where are the most active areas in Dubai?",
+    "faqA3": "Zone 6 recorded the highest activity in Q3, accounting for 37% of total transactions. It covers areas along the Al Khail corridor including Jumeirah Village Circle (JVC), Dubailand, Damac Hills 2, The Valley, and Damac Lagoons. Zone 3 followed with 29%, including JBR, Bluewaters, Dubai Marina, Emirates Living, JLT, and Barsha. Zone 2 saw an uptick in 2025 (13% in Q3), covering Business Bay, Downtown, and City Walk.",
+    "faqQ4": "What is the supply and completion outlook for Dubai?",
+    "faqA4": "Approximately 8,500 units were added in Q3 2025, bringing year-to-date completions to nearly 30,000—matching the full year 2024 total. Around 10,000 further residential units are slated for completion in Q4 2025. The forward-looking pipeline remains strong with over 250,000 units anticipated by the end of 2028. Over 10,000 units were launched in Q3 2025, with apartments accounting for 97% of new launches.",
+    "faqQ5": "Is now a good time to buy property in Dubai?",
+    "faqA5": "Q3 2025 delivered record-breaking metrics with transaction volumes and average rates per sq ft reaching new highs. Dubai's population is forecast to reach 5 million by 2030. The emirate's political stability, competitive regulatory landscape, and business-friendly ecosystem are expected to support ongoing population and investment inflows long-term. Henley & Partners anticipate 9,800 millionaires migrating to the UAE in 2025. Sweet Home can help you explore carefully selected properties and provide expert guidance for buying or investing in Dubai."
+  },
   "projects": {
     "regions": {
       "title": "Projects by Region",

@@ -1,0 +1,275 @@
+<% useMainContainer = false %>
+<% useHomeHeader = true %>
+<link rel="stylesheet" href="/css/home.css" />
+<link rel="stylesheet" href="/css/berlin-landing.css" />
+
+<div id="locations-data" data-locations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locations) : JSON.stringify(locations)).replace(/'/g, '&#39;') %>' style="display:none"></div>
+
+<div class="berlin-landing-page">
+  <!-- 1) Hero -->
+  <section class="berlin-hero" aria-labelledby="dubai-hero-title">
+    <div class="berlin-hero__bg">
+      <img src="/images/dubai-hero.jpg" alt="<%= t('dubai.heroImgAlt','Dubai skyline – properties for sale in Dubai, UAE') %>" fetchpriority="high" decoding="async">
+    </div>
+    <div class="berlin-hero__overlay"></div>
+    <div class="berlin-hero__content">
+      <h1 id="dubai-hero-title" class="berlin-hero__title"><%= t('dubai.heroTitle','Properties for Sale in Dubai') %></h1>
+      <p class="berlin-hero__description"><%= t('dubai.heroDescription','Discover carefully selected properties for sale in Dubai, one of the world\'s most dynamic real estate markets. Sweet Home supports international buyers and investors with expert guidance and access to off-plan and ready residential opportunities.') %></p>
+    </div>
+  </section>
+
+  <!-- 2) Search bar (UAE / Dubai default) -->
+  <section id="dubai-search" class="berlin-search" aria-labelledby="dubai-search-title">
+    <h2 id="dubai-search-title" class="berlin-search__title sr-only"><%= t('home.search.cta','Search Properties') %></h2>
+    <form action="/properties" method="get" class="berlin-search__form">
+      <div class="berlin-search__row">
+        <label class="sr-only" for="country"><%= t('forms.country','Country') %></label>
+        <select id="country" name="country" aria-label="<%= t('forms.country','Country') %>">
+          <option value=""><%= t('forms.country','Country') %></option>
+          <% Object.keys(locations).forEach(c => { %>
+            <option value="<%= c %>" <%= c === 'UAE' ? 'selected' : '' %>><%= c %></option>
+          <% }); %>
+        </select>
+        <label class="sr-only" for="city"><%= t('forms.city','City') %></label>
+        <select id="city" name="city" aria-label="<%= t('forms.city','City') %>">
+          <option value=""><%= t('forms.city','City') %></option>
+          <% if (locations.UAE) { Object.keys(locations.UAE).forEach(ct => { %>
+            <option value="<%= ct %>" <%= ct === 'Dubai' ? 'selected' : '' %>><%= ct %></option>
+          <% }); } %>
+        </select>
+        <label class="sr-only" for="neighborhood"><%= t('forms.neighborhood','Neighborhood') %></label>
+        <select id="neighborhood" name="neighborhood" disabled aria-label="<%= t('forms.neighborhood','Neighborhood') %>">
+          <option value=""><%= t('forms.neighborhood','Neighborhood') %></option>
+        </select>
+        <label class="sr-only" for="operation"><%= t('forms.operation','Operation') %></label>
+        <select id="operation" name="operation">
+          <option value=""><%= t('forms.anyOperation','Any Operation') %></option>
+          <option value="buy" selected><%= t('forms.operations.buy','Buy') %></option>
+          <option value="rent"><%= t('forms.operations.rent','Rent') %></option>
+        </select>
+        <label class="sr-only" for="type"><%= t('forms.propertyType','Property Type') %></label>
+        <select id="type" name="type">
+          <option value=""><%= t('forms.anyType','Any Type') %></option>
+          <option><%= t('forms.types.apartment','Apartment') %></option>
+          <option><%= t('forms.types.house','House') %></option>
+          <option><%= t('forms.types.villa','Villa') %></option>
+          <option><%= t('forms.types.land','Land') %></option>
+        </select>
+        <button type="submit"><%= t('home.search.cta','Search Properties') %></button>
+      </div>
+    </form>
+  </section>
+
+  <!-- 3) Featured properties -->
+  <section class="section featured berlin-featured" aria-labelledby="recommended-heading">
+    <h2 id="recommended-heading" class="berlin-featured__title"><%= t('dubai.featuredTitle','Featured properties') %></h2>
+    <div class="berlin-featured__grid" id="dubaiRecommended">
+      <% (recommendedProperties || []).forEach(property => { %>
+        <%
+          const photoUrl = (property.photos && property.photos[0]) ? property.photos[0] : '/img/property-placeholder.jpg';
+          const size = property.size ? `${property.size} m²` : null;
+          const beds = (typeof property.rooms !== 'undefined' && property.rooms !== null) ? property.rooms : null;
+          const baths = (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) ? property.bathrooms : null;
+          const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString('en-US') : '';
+        %>
+        <article class="property-card">
+          <a href="/properties/<%= property.slug %>" class="property-card-link">
+            <div class="img-wrap" <%= priceText ? `data-price="${priceText}"` : '' %>>
+              <img src="<%= photoUrl %>" alt="<%= property.title %>" loading="lazy" decoding="async" onerror="this.src='/img/property-placeholder.jpg'">
+            </div>
+            <div class="meta">
+              <div class="title"><%= property.title %></div>
+              <% if (priceText) { %><div class="price"><%= priceText %></div><% } %>
+              <div class="location">
+                <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                <%= property.neighborhood || property.city %>, <%= property.country %>
+              </div>
+              <div class="features-row">
+                <% if (size) { %>
+                  <div class="feature">
+                    <span class="icon icon-16 icon-inline icon-mask icon-size"></span>
+                    <span><%= size %></span>
+                  </div>
+                <% } %>
+                <% if (beds !== null) { %>
+                  <div class="feature">
+                    <span class="icon icon-16 icon-inline icon-mask icon-bed"></span>
+                    <span><%= beds %> bed<%= Number(beds) === 1 ? '' : 's' %></span>
+                  </div>
+                <% } %>
+                <% if (baths !== null) { %>
+                  <div class="feature">
+                    <span class="icon icon-16 icon-inline icon-mask icon-bath"></span>
+                    <span><%= baths %> bath<%= Number(baths) === 1 ? '' : 's' %></span>
+                  </div>
+                <% } %>
+              </div>
+              <span class="learn-more"><%= t('properties.list.viewDetails','View details') %> →</span>
+            </div>
+          </a>
+        </article>
+      <% }); %>
+    </div>
+    <% if (!recommendedProperties || recommendedProperties.length === 0) { %>
+      <p class="section-empty"><%= t('properties.list.noResults','No properties found.') %> <a href="/properties?country=UAE"><%= t('home.search.cta','Search Properties') %></a></p>
+    <% } else { %>
+      <p class="section-cta">
+        <a href="/properties?country=UAE" class="btn btn-primary"><%= t('dubai.viewAll','View all properties in Dubai') %></a>
+      </p>
+    <% } %>
+  </section>
+
+  <!-- 4) FAQ: Dubai real estate (from Savills Q3 2025 report) -->
+  <section class="berlin-faq section" aria-labelledby="dubai-faq-heading">
+    <h2 id="dubai-faq-heading" class="berlin-faq__title"><%= t('dubai.faqTitle','Frequently asked questions about buying property in Dubai') %></h2>
+    <div class="berlin-faq__list">
+      <article class="berlin-faq__item">
+        <h3 class="berlin-faq__question">
+          <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="dubai-faq-a1" id="dubai-faq-q1" data-faq-toggle>
+            <%= t('dubai.faqQ1','Why invest in Dubai real estate?') %>
+          </button>
+        </h3>
+        <div class="berlin-faq__answer" id="dubai-faq-a1" role="region" aria-labelledby="dubai-faq-q1" hidden>
+          <p><%= t('dubai.faqA1','Dubai\'s residential market reached record levels again in Q3 2025, supported by population growth (over four million), strong UAE GDP growth (4.9%), and an influx of high net worth individuals. The tax-free ecosystem, ease of securing mortgages, and lower cost of prime ownership versus other global cities are driving a clear shift toward homeownership among expatriates and continued appeal for investors. Savills ranked Dubai as the top global city for attracting and developing individual wealth, with the Golden Visa and quality of life reinforcing long-term demand.') %></p>
+        </div>
+      </article>
+      <article class="berlin-faq__item">
+        <h3 class="berlin-faq__question">
+          <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="dubai-faq-a2" id="dubai-faq-q2" data-faq-toggle>
+            <%= t('dubai.faqQ2','How active is the Dubai residential market?') %>
+          </button>
+        </h3>
+        <div class="berlin-faq__answer" id="dubai-faq-a2" role="region" aria-labelledby="dubai-faq-q2" hidden>
+          <p><%= t('dubai.faqA2','Q3 2025 maintained residential transaction volumes over 50,000 for a second consecutive quarter. Average quarterly volumes have risen from circa 22,750 in 2022 to 31,200 in 2023, 43,500 in 2024 and 49,500 year-to-date in 2025. Apartments dominated with 86% of all transactions. Off-plan sales represented 69% of all deals in Q3 2025, with nearly 37,000 off-plan transactions. The ready market remained stable with over 16,500 transactions in the quarter.') %></p>
+        </div>
+      </article>
+      <article class="berlin-faq__item">
+        <h3 class="berlin-faq__question">
+          <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="dubai-faq-a3" id="dubai-faq-q3" data-faq-toggle>
+            <%= t('dubai.faqQ3','Where are the most active areas in Dubai?') %>
+          </button>
+        </h3>
+        <div class="berlin-faq__answer" id="dubai-faq-a3" role="region" aria-labelledby="dubai-faq-q3" hidden>
+          <p><%= t('dubai.faqA3','Zone 6 recorded the highest activity in Q3, accounting for 37% of total transactions. It covers areas along the Al Khail corridor including Jumeirah Village Circle (JVC), Dubailand, Damac Hills 2, The Valley, and Damac Lagoons. Zone 3 followed with 29%, including JBR, Bluewaters, Dubai Marina, Emirates Living, JLT, and Barsha. Zone 2 saw an uptick in 2025 (13% in Q3), covering Business Bay, Downtown, and City Walk.') %></p>
+        </div>
+      </article>
+      <article class="berlin-faq__item">
+        <h3 class="berlin-faq__question">
+          <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="dubai-faq-a4" id="dubai-faq-q4" data-faq-toggle>
+            <%= t('dubai.faqQ4','What is the supply and completion outlook for Dubai?') %>
+          </button>
+        </h3>
+        <div class="berlin-faq__answer" id="dubai-faq-a4" role="region" aria-labelledby="dubai-faq-q4" hidden>
+          <p><%= t('dubai.faqA4','Approximately 8,500 units were added in Q3 2025, bringing year-to-date completions to nearly 30,000—matching the full year 2024 total. Around 10,000 further residential units are slated for completion in Q4 2025. The forward-looking pipeline remains strong with over 250,000 units anticipated by the end of 2028. Over 10,000 units were launched in Q3 2025, with apartments accounting for 97% of new launches.') %></p>
+        </div>
+      </article>
+      <article class="berlin-faq__item">
+        <h3 class="berlin-faq__question">
+          <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="dubai-faq-a5" id="dubai-faq-q5" data-faq-toggle>
+            <%= t('dubai.faqQ5','Is now a good time to buy property in Dubai?') %>
+          </button>
+        </h3>
+        <div class="berlin-faq__answer" id="dubai-faq-a5" role="region" aria-labelledby="dubai-faq-q5" hidden>
+          <p><%= t('dubai.faqA5','Q3 2025 delivered record-breaking metrics with transaction volumes and average rates per sq ft reaching new highs. Dubai\'s population is forecast to reach 5 million by 2030. The emirate\'s political stability, competitive regulatory landscape, and business-friendly ecosystem are expected to support ongoing population and investment inflows long-term. Henley & Partners anticipate 9,800 millionaires migrating to the UAE in 2025. Sweet Home can help you explore carefully selected properties and provide expert guidance for buying or investing in Dubai.') %></p>
+        </div>
+      </article>
+    </div>
+    <p class="berlin-faq__source"><%= t('dubai.faqSource','Sources: Savills Research, Dubai Residential Market Report Q3 2025.') %> <a href="https://www.savills.com/research_articles/255350/323691-0" rel="noopener noreferrer" target="_blank">Savills Dubai Residential Market Q3 2025</a></p>
+  </section>
+</div>
+
+<script>
+document.querySelectorAll('[data-faq-toggle]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var expanded = this.getAttribute('aria-expanded') === 'true';
+    var targetId = this.getAttribute('aria-controls');
+    var target = targetId ? document.getElementById(targetId) : null;
+    this.setAttribute('aria-expanded', !expanded);
+    if (target) target.hidden = expanded;
+  });
+});
+</script>
+<script>
+(function headerShrink() {
+  var header = document.querySelector('.site-header.gradient') || document.querySelector('.site-header');
+  if (!header) return;
+  function update() {
+    if (window.scrollY > 40) header.classList.add('shrink');
+    else header.classList.remove('shrink');
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function run() {
+      update();
+      window.addEventListener('scroll', update, { passive: true });
+    });
+  } else {
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+  }
+})();
+
+(function() {
+  var locationsEl = document.getElementById('locations-data');
+  if (locationsEl && typeof window !== 'undefined') {
+    try {
+      window.locations = JSON.parse(locationsEl.getAttribute('data-locations') || '{}');
+    } catch (e) {}
+  }
+  var countrySelect = document.getElementById('country');
+  var citySelect = document.getElementById('city');
+  var neighborhoodSelect = document.getElementById('neighborhood');
+  if (countrySelect && citySelect && neighborhoodSelect && window.locations) {
+    citySelect.disabled = false;
+    countrySelect.addEventListener('change', function() {
+      var country = this.value;
+      citySelect.innerHTML = '<option value="">' + (document.documentElement.lang === 'de' ? 'Stadt' : document.documentElement.lang === 'es' ? 'Ciudad' : 'City') + '</option>';
+      neighborhoodSelect.innerHTML = '<option value="">' + (document.documentElement.lang === 'de' ? 'Stadtteil' : document.documentElement.lang === 'es' ? 'Barrio' : 'Neighborhood') + '</option>';
+      neighborhoodSelect.disabled = true;
+      if (country && window.locations[country]) {
+        Object.keys(window.locations[country]).forEach(function(ct) {
+          var opt = document.createElement('option');
+          opt.value = ct;
+          opt.textContent = ct;
+          citySelect.appendChild(opt);
+        });
+        citySelect.disabled = false;
+      } else {
+        citySelect.disabled = true;
+      }
+    });
+    citySelect.addEventListener('change', function() {
+      var country = countrySelect.value;
+      var city = this.value;
+      neighborhoodSelect.innerHTML = '<option value="">' + (document.documentElement.lang === 'de' ? 'Stadtteil' : document.documentElement.lang === 'es' ? 'Barrio' : 'Neighborhood') + '</option>';
+      if (country && city && window.locations[country] && window.locations[country][city]) {
+        var neighborhoods = window.locations[country][city];
+        if (Array.isArray(neighborhoods) && neighborhoods.length > 0) {
+          neighborhoods.forEach(function(n) {
+            var opt = document.createElement('option');
+            opt.value = n;
+            opt.textContent = n;
+            neighborhoodSelect.appendChild(opt);
+          });
+          neighborhoodSelect.disabled = false;
+        } else {
+          neighborhoodSelect.disabled = false;
+        }
+      } else {
+        neighborhoodSelect.disabled = true;
+      }
+    });
+    if (countrySelect.value === 'UAE' && window.locations.UAE) {
+      if (citySelect.options.length <= 1) {
+        Object.keys(window.locations.UAE).forEach(function(ct) {
+          var opt = document.createElement('option');
+          opt.value = ct;
+          opt.textContent = ct;
+          citySelect.appendChild(opt);
+        });
+      }
+      citySelect.value = 'Dubai';
+      citySelect.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+})();
+</script>

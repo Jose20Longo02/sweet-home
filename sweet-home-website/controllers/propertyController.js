@@ -2631,3 +2631,84 @@ exports.berlinPropertiesPage = async (req, res, next) => {
     next(err);
   }
 };
+
+// Dubai landing page: Properties for Sale Dubai (9 most-viewed in UAE)
+exports.dubaiPropertiesPage = async (req, res, next) => {
+  try {
+    const sql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE 
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.featured, p.created_at, p.description,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name, u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'UAE'
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 9
+    `;
+    const { rows: properties } = await query(sql);
+    const lang = res.locals.lang || 'en';
+    const recommendedProperties = (properties || []).map(p => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: (p.title_i18n && p.title_i18n[lang]) || p.title,
+        description: (p.description_i18n && p.description_i18n[lang]) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+
+    const baseUrl = res.locals.baseUrl;
+    const dubaiUrls = {
+      en: `${baseUrl}/properties-for-sale-dubai`,
+      de: `${baseUrl}/de/immobilien-dubai-kaufen`,
+      es: `${baseUrl}/es/propiedades-en-venta-dubai`
+    };
+    const canonicalUrl = dubaiUrls[lang] || dubaiUrls.en;
+    const hreflangAlternates = {
+      'en-us': dubaiUrls.en,
+      'de-de': dubaiUrls.de,
+      'es-es': dubaiUrls.es
+    };
+    const titles = {
+      en: 'Properties for Sale in Dubai',
+      de: 'Immobilien Dubai kaufen',
+      es: 'Propiedades en venta en Dubái'
+    };
+    const metaDescriptions = {
+      en: 'Find properties for sale in Dubai, UAE. Browse apartments, villas and off-plan. Expert real estate guidance from Sweet Home.',
+      de: 'Immobilien in Dubai kaufen: Wohnungen, Villen und Off-Plan. Sweet Home unterstützt internationale Käufer und Investoren.',
+      es: 'Encuentra propiedades en venta en Dubái, EAU. Apartamentos, villas y plan futuro. Asesoramiento de Sweet Home.'
+    };
+    const dubaiPagePaths = {
+      en: '/properties-for-sale-dubai',
+      de: '/de/immobilien-dubai-kaufen',
+      es: '/es/propiedades-en-venta-dubai'
+    };
+    res.render('properties-for-sale-dubai', {
+      title: titles[lang] || titles.en,
+      useMainContainer: false,
+      useHomeHeader: true,
+      headPartial: '../partials/seo/dubai-properties-head',
+      canonicalUrl,
+      hreflangAlternates,
+      pageMetaDescription: metaDescriptions[lang] || metaDescriptions.en,
+      dubaiPagePaths,
+      locations,
+      recommendedProperties,
+      baseUrl: res.locals.baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+};
