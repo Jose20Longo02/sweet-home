@@ -8,9 +8,10 @@ module.exports = function i18nMiddleware(req, res, next) {
     const supported = ['en', 'es', 'de'];
     const labels = { en: 'English', es: 'Español', de: 'Deutsch' };
     const accepts = (typeof req.acceptsLanguages === 'function') ? (req.acceptsLanguages() || []) : [];
-    // Prefer cookie; default to English for first-time visitors. Ignore query param to avoid sticky URLs.
+    // Prefer locale from URL path (e.g. /en, /de, /es for homepage), then cookie
+    const pathLang = (req.path === '/en' || req.path === '/de' || req.path === '/es') ? req.path.slice(1) : '';
     const cLang = (req.cookies && typeof req.cookies.lang === 'string') ? req.cookies.lang.trim() : '';
-    let lang = cLang || 'en';
+    let lang = pathLang || cLang || 'en';
     lang = String(lang).slice(0, 2).toLowerCase();
     if (!supported.includes(lang)) lang = 'en';
 

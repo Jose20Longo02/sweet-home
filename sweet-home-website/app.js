@@ -307,6 +307,8 @@ app.use(['/api', '/auth', '/properties/api', '/projects/api'], apiLimiter);
 // Expose current path to views so layout can pick header variant
 app.use((req, res, next) => {
   res.locals.currentPath = req.path;
+  // Flag for lang switcher: on /en, /de, /es use path-based links instead of /lang/:code
+  res.locals.homeLangPaths = (req.path === '/en' || req.path === '/de' || req.path === '/es');
   next();
 });
 
@@ -430,11 +432,16 @@ app.use('/superadmin/dashboard/properties', adminPropertyRoutes);
 // Alias admin create route so buttons like "/admin/properties/new" work
 app.use('/admin/properties', propertyRoutes);
 
-// Home page route
-app.get('/', async (req, res, next) => {
+// Home page: / redirects to language-specific URL based on cookie (or /en default)
+app.get('/', (req, res) => {
+  const lang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase() : 'en';
+  const target = ['de', 'es'].includes(lang) ? `/${lang}` : '/en';
+  return res.redirect(302, target);
+});
+
+// Shared home page render logic
+async function renderHomePage(req, res, langPath, next) {
   try {
-    // Pick one random active project to highlight (optimized: use TABLESAMPLE for better performance)
-    // Fallback to ORDER BY id DESC if TABLESAMPLE not available
     let rows;
     try {
       const { rows: sampleRows } = await query(`
@@ -508,19 +515,31 @@ app.get('/', async (req, res, next) => {
     } catch (_) { /* non-fatal */ }
 
     const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
-    res.render('home', { 
+    const canonicalUrl = `${baseUrl}${langPath}`;
+    const hreflangAlternates = {
+      'en-us': `${baseUrl}/en`,
+      'de-de': `${baseUrl}/de`,
+      'es-es': `${baseUrl}/es`
+    };
+    res.render('home', {
       title: 'Find Your Dream Home',
       user: req.session.user || null,
       locations,
       recommendedProject,
       recentBlogPosts,
       baseUrl,
-      canonicalUrl: `${baseUrl}/`,
+      canonicalUrl,
+      hreflangAlternates,
       headPartial: '../partials/seo/home-head',
       pageMetaDescription: 'Find your dream property in Cyprus, Dubai, and Berlin. Browse luxury apartments, villas, and real estate investments. Expert guidance for buyers and sellers.'
     });
   } catch (e) { next(e); }
-});
+}
+
+// Home page by language: /en, /de, /es (i18n reads lang from path)
+app.get('/en', (req, res, next) => renderHomePage(req, res, '/en', next));
+app.get('/de', (req, res, next) => renderHomePage(req, res, '/de', next));
+app.get('/es', (req, res, next) => renderHomePage(req, res, '/es', next));
 
 // Staff convenience entry — bookmarkable
 app.get('/admin', (req, res) => {

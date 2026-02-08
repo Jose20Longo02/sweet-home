@@ -64,21 +64,27 @@
     <!-- End Meta Pixel Code -->
   <% } %>
   <% if (typeof canonicalUrl !== 'undefined' && canonicalUrl) { 
-    // Single source: canonical and every hreflang href must be identical (no conflict, self-referencing)
     const canonicalHref = String(canonicalUrl).trim();
-    // Lowercase language-region (e.g. en-us) for hreflang to satisfy validators and self-reference checks
-    const supportedHreflangs = [
-      { lang: 'en', region: 'us' },
-      { lang: 'es', region: 'es' },
-      { lang: 'de', region: 'de' }
-    ];
-    const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
-    const currentHreflang = supportedHreflangs.find(h => h.lang === currentLang) || supportedHreflangs[0];
-    const currentHreflangValue = currentHreflang.lang + '-' + currentHreflang.region;
+    if (typeof hreflangAlternates !== 'undefined' && hreflangAlternates && typeof hreflangAlternates === 'object') {
+      // URL-based language variants (e.g. home /en, /de, /es): each lang has its own URL
   %>
-    <!-- Canonical URL - must match every hreflang href exactly (no conflicting hreflang and rel=canonical) -->
     <link rel="canonical" href="<%= canonicalHref %>">
-    <!-- Self-referencing hreflang: same href as canonical so validators see a self-referencing URL -->
+    <% Object.keys(hreflangAlternates).forEach(function(hreflangCode) { %>
+    <link rel="alternate" hreflang="<%= hreflangCode %>" href="<%= hreflangAlternates[hreflangCode] %>">
+    <% }); %>
+    <link rel="alternate" hreflang="x-default" href="<%= hreflangAlternates['en-us'] || canonicalHref %>">
+  <% } else {
+      // Single-URL pages (cookie-based lang): canonical and all hreflang point to same URL
+      const supportedHreflangs = [
+        { lang: 'en', region: 'us' },
+        { lang: 'es', region: 'es' },
+        { lang: 'de', region: 'de' }
+      ];
+      const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+      const currentHreflang = supportedHreflangs.find(h => h.lang === currentLang) || supportedHreflangs[0];
+      const currentHreflangValue = currentHreflang.lang + '-' + currentHreflang.region;
+  %>
+    <link rel="canonical" href="<%= canonicalHref %>">
     <link rel="alternate" hreflang="<%= currentHreflangValue %>" href="<%= canonicalHref %>">
     <% supportedHreflangs.forEach(function(hreflang) { 
       const hreflangValue = hreflang.lang + '-' + hreflang.region;
@@ -88,6 +94,7 @@
     <%   }
     }); %>
     <link rel="alternate" hreflang="x-default" href="<%= canonicalHref %>">
+  <% } %>
   <% } %>
   <% if ((typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) && !(typeof currentPath !== 'undefined' && (/^\/(admin|superadmin)/).test(currentPath))) { %>
     <meta name="ga-measurement-id" content="<%= GA_MEASUREMENT_ID %>">
@@ -101,7 +108,7 @@
   <a href="#main-content" class="skip-link">Skip to main content</a>
   <% const isAdmin = (typeof currentPath !== 'undefined' ? /^\/admin/.test(currentPath) : false); %>
   <% const isSuperAdmin = (typeof currentPath !== 'undefined' ? /^\/superadmin/.test(currentPath) : false); %>
-  <% const isHomePage = (typeof currentPath !== 'undefined' ? currentPath === '/' : false); %>
+  <% const isHomePage = (typeof currentPath !== 'undefined' ? (currentPath === '/' || currentPath === '/en' || currentPath === '/de' || currentPath === '/es') : false); %>
   <% const useHomeHeaderOption = typeof useHomeHeader !== 'undefined' && useHomeHeader === true; %>
   <% const showHomeHeader = isHomePage || useHomeHeaderOption; %>
   <%- include(isSuperAdmin ? '../partials/header-admin' : (showHomeHeader ? '../partials/header' : '../partials/header-main')) %>

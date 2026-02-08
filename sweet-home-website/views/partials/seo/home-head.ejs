@@ -13,7 +13,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Sweet Home - Find Your Dream Property' %>">
 <meta property="og:description" content="<%= pageMetaDescription %>">
-<meta property="og:url" content="<%= baseUrl %>/">
+<meta property="og:url" content="<%= (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : baseUrl + '/' %>">
 <meta property="og:image" content="<%= baseUrl %>/images/dubai-hero.jpg">
 <meta property="og:site_name" content="<%= siteName %>">
 <meta property="og:locale" content="en_US">
