@@ -8,10 +8,12 @@ module.exports = function i18nMiddleware(req, res, next) {
     const supported = ['en', 'es', 'de'];
     const labels = { en: 'English', es: 'Español', de: 'Deutsch' };
     const accepts = (typeof req.acceptsLanguages === 'function') ? (req.acceptsLanguages() || []) : [];
-    // Prefer locale from URL path (/de, /es or /de/*, /es/*), then cookie
+    // Prefer locale from URL path: /de, /es (or /de/*, /es/*) set language; English URLs must also force 'en' so cookie does not override
+    const englishPaths = ['/', '/properties-for-sale-berlin', '/properties-for-sale-dubai'];
     let pathLang = '';
     if (req.path === '/de' || req.path.startsWith('/de/')) pathLang = 'de';
     else if (req.path === '/es' || req.path.startsWith('/es/')) pathLang = 'es';
+    else if (englishPaths.indexOf(req.path) !== -1) pathLang = 'en';
     const cLang = (req.cookies && typeof req.cookies.lang === 'string') ? req.cookies.lang.trim() : '';
     let lang = pathLang || cLang || 'en';
     lang = String(lang).slice(0, 2).toLowerCase();
