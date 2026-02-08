@@ -61,7 +61,7 @@
 
 .berlin-hero__description {
   font-size: clamp(1rem, 2.2vw, 1.25rem);
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.5;
   margin: 0 0 28px;
   color: rgba(220, 220, 220, 0.95);
