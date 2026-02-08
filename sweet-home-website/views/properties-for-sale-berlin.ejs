@@ -61,10 +61,10 @@
     </form>
   </section>
 
-  <!-- 3) Featured properties -->
-  <section class="section featured" aria-labelledby="recommended-heading">
-    <h2 id="recommended-heading" class="section-title">Featured Properties in Berlin</h2>
-    <div class="cards-carousel cards-carousel--grid" id="berlinRecommended">
+  <!-- 3) Featured properties: 3x3 grid, handpicked style -->
+  <section class="section featured berlin-featured" aria-labelledby="recommended-heading">
+    <h2 id="recommended-heading" class="berlin-featured__title">Explore Our Handpicked Properties in Berlin</h2>
+    <div class="berlin-featured__grid" id="berlinRecommended">
       <% (recommendedProperties || []).forEach(property => { %>
         <%
           const photoUrl = (property.photos && property.photos[0]) ? property.photos[0] : '/img/property-placeholder.jpg';

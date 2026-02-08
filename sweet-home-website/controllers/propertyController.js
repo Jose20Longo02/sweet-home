@@ -2572,7 +2572,7 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       LEFT JOIN property_stats ps ON ps.property_id = p.id
       WHERE p.country = 'Germany'
       ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
-      LIMIT 8
+      LIMIT 9
     `;
     const { rows: properties } = await query(sql);
     const lang = res.locals.lang || 'en';

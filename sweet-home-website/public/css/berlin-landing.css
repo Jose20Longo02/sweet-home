@@ -49,6 +49,7 @@
   font-weight: 700;
   line-height: 1.2;
   margin: 0 0 20px;
+  color: #fff;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -56,7 +57,7 @@
   font-size: clamp(1rem, 2.2vw, 1.25rem);
   line-height: 1.5;
   margin: 0 0 28px;
-  opacity: 0.95;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .berlin-hero__cta {
@@ -164,4 +165,147 @@
 
 @media (max-width: 480px) {
   .berlin-search .berlin-search__row > select { flex: 1 1 100%; }
+}
+
+/* 3) Featured properties: 3×3 grid, handpicked style (like reference) */
+.berlin-featured {
+  padding: 56px 16px 48px;
+  background: #fff;
+}
+
+.berlin-featured__title {
+  font-family: 'Lato', system-ui, -apple-system, sans-serif;
+  font-size: clamp(1.35rem, 2.5vw, 1.6rem);
+  font-weight: 600;
+  color: var(--gray-800, #1e293b);
+  text-align: center;
+  margin: 0 0 40px;
+  line-height: 1.3;
+}
+
+.berlin-featured__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.berlin-featured__grid .property-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.berlin-featured__grid .property-card:hover {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.berlin-featured__grid .property-card .property-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.berlin-featured__grid .property-card .img-wrap {
+  border-radius: 14px 14px 0 0;
+  overflow: hidden;
+}
+
+.berlin-featured__grid .property-card .img-wrap img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+}
+
+.berlin-featured__grid .property-card .meta {
+  padding: 20px 18px 22px;
+  min-height: 0;
+}
+
+.berlin-featured__grid .property-card .title {
+  font-family: 'Lato', system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin: 0 0 8px;
+  line-height: 1.35;
+}
+
+.berlin-featured__grid .property-card .price {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0 0 14px;
+  letter-spacing: -0.02em;
+}
+
+.berlin-featured__grid .property-card .location {
+  margin-bottom: 12px;
+  font-size: 0.875rem;
+  color: var(--gray-600);
+}
+
+.berlin-featured__grid .property-card .features-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+}
+
+.berlin-featured__grid .property-card .feature {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  color: var(--gray-500);
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+.berlin-featured__grid .property-card .feature .icon {
+  color: var(--gray-400);
+}
+
+.berlin-featured__grid .property-card .learn-more {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.berlin-featured .section-cta {
+  text-align: center;
+  margin-top: 32px;
+}
+
+.berlin-featured .section-empty {
+  text-align: center;
+  color: var(--gray-600);
+}
+
+@media (max-width: 1024px) {
+  .berlin-featured__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  .berlin-featured__grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .berlin-featured__grid .property-card .img-wrap img {
+    height: 200px;
+  }
 }
