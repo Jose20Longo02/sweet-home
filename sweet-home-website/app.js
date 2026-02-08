@@ -516,7 +516,7 @@ async function renderHomePage(req, res, langPath, next) {
     };
     const homeTitles = {
       en: 'International Real Estate Investment Company',
-      de: 'Internationale Immobilieninvestmentgesellschaft',
+      de: 'Internationales Immobilien Investment Unternehmen',
       es: 'Agencia internacional de inversión inmobiliaria'
     };
     const pageTitle = homeTitles[lang] || homeTitles.en;
