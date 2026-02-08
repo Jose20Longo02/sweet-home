@@ -8,8 +8,8 @@ module.exports = function i18nMiddleware(req, res, next) {
     const supported = ['en', 'es', 'de'];
     const labels = { en: 'English', es: 'Español', de: 'Deutsch' };
     const accepts = (typeof req.acceptsLanguages === 'function') ? (req.acceptsLanguages() || []) : [];
-    // Prefer locale from URL path (e.g. /en, /de, /es for homepage), then cookie
-    const pathLang = (req.path === '/en' || req.path === '/de' || req.path === '/es') ? req.path.slice(1) : '';
+    // Prefer locale from URL path (/de, /es for homepage; / uses cookie), then cookie
+    const pathLang = (req.path === '/de' || req.path === '/es') ? req.path.slice(1) : '';
     const cLang = (req.cookies && typeof req.cookies.lang === 'string') ? req.cookies.lang.trim() : '';
     let lang = pathLang || cLang || 'en';
     lang = String(lang).slice(0, 2).toLowerCase();

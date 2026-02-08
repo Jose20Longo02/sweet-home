@@ -108,7 +108,7 @@
   <a href="#main-content" class="skip-link">Skip to main content</a>
   <% const isAdmin = (typeof currentPath !== 'undefined' ? /^\/admin/.test(currentPath) : false); %>
   <% const isSuperAdmin = (typeof currentPath !== 'undefined' ? /^\/superadmin/.test(currentPath) : false); %>
-  <% const isHomePage = (typeof currentPath !== 'undefined' ? (currentPath === '/' || currentPath === '/en' || currentPath === '/de' || currentPath === '/es') : false); %>
+  <% const isHomePage = (typeof currentPath !== 'undefined' ? (currentPath === '/' || currentPath === '/de' || currentPath === '/es') : false); %>
   <% const useHomeHeaderOption = typeof useHomeHeader !== 'undefined' && useHomeHeader === true; %>
   <% const showHomeHeader = isHomePage || useHomeHeaderOption; %>
   <%- include(isSuperAdmin ? '../partials/header-admin' : (showHomeHeader ? '../partials/header' : '../partials/header-main')) %>

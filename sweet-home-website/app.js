@@ -307,8 +307,8 @@ app.use(['/api', '/auth', '/properties/api', '/projects/api'], apiLimiter);
 // Expose current path to views so layout can pick header variant
 app.use((req, res, next) => {
   res.locals.currentPath = req.path;
-  // Flag for lang switcher: on /en, /de, /es use path-based links instead of /lang/:code
-  res.locals.homeLangPaths = (req.path === '/en' || req.path === '/de' || req.path === '/es');
+  // Flag for lang switcher: on /, /de, /es use path-based links instead of /lang/:code
+  res.locals.homeLangPaths = (req.path === '/' || req.path === '/de' || req.path === '/es');
   next();
 });
 
@@ -432,13 +432,6 @@ app.use('/superadmin/dashboard/properties', adminPropertyRoutes);
 // Alias admin create route so buttons like "/admin/properties/new" work
 app.use('/admin/properties', propertyRoutes);
 
-// Home page: / redirects to language-specific URL based on cookie (or /en default)
-app.get('/', (req, res) => {
-  const lang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase() : 'en';
-  const target = ['de', 'es'].includes(lang) ? `/${lang}` : '/en';
-  return res.redirect(302, target);
-});
-
 // Shared home page render logic
 async function renderHomePage(req, res, langPath, next) {
   try {
@@ -517,7 +510,7 @@ async function renderHomePage(req, res, langPath, next) {
     const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     const canonicalUrl = `${baseUrl}${langPath}`;
     const hreflangAlternates = {
-      'en-us': `${baseUrl}/en`,
+      'en-us': `${baseUrl}/`,
       'de-de': `${baseUrl}/de`,
       'es-es': `${baseUrl}/es`
     };
@@ -536,8 +529,8 @@ async function renderHomePage(req, res, langPath, next) {
   } catch (e) { next(e); }
 }
 
-// Home page by language: /en, /de, /es (i18n reads lang from path)
-app.get('/en', (req, res, next) => renderHomePage(req, res, '/en', next));
+// Home page: / (English default), /de, /es (i18n reads lang from path)
+app.get('/', (req, res, next) => renderHomePage(req, res, '/', next));
 app.get('/de', (req, res, next) => renderHomePage(req, res, '/de', next));
 app.get('/es', (req, res, next) => renderHomePage(req, res, '/es', next));
 
