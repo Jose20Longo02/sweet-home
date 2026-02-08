@@ -14,7 +14,6 @@ const sendMail  = require('../config/mailer');
 exports.loginPage = (req, res) => {
   const awaitingApproval = req.query.awaitingApproval === 'true';
   const role             = req.query.role || null;
-  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
   // login.ejs has its own <head> and body structure, so use layout: false to avoid conflicts
   // But we include header and footer manually in the template
   res.render('auth/login', {
@@ -22,7 +21,7 @@ exports.loginPage = (req, res) => {
     awaitingApproval,
     role,
     error: null,
-    baseUrl,
+    baseUrl: res.locals.baseUrl,
     lang: res.locals.lang || 'en', // Ensure lang is passed for header/footer
     csrfToken: req.csrfToken ? req.csrfToken() : '', // Ensure csrfToken is available
     layout: false // Don't use main layout since login.ejs has its own <head>
@@ -40,13 +39,12 @@ exports.login = async (req, res, next) => {
       [email]
     );
     if (rows.length === 0) {
-      const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
       return res.render('auth/login', {
         title: 'Sign In',
         awaitingApproval: false,
         role: null,
         error: "This account doesn't exist",
-        baseUrl,
+        baseUrl: res.locals.baseUrl,
         lang: res.locals.lang || 'en',
         csrfToken: req.csrfToken ? req.csrfToken() : '',
         layout: false
@@ -57,13 +55,12 @@ exports.login = async (req, res, next) => {
     // 2) Check password
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
       return res.render('auth/login', {
         title: 'Sign In',
         awaitingApproval: false,
         role: null,
         error: 'The password is incorrect',
-        baseUrl,
+        baseUrl: res.locals.baseUrl,
         lang: res.locals.lang || 'en',
         csrfToken: req.csrfToken ? req.csrfToken() : '',
         layout: false
@@ -72,13 +69,12 @@ exports.login = async (req, res, next) => {
 
     // 3) Check approval
     if (!user.approved) {
-      const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
       return res.render('auth/login', {
         title: 'Sign In',
         awaitingApproval: false,
         role: null,
         error: 'This account is still waiting for approval',
-        baseUrl,
+        baseUrl: res.locals.baseUrl,
         lang: res.locals.lang || 'en',
         csrfToken: req.csrfToken ? req.csrfToken() : '',
         layout: false
@@ -123,12 +119,11 @@ exports.registerPage = async (req, res, next) => {
           AND approved = false`
     );
     const pendingCount = parseInt(rows[0].count, 10);
-    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     res.render('auth/register', {
       areaRoles,
       pendingCount,
       error: null,
-      baseUrl
+      baseUrl: res.locals.baseUrl
     });
   } catch (err) {
     next(err);
@@ -294,12 +289,11 @@ exports.thankYouPage = (req, res) => {
 // Password reset: request form (GET /auth/forgot)
 // ———————————————————————————————————————————————
 exports.forgotPasswordPage = (req, res) => {
-  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+  const baseUrl = res.locals.baseUrl;
   res.render('auth/forgot', {
     title: 'Forgot your password?',
     error: null,
     sent: false,
-    baseUrl,
     canonicalUrl: `${baseUrl}/auth/forgot`
   });
 };

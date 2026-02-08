@@ -454,8 +454,7 @@ exports.showProperty = async (req, res, next) => {
       }
     };
 
-    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
-    res.render('properties/property-detail', { property, baseUrl });
+    res.render('properties/property-detail', { property, baseUrl: res.locals.baseUrl });
   } catch (err) {
     next(err);
   }

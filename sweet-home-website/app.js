@@ -220,6 +220,22 @@ if (process.env.TRUST_PROXY === 'true') {
   app.set('trust proxy', 1);
 }
 
+// Canonical base URL: prefer real domain (sweet-home.co.il) over Render URL (sweet-home-ien7.onrender.com)
+// When APP_URL or request host is onrender.com, use the real domain so links don't point to Render
+const CANONICAL_DOMAIN = 'https://sweet-home.co.il';
+function getCanonicalBaseUrl(req) {
+  const appUrl = (process.env.APP_URL || '').replace(/\/$/, '');
+  if (appUrl && !appUrl.includes('onrender.com') && !appUrl.includes('localhost')) {
+    return appUrl;
+  }
+  const host = (req.get && req.get('x-forwarded-host')) || (req.get && req.get('host')) || '';
+  if (host.includes('onrender.com')) {
+    return CANONICAL_DOMAIN;
+  }
+  const proto = (req.get && req.get('x-forwarded-proto')) || req.protocol || 'https';
+  return `${proto}://${host}`.replace(/\/$/, '');
+}
+
 // 1) Set up EJS **first**
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -309,6 +325,8 @@ app.use((req, res, next) => {
   res.locals.currentPath = req.path;
   // Flag for lang switcher: on /, /de, /es use path-based links instead of /lang/:code
   res.locals.homeLangPaths = (req.path === '/' || req.path === '/de' || req.path === '/es');
+  // Canonical base URL for all absolute links (canonical, hreflang, sitemap, etc.) - prefers real domain over Render URL
+  res.locals.baseUrl = getCanonicalBaseUrl(req);
   next();
 });
 
@@ -382,34 +400,29 @@ app.get('/about', async (req, res, next) => {
     try {
       areaOrder = Object.keys(require('./config/roles')) || [];
     } catch (_) { areaOrder = []; }
-    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     res.render('about', {
       title: 'About',
       team: filtered,
       useMainContainer: false,
-      areaOrder,
-      baseUrl
+      areaOrder
     });
   } catch (err) { next(err); }
 });
 app.get('/contact', (req, res) => {
-  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
-  res.render('contact', { title: 'Contact', baseUrl });
+  res.render('contact', { title: 'Contact' });
 });
 app.get('/terms', (req, res) => {
-  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+  const baseUrl = res.locals.baseUrl;
   res.render('terms', { 
     title: 'Terms & Conditions',
-    baseUrl,
     headPartial: '../partials/seo/terms-head',
     canonicalUrl: `${baseUrl}/terms`
   });
 });
 app.get('/privacy', (req, res) => {
-  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+  const baseUrl = res.locals.baseUrl;
   res.render('privacy', { 
     title: 'Privacy Policy', 
-    baseUrl,
     headPartial: '../partials/seo/privacy-head',
     canonicalUrl: `${baseUrl}/privacy`
   });
@@ -507,7 +520,7 @@ async function renderHomePage(req, res, langPath, next) {
       }));
     } catch (_) { /* non-fatal */ }
 
-    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+    const baseUrl = res.locals.baseUrl;
     const canonicalUrl = `${baseUrl}${langPath}`;
     const hreflangAlternates = {
       'en-us': `${baseUrl}/`,
@@ -526,7 +539,6 @@ async function renderHomePage(req, res, langPath, next) {
       locations,
       recommendedProject,
       recentBlogPosts,
-      baseUrl,
       canonicalUrl,
       hreflangAlternates,
       headPartial: '../partials/seo/home-head',
@@ -550,12 +562,7 @@ app.get('/admin', (req, res) => {
 
 // Services page
 app.get('/services', (req, res) => {
-  // Ensure we use the correct domain, not staging URLs
-  let baseUrl = process.env.APP_URL;
-  if (!baseUrl || baseUrl.includes('onrender.com') || baseUrl.includes('localhost')) {
-    baseUrl = `${req.protocol}://${req.get('host')}`;
-  }
-  baseUrl = baseUrl.replace(/\/$/, '');
+  const baseUrl = res.locals.baseUrl;
   const canonicalUrl = `${baseUrl}/services`;
   const title = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('nav.services', 'Services') : 'Services';
   res.render('services', {
@@ -579,13 +586,12 @@ app.get('/owners', async (req, res, next) => {
       ...p,
       photos: Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : [])
     }));
-    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+    const baseUrl = res.locals.baseUrl;
     res.render('owners', {
       title: 'For Sellers',
       useMainContainer: false,
       soldProperties: properties,
-      canonicalUrl: `${baseUrl}/owners`,
-      baseUrl
+      canonicalUrl: `${baseUrl}/owners`
     });
   } catch (e) { next(e); }
 });
@@ -655,7 +661,7 @@ app.get('/css/icon-theme.css', (req, res) => {
 
 app.get('/robots.txt', (req, res) => {
   res.type('text/plain');
-  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+  const baseUrl = res.locals.baseUrl;
   const allowAll = process.env.ROBOTS_ALLOW !== 'false';
   const robotsContent = allowAll 
     ? `User-agent: *\nAllow: /\n\nSitemap: ${baseUrl}/sitemap.xml` 
@@ -666,7 +672,7 @@ app.get('/robots.txt', (req, res) => {
 // llms.txt for AI search engines
 app.get('/llms.txt', (req, res) => {
   res.type('text/plain');
-  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+  const baseUrl = res.locals.baseUrl;
   const llmsContent = `# Sweet Home Real Estate Platform
 
 ## About
@@ -713,7 +719,7 @@ For inquiries, visit: ${baseUrl}/contact
 // sitemap.xml (basic; can be expanded to pull from DB)
 app.get('/sitemap.xml', async (req, res, next) => {
   try {
-    const base = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+    const base = res.locals.baseUrl;
 
     // Static pages
     const staticPaths = ['', 'about', 'contact', 'projects', 'properties', 'privacy', 'terms', 'cookies'];

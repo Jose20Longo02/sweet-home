@@ -69,7 +69,6 @@ exports.listPublic = async (req, res, next) => {
     const { rows: countRows } = await query(`SELECT COUNT(*)::int AS count FROM blog_posts WHERE status = 'published'`);
     const total = (countRows && countRows[0] && countRows[0].count) || 0;
     const totalPages = Math.max(1, Math.ceil(total / pageSize));
-    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     res.render('blog/blog-list', {
       title: 'Blog',
       posts: localizedPosts,
@@ -77,7 +76,7 @@ exports.listPublic = async (req, res, next) => {
       hasNext: page < totalPages,
       totalPages,
       stickyFooter: true,
-      baseUrl
+      baseUrl: res.locals.baseUrl
     });
   } catch (err) { next(err); }
 };
@@ -109,13 +108,12 @@ exports.showPublic = async (req, res, next) => {
         LIMIT 4`,
       [req.params.slug]
     );
-    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     res.render('blog/blog-detail', {
       title: localizedPost.title,
       post: localizedPost,
       recommendedPosts: recommendedPosts || [],
       stickyFooter: true,
-      baseUrl
+      baseUrl: res.locals.baseUrl
     });
   } catch (err) { next(err); }
 };

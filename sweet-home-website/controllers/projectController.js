@@ -1218,7 +1218,6 @@ exports.listProjectsPublic = async (req, res, next) => {
       return { ...p, has_variants: has, variant_base: base };
     });
 
-    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     res.render('projects/project-list', { 
       projects: projectsWithVariants,
       locations,
@@ -1229,7 +1228,7 @@ exports.listProjectsPublic = async (req, res, next) => {
       totalPages,
       totalProjects,
       queryParams: req.query,
-      baseUrl
+      baseUrl: res.locals.baseUrl
     });
   } catch (err) {
     next(err);
@@ -1399,13 +1398,12 @@ exports.showProject = async (req, res, next) => {
       };
     });
 
-    const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
     res.render('projects/project-detail', {
       project,
       relatedProjects: normalizedRelatedProjects,
       projectProperties: normalizedProjectProperties,
       locations,
-      baseUrl
+      baseUrl: res.locals.baseUrl
     });
   } catch (err) {
     next(err);

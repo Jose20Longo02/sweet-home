@@ -10,9 +10,8 @@ router.get('/', listProjectsPublic);
 
 // Split hero for Cyprus vs Dubai
 router.get('/regions', (req, res) => {
-  const baseUrl = (process.env.APP_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+  const baseUrl = res.locals.baseUrl;
   res.render('projects/regions', {
-    baseUrl,
     headPartial: '../partials/seo/regions-head',
     canonicalUrl: `${baseUrl}/projects/regions`,
     useHomeHeader: true
