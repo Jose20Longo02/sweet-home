@@ -1,114 +1,125 @@
 <% useMainContainer = false %>
 <% useHomeHeader = true %>
 <link rel="stylesheet" href="/css/home.css" />
+<link rel="stylesheet" href="/css/berlin-landing.css" />
 
 <div id="locations-data" data-locations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locations) : JSON.stringify(locations)).replace(/'/g, '&#39;') %>' style="display:none"></div>
 
-<!-- Hero: single Berlin panel + search bar (Germany selected by default) -->
-<section class="hero-panels hero-panels--single">
-  <h1 class="sr-only"><%= typeof title !== 'undefined' ? title : 'Properties for Sale in Berlin' %></h1>
-  <p class="sr-only">Browse properties for sale in Berlin, Germany. Find apartments, houses, and villas. Sweet Home offers expert real estate guidance in Berlin.</p>
-  <div class="panel" data-country="Berlin">
-    <img src="/images/berlin-hero.jpg" alt="Properties for sale in Berlin, Germany" fetchpriority="high" decoding="async">
-  </div>
-
-  <form class="hero-search" action="/properties" method="get">
-    <div class="search-row">
-      <label class="sr-only" for="country"><%= t('forms.country','Country') %></label>
-      <select id="country" name="country" aria-label="<%= t('forms.country','Country') %>">
-        <option value=""><%= t('forms.country','Country') %></option>
-        <% Object.keys(locations).forEach(c => { %>
-          <option value="<%= c %>" <%= c === 'Germany' ? 'selected' : '' %>><%= c %></option>
-        <% }); %>
-      </select>
-      <label class="sr-only" for="city"><%= t('forms.city','City') %></label>
-      <select id="city" name="city" aria-label="<%= t('forms.city','City') %>">
-        <option value=""><%= t('forms.city','City') %></option>
-        <% if (locations.Germany) { Object.keys(locations.Germany).forEach(ct => { %>
-          <option value="<%= ct %>"><%= ct %></option>
-        <% }); } %>
-      </select>
-      <label class="sr-only" for="neighborhood"><%= t('forms.neighborhood','Neighborhood') %></label>
-      <select id="neighborhood" name="neighborhood" disabled aria-label="<%= t('forms.neighborhood','Neighborhood') %>">
-        <option value=""><%= t('forms.neighborhood','Neighborhood') %></option>
-      </select>
-      <label class="sr-only" for="operation"><%= t('forms.operation','Operation') %></label>
-      <select id="operation" name="operation">
-        <option value=""><%= t('forms.anyOperation','Any Operation') %></option>
-        <option value="buy" selected><%= t('forms.operations.buy','Buy') %></option>
-        <option value="rent"><%= t('forms.operations.rent','Rent') %></option>
-      </select>
-      <label class="sr-only" for="type"><%= t('forms.propertyType','Property Type') %></label>
-      <select id="type" name="type">
-        <option value=""><%= t('forms.anyType','Any Type') %></option>
-        <option><%= t('forms.types.apartment','Apartment') %></option>
-        <option><%= t('forms.types.house','House') %></option>
-        <option><%= t('forms.types.villa','Villa') %></option>
-        <option><%= t('forms.types.land','Land') %></option>
-      </select>
-      <button type="submit"><%= t('home.search.cta','Search Properties') %></button>
+<div class="berlin-landing-page">
+  <!-- 1) Hero: title, description, CTA -->
+  <section class="berlin-hero" aria-labelledby="berlin-hero-title">
+    <div class="berlin-hero__bg">
+      <img src="/images/berlin-hero.jpg" alt="" fetchpriority="high" decoding="async">
     </div>
-  </form>
-</section>
+    <div class="berlin-hero__overlay"></div>
+    <div class="berlin-hero__content">
+      <h1 id="berlin-hero-title" class="berlin-hero__title">Properties for Sale in Berlin</h1>
+      <p class="berlin-hero__description">Find your next home or investment in Berlin, Germany. Browse apartments, houses, and villas with expert guidance from Sweet Home.</p>
+      <a href="#berlin-search" class="berlin-hero__cta"><%= t('home.search.cta','Search Properties') %></a>
+    </div>
+  </section>
 
-<!-- Recommended properties (8 most viewed in Germany) -->
-<section class="section featured" aria-labelledby="recommended-heading">
-  <h2 id="recommended-heading" class="section-title"><%= t('home.featured.title','Featured Properties') %> – Berlin</h2>
-  <div class="cards-carousel cards-carousel--grid" id="berlinRecommended">
-    <% (recommendedProperties || []).forEach(property => { %>
-      <%
-        const photoUrl = (property.photos && property.photos[0]) ? property.photos[0] : '/img/property-placeholder.jpg';
-        const size = property.size ? `${property.size} m²` : null;
-        const beds = (typeof property.rooms !== 'undefined' && property.rooms !== null) ? property.rooms : null;
-        const baths = (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) ? property.bathrooms : null;
-        const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString('en-US') : '';
-      %>
-      <article class="property-card">
-        <a href="/properties/<%= property.slug %>" class="property-card-link">
-          <div class="img-wrap" <%= priceText ? `data-price="${priceText}"` : '' %>>
-            <img src="<%= photoUrl %>" alt="<%= property.title %>" loading="lazy" decoding="async" onerror="this.src='/img/property-placeholder.jpg'">
-          </div>
-          <div class="meta">
-            <div class="title"><%= property.title %></div>
-            <% if (priceText) { %><div class="price"><%= priceText %></div><% } %>
-            <div class="location">
-              <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
-              <%= property.neighborhood || property.city %>, <%= property.country %>
+  <!-- 2) Search bar section (Germany default) -->
+  <section id="berlin-search" class="berlin-search" aria-labelledby="berlin-search-title">
+    <h2 id="berlin-search-title" class="berlin-search__title sr-only"><%= t('home.search.cta','Search Properties') %></h2>
+    <form action="/properties" method="get" class="berlin-search__form">
+      <div class="berlin-search__row">
+        <label class="sr-only" for="country"><%= t('forms.country','Country') %></label>
+        <select id="country" name="country" aria-label="<%= t('forms.country','Country') %>">
+          <option value=""><%= t('forms.country','Country') %></option>
+          <% Object.keys(locations).forEach(c => { %>
+            <option value="<%= c %>" <%= c === 'Germany' ? 'selected' : '' %>><%= c %></option>
+          <% }); %>
+        </select>
+        <label class="sr-only" for="city"><%= t('forms.city','City') %></label>
+        <select id="city" name="city" aria-label="<%= t('forms.city','City') %>">
+          <option value=""><%= t('forms.city','City') %></option>
+          <% if (locations.Germany) { Object.keys(locations.Germany).forEach(ct => { %>
+            <option value="<%= ct %>"><%= ct %></option>
+          <% }); } %>
+        </select>
+        <label class="sr-only" for="neighborhood"><%= t('forms.neighborhood','Neighborhood') %></label>
+        <select id="neighborhood" name="neighborhood" disabled aria-label="<%= t('forms.neighborhood','Neighborhood') %>">
+          <option value=""><%= t('forms.neighborhood','Neighborhood') %></option>
+        </select>
+        <label class="sr-only" for="operation"><%= t('forms.operation','Operation') %></label>
+        <select id="operation" name="operation">
+          <option value=""><%= t('forms.anyOperation','Any Operation') %></option>
+          <option value="buy" selected><%= t('forms.operations.buy','Buy') %></option>
+          <option value="rent"><%= t('forms.operations.rent','Rent') %></option>
+        </select>
+        <label class="sr-only" for="type"><%= t('forms.propertyType','Property Type') %></label>
+        <select id="type" name="type">
+          <option value=""><%= t('forms.anyType','Any Type') %></option>
+          <option><%= t('forms.types.apartment','Apartment') %></option>
+          <option><%= t('forms.types.house','House') %></option>
+          <option><%= t('forms.types.villa','Villa') %></option>
+          <option><%= t('forms.types.land','Land') %></option>
+        </select>
+        <button type="submit"><%= t('home.search.cta','Search Properties') %></button>
+      </div>
+    </form>
+  </section>
+
+  <!-- 3) Featured properties -->
+  <section class="section featured" aria-labelledby="recommended-heading">
+    <h2 id="recommended-heading" class="section-title">Featured Properties in Berlin</h2>
+    <div class="cards-carousel cards-carousel--grid" id="berlinRecommended">
+      <% (recommendedProperties || []).forEach(property => { %>
+        <%
+          const photoUrl = (property.photos && property.photos[0]) ? property.photos[0] : '/img/property-placeholder.jpg';
+          const size = property.size ? `${property.size} m²` : null;
+          const beds = (typeof property.rooms !== 'undefined' && property.rooms !== null) ? property.rooms : null;
+          const baths = (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) ? property.bathrooms : null;
+          const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString('en-US') : '';
+        %>
+        <article class="property-card">
+          <a href="/properties/<%= property.slug %>" class="property-card-link">
+            <div class="img-wrap" <%= priceText ? `data-price="${priceText}"` : '' %>>
+              <img src="<%= photoUrl %>" alt="<%= property.title %>" loading="lazy" decoding="async" onerror="this.src='/img/property-placeholder.jpg'">
             </div>
-            <div class="features-row">
-              <% if (size) { %>
-                <div class="feature">
-                  <span class="icon icon-16 icon-inline icon-mask icon-size"></span>
-                  <span><%= size %></span>
-                </div>
-              <% } %>
-              <% if (beds !== null) { %>
-                <div class="feature">
-                  <span class="icon icon-16 icon-inline icon-mask icon-bed"></span>
-                  <span><%= beds %> bed<%= Number(beds) === 1 ? '' : 's' %></span>
-                </div>
-              <% } %>
-              <% if (baths !== null) { %>
-                <div class="feature">
-                  <span class="icon icon-16 icon-inline icon-mask icon-bath"></span>
-                  <span><%= baths %> bath<%= Number(baths) === 1 ? '' : 's' %></span>
-                </div>
-              <% } %>
+            <div class="meta">
+              <div class="title"><%= property.title %></div>
+              <% if (priceText) { %><div class="price"><%= priceText %></div><% } %>
+              <div class="location">
+                <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                <%= property.neighborhood || property.city %>, <%= property.country %>
+              </div>
+              <div class="features-row">
+                <% if (size) { %>
+                  <div class="feature">
+                    <span class="icon icon-16 icon-inline icon-mask icon-size"></span>
+                    <span><%= size %></span>
+                  </div>
+                <% } %>
+                <% if (beds !== null) { %>
+                  <div class="feature">
+                    <span class="icon icon-16 icon-inline icon-mask icon-bed"></span>
+                    <span><%= beds %> bed<%= Number(beds) === 1 ? '' : 's' %></span>
+                  </div>
+                <% } %>
+                <% if (baths !== null) { %>
+                  <div class="feature">
+                    <span class="icon icon-16 icon-inline icon-mask icon-bath"></span>
+                    <span><%= baths %> bath<%= Number(baths) === 1 ? '' : 's' %></span>
+                  </div>
+                <% } %>
+              </div>
+              <span class="learn-more"><%= t('properties.list.viewDetails','View details') %> →</span>
             </div>
-            <span class="learn-more"><%= t('properties.list.viewDetails','View details') %> →</span>
-          </div>
-        </a>
-      </article>
-    <% }); %>
-  </div>
-  <% if (!recommendedProperties || recommendedProperties.length === 0) { %>
-    <p class="section-empty"><%= t('properties.list.noResults','No properties found.') %> <a href="/properties?country=Germany"><%= t('home.search.cta','Search Properties') %></a></p>
-  <% } else { %>
-    <p class="section-cta">
-      <a href="/properties?country=Germany" class="btn btn-primary"><%= t('properties.list.viewAll','View all properties in Berlin') %></a>
-    </p>
-  <% } %>
-</section>
+          </a>
+        </article>
+      <% }); %>
+    </div>
+    <% if (!recommendedProperties || recommendedProperties.length === 0) { %>
+      <p class="section-empty"><%= t('properties.list.noResults','No properties found.') %> <a href="/properties?country=Germany"><%= t('home.search.cta','Search Properties') %></a></p>
+    <% } else { %>
+      <p class="section-cta">
+        <a href="/properties?country=Germany" class="btn btn-primary"><%= t('properties.list.viewAll','View all properties in Berlin') %></a>
+      </p>
+    <% } %>
+  </section>
+</div>
 
 <script>
 (function() {
