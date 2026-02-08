@@ -56,6 +56,12 @@ function convertH1ToH2(htmlContent) {
 // Public
 exports.listPublic = async (req, res, next) => {
   try {
+    // 301 redirect /blog?page=1 to /blog to eliminate duplicate URL/title
+    const keys = Object.keys(req.query);
+    if (keys.length === 1 && (req.query.page === '1' || req.query.page === 1)) {
+      return res.redirect(301, '/blog');
+    }
+
     const page = Math.max(parseInt(req.query.page || '1', 10), 1);
     const pageSize = 9; // 3 per row looks cleaner
     const offset = (page - 1) * pageSize;

@@ -1042,6 +1042,12 @@ exports.listProjectsPublic = async (req, res, next) => {
       page = 1
     } = req.query;
 
+    // 301 redirect /projects?page=1 to /projects to eliminate duplicate URL/title/content
+    const keys = Object.keys(req.query);
+    if (keys.length === 1 && (req.query.page === '1' || req.query.page === 1)) {
+      return res.redirect(301, '/projects');
+    }
+
     // Build WHERE clause for filtering
     const whereConditions = [];
     const queryParams = [];
