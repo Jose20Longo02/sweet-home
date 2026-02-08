@@ -172,6 +172,7 @@
 .berlin-featured {
   padding: 56px 16px 48px;
   background: #fff;
+  content-visibility: visible;
 }
 
 .berlin-featured__title {
@@ -198,6 +199,8 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   transition: box-shadow 0.25s ease, transform 0.25s ease;
+  opacity: 1;
+  transform: none;
 }
 
 .berlin-featured__grid .property-card:hover {
