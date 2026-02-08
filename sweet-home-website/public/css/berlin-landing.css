@@ -33,7 +33,8 @@
 .berlin-hero__overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  /* Darker at bottom where text sits for better readability */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.55) 50%, rgba(0, 0, 0, 0.75) 100%);
   z-index: 1;
 }
 
@@ -51,14 +52,19 @@
   line-height: 1.2;
   margin: 0 0 20px;
   color: #fff;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  /* Multi-layer shadow for readability on any part of the image */
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
 .berlin-hero__description {
   font-size: clamp(1rem, 2.2vw, 1.25rem);
   line-height: 1.5;
   margin: 0 0 28px;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5), 0 2px 12px rgba(0, 0, 0, 0.4);
 }
 
 /* 2) Search bar section – white bg + animated green border only */
