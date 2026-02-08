@@ -447,6 +447,11 @@ app.get('/properties-for-sale-dubai', propertyController.dubaiPropertiesPage);
 app.get('/de/immobilien-dubai-kaufen', propertyController.dubaiPropertiesPage);
 app.get('/es/propiedades-en-venta-dubai', propertyController.dubaiPropertiesPage);
 
+// Cyprus landing page
+app.get('/properties-for-sale-cyprus', propertyController.cyprusPropertiesPage);
+app.get('/de/immobilien-zypern-kaufen', propertyController.cyprusPropertiesPage);
+app.get('/es/propiedades-en-venta-chipre', propertyController.cyprusPropertiesPage);
+
 // Public & agent routes
 app.use('/properties', propertyRoutes);
 

@@ -115,6 +115,25 @@
     "faqQ5": "Is now a good time to buy property in Dubai?",
     "faqA5": "Q3 2025 delivered record-breaking metrics with transaction volumes and average rates per sq ft reaching new highs. Dubai's population is forecast to reach 5 million by 2030. The emirate's political stability, competitive regulatory landscape, and business-friendly ecosystem are expected to support ongoing population and investment inflows long-term. Henley & Partners anticipate 9,800 millionaires migrating to the UAE in 2025. Sweet Home can help you explore carefully selected properties and provide expert guidance for buying or investing in Dubai."
   },
+  "cyprus": {
+    "heroTitle": "Properties for Sale in Cyprus",
+    "heroDescription": "Discover carefully selected properties for sale in Cyprus, an EU member with a resilient real estate market. Sweet Home supports international buyers and investors with expert guidance and access to residential and coastal opportunities.",
+    "heroImgAlt": "Cyprus – properties for sale in Cyprus",
+    "featuredTitle": "Featured properties",
+    "viewAll": "View all properties in Cyprus",
+    "faqTitle": "Frequently asked questions about buying property in Cyprus",
+    "faqSource": "Sources: KPMG Cyprus Real Estate Insights 13th Edition (2024); PwC Cyprus Real Estate Market Year in Review 2024.",
+    "faqQ1": "Why invest in Cyprus real estate?",
+    "faqA1": "Cyprus is an EU member with an attractive tax regime (e.g. corporate tax 12.5%), a large network of double tax treaties, and a common-law legal system. Real estate and construction contributed 16% of GVA in 2023. In 2024, total transaction value reached €5.7bn with residential demand driving 67% of the market. Sovereign credit ratings have been upgraded to investment grade with a positive outlook, reflecting improved fiscal stability and reduced banking risks.",
+    "faqQ2": "How active is the Cyprus residential market?",
+    "faqA2": "In 2024, 23,900 transactions were recorded (a 3% drop compared to 2023) with a total value of €5.71bn (1% growth). Limassol made up the majority of transaction value at 44%, followed by Nicosia and Paphos at 18% each, and Larnaca at 16%. In terms of volume, Limassol led with 29%, then Nicosia (27%) and Larnaca (21%). Residential assets represented 67% of total transaction value.",
+    "faqQ3": "Where are the most active areas in Cyprus?",
+    "faqA3": "Limassol leads in both volume (29%) and value (44%) of transactions. Nicosia follows with 27% of volume and 18% of value; Larnaca 21% volume and 16% value; Paphos 18% of value. For foreign buyers, Paphos and Limassol made up the majority of acquisitions in 2024 (32% and 29% respectively). Limassol led apartment transaction values in 2023, reaching €1.8bn and 3,053 units.",
+    "faqQ4": "How have property prices and the high-end segment performed?",
+    "faqA4": "Residential property index prices maintained a stable upward trend in 2024 with around 7% year-on-year increase (data to Q3). The high-end segment (single residential properties ≥€1.5m) improved marginally: 188 transactions were recorded in 2024 with total values reaching €550m, a 4% year-on-year increase. New building permits issued in 2024 saw a 2% increase in value terms.",
+    "faqQ5": "Is now a good time to buy property in Cyprus?",
+    "faqA5": "The Cyprus real estate market has shown resilience and flexibility, maintaining record-high transaction values. The economy continues to outperform the Eurozone average with sovereign rating upgrades. Lending improved: new mortgage facilities increased 7% in 2024 versus 2023. Tourism, real estate and ICT remain key growth drivers. Sweet Home can help you explore carefully selected properties and provide expert guidance for buying or investing in Cyprus."
+  },
   "projects": {
     "regions": {
       "title": "Projects by Region",

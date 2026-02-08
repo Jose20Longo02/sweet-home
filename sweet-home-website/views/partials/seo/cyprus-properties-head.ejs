@@ -1,0 +1,132 @@
+<%
+  const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
+  const pageUrl = `${siteBaseUrl}/properties-for-sale-cyprus`;
+  const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : 'Find properties for sale in Cyprus. Browse apartments, villas and coastal homes. Expert real estate guidance from Sweet Home.';
+  const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Properties for Sale in Cyprus';
+%>
+<meta name="description" content="<%= pageDesc %>">
+<!-- Canonical and hreflang are output by main layout when canonicalUrl is passed -->
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="<%= pageTitle %> | Sweet Home">
+<meta property="og:description" content="<%= pageDesc %>">
+<meta property="og:url" content="<%= (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl %>">
+<meta property="og:image" content="<%= siteBaseUrl %>/images/cyprus-international.jpg">
+<meta property="og:image:alt" content="Properties for sale in Cyprus – Sweet Home real estate">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= pageTitle %> | Sweet Home">
+<meta name="twitter:description" content="<%= pageDesc %>">
+<meta name="twitter:image" content="<%= siteBaseUrl %>/images/cyprus-international.jpg">
+<meta name="twitter:image:alt" content="Properties for sale in Cyprus – Sweet Home real estate">
+
+<!-- JSON-LD WebPage + BreadcrumbList -->
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': pageUrl + '#webpage',
+      name: pageTitle + ' | Sweet Home',
+      description: pageDesc,
+      url: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl,
+      isPartOf: { '@type': 'WebSite', '@id': siteBaseUrl + '/#website', name: 'Sweet Home' }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: siteBaseUrl + '/' },
+        { '@type': 'ListItem', position: 2, name: pageTitle, item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
+      ]
+    }
+  ]
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': pageUrl + '#webpage',
+      name: pageTitle + ' | Sweet Home',
+      description: pageDesc,
+      url: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl,
+      isPartOf: { '@type': 'WebSite', '@id': siteBaseUrl + '/#website', name: 'Sweet Home' }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: siteBaseUrl + '/' },
+        { '@type': 'ListItem', position: 2, name: pageTitle, item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
+      ]
+    }
+  ]
+})) %></script>
+
+<!-- JSON-LD FAQPage (Cyprus) -->
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'Why invest in Cyprus real estate?', acceptedAnswer: { '@type': 'Answer', text: 'Cyprus is an EU member with an attractive tax regime (e.g. corporate tax 12.5%), double tax treaties, and common-law legal system. Real estate and construction contributed 16% of GVA in 2023. In 2024 total transaction value reached €5.7bn; residential demand drove 67%. Sovereign ratings were upgraded to investment grade with positive outlook.' } },
+    { '@type': 'Question', name: 'How active is the Cyprus residential market?', acceptedAnswer: { '@type': 'Answer', text: 'In 2024, 23,900 transactions were recorded (3% drop vs 2023) with total value €5.71bn (1% growth). Limassol had 44% of value, Nicosia and Paphos 18% each, Larnaca 16%. By volume: Limassol 29%, Nicosia 27%, Larnaca 21%. Residential made up 67% of total transaction value.' } },
+    { '@type': 'Question', name: 'Where are the most active areas in Cyprus?', acceptedAnswer: { '@type': 'Answer', text: 'Limassol leads in volume (29%) and value (44%). Nicosia 27% volume, 18% value; Larnaca 21% volume, 16% value; Paphos 18% value. For foreign buyers, Paphos and Limassol led in 2024 (32% and 29%). Limassol led apartment transactions in 2023 (€1.8bn, 3,053 units).' } },
+    { '@type': 'Question', name: 'How have property prices and the high-end segment performed?', acceptedAnswer: { '@type': 'Answer', text: 'Residential property prices showed around 7% year-on-year increase in 2024 (to Q3). High-end segment (≥€1.5m): 188 transactions in 2024, €550m total value, 4% YoY increase. New building permits value increased 2% in 2024.' } },
+    { '@type': 'Question', name: 'Is now a good time to buy property in Cyprus?', acceptedAnswer: { '@type': 'Answer', text: 'The Cyprus real estate market has shown resilience with record-high transaction values. Sovereign rating upgrades and improved lending (new mortgages +7% in 2024) support investment. Sweet Home can help with expert guidance for buying or investing in Cyprus.' } }
+  ]
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'Why invest in Cyprus real estate?', acceptedAnswer: { '@type': 'Answer', text: 'Cyprus is an EU member with attractive tax regime and investment-grade sovereign ratings. Real estate contributed 16% GVA; 2024 transaction value €5.7bn, 67% residential.' } },
+    { '@type': 'Question', name: 'How active is the Cyprus residential market?', acceptedAnswer: { '@type': 'Answer', text: '23,900 transactions in 2024, €5.71bn value. Limassol 44% value; Nicosia and Paphos 18% each. Residential 67% of total value.' } },
+    { '@type': 'Question', name: 'Where are the most active areas in Cyprus?', acceptedAnswer: { '@type': 'Answer', text: 'Limassol leads (29% volume, 44% value). Nicosia, Larnaca, Paphos follow. Foreign buyers concentrated in Paphos (32%) and Limassol (29%).' } },
+    { '@type': 'Question', name: 'How have property prices and the high-end segment performed?', acceptedAnswer: { '@type': 'Answer', text: 'Residential prices c.7% YoY in 2024. High-end ≥€1.5m: 188 transactions, €550m, 4% YoY. Building permits value +2%.' } },
+    { '@type': 'Question', name: 'Is now a good time to buy property in Cyprus?', acceptedAnswer: { '@type': 'Answer', text: 'Market resilience, sovereign upgrades, and improved lending support investment. Sweet Home can help with expert guidance for buying or investing in Cyprus.' } }
+  ]
+})) %></script>
+
+<!-- JSON-LD ItemList for recommended properties -->
+<% if (typeof recommendedProperties !== 'undefined' && recommendedProperties && recommendedProperties.length > 0) { %>
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Properties for Sale in Cyprus',
+  description: pageDesc,
+  itemListElement: recommendedProperties.map((p, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'RealEstateListing',
+      name: p.title,
+      url: `${siteBaseUrl}/properties/${p.slug}`,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: p.city || 'Paphos',
+        addressCountry: p.country || 'Cyprus'
+      }
+    }
+  }))
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Properties for Sale in Cyprus',
+  description: pageDesc,
+  itemListElement: recommendedProperties.map((p, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'RealEstateListing',
+      name: p.title,
+      url: `${siteBaseUrl}/properties/${p.slug}`,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: p.city || 'Paphos',
+        addressCountry: p.country || 'Cyprus'
+      }
+    }
+  }))
+})) %></script>
+<% } %>

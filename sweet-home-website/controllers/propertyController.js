@@ -2712,3 +2712,84 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
     next(err);
   }
 };
+
+// Cyprus landing page: Properties for Sale Cyprus (9 most-viewed in Cyprus)
+exports.cyprusPropertiesPage = async (req, res, next) => {
+  try {
+    const sql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE 
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.featured, p.created_at, p.description,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name, u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'Cyprus'
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 9
+    `;
+    const { rows: properties } = await query(sql);
+    const lang = res.locals.lang || 'en';
+    const recommendedProperties = (properties || []).map(p => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: (p.title_i18n && p.title_i18n[lang]) || p.title,
+        description: (p.description_i18n && p.description_i18n[lang]) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+
+    const baseUrl = res.locals.baseUrl;
+    const cyprusUrls = {
+      en: `${baseUrl}/properties-for-sale-cyprus`,
+      de: `${baseUrl}/de/immobilien-zypern-kaufen`,
+      es: `${baseUrl}/es/propiedades-en-venta-chipre`
+    };
+    const canonicalUrl = cyprusUrls[lang] || cyprusUrls.en;
+    const hreflangAlternates = {
+      'en-us': cyprusUrls.en,
+      'de-de': cyprusUrls.de,
+      'es-es': cyprusUrls.es
+    };
+    const titles = {
+      en: 'Properties for Sale in Cyprus',
+      de: 'Immobilien Zypern kaufen',
+      es: 'Propiedades en venta en Chipre'
+    };
+    const metaDescriptions = {
+      en: 'Find properties for sale in Cyprus. Browse apartments, villas and coastal homes. Expert real estate guidance from Sweet Home.',
+      de: 'Immobilien in Zypern kaufen: Wohnungen, Villen und Strandhäuser. Sweet Home unterstützt internationale Käufer und Investoren.',
+      es: 'Encuentra propiedades en venta en Chipre. Apartamentos, villas y viviendas costeras. Asesoramiento de Sweet Home.'
+    };
+    const cyprusPagePaths = {
+      en: '/properties-for-sale-cyprus',
+      de: '/de/immobilien-zypern-kaufen',
+      es: '/es/propiedades-en-venta-chipre'
+    };
+    res.render('properties-for-sale-cyprus', {
+      title: titles[lang] || titles.en,
+      useMainContainer: false,
+      useHomeHeader: true,
+      headPartial: '../partials/seo/cyprus-properties-head',
+      canonicalUrl,
+      hreflangAlternates,
+      pageMetaDescription: metaDescriptions[lang] || metaDescriptions.en,
+      cyprusPagePaths,
+      locations,
+      recommendedProperties,
+      baseUrl: res.locals.baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+};
