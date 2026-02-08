@@ -354,3 +354,133 @@
     height: 200px;
   }
 }
+
+/* 4) FAQ section – Berlin real estate investment */
+.berlin-faq {
+  padding: 56px 16px 64px;
+  background: var(--gray-50, #f8fafc);
+  content-visibility: visible;
+}
+
+.berlin-faq__title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.35rem, 2.5vw, 1.6rem);
+  font-weight: 600;
+  color: var(--gray-800, #1e293b);
+  text-align: center;
+  margin: 0 0 40px;
+  line-height: 1.3;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.berlin-faq__list {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.berlin-faq__item {
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.berlin-faq__item:first-child {
+  border-top: 1px solid var(--gray-200);
+}
+
+.berlin-faq__question {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.berlin-faq__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 18px 0;
+  background: none;
+  border: none;
+  font-family: 'Lato', system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--gray-800, #1e293b);
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.berlin-faq__trigger:hover {
+  color: var(--primary-color, #2ea862);
+}
+
+.berlin-faq__trigger::after {
+  content: '';
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-left: 12px;
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;
+  transition: transform 0.25s ease;
+}
+
+.berlin-faq__trigger[aria-expanded="true"]::after {
+  transform: rotate(180deg);
+}
+
+.berlin-faq__answer {
+  overflow: hidden;
+}
+
+.berlin-faq__answer[hidden] {
+  display: block;
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin: 0;
+  opacity: 0;
+  transition: opacity 0.25s ease, padding 0.25s ease;
+}
+
+.berlin-faq__answer:not([hidden]) {
+  visibility: visible;
+  height: auto;
+  opacity: 1;
+}
+
+.berlin-faq__answer p {
+  margin: 0 0 20px;
+  padding-bottom: 20px;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--gray-700, #334155);
+}
+
+.berlin-faq__answer p:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.berlin-faq__source {
+  max-width: 720px;
+  margin: 28px auto 0;
+  font-size: 0.875rem;
+  color: var(--gray-500);
+}
+
+.berlin-faq__source a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.berlin-faq__source a:hover {
+  text-decoration: underline;
+}

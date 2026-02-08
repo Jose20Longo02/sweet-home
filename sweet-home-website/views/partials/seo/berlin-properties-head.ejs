@@ -65,6 +65,64 @@
   ]
 })) %></script>
 
+<!-- JSON-LD FAQPage -->
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Why should I consider investing in Berlin real estate?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Berlin is one of Europe\'s most attractive real estate markets with strong demographic growth, a robust economy, and ongoing demand for housing. The capital needs around 222,000 new apartments by 2040. Asking rents rose again in 2024 (12% to €15.79/m² on average), making Berlin one of the top cities in Germany for rental dynamics. For investors, this supports long-term value and income potential.'
+      }
+    },
+    {
+      '@type': 'Question',
+      name: 'How have Berlin property prices developed recently?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'In 2024, asking prices for condominiums decreased by 0.9% to €5,696/m² and for apartment buildings by 4.4% to €3,041/m². Asking rents increased by 12% to €15.79/m², with Berlin showing the highest rent dynamics among Germany\'s seven largest cities. Purchase prices have corrected while rental income potential has strengthened.'
+      }
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the long-term outlook for the Berlin housing market?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Population forecasts assume growth of around 5% to 2040; the Urban Development Plan Housing 2040 targets 222,000 new apartments plus land for 50,000 more. Transaction volume recovered in 2024 to €2.9 billion. If interest rates remain stable, a further slight increase in the transaction market is expected in 2025.'
+      }
+    },
+    {
+      '@type': 'Question',
+      name: 'Where is new housing being built in Berlin?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'In 2024, around 215 projects with roughly 43,530 new apartments were in planning or construction. Most large rental projects are outside the S-Bahn ring and in the metropolitan area; only about 14.6% were within the ring. Districts such as Marzahn-Hellersdorf, Spandau, Pankow, and the metropolitan area see substantial new development.'
+      }
+    },
+    {
+      '@type': 'Question',
+      name: 'Is now a good time to buy property in Berlin?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Purchase prices have adjusted from previous highs while demand and rental growth remain strong. The market recalibration is largely complete and institutional interest in residential assets has increased. Sweet Home can help you explore carefully selected properties and provide expert guidance for buying or investing in Berlin.'
+      }
+    }
+  ]
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'Why should I consider investing in Berlin real estate?', acceptedAnswer: { '@type': 'Answer', text: 'Berlin is one of Europe\'s most attractive real estate markets with strong demographic growth and ongoing demand. The capital needs around 222,000 new apartments by 2040. Asking rents rose 12% in 2024 to €15.79/m² on average, supporting long-term value and income potential for investors.' } },
+    { '@type': 'Question', name: 'How have Berlin property prices developed recently?', acceptedAnswer: { '@type': 'Answer', text: 'In 2024, condo prices decreased 0.9% to €5,696/m² and apartment building prices 4.4% to €3,041/m². Rents increased 12% to €15.79/m². Purchase prices have corrected while rental income potential has strengthened.' } },
+    { '@type': 'Question', name: 'What is the long-term outlook for the Berlin housing market?', acceptedAnswer: { '@type': 'Answer', text: 'Population growth of around 5% to 2040; 222,000 new apartments targeted. Transaction volume recovered to €2.9bn in 2024. A further slight increase in the transaction market is expected in 2025 if interest rates remain stable.' } },
+    { '@type': 'Question', name: 'Where is new housing being built in Berlin?', acceptedAnswer: { '@type': 'Answer', text: 'Around 215 projects with ~43,530 apartments in 2024. Most development is outside the S-Bahn ring and in the metropolitan area. Districts like Marzahn-Hellersdorf, Spandau, Pankow and the metropolitan area see substantial new construction.' } },
+    { '@type': 'Question', name: 'Is now a good time to buy property in Berlin?', acceptedAnswer: { '@type': 'Answer', text: 'Prices have adjusted while demand and rental growth remain strong. Market recalibration is largely complete. Sweet Home can help you explore properties and provide expert guidance for buying or investing in Berlin.' } }
+  ]
+})) %></script>
+
 <!-- JSON-LD ItemList for recommended properties -->
 <% if (typeof recommendedProperties !== 'undefined' && recommendedProperties && recommendedProperties.length > 0) { %>
 <script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
