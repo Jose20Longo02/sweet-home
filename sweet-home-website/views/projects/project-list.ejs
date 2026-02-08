@@ -1,5 +1,5 @@
 <% 
-  title = 'Development Projects';
+  if (typeof title === 'undefined' || !title) { title = 'Development Projects'; }
   headPartial = '../partials/seo/project-list-head';
 %>
 <link rel="stylesheet" href="/css/project-list.css" />

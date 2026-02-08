@@ -69,8 +69,9 @@ exports.listPublic = async (req, res, next) => {
     const { rows: countRows } = await query(`SELECT COUNT(*)::int AS count FROM blog_posts WHERE status = 'published'`);
     const total = (countRows && countRows[0] && countRows[0].count) || 0;
     const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    const pageTitle = page > 1 ? `Blog - Page ${page}` : 'Blog';
     res.render('blog/blog-list', {
-      title: 'Blog',
+      title: pageTitle,
       posts: localizedPosts,
       page,
       hasNext: page < totalPages,

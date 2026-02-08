@@ -1,8 +1,27 @@
 <%
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
-  const queryString = (typeof queryParams !== 'undefined' && Object.keys(queryParams || {}).length) ? '?' + new URLSearchParams(queryParams).toString() : '';
+  // Canonical URL: consolidate duplicates - strip page=1, expand UAE to UAE+Dubai when UAE has only one city
+  let canonicalParams = Object.assign({}, (typeof queryParams !== 'undefined' && queryParams) ? queryParams : {});
+  if (canonicalParams.page === '1' || canonicalParams.page === 1) delete canonicalParams.page;
+  const f = (typeof filters !== 'undefined' && filters) ? filters : {};
+  const locs = (typeof locations !== 'undefined' && locations) ? locations : {};
+  if (f.country === 'UAE' && !f.city && locs.UAE && Object.keys(locs.UAE).length === 1) {
+    canonicalParams.city = Object.keys(locs.UAE)[0];
+  }
+  const queryString = Object.keys(canonicalParams).length ? '?' + new URLSearchParams(canonicalParams).toString() : '';
   const projectListUrl = `${siteBaseUrl}/projects${queryString}`;
-  const listDesc = 'Browse luxury development projects in Cyprus, Dubai, and Berlin. Find your perfect real estate investment opportunity.';
+  const country = f.country || '';
+  const city = f.city || '';
+  const currentPage = typeof currentPage !== 'undefined' ? currentPage : 1;
+  let listDesc = 'Browse luxury development projects in Cyprus, Dubai, and Berlin. Find your perfect real estate investment opportunity.';
+  if (country && city) {
+    listDesc = `Browse luxury development projects in ${city}, ${country}. Find your perfect real estate investment opportunity.`;
+  } else if (country) {
+    listDesc = `Browse luxury development projects in ${country}. Find your perfect real estate investment opportunity.`;
+  }
+  if (currentPage > 1) {
+    listDesc = listDesc.replace('. Find', ` - Page ${currentPage}. Find`);
+  }
 %>
 <meta name="description" content="<%= listDesc %>">
 <link rel="canonical" href="<%= projectListUrl %>">

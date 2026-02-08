@@ -1,5 +1,5 @@
 <% 
-  title = t('nav.blog','Blog');
+  if (typeof title === 'undefined' || !title) { title = t('nav.blog','Blog'); }
   headPartial = '../partials/seo/blog-list-head';
 %>
 <link rel="stylesheet" href="/css/blog.css" />

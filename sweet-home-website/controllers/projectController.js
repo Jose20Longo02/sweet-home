@@ -1218,7 +1218,19 @@ exports.listProjectsPublic = async (req, res, next) => {
       return { ...p, has_variants: has, variant_base: base };
     });
 
+    // Unique page title for SEO (avoids duplicate title tags on paginated/filtered pages)
+    let pageTitle = 'Development Projects';
+    if (country && city) {
+      pageTitle = `Development Projects in ${city}, ${country}`;
+    } else if (country) {
+      pageTitle = `Development Projects in ${country}`;
+    }
+    if (parseInt(page, 10) > 1) {
+      pageTitle += ` - Page ${page}`;
+    }
+
     res.render('projects/project-list', { 
+      title: pageTitle,
       projects: projectsWithVariants,
       locations,
       filters,

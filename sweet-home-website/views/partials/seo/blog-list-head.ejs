@@ -1,7 +1,8 @@
 <%
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
   const blogListUrl = `${siteBaseUrl}/blog${(typeof page !== 'undefined' && page > 1) ? `?page=${page}` : ''}`;
-  const listDesc = 'Browse our real estate blog for insights on property markets in Cyprus, Dubai, and Berlin. Expert advice, market trends, and investment guides.';
+  const baseDesc = 'Browse our real estate blog for insights on property markets in Cyprus, Dubai, and Berlin. Expert advice, market trends, and investment guides.';
+  const listDesc = (typeof page !== 'undefined' && page > 1) ? `Browse our real estate blog - Page ${page}. Insights on property markets in Cyprus, Dubai, and Berlin. Expert advice, market trends, and investment guides.` : baseDesc;
 %>
 <meta name="description" content="<%= listDesc %>">
 <link rel="canonical" href="<%= blogListUrl %>">
