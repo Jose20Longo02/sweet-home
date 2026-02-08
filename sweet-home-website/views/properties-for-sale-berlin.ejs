@@ -34,7 +34,7 @@
         <select id="city" name="city" aria-label="<%= t('forms.city','City') %>">
           <option value=""><%= t('forms.city','City') %></option>
           <% if (locations.Germany) { Object.keys(locations.Germany).forEach(ct => { %>
-            <option value="<%= ct %>"><%= ct %></option>
+            <option value="<%= ct %>" <%= ct === 'Berlin' ? 'selected' : '' %>><%= ct %></option>
           <% }); } %>
         </select>
         <label class="sr-only" for="neighborhood"><%= t('forms.neighborhood','Neighborhood') %></label>
@@ -153,12 +153,16 @@
   if (countrySelect && citySelect && neighborhoodSelect && window.locations) {
     citySelect.disabled = false;
     if (countrySelect.value === 'Germany' && window.locations.Germany) {
-      Object.keys(window.locations.Germany).forEach(function(ct) {
-        var opt = document.createElement('option');
-        opt.value = ct;
-        opt.textContent = ct;
-        citySelect.appendChild(opt);
-      });
+      if (citySelect.options.length <= 1) {
+        Object.keys(window.locations.Germany).forEach(function(ct) {
+          var opt = document.createElement('option');
+          opt.value = ct;
+          opt.textContent = ct;
+          citySelect.appendChild(opt);
+        });
+      }
+      citySelect.value = 'Berlin';
+      citySelect.dispatchEvent(new Event('change', { bubbles: true }));
     }
     countrySelect.addEventListener('change', function() {
       var country = this.value;
