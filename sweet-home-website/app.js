@@ -439,6 +439,8 @@ app.use('/superadmin/dashboard/blog', blogSuperAdminRoutes);
 
 // Berlin landing page (before /properties so path is explicit)
 app.get('/properties-for-sale-berlin', propertyController.berlinPropertiesPage);
+app.get('/de/immobilien-berlin-kaufen', propertyController.berlinPropertiesPage);
+app.get('/es/propiedades-en-venta-berlin', propertyController.berlinPropertiesPage);
 
 // Public & agent routes
 app.use('/properties', propertyRoutes);

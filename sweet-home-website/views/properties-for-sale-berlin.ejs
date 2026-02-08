@@ -9,12 +9,12 @@
   <!-- 1) Hero: title, description, CTA -->
   <section class="berlin-hero" aria-labelledby="berlin-hero-title">
     <div class="berlin-hero__bg">
-      <img src="/images/berlin-hero.jpg" alt="Berlin skyline – properties for sale in Berlin, Germany" fetchpriority="high" decoding="async">
+      <img src="/images/berlin-hero.jpg" alt="<%= t('berlin.heroImgAlt','Berlin skyline – properties for sale in Berlin, Germany') %>" fetchpriority="high" decoding="async">
     </div>
     <div class="berlin-hero__overlay"></div>
     <div class="berlin-hero__content">
-      <h1 id="berlin-hero-title" class="berlin-hero__title">Properties for Sale in Berlin</h1>
-      <p class="berlin-hero__description">Discover carefully selected properties for sale in Berlin, one of Europe's most attractive real estate markets. Sweet Home supports international buyers and investors with expert guidance and access to residential and investment opportunities across the city.</p>
+      <h1 id="berlin-hero-title" class="berlin-hero__title"><%= t('berlin.heroTitle','Properties for Sale in Berlin') %></h1>
+      <p class="berlin-hero__description"><%= t('berlin.heroDescription','Discover carefully selected properties for sale in Berlin, one of Europe\'s most attractive real estate markets. Sweet Home supports international buyers and investors with expert guidance and access to residential and investment opportunities across the city.') %></p>
     </div>
   </section>
 
@@ -62,7 +62,7 @@
 
   <!-- 3) Featured properties: 3x3 grid, handpicked style -->
   <section class="section featured berlin-featured" aria-labelledby="recommended-heading">
-    <h2 id="recommended-heading" class="berlin-featured__title">Featured properties</h2>
+    <h2 id="recommended-heading" class="berlin-featured__title"><%= t('berlin.featuredTitle','Featured properties') %></h2>
     <div class="berlin-featured__grid" id="berlinRecommended">
       <% (recommendedProperties || []).forEach(property => { %>
         <%
@@ -114,67 +114,67 @@
       <p class="section-empty"><%= t('properties.list.noResults','No properties found.') %> <a href="/properties?country=Germany"><%= t('home.search.cta','Search Properties') %></a></p>
     <% } else { %>
       <p class="section-cta">
-        <a href="/properties?country=Germany" class="btn btn-primary"><%= t('properties.list.viewAll','View all properties in Berlin') %></a>
+        <a href="/properties?country=Germany" class="btn btn-primary"><%= t('berlin.viewAll','View all properties in Berlin') %></a>
       </p>
     <% } %>
   </section>
 
   <!-- 4) FAQ: Berlin real estate investment -->
   <section class="berlin-faq section" aria-labelledby="berlin-faq-heading">
-    <h2 id="berlin-faq-heading" class="berlin-faq__title">Frequently asked questions about buying property in Berlin</h2>
+    <h2 id="berlin-faq-heading" class="berlin-faq__title"><%= t('berlin.faqTitle','Frequently asked questions about buying property in Berlin') %></h2>
     <div class="berlin-faq__list">
       <article class="berlin-faq__item">
         <h3 class="berlin-faq__question">
           <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="berlin-faq-a1" id="berlin-faq-q1" data-faq-toggle>
-            Why should I consider investing in Berlin real estate?
+            <%= t('berlin.faqQ1','Why should I consider investing in Berlin real estate?') %>
           </button>
         </h3>
         <div class="berlin-faq__answer" id="berlin-faq-a1" role="region" aria-labelledby="berlin-faq-q1" hidden>
-          <p>Berlin is one of Europe’s most attractive real estate markets. The city has strong demographic growth, a robust economy, and ongoing demand for housing. According to the Berlin Housing Market Report 2025 (Berlin Hyp &amp; CBRE), the capital needs around 222,000 new apartments by 2040, plus land provision for a further 50,000 units. Asking rents rose again in 2024 (by 12% to €15.79 per m² on average), making Berlin one of the top cities in Germany for rental dynamics. For investors, this combination of demand, limited supply, and rental growth supports long-term value and income potential.</p>
+          <p><%= t('berlin.faqA1','Berlin is one of Europe\'s most attractive real estate markets. The city has strong demographic growth, a robust economy, and ongoing demand for housing. According to the Berlin Housing Market Report 2025 (Berlin Hyp & CBRE), the capital needs around 222,000 new apartments by 2040, plus land provision for a further 50,000 units. Asking rents rose again in 2024 (by 12% to €15.79 per m² on average), making Berlin one of the top cities in Germany for rental dynamics. For investors, this combination of demand, limited supply, and rental growth supports long-term value and income potential.') %></p>
         </div>
       </article>
       <article class="berlin-faq__item">
         <h3 class="berlin-faq__question">
           <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="berlin-faq-a2" id="berlin-faq-q2" data-faq-toggle>
-            How have Berlin property prices developed recently?
+            <%= t('berlin.faqQ2','How have Berlin property prices developed recently?') %>
           </button>
         </h3>
         <div class="berlin-faq__answer" id="berlin-faq-a2" role="region" aria-labelledby="berlin-faq-q2" hidden>
-          <p>In 2024, asking prices for condominiums in Berlin decreased slightly by 0.9% to an average of €5,696 per m², while asking prices for apartment buildings fell by 4.4% to €3,041 per m². This reflects higher interest rates and economic uncertainty. At the same time, asking rents increased by 12% to €15.79 per m², with Berlin showing the highest rent dynamics among Germany’s seven largest cities. So while purchase prices have corrected, rental income potential has strengthened, which can make Berlin attractive for buy-to-let and long-term investment.</p>
+          <p><%= t('berlin.faqA2','In 2024, asking prices for condominiums in Berlin decreased slightly by 0.9% to an average of €5,696 per m², while asking prices for apartment buildings fell by 4.4% to €3,041 per m². This reflects higher interest rates and economic uncertainty. At the same time, asking rents increased by 12% to €15.79 per m², with Berlin showing the highest rent dynamics among Germany\'s seven largest cities. So while purchase prices have corrected, rental income potential has strengthened, which can make Berlin attractive for buy-to-let and long-term investment.') %></p>
         </div>
       </article>
       <article class="berlin-faq__item">
         <h3 class="berlin-faq__question">
           <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="berlin-faq-a3" id="berlin-faq-q3" data-faq-toggle>
-            What is the long-term outlook for the Berlin housing market?
+            <%= t('berlin.faqQ3','What is the long-term outlook for the Berlin housing market?') %>
           </button>
         </h3>
         <div class="berlin-faq__answer" id="berlin-faq-a3" role="region" aria-labelledby="berlin-faq-q3" hidden>
-          <p>Population forecasts assume growth of around 5% from 2021 to 2040, and the Urban Development Plan Housing 2040 targets 222,000 new apartments plus land for 50,000 more. The housing shortage remains a key challenge, which supports sustained demand. The institutional transaction market also recovered in 2024 (volume increased to €2.9 billion from €1.8 billion the previous year). Industry experts such as Berlin Hyp and CBRE indicate that if interest rates remain stable, a further slight increase in the transaction market can be expected in 2025, underlining continued investor interest in Berlin residential real estate.</p>
+          <p><%= t('berlin.faqA3','Population forecasts assume growth of around 5% from 2021 to 2040, and the Urban Development Plan Housing 2040 targets 222,000 new apartments plus land for 50,000 more. The housing shortage remains a key challenge, which supports sustained demand. The institutional transaction market also recovered in 2024 (volume increased to €2.9 billion from €1.8 billion the previous year). Industry experts such as Berlin Hyp and CBRE indicate that if interest rates remain stable, a further slight increase in the transaction market can be expected in 2025, underlining continued investor interest in Berlin residential real estate.') %></p>
         </div>
       </article>
       <article class="berlin-faq__item">
         <h3 class="berlin-faq__question">
           <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="berlin-faq-a4" id="berlin-faq-q4" data-faq-toggle>
-            Where is new housing being built in Berlin?
+            <%= t('berlin.faqQ4','Where is new housing being built in Berlin?') %>
           </button>
         </h3>
         <div class="berlin-faq__answer" id="berlin-faq-a4" role="region" aria-labelledby="berlin-faq-q4" hidden>
-          <p>In 2024, around 215 construction projects with roughly 43,530 new apartments were in planning or construction—a significant increase compared to the previous year (34,940). Most large rental housing projects are concentrated outside the S-Bahn ring and in the Berlin metropolitan area; only about 14.6% of projects were within the ring, reflecting limited free land in the inner city. Districts such as Marzahn-Hellersdorf, Spandau, Pankow, and the metropolitan area (e.g. Potsdam, Barnim) are seeing substantial new development. Both state-owned housing companies and private developers are active, offering a mix of subsidised and market-rate housing and investment opportunities.</p>
+          <p><%= t('berlin.faqA4','In 2024, around 215 construction projects with roughly 43,530 new apartments were in planning or construction—a significant increase compared to the previous year (34,940). Most large rental housing projects are concentrated outside the S-Bahn ring and in the Berlin metropolitan area; only about 14.6% of projects were within the ring, reflecting limited free land in the inner city. Districts such as Marzahn-Hellersdorf, Spandau, Pankow, and the metropolitan area (e.g. Potsdam, Barnim) are seeing substantial new development. Both state-owned housing companies and private developers are active, offering a mix of subsidised and market-rate housing and investment opportunities.') %></p>
         </div>
       </article>
       <article class="berlin-faq__item">
         <h3 class="berlin-faq__question">
           <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="berlin-faq-a5" id="berlin-faq-q5" data-faq-toggle>
-            Is now a good time to buy property in Berlin?
+            <%= t('berlin.faqQ5','Is now a good time to buy property in Berlin?') %>
           </button>
         </h3>
         <div class="berlin-faq__answer" id="berlin-faq-a5" role="region" aria-labelledby="berlin-faq-q5" hidden>
-          <p>Current conditions can be favourable for certain investors: purchase prices for condominiums and apartment buildings have adjusted from previous highs, while demand for housing and rental growth remain strong. The recalibration of the market to a new price level is seen as largely complete, and institutional interest in residential assets has increased again due to housing shortage and the resilience of the sector. Whether it’s the right time for you depends on your goals, financing, and target area. Sweet Home can help you explore carefully selected properties and provide expert guidance for buying or investing in Berlin.</p>
+          <p><%= t('berlin.faqA5','Current conditions can be favourable for certain investors: purchase prices for condominiums and apartment buildings have adjusted from previous highs, while demand for housing and rental growth remain strong. The recalibration of the market to a new price level is seen as largely complete, and institutional interest in residential assets has increased again due to housing shortage and the resilience of the sector. Whether it\'s the right time for you depends on your goals, financing, and target area. Sweet Home can help you explore carefully selected properties and provide expert guidance for buying or investing in Berlin.') %></p>
         </div>
       </article>
     </div>
-    <p class="berlin-faq__source">Sources: <a href="https://www.berlinhyp.de/en/newsroom/press-information/housing-market-report-berlin-2025-asking-rents-continue-to-rise-rapidly" rel="noopener noreferrer" target="_blank">Berlin Hyp &amp; CBRE Housing Market Report Berlin 2025</a>.</p>
+    <p class="berlin-faq__source"><%= t('berlin.faqSource','Sources: Berlin Hyp & CBRE Housing Market Report Berlin 2025.') %> <a href="https://www.berlinhyp.de/en/newsroom/press-information/housing-market-report-berlin-2025-asking-rents-continue-to-rise-rapidly" rel="noopener noreferrer" target="_blank">Berlin Hyp &amp; CBRE Housing Market Report Berlin 2025</a></p>
   </section>
 </div>
 

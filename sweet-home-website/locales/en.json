@@ -77,6 +77,25 @@
     "validation": { "fullName": "Please enter your full name", "countryCode": "Please enter a country code", "phone": "Please enter a phone number", "email": "Enter a valid email address", "language": "Select a language" },
     "aria": { "hero": "For Sellers hero", "primaryActions": "Primary actions", "heroNote": "Hero background image has a decorative dark overlay to improve text contrast", "reasons": "Reasons list", "recentlySoldCarousel": "Recently sold carousel" }
   },
+  "berlin": {
+    "heroTitle": "Properties for Sale in Berlin",
+    "heroDescription": "Discover carefully selected properties for sale in Berlin, one of Europe's most attractive real estate markets. Sweet Home supports international buyers and investors with expert guidance and access to residential and investment opportunities across the city.",
+    "heroImgAlt": "Berlin skyline – properties for sale in Berlin, Germany",
+    "featuredTitle": "Featured properties",
+    "viewAll": "View all properties in Berlin",
+    "faqTitle": "Frequently asked questions about buying property in Berlin",
+    "faqSource": "Sources: Berlin Hyp & CBRE Housing Market Report Berlin 2025.",
+    "faqQ1": "Why should I consider investing in Berlin real estate?",
+    "faqA1": "Berlin is one of Europe's most attractive real estate markets. The city has strong demographic growth, a robust economy, and ongoing demand for housing. According to the Berlin Housing Market Report 2025 (Berlin Hyp & CBRE), the capital needs around 222,000 new apartments by 2040, plus land provision for a further 50,000 units. Asking rents rose again in 2024 (by 12% to €15.79 per m² on average), making Berlin one of the top cities in Germany for rental dynamics. For investors, this combination of demand, limited supply, and rental growth supports long-term value and income potential.",
+    "faqQ2": "How have Berlin property prices developed recently?",
+    "faqA2": "In 2024, asking prices for condominiums in Berlin decreased slightly by 0.9% to an average of €5,696 per m², while asking prices for apartment buildings fell by 4.4% to €3,041 per m². This reflects higher interest rates and economic uncertainty. At the same time, asking rents increased by 12% to €15.79 per m², with Berlin showing the highest rent dynamics among Germany's seven largest cities. So while purchase prices have corrected, rental income potential has strengthened, which can make Berlin attractive for buy-to-let and long-term investment.",
+    "faqQ3": "What is the long-term outlook for the Berlin housing market?",
+    "faqA3": "Population forecasts assume growth of around 5% from 2021 to 2040, and the Urban Development Plan Housing 2040 targets 222,000 new apartments plus land for 50,000 more. The housing shortage remains a key challenge, which supports sustained demand. The institutional transaction market also recovered in 2024 (volume increased to €2.9 billion from €1.8 billion the previous year). Industry experts such as Berlin Hyp and CBRE indicate that if interest rates remain stable, a further slight increase in the transaction market can be expected in 2025, underlining continued investor interest in Berlin residential real estate.",
+    "faqQ4": "Where is new housing being built in Berlin?",
+    "faqA4": "In 2024, around 215 construction projects with roughly 43,530 new apartments were in planning or construction—a significant increase compared to the previous year (34,940). Most large rental housing projects are concentrated outside the S-Bahn ring and in the Berlin metropolitan area; only about 14.6% of projects were within the ring, reflecting limited free land in the inner city. Districts such as Marzahn-Hellersdorf, Spandau, Pankow, and the metropolitan area (e.g. Potsdam, Barnim) are seeing substantial new development. Both state-owned housing companies and private developers are active, offering a mix of subsidised and market-rate housing and investment opportunities.",
+    "faqQ5": "Is now a good time to buy property in Berlin?",
+    "faqA5": "Current conditions can be favourable for certain investors: purchase prices for condominiums and apartment buildings have adjusted from previous highs, while demand for housing and rental growth remain strong. The recalibration of the market to a new price level is seen as largely complete, and institutional interest in residential assets has increased again due to housing shortage and the resilience of the sector. Whether it's the right time for you depends on your goals, financing, and target area. Sweet Home can help you explore carefully selected properties and provide expert guidance for buying or investing in Berlin."
+  },
   "projects": {
     "regions": {
       "title": "Projects by Region",

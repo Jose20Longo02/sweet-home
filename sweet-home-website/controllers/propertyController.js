@@ -2588,14 +2588,41 @@ exports.berlinPropertiesPage = async (req, res, next) => {
     });
 
     const baseUrl = res.locals.baseUrl;
-    const canonicalUrl = `${baseUrl}/properties-for-sale-berlin`;
+    const berlinUrls = {
+      en: `${baseUrl}/properties-for-sale-berlin`,
+      de: `${baseUrl}/de/immobilien-berlin-kaufen`,
+      es: `${baseUrl}/es/propiedades-en-venta-berlin`
+    };
+    const canonicalUrl = berlinUrls[lang] || berlinUrls.en;
+    const hreflangAlternates = {
+      'en-us': berlinUrls.en,
+      'de-de': berlinUrls.de,
+      'es-es': berlinUrls.es
+    };
+    const titles = {
+      en: 'Properties for Sale in Berlin',
+      de: 'Immobilien Berlin kaufen',
+      es: 'Propiedades en venta en Berlín'
+    };
+    const metaDescriptions = {
+      en: 'Find properties for sale in Berlin, Germany. Browse the most viewed apartments, houses, and villas. Expert real estate guidance from Sweet Home.',
+      de: 'Immobilien in Berlin kaufen: Ausgewählte Wohnungen, Häuser und Villen. Sweet Home unterstützt internationale Käufer und Investoren mit Beratung und Zugang zu Wohn- und Anlagemöglichkeiten.',
+      es: 'Encuentra propiedades en venta en Berlín, Alemania. Apartamentos, casas y villas. Asesoramiento inmobiliario de Sweet Home para compradores e inversores internacionales.'
+    };
+    const berlinPagePaths = {
+      en: '/properties-for-sale-berlin',
+      de: '/de/immobilien-berlin-kaufen',
+      es: '/es/propiedades-en-venta-berlin'
+    };
     res.render('properties-for-sale-berlin', {
-      title: 'Properties for Sale in Berlin',
+      title: titles[lang] || titles.en,
       useMainContainer: false,
       useHomeHeader: true,
       headPartial: '../partials/seo/berlin-properties-head',
       canonicalUrl,
-      pageMetaDescription: 'Find properties for sale in Berlin, Germany. Browse the most viewed apartments, houses, and villas. Expert real estate guidance from Sweet Home.',
+      hreflangAlternates,
+      pageMetaDescription: metaDescriptions[lang] || metaDescriptions.en,
+      berlinPagePaths,
       locations,
       recommendedProperties,
       baseUrl: res.locals.baseUrl

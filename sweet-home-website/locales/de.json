@@ -17,6 +17,25 @@
     "validation": { "fullName": "Bitte geben Sie Ihren vollständigen Namen ein", "countryCode": "Bitte eine Ländervorwahl eingeben", "phone": "Bitte eine Telefonnummer eingeben", "email": "Geben Sie eine gültige E-Mail-Adresse ein", "language": "Bitte eine Sprache auswählen" },
     "aria": { "hero": "Bereich für Verkäufer", "primaryActions": "Hauptaktionen", "heroNote": "Hintergrundbild mit dunkler Überlagerung zur besseren Lesbarkeit", "reasons": "Gründe-Liste", "recentlySoldCarousel": "Karussell: Kürzlich verkauft" }
   },
+  "berlin": {
+    "heroTitle": "Immobilien Berlin kaufen",
+    "heroDescription": "Entdecken Sie ausgewählte Immobilien zum Verkauf in Berlin, einem der attraktivsten Immobilienmärkte Europas. Sweet Home unterstützt internationale Käufer und Investoren mit fachkundiger Beratung und Zugang zu Wohn- und Anlagemöglichkeiten in der ganzen Stadt.",
+    "heroImgAlt": "Berliner Skyline – Immobilien zum Kauf in Berlin, Deutschland",
+    "featuredTitle": "Ausgewählte Immobilien",
+    "viewAll": "Alle Immobilien in Berlin anzeigen",
+    "faqTitle": "Häufige Fragen zum Immobilienkauf in Berlin",
+    "faqSource": "Quellen: Berlin Hyp & CBRE Wohnungsmarktbericht Berlin 2025.",
+    "faqQ1": "Warum in Berliner Immobilien investieren?",
+    "faqA1": "Berlin ist einer der attraktivsten Immobilienmärkte Europas. Die Stadt verzeichnet starkes Bevölkerungswachstum, eine robuste Wirtschaft und anhaltende Wohnraumnachfrage. Laut dem Wohnungsmarktbericht Berlin 2025 (Berlin Hyp & CBRE) benötigt die Hauptstadt bis 2040 rund 222.000 neue Wohnungen sowie Flächen für weitere 50.000 Einheiten. Die Angebotsmieten stiegen 2024 erneut (um 12 % auf durchschnittlich 15,79 €/m²), was Berlin zu einer der dynamischsten Städte bei den Mieten in Deutschland macht. Für Investoren unterstützen Nachfrage, begrenztes Angebot und Mietwachstum langfristigen Wert und Ertragspotenzial.",
+    "faqQ2": "Wie haben sich die Immobilienpreise in Berlin kürzlich entwickelt?",
+    "faqA2": "2024 sanken die Angebotspreise für Eigentumswohnungen in Berlin leicht um 0,9 % auf durchschnittlich 5.696 €/m², die für Mehrfamilienhäuser um 4,4 % auf 3.041 €/m². Gründe sind höhere Zinsen und wirtschaftliche Unsicherheit. Gleichzeitig stiegen die Angebotsmieten um 12 % auf 15,79 €/m² – Berlin weist unter den sieben größten deutschen Städten die höchste Mietdynamik auf. Während die Kaufpreise sich korrigiert haben, ist das Mietertragspotenzial gewachsen, was Berlin für Kapitalanleger und langfristige Investoren interessant macht.",
+    "faqQ3": "Wie ist die langfristige Perspektive für den Berliner Wohnungsmarkt?",
+    "faqA3": "Die Bevölkerungsprognose geht von einem Wachstum von rund 5 % von 2021 bis 2040 aus; der Stadtentwicklungsplan Wohnen 2040 sieht 222.000 neue Wohnungen plus Flächen für 50.000 weitere vor. Der Wohnungsmangel bleibt eine zentrale Herausforderung und stützt die Nachfrage. Das Transaktionsvolumen am institutionellen Markt erholte sich 2024 (von 1,8 auf 2,9 Mrd. €). Experten von Berlin Hyp und CBRE erwarten bei stabilen Zinsen 2025 eine weitere leichte Belebung des Transaktionsmarkts und damit anhaltendes Investoreninteresse an Berliner Wohnimmobilien.",
+    "faqQ4": "Wo wird in Berlin neu gebaut?",
+    "faqA4": "2024 befanden sich rund 215 Bauprojekte mit etwa 43.530 neuen Wohnungen in Planung oder Bau – ein deutlicher Anstieg zum Vorjahr (34.940). Die meisten großen Mietwohnungsprojekte liegen außerhalb des S-Bahn-Rings und im Berliner Umland; nur etwa 14,6 % der Projekte lagen innerhalb des Rings. Bezirke wie Marzahn-Hellersdorf, Spandau, Pankow sowie das Umland (z. B. Potsdam, Barnim) verzeichnen erhebliche Neubautätigkeit. Sowohl landeseigene als auch private Bauträger sind aktiv und bieten eine Mischung aus gefördertem und freifinanziertem Wohnraum sowie Anlageoptionen.",
+    "faqQ5": "Ist jetzt ein guter Zeitpunkt, um in Berlin zu kaufen?",
+    "faqA5": "Die aktuellen Bedingungen können für bestimmte Investoren günstig sein: Die Kaufpreise für Wohnungen und Mehrfamilienhäuser haben sich von früheren Höchstständen angepasst, während die Nachfrage und das Mietwachstum hoch bleiben. Die Anpassung des Marktes an das neue Preisniveau gilt als weitgehend abgeschlossen, und das institutionelle Interesse an Wohnimmobilien ist wegen des Wohnungsmangels und der Krisenfestigkeit des Sektors wieder gestiegen. Ob der richtige Zeitpunkt für Sie ist, hängt von Ihren Zielen, der Finanzierung und der gewünschten Lage ab. Sweet Home unterstützt Sie bei der Auswahl passender Objekte und mit fachkundiger Beratung für Kauf und Investition in Berlin."
+  },
   "projects": {
     "regions": {
       "title": "Projekte nach Region",

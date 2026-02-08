@@ -17,6 +17,25 @@
     "validation": { "fullName": "Introduce tu nombre completo", "countryCode": "Introduce un código de país", "phone": "Introduce un número de teléfono", "email": "Introduce un correo válido", "language": "Selecciona un idioma" },
     "aria": { "hero": "Sección para vendedores", "primaryActions": "Acciones principales", "heroNote": "La imagen de fondo tiene una superposición oscura para mejorar el contraste", "reasons": "Lista de razones", "recentlySoldCarousel": "Carrusel de recientemente vendidos" }
   },
+  "berlin": {
+    "heroTitle": "Propiedades en venta en Berlín",
+    "heroDescription": "Descubre propiedades seleccionadas en venta en Berlín, uno de los mercados inmobiliarios más atractivos de Europa. Sweet Home apoya a compradores e inversores internacionales con asesoramiento experto y acceso a oportunidades residenciales e inversión en la ciudad.",
+    "heroImgAlt": "Skyline de Berlín – propiedades en venta en Berlín, Alemania",
+    "featuredTitle": "Propiedades destacadas",
+    "viewAll": "Ver todas las propiedades en Berlín",
+    "faqTitle": "Preguntas frecuentes sobre la compra de inmuebles en Berlín",
+    "faqSource": "Fuentes: Berlin Hyp y CBRE, Informe del Mercado Residencial Berlín 2025.",
+    "faqQ1": "¿Por qué invertir en inmuebles en Berlín?",
+    "faqA1": "Berlín es uno de los mercados inmobiliarios más atractivos de Europa. La ciudad tiene un fuerte crecimiento demográfico, una economía sólida y una demanda constante de vivienda. Según el Informe del Mercado Residencial Berlín 2025 (Berlin Hyp y CBRE), la capital necesita unas 222.000 viviendas nuevas hasta 2040, además de suelo para 50.000 más. Las rentas de oferta volvieron a subir en 2024 (un 12 % hasta 15,79 €/m² de media), situando a Berlín entre las ciudades con mayor dinámica de alquiler en Alemania. Para inversores, esta combinación de demanda, oferta limitada y crecimiento del alquiler respalda el valor y el potencial de ingresos a largo plazo.",
+    "faqQ2": "¿Cómo han evolucionado recientemente los precios en Berlín?",
+    "faqA2": "En 2024, los precios de oferta de pisos en Berlín bajaron ligeramente un 0,9 % hasta 5.696 €/m² de media, y los de edificios de viviendas un 4,4 % hasta 3.041 €/m². Esto refleja tipos de interés más altos e incertidumbre económica. Al mismo tiempo, las rentas de oferta subieron un 12 % hasta 15,79 €/m², con Berlín a la cabeza en dinámica de alquiler entre las siete mayores ciudades alemanas. Así, mientras los precios de compra se han corregido, el potencial de ingresos por alquiler se ha reforzado, lo que puede hacer atractiva la inversión en compra para alquilar a largo plazo.",
+    "faqQ3": "¿Cuál es la perspectiva a largo plazo del mercado residencial en Berlín?",
+    "faqA3": "Las previsiones demográficas apuntan a un crecimiento de alrededor del 5 % entre 2021 y 2040, y el Plan de Desarrollo Urbano Vivienda 2040 fija 222.000 viviendas nuevas más suelo para 50.000 más. La escasez de vivienda sigue siendo un reto clave y sostiene la demanda. El mercado de transacciones institucionales también se recuperó en 2024 (el volumen pasó de 1.800 a 2.900 millones €). Expertos como Berlin Hyp y CBRE indican que, con tipos estables, puede esperarse una nueva ligera subida del mercado de transacciones en 2025, lo que subraya el interés inversor en el residencial en Berlín.",
+    "faqQ4": "¿Dónde se construye nueva vivienda en Berlín?",
+    "faqA4": "En 2024, unos 215 proyectos con aproximadamente 43.530 viviendas nuevas estaban en planificación o construcción, un aumento importante respecto al año anterior (34.940). La mayoría de los grandes proyectos de alquiler se concentran fuera del anillo S-Bahn y en el área metropolitana; solo alrededor del 14,6 % estaban dentro del anillo. Distritos como Marzahn-Hellersdorf, Spandau, Pankow y el área metropolitana (p. ej. Potsdam, Barnim) concentran gran parte del desarrollo. Tanto empresas públicas como promotores privados están activos, ofreciendo vivienda protegida y libre e oportunidades de inversión.",
+    "faqQ5": "¿Es buen momento para comprar inmuebles en Berlín?",
+    "faqA5": "Las condiciones actuales pueden ser favorables para algunos inversores: los precios de compra de pisos y edificios se han ajustado respecto a máximos anteriores, mientras la demanda de vivienda y el crecimiento del alquiler se mantienen. El reequilibrio del mercado hacia un nuevo nivel de precios se considera en gran medida completado y el interés institucional por activos residenciales ha vuelto a crecer por la escasez de vivienda y la resistencia del sector. Si es el momento adecuado para usted depende de sus objetivos, financiación y zona deseada. Sweet Home puede ayudarle a explorar propiedades seleccionadas y ofrecer asesoramiento experto para comprar o invertir en Berlín."
+  },
   "brand": "PlataformaInmobiliaria",
   "nav": {
     "home": "Inicio",
