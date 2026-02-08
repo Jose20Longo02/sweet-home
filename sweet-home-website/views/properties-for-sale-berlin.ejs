@@ -152,18 +152,6 @@
   var neighborhoodSelect = document.getElementById('neighborhood');
   if (countrySelect && citySelect && neighborhoodSelect && window.locations) {
     citySelect.disabled = false;
-    if (countrySelect.value === 'Germany' && window.locations.Germany) {
-      if (citySelect.options.length <= 1) {
-        Object.keys(window.locations.Germany).forEach(function(ct) {
-          var opt = document.createElement('option');
-          opt.value = ct;
-          opt.textContent = ct;
-          citySelect.appendChild(opt);
-        });
-      }
-      citySelect.value = 'Berlin';
-      citySelect.dispatchEvent(new Event('change', { bubbles: true }));
-    }
     countrySelect.addEventListener('change', function() {
       var country = this.value;
       citySelect.innerHTML = '<option value="">' + (document.documentElement.lang === 'de' ? 'Stadt' : document.documentElement.lang === 'es' ? 'Ciudad' : 'City') + '</option>';
@@ -186,17 +174,34 @@
       var city = this.value;
       neighborhoodSelect.innerHTML = '<option value="">' + (document.documentElement.lang === 'de' ? 'Stadtteil' : document.documentElement.lang === 'es' ? 'Barrio' : 'Neighborhood') + '</option>';
       if (country && city && window.locations[country] && window.locations[country][city]) {
-        window.locations[country][city].forEach(function(n) {
-          var opt = document.createElement('option');
-          opt.value = n;
-          opt.textContent = n;
-          neighborhoodSelect.appendChild(opt);
-        });
-        neighborhoodSelect.disabled = false;
+        var neighborhoods = window.locations[country][city];
+        if (Array.isArray(neighborhoods) && neighborhoods.length > 0) {
+          neighborhoods.forEach(function(n) {
+            var opt = document.createElement('option');
+            opt.value = n;
+            opt.textContent = n;
+            neighborhoodSelect.appendChild(opt);
+          });
+          neighborhoodSelect.disabled = false;
+        } else {
+          neighborhoodSelect.disabled = false;
+        }
       } else {
         neighborhoodSelect.disabled = true;
       }
     });
+    if (countrySelect.value === 'Germany' && window.locations.Germany) {
+      if (citySelect.options.length <= 1) {
+        Object.keys(window.locations.Germany).forEach(function(ct) {
+          var opt = document.createElement('option');
+          opt.value = ct;
+          opt.textContent = ct;
+          citySelect.appendChild(opt);
+        });
+      }
+      citySelect.value = 'Berlin';
+      citySelect.dispatchEvent(new Event('change', { bubbles: true }));
+    }
   }
 })();
 </script>
