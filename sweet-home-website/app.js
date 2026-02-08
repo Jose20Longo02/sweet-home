@@ -514,8 +514,14 @@ async function renderHomePage(req, res, langPath, next) {
       'de-de': `${baseUrl}/de`,
       'es-es': `${baseUrl}/es`
     };
+    const homeTitles = {
+      en: 'International Real Estate Investment Company',
+      de: 'Internationale Immobilieninvestmentgesellschaft',
+      es: 'Agencia internacional de inversión inmobiliaria'
+    };
+    const pageTitle = homeTitles[lang] || homeTitles.en;
     res.render('home', {
-      title: 'Find Your Dream Home',
+      title: pageTitle,
       user: req.session.user || null,
       locations,
       recommendedProject,

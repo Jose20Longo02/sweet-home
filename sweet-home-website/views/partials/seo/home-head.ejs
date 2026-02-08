@@ -11,7 +11,7 @@
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Sweet Home - Find Your Dream Property' %>">
+<meta property="og:title" content="<%= (typeof title !== 'undefined' && title) ? title + ' | Sweet Home' : 'International Real Estate Investment Company | Sweet Home' %>">
 <meta property="og:description" content="<%= pageMetaDescription %>">
 <meta property="og:url" content="<%= (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : baseUrl + '/' %>">
 <meta property="og:image" content="<%= baseUrl %>/images/dubai-hero.jpg">
@@ -20,7 +20,7 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'Sweet Home - Find Your Dream Property' %>">
+<meta name="twitter:title" content="<%= (typeof title !== 'undefined' && title) ? title + ' | Sweet Home' : 'International Real Estate Investment Company | Sweet Home' %>">
 <meta name="twitter:description" content="<%= pageMetaDescription %>">
 <meta name="twitter:image" content="<%= baseUrl %>/images/dubai-hero.jpg">
 
