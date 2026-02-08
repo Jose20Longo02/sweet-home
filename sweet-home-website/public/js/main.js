@@ -3,6 +3,19 @@ document.addEventListener('DOMContentLoaded', function () {
   // Expose CSRF token for generic fetch calls
   window.__CSRF_TOKEN__ = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
+  // Header solidify on scroll (for pages with .site-header.gradient: transparent -> white)
+  (function initHeaderShrink() {
+    const header = document.querySelector('.site-header.gradient');
+    if (!header) return;
+    function updateHeader() {
+      const threshold = 40;
+      if (window.scrollY > threshold) header.classList.add('shrink');
+      else header.classList.remove('shrink');
+    }
+    updateHeader();
+    window.addEventListener('scroll', updateHeader, { passive: true });
+  })();
+
   // Header mobile menu toggle
   (function initSiteHeaderMenu() {
     const toggle = document.querySelector('.menu-toggle');
