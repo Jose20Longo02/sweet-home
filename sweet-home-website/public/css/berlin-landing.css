@@ -211,7 +211,7 @@
 }
 
 .berlin-featured__title {
-  font-family: 'Lato', system-ui, -apple-system, sans-serif;
+  font-family: 'Playfair Display', serif;
   font-size: clamp(1.35rem, 2.5vw, 1.6rem);
   font-weight: 600;
   color: var(--gray-800, #1e293b);
