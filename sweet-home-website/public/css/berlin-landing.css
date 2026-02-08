@@ -85,7 +85,12 @@
   outline-offset: 3px;
 }
 
-/* 2) Search bar section */
+/* 2) Search bar section – animated green gradient border */
+@keyframes berlin-search-border {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
 .berlin-search {
   background: #fff;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -93,9 +98,26 @@
   margin: -32px auto 0;
   position: relative;
   z-index: 3;
-  border-radius: 16px;
+  border-radius: 18px;
   max-width: 1100px;
   width: calc(100% - 32px);
+}
+
+.berlin-search::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 21px;
+  z-index: -1;
+  background: linear-gradient(
+    110deg,
+    var(--primary-color, #2ea862),
+    var(--primary-light, #58c27d),
+    var(--primary-dark, #23804b),
+    var(--primary-color, #2ea862)
+  );
+  background-size: 300% 300%;
+  animation: berlin-search-border 6s ease infinite;
 }
 
 .berlin-search__title {
@@ -158,7 +180,8 @@
 @media (max-width: 768px) {
   .berlin-hero { min-height: 70vh; padding-bottom: 12vh; }
   .berlin-hero__content { padding: 0 20px; }
-  .berlin-search { margin: -24px 12px 0; padding: 20px 16px; border-radius: 14px; }
+  .berlin-search { margin: -24px 12px 0; padding: 20px 16px; border-radius: 16px; }
+  .berlin-search::before { border-radius: 19px; }
   .berlin-search .berlin-search__row { flex-wrap: wrap; gap: 10px; justify-content: stretch; }
   .berlin-search .berlin-search__row > select { flex: 1 1 calc(50% - 8px); max-width: none; }
   .berlin-search .berlin-search__row > button { flex: 1 1 100%; }
