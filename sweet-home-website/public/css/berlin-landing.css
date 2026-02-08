@@ -103,14 +103,14 @@
   width: calc(100% - 32px);
 }
 
-/* Border only: gradient in a ring (mask hides center so white bg shows through) */
+/* Thin outline that surrounds the search bar (animated green line around the box) */
 .berlin-search::before {
   content: '';
   position: absolute;
-  inset: 0;
-  border-radius: 18px;
+  inset: -2px;
+  border-radius: 20px;
   z-index: 0;
-  padding: 3px;
+  padding: 2px;
   background: linear-gradient(
     110deg,
     var(--primary-color, #2ea862),
