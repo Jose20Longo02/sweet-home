@@ -8,7 +8,7 @@
 /* 1) Hero section: title, description, CTA – tall hero, content kept lower to separate from header */
 .berlin-hero {
   position: relative;
-  min-height: 75vh;
+  min-height: 68vh;
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -166,7 +166,7 @@
 }
 
 @media (max-width: 768px) {
-  .berlin-hero { min-height: 70vh; padding-bottom: 12vh; }
+  .berlin-hero { min-height: 62vh; padding-bottom: 12vh; }
   .berlin-hero__content { padding: 0 20px; }
   .berlin-search { margin: -24px 12px 0; padding: 20px 16px; border-radius: 16px; }
   .berlin-search::before { border-radius: 19px; }
