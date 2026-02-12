@@ -356,7 +356,117 @@
   }
 }
 
-/* 4) FAQ section – Berlin real estate investment */
+/* 4) Content sections – Why Invest / Best Areas (elegant, readable) */
+.berlin-content {
+  content-visibility: visible;
+}
+
+.berlin-content__inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 56px 24px 52px;
+}
+
+.berlin-content__title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.5rem, 2.8vw, 1.75rem);
+  font-weight: 600;
+  color: var(--gray-800, #1e293b);
+  margin: 0 0 28px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.berlin-content__body p,
+.berlin-content__intro,
+.berlin-content__outro {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--gray-700, #334155);
+  margin: 0 0 20px;
+}
+
+.berlin-content__body p:last-child,
+.berlin-content__outro {
+  margin-bottom: 0;
+}
+
+/* Why Invest – white background, clean block */
+.berlin-why-invest {
+  background: #fff;
+}
+
+.berlin-why-invest .berlin-content__body p {
+  text-align: left;
+}
+
+/* Best Areas – soft gray background, list styling */
+.berlin-best-areas {
+  background: var(--gray-50, #f8fafc);
+}
+
+.berlin-content__intro {
+  margin-bottom: 24px;
+}
+
+.berlin-areas__list {
+  list-style: none;
+  margin: 0 0 28px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.berlin-areas__item {
+  position: relative;
+  padding-left: 24px;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--gray-700, #334155);
+}
+
+.berlin-areas__item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary-color, #2ea862);
+}
+
+.berlin-areas__item strong {
+  color: var(--gray-800, #1e293b);
+  font-weight: 600;
+}
+
+.berlin-content__outro {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 640px) {
+  .berlin-content__inner {
+    padding: 44px 20px 40px;
+  }
+
+  .berlin-content__title {
+    margin-bottom: 22px;
+  }
+
+  .berlin-areas__list {
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .berlin-areas__item {
+    padding-left: 20px;
+  }
+}
+
+/* 5) FAQ section – Berlin real estate investment */
 .berlin-faq {
   padding: 56px 16px 64px;
   background: var(--gray-50, #f8fafc);
