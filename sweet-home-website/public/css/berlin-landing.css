@@ -356,15 +356,17 @@
   }
 }
 
-/* 4) Content sections – Why Invest / Best Areas (elegant, readable) */
+/* 4) Content sections – Why Invest / Best Areas (elegant, readable, aligned with page) */
 .berlin-content {
   content-visibility: visible;
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 .berlin-content__inner {
   max-width: 720px;
   margin: 0 auto;
-  padding: 56px 24px 52px;
+  padding: 64px 0 56px;
 }
 
 .berlin-content__title {
@@ -372,7 +374,7 @@
   font-size: clamp(1.5rem, 2.8vw, 1.75rem);
   font-weight: 600;
   color: var(--gray-800, #1e293b);
-  margin: 0 0 28px;
+  margin: 0 0 36px;
   line-height: 1.3;
   letter-spacing: -0.01em;
 }
@@ -381,9 +383,9 @@
 .berlin-content__intro,
 .berlin-content__outro {
   font-size: 1.0625rem;
-  line-height: 1.7;
+  line-height: 1.75;
   color: var(--gray-700, #334155);
-  margin: 0 0 20px;
+  margin: 0 0 26px;
 }
 
 .berlin-content__body p:last-child,
@@ -406,16 +408,16 @@
 }
 
 .berlin-content__intro {
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .berlin-areas__list {
   list-style: none;
-  margin: 0 0 28px;
+  margin: 0 0 32px;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 22px;
 }
 
 .berlin-areas__item {
@@ -444,21 +446,38 @@
 
 .berlin-content__outro {
   font-size: 1.0625rem;
-  line-height: 1.7;
+  line-height: 1.75;
+}
+
+@media (max-width: 768px) {
+  .berlin-content {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 }
 
 @media (max-width: 640px) {
+  .berlin-content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
   .berlin-content__inner {
-    padding: 44px 20px 40px;
+    padding: 48px 0 44px;
   }
 
   .berlin-content__title {
+    margin-bottom: 28px;
+  }
+
+  .berlin-content__body p,
+  .berlin-content__intro {
     margin-bottom: 22px;
   }
 
   .berlin-areas__list {
-    gap: 16px;
-    margin-bottom: 24px;
+    gap: 20px;
+    margin-bottom: 28px;
   }
 
   .berlin-areas__item {
