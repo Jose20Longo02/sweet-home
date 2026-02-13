@@ -2614,6 +2614,51 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       de: '/de/immobilien-berlin-kaufen',
       es: '/es/propiedades-en-venta-berlin'
     };
+
+    // Berlin page uses URL-per-language (no i18n); content by route language
+    const berlinSectionContent = {
+      en: {
+        whyInvestTitle: 'Why Invest in Berlin Real Estate?',
+        whyInvestP1: 'Berlin remains one of Europe\'s most resilient residential markets, supported by steady population growth and sustained international migration. With nearly 3.9 million residents and a structural housing shortage requiring over 220,000 new apartments by 2040, demand continues to outpace supply. Vacancy rates remain critically low at around 0.3%, reinforcing rental market pressure.',
+        whyInvestP2: 'While purchase prices have slightly corrected in the past year, asking rents have continued to rise strongly, increasing by approximately 12% in 2024 and more than 50% since 2019. This combination of rental growth and limited new construction creates attractive long-term fundamentals for investors focused on stable income and capital preservation within Germany\'s capital city.',
+        bestAreasTitle: 'Best Areas to Buy Property in Berlin',
+        bestAreasIntro: 'Berlin offers distinct submarkets suited to different investment strategies:',
+        bestAreasMitte: 'Prime central district with average prices around €6,600–8,300/m² and strong rental demand driven by professionals and international residents.',
+        bestAreasCharlottenburg: 'Established West Berlin location combining prestige and stability, with solid long-term value retention.',
+        bestAreasPankow: 'Popular with families and young professionals, showing rental growth momentum and ongoing development.',
+        bestAreasNeukoelln: 'Dynamic district with strong rent increases and continued urban transformation.',
+        bestAreasLichtenberg: 'More affordable entry points with emerging growth potential as rental spreads narrow across the city.',
+        bestAreasOutro: 'These districts reflect Berlin\'s diverse residential landscape, from prime core locations to growth-oriented submarkets benefiting from citywide supply constraints.'
+      },
+      de: {
+        whyInvestTitle: 'Warum in Berliner Immobilien investieren?',
+        whyInvestP1: 'Berlin zählt weiterhin zu den widerstandsfähigsten Wohnimmobilienmärkten Europas, gestützt durch kontinuierliches Bevölkerungswachstum und anhaltende internationale Zuwanderung. Mit rund 3,9 Millionen Einwohnern und einem strukturellen Wohnungsdefizit von über 220.000 benötigten Wohnungen bis 2040 übersteigt die Nachfrage dauerhaft das Angebot. Die Leerstandsquote liegt mit etwa 0,3 % auf einem äußerst niedrigen Niveau und sorgt für anhaltenden Druck auf dem Mietmarkt.',
+        whyInvestP2: 'Während sich die Kaufpreise im vergangenen Jahr leicht korrigiert haben, steigen die Angebotsmieten weiterhin deutlich – um rund 12 % im Jahr 2024 und um mehr als 50 % seit 2019. Diese Kombination aus starkem Mietwachstum und begrenzter Neubautätigkeit schafft attraktive langfristige Rahmenbedingungen für Investoren, die auf stabile Erträge und Kapitalerhalt in Deutschlands Hauptstadt setzen.',
+        bestAreasTitle: 'Beste Lagen zum Immobilienkauf in Berlin',
+        bestAreasIntro: 'Berlin bietet unterschiedliche Teilmärkte, die verschiedenen Anlagestrategien gerecht werden:',
+        bestAreasMitte: 'Zentrale Premiumlage mit durchschnittlichen Kaufpreisen von ca. 6.600–8.300 €/m² und hoher Nachfrage durch Berufstätige und internationale Käufer.',
+        bestAreasCharlottenburg: 'Etablierter West-Berliner Bezirk mit Prestige, Stabilität und langfristiger Wertbeständigkeit.',
+        bestAreasPankow: 'Beliebt bei Familien und jungen Berufstätigen, mit dynamischer Mietentwicklung und fortlaufender Quartiersentwicklung.',
+        bestAreasNeukoelln: 'Wachstumsorientierter Bezirk mit deutlichen Mietsteigerungen und fortschreitender urbaner Transformation.',
+        bestAreasLichtenberg: 'Preislich attraktivere Einstiegslagen mit zunehmendem Entwicklungspotenzial im Zuge stadtweiter Angebotsknappheit.',
+        bestAreasOutro: 'Diese Bezirke spiegeln die Vielfalt des Berliner Wohnimmobilienmarktes wider – von zentralen Premiumlagen bis hin zu wachstumsstarken Teilmärkten, die von strukturellem Angebotsmangel profitieren.'
+      },
+      es: {
+        whyInvestTitle: '¿Por qué invertir en el mercado inmobiliario de Berlín?',
+        whyInvestP1: 'Berlín sigue siendo uno de los mercados residenciales más resilientes de Europa, impulsado por el crecimiento constante de la población y una migración internacional sostenida. Con cerca de 3,9 millones de habitantes y un déficit estructural de más de 220.000 viviendas necesarias antes de 2040, la demanda continúa superando claramente la oferta. La tasa de vacancia se mantiene en niveles extremadamente bajos, alrededor del 0,3 %, reforzando la presión en el mercado de alquiler.',
+        whyInvestP2: 'Aunque los precios de compra han experimentado una ligera corrección en el último año, los alquileres solicitados han seguido aumentando con fuerza, con un incremento aproximado del 12 % en 2024 y superior al 50 % desde 2019. Esta combinación de crecimiento de rentas y limitada construcción nueva genera fundamentos sólidos a largo plazo para inversores que buscan ingresos estables y preservación de capital en la capital alemana.',
+        bestAreasTitle: 'Mejores zonas para comprar propiedad en Berlín',
+        bestAreasIntro: 'Berlín ofrece distintos submercados adaptados a diferentes estrategias de inversión:',
+        bestAreasMitte: 'Distrito central prime con precios medios entre 6.600 y 8.300 €/m² y alta demanda de profesionales y residentes internacionales.',
+        bestAreasCharlottenburg: 'Zona consolidada del oeste de Berlín que combina prestigio, estabilidad y retención de valor a largo plazo.',
+        bestAreasPankow: 'Popular entre familias y jóvenes profesionales, con fuerte dinamismo en el mercado de alquiler y desarrollo continuo.',
+        bestAreasNeukoelln: 'Distrito dinámico con importantes incrementos de renta y transformación urbana constante.',
+        bestAreasLichtenberg: 'Puntos de entrada más accesibles con potencial de crecimiento a medida que se reducen las diferencias de precios dentro de la ciudad.',
+        bestAreasOutro: 'Estas zonas reflejan la diversidad del mercado inmobiliario berlinés, desde áreas prime consolidadas hasta submercados con potencial de crecimiento impulsados por la escasez estructural de oferta.'
+      }
+    };
+    const berlinContent = berlinSectionContent[lang] || berlinSectionContent.en;
+
     res.render('properties-for-sale-berlin', {
       title: titles[lang] || titles.en,
       useMainContainer: false,
@@ -2623,6 +2668,7 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       hreflangAlternates,
       pageMetaDescription: metaDescriptions[lang] || metaDescriptions.en,
       berlinPagePaths,
+      berlinContent,
       locations,
       recommendedProperties,
       baseUrl: res.locals.baseUrl
