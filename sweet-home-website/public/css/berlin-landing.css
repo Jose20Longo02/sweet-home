@@ -408,7 +408,7 @@
 }
 
 .berlin-image-break__wrap {
-  max-width: 1100px;
+  max-width: 980px;
   margin: 0 auto;
   border-radius: 14px;
   overflow: hidden;
@@ -420,7 +420,7 @@
   height: auto;
   display: block;
   object-fit: cover;
-  max-height: 300px;
+  max-height: 380px;
 }
 
 @media (max-width: 640px) {
