@@ -2822,6 +2822,48 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
       de: '/de/immobilien-zypern-kaufen',
       es: '/es/propiedades-en-venta-chipre'
     };
+
+    // Cyprus page uses URL-per-language; content by route language
+    const cyprusSectionContent = {
+      en: {
+        whyInvestTitle: 'Why Invest in Cyprus Real Estate?',
+        whyInvestP1: 'Cyprus offers a resilient and growing real estate market supported by strong economic fundamentals and EU membership. In 2024, total property transaction values remained near record levels at approximately €5.7 billion, with residential properties representing the majority of market activity. Economic growth continues to outperform the eurozone average, while inflation has moderated and sovereign credit ratings have been upgraded to investment-grade levels.',
+        whyInvestP2: 'Residential demand remains supported by international buyers, tourism recovery, and sustained domestic activity. Building permit values increased significantly during 2024, reflecting renewed development momentum. These fundamentals create an attractive long-term environment for investors seeking stable income, lifestyle appeal, and capital preservation within a regulated EU market.',
+        bestAreasTitle: 'Best Areas to Buy Property in Cyprus',
+        bestAreasIntro: 'Cyprus offers several regional markets, with Paphos standing out as one of the most attractive destinations for international buyers and investors.',
+        bestAreasPaphos: 'A leading coastal market combining lifestyle appeal with strong international demand. Popular among European buyers and long-term residents, Paphos benefits from tourism activity, stable residential demand, and a wide range of modern developments. The area offers attractive pricing compared to other Mediterranean destinations while maintaining solid long-term value potential.',
+        bestAreasLimassol: 'The island\'s primary business and investment hub, known for higher-end developments and strong international activity.',
+        bestAreasLarnaca: 'A growing coastal market with expanding infrastructure and competitive entry pricing.',
+        bestAreasNicosia: 'The administrative capital, offering stable domestic demand and long-term residential security.',
+        bestAreasOutro: 'Paphos continues to attract buyers seeking a balance between investment potential, lifestyle quality, and EU market stability.'
+      },
+      de: {
+        whyInvestTitle: 'Warum in Immobilien in Zypern investieren?',
+        whyInvestP1: 'Zypern bietet einen stabilen und wachsenden Immobilienmarkt, gestützt durch solide wirtschaftliche Fundamentaldaten und die EU-Mitgliedschaft. Im Jahr 2024 blieb das Transaktionsvolumen mit rund 5,7 Milliarden Euro auf hohem Niveau, wobei Wohnimmobilien den Großteil der Marktaktivität ausmachten. Das Wirtschaftswachstum liegt weiterhin über dem EU-Durchschnitt, während sich die Inflation normalisiert hat und das Land mehrfach im Investment-Grade-Bereich hochgestuft wurde.',
+        whyInvestP2: 'Die Nachfrage nach Wohnimmobilien wird weiterhin durch internationale Käufer, eine starke Tourismusentwicklung und stabile Inlandsnachfrage unterstützt. Gleichzeitig ist der Wert der erteilten Baugenehmigungen im Jahr 2024 deutlich gestiegen, was auf erneute Entwicklungsdynamik hinweist. Diese Faktoren schaffen attraktive langfristige Rahmenbedingungen für Investoren, die stabile Erträge und Kapitalerhalt in einem regulierten EU-Markt suchen.',
+        bestAreasTitle: 'Beste Regionen für den Immobilienkauf in Zypern',
+        bestAreasIntro: 'Zypern bietet mehrere regionale Immobilienmärkte, wobei Paphos als besonders attraktive Küstenregion für internationale Käufer und Investoren hervorsticht.',
+        bestAreasPaphos: 'Einer der gefragtesten Standorte für Wohn- und Ferienimmobilien mit hoher internationaler Nachfrage. Die Region verbindet Lebensqualität am Meer mit stabiler Wohnraumnachfrage und moderner Projektentwicklung. Im Vergleich zu anderen Mittelmeerstandorten bietet Paphos ein attraktives Preisniveau bei solidem langfristigem Wertpotenzial.',
+        bestAreasLimassol: 'Führendes Wirtschafts- und Investmentzentrum mit höherpreisigen Projekten und internationaler Ausrichtung.',
+        bestAreasLarnaca: 'Wachsende Küstenregion mit zunehmender Infrastrukturentwicklung und wettbewerbsfähigen Einstiegspreisen.',
+        bestAreasNicosia: 'Verwaltungs- und Geschäftszentrum mit stabiler Inlandsnachfrage.',
+        bestAreasOutro: 'Paphos bleibt insbesondere für internationale Investoren eine ausgewogene Kombination aus Renditepotenzial und hoher Lebensqualität innerhalb der EU.'
+      },
+      es: {
+        whyInvestTitle: '¿Por qué invertir en el mercado inmobiliario de Chipre?',
+        whyInvestP1: 'Chipre ofrece un mercado inmobiliario resiliente y en crecimiento, respaldado por sólidos fundamentos económicos y su condición de miembro de la Unión Europea. En 2024, el valor total de las transacciones inmobiliarias se mantuvo cerca de niveles récord, alcanzando aproximadamente €5.700 millones, con el segmento residencial representando la mayor parte de la actividad. El crecimiento económico continúa superando la media de la eurozona, mientras la inflación se ha moderado y las agencias de calificación han reafirmado el grado de inversión del país.',
+        whyInvestP2: 'La demanda residencial se mantiene impulsada por compradores internacionales, la recuperación del turismo y una actividad doméstica estable. El valor de los permisos de construcción aumentó significativamente en 2024, señalando una nueva fase de desarrollo. Estos factores generan un entorno atractivo a largo plazo para inversores que buscan estabilidad, ingresos sostenibles y preservación de capital dentro de un mercado regulado de la UE.',
+        bestAreasTitle: 'Mejores zonas para comprar propiedad en Chipre',
+        bestAreasIntro: 'Chipre cuenta con distintos mercados regionales, destacando Pafos como una de las zonas más atractivas para compradores e inversores internacionales.',
+        bestAreasPaphos: 'Mercado costero consolidado que combina calidad de vida, demanda internacional y desarrollo residencial moderno. Muy popular entre compradores europeos y residentes extranjeros, ofrece precios competitivos en comparación con otros destinos mediterráneos y un sólido potencial de valorización a largo plazo.',
+        bestAreasLimassol: 'Principal centro empresarial e inversor de la isla, con proyectos de mayor nivel y fuerte presencia internacional.',
+        bestAreasLarnaca: 'Zona costera en crecimiento con mejoras de infraestructura y precios de entrada más accesibles.',
+        bestAreasNicosia: 'Capital administrativa con demanda residencial estable y enfoque más doméstico.',
+        bestAreasOutro: 'Pafos continúa posicionándose como una opción equilibrada entre inversión, estilo de vida y estabilidad dentro del mercado de la Unión Europea.'
+      }
+    };
+    const cyprusContent = cyprusSectionContent[lang] || cyprusSectionContent.en;
+
     res.render('properties-for-sale-cyprus', {
       title: titles[lang] || titles.en,
       useMainContainer: false,
@@ -2831,6 +2873,7 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
       hreflangAlternates,
       pageMetaDescription: metaDescriptions[lang] || metaDescriptions.en,
       cyprusPagePaths,
+      cyprusContent,
       locations,
       recommendedProperties,
       baseUrl: res.locals.baseUrl

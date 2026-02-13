@@ -119,7 +119,40 @@
     <% } %>
   </section>
 
-  <!-- 4) FAQ: Cyprus real estate (from KPMG 13th Edition & PwC Year in Review 2024) -->
+  <!-- 4) Why Invest in Cyprus Real Estate (content by URL language) -->
+  <section class="berlin-content section berlin-why-invest" aria-labelledby="cyprus-why-invest-heading">
+    <div class="berlin-content__inner">
+      <h2 id="cyprus-why-invest-heading" class="berlin-content__title"><%= cyprusContent.whyInvestTitle %></h2>
+      <div class="berlin-content__body">
+        <p><%= cyprusContent.whyInvestP1 %></p>
+        <p><%= cyprusContent.whyInvestP2 %></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4b) Horizontal Cyprus image break -->
+  <section class="berlin-image-break" aria-hidden="true">
+    <div class="berlin-image-break__wrap">
+      <img src="/images/cyprus-international.jpg" alt="" role="presentation" loading="lazy" decoding="async">
+    </div>
+  </section>
+
+  <!-- 5) Best Areas to Buy Property in Cyprus (content by URL language) -->
+  <section class="berlin-content section berlin-best-areas" aria-labelledby="cyprus-areas-heading">
+    <div class="berlin-content__inner">
+      <h2 id="cyprus-areas-heading" class="berlin-content__title"><%= cyprusContent.bestAreasTitle %></h2>
+      <p class="berlin-content__intro"><%= cyprusContent.bestAreasIntro %></p>
+      <ul class="berlin-areas__list">
+        <li class="berlin-areas__item"><strong>Paphos</strong> – <%= cyprusContent.bestAreasPaphos %></li>
+        <li class="berlin-areas__item"><strong>Limassol</strong> – <%= cyprusContent.bestAreasLimassol %></li>
+        <li class="berlin-areas__item"><strong>Larnaca</strong> – <%= cyprusContent.bestAreasLarnaca %></li>
+        <li class="berlin-areas__item"><strong>Nicosia</strong> – <%= cyprusContent.bestAreasNicosia %></li>
+      </ul>
+      <p class="berlin-content__outro"><%= cyprusContent.bestAreasOutro %></p>
+    </div>
+  </section>
+
+  <!-- 6) FAQ: Cyprus real estate (from KPMG 13th Edition & PwC Year in Review 2024) -->
   <section class="berlin-faq section" aria-labelledby="cyprus-faq-heading">
     <h2 id="cyprus-faq-heading" class="berlin-faq__title"><%= t('cyprus.faqTitle','Frequently asked questions about buying property in Cyprus') %></h2>
     <div class="berlin-faq__list">
