@@ -420,7 +420,7 @@
   height: auto;
   display: block;
   object-fit: cover;
-  max-height: 380px;
+  max-height: 300px;
 }
 
 @media (max-width: 640px) {
