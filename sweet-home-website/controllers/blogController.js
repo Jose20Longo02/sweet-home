@@ -105,6 +105,13 @@ exports.showPublic = async (req, res, next) => {
       excerpt: (post.excerpt_i18n && post.excerpt_i18n[lang]) || post.excerpt,
       content: processedContent
     };
+    // Ensure unique <title> for SEO when slug ends with -2, -3, etc. (avoids duplicate title tags)
+    let pageTitle = localizedPost.title;
+    const slug = (localizedPost.slug || '').trim();
+    const slugSuffix = slug.match(/-(\d+)$/);
+    if (slugSuffix && slugSuffix[1]) {
+      pageTitle = `${localizedPost.title} (${slugSuffix[1]})`;
+    }
     // Recent/recommended posts (up to 4, excluding current)
     const { rows: recommendedPosts } = await query(
       `SELECT bp.title, bp.slug, bp.cover_image, COALESCE(bp.published_at, bp.created_at) AS published_at, u.name AS author_name
@@ -116,7 +123,7 @@ exports.showPublic = async (req, res, next) => {
       [req.params.slug]
     );
     res.render('blog/blog-detail', {
-      title: localizedPost.title,
+      title: pageTitle,
       post: localizedPost,
       recommendedPosts: recommendedPosts || [],
       stickyFooter: true,

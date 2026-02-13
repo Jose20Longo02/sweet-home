@@ -7,13 +7,14 @@
   const blogDescription = (post.excerpt || post.description || '').slice(0, 160) || post.title;
   const publishedDate = post.published_at || post.created_at;
   const modifiedDate = post.updated_at || publishedDate;
+  const pageTitle = (typeof title !== 'undefined' && title) ? title : post.title;
 %>
 <meta name="description" content="<%= blogDescription %>">
 <link rel="canonical" href="<%= blogUrl %>">
 
 <!-- Open Graph -->
 <meta property="og:type" content="article">
-<meta property="og:title" content="<%= post.title %>">
+<meta property="og:title" content="<%= pageTitle %>">
 <meta property="og:description" content="<%= blogDescription %>">
 <meta property="og:url" content="<%= blogUrl %>">
 <meta property="og:image" content="<%= blogImage %>">
@@ -31,7 +32,7 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<%= post.title %>">
+<meta name="twitter:title" content="<%= pageTitle %>">
 <meta name="twitter:description" content="<%= blogDescription %>">
 <meta name="twitter:image" content="<%= blogImage %>">
 

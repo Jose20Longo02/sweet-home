@@ -1,4 +1,4 @@
-<% title = post.title; headPartial = '../partials/seo/blog-detail-head'; %>
+<% if (typeof title === 'undefined' || !title) { title = post.title; } headPartial = '../partials/seo/blog-detail-head'; %>
 <link rel="stylesheet" href="/css/blog.css" />
 <article class="container main blog-detail">
   <div class="blog-detail-grid">
