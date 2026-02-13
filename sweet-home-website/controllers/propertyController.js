@@ -2572,7 +2572,7 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       LEFT JOIN property_stats ps ON ps.property_id = p.id
       WHERE p.country = 'Germany'
       ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
-      LIMIT 9
+      LIMIT 12
     `;
     const { rows: properties } = await query(sql);
     const lang = res.locals.lang || 'en';
@@ -2699,7 +2699,7 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
       LEFT JOIN property_stats ps ON ps.property_id = p.id
       WHERE p.country = 'UAE'
       ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
-      LIMIT 9
+      LIMIT 12
     `;
     const { rows: properties } = await query(sql);
     const lang = res.locals.lang || 'en';
@@ -2826,7 +2826,7 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
       LEFT JOIN property_stats ps ON ps.property_id = p.id
       WHERE p.country = 'Cyprus'
       ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
-      LIMIT 9
+      LIMIT 12
     `;
     const { rows: properties } = await query(sql);
     const lang = res.locals.lang || 'en';
