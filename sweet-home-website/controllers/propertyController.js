@@ -2741,6 +2741,51 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
       de: '/de/immobilien-dubai-kaufen',
       es: '/es/propiedades-en-venta-dubai'
     };
+
+    // Dubai page uses URL-per-language; content by route language
+    const dubaiSectionContent = {
+      en: {
+        whyInvestTitle: 'Why Invest in Dubai Real Estate?',
+        whyInvestP1: 'Dubai\'s residential market continues to demonstrate strong expansionary momentum, supported by sustained population growth and solid economic performance. The city\'s population surpassed 3.8 million in 2024, growing by 5% year-on-year, while GDP expanded by 3.2% in the first half of the year.',
+        whyInvestP2: 'Residential values increased by approximately 20% in 2024, with rents rising by 19% over the same period. By Q1 2025, citywide prices had reached AED 1,749 per square foot, now significantly above the previous market peak. Transaction activity remains robust, with 43,000 deals recorded in Q1 2025 alone, totaling AED 114.7 billion, and cash buyers accounting for 87% of purchases. This combination of price growth, rental expansion, liquidity, and international capital inflows reinforces Dubai\'s position as one of the most dynamic global real estate markets for both yield-oriented and capital appreciation strategies.',
+        bestAreasTitle: 'Best Areas to Buy Property in Dubai',
+        bestAreasIntro: 'Dubai offers diverse submarkets aligned with different investment profiles:',
+        bestAreasPalmJumeirah: 'A prime waterfront location where villa and apartment prices remain among the highest in the city, supported by strong luxury demand and international buyers.',
+        bestAreasDowntown: 'Core central district benefiting from sustained demand and premium pricing near the Burj Khalifa and DIFC corridor.',
+        bestAreasMarina: 'Established waterfront community with high transaction volumes and consistent rental demand.',
+        bestAreasBusinessBay: 'Mixed-use district with strong price growth and proximity to Downtown.',
+        bestAreasHillsJVC: 'Growth-oriented communities attracting off-plan activity and mid-market investors.',
+        bestAreasOutro: 'These districts reflect Dubai\'s diversified property landscape, from ultra-prime waterfront assets to high-growth residential communities supported by continued population expansion and investor demand.'
+      },
+      de: {
+        whyInvestTitle: 'Warum in Immobilien in Dubai investieren?',
+        whyInvestP1: 'Der Immobilienmarkt in Dubai befindet sich weiterhin in einer starken Wachstumsphase, gestützt durch anhaltendes Bevölkerungswachstum und solide wirtschaftliche Fundamentaldaten. Die Bevölkerung überschritt 2024 die Marke von 3,8 Millionen Einwohnern, während das Bruttoinlandsprodukt im ersten Halbjahr um 3,2 % wuchs.',
+        whyInvestP2: 'Die Kaufpreise für Wohnimmobilien stiegen 2024 um rund 20 %, während die Mieten um etwa 19 % zunahmen. Im ersten Quartal 2025 erreichten die durchschnittlichen Verkaufspreise AED 1.749 pro Quadratfuß und lagen damit deutlich über dem vorherigen Marktzyklus. Mit 43.000 Transaktionen allein im ersten Quartal 2025 und einem hohen Anteil von rund 87 % Bar-Käufern zeigt sich die starke Liquidität des Marktes. Diese Kombination aus Preiswachstum, Mietdynamik und internationalem Kapitalzufluss macht Dubai zu einem der attraktivsten globalen Standorte für renditeorientierte und wachstumsbasierte Immobilieninvestitionen.',
+        bestAreasTitle: 'Beste Lagen für den Immobilienkauf in Dubai',
+        bestAreasIntro: 'Dubai bietet unterschiedliche Teilmärkte für verschiedene Investitionsstrategien:',
+        bestAreasPalmJumeirah: 'Premium-Wasserlage mit hoher internationaler Nachfrage und starkem Luxussegment.',
+        bestAreasDowntown: 'Zentrale Top-Lage rund um den Burj Khalifa mit stabiler Nachfrage und Premiumpreisen.',
+        bestAreasMarina: 'Etablierte Waterfront-Community mit konstant hoher Transaktionsaktivität und Mietnachfrage.',
+        bestAreasBusinessBay: 'Wachstumsstarker Mixed-Use-Distrikt in unmittelbarer Nähe zu Downtown.',
+        bestAreasHillsJVC: 'Beliebte Wohnquartiere mit hohem Off-Plan-Anteil und attraktiven Einstiegsmöglichkeiten für Investoren.',
+        bestAreasOutro: 'Diese Standorte spiegeln Dubais diversifizierten Immobilienmarkt wider – von internationalen Luxuslagen bis hin zu wachstumsorientierten Wohnquartieren mit starker Nachfrage.'
+      },
+      es: {
+        whyInvestTitle: '¿Por qué invertir en el mercado inmobiliario de Dubái?',
+        whyInvestP1: 'El mercado inmobiliario de Dubái continúa mostrando un fuerte dinamismo, impulsado por el crecimiento sostenido de la población y un sólido desempeño económico. En 2024 la población superó los 3,8 millones de habitantes y el PIB creció un 3,2 % en el primer semestre.',
+        whyInvestP2: 'Los precios de las propiedades residenciales aumentaron aproximadamente un 20 % en 2024, mientras que los alquileres crecieron alrededor de un 19 %. En el primer trimestre de 2025, el precio medio alcanzó los 1.749 AED por pie cuadrado, superando claramente el ciclo anterior. Con 43.000 transacciones registradas en el primer trimestre y un 87 % de compras realizadas en efectivo, el mercado demuestra altos niveles de liquidez y confianza inversora. La combinación de crecimiento de precios, aumento de rentas y fuerte participación de capital internacional posiciona a Dubái como uno de los mercados inmobiliarios más atractivos a nivel global para estrategias de rentabilidad y apreciación de capital.',
+        bestAreasTitle: 'Mejores zonas para comprar propiedad en Dubái',
+        bestAreasIntro: 'Dubái ofrece distintos submercados adaptados a diferentes perfiles de inversión:',
+        bestAreasPalmJumeirah: 'Zona prime frente al mar con fuerte demanda internacional y elevado segmento de lujo.',
+        bestAreasDowntown: 'Distrito central junto al Burj Khalifa, con precios premium y demanda constante.',
+        bestAreasMarina: 'Comunidad consolidada junto al mar con alta actividad transaccional y demanda de alquiler estable.',
+        bestAreasBusinessBay: 'Área mixta en expansión cercana al centro financiero y comercial.',
+        bestAreasHillsJVC: 'Comunidades residenciales con alta actividad off-plan y oportunidades atractivas para inversores.',
+        bestAreasOutro: 'Estas zonas reflejan la diversidad del mercado inmobiliario de Dubái, desde activos prime de lujo hasta comunidades residenciales con fuerte potencial de crecimiento.'
+      }
+    };
+    const dubaiContent = dubaiSectionContent[lang] || dubaiSectionContent.en;
+
     res.render('properties-for-sale-dubai', {
       title: titles[lang] || titles.en,
       useMainContainer: false,
@@ -2750,6 +2795,7 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
       hreflangAlternates,
       pageMetaDescription: metaDescriptions[lang] || metaDescriptions.en,
       dubaiPagePaths,
+      dubaiContent,
       locations,
       recommendedProperties,
       baseUrl: res.locals.baseUrl

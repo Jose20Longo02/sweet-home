@@ -119,7 +119,41 @@
     <% } %>
   </section>
 
-  <!-- 4) FAQ: Dubai real estate (from Savills Q3 2025 report) -->
+  <!-- 4) Why Invest in Dubai Real Estate (content by URL language) -->
+  <section class="berlin-content section berlin-why-invest" aria-labelledby="dubai-why-invest-heading">
+    <div class="berlin-content__inner">
+      <h2 id="dubai-why-invest-heading" class="berlin-content__title"><%= dubaiContent.whyInvestTitle %></h2>
+      <div class="berlin-content__body">
+        <p><%= dubaiContent.whyInvestP1 %></p>
+        <p><%= dubaiContent.whyInvestP2 %></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4b) Horizontal Dubai image break -->
+  <section class="berlin-image-break" aria-hidden="true">
+    <div class="berlin-image-break__wrap">
+      <img src="/images/dubai-international.jpg" alt="" role="presentation" loading="lazy" decoding="async">
+    </div>
+  </section>
+
+  <!-- 5) Best Areas to Buy Property in Dubai (content by URL language) -->
+  <section class="berlin-content section berlin-best-areas" aria-labelledby="dubai-areas-heading">
+    <div class="berlin-content__inner">
+      <h2 id="dubai-areas-heading" class="berlin-content__title"><%= dubaiContent.bestAreasTitle %></h2>
+      <p class="berlin-content__intro"><%= dubaiContent.bestAreasIntro %></p>
+      <ul class="berlin-areas__list">
+        <li class="berlin-areas__item"><strong>Palm Jumeirah</strong> – <%= dubaiContent.bestAreasPalmJumeirah %></li>
+        <li class="berlin-areas__item"><strong>Downtown Dubai</strong> – <%= dubaiContent.bestAreasDowntown %></li>
+        <li class="berlin-areas__item"><strong>Dubai Marina</strong> – <%= dubaiContent.bestAreasMarina %></li>
+        <li class="berlin-areas__item"><strong>Business Bay</strong> – <%= dubaiContent.bestAreasBusinessBay %></li>
+        <li class="berlin-areas__item"><strong>Dubai Hills Estate &amp; Jumeirah Village Circle (JVC)</strong> – <%= dubaiContent.bestAreasHillsJVC %></li>
+      </ul>
+      <p class="berlin-content__outro"><%= dubaiContent.bestAreasOutro %></p>
+    </div>
+  </section>
+
+  <!-- 6) FAQ: Dubai real estate (from Savills Q3 2025 report) -->
   <section class="berlin-faq section" aria-labelledby="dubai-faq-heading">
     <h2 id="dubai-faq-heading" class="berlin-faq__title"><%= t('dubai.faqTitle','Frequently asked questions about buying property in Dubai') %></h2>
     <div class="berlin-faq__list">
