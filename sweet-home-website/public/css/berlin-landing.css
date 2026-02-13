@@ -401,9 +401,41 @@
   text-align: left;
 }
 
-/* Best Areas – soft gray background, list styling */
+/* Horizontal image break between Why Invest and Best Areas */
+.berlin-image-break {
+  padding: 0 16px 40px;
+  background: #fff;
+}
+
+.berlin-image-break__wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.berlin-image-break__wrap img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  max-height: 380px;
+}
+
+@media (max-width: 640px) {
+  .berlin-image-break {
+    padding: 0 16px 32px;
+  }
+
+  .berlin-image-break__wrap img {
+    max-height: 240px;
+  }
+}
+
+/* Best Areas – white background, list styling */
 .berlin-best-areas {
-  background: var(--gray-50, #f8fafc);
+  background: #fff;
 }
 
 .berlin-content__intro {
