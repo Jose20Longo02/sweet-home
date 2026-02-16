@@ -482,15 +482,12 @@ async function renderHomePage(req, res, langPath, next) {
     const lang = (res.locals && res.locals.lang) ? res.locals.lang : (req.cookies && req.cookies.lang) ? req.cookies.lang : 'en';
 
     let recommendedProject = null;
-    let blogRows = [];
 
     const cached = getHomePageData();
     if (cached) {
       recommendedProject = cached.recommendedProject;
-      blogRows = cached.blogRows || [];
     } else {
-      // Parallel fetch: single fast project query + blog posts (no TABLESAMPLE)
-      const projectsPromise = query(`
+      const projectsResult = await query(`
         SELECT id, title, slug, country, city, neighborhood, photos,
                min_price, max_price, min_unit_size, max_unit_size, unit_types, status
           FROM projects
@@ -498,11 +495,7 @@ async function renderHomePage(req, res, langPath, next) {
          ORDER BY id DESC
          LIMIT 1
       `);
-      const blogPromise = BlogPost.findPublic({ limit: 6, offset: 0 }).catch(() => []);
-
-      const [projectsResult, posts] = await Promise.all([projectsPromise, blogPromise]);
       const rows = (projectsResult && projectsResult.rows) ? projectsResult.rows : [];
-      blogRows = Array.isArray(posts) ? posts : [];
 
       if (rows.length > 0) {
         const p = rows[0];
@@ -529,13 +522,8 @@ async function renderHomePage(req, res, langPath, next) {
         };
       }
 
-      setHomePageData({ recommendedProject, blogRows });
+      setHomePageData({ recommendedProject });
     }
-
-    const recentBlogPosts = blogRows.map(p => ({
-      slug: p.slug,
-      title: (p.title_i18n && p.title_i18n[lang]) || p.title
-    }));
 
     const baseUrl = res.locals.baseUrl;
     const canonicalUrl = `${baseUrl}${langPath}`;
@@ -555,7 +543,6 @@ async function renderHomePage(req, res, langPath, next) {
       user: req.session.user || null,
       locations,
       recommendedProject,
-      recentBlogPosts,
       canonicalUrl,
       hreflangAlternates,
       headPartial: '../partials/seo/home-head',

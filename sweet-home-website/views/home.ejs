@@ -273,19 +273,6 @@
   </div>
 </section>
 
-<!-- Latest from blog (internal linking for SEO) -->
-<% if (typeof recentBlogPosts !== 'undefined' && recentBlogPosts && recentBlogPosts.length > 0) { %>
-<section class="section blog-preview" aria-label="<%= t('nav.blog','Blog') %>">
-  <h2 class="section-title"><%= t('home.blogPreview.title','Latest from our blog') %></h2>
-  <ul class="blog-preview-list">
-    <% recentBlogPosts.forEach(function(p) { %>
-      <li><a href="/blog/<%= p.slug %>"><%= p.title %></a></li>
-    <% }); %>
-  </ul>
-  <p class="blog-preview-cta"><a href="/blog" class="btn-green"><%= t('home.blogPreview.viewAll','View all articles') %></a></p>
-</section>
-<% } %>
-
 <!-- 7) Contact Section -->
 <section class="contact-hero">
   <h2 class="title"><%= t('contact.title','Contact Us') %></h2>
