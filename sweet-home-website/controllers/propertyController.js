@@ -31,6 +31,12 @@ function extractCoordsFromLink(input) {
   return { lat: null, lng: null };
 }
 
+// Localized title: prefer lang, then en, then main title
+function getLocalizedTitle(row, lang) {
+  const i18n = row && row.title_i18n && typeof row.title_i18n === 'object' ? row.title_i18n : null;
+  return (i18n && (i18n[lang] || i18n.en)) || (row && row.title) || '';
+}
+
 //
 // — Public & Agent Handlers —
 //
@@ -327,7 +333,7 @@ exports.listPropertiesPublic = async (req, res, next) => {
         }
       }
       // Localize
-      const localizedTitle = (p.title_i18n && p.title_i18n[lang]) || p.title;
+      const localizedTitle = getLocalizedTitle(p, lang);
       const localizedDescription = (p.description_i18n && p.description_i18n[lang]) || p.description;
       return {
         ...p,
@@ -430,7 +436,7 @@ exports.showProperty = async (req, res, next) => {
       }
     }
     const lang = res.locals.lang || 'en';
-    const localizedTitle = (p.title_i18n && p.title_i18n[lang]) || p.title;
+    const localizedTitle = getLocalizedTitle(p, lang);
     const localizedDescription = (p.description_i18n && p.description_i18n[lang]) || p.description;
     const property = {
       ...p,
@@ -492,7 +498,7 @@ exports.getSimilarProperties = async (req, res, next) => {
     if (city)    { conds.push(`p.city = $${idx++}`);    values.push(city); }
     if (exclude) { conds.push(`p.id <> $${idx++}`);    values.push(Number(exclude)); }
     const sql = `
-      SELECT p.id, p.title, p.slug, p.country, p.city, p.neighborhood, p.price, p.photos
+      SELECT p.id, p.title, p.title_i18n, p.slug, p.country, p.city, p.neighborhood, p.price, p.photos
         FROM properties p
        WHERE ${conds.join(' AND ')}
        ORDER BY p.created_at DESC
@@ -500,8 +506,10 @@ exports.getSimilarProperties = async (req, res, next) => {
     `;
     values.push(Number(limit));
     const { rows } = await query(sql, values);
+    const lang = res.locals.lang || 'en';
     const normalized = rows.map(p => ({
       ...p,
+      title: getLocalizedTitle(p, lang),
       photos: Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : [])
     }));
     res.json({ success: true, properties: normalized });
@@ -2551,7 +2559,7 @@ exports.getFeaturedProperties = async (req, res, next) => {
     const langFeat = res.locals.lang || 'en';
     const normalizedProperties = properties.map(p => ({
       ...p,
-      title: (p.title_i18n && p.title_i18n[langFeat]) || p.title,
+      title: getLocalizedTitle(p, langFeat),
       description: (p.description_i18n && p.description_i18n[langFeat]) || p.description,
       photos: Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []),
       agent: {
@@ -2595,7 +2603,7 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
       return {
         ...p,
-        title: (p.title_i18n && p.title_i18n[lang]) || p.title,
+        title: getLocalizedTitle(p, lang),
         description: (p.description_i18n && p.description_i18n[lang]) || p.description,
         photos,
         agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
@@ -2722,7 +2730,7 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
       const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
       return {
         ...p,
-        title: (p.title_i18n && p.title_i18n[lang]) || p.title,
+        title: getLocalizedTitle(p, lang),
         description: (p.description_i18n && p.description_i18n[lang]) || p.description,
         photos,
         agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
@@ -2849,7 +2857,7 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
       const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
       return {
         ...p,
-        title: (p.title_i18n && p.title_i18n[lang]) || p.title,
+        title: getLocalizedTitle(p, lang),
         description: (p.description_i18n && p.description_i18n[lang]) || p.description,
         photos,
         agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
