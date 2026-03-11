@@ -322,6 +322,26 @@ const apiLimiter = rateLimit({
 });
 app.use(['/api', '/auth', '/properties/api', '/projects/api'], apiLimiter);
 
+// Redirect: when on /properties/:slug or /projects/:slug with lang cookie (de/es), go to locale-prefixed URL
+app.use((req, res, next) => {
+  if (req.method !== 'GET') return next();
+  if (req.path.startsWith('/de/') || req.path.startsWith('/es/')) return next();
+  if (/^\/(admin|superadmin|auth|api)/.test(req.path)) return next();
+  const cLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase() : '';
+  if (cLang !== 'de' && cLang !== 'es') return next();
+  const q = (req.originalUrl && req.originalUrl.includes('?')) ? req.originalUrl.slice(req.originalUrl.indexOf('?')) : '';
+  if (/^\/properties\/[^/]+$/.test(req.path) && req.path !== '/properties/new') {
+    return res.redirect(302, '/' + cLang + req.path + q);
+  }
+  if (/^\/projects\/[^/]+$/.test(req.path) && req.path !== '/projects/regions') {
+    return res.redirect(302, '/' + cLang + req.path + q);
+  }
+  if (/^\/blog\/[^/]+$/.test(req.path)) {
+    return res.redirect(302, '/' + cLang + req.path + q);
+  }
+  next();
+});
+
 // Expose current path to views so layout can pick header variant
 app.use((req, res, next) => {
   res.locals.currentPath = req.path;
