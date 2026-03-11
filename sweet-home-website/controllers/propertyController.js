@@ -2094,12 +2094,18 @@ exports.listPropertiesAdmin = async (req, res, next) => {
     const page    = parseInt(req.query.page, 10) || 1;
     const limit   = 20;
     const offset  = (page - 1) * limit;
-    const { country, city, type, minPrice, maxPrice, status, sold, agent } = req.query;
+    const { country, city, type, minPrice, maxPrice, status, sold, agent, full_address: fullAddressParam } = req.query;
+    const fullAddressSearch = (fullAddressParam && String(fullAddressParam).trim()) || '';
 
     // 2) Build dynamic WHERE clause
     const conditions = [];
     const values     = [];
     let idx = 1;
+    if (fullAddressSearch) {
+      conditions.push(`(p.full_address IS NOT NULL AND p.full_address ILIKE $${idx})`);
+      values.push('%' + fullAddressSearch + '%');
+      idx++;
+    }
     if (country)  { conditions.push(`p.country = $${idx}`);      values.push(country); idx++; }
     if (city)     { conditions.push(`p.city = $${idx}`);         values.push(city);    idx++; }
     if (type)     { conditions.push(`p.type = $${idx}`);         values.push(type);    idx++; }
@@ -2223,7 +2229,7 @@ exports.listPropertiesAdmin = async (req, res, next) => {
       allAgents,
       currentPage:  page,
       totalPages,
-      filters:      { country, city, type, minPrice, maxPrice, status, sold, agent },
+      filters:      { country, city, type, minPrice, maxPrice, status, sold, agent, full_address: fullAddressSearch },
       countryOptions,
       cityOptions,
       typeOptions,
@@ -2413,13 +2419,19 @@ exports.listMyProperties = async (req, res, next) => {
     const limit   = 18;
     const offset  = (page - 1) * limit;
 
-    const { country, city, type, minPrice, maxPrice, status } = req.query;
+    const { country, city, type, minPrice, maxPrice, status, full_address: fullAddressParam } = req.query;
+    const fullAddressSearch = (fullAddressParam && String(fullAddressParam).trim()) || '';
 
     // Constrain by: assigned to this user OR (unassigned AND created by this user)
     const conds = ['(p.agent_id = $1 OR (p.agent_id IS NULL AND p.created_by = $1))'];
     const vals  = [userId];
     let idx = 2;
 
+    if (fullAddressSearch) {
+      conds.push(`(p.full_address IS NOT NULL AND p.full_address ILIKE $${idx})`);
+      vals.push('%' + fullAddressSearch + '%');
+      idx++;
+    }
     if (country)  { conds.push(`p.country = $${idx++}`);      vals.push(country); }
     if (city)     { conds.push(`p.city = $${idx++}`);         vals.push(city); }
     if (type)     { conds.push(`p.type = $${idx++}`);         vals.push(type); }
@@ -2494,7 +2506,8 @@ exports.listMyProperties = async (req, res, next) => {
         type, 
         minPrice: minPriceNum !== null && !isNaN(minPriceNum) ? minPriceNum : minPrice || '', 
         maxPrice: maxPriceNum !== null && !isNaN(maxPriceNum) ? maxPriceNum : maxPrice || '', 
-        status 
+        status,
+        full_address: fullAddressSearch
       },
       countryOptions,
       cityOptions,

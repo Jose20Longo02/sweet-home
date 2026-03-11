@@ -55,6 +55,12 @@
             <% }) %>
           </select>
 
+          <input type="text"
+                 name="full_address"
+                 placeholder="Full address (partial match)"
+                 value="<%= filters.full_address||'' %>"
+                 title="Search by street, number, apartment, etc. Case-insensitive partial match." />
+
           <select name="type">
             <option value="">All Types</option>
             <% typeOptions.forEach(t => { %>
@@ -184,6 +190,7 @@
               if (filters.agent) params.push('agent=' + encodeURIComponent(filters.agent));
               if (filters.country) params.push('country=' + encodeURIComponent(filters.country));
               if (filters.city) params.push('city=' + encodeURIComponent(filters.city));
+              if (filters.full_address) params.push('full_address=' + encodeURIComponent(filters.full_address));
               if (filters.type) params.push('type=' + encodeURIComponent(filters.type));
               if (filters.status) params.push('status=' + encodeURIComponent(filters.status));
               if (filters.sold) params.push('sold=' + encodeURIComponent(filters.sold));
