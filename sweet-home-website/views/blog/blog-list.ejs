@@ -15,7 +15,7 @@
           <img src="<%= p.cover_image %>" alt="<%= p.title || 'Blog post cover image' %>" class="cover" />
         <% } %>
         <div class="info">
-          <h2><a href="/blog/<%= p.slug %>"><%= p.title %></a></h2>
+          <h2><a href="<%= (typeof localePath === 'function') ? localePath('/blog/' + p.slug) : '/blog/' + p.slug %>"><%= p.title %></a></h2>
           <% if (p.author_name) { %><p class="meta"><%= t('blog.by','By') %> <%= p.author_name %></p><% } %>
           <% if (p.excerpt) { %><p><%= p.excerpt %></p><% } %>
         </div>
@@ -27,7 +27,7 @@
       <ul>
         <li class="prev <%= page <= 1 ? 'disabled' : '' %>"><a href="<%= page <= 1 ? '#' : ('/blog?page=' + (page - 1)) %>"><%= t('common.previous','Previous') %></a></li>
         <% for (var i = 1; i <= totalPages; i++) { %>
-          <li class="<%= i === page ? 'active' : '' %>"><a href="/blog?page=<%= i %>"><%= i %></a></li>
+          <li class="<%= i === page ? 'active' : '' %>"><a href="<%= (typeof localePath === 'function') ? localePath('/blog') : '/blog' %>?page=<%= i %>"><%= i %></a></li>
         <% } %>
         <li class="next <%= page >= totalPages ? 'disabled' : '' %>"><a href="<%= page >= totalPages ? '#' : ('/blog?page=' + (page + 1)) %>"><%= t('common.next','Next') %></a></li>
       </ul>

@@ -306,7 +306,7 @@
               <p><%= t('projects.list.noResults.hint','Try adjusting your search criteria or browse all available projects.') %></p>
               <div class="no-results-actions">
                 <button type="button" class="btn btn-secondary" onclick="clearAllFilters()"><%= t('projects.list.clearFilters','Clear Filters') %></button>
-                <a href="/projects" class="btn btn-primary"><%= t('projects.list.browseAll','Browse all available development projects') %></a>
+                <a href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>" class="btn btn-primary"><%= t('projects.list.browseAll','Browse all available development projects') %></a>
               </div>
             </div>
           <% } %>

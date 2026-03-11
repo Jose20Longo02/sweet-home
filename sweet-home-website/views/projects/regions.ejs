@@ -8,19 +8,19 @@
 
 <main class="regions-page" aria-label="<%= t('projects.regions.aria.page','Projects by region') %>">
   <section class="regions-split">
-    <a class="region region-left" href="/projects?country=Cyprus" aria-label="<%= t('projects.regions.aria.cyprus','See all projects in Cyprus') %>" tabindex="0">
+    <a class="region region-left" href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>?country=Cyprus" aria-label="<%= t('projects.regions.aria.cyprus','See all projects in Cyprus') %>" tabindex="0">
       <div class="region-media" aria-hidden="true"></div>
       <div class="region-overlay"></div>
       <h1 class="region-title"><%= t('projects.regions.cyprusTitle','Projects in Cyprus') %></h1>
       <span class="region-cta" aria-hidden="false"><%= t('projects.regions.cta','See all projects') %></span>
     </a>
-    <a class="region region-center" href="/projects?country=Germany&city=Berlin" aria-label="<%= t('projects.regions.aria.germany','See all projects in Germany') %>" tabindex="0">
+    <a class="region region-center" href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>?country=Germany&city=Berlin" aria-label="<%= t('projects.regions.aria.germany','See all projects in Germany') %>" tabindex="0">
       <div class="region-media" aria-hidden="true"></div>
       <div class="region-overlay"></div>
       <h2 class="region-title"><%= t('projects.regions.germanyTitle','Projects in Germany') %></h2>
       <span class="region-cta" aria-hidden="false"><%= t('projects.regions.cta','See all projects') %></span>
     </a>
-    <a class="region region-right" href="/projects?country=UAE&city=Dubai" aria-label="<%= t('projects.regions.aria.dubai','See all projects in Dubai') %>" tabindex="0">
+    <a class="region region-right" href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>?country=UAE&city=Dubai" aria-label="<%= t('projects.regions.aria.dubai','See all projects in Dubai') %>" tabindex="0">
       <div class="region-media" aria-hidden="true"></div>
       <div class="region-overlay"></div>
       <h2 class="region-title"><%= t('projects.regions.dubaiTitle','Projects in Dubai') %></h2>

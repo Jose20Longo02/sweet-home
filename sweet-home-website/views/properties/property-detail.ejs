@@ -53,10 +53,10 @@
   <nav class="breadcrumb-nav">
     <div class="container">
       <ol class="breadcrumb">
-        <li><a href="/"><%= t('nav.home','Home') %></a></li>
-        <li><a href="/properties"><%= t('nav.properties','Properties') %></a></li>
-        <li><a href="/properties?country=<%= property.country %>"><%= property.country %></a></li>
-        <li><a href="/properties?country=<%= property.country %>&city=<%= property.city %>"><%= property.city %></a></li>
+        <li><a href="<%= (typeof localePath === 'function') ? localePath('/') : '/' %>"><%= t('nav.home','Home') %></a></li>
+        <li><a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>"><%= t('nav.properties','Properties') %></a></li>
+        <li><a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=<%= property.country %>"><%= property.country %></a></li>
+        <li><a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=<%= property.country %>&city=<%= property.city %>"><%= property.city %></a></li>
         <li class="active"><%= property.title %></li>
       </ol>
     </div>
@@ -219,7 +219,7 @@
               <p class="project-link-subtitle"><%= t('properties.detail.partOfProjectSubtitle','This property is part of this project.') %></p>
             </div>
             <% if (property.project.slug) { %>
-              <a href="/projects/<%= property.project.slug %>" class="btn btn-primary project-link-cta"><%= t('projects.viewDetails','View project details') %></a>
+              <a href="<%= (typeof localePath === 'function') ? localePath('/projects/' + property.project.slug) : '/projects/' + property.project.slug %>" class="btn btn-primary project-link-cta"><%= t('projects.viewDetails','View project details') %></a>
             <% } %>
           </div>
           <div class="project-link-divider"></div>
@@ -320,7 +320,7 @@
                   <% }); %>
                 </div>
                 <% if (property.project.slug) { %>
-                  <a href="/projects/<%= property.project.slug %>" class="project-gallery-link">
+                  <a href="<%= (typeof localePath === 'function') ? localePath('/projects/' + property.project.slug) : '/projects/' + property.project.slug %>" class="project-gallery-link">
                     <%= t('projects.viewAllPhotos','View all project photos') %>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <polyline points="9,18 15,12 9,6"></polyline>

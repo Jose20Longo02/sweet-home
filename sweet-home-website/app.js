@@ -23,6 +23,7 @@ const { publicRouter: propertyRoutes, adminRouter: adminPropertyRoutes } = requi
 const propertyController = require('./controllers/propertyController');
 const { publicRouter: blogPublicRoutes, adminRouter: blogAdminRoutes, superAdminRouter: blogSuperAdminRoutes } = require('./routes/blogRoutes');
 const leadRoutes     = require('./routes/leadRoutes');
+const { createLocaleRouter } = require('./routes/localeRoutes');
 const { connectDB }  = require('./config/db');
 const sendMail       = require('./config/mailer');
 const locations      = require('./config/locations');
@@ -324,8 +325,26 @@ app.use(['/api', '/auth', '/properties/api', '/projects/api'], apiLimiter);
 // Expose current path to views so layout can pick header variant
 app.use((req, res, next) => {
   res.locals.currentPath = req.path;
-  // Flag for lang switcher: on /, /de, /es use path-based links instead of /lang/:code
-  res.locals.homeLangPaths = (req.path === '/' || req.path === '/de' || req.path === '/es');
+  // Flag: use path-based locale links when we have a locale prefix (/, /de, /es or any /de/*, /es/*)
+  res.locals.homeLangPaths = (req.path === '/' || req.path === '/de' || req.path === '/es' || req.path.startsWith('/de/') || req.path.startsWith('/es/'));
+  // Helper: prepend locale prefix to a path. e.g. localePath('/properties') -> '/de/properties' when on /de/* pages
+  const prefix = res.locals.localePrefix || '';
+  res.locals.localePath = (p) => {
+    if (!p || p === '/') return prefix || '/';
+    const clean = String(p).replace(/^\//, '');
+    return prefix + (clean ? '/' + clean : '');
+  };
+  // For lang switcher: paths to same page in each language (only when on locale-prefixed URL)
+  if (prefix) {
+    const pathWithoutLocale = req.path.slice(prefix.length) || '/';
+    res.locals.localeAlternatePaths = {
+      en: pathWithoutLocale === '/' ? '/' : pathWithoutLocale,
+      de: '/de' + pathWithoutLocale,
+      es: '/es' + pathWithoutLocale
+    };
+  } else {
+    res.locals.localeAlternatePaths = null;
+  }
   // Canonical base URL for all absolute links (canonical, hreflang, sitemap, etc.) - prefers real domain over Render URL
   res.locals.baseUrl = getCanonicalBaseUrl(req);
   next();
@@ -556,6 +575,10 @@ app.get('/', (req, res, next) => renderHomePage(req, res, '/', next));
 app.get('/de', (req, res, next) => renderHomePage(req, res, '/de', next));
 app.get('/es', (req, res, next) => renderHomePage(req, res, '/es', next));
 
+// Locale-prefixed public routes: /de/* and /es/* (about, contact, projects, properties, blog, etc.)
+app.use('/de', createLocaleRouter(renderHomePage));
+app.use('/es', createLocaleRouter(renderHomePage));
+
 // Staff convenience entry — bookmarkable
 app.get('/admin', (req, res) => {
   const u = req.session.user;
@@ -725,14 +748,17 @@ app.get('/sitemap.xml', async (req, res, next) => {
   try {
     const base = res.locals.baseUrl;
 
-    // Static pages
-    const staticPaths = ['', 'about', 'contact', 'projects', 'properties', 'privacy', 'terms', 'cookies'];
+    // Static pages (including locale-prefixed variants)
+    const staticPaths = ['', 'about', 'contact', 'projects', 'properties', 'privacy', 'terms', 'cookies', 'services', 'owners'];
     const staticUrls = staticPaths.map(p => ({ 
       loc: `${base}/${p}`.replace(/\/$/, '/'), 
       lastmod: null,
       changefreq: p === '' ? 'daily' : 'weekly',
       priority: p === '' ? '1.0' : '0.8'
     }));
+    // Locale-prefixed home pages
+    staticUrls.push({ loc: `${base}/de`, lastmod: null, changefreq: 'daily', priority: '1.0' });
+    staticUrls.push({ loc: `${base}/es`, lastmod: null, changefreq: 'daily', priority: '1.0' });
 
     // Dynamic properties
     const props = await query(`SELECT slug, updated_at, created_at FROM properties WHERE slug IS NOT NULL ORDER BY updated_at DESC NULLS LAST, created_at DESC NULLS LAST LIMIT 5000`);

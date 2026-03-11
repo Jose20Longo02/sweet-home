@@ -1111,13 +1111,21 @@ document.addEventListener('DOMContentLoaded', function() {
       if (btnView) {
         const card = e.target.closest('.property-card');
         const slug = card && card.getAttribute('data-slug');
-        if (slug) window.location.href = `/properties/${slug}`;
+        if (slug) {
+          const loc = document.getElementById('locations-data');
+          const prefix = (loc && loc.getAttribute('data-locale-prefix')) || '';
+          window.location.href = (prefix || '') + '/properties/' + slug;
+        }
         return;
       }
       const card = e.target.closest('.property-card');
       if (card) {
         const slug = card.getAttribute('data-slug');
-        if (slug) window.location.href = `/properties/${slug}`;
+        if (slug) {
+          const loc = document.getElementById('locations-data');
+          const prefix = (loc && loc.getAttribute('data-locale-prefix')) || '';
+          window.location.href = (prefix || '') + '/properties/' + slug;
+        }
       }
     });
   }

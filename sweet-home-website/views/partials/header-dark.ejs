@@ -15,7 +15,7 @@
     </a>
 
     <nav class="nav-grid" aria-label="Primary">
-      <a href="/projects/regions"><%= t('nav.projects','Projects') %></a>
+      <a href="<%= (typeof localePath === 'function') ? localePath('/projects/regions') : '/projects/regions' %>"><%= t('nav.projects','Projects') %></a>
       <div class="nav-properties-wrap">
         <button type="button" class="nav-properties-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="nav-properties-menu" id="nav-properties-btn"><%= t('nav.properties','Properties') %></button>
         <div id="nav-properties-menu" class="nav-properties-menu" role="menu" aria-labelledby="nav-properties-btn" hidden>
@@ -30,7 +30,7 @@
       </a>
       <a href="/services"><%= t('nav.services','Services') %></a>
       <a href="/about"><%= t('nav.about','About') %></a>
-      <a href="/blog"><%= t('nav.blog','Blog') %></a>
+      <a href="<%= (typeof localePath === 'function') ? localePath('/blog') : '/blog' %>"><%= t('nav.blog','Blog') %></a>
     </nav>
     <div class="lang-switcher-wrap">
       <%- include('./lang-switcher') %>
@@ -43,7 +43,7 @@
 
   <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
     <nav class="mobile-links" aria-label="Mobile">
-      <a href="/projects/regions"><%= t('nav.projects','Projects') %></a>
+      <a href="<%= (typeof localePath === 'function') ? localePath('/projects/regions') : '/projects/regions' %>"><%= t('nav.projects','Projects') %></a>
       <div class="mobile-properties-wrap">
         <button type="button" class="mobile-properties-trigger" aria-expanded="false" aria-controls="mobile-properties-list"><%= t('nav.properties','Properties') %></button>
         <div id="mobile-properties-list" class="mobile-properties-list" hidden>
@@ -55,7 +55,7 @@
       <a href="/owners"><%= t('nav.owners','Owners') %></a>
       <a href="/services"><%= t('nav.services','Services') %></a>
       <a href="/about"><%= t('nav.about','About') %></a>
-      <a href="/blog"><%= t('nav.blog','Blog') %></a>
+      <a href="<%= (typeof localePath === 'function') ? localePath('/blog') : '/blog' %>"><%= t('nav.blog','Blog') %></a>
     </nav>
   </div>
 </header>

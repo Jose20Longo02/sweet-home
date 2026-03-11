@@ -10,11 +10,11 @@
   <section class="project-header">
     <div class="container">
       <nav class="breadcrumb">
-        <a href="/projects"><%= t('nav.projects','Projects') %></a>
+        <a href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>"><%= t('nav.projects','Projects') %></a>
         <span class="separator">/</span>
-        <a href="/projects?country=<%= project.country %>"><%= project.country %></a>
+        <a href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>?country=<%= project.country %>"><%= project.country %></a>
         <span class="separator">/</span>
-        <a href="/projects?country=<%= project.country %>&city=<%= project.city %>"><%= project.city %></a>
+        <a href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>?country=<%= project.country %>&city=<%= project.city %>"><%= project.city %></a>
         <span class="separator">/</span>
         <span class="current"><%= project.title %></span>
       </nav>
@@ -222,7 +222,7 @@
               <div class="project-properties-grid">
                 <% projectProperties.forEach(property => { %>
                   <div class="project-property-card">
-                    <a href="/properties/<%= property.slug %>" class="property-card-link">
+                    <a href="<%= (typeof localePath === 'function') ? localePath('/properties/' + property.slug) : '/properties/' + property.slug %>" class="property-card-link">
                       <div class="property-image-container">
                         <% if (property.photos && property.photos.length > 0) { %>
                           <img 
@@ -290,7 +290,7 @@
               
               <% if (projectProperties.length >= 12) { %>
                 <div class="project-properties-footer">
-                  <a href="/properties?project=<%= project.id %>" class="btn btn-outline">
+                  <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?project=<%= project.id %>" class="btn btn-outline">
                     <%= t('projects.detail.viewAllProperties', 'View All Properties') %>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <polyline points="9,18 15,12 9,6"></polyline>
@@ -431,7 +431,7 @@
               
               <div class="related-projects-list">
                 <% relatedProjects.forEach(relatedProject => { %>
-                  <a href="/projects/<%= relatedProject.slug %>" class="related-project-item">
+                  <a href="<%= (typeof localePath === 'function') ? localePath('/projects/' + relatedProject.slug) : '/projects/' + relatedProject.slug %>" class="related-project-item">
                     <div class="related-project-image">
                       <% if (relatedProject.photos && relatedProject.photos.length > 0) { %>
                         <img src="<%= relatedProject.photos[0] %>" 

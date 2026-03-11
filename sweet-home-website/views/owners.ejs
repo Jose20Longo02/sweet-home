@@ -70,7 +70,7 @@
     <div class="sold-track">
       <% (soldProperties || []).forEach(function(p){ const bg = (p.photos && p.photos[0]) ? p.photos[0] : '/images/apartment-interior.jpg'; %>
         <article class="sold-card">
-          <a href="/properties/<%= p.slug %>" aria-label="<%= t('properties.list.viewDetails','View details') %> - <%= p.title %>">
+          <a href="<%= (typeof localePath === 'function') ? localePath('/properties/' + p.slug) : '/properties/' + p.slug %>" aria-label="<%= t('properties.list.viewDetails','View details') %> - <%= p.title %>">
             <div class="media" style="background-image:url('<%= bg %>')"></div>
           </a>
           <div class="gradient"></div>

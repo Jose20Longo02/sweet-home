@@ -50,6 +50,8 @@ module.exports = function i18nMiddleware(req, res, next) {
     res.locals.lang = lang;
     res.locals.supportedLanguages = supported;
     res.locals.languageLabels = labels;
+    // Locale prefix for URL-based i18n: '' for en, '/de' or '/es' when path starts with that
+    res.locals.localePrefix = (req.path === '/de' || req.path.startsWith('/de/')) ? '/de' : (req.path === '/es' || req.path.startsWith('/es/')) ? '/es' : '';
     // Diagnostics header: confirm a known key resolves
     try {
       const probe = (typeof res.locals.t === 'function') ? res.locals.t('nav.projects', '') : '';
@@ -65,6 +67,7 @@ module.exports = function i18nMiddleware(req, res, next) {
     res.locals.lang = 'en';
     res.locals.supportedLanguages = ['en','es','de'];
     res.locals.languageLabels = { en:'English', es:'Español', de:'Deutsch' };
+    res.locals.localePrefix = '';
   }
   next();
 };

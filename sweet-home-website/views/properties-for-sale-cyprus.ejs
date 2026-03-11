@@ -73,7 +73,7 @@
           const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString('en-US') : '';
         %>
         <article class="property-card">
-          <a href="/properties/<%= property.slug %>" class="property-card-link">
+          <a href="<%= (typeof localePath === 'function') ? localePath('/properties/' + property.slug) : '/properties/' + property.slug %>" class="property-card-link">
             <div class="img-wrap" <%= priceText ? `data-price="${priceText}"` : '' %>>
               <img src="<%= photoUrl %>" alt="<%= property.title %>" loading="lazy" decoding="async" onerror="this.src='/img/property-placeholder.jpg'">
             </div>
@@ -111,10 +111,10 @@
       <% }); %>
     </div>
     <% if (!recommendedProperties || recommendedProperties.length === 0) { %>
-      <p class="section-empty"><%= t('properties.list.noResults','No properties found.') %> <a href="/properties?country=Cyprus"><%= t('home.search.cta','Search Properties') %></a></p>
+      <p class="section-empty"><%= t('properties.list.noResults','No properties found.') %> <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Cyprus"><%= t('home.search.cta','Search Properties') %></a></p>
     <% } else { %>
       <p class="section-cta">
-        <a href="/properties?country=Cyprus" class="btn btn-primary"><%= t('cyprus.viewAll','View all properties in Cyprus') %></a>
+        <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Cyprus" class="btn btn-primary"><%= t('cyprus.viewAll','View all properties in Cyprus') %></a>
       </p>
     <% } %>
   </section>
