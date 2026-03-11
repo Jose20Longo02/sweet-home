@@ -31,19 +31,22 @@ const CONFIG = {
 async function translateWithDeepL(text, targetLang, { sourceLang = 'en', isHtml = false } = {}) {
   if (!text || !CONFIG.deepl.apiKey) return null;
   const url = `https://${CONFIG.deepl.host}/v2/translate`;
-  const params = new URLSearchParams();
-  params.append('auth_key', CONFIG.deepl.apiKey);
-  params.append('text', text);
-  params.append('target_lang', targetLang.toUpperCase());
-  if (sourceLang) params.append('source_lang', sourceLang.toUpperCase());
+  const body = {
+    text: [text],
+    target_lang: targetLang.toUpperCase()
+  };
+  if (sourceLang) body.source_lang = sourceLang.toUpperCase();
   if (isHtml) {
-    params.append('tag_handling', 'html');
-    params.append('preserve_formatting', '1');
+    body.tag_handling = 'html';
+    body.preserve_formatting = true;
   }
   const res = await fetchFn(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: params
+    headers: {
+      'Authorization': `DeepL-Auth-Key ${CONFIG.deepl.apiKey}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
   });
   if (!res.ok) {
     const msg = await res.text().catch(() => '');
@@ -83,6 +86,7 @@ async function translateText(text, targetLang, opts = {}) {
       return await translateWithDeepL(text, normalizedTarget, opts);
     }
   } catch (e) {
+    if (process.env.DEBUG_TRANSLATE) console.error('[translator] DeepL error:', e.message);
     // fall through to optional fallback
   }
   try {
@@ -108,31 +112,27 @@ function upsertFieldI18n(existing, values) {
 // Given source English fields, ensure i18n objects for target locales.
 // fields: { title, description, excerpt, content, ... }
 // existing: { title_i18n, description_i18n, ... }
+// Runs translations sequentially to avoid DeepL 429 rate limit.
 async function ensureLocalizedFields({ fields, existing = {}, sourceLang = 'en', targetLangs = ['es', 'de'], htmlFields = [] }) {
   if (!fields || typeof fields !== 'object') return {};
   const isHtmlField = (name) => htmlFields.includes(name);
+  const delay = (ms) => new Promise(r => setTimeout(r, ms));
 
   const results = {};
-  const tasks = [];
-
   for (const [name, value] of Object.entries(fields)) {
     const existingI18n = existing[`${name}_i18n`] || {};
     const base = upsertFieldI18n(existingI18n, { [sourceLang]: value });
-    results[`${name}_i18n`] = base; // seed with EN
+    results[`${name}_i18n`] = base;
     for (const tl of targetLangs) {
       if (!base[tl] || String(base[tl]).trim() === '') {
-        tasks.push(
-          (async () => {
-            try {
-              const translated = await translateText(value || '', tl, { sourceLang, isHtml: isHtmlField(name) });
-              if (translated) results[`${name}_i18n`][tl] = translated;
-            } catch (_) {}
-          })()
-        );
+        await delay(400);
+        try {
+          const translated = await translateText(value || '', tl, { sourceLang, isHtml: isHtmlField(name) });
+          if (translated) results[`${name}_i18n`][tl] = translated;
+        } catch (_) {}
       }
     }
   }
-  await Promise.all(tasks);
   return results;
 }
 

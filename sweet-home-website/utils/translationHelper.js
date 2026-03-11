@@ -71,7 +71,6 @@ async function generateMissingTranslations(fields, existingI18n, sourceLang) {
   console.log(`[TranslationHelper] Existing i18n:`, existingI18n);
   
   const results = {};
-  const tasks = [];
   
   for (const [fieldName, fieldValue] of Object.entries(fields)) {
     if (!fieldValue || typeof fieldValue !== 'string' || fieldValue.trim() === '') {
@@ -114,59 +113,53 @@ async function generateMissingTranslations(fields, existingI18n, sourceLang) {
     // This is crucial for proper language switching
     results[i18nKey][sourceLang] = cleanSourceContent;
     
-    // Generate missing translations
+    // Generate missing translations (sequential to avoid DeepL 429 rate limit)
+    const { translateText } = require('../config/translator');
+    const delay = (ms) => new Promise(r => setTimeout(r, ms));
     for (const targetLang of missingLangs) {
-      tasks.push(
-        (async () => {
-            try {
-              const { translateText } = require('../config/translator');
-              console.log(`[TranslationHelper] Attempting to translate ${fieldName} from ${sourceLang} to ${targetLang}`);
-              console.log(`[TranslationHelper] Source text: "${cleanSourceContent.substring(0, 100)}..."`);
-              const translated = await translateText(cleanSourceContent, targetLang, { 
-                sourceLang, 
-                isHtml: fieldName === 'description' 
-              });
-              if (translated) {
-                // Check if line breaks were preserved in translation
-                const hasLineBreaks = translated.includes('\n');
-                console.log(`[TranslationHelper] Translation has line breaks: ${hasLineBreaks}`);
-                if (!hasLineBreaks && cleanSourceContent.includes('\n')) {
-                  console.log(`[TranslationHelper] ⚠️ Line breaks lost in translation, attempting to restore...`);
-                  // Try to restore line breaks by translating line by line
-                  const lines = cleanSourceContent.split('\n');
-                  const translatedLines = [];
-                  for (const line of lines) {
-                    if (line.trim() === '') {
-                      translatedLines.push('');
-                    } else {
-                      try {
-                        const lineTranslation = await translateText(line.trim(), targetLang, { sourceLang });
-                        translatedLines.push(lineTranslation || line);
-                      } catch (error) {
-                        translatedLines.push(line);
-                      }
-                    }
-                  }
-                  const restoredTranslation = translatedLines.join('\n');
-                  results[i18nKey][targetLang] = restoredTranslation;
-                  console.log(`[TranslationHelper] ✅ Restored line breaks for ${sourceLang}→${targetLang}: "${restoredTranslation.substring(0, 100)}..."`);
-                } else {
-                  results[i18nKey][targetLang] = translated;
-                  console.log(`[TranslationHelper] ✅ Generated ${sourceLang}→${targetLang} for ${fieldName}: "${translated.substring(0, 100)}..."`);
-                }
+      await delay(400);
+      try {
+        console.log(`[TranslationHelper] Attempting to translate ${fieldName} from ${sourceLang} to ${targetLang}`);
+        console.log(`[TranslationHelper] Source text: "${cleanSourceContent.substring(0, 100)}..."`);
+        const translated = await translateText(cleanSourceContent, targetLang, {
+          sourceLang,
+          isHtml: fieldName === 'description'
+        });
+        if (translated) {
+          const hasLineBreaks = translated.includes('\n');
+          console.log(`[TranslationHelper] Translation has line breaks: ${hasLineBreaks}`);
+          if (!hasLineBreaks && cleanSourceContent.includes('\n')) {
+            console.log(`[TranslationHelper] ⚠️ Line breaks lost in translation, attempting to restore...`);
+            const lines = cleanSourceContent.split('\n');
+            const translatedLines = [];
+            for (const line of lines) {
+              if (line.trim() === '') {
+                translatedLines.push('');
               } else {
-                console.log(`[TranslationHelper] ❌ No translation generated for ${sourceLang}→${targetLang} (API not configured or failed)`);
+                await delay(300);
+                try {
+                  const lineTranslation = await translateText(line.trim(), targetLang, { sourceLang });
+                  translatedLines.push(lineTranslation || line);
+                } catch (error) {
+                  translatedLines.push(line);
+                }
               }
-            } catch (error) {
-              console.log(`[TranslationHelper] ❌ Translation failed for ${fieldName} to ${targetLang}:`, error.message);
             }
-        })()
-      );
+            const restoredTranslation = translatedLines.join('\n');
+            results[i18nKey][targetLang] = restoredTranslation;
+            console.log(`[TranslationHelper] ✅ Restored line breaks for ${sourceLang}→${targetLang}: "${restoredTranslation.substring(0, 100)}..."`);
+          } else {
+            results[i18nKey][targetLang] = translated;
+            console.log(`[TranslationHelper] ✅ Generated ${sourceLang}→${targetLang} for ${fieldName}: "${translated.substring(0, 100)}..."`);
+          }
+        } else {
+          console.log(`[TranslationHelper] ❌ No translation generated for ${sourceLang}→${targetLang} (API not configured or failed)`);
+        }
+      } catch (error) {
+        console.log(`[TranslationHelper] ❌ Translation failed for ${fieldName} to ${targetLang}:`, error.message);
+      }
     }
   }
-  
-  // Wait for all translations to complete
-  await Promise.all(tasks);
   
   return results;
 }
