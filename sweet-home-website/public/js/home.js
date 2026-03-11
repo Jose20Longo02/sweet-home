@@ -302,7 +302,7 @@ async function loadFeaturedProperties() {
                 <span>${baths} bath${Number(baths) === 1 ? '' : 's'}</span>
               </div>` : ''}
             </div>
-            <a class="learn-more" href="/properties/${property.slug}">Learn more →</a>
+            <a class="learn-more" href="${(document.getElementById('locations-data')?.getAttribute('data-locale-prefix') || '')}/properties/${property.slug}">Learn more →</a>
           </div>
         </article>`;
       }).join('');

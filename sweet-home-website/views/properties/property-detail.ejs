@@ -40,6 +40,7 @@
   <div id="propertyData"
        data-id="<%= property.id %>"
        data-slug="<%= property.slug %>"
+       data-locale-prefix="<%= (typeof localePrefix !== 'undefined' && localePrefix) ? localePrefix : '' %>"
        data-title="<%= property.title %>"
        data-price="<%= property.price || 0 %>"
        data-country="<%= property.country %>"

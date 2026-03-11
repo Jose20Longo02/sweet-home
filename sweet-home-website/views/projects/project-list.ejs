@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="/css/project-list.css" />
 
 <!-- Locations data for JavaScript -->
-<div id="locations-data" data-locations='<%- JSON.stringify(locations).replace(/'/g, '&#39;') %>' style="display: none;"></div>
+<div id="locations-data" data-locations='<%- JSON.stringify(locations).replace(/'/g, '&#39;') %>' data-locale-prefix="<%= (typeof localePrefix !== 'undefined' && localePrefix) ? localePrefix : '' %>" style="display: none;"></div>
 
 <div class="project-search-page">
   <!-- Search Header removed per design request; dark header enabled in layout -->
@@ -267,9 +267,9 @@
                     <% } %>
                     
                     <div class="project-footer">
-                      <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); window.location.href='/projects/<%= project.slug %>'">
+                      <a href="<%= (typeof localePath === 'function') ? localePath('/projects/' + project.slug) : '/projects/' + project.slug %>" class="btn btn-outline btn-sm" onclick="event.stopPropagation()">
                         <%= t('projects.viewDetails','View project details') %>
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </div>

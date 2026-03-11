@@ -626,8 +626,9 @@ class PropertyDetailPage {
         : '/img/property-placeholder.jpg';
       const price = Number(property.price || 0).toLocaleString('en-US');
       
+      const localePrefix = (document.getElementById('propertyData')?.getAttribute('data-locale-prefix') || '');
       return `
-        <a href="/properties/${slug}" class="similar-property" data-slug="${slug}">
+        <a href="${localePrefix}/properties/${slug}" class="similar-property" data-slug="${slug}">
           <div class="similar-property-image">
             <img src="${photo}" 
                  alt="${title}" 

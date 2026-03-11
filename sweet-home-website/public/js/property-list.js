@@ -441,7 +441,7 @@ function createMarkerPopup(property) {
           <span>${property.bathrooms || 0} ${bathsLabel}</span>
           <span>${property.size || 0} ${sqmLabel}</span>
         </div>
-        <a href="/properties/${property.slug}" class="popup-link">${viewDetails}</a>
+        <a href="${(document.getElementById('locations-data')?.getAttribute('data-locale-prefix') || '') + '/properties/' + property.slug}" class="popup-link">${viewDetails}</a>
       </div>
     </div>
   `;

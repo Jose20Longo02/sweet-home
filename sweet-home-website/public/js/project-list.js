@@ -42,7 +42,11 @@ function initializeProjectList() {
       const card = e.target.closest('.project-card');
       if (card) {
         const slug = card.getAttribute('data-project-slug');
-        if (slug) window.location.href = `/projects/${slug}`;
+        if (slug) {
+          const loc = document.getElementById('locations-data');
+          const prefix = (loc && loc.getAttribute('data-locale-prefix')) || '';
+          window.location.href = (prefix || '') + '/projects/' + slug;
+        }
       }
     });
   }
@@ -350,7 +354,9 @@ function initializeProjectCards() {
       const projectSlug = this.dataset.projectSlug;
       
       if (projectSlug) {
-        window.location.href = `/projects/${projectSlug}`;
+        const loc = document.getElementById('locations-data');
+        const prefix = (loc && loc.getAttribute('data-locale-prefix')) || '';
+        window.location.href = (prefix || '') + '/projects/' + projectSlug;
       }
     });
     
