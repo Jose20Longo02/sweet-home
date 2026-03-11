@@ -57,6 +57,11 @@
       </div>
       
       <div class="field">
+        <label for="full_address">Full Address (Street, Number, Apartment, etc.)</label>
+        <input id="full_address" name="full_address" type="text" placeholder="e.g. Hansastraße 16, Apartment 3B" value="<%= form.full_address||'' %>" />
+      </div>
+      
+      <div class="field">
         <label for="map_link">Map link or "lat,lng"</label>
         <input id="map_link" name="map_link" type="text" placeholder="Paste Google Maps / OpenStreetMap link or 40.4168,-3.7038" value="<%= form.map_link||'' %>" />
         <small>Optional: If provided and coordinates are empty, we will extract coordinates from this.</small>

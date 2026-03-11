@@ -14,7 +14,8 @@ module.exports = {
       "Kreuzberg",
       "Moabit",
       "Reinickendorf (Am Schäfersee)",
-      "Schöneberg"
+      "Schöneberg",
+      "Spandau"
     ]
   },
   "UAE": {

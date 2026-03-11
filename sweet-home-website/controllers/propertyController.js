@@ -564,6 +564,7 @@ exports.createProperty = async (req, res, next) => {
     const country      = body.country?.trim();
     const city         = body.city?.trim();
     const neighborhood = body.neighborhood?.trim() || null;
+    const fullAddress   = (body.full_address && String(body.full_address).trim()) || null;
     const price        = parseNumberField(body.price);
     const yearBuilt    = parseNumberField(body.year_built);
     // New occupancy/rental fields
@@ -765,7 +766,7 @@ exports.createProperty = async (req, res, next) => {
 
     const insertRes = await query(
       `INSERT INTO properties (
-         country, city, neighborhood, title, slug, description,
+         country, city, neighborhood, full_address, title, slug, description,
          type, price, status_tags, photos, video_url,
          floorplan_url, agent_id, created_by,
          apartment_size, rooms, bathrooms,
@@ -777,20 +778,20 @@ exports.createProperty = async (req, res, next) => {
          occupancy_type, rental_status, rental_income, housegeld,
          created_at
        ) VALUES (
-         $1,$2,$3,$4,$5,$6,
-         $7,$8,$9,$10,$11,
-         $12,$13,$14,
-         $15,$16,$17,
-         $18,$19,$20,$21,
-         $22,$23,
-         $24,
+         $1,$2,$3,$4,$5,$6,$7,
+         $8,$9,$10,$11,$12,
+         $13,$14,$15,
+         $16,$17,$18,
+         $19,$20,$21,$22,
+         $23,$24,
          $25,
          $26,
-         $27,$28,$29,$30,
+         $27,
+         $28,$29,$30,$31,
          NOW()
        ) RETURNING id`,
       [
-        country, city, neighborhood, title, uniqueSlug, description,
+        country, city, neighborhood, fullAddress, title, uniqueSlug, description,
         type, price, statusTags, photos, videoUrl,
         floorplanUrl, agentId, req.session.user.id,
         apartmentSize, rooms, bathrooms,
@@ -1226,6 +1227,7 @@ exports.updateProperty = async (req, res, next) => {
     const country      = body.country?.trim() || existing.country;
     const city         = body.city?.trim() || existing.city;
     const neighborhood = (body.neighborhood?.trim() || '') || null;
+    const fullAddress   = (body.full_address !== undefined) ? (String(body.full_address || '').trim() || null) : existing.full_address;
     const price        = parseNumberField(body.price) ?? existing.price;
     const yearBuilt    = parseNumberField(body.year_built) ?? existing.year_built;
     // New occupancy/rental fields (update)
@@ -1488,24 +1490,24 @@ exports.updateProperty = async (req, res, next) => {
       // Update everything except photos/video_url (those are handled after file processing)
       await query(
         `UPDATE properties SET
-           country=$1, city=$2, neighborhood=$3,
-           title=$4, slug=$5, description=$6,
-           type=$7, price=$8, status_tags=$9,
-           apartment_size=$10, rooms=$11, bathrooms=$12, floorplan_url=$13,
-           total_size=$14, living_space=$15,
-           land_size=$16, plan_photo_url=$17,
-           is_in_project=$18, project_id=$19,
-           agent_id=$20,
-           map_link=$21,
-           features=$22::jsonb,
-           year_built=$23,
-           sold=$24,
-           sold_at=$25,
-           occupancy_type=$26, rental_status=$27, rental_income=$28, housegeld=$29,
+           country=$1, city=$2, neighborhood=$3, full_address=$4,
+           title=$5, slug=$6, description=$7,
+           type=$8, price=$9, status_tags=$10,
+           apartment_size=$11, rooms=$12, bathrooms=$13, floorplan_url=$14,
+           total_size=$15, living_space=$16,
+           land_size=$17, plan_photo_url=$18,
+           is_in_project=$19, project_id=$20,
+           agent_id=$21,
+           map_link=$22,
+           features=$23::jsonb,
+           year_built=$24,
+           sold=$25,
+           sold_at=$26,
+           occupancy_type=$27, rental_status=$28, rental_income=$29, housegeld=$30,
            updated_at=NOW()
-         WHERE id=$30`,
+         WHERE id=$31`,
         [
-          country, city, neighborhood,
+          country, city, neighborhood, fullAddress,
           title, newSlug, description,
           type, price, statusTags,
           apartmentSize, rooms, bathrooms, floorplanUrl,
@@ -1541,25 +1543,25 @@ exports.updateProperty = async (req, res, next) => {
       // No file uploads, update photos/video_url normally
       await query(
         `UPDATE properties SET
-           country=$1, city=$2, neighborhood=$3,
-           title=$4, slug=$5, description=$6,
-           type=$7, price=$8, status_tags=$9,
-           photos=$10, video_url=$11,
-           apartment_size=$12, rooms=$13, bathrooms=$14, floorplan_url=$15,
-           total_size=$16, living_space=$17,
-           land_size=$18, plan_photo_url=$19,
-           is_in_project=$20, project_id=$21,
-           agent_id=$22,
-           map_link=$23,
-           features=$24::jsonb,
-           year_built=$25,
-           sold=$26,
-           sold_at=$27,
-           occupancy_type=$28, rental_status=$29, rental_income=$30, housegeld=$31,
+           country=$1, city=$2, neighborhood=$3, full_address=$4,
+           title=$5, slug=$6, description=$7,
+           type=$8, price=$9, status_tags=$10,
+           photos=$11, video_url=$12,
+           apartment_size=$13, rooms=$14, bathrooms=$15, floorplan_url=$16,
+           total_size=$17, living_space=$18,
+           land_size=$19, plan_photo_url=$20,
+           is_in_project=$21, project_id=$22,
+           agent_id=$23,
+           map_link=$24,
+           features=$25::jsonb,
+           year_built=$26,
+           sold=$27,
+           sold_at=$28,
+           occupancy_type=$29, rental_status=$30, rental_income=$31, housegeld=$32,
            updated_at=NOW()
-         WHERE id=$32`,
+         WHERE id=$33`,
         [
-          country, city, neighborhood,
+          country, city, neighborhood, fullAddress,
           title, newSlug, description,
           type, price, statusTags,
           photos, videoUrl,
