@@ -155,6 +155,20 @@ app.use(
   })
 );
 app.use(cookieParser());
+// Non-prefixed detail URLs = English. Override cookie for this request so i18n loads English on first click.
+app.use((req, res, next) => {
+  if (req.method !== 'GET') return next();
+  if (req.path.startsWith('/de/') || req.path.startsWith('/es/')) return next();
+  if (/^\/(admin|superadmin|auth|api)/.test(req.path)) return next();
+  const isDetailPage = (/^\/properties\/[^/]+$/.test(req.path) && req.path !== '/properties/new') ||
+    (/^\/projects\/[^/]+$/.test(req.path) && req.path !== '/projects/regions') ||
+    /^\/blog\/[^/]+$/.test(req.path);
+  if (isDetailPage && req.cookies && (req.cookies.lang === 'de' || req.cookies.lang === 'es')) {
+    req.cookies = { ...req.cookies, lang: 'en' };
+    try { res.cookie('lang', 'en', { httpOnly: false, sameSite: 'lax', maxAge: 30 * 24 * 60 * 60 * 1000 }); } catch (_) {}
+  }
+  next();
+});
 // Internationalization: must come immediately after cookies so it can read lang
 app.use(i18nMiddleware);
 // Expose current lang for diagnostics
