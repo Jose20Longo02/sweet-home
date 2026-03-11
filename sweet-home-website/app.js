@@ -334,7 +334,7 @@ app.use((req, res, next) => {
     const clean = String(p).replace(/^\//, '');
     return prefix + (clean ? '/' + clean : '');
   };
-  // For lang switcher: paths to same page in each language (only when on locale-prefixed URL)
+  // For lang switcher: path-based links for all public pages (so URL reflects language)
   if (prefix) {
     const pathWithoutLocale = req.path.slice(prefix.length) || '/';
     res.locals.localeAlternatePaths = {
@@ -343,7 +343,17 @@ app.use((req, res, next) => {
       es: '/es' + pathWithoutLocale
     };
   } else {
-    res.locals.localeAlternatePaths = null;
+    // Non-prefixed URL: still offer /de/... and /es/... so switching lang updates the URL
+    const isPublic = !/^\/(admin|superadmin|auth|api)/.test(req.path);
+    if (isPublic) {
+      res.locals.localeAlternatePaths = {
+        en: req.path === '/' ? '/' : req.path,
+        de: req.path === '/' ? '/de' : '/de' + req.path,
+        es: req.path === '/' ? '/es' : '/es' + req.path
+      };
+    } else {
+      res.locals.localeAlternatePaths = null;
+    }
   }
   // Canonical base URL for all absolute links (canonical, hreflang, sitemap, etc.) - prefers real domain over Render URL
   res.locals.baseUrl = getCanonicalBaseUrl(req);
