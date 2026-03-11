@@ -288,10 +288,13 @@ exports.deleteTeamMember = async (req, res, next) => {
       }
     }
 
-    // 3) Remove the user
+    // 3) Delete activity logs that reference this user (avoids FK ON DELETE SET NULL vs NOT NULL conflict)
+    await query('DELETE FROM activity_logs WHERE user_id = $1', [memberId]);
+
+    // 4) Remove the user
     await query('DELETE FROM users WHERE id = $1', [memberId]);
 
-    // 4) Redirect back
+    // 5) Redirect back
     res.redirect('/superadmin/dashboard/team');
   } catch (err) {
     next(err);
