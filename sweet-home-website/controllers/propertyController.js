@@ -210,7 +210,7 @@ exports.listPropertiesPublic = async (req, res, next) => {
     // Build the base query
     let baseQuery = `
       SELECT
-        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood, p.full_address,
         p.price, p.photos, p.type, p.rooms, p.bathrooms,
         p.rental_status, p.rental_income,
         CASE 
@@ -385,7 +385,7 @@ exports.showProperty = async (req, res, next) => {
   try {
     const sql = `
       SELECT
-        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood, p.full_address,
         p.price, p.photos, p.type, p.rooms, p.bathrooms,
         CASE 
           WHEN p.type = 'Apartment' THEN p.apartment_size

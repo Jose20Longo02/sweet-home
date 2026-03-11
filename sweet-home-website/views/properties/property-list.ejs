@@ -565,7 +565,7 @@
                     
                     <div class="property-location">
                       <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: #000;"></span>
-                      <%= property.neighborhood || property.city %>, <%= property.country %>
+                      <%= property.neighborhood || property.city %>, <%= property.country %><% if (property.full_address && String(property.full_address).trim()) { %> (<%= property.full_address %>)<% } %>
                     </div>
                     
                     <div class="property-details">
