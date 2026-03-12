@@ -89,6 +89,13 @@
   </form>
 </section>
 
+<!-- Featured section translations: single source for locale (avoids data-attr/parse issues) -->
+<script>
+window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
+  learnMore: <%- JSON.stringify(typeof learnMoreText !== 'undefined' ? learnMoreText : (typeof t === 'function' ? t('common.learnMore', 'Learn more') : 'Learn more')) %>,
+  locations: <%- JSON.stringify(typeof locationsTranslations !== 'undefined' && locationsTranslations ? locationsTranslations : { countries: {}, cities: {} }) %>
+};
+</script>
 <!-- 3) Featured Properties – card carousel (3-up) -->
 <section class="section featured">
   <h2 class="section-title"><%= t('home.featured.title','Featured Properties') %></h2>

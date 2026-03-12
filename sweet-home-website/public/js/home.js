@@ -268,12 +268,15 @@ async function loadFeaturedProperties() {
     }
     
     const properties = await response.json();
-    // Prefer i18n-home (already parsed for current locale); fallback to #locations-data
-    let locTr = (HOME_I18N && HOME_I18N.locations && typeof HOME_I18N.locations === 'object')
-      ? { countries: HOME_I18N.locations.countries || {}, cities: HOME_I18N.locations.cities || {} }
-      : { countries: {}, cities: {} };
+    // Use inline script __FEATURED_I18N__ first (same locale as page), then HOME_I18N, then #locations-data
+    const featI18n = window.__FEATURED_I18N__;
+    let locTr = (featI18n && featI18n.locations && typeof featI18n.locations === 'object')
+      ? { countries: featI18n.locations.countries || {}, cities: featI18n.locations.cities || {} }
+      : (HOME_I18N && HOME_I18N.locations && typeof HOME_I18N.locations === 'object')
+        ? { countries: HOME_I18N.locations.countries || {}, cities: HOME_I18N.locations.cities || {} }
+        : { countries: {}, cities: {} };
     const locsData = document.getElementById('locations-data');
-    if ((!locTr.countries || Object.keys(locTr.countries).length === 0) && locsData) {
+    if ((!locTr.cities || Object.keys(locTr.cities).length === 0) && locsData) {
       try {
         const raw = locsData.getAttribute('data-locations-translations');
         if (raw) {
@@ -284,7 +287,7 @@ async function loadFeaturedProperties() {
     }
     const trCity = (c) => (locTr.cities && locTr.cities[c]) || c;
     const trCountry = (c) => (locTr.countries && locTr.countries[c]) || c;
-    let learnMoreText = hGet('featured.learnMore', 'Learn more');
+    let learnMoreText = (featI18n && typeof featI18n.learnMore === 'string') ? featI18n.learnMore : hGet('featured.learnMore', 'Learn more');
     if (learnMoreText === 'Learn more' && locsData) {
       const attr = locsData.getAttribute('data-learn-more');
       if (attr) learnMoreText = attr.replace(/&quot;/g, '"');
