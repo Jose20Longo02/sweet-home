@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="/css/home.css" />
 <link rel="stylesheet" href="/css/contact.css?v=<%= assetVersion %>" />
 <% if (process.env.RECAPTCHA_SITE_KEY) { %>
- <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+  <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
 <% } %>
 
 <!-- Preload the primary hero image for faster first paint -->
@@ -14,519 +14,518 @@
 <div id="locations-data" data-locations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locations) : JSON.stringify(locations)).replace(/'/g, '&#39;') %>' data-locale-prefix="<%= (typeof localePrefix !== 'undefined' && localePrefix) ? localePrefix : '' %>" data-locations-translations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(typeof locationsTranslations !== 'undefined' && locationsTranslations ? locationsTranslations : { countries: {}, cities: {} }) : JSON.stringify(typeof locationsTranslations !== 'undefined' && locationsTranslations ? locationsTranslations : { countries: {}, cities: {} })).replace(/'/g, '&#39;') %>' data-learn-more="<%= (typeof t === 'function' ? t('common.learnMore', 'Learn more') : 'Learn more').replace(/"/g, '&quot;') %>" style="display:none"></div>
 <!-- i18n strings for Home JS -->
 <div id="i18n-home" data-i18n='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
- calc: {
-   placeholders: {
-     price: t("home.calc.placeholders.price","e.g. €350,000"),
-     down: t("home.calc.placeholders.down","e.g. €70,000"),
-     rate: t("home.calc.placeholders.rate","e.g. 4.50")
-   },
-   errors: {
-     invalid: t("home.calc.errors.invalid","Please enter valid values for all fields."),
-     downTooHigh: t("home.calc.errors.downTooHigh","Down payment cannot be greater than or equal to property price.")
-   }
- },
- aria: { prev: t('common.previous','Previous'), next: t('common.next','Next') },
- forms: {
-   anyCity: t('forms.anyCity','Any City'),
-   anyNeighborhood: t('forms.anyNeighborhood','Any Neighborhood')
- },
- featured: { learnMore: t('common.learnMore','Learn more') },
- locations: (typeof locationsTranslations !== 'undefined' && locationsTranslations) ? locationsTranslations : { countries: {}, cities: {} }
+  calc: {
+    placeholders: {
+      price: t("home.calc.placeholders.price","e.g. €350,000"),
+      down: t("home.calc.placeholders.down","e.g. €70,000"),
+      rate: t("home.calc.placeholders.rate","e.g. 4.50")
+    },
+    errors: {
+      invalid: t("home.calc.errors.invalid","Please enter valid values for all fields."),
+      downTooHigh: t("home.calc.errors.downTooHigh","Down payment cannot be greater than or equal to property price.")
+    }
+  },
+  aria: { prev: t('common.previous','Previous'), next: t('common.next','Next') },
+  forms: {
+    anyCity: t('forms.anyCity','Any City'),
+    anyNeighborhood: t('forms.anyNeighborhood','Any Neighborhood')
+  },
+  featured: { learnMore: t('common.learnMore','Learn more') },
+  locations: (typeof locationsTranslations !== 'undefined' && locationsTranslations) ? locationsTranslations : { countries: {}, cities: {} }
 }) : JSON.stringify({
- calc: {
-   placeholders: {
-     price: t("home.calc.placeholders.price","e.g. €350,000"),
-     down: t("home.calc.placeholders.down","e.g. €70,000"),
-     rate: t("home.calc.placeholders.rate","e.g. 4.50")
-   },
-   errors: {
-     invalid: t("home.calc.errors.invalid","Please enter valid values for all fields."),
-     downTooHigh: t("home.calc.errors.downTooHigh","Down payment cannot be greater than or equal to property price.")
-   }
- },
- aria: { prev: t('common.previous','Previous'), next: t('common.next','Next') },
- forms: {
-   anyCity: t('forms.anyCity','Any City'),
-   anyNeighborhood: t('forms.anyNeighborhood','Any Neighborhood')
- },
- featured: { learnMore: t('common.learnMore','Learn more') },
- locations: (typeof locationsTranslations !== 'undefined' && locationsTranslations) ? locationsTranslations : { countries: {}, cities: {} }
+  calc: {
+    placeholders: {
+      price: t("home.calc.placeholders.price","e.g. €350,000"),
+      down: t("home.calc.placeholders.down","e.g. €70,000"),
+      rate: t("home.calc.placeholders.rate","e.g. 4.50")
+    },
+    errors: {
+      invalid: t("home.calc.errors.invalid","Please enter valid values for all fields."),
+      downTooHigh: t("home.calc.errors.downTooHigh","Down payment cannot be greater than or equal to property price.")
+    }
+  },
+  aria: { prev: t('common.previous','Previous'), next: t('common.next','Next') },
+  forms: {
+    anyCity: t('forms.anyCity','Any City'),
+    anyNeighborhood: t('forms.anyNeighborhood','Any Neighborhood')
+  },
+  featured: { learnMore: t('common.learnMore','Learn more') },
+  locations: (typeof locationsTranslations !== 'undefined' && locationsTranslations) ? locationsTranslations : { countries: {}, cities: {} }
 })).replace(/'/g, '&#39;') %>' style="display:none"></div>
 
 <!-- 1) Header overlayed hero with 3 vertical panels and centered search -->
 <section class="hero-panels">
-<h1 class="sr-only"><%= t('home.title','International Real Estate Investment Company') %></h1>
-<p class="sr-only"><%= t('home.heroDescription','Sweet Home is an international real estate investment company providing carefully selected investment properties in Berlin, Dubai, and Cyprus. We support international investors and expats with a full-service approach, from property sourcing and due diligence to acquisition and long-term investment support.') %></p>
-<div class="panel" data-country="Berlin"><img src="/images/berlin-hero.jpg" alt="Luxury properties in Berlin, Germany" loading="lazy" decoding="async"></div>
-<div class="panel" data-country="Dubai"><img src="/images/dubai-hero.jpg" alt="Luxury properties in Dubai, UAE" fetchpriority="high" decoding="async"></div>
-<div class="panel" data-country="Cyprus"><img src="/images/cyprus-hero.jpg" alt="Luxury properties in Cyprus" loading="lazy" decoding="async"></div>
+  <h1 class="sr-only"><%= t('home.title','International Real Estate Investment Company') %></h1>
+  <p class="sr-only"><%= t('home.heroDescription','Sweet Home is an international real estate investment company providing carefully selected investment properties in Berlin, Dubai, and Cyprus. We support international investors and expats with a full-service approach, from property sourcing and due diligence to acquisition and long-term investment support.') %></p>
+  <div class="panel" data-country="Berlin"><img src="/images/berlin-hero.jpg" alt="Luxury properties in Berlin, Germany" loading="lazy" decoding="async"></div>
+  <div class="panel" data-country="Dubai"><img src="/images/dubai-hero.jpg" alt="Luxury properties in Dubai, UAE" fetchpriority="high" decoding="async"></div>
+  <div class="panel" data-country="Cyprus"><img src="/images/cyprus-hero.jpg" alt="Luxury properties in Cyprus" loading="lazy" decoding="async"></div>
 
-<form class="hero-search" action="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>" method="get">
-<div class="search-row">
-<label class="sr-only" for="country"><%= t('forms.country','Country') %></label>
-<select id="country" name="country">
-<option value=""><%= t('forms.country','Country') %></option>
-<% Object.keys(locations).forEach(country => { %>
-         <option value="<%= country %>"><%= (typeof translateLocation === 'function') ? translateLocation('country', country) : country %></option>
-       <% }); %>
-</select>
-<label class="sr-only" for="city"><%= t('forms.city','City') %></label>
-<select id="city" name="city" disabled>
-<option value=""><%= t('forms.city','City') %></option>
-</select>
-<label class="sr-only" for="neighborhood"><%= t('forms.neighborhood','Neighborhood') %></label>
-<select id="neighborhood" name="neighborhood" disabled>
-<option value=""><%= t('forms.neighborhood','Neighborhood') %></option>
-</select>
-<label class="sr-only" for="operation"><%= t('forms.operation','Operation') %></label>
-<select id="operation" name="operation">
-<option value=""><%= t('forms.anyOperation','Any Operation') %></option>
-<option value="buy"><%= t('forms.operations.buy','Buy') %></option>
-<option value="rent"><%= t('forms.operations.rent','Rent') %></option>
-</select>
-<label class="sr-only" for="type"><%= t('forms.propertyType','Property Type') %></label>
-<select id="type" name="type">
-<option value=""><%= t('forms.anyType','Any Type') %></option>
-<option><%= t('forms.types.apartment','Apartment') %></option>
-<option><%= t('forms.types.house','House') %></option>
-<option><%= t('forms.types.villa','Villa') %></option>
-<option><%= t('forms.types.land','Land') %></option>
-</select>
-<button type="submit"><%= t('home.search.cta','Search Properties') %></button>
-</div>
-</form>
+  <form class="hero-search" action="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>" method="get">
+    <div class="search-row">
+      <label class="sr-only" for="country"><%= t('forms.country','Country') %></label>
+      <select id="country" name="country">
+        <option value=""><%= t('forms.country','Country') %></option>
+        <% Object.keys(locations).forEach(country => { %>
+          <option value="<%= country %>"><%= (typeof translateLocation === 'function') ? translateLocation('country', country) : country %></option>
+        <% }); %>
+      </select>
+      <label class="sr-only" for="city"><%= t('forms.city','City') %></label>
+      <select id="city" name="city" disabled>
+        <option value=""><%= t('forms.city','City') %></option>
+      </select>
+      <label class="sr-only" for="neighborhood"><%= t('forms.neighborhood','Neighborhood') %></label>
+      <select id="neighborhood" name="neighborhood" disabled>
+        <option value=""><%= t('forms.neighborhood','Neighborhood') %></option>
+      </select>
+      <label class="sr-only" for="operation"><%= t('forms.operation','Operation') %></label>
+      <select id="operation" name="operation">
+        <option value=""><%= t('forms.anyOperation','Any Operation') %></option>
+        <option value="buy"><%= t('forms.operations.buy','Buy') %></option>
+        <option value="rent"><%= t('forms.operations.rent','Rent') %></option>
+      </select>
+      <label class="sr-only" for="type"><%= t('forms.propertyType','Property Type') %></label>
+      <select id="type" name="type">
+        <option value=""><%= t('forms.anyType','Any Type') %></option>
+        <option><%= t('forms.types.apartment','Apartment') %></option>
+        <option><%= t('forms.types.house','House') %></option>
+        <option><%= t('forms.types.villa','Villa') %></option>
+        <option><%= t('forms.types.land','Land') %></option>
+      </select>
+      <button type="submit"><%= t('home.search.cta','Search Properties') %></button>
+    </div>
+  </form>
 </section>
 
 <!-- Featured section translations: single source for locale (avoids data-attr/parse issues) -->
 <script>
 window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
- learnMore: <%- JSON.stringify(typeof learnMoreText !== 'undefined' ? learnMoreText : (typeof t === 'function' ? t('common.learnMore', 'Learn more') : 'Learn more')) %>,
- locations: <%- JSON.stringify(typeof locationsTranslations !== 'undefined' && locationsTranslations ? locationsTranslations : { countries: {}, cities: {} }) %>
+  learnMore: <%- JSON.stringify(typeof learnMoreText !== 'undefined' ? learnMoreText : (typeof t === 'function' ? t('common.learnMore', 'Learn more') : 'Learn more')) %>,
+  locations: <%- JSON.stringify(typeof locationsTranslations !== 'undefined' && locationsTranslations ? locationsTranslations : { countries: {}, cities: {} }) %>
 };
 </script>
 <!-- 3) Featured Properties – card carousel (3-up) -->
 <section class="section featured">
-  <h2 class="section-title"><%= t('home.featured.title','Featured Properties') %></h2>
   <h2 class="section-title"><%= t('berlin.featuredTitle','Apartments in Berlin') %></h2>
-<div class="cards-carousel" id="featuredCarousel" aria-label="Featured properties">
-<button class="carousel-nav prev" data-target="#featuredCarousel" aria-label="<%= t('common.previous','Previous') %>">&#8249;</button>
-<div class="cards-track" id="featuredProperties">
-<% if (typeof featuredProperties !== 'undefined' && featuredProperties && featuredProperties.length >= 1) { %>
-       <% featuredProperties.forEach(property => { %>
-         <% const locationText = (typeof property.locationDisplay !== 'undefined' && property.locationDisplay) ? property.locationDisplay : ((property.city || '') + ', ' + (property.country || '')); %>
-         <% const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString('en-US') : ''; %>
-         <article class="property-card">
-           <div class="img-wrap"<% if (priceText) { %> data-price="<%= priceText %>"<% } %>>
-             <img src="<%= (property.photos && property.photos[0]) ? property.photos[0] : '/img/property-placeholder.jpg' %>" alt="<%= property.title %>" loading="lazy" onerror="this.src='/img/property-placeholder.jpg'">
-           </div>
-           <div class="meta">
-             <div class="title"><%= property.title %></div>
-             <% if (priceText) { %><div class="price"><%= priceText %></div><% } %>
-             <div class="location">
-               <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
-               <%= locationText %>
-             </div>
-             <div class="features-row">
-               <% if (property.size) { %>
-               <div class="feature">
-                 <span class="icon icon-16 icon-inline icon-mask icon-size"></span>
-                 <span><%= property.size %> m²</span>
-               </div>
-               <% } %>
-               <% if (typeof property.rooms !== 'undefined' && property.rooms !== null) { %>
-               <div class="feature">
-                 <span class="icon icon-16 icon-inline icon-mask icon-bed"></span>
-                 <span><%= property.rooms %> <%= t('properties.list.meta.beds','beds') %></span>
-               </div>
-               <% } %>
-               <% if (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) { %>
-               <div class="feature">
-                 <span class="icon icon-16 icon-inline icon-mask icon-bath"></span>
-                 <span><%= property.bathrooms %> <%= t('properties.list.meta.baths','baths') %></span>
-               </div>
-               <% } %>
-             </div>
-             <a class="learn-more" href="<%= (typeof localePath === 'function') ? localePath('/properties/' + property.slug) : '/properties/' + property.slug %>"><%= (typeof learnMoreText !== 'undefined' ? learnMoreText : (typeof t === 'function' ? t('common.learnMore','Learn more') : 'Learn more')) %> →</a>
-           </div>
-         </article>
-       <% }); %>
-     <% } else { %>
-       <!-- fallback: populated by JS -->
-     <% } %>
-</div>
-<button class="carousel-nav next" data-target="#featuredCarousel" aria-label="<%= t('common.next','Next') %>">&#8250;</button>
-</div>
+  <div class="cards-carousel" id="featuredCarousel" aria-label="Featured properties">
+    <button class="carousel-nav prev" data-target="#featuredCarousel" aria-label="<%= t('common.previous','Previous') %>">&#8249;</button>
+    <div class="cards-track" id="featuredProperties">
+      <% if (typeof featuredProperties !== 'undefined' && featuredProperties && featuredProperties.length >= 1) { %>
+        <% featuredProperties.forEach(property => { %>
+          <% const locationText = (typeof property.locationDisplay !== 'undefined' && property.locationDisplay) ? property.locationDisplay : ((property.city || '') + ', ' + (property.country || '')); %>
+          <% const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString('en-US') : ''; %>
+          <article class="property-card">
+            <div class="img-wrap"<% if (priceText) { %> data-price="<%= priceText %>"<% } %>>
+              <img src="<%= (property.photos && property.photos[0]) ? property.photos[0] : '/img/property-placeholder.jpg' %>" alt="<%= property.title %>" loading="lazy" onerror="this.src='/img/property-placeholder.jpg'">
+            </div>
+            <div class="meta">
+              <div class="title"><%= property.title %></div>
+              <% if (priceText) { %><div class="price"><%= priceText %></div><% } %>
+              <div class="location">
+                <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                <%= locationText %>
+              </div>
+              <div class="features-row">
+                <% if (property.size) { %>
+                <div class="feature">
+                  <span class="icon icon-16 icon-inline icon-mask icon-size"></span>
+                  <span><%= property.size %> m²</span>
+                </div>
+                <% } %>
+                <% if (typeof property.rooms !== 'undefined' && property.rooms !== null) { %>
+                <div class="feature">
+                  <span class="icon icon-16 icon-inline icon-mask icon-bed"></span>
+                  <span><%= property.rooms %> <%= t('properties.list.meta.beds','beds') %></span>
+                </div>
+                <% } %>
+                <% if (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) { %>
+                <div class="feature">
+                  <span class="icon icon-16 icon-inline icon-mask icon-bath"></span>
+                  <span><%= property.bathrooms %> <%= t('properties.list.meta.baths','baths') %></span>
+                </div>
+                <% } %>
+              </div>
+              <a class="learn-more" href="<%= (typeof localePath === 'function') ? localePath('/properties/' + property.slug) : '/properties/' + property.slug %>"><%= (typeof learnMoreText !== 'undefined' ? learnMoreText : (typeof t === 'function' ? t('common.learnMore','Learn more') : 'Learn more')) %> →</a>
+            </div>
+          </article>
+        <% }); %>
+      <% } else { %>
+        <!-- fallback: populated by JS -->
+      <% } %>
+    </div>
+    <button class="carousel-nav next" data-target="#featuredCarousel" aria-label="<%= t('common.next','Next') %>">&#8250;</button>
+  </div>
 </section>
 
 <!-- New Development -->
 <section class="section new-development" aria-label="<%= t('home.newDevelopment.title','New development') %>">
-<div class="container">
-<h2 class="section-title"><%= t('home.newDevelopment.title','New development') %></h2>
-<% const devRows = (typeof newDevelopmentRows !== 'undefined' && Array.isArray(newDevelopmentRows)) ? newDevelopmentRows : []; %>
-<% if (devRows.length > 0) { %>
-     <% devRows.forEach(function(row){ %>
-       <div class="dev-row">
-         <h3 class="dev-row-title"><%= t('home.newDevelopment.rows.' + row.key, row.key) %></h3>
-         <div class="dev-grid">
-           <% (row.cards || []).slice(0,3).forEach(function(card){ %>
-             <article class="dev-card">
-               <a class="dev-media" href="<%= (typeof localePath === 'function') ? localePath('/projects/' + card.slug) : '/projects/' + card.slug %>">
-                 <img src="<%= card.photo %>" alt="<%= card.title %>" loading="lazy" onerror="this.src='/img/property-placeholder.jpg'">
-               </a>
-               <div class="dev-meta">
-                 <a class="dev-title" href="<%= (typeof localePath === 'function') ? localePath('/projects/' + card.slug) : '/projects/' + card.slug %>"><%= card.title %></a>
-                 <p class="dev-location">
-                   <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
-                   <%= card.locationDisplay %>
-                 </p>
-                 <div class="dev-info">
-                   <% if (card.unit_types && card.unit_types.length) { %>
-                     <span class="dev-chip"><%= card.unit_types.slice(0, 2).join(', ') %></span>
-                   <% } %>
-                   <% if (card.min_unit_size || card.max_unit_size) { %>
-                     <span class="dev-chip"><%= t('home.newDevelopment.size','Size') %>: <%= card.min_unit_size ? Math.round(card.min_unit_size) : '?' %><% if (card.max_unit_size && card.max_unit_size !== card.min_unit_size) { %>-<%= Math.round(card.max_unit_size) %><% } %> m²</span>
-                   <% } %>
-                   <% if (card.total_units) { %>
-                     <span class="dev-chip"><%= card.total_units %> <%= t('home.newDevelopment.units','units') %></span>
-                   <% } %>
-                 </div>
-                 <div class="dev-bottom">
-                   <span class="dev-price">
-                     <span class="dev-price-label"><%= t('home.newDevelopment.fromPrice','From') %></span>
-                     <% if (card.min_price) { %>
-                       <span class="dev-price-value">€<%= Number(card.min_price).toLocaleString('en-US') %></span>
-                     <% } else { %>
-                       <span class="dev-price-request"><%= t('home.newDevelopment.uponRequest','Upon request') %></span>
-                     <% } %>
-                   </span>
-                   <% if (card.completion_date) { %>
-                     <span class="dev-completion"><%= t('home.newDevelopment.completion','Completion') %>: <%= card.completionDisplay || card.completion_date %></span>
-                   <% } %>
-                 </div>
-               </div>
-             </article>
-           <% }) %>
-         </div>
-       </div>
-     <% }) %>
-   <% } else { %>
-     <p class="section-empty"><%= t('home.newDevelopment.empty','No developments available right now.') %></p>
-   <% } %>
-<div class="dev-cta-wrap">
-<a class="btn btn-green dev-cta" href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>"><%= t('home.newDevelopment.viewMore','View more developments') %></a>
-</div>
-</div>
+  <div class="container">
+    <h2 class="section-title"><%= t('home.newDevelopment.title','New development') %></h2>
+    <% const devRows = (typeof newDevelopmentRows !== 'undefined' && Array.isArray(newDevelopmentRows)) ? newDevelopmentRows : []; %>
+    <% if (devRows.length > 0) { %>
+      <% devRows.forEach(function(row){ %>
+        <div class="dev-row">
+          <h3 class="dev-row-title"><%= t('home.newDevelopment.rows.' + row.key, row.key) %></h3>
+          <div class="dev-grid">
+            <% (row.cards || []).slice(0,3).forEach(function(card){ %>
+              <article class="dev-card">
+                <a class="dev-media" href="<%= (typeof localePath === 'function') ? localePath('/projects/' + card.slug) : '/projects/' + card.slug %>">
+                  <img src="<%= card.photo %>" alt="<%= card.title %>" loading="lazy" onerror="this.src='/img/property-placeholder.jpg'">
+                </a>
+                <div class="dev-meta">
+                  <a class="dev-title" href="<%= (typeof localePath === 'function') ? localePath('/projects/' + card.slug) : '/projects/' + card.slug %>"><%= card.title %></a>
+                  <p class="dev-location">
+                    <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                    <%= card.locationDisplay %>
+                  </p>
+                  <div class="dev-info">
+                    <% if (card.unit_types && card.unit_types.length) { %>
+                      <span class="dev-chip"><%= card.unit_types.slice(0, 2).join(', ') %></span>
+                    <% } %>
+                    <% if (card.min_unit_size || card.max_unit_size) { %>
+                      <span class="dev-chip"><%= t('home.newDevelopment.size','Size') %>: <%= card.min_unit_size ? Math.round(card.min_unit_size) : '?' %><% if (card.max_unit_size && card.max_unit_size !== card.min_unit_size) { %>-<%= Math.round(card.max_unit_size) %><% } %> m²</span>
+                    <% } %>
+                    <% if (card.total_units) { %>
+                      <span class="dev-chip"><%= card.total_units %> <%= t('home.newDevelopment.units','units') %></span>
+                    <% } %>
+                  </div>
+                  <div class="dev-bottom">
+                    <span class="dev-price">
+                      <span class="dev-price-label"><%= t('home.newDevelopment.fromPrice','From') %></span>
+                      <% if (card.min_price) { %>
+                        <span class="dev-price-value">€<%= Number(card.min_price).toLocaleString('en-US') %></span>
+                      <% } else { %>
+                        <span class="dev-price-request"><%= t('home.newDevelopment.uponRequest','Upon request') %></span>
+                      <% } %>
+                    </span>
+                    <% if (card.completion_date) { %>
+                      <span class="dev-completion"><%= t('home.newDevelopment.completion','Completion') %>: <%= card.completionDisplay || card.completion_date %></span>
+                    <% } %>
+                  </div>
+                </div>
+              </article>
+            <% }) %>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p class="section-empty"><%= t('home.newDevelopment.empty','No developments available right now.') %></p>
+    <% } %>
+    <div class="dev-cta-wrap">
+      <a class="btn btn-green dev-cta" href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>"><%= t('home.newDevelopment.viewMore','View more developments') %></a>
+    </div>
+  </div>
 </section>
 
 <!-- Berlin neighborhoods helper section -->
 <section class="section home-berlin-neighborhoods" aria-label="<%= t('home.berlinNeighborhoods.title','What Neighborhood should I choose in Berlin?') %>">
-<div class="container">
-<h2 class="section-title"><%= t('home.berlinNeighborhoods.title','What Neighborhood should I choose in Berlin?') %></h2>
-<p class="home-berlin-neighborhoods__hint"><%= t('home.berlinNeighborhoods.hint','Click a neighborhood to expand key local context and real-estate profile.') %></p>
-<% const homeBerlinNeighborhoods = (typeof berlinNeighborhoods !== 'undefined' && Array.isArray(berlinNeighborhoods)) ? berlinNeighborhoods : []; %>
-<div class="home-berlin-neighborhoods__grid">
-<% homeBerlinNeighborhoods.forEach(function(item, idx){ %>
-       <% const panelId = `home-berlin-neighborhood-panel-${idx}`; %>
-       <% const triggerId = `home-berlin-neighborhood-trigger-${idx}`; %>
-       <article class="home-berlin-neighborhood-card" data-home-neighborhood-card>
-         <button
-           type="button"
-           id="<%= triggerId %>"
-           class="home-berlin-neighborhood-card__trigger"
-           data-home-neighborhood-toggle
-           aria-expanded="false"
-           aria-controls="<%= panelId %>"
-         >
-           <span class="home-berlin-neighborhood-card__name"><%= item.name %></span>
-           <span class="home-berlin-neighborhood-card__icon" aria-hidden="true"></span>
-         </button>
-         <div class="home-berlin-neighborhood-card__panel" id="<%= panelId %>" role="region" aria-labelledby="<%= triggerId %>" hidden>
-           <p><%= item.summary %></p>
-           <p><strong><%= t('home.berlinNeighborhoods.realEstate','Real estate') %>:</strong> <%= item.realEstate %></p>
-           <a
-             class="btn btn-green home-berlin-neighborhood-card__cta"
-             href="<%= ((typeof localePath === 'function') ? localePath('/properties') : '/properties') + '?country=Germany&city=Berlin&neighborhood=' + encodeURIComponent(item.name) %>"
-           >
-             <%= t('home.berlinNeighborhoods.exploreCta','Explore apartments') %>
-           </a>
-         </div>
-       </article>
-     <% }) %>
-</div>
-</div>
+  <div class="container">
+    <h2 class="section-title"><%= t('home.berlinNeighborhoods.title','What Neighborhood should I choose in Berlin?') %></h2>
+    <p class="home-berlin-neighborhoods__hint"><%= t('home.berlinNeighborhoods.hint','Click a neighborhood to expand key local context and real-estate profile.') %></p>
+    <% const homeBerlinNeighborhoods = (typeof berlinNeighborhoods !== 'undefined' && Array.isArray(berlinNeighborhoods)) ? berlinNeighborhoods : []; %>
+    <div class="home-berlin-neighborhoods__grid">
+      <% homeBerlinNeighborhoods.forEach(function(item, idx){ %>
+        <% const panelId = `home-berlin-neighborhood-panel-${idx}`; %>
+        <% const triggerId = `home-berlin-neighborhood-trigger-${idx}`; %>
+        <article class="home-berlin-neighborhood-card" data-home-neighborhood-card>
+          <button
+            type="button"
+            id="<%= triggerId %>"
+            class="home-berlin-neighborhood-card__trigger"
+            data-home-neighborhood-toggle
+            aria-expanded="false"
+            aria-controls="<%= panelId %>"
+          >
+            <span class="home-berlin-neighborhood-card__name"><%= item.name %></span>
+            <span class="home-berlin-neighborhood-card__icon" aria-hidden="true"></span>
+          </button>
+          <div class="home-berlin-neighborhood-card__panel" id="<%= panelId %>" role="region" aria-labelledby="<%= triggerId %>" hidden>
+            <p><%= item.summary %></p>
+            <p><strong><%= t('home.berlinNeighborhoods.realEstate','Real estate') %>:</strong> <%= item.realEstate %></p>
+            <a
+              class="btn btn-green home-berlin-neighborhood-card__cta"
+              href="<%= ((typeof localePath === 'function') ? localePath('/properties') : '/properties') + '?country=Germany&city=Berlin&neighborhood=' + encodeURIComponent(item.name) %>"
+            >
+              <%= t('home.berlinNeighborhoods.exploreCta','Explore apartments') %>
+            </a>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  </div>
 </section>
 
 <!-- 4) International Real Estate – stretch/collapse carousel -->
 <section class="section international">
-<h2 class="section-title"><%= t('home.international.title','International Real Estate') %></h2>
-<div class="stretch-carousel" id="intlCarousel">
-<button class="carousel-nav prev" data-target="#intlCarousel" aria-label="<%= t('common.previous','Previous') %>">&#8249;</button>
-<div class="stretch-track">
-<article class="stretch-card is-collapsed" data-title="<%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %>">
-<img src="/images/cyprus-international.jpg" alt="" loading="lazy">
-<span class="vertical-title"><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></span>
-<div class="expanded-info">
-<h3><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></h3>
-<a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Cyprus" class="see-link"><%= t('home.international.see','See properties') %></a>
-</div>
-</article>
-<article class="stretch-card is-collapsed" data-title="<%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %>">
-<img src="/images/dubai-international.jpg" alt="" loading="lazy">
-<span class="vertical-title"><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %></span>
-<div class="expanded-info">
-<h3><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %></h3>
-<a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=UAE&city=Dubai" class="see-link"><%= t('home.international.see','See properties') %></a>
-</div>
-</article>
-<article class="stretch-card is-focused" data-title="<%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Berlin') : 'Berlin') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'Germany') : 'Germany') %>">
-<img src="/images/berlin-international.jpg" alt="" loading="lazy">
-<span class="vertical-title"><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Berlin') : 'Berlin') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'Germany') : 'Germany') %></span>
-<div class="expanded-info">
-<h3><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Berlin') : 'Berlin') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'Germany') : 'Germany') %></h3>
-<a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Germany&city=Berlin" class="see-link"><%= t('home.international.see','See properties') %></a>
-</div>
-</article>
-</div>
-<button class="carousel-nav next" data-target="#intlCarousel" aria-label="<%= t('common.next','Next') %>">&#8250;</button>
-</div>
+  <h2 class="section-title"><%= t('home.international.title','International Real Estate') %></h2>
+  <div class="stretch-carousel" id="intlCarousel">
+    <button class="carousel-nav prev" data-target="#intlCarousel" aria-label="<%= t('common.previous','Previous') %>">&#8249;</button>
+    <div class="stretch-track">
+      <article class="stretch-card is-collapsed" data-title="<%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %>">
+        <img src="/images/cyprus-international.jpg" alt="" loading="lazy">
+        <span class="vertical-title"><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></span>
+        <div class="expanded-info">
+          <h3><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></h3>
+          <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Cyprus" class="see-link"><%= t('home.international.see','See properties') %></a>
+        </div>
+      </article>
+      <article class="stretch-card is-collapsed" data-title="<%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %>">
+        <img src="/images/dubai-international.jpg" alt="" loading="lazy">
+        <span class="vertical-title"><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %></span>
+        <div class="expanded-info">
+          <h3><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %></h3>
+          <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=UAE&city=Dubai" class="see-link"><%= t('home.international.see','See properties') %></a>
+        </div>
+      </article>
+      <article class="stretch-card is-focused" data-title="<%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Berlin') : 'Berlin') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'Germany') : 'Germany') %>">
+        <img src="/images/berlin-international.jpg" alt="" loading="lazy">
+        <span class="vertical-title"><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Berlin') : 'Berlin') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'Germany') : 'Germany') %></span>
+        <div class="expanded-info">
+          <h3><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Berlin') : 'Berlin') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'Germany') : 'Germany') %></h3>
+          <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Germany&city=Berlin" class="see-link"><%= t('home.international.see','See properties') %></a>
+        </div>
+      </article>
+    </div>
+    <button class="carousel-nav next" data-target="#intlCarousel" aria-label="<%= t('common.next','Next') %>">&#8250;</button>
+  </div>
 </section>
 
 <!-- 5) About Section over panoramic image -->
 <section class="about-hero">
-<img src="/images/berlin-about.jpg" alt="" loading="lazy">
-<div class="about-overlay">
-<h2><%= t('home.about.title','About Sweet Home') %></h2>
-<p><%= t('home.about.copy','') %></p>
-<a href="/about" class="btn-dark"><%= t('home.about.cta','Learn more about Sweet Home') %></a>
-</div>
+  <img src="/images/berlin-about.jpg" alt="" loading="lazy">
+  <div class="about-overlay">
+    <h2><%= t('home.about.title','About Sweet Home') %></h2>
+    <p><%= t('home.about.copy','') %></p>
+    <a href="/about" class="btn-dark"><%= t('home.about.cta','Learn more about Sweet Home') %></a>
+  </div>
 </section>
 
 <!-- Mortgage Calculator -->
 <section class="mortgage-calculator" id="mortgage">
-<h2 class="section-title"><%= t('home.calc.title','Mortgage Calculator') %></h2>
-<div class="calculator-container">
-<form class="calculator-form" id="mortgageForm">
-<div class="form-row">
-<div class="form-group">
-<label for="propertyPrice"><%= t('home.calc.price','Property Price (€)') %></label>
-<input type="text" id="propertyPrice" inputmode="numeric" placeholder="<%= t('home.calc.placeholders.price','e.g. €350,000') %>">
-</div>
-<div class="form-group">
-<label for="downPayment"><%= t('home.calc.down','Down Payment (€)') %></label>
-<input type="text" id="downPayment" inputmode="numeric" placeholder="<%= t('home.calc.placeholders.down','e.g. €70,000') %>">
-</div>
-</div>
-<div class="form-row">
-<div class="form-group">
-<label for="loanTerm"><%= t('home.calc.term','Loan Term (Years)') %></label>
-<select id="loanTerm">
-<option value="15">15</option>
-<option value="20">20</option>
-<option value="25">25</option>
-<option value="30" selected>30</option>
-<option value="35">35</option>
-<option value="40">40</option>
-</select>
-</div>
-<div class="form-group">
-<label for="interestRate"><%= t('home.calc.rate','Interest Rate (%)') %></label>
-<input type="number" id="interestRate" min="0" max="25" step="0.01" placeholder="<%= t('home.calc.placeholders.rate','e.g. 4.50') %>">
-</div>
-</div>
-<button type="submit" class="btn btn-green"><%= t('home.calc.cta','Calculate Payment') %></button>
-</form>
+  <h2 class="section-title"><%= t('home.calc.title','Mortgage Calculator') %></h2>
+  <div class="calculator-container">
+    <form class="calculator-form" id="mortgageForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="propertyPrice"><%= t('home.calc.price','Property Price (€)') %></label>
+          <input type="text" id="propertyPrice" inputmode="numeric" placeholder="<%= t('home.calc.placeholders.price','e.g. €350,000') %>">
+        </div>
+        <div class="form-group">
+          <label for="downPayment"><%= t('home.calc.down','Down Payment (€)') %></label>
+          <input type="text" id="downPayment" inputmode="numeric" placeholder="<%= t('home.calc.placeholders.down','e.g. €70,000') %>">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="loanTerm"><%= t('home.calc.term','Loan Term (Years)') %></label>
+          <select id="loanTerm">
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+            <option value="30" selected>30</option>
+            <option value="35">35</option>
+            <option value="40">40</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="interestRate"><%= t('home.calc.rate','Interest Rate (%)') %></label>
+          <input type="number" id="interestRate" min="0" max="25" step="0.01" placeholder="<%= t('home.calc.placeholders.rate','e.g. 4.50') %>">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-green"><%= t('home.calc.cta','Calculate Payment') %></button>
+    </form>
 
-<aside class="calculator-results" id="calculatorResults" style="display:none;">
-<h3><%= t('home.calc.result.title','Your Monthly Payment') %></h3>
-<div class="payment-breakdown">
-<div class="result-item">
-<span class="result-label"><%= t('home.calc.result.pi','Principal & Interest:') %></span>
-<span class="result-value" id="monthlyPayment">€0</span>
-</div>
-<div class="result-item">
-<span class="result-label"><%= t('home.calc.result.tax','Property Tax (estimated):') %></span>
-<span class="result-value" id="propertyTax">€0</span>
-</div>
-<div class="result-item">
-<span class="result-label"><%= t('home.calc.result.ins','Insurance (estimated):') %></span>
-<span class="result-value" id="insurance">€0</span>
-</div>
-<div class="result-item total">
-<span class="result-label"><%= t('home.calc.result.total','Total Monthly Payment:') %></span>
-<span class="result-value" id="totalPayment">€0</span>
-</div>
-</div>
+    <aside class="calculator-results" id="calculatorResults" style="display:none;">
+      <h3><%= t('home.calc.result.title','Your Monthly Payment') %></h3>
+      <div class="payment-breakdown">
+        <div class="result-item">
+          <span class="result-label"><%= t('home.calc.result.pi','Principal & Interest:') %></span>
+          <span class="result-value" id="monthlyPayment">€0</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label"><%= t('home.calc.result.tax','Property Tax (estimated):') %></span>
+          <span class="result-value" id="propertyTax">€0</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label"><%= t('home.calc.result.ins','Insurance (estimated):') %></span>
+          <span class="result-value" id="insurance">€0</span>
+        </div>
+        <div class="result-item total">
+          <span class="result-label"><%= t('home.calc.result.total','Total Monthly Payment:') %></span>
+          <span class="result-value" id="totalPayment">€0</span>
+        </div>
+      </div>
 
-<div class="loan-summary">
-<h4><%= t('home.calc.result.summary','Loan Summary') %></h4>
-<div class="summary-grid">
-<div class="summary-item">
-<span class="summary-label"><%= t('home.calc.result.loan','Loan Amount:') %></span>
-<span class="summary-value" id="loanAmount">€0</span>
-</div>
-<div class="summary-item">
-<span class="summary-label"><%= t('home.calc.result.interest','Total Interest:') %></span>
-<span class="summary-value" id="totalInterest">€0</span>
-</div>
-<div class="summary-item">
-<span class="summary-label"><%= t('home.calc.result.cost','Total Cost:') %></span>
-<span class="summary-value" id="totalCost">€0</span>
-</div>
-</div>
-</div>
-</aside>
-</div>
+      <div class="loan-summary">
+        <h4><%= t('home.calc.result.summary','Loan Summary') %></h4>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span class="summary-label"><%= t('home.calc.result.loan','Loan Amount:') %></span>
+            <span class="summary-value" id="loanAmount">€0</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label"><%= t('home.calc.result.interest','Total Interest:') %></span>
+            <span class="summary-value" id="totalInterest">€0</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label"><%= t('home.calc.result.cost','Total Cost:') %></span>
+            <span class="summary-value" id="totalCost">€0</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
 </section>
 
 <!-- 7) Contact Section -->
 <section class="contact-hero">
-<h2 class="title"><%= t('contact.title','Contact Us') %></h2>
-<div class="grid">
-<article class="office-card" aria-label="<%= t('contact.office.aria','Berlin Office image') %>">
-<!-- REPLACE: office image src -->
-<span class="shine" aria-hidden="true"></span>
-<div class="info">
-<div class="name"><%= t('contact.office.name','Berlin Office') %></div>
-<p class="line"><%= t('contact.office.address','Hohenzollerndamm 196, 10717 Berlin') %></p>
-<p class="line"><%= t('contact.office.phone','+49-030-65852933') %></p>
-</div>
-</article>
+  <h2 class="title"><%= t('contact.title','Contact Us') %></h2>
+  <div class="grid">
+    <article class="office-card" aria-label="<%= t('contact.office.aria','Berlin Office image') %>">
+      <!-- REPLACE: office image src -->
+      <span class="shine" aria-hidden="true"></span>
+      <div class="info">
+        <div class="name"><%= t('contact.office.name','Berlin Office') %></div>
+        <p class="line"><%= t('contact.office.address','Hohenzollerndamm 196, 10717 Berlin') %></p>
+        <p class="line"><%= t('contact.office.phone','+49-030-65852933') %></p>
+      </div>
+    </article>
 
-<form action="/api/leads/contact" method="post" class="contact-form" novalidate <% if (process.env.RECAPTCHA_SITE_KEY) { %> data-recaptcha-site-key="<%= process.env.RECAPTCHA_SITE_KEY %>" <% } %>>
-<input type="hidden" name="_csrf" value="<%= csrfToken %>">
-<% if (process.env.RECAPTCHA_SITE_KEY) { %>
-       <input type="hidden" name="recaptchaToken" id="recaptchaTokenContact" />
-     <% } %>
-<!-- Honeypot field for spam bots -->
-<input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
+    <form action="/api/leads/contact" method="post" class="contact-form" novalidate <% if (process.env.RECAPTCHA_SITE_KEY) { %> data-recaptcha-site-key="<%= process.env.RECAPTCHA_SITE_KEY %>" <% } %>>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <% if (process.env.RECAPTCHA_SITE_KEY) { %>
+        <input type="hidden" name="recaptchaToken" id="recaptchaTokenContact" />
+      <% } %>
+      <!-- Honeypot field for spam bots -->
+      <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
 
-<div class="row">
-<div class="field">
-<label for="fullName"><%= t('forms.fullName','Full name') %><span aria-hidden="true">*</span></label>
-<input id="fullName" name="name" type="text" placeholder="Full name*" required />
-</div>
-<div class="field">
-<label for="email"><%= t('forms.email','Email Address') %><span aria-hidden="true">*</span></label>
-<input id="email" name="email" type="email" placeholder="Email Address*" required />
-</div>
-</div>
+      <div class="row">
+        <div class="field">
+          <label for="fullName"><%= t('forms.fullName','Full name') %><span aria-hidden="true">*</span></label>
+          <input id="fullName" name="name" type="text" placeholder="Full name*" required />
+        </div>
+        <div class="field">
+          <label for="email"><%= t('forms.email','Email Address') %><span aria-hidden="true">*</span></label>
+          <input id="email" name="email" type="email" placeholder="Email Address*" required />
+        </div>
+      </div>
 
-<div class="row">
-<div class="field">
-<label for="countryCode"><%= t('forms.countryCode','Country code') %><span aria-hidden="true">*</span></label>
-<input id="countryCode" name="countryCode" type="text" placeholder="e.g. +49" required />
-</div>
-<div class="field">
-<label for="phone"><%= t('forms.phoneNumber','Phone Number') %><span aria-hidden="true">*</span></label>
-<input id="phone" name="phone" type="tel" placeholder="Phone number*" required />
-</div>
-</div>
+      <div class="row">
+        <div class="field">
+          <label for="countryCode"><%= t('forms.countryCode','Country code') %><span aria-hidden="true">*</span></label>
+          <input id="countryCode" name="countryCode" type="text" placeholder="e.g. +49" required />
+        </div>
+        <div class="field">
+          <label for="phone"><%= t('forms.phoneNumber','Phone Number') %><span aria-hidden="true">*</span></label>
+          <input id="phone" name="phone" type="tel" placeholder="Phone number*" required />
+        </div>
+      </div>
 
-<div class="row">
-<div class="field">
-<label for="language"><%= t('forms.preferredLanguage','Preferred language') %><span aria-hidden="true">*</span></label>
-<select id="language" name="language" required>
-<option value="" selected disabled><%= t('forms.preferredLanguage','Preferred language') %>*</option>
-<% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
-             <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
-           <% }) %>
-</select>
-</div>
-</div>
-<!-- Hidden metadata fields captured in JS -->
-<input type="hidden" name="utm_source" />
-<input type="hidden" name="utm_medium" />
-<input type="hidden" name="utm_campaign" />
-<input type="hidden" name="utm_term" />
-<input type="hidden" name="utm_content" />
-<input type="hidden" name="referrer" />
-<input type="hidden" name="page_path" />
+      <div class="row">
+        <div class="field">
+          <label for="language"><%= t('forms.preferredLanguage','Preferred language') %><span aria-hidden="true">*</span></label>
+          <select id="language" name="language" required>
+            <option value="" selected disabled><%= t('forms.preferredLanguage','Preferred language') %>*</option>
+            <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
+              <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+      <!-- Hidden metadata fields captured in JS -->
+      <input type="hidden" name="utm_source" />
+      <input type="hidden" name="utm_medium" />
+      <input type="hidden" name="utm_campaign" />
+      <input type="hidden" name="utm_term" />
+      <input type="hidden" name="utm_content" />
+      <input type="hidden" name="referrer" />
+      <input type="hidden" name="page_path" />
 
-<div class="field">
-<label for="message"><%= t('forms.message','Message') %></label>
-<textarea id="message" name="message" rows="5" placeholder="<%= t('forms.message','Message') %>"></textarea>
-</div>
+      <div class="field">
+        <label for="message"><%= t('forms.message','Message') %></label>
+        <textarea id="message" name="message" rows="5" placeholder="<%= t('forms.message','Message') %>"></textarea>
+      </div>
 
-<button type="submit" class="submit"><%= t('contact.submit','Send') %></button>
-</form>
-</div>
+      <button type="submit" class="submit"><%= t('contact.submit','Send') %></button>
+    </form>
+  </div>
 </section>
 
 
 <!-- Floating Social Media Bar -->
 <div class="social-media-bar" id="socialBar">
-<div class="social-media-bar__content">
-<%
-     const isChristmas = getActiveTheme && getActiveTheme() === 'christmas';
-   %>
-<a href="https://www.facebook.com/profile.php?id=100093168151239" class="social-link facebook" aria-label="Follow us on Facebook" target="_blank" rel="noopener">
-<% if (isChristmas) { %>
-       <img src="/images/Christmas%20assets/Christmas%20-%20Logo%20-%20Facebook.png" alt="Facebook" width="20" height="20">
-     <% } else { %>
-       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-       </svg>
-     <% } %>
-</a>
-<a href="https://www.instagram.com/sweet.home.investments/" class="social-link instagram" aria-label="Follow us on Instagram" target="_blank" rel="noopener">
-<% if (isChristmas) { %>
-       <img src="/images/Christmas%20assets/Christmas%20-%20Logo%20-%20Instagram.png" alt="Instagram" width="20" height="20">
-     <% } else { %>
-       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-       </svg>
-     <% } %>
-</a>
-<a href="https://www.linkedin.com/company/sweet-home/" class="social-link linkedin" aria-label="Follow us on LinkedIn" target="_blank" rel="noopener">
-<% if (isChristmas) { %>
-       <img src="/images/Christmas%20assets/Christmas%20-%20Logo%20-%20LinkedIn.png" alt="LinkedIn" width="20" height="20">
-     <% } else { %>
-       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-       </svg>
-     <% } %>
-</a>
-</div>
+  <div class="social-media-bar__content">
+    <%
+      const isChristmas = getActiveTheme && getActiveTheme() === 'christmas';
+    %>
+    <a href="https://www.facebook.com/profile.php?id=100093168151239" class="social-link facebook" aria-label="Follow us on Facebook" target="_blank" rel="noopener">
+      <% if (isChristmas) { %>
+        <img src="/images/Christmas%20assets/Christmas%20-%20Logo%20-%20Facebook.png" alt="Facebook" width="20" height="20">
+      <% } else { %>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+      <% } %>
+    </a>
+    <a href="https://www.instagram.com/sweet.home.investments/" class="social-link instagram" aria-label="Follow us on Instagram" target="_blank" rel="noopener">
+      <% if (isChristmas) { %>
+        <img src="/images/Christmas%20assets/Christmas%20-%20Logo%20-%20Instagram.png" alt="Instagram" width="20" height="20">
+      <% } else { %>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+        </svg>
+      <% } %>
+    </a>
+    <a href="https://www.linkedin.com/company/sweet-home/" class="social-link linkedin" aria-label="Follow us on LinkedIn" target="_blank" rel="noopener">
+      <% if (isChristmas) { %>
+        <img src="/images/Christmas%20assets/Christmas%20-%20Logo%20-%20LinkedIn.png" alt="LinkedIn" width="20" height="20">
+      <% } else { %>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      <% } %>
+    </a>
+  </div>
 </div>
 
 <script src="/js/home.js"></script>
 <script src="/js/contact.js" defer></script>
 <script>
 document.querySelectorAll('[data-home-neighborhood-toggle]').forEach(function(btn) {
- btn.addEventListener('click', function() {
-   var currentExpanded = this.getAttribute('aria-expanded') === 'true';
-   var currentPanelId = this.getAttribute('aria-controls');
-   var currentPanel = currentPanelId ? document.getElementById(currentPanelId) : null;
-   var currentCard = this.closest('[data-home-neighborhood-card]');
+  btn.addEventListener('click', function() {
+    var currentExpanded = this.getAttribute('aria-expanded') === 'true';
+    var currentPanelId = this.getAttribute('aria-controls');
+    var currentPanel = currentPanelId ? document.getElementById(currentPanelId) : null;
+    var currentCard = this.closest('[data-home-neighborhood-card]');
 
-   document.querySelectorAll('[data-home-neighborhood-toggle]').forEach(function(otherBtn) {
-     var expanded = otherBtn.getAttribute('aria-expanded') === 'true';
-     if (!expanded) return;
-     otherBtn.setAttribute('aria-expanded', 'false');
-     var panelId = otherBtn.getAttribute('aria-controls');
-     var panel = panelId ? document.getElementById(panelId) : null;
-     if (panel) panel.hidden = true;
-     var card = otherBtn.closest('[data-home-neighborhood-card]');
-     if (card) card.classList.remove('is-open');
-   });
+    document.querySelectorAll('[data-home-neighborhood-toggle]').forEach(function(otherBtn) {
+      var expanded = otherBtn.getAttribute('aria-expanded') === 'true';
+      if (!expanded) return;
+      otherBtn.setAttribute('aria-expanded', 'false');
+      var panelId = otherBtn.getAttribute('aria-controls');
+      var panel = panelId ? document.getElementById(panelId) : null;
+      if (panel) panel.hidden = true;
+      var card = otherBtn.closest('[data-home-neighborhood-card]');
+      if (card) card.classList.remove('is-open');
+    });
 
-   if (!currentExpanded) {
-     this.setAttribute('aria-expanded', 'true');
-     if (currentPanel) currentPanel.hidden = false;
-     if (currentCard) currentCard.classList.add('is-open');
-   } else {
-     this.setAttribute('aria-expanded', 'false');
-     if (currentPanel) currentPanel.hidden = true;
-     if (currentCard) currentCard.classList.remove('is-open');
-   }
- });
+    if (!currentExpanded) {
+      this.setAttribute('aria-expanded', 'true');
+      if (currentPanel) currentPanel.hidden = false;
+      if (currentCard) currentCard.classList.add('is-open');
+    } else {
+      this.setAttribute('aria-expanded', 'false');
+      if (currentPanel) currentPanel.hidden = true;
+      if (currentCard) currentCard.classList.remove('is-open');
+    }
+  });
 });
 
 document.querySelectorAll('[data-home-neighborhood-card]').forEach(function(card) {
- card.addEventListener('click', function(event) {
-   if (event.target.closest('a, button, input, select, textarea, label')) return;
-   var toggle = card.querySelector('[data-home-neighborhood-toggle]');
-   if (toggle) toggle.click();
- });
+  card.addEventListener('click', function(event) {
+    if (event.target.closest('a, button, input, select, textarea, label')) return;
+    var toggle = card.querySelector('[data-home-neighborhood-toggle]');
+    if (toggle) toggle.click();
+  });
 });
 </script>
