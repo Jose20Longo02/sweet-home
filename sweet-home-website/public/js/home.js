@@ -502,6 +502,8 @@ function initCardsCarousel(rootSelector) {
   const isFeatured = root.id === 'featuredCarousel';
   let didInitialCenter = false;
   let scrollSyncRaf = 0;
+  let isProgrammaticScroll = false;
+  let programmaticScrollTimer = null;
 
   function setCenterClassByIndex(i) {
     const cards = getCards();
@@ -521,6 +523,17 @@ function initCardsCarousel(rootSelector) {
     const max = Math.max(0, track.scrollWidth - track.clientWidth);
     const clamped = Math.max(0, Math.min(target, max));
     track.scrollTo({ left: clamped, behavior });
+    if (programmaticScrollTimer) clearTimeout(programmaticScrollTimer);
+    if (behavior === 'smooth') {
+      isProgrammaticScroll = true;
+      // Keep center locked while smooth scrolling animation is running.
+      programmaticScrollTimer = setTimeout(() => {
+        isProgrammaticScroll = false;
+        syncCenterWithViewport();
+      }, 420);
+    } else {
+      isProgrammaticScroll = false;
+    }
   }
 
   function currentCenteredIndex() {
@@ -606,6 +619,7 @@ function initCardsCarousel(rootSelector) {
 
   // Keep center highlight in sync while scrolling.
   track?.addEventListener('scroll', () => {
+    if (isProgrammaticScroll) return;
     if (scrollSyncRaf) return;
     scrollSyncRaf = requestAnimationFrame(() => {
       scrollSyncRaf = 0;
