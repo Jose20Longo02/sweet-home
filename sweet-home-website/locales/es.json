@@ -272,11 +272,6 @@
         "germany": "Alemania"
       }
     },
-    "berlinApartments": {
-      "title": "Apartamentos en Berlin",
-      "viewAll": "Ver todos los apartamentos en Berlin",
-      "empty": "No hay apartamentos disponibles en Berlin por ahora."
-    },
     "berlinNeighborhoods": {
       "title": "Que barrio deberia elegir en Berlin?",
       "hint": "Haz clic en un barrio para ver contexto local y su perfil inmobiliario.",

@@ -217,49 +217,6 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
   </div>
 </section>
 
-<!-- Apartments in Berlin -->
-<section class="section home-berlin-apartments" aria-label="<%= t('home.berlinApartments.title','Apartments in Berlin') %>">
-  <div class="container">
-    <h2 class="section-title"><%= t('home.berlinApartments.title','Apartments in Berlin') %></h2>
-    <% const berlinRows = (typeof berlinApartmentsRows !== 'undefined' && Array.isArray(berlinApartmentsRows)) ? berlinApartmentsRows : []; %>
-    <% if (berlinRows.length > 0) { %>
-      <% berlinRows.forEach(function(row){ %>
-        <div class="home-berlin-apartments__row">
-          <div class="home-berlin-apartments__grid">
-            <% (row || []).forEach(function(apartment){ %>
-              <% const priceText = apartment.price && Number(apartment.price) > 0 ? '€' + Number(apartment.price).toLocaleString('en-US') : ''; %>
-              <article class="home-berlin-apartment-card">
-                <a class="home-berlin-apartment-card__media" href="<%= (typeof localePath === 'function') ? localePath('/properties/' + apartment.slug) : '/properties/' + apartment.slug %>">
-                  <img src="<%= apartment.photo %>" alt="<%= apartment.title %>" loading="lazy" onerror="this.src='/img/property-placeholder.jpg'">
-                </a>
-                <div class="home-berlin-apartment-card__meta">
-                  <a class="home-berlin-apartment-card__title" href="<%= (typeof localePath === 'function') ? localePath('/properties/' + apartment.slug) : '/properties/' + apartment.slug %>"><%= apartment.title %></a>
-                  <% if (priceText) { %><div class="home-berlin-apartment-card__price"><%= priceText %></div><% } %>
-                  <p class="home-berlin-apartment-card__location">
-                    <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
-                    <%= apartment.neighborhood || apartment.locationDisplay %>
-                  </p>
-                  <div class="home-berlin-apartment-card__features">
-                    <% if (apartment.size) { %><span><%= apartment.size %> m²</span><% } %>
-                    <% if (typeof apartment.rooms !== 'undefined' && apartment.rooms !== null) { %><span><%= apartment.rooms %> <%= t('properties.list.meta.beds','beds') %></span><% } %>
-                    <% if (typeof apartment.bathrooms !== 'undefined' && apartment.bathrooms !== null) { %><span><%= apartment.bathrooms %> <%= t('properties.list.meta.baths','baths') %></span><% } %>
-                  </div>
-                  <a class="home-berlin-apartment-card__more" href="<%= (typeof localePath === 'function') ? localePath('/properties/' + apartment.slug) : '/properties/' + apartment.slug %>"><%= t('properties.list.viewDetails','View details') %> →</a>
-                </div>
-              </article>
-            <% }) %>
-          </div>
-        </div>
-      <% }) %>
-      <div class="home-berlin-apartments__cta-wrap">
-        <a class="btn btn-green home-berlin-apartments__cta" href="<%= ((typeof localePath === 'function') ? localePath('/properties') : '/properties') + '?country=Germany&city=Berlin&type=Apartment' %>"><%= t('home.berlinApartments.viewAll','View all apartments in Berlin') %></a>
-      </div>
-    <% } else { %>
-      <p class="section-empty"><%= t('home.berlinApartments.empty','No apartments available in Berlin right now.') %></p>
-    <% } %>
-  </div>
-</section>
-
 <!-- Berlin neighborhoods helper section -->
 <section class="section home-berlin-neighborhoods" aria-label="<%= t('home.berlinNeighborhoods.title','What Neighborhood should I choose in Berlin?') %>">
   <div class="container">

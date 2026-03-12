@@ -959,133 +959,6 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 }
 
 /* Home Berlin neighborhoods section */
-.section.home-berlin-apartments {
-  padding: 4px 0 44px;
-  background: #fff;
-}
-
-.section.home-berlin-apartments .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
-
-.home-berlin-apartments .section-title {
-  margin-bottom: 28px;
-}
-
-.home-berlin-apartments__row {
-  margin-bottom: 20px;
-}
-
-.home-berlin-apartments__row:last-child {
-  margin-bottom: 0;
-}
-
-.home-berlin-apartments__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.home-berlin-apartment-card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.home-berlin-apartment-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1);
-}
-
-.home-berlin-apartment-card__media {
-  display: block;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-}
-
-.home-berlin-apartment-card__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.home-berlin-apartment-card__meta {
-  padding: 14px 14px 16px;
-}
-
-.home-berlin-apartment-card__title {
-  color: #1f2937;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 1rem;
-  line-height: 1.35;
-}
-
-.home-berlin-apartment-card__title:hover {
-  color: var(--primary-color, #2ea862);
-}
-
-.home-berlin-apartment-card__price {
-  margin-top: 8px;
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: #111827;
-}
-
-.home-berlin-apartment-card__location {
-  margin: 8px 0 10px;
-  color: #4b5563;
-  font-size: 0.92rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.home-berlin-apartment-card__features {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.home-berlin-apartment-card__features span {
-  background: #f3f4f6;
-  color: #374151;
-  border-radius: 999px;
-  padding: 4px 10px;
-  font-size: 0.8rem;
-  line-height: 1;
-}
-
-.home-berlin-apartment-card__more {
-  color: var(--primary-color, #2ea862);
-  font-weight: 700;
-  text-decoration: none;
-  font-size: 0.9rem;
-}
-
-.home-berlin-apartment-card__more:hover {
-  text-decoration: underline;
-}
-
-.home-berlin-apartments__cta-wrap {
-  margin-top: 26px;
-  text-align: center;
-}
-
-.home-berlin-apartments__cta {
-  min-width: 260px;
-  box-shadow: 0 12px 24px rgba(46, 168, 98, 0.2);
-  border-radius: 10px;
-  font-weight: 700;
-}
-
 .section.home-berlin-neighborhoods {
   padding: 60px 0 56px;
   background: #fff;
@@ -1210,10 +1083,6 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 }
 
 @media (max-width: 1100px) {
-  .home-berlin-apartments__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .home-berlin-neighborhoods__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -1226,15 +1095,6 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 }
 
 @media (max-width: 640px) {
-  .section.home-berlin-apartments {
-    padding: 0 0 36px;
-  }
-
-  .home-berlin-apartments__grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
   .section.home-berlin-neighborhoods {
     padding: 0 0 42px;
   }

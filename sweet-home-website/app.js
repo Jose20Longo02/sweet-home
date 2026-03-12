@@ -747,7 +747,6 @@ async function renderHomePage(req, res, langPath, next) {
     const lang = (res.locals && res.locals.lang) ? res.locals.lang : (req.cookies && req.cookies.lang) ? req.cookies.lang : 'en';
 
     let newDevelopmentRows = null;
-    let berlinApartmentsRows = [];
     let featuredProperties = null;
 
     const cached = getHomePageData();
@@ -824,50 +823,6 @@ async function renderHomePage(req, res, langPath, next) {
 
       setHomePageData({ newDevelopmentRows });
     }
-
-    // Berlin apartments for home section (3 rows x 3 cards)
-    try {
-      const berlinApartmentsSql = `
-        SELECT p.id, p.title, p.title_i18n, p.slug, p.country, p.city, p.neighborhood,
-               p.price, p.photos, p.type, p.rooms, p.bathrooms,
-               CASE WHEN p.type = 'Apartment' THEN p.apartment_size
-                    WHEN p.type IN ('House', 'Villa') THEN p.living_space
-                    WHEN p.type = 'Land' THEN p.land_size ELSE NULL END as size,
-               COALESCE(ps.views, 0) AS views
-          FROM properties p
-          LEFT JOIN property_stats ps ON ps.property_id = p.id
-         WHERE p.slug IS NOT NULL
-           AND p.country = 'Germany'
-           AND p.city = 'Berlin'
-           AND p.type = 'Apartment'
-         ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
-         LIMIT 9
-      `;
-      const { rows: berlinApartmentCards } = await query(berlinApartmentsSql);
-      const translateLocation = res.locals.translateLocation;
-      const apartmentCards = (berlinApartmentCards || []).map((p) => {
-        const titleI18n = p.title_i18n && typeof p.title_i18n === 'object' ? p.title_i18n : null;
-        const title = (titleI18n && (titleI18n[lang] || titleI18n.en)) || p.title || '';
-        const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
-        const cityTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('city', p.city || '') : (p.city || '');
-        const countryTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('country', p.country || '') : (p.country || '');
-        return {
-          id: p.id,
-          slug: p.slug,
-          title,
-          price: p.price,
-          rooms: p.rooms,
-          bathrooms: p.bathrooms,
-          size: p.size,
-          photo: photos[0] || '/img/property-placeholder.jpg',
-          locationDisplay: [cityTr, countryTr].filter(Boolean).join(', '),
-          neighborhood: p.neighborhood
-        };
-      });
-      for (let i = 0; i < apartmentCards.length; i += 3) {
-        berlinApartmentsRows.push(apartmentCards.slice(i, i + 3));
-      }
-    } catch (_) { /* non-fatal */ }
 
     // Featured properties (server-rendered for correct i18n of location and CTA)
     try {
@@ -948,7 +903,6 @@ async function renderHomePage(req, res, langPath, next) {
       user: req.session.user || null,
       locations,
       newDevelopmentRows,
-      berlinApartmentsRows,
       berlinNeighborhoods,
       featuredProperties,
       learnMoreText,
