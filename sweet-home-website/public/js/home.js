@@ -501,16 +501,26 @@ function initCardsCarousel(rootSelector) {
   const getCards = () => [...track.querySelectorAll('.property-card, .testimonial-card')];
   const isFeatured = root.id === 'featuredCarousel';
   let didInitialCenter = false;
+  let scrollSyncRaf = 0;
 
-  function centerCardByIndex(i) {
+  function setCenterClassByIndex(i) {
+    const cards = getCards();
+    if (!cards.length) return -1;
+    const idx = Math.max(0, Math.min(cards.length - 1, i));
+    cards.forEach((c, j) => c.classList.toggle('is-center', j === idx));
+    return idx;
+  }
+
+  function centerCardByIndex(i, behavior = 'smooth') {
     const cards = getCards();
     if (!cards.length) return;
-    const idx = Math.max(0, Math.min(cards.length - 1, i));
+    const idx = setCenterClassByIndex(i);
+    if (idx < 0) return;
     const card = cards[idx];
     const target = card.offsetLeft + (card.offsetWidth / 2) - (track.clientWidth / 2);
     const max = Math.max(0, track.scrollWidth - track.clientWidth);
     const clamped = Math.max(0, Math.min(target, max));
-    track.scrollTo({ left: clamped, behavior: 'smooth' });
+    track.scrollTo({ left: clamped, behavior });
   }
 
   function currentCenteredIndex() {
@@ -524,6 +534,11 @@ function initCardsCarousel(rootSelector) {
       if (d < min) { min = d; best = i; }
     });
     return best;
+  }
+
+  function syncCenterWithViewport() {
+    const idx = currentCenteredIndex();
+    setCenterClassByIndex(idx);
   }
 
   // Allow first/last card to be centered by adding dynamic side padding
@@ -569,9 +584,13 @@ function initCardsCarousel(rootSelector) {
       ensureSpacers();
       if (isFeatured && !didInitialCenter) {
         const cards = getCards();
-        if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; }
+        if (cards.length >= 2) {
+          centerCardByIndex(1, 'auto');
+          didInitialCenter = true;
+        }
+      } else {
+        syncCenterWithViewport();
       }
-      initCenterState();
     });
   });
   mo.observe(track, { childList: true });
@@ -585,12 +604,13 @@ function initCardsCarousel(rootSelector) {
     centerCardByIndex(i + 1);
   });
 
-  // Keep previous center while scrolling; update only when scrolling settles.
-  // This avoids incoming cards flashing focused during smooth scroll frames.
-  let scrollEndTimer = null;
+  // Keep center highlight in sync while scrolling.
   track?.addEventListener('scroll', () => {
-    if (scrollEndTimer) clearTimeout(scrollEndTimer);
-    scrollEndTimer = setTimeout(() => markCenterCard(track), 120);
+    if (scrollSyncRaf) return;
+    scrollSyncRaf = requestAnimationFrame(() => {
+      scrollSyncRaf = 0;
+      syncCenterWithViewport();
+    });
   });
 
   // Center card on click
@@ -601,67 +621,32 @@ function initCardsCarousel(rootSelector) {
     if (i >= 0) centerCardByIndex(i);
   });
 
-  // Initial center mark: first force all cards to dimmed state, then apply center after paint.
-  // This prevents cards from entering enhanced on first scroll (they need base state applied first).
-  function initCenterState() {
-    const cards = getCards();
-    cards.forEach(c => c.classList.remove('is-center'));
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        markCenterCard(track);
-      });
-    });
-  }
   setTimeout(() => {
     ensureSpacers();
     if (isFeatured && !didInitialCenter) {
       const cards = getCards();
-      if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; }
+      if (cards.length >= 2) {
+        centerCardByIndex(1, 'auto');
+        didInitialCenter = true;
+        return;
+      }
     }
-    initCenterState();
+    syncCenterWithViewport();
   }, 0);
 }
 
 function markCenterCard(container) {
   const cards = [...container.querySelectorAll('.property-card, .testimonial-card')];
   if (!cards.length) return;
-  const viewLeft = container.scrollLeft;
-  const viewRight = viewLeft + container.clientWidth;
-  const center = viewLeft + container.clientWidth / 2;
-  let closest = null;
-  let minDist = Infinity;
-  cards.forEach(card => {
-    const cardLeft = card.offsetLeft;
-    const cardRight = cardLeft + card.offsetWidth;
-    const visibleWidth = Math.max(0, Math.min(cardRight, viewRight) - Math.max(cardLeft, viewLeft));
-    const visibleRatio = card.offsetWidth > 0 ? (visibleWidth / card.offsetWidth) : 0;
-    // Ignore cards that are still entering/leaving the viewport.
-    if (visibleRatio < 0.9) return;
+  const center = container.scrollLeft + container.clientWidth / 2;
+  let best = 0;
+  let min = Infinity;
+  cards.forEach((card, i) => {
     const cx = card.offsetLeft + card.offsetWidth / 2;
     const dist = Math.abs(cx - center);
-    if (dist < minDist) { minDist = dist; closest = card; }
+    if (dist < min) { min = dist; best = i; }
   });
-  const current = container.querySelector('.property-card.is-center, .testimonial-card.is-center');
-  let target = current || null;
-
-  if (!current) {
-    // Initial assignment: only if really close to center.
-    if (closest && minDist < closest.offsetWidth * 0.2) target = closest;
-  } else {
-    const currentLeft = current.offsetLeft;
-    const currentRight = currentLeft + current.offsetWidth;
-    const currentVisibleWidth = Math.max(0, Math.min(currentRight, viewRight) - Math.max(currentLeft, viewLeft));
-    const currentVisibleRatio = current.offsetWidth > 0 ? (currentVisibleWidth / current.offsetWidth) : 0;
-    const currentDist = Math.abs((current.offsetLeft + current.offsetWidth / 2) - center);
-
-    // Hysteresis: keep current center until a new card is clearly more centered.
-    // This prevents entering cards from flashing focused during the first smooth scroll.
-    const currentIsStillGood = currentVisibleRatio >= 0.55 && currentDist < current.offsetWidth * 0.32;
-    const challengerIsClearlyCentered = closest && minDist < closest.offsetWidth * 0.18;
-    target = (!currentIsStillGood && challengerIsClearlyCentered) ? closest : current;
-  }
-
-  cards.forEach(card => card.classList.toggle('is-center', card === target));
+  cards.forEach((card, i) => card.classList.toggle('is-center', i === best));
 }
 
 function initStretchCarousel(rootSelector) {
