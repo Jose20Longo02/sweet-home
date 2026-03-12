@@ -335,11 +335,25 @@ app.use((req, res, next) => {
   const isDetailPage = isPropertyDetail || isProjectDetail || isBlogDetail;
   if (isDetailPage) {
     const cLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase().slice(0, 2) : '';
-    if (cLang === 'de' || cLang === 'es') {
+    let chosenLang = (cLang === 'de' || cLang === 'es') ? cLang : '';
+    if (!chosenLang) {
+      // Fallback to referer locale so opening a detail from /es/* or /de/* keeps language
+      const referer = String(req.get('referer') || '');
+      const host = req.get('host');
+      try {
+        const refUrl = referer ? new URL(referer) : null;
+        const sameHost = !!(refUrl && host && refUrl.host === host);
+        if (sameHost) {
+          if (refUrl.pathname === '/de' || refUrl.pathname.startsWith('/de/')) chosenLang = 'de';
+          else if (refUrl.pathname === '/es' || refUrl.pathname.startsWith('/es/')) chosenLang = 'es';
+        }
+      } catch (_) { /* ignore malformed referer */ }
+    }
+    if (chosenLang) {
       let localePath;
-      if (isPropertyDetail) localePath = `/${cLang}/properties${req.path.slice('/properties'.length)}`;
-      else if (isProjectDetail) localePath = `/${cLang}/projects${req.path.slice('/projects'.length)}`;
-      else if (isBlogDetail) localePath = `/${cLang}/blog${req.path.slice('/blog'.length)}`;
+      if (isPropertyDetail) localePath = `/${chosenLang}/properties${req.path.slice('/properties'.length)}`;
+      else if (isProjectDetail) localePath = `/${chosenLang}/projects${req.path.slice('/projects'.length)}`;
+      else if (isBlogDetail) localePath = `/${chosenLang}/blog${req.path.slice('/blog'.length)}`;
       if (localePath) return res.redirect(302, localePath + (req.originalUrl.includes('?') ? '?' + req.originalUrl.split('?')[1] : ''));
     }
   }
