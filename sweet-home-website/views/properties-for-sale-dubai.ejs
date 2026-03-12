@@ -119,6 +119,41 @@
     <% } %>
   </section>
 
+  <!-- 3b) Dubai neighborhoods grid with expandable cards -->
+  <section class="section berlin-neighborhoods" aria-labelledby="dubai-neighborhoods-heading">
+    <h2 id="dubai-neighborhoods-heading" class="berlin-neighborhoods__title"><%= dubaiContent.neighborhoodsTitle %></h2>
+    <p class="berlin-neighborhoods__hint"><%= dubaiContent.neighborhoodsHint %></p>
+    <div class="berlin-neighborhoods__grid">
+      <% (dubaiNeighborhoods || []).forEach(function(item, idx){ %>
+        <% const panelId = `dubai-neighborhood-panel-${idx}`; %>
+        <% const buttonId = `dubai-neighborhood-trigger-${idx}`; %>
+        <article class="berlin-neighborhood-card" data-neighborhood-card>
+          <button
+            type="button"
+            id="<%= buttonId %>"
+            class="berlin-neighborhood-card__trigger"
+            data-neighborhood-toggle
+            aria-expanded="false"
+            aria-controls="<%= panelId %>"
+          >
+            <span class="berlin-neighborhood-card__name"><%= item.name %></span>
+            <span class="berlin-neighborhood-card__icon" aria-hidden="true"></span>
+          </button>
+          <div class="berlin-neighborhood-card__panel" id="<%= panelId %>" role="region" aria-labelledby="<%= buttonId %>" hidden>
+            <p><%= item.summary %></p>
+            <p><strong><%= dubaiContent.neighborhoodsRealEstateLabel %>:</strong> <%= item.realEstate %></p>
+          </div>
+        </article>
+      <% }); %>
+    </div>
+    <p class="berlin-neighborhoods__source">
+      <%= dubaiContent.neighborhoodsSourcesLabel %>:
+      <a href="https://dubailand.gov.ae/en/open-data/" target="_blank" rel="noopener noreferrer">Dubai Land Department Open Data</a>,
+      <a href="https://www.cbre.ae/insights/figures/dubai-residential-market-snapshot" target="_blank" rel="noopener noreferrer">CBRE Dubai Residential Market Snapshot</a>,
+      <a href="https://www.savills.com/research_articles/255350/323691-0" target="_blank" rel="noopener noreferrer">Savills Dubai Residential Market Q3 2025</a>.
+    </p>
+  </section>
+
   <!-- 4) Why Invest in Dubai Real Estate (content by URL language) -->
   <section class="berlin-content section berlin-why-invest" aria-labelledby="dubai-why-invest-heading">
     <div class="berlin-content__inner">
@@ -220,6 +255,45 @@ document.querySelectorAll('[data-faq-toggle]').forEach(function(btn) {
     var target = targetId ? document.getElementById(targetId) : null;
     this.setAttribute('aria-expanded', !expanded);
     if (target) target.hidden = expanded;
+  });
+});
+</script>
+<script>
+document.querySelectorAll('[data-neighborhood-toggle]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var currentExpanded = this.getAttribute('aria-expanded') === 'true';
+    var currentPanelId = this.getAttribute('aria-controls');
+    var currentPanel = currentPanelId ? document.getElementById(currentPanelId) : null;
+    var currentCard = this.closest('[data-neighborhood-card]');
+
+    document.querySelectorAll('[data-neighborhood-toggle]').forEach(function(otherBtn) {
+      var expanded = otherBtn.getAttribute('aria-expanded') === 'true';
+      if (!expanded) return;
+      otherBtn.setAttribute('aria-expanded', 'false');
+      var panelId = otherBtn.getAttribute('aria-controls');
+      var panel = panelId ? document.getElementById(panelId) : null;
+      if (panel) panel.hidden = true;
+      var card = otherBtn.closest('[data-neighborhood-card]');
+      if (card) card.classList.remove('is-open');
+    });
+
+    if (!currentExpanded) {
+      this.setAttribute('aria-expanded', 'true');
+      if (currentPanel) currentPanel.hidden = false;
+      if (currentCard) currentCard.classList.add('is-open');
+    } else {
+      this.setAttribute('aria-expanded', 'false');
+      if (currentPanel) currentPanel.hidden = true;
+      if (currentCard) currentCard.classList.remove('is-open');
+    }
+  });
+});
+
+document.querySelectorAll('[data-neighborhood-card]').forEach(function(card) {
+  card.addEventListener('click', function(event) {
+    if (event.target.closest('[data-neighborhood-toggle]')) return;
+    var toggle = card.querySelector('[data-neighborhood-toggle]');
+    if (toggle) toggle.click();
   });
 });
 </script>

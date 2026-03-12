@@ -119,6 +119,41 @@
     <% } %>
   </section>
 
+  <!-- 3b) Paphos neighborhoods grid with expandable cards -->
+  <section class="section berlin-neighborhoods" aria-labelledby="paphos-neighborhoods-heading">
+    <h2 id="paphos-neighborhoods-heading" class="berlin-neighborhoods__title"><%= cyprusContent.neighborhoodsTitle %></h2>
+    <p class="berlin-neighborhoods__hint"><%= cyprusContent.neighborhoodsHint %></p>
+    <div class="berlin-neighborhoods__grid">
+      <% (paphosNeighborhoods || []).forEach(function(item, idx){ %>
+        <% const panelId = `paphos-neighborhood-panel-${idx}`; %>
+        <% const buttonId = `paphos-neighborhood-trigger-${idx}`; %>
+        <article class="berlin-neighborhood-card" data-neighborhood-card>
+          <button
+            type="button"
+            id="<%= buttonId %>"
+            class="berlin-neighborhood-card__trigger"
+            data-neighborhood-toggle
+            aria-expanded="false"
+            aria-controls="<%= panelId %>"
+          >
+            <span class="berlin-neighborhood-card__name"><%= item.name %></span>
+            <span class="berlin-neighborhood-card__icon" aria-hidden="true"></span>
+          </button>
+          <div class="berlin-neighborhood-card__panel" id="<%= panelId %>" role="region" aria-labelledby="<%= buttonId %>" hidden>
+            <p><%= item.summary %></p>
+            <p><strong><%= cyprusContent.neighborhoodsRealEstateLabel %>:</strong> <%= item.realEstate %></p>
+          </div>
+        </article>
+      <% }); %>
+    </div>
+    <p class="berlin-neighborhoods__source">
+      <%= cyprusContent.neighborhoodsSourcesLabel %>:
+      <a href="https://portal.dls.moi.gov.cy/en-us/homepage" target="_blank" rel="noopener noreferrer">Cyprus Department of Lands and Surveys</a>,
+      <a href="https://www.cystat.gov.cy/en/" target="_blank" rel="noopener noreferrer">Cyprus Statistical Service (CYSTAT)</a>,
+      <a href="https://assets.kpmg.com/content/dam/kpmg/cy/pdf/cy-real-estate-insights-13th-edition.pdf" target="_blank" rel="noopener noreferrer">KPMG Cyprus Real Estate Insights</a>.
+    </p>
+  </section>
+
   <!-- 4) Why Invest in Cyprus Real Estate (content by URL language) -->
   <section class="berlin-content section berlin-why-invest" aria-labelledby="cyprus-why-invest-heading">
     <div class="berlin-content__inner">
@@ -219,6 +254,45 @@ document.querySelectorAll('[data-faq-toggle]').forEach(function(btn) {
     var target = targetId ? document.getElementById(targetId) : null;
     this.setAttribute('aria-expanded', !expanded);
     if (target) target.hidden = expanded;
+  });
+});
+</script>
+<script>
+document.querySelectorAll('[data-neighborhood-toggle]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var currentExpanded = this.getAttribute('aria-expanded') === 'true';
+    var currentPanelId = this.getAttribute('aria-controls');
+    var currentPanel = currentPanelId ? document.getElementById(currentPanelId) : null;
+    var currentCard = this.closest('[data-neighborhood-card]');
+
+    document.querySelectorAll('[data-neighborhood-toggle]').forEach(function(otherBtn) {
+      var expanded = otherBtn.getAttribute('aria-expanded') === 'true';
+      if (!expanded) return;
+      otherBtn.setAttribute('aria-expanded', 'false');
+      var panelId = otherBtn.getAttribute('aria-controls');
+      var panel = panelId ? document.getElementById(panelId) : null;
+      if (panel) panel.hidden = true;
+      var card = otherBtn.closest('[data-neighborhood-card]');
+      if (card) card.classList.remove('is-open');
+    });
+
+    if (!currentExpanded) {
+      this.setAttribute('aria-expanded', 'true');
+      if (currentPanel) currentPanel.hidden = false;
+      if (currentCard) currentCard.classList.add('is-open');
+    } else {
+      this.setAttribute('aria-expanded', 'false');
+      if (currentPanel) currentPanel.hidden = true;
+      if (currentCard) currentCard.classList.remove('is-open');
+    }
+  });
+});
+
+document.querySelectorAll('[data-neighborhood-card]').forEach(function(card) {
+  card.addEventListener('click', function(event) {
+    if (event.target.closest('[data-neighborhood-toggle]')) return;
+    var toggle = card.querySelector('[data-neighborhood-toggle]');
+    if (toggle) toggle.click();
   });
 });
 </script>

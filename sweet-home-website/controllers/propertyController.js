@@ -2990,7 +2990,11 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
         bestAreasMarina: 'Established waterfront community with high transaction volumes and consistent rental demand.',
         bestAreasBusinessBay: 'Mixed-use district with strong price growth and proximity to Downtown.',
         bestAreasHillsJVC: 'Growth-oriented communities attracting off-plan activity and mid-market investors.',
-        bestAreasOutro: 'These districts reflect Dubai\'s diversified property landscape, from ultra-prime waterfront assets to high-growth residential communities supported by continued population expansion and investor demand.'
+        bestAreasOutro: 'These districts reflect Dubai\'s diversified property landscape, from ultra-prime waterfront assets to high-growth residential communities supported by continued population expansion and investor demand.',
+        neighborhoodsTitle: 'Dubai Neighborhoods Guide',
+        neighborhoodsHint: 'Click a neighborhood to expand local context and real-estate profile.',
+        neighborhoodsRealEstateLabel: 'Real estate',
+        neighborhoodsSourcesLabel: 'Sources'
       },
       de: {
         whyInvestTitle: 'Warum in Immobilien in Dubai investieren?',
@@ -3003,7 +3007,11 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
         bestAreasMarina: 'Etablierte Waterfront-Community mit konstant hoher Transaktionsaktivität und Mietnachfrage.',
         bestAreasBusinessBay: 'Wachstumsstarker Mixed-Use-Distrikt in unmittelbarer Nähe zu Downtown.',
         bestAreasHillsJVC: 'Beliebte Wohnquartiere mit hohem Off-Plan-Anteil und attraktiven Einstiegsmöglichkeiten für Investoren.',
-        bestAreasOutro: 'Diese Standorte spiegeln Dubais diversifizierten Immobilienmarkt wider – von internationalen Luxuslagen bis hin zu wachstumsorientierten Wohnquartieren mit starker Nachfrage.'
+        bestAreasOutro: 'Diese Standorte spiegeln Dubais diversifizierten Immobilienmarkt wider – von internationalen Luxuslagen bis hin zu wachstumsorientierten Wohnquartieren mit starker Nachfrage.',
+        neighborhoodsTitle: 'Dubai Stadtteile Guide',
+        neighborhoodsHint: 'Klicken Sie auf einen Stadtteil, um lokalen Kontext und Immobilienprofil zu sehen.',
+        neighborhoodsRealEstateLabel: 'Immobilien',
+        neighborhoodsSourcesLabel: 'Quellen'
       },
       es: {
         whyInvestTitle: '¿Por qué invertir en el mercado inmobiliario de Dubái?',
@@ -3016,10 +3024,99 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
         bestAreasMarina: 'Comunidad consolidada junto al mar con alta actividad transaccional y demanda de alquiler estable.',
         bestAreasBusinessBay: 'Área mixta en expansión cercana al centro financiero y comercial.',
         bestAreasHillsJVC: 'Comunidades residenciales con alta actividad off-plan y oportunidades atractivas para inversores.',
-        bestAreasOutro: 'Estas zonas reflejan la diversidad del mercado inmobiliario de Dubái, desde activos prime de lujo hasta comunidades residenciales con fuerte potencial de crecimiento.'
+        bestAreasOutro: 'Estas zonas reflejan la diversidad del mercado inmobiliario de Dubái, desde activos prime de lujo hasta comunidades residenciales con fuerte potencial de crecimiento.',
+        neighborhoodsTitle: 'Guía de Barrios de Dubái',
+        neighborhoodsHint: 'Haz clic en un barrio para ver contexto local y su perfil inmobiliario.',
+        neighborhoodsRealEstateLabel: 'Inmobiliario',
+        neighborhoodsSourcesLabel: 'Fuentes'
       }
     };
     const dubaiContent = dubaiSectionContent[lang] || dubaiSectionContent.en;
+    const dubaiNeighborhoodNames = (((locations || {}).UAE || {}).Dubai && Array.isArray(locations.UAE.Dubai))
+      ? locations.UAE.Dubai
+      : [];
+    const normalizeNeighborhoodKey = (value) => String(value || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '');
+    const dubaiNeighborhoodContent = {
+      en: {
+        'Dubai Marina': { summary: 'High-density waterfront district with strong lifestyle appeal, walkability and year-round rental demand.', realEstate: 'Dominated by apartments; one of Dubai\'s most liquid resale and leasing submarkets with broad investor participation.' },
+        'Downtown Dubai': { summary: 'Prime central district around Burj Khalifa and Dubai Mall, combining residential, office and hospitality uses.', realEstate: 'Premium pricing and deep end-user/investor demand support resilient values and high visibility inventory.' },
+        'Business Bay': { summary: 'Mixed-use extension of Downtown with rapid residential delivery and strong connectivity to key employment hubs.', realEstate: 'Active apartment market with high transaction turnover and sustained interest from both owner-occupiers and landlords.' },
+        'Palm Jumeirah': { summary: 'Iconic coastal enclave with beach access and branded developments attracting international high-net-worth buyers.', realEstate: 'Ultra-prime villas and premium apartments command top pricing and limited waterfront supply dynamics.' },
+        'Jumeirah Village Circle': { summary: 'Large master-planned residential area with family-oriented amenities and improving transport accessibility.', realEstate: 'Mid-market apartment focus with strong off-plan and rental activity, popular for yield-driven strategies.' },
+        'JVC': { summary: 'Large master-planned residential area with family-oriented amenities and improving transport accessibility.', realEstate: 'Mid-market apartment focus with strong off-plan and rental activity, popular for yield-driven strategies.' },
+        'Jumeirah Lake Towers': { summary: 'Clustered towers around lakes opposite Marina, offering mixed residential and office demand.', realEstate: 'Broad stock of apartments with competitive price points relative to nearby prime waterfront districts.' },
+        'JLT': { summary: 'Clustered towers around lakes opposite Marina, offering mixed residential and office demand.', realEstate: 'Broad stock of apartments with competitive price points relative to nearby prime waterfront districts.' },
+        'Dubai Hills Estate': { summary: 'Master community centered on parks and golf, positioned between Downtown and Marina corridors.', realEstate: 'Growing supply of villas and apartments with strong end-user appeal and steady mid-to-upper segment demand.' },
+        'Dubai Creek Harbour': { summary: 'Large-scale waterfront regeneration area with modern towers and long-term infrastructure pipeline.', realEstate: 'Primarily apartment-led market with ongoing launches and strong interest in newer stock.' },
+        'Arabian Ranches': { summary: 'Established suburban villa community known for schools, parks and family-oriented living.', realEstate: 'Villa-focused submarket with stable end-user demand and lower stock turnover than apartment zones.' },
+        'Damac Hills': { summary: 'Master-planned golf community offering villas, townhouses and apartment clusters.', realEstate: 'Balanced end-user and investor demand across mid-to-upper segments, supported by phased development.' },
+        'DAMAC Hills': { summary: 'Master-planned golf community offering villas, townhouses and apartment clusters.', realEstate: 'Balanced end-user and investor demand across mid-to-upper segments, supported by phased development.' }
+      },
+      de: {
+        'Dubai Marina': { summary: 'Dichter Waterfront-Stadtteil mit hoher Lebensqualität, guter Fußläufigkeit und ganzjähriger Mietnachfrage.', realEstate: 'Vor allem Apartmentbestand; einer der liquidesten Teilmärkte Dubais für Wiederverkauf und Vermietung.' },
+        'Downtown Dubai': { summary: 'Prime-Citylage rund um Burj Khalifa und Dubai Mall mit gemischter Wohn-, Büro- und Hotelnutzung.', realEstate: 'Premiumpreise und tiefe Nachfrage von Eigennutzern und Investoren stützen langfristig die Werte.' },
+        'Business Bay': { summary: 'Mixed-Use-Erweiterung von Downtown mit dynamischer Wohnentwicklung und starker Anbindung.', realEstate: 'Aktiver Apartmentmarkt mit hohem Transaktionsvolumen und stabiler Nachfrage auf Miet- und Kaufseite.' },
+        'Palm Jumeirah': { summary: 'Ikonische Küstenlage mit Strandzugang und internationalen Luxusprojekten.', realEstate: 'Ultra-Prime-Villen und hochwertige Apartments erzielen Spitzenpreise bei begrenztem Waterfront-Angebot.' },
+        'Jumeirah Village Circle': { summary: 'Große Master-Community mit familienorientierter Infrastruktur und wachsender Erreichbarkeit.', realEstate: 'Mid-Market-Apartments mit hoher Off-Plan- und Vermietungsaktivität, beliebt bei renditeorientierten Investoren.' },
+        'JVC': { summary: 'Große Master-Community mit familienorientierter Infrastruktur und wachsender Erreichbarkeit.', realEstate: 'Mid-Market-Apartments mit hoher Off-Plan- und Vermietungsaktivität, beliebt bei renditeorientierten Investoren.' },
+        'Jumeirah Lake Towers': { summary: 'Turmcluster rund um Seen gegenüber der Marina mit gemischter Wohn- und Arbeitsnachfrage.', realEstate: 'Breiter Apartmentbestand mit wettbewerbsfähigen Preisen gegenüber benachbarten Prime-Lagen.' },
+        'JLT': { summary: 'Turmcluster rund um Seen gegenüber der Marina mit gemischter Wohn- und Arbeitsnachfrage.', realEstate: 'Breiter Apartmentbestand mit wettbewerbsfähigen Preisen gegenüber benachbarten Prime-Lagen.' },
+        'Dubai Hills Estate': { summary: 'Master-Community mit Parks und Golf, strategisch zwischen Downtown und Marina gelegen.', realEstate: 'Wachsende Angebotsbasis bei Villen und Apartments mit starker Endnutzer-Nachfrage.' },
+        'Dubai Creek Harbour': { summary: 'Großes Waterfront-Entwicklungsgebiet mit modernen Hochhäusern und langfristigem Infrastrukturpotenzial.', realEstate: 'Vorwiegend apartmentgetriebener Markt mit laufenden Launches und starker Nachfrage nach Neubauten.' },
+        'Arabian Ranches': { summary: 'Etablierte suburbane Villenlage mit Schulen, Grünflächen und familienfreundlichem Umfeld.', realEstate: 'Villenfokus mit stabiler Endnutzer-Nachfrage und geringerer Umschlagshäufigkeit als Apartmentmärkte.' },
+        'Damac Hills': { summary: 'Master-geplante Golf-Community mit Villen, Townhouses und Apartment-Clustern.', realEstate: 'Ausgewogene Nachfrage von Eigennutzern und Investoren im mittleren bis oberen Segment.' },
+        'DAMAC Hills': { summary: 'Master-geplante Golf-Community mit Villen, Townhouses und Apartment-Clustern.', realEstate: 'Ausgewogene Nachfrage von Eigennutzern und Investoren im mittleren bis oberen Segment.' }
+      },
+      es: {
+        'Dubai Marina': { summary: 'Distrito frente al mar con alta densidad, estilo de vida urbano y fuerte demanda de alquiler todo el año.', realEstate: 'Predominan los apartamentos; es uno de los submercados más líquidos de Dubái en compraventa y renta.' },
+        'Downtown Dubai': { summary: 'Zona prime central alrededor del Burj Khalifa y Dubai Mall, con uso residencial, comercial y hotelero.', realEstate: 'Precios premium y demanda profunda de compradores finales e inversores sostienen el valor del área.' },
+        'Business Bay': { summary: 'Extensión mixta de Downtown con crecimiento residencial acelerado y excelente conectividad.', realEstate: 'Mercado de apartamentos muy activo, con alta rotación transaccional y demanda constante.' },
+        'Palm Jumeirah': { summary: 'Enclave costero icónico con acceso a playa y proyectos de lujo de perfil internacional.', realEstate: 'Villas ultra-prime y apartamentos premium con precios de referencia y oferta waterfront limitada.' },
+        'Jumeirah Village Circle': { summary: 'Gran comunidad planificada, orientada a familias, con servicios consolidados y mejor accesibilidad.', realEstate: 'Foco mid-market en apartamentos, con fuerte actividad off-plan y demanda de renta por rendimiento.' },
+        'JVC': { summary: 'Gran comunidad planificada, orientada a familias, con servicios consolidados y mejor accesibilidad.', realEstate: 'Foco mid-market en apartamentos, con fuerte actividad off-plan y demanda de renta por rendimiento.' },
+        'Jumeirah Lake Towers': { summary: 'Conjunto de torres alrededor de lagos frente a Marina, con demanda mixta residencial y de oficinas.', realEstate: 'Amplio stock de apartamentos con precios competitivos frente a zonas waterfront más prime.' },
+        'JLT': { summary: 'Conjunto de torres alrededor de lagos frente a Marina, con demanda mixta residencial y de oficinas.', realEstate: 'Amplio stock de apartamentos con precios competitivos frente a zonas waterfront más prime.' },
+        'Dubai Hills Estate': { summary: 'Comunidad maestra con parques y golf, ubicada entre los corredores de Downtown y Marina.', realEstate: 'Oferta creciente de villas y apartamentos con alta preferencia de usuario final.' },
+        'Dubai Creek Harbour': { summary: 'Gran desarrollo waterfront con torres modernas y pipeline de infraestructura a largo plazo.', realEstate: 'Submercado liderado por apartamentos, con lanzamientos continuos y alta demanda por producto nuevo.' },
+        'Arabian Ranches': { summary: 'Comunidad suburbana consolidada de villas, conocida por su perfil familiar y servicios.', realEstate: 'Mercado centrado en villas con demanda estable de vivienda propia y menor rotación que zonas de apartamentos.' },
+        'Damac Hills': { summary: 'Comunidad planificada alrededor de campo de golf con villas, townhouses y apartamentos.', realEstate: 'Demanda equilibrada de usuarios finales e inversores en segmentos medio y medio-alto.' },
+        'DAMAC Hills': { summary: 'Comunidad planificada alrededor de campo de golf con villas, townhouses y apartamentos.', realEstate: 'Demanda equilibrada de usuarios finales e inversores en segmentos medio y medio-alto.' }
+      }
+    };
+    const selectedDubaiNeighborhoodContent = dubaiNeighborhoodContent[lang] || dubaiNeighborhoodContent.en;
+    const fallbackDubaiNeighborhoodContent = dubaiNeighborhoodContent.en;
+    const selectedDubaiByNormalized = Object.entries(selectedDubaiNeighborhoodContent).reduce((acc, [key, val]) => {
+      acc[normalizeNeighborhoodKey(key)] = val;
+      return acc;
+    }, {});
+    const fallbackDubaiByNormalized = Object.entries(fallbackDubaiNeighborhoodContent).reduce((acc, [key, val]) => {
+      acc[normalizeNeighborhoodKey(key)] = val;
+      return acc;
+    }, {});
+    const dubaiNeighborhoods = dubaiNeighborhoodNames.map((name) => {
+      const normalized = normalizeNeighborhoodKey(name);
+      const item = selectedDubaiNeighborhoodContent[name]
+        || selectedDubaiByNormalized[normalized]
+        || fallbackDubaiNeighborhoodContent[name]
+        || fallbackDubaiByNormalized[normalized]
+        || {
+          summary: lang === 'de'
+            ? 'Wohnquartier in Dubai mit lokaler Infrastruktur und guter Anbindung an wichtige Stadtachsen.'
+            : lang === 'es'
+              ? 'Zona residencial de Dubái con servicios locales y buena conexión con los principales ejes urbanos.'
+              : 'Residential district in Dubai with local amenities and solid connectivity to key city corridors.',
+          realEstate: lang === 'de'
+            ? 'Überwiegend apartmentgeprägter Teilmarkt mit aktiver Nachfrage von Eigennutzern und Investoren.'
+            : lang === 'es'
+              ? 'Submercado mayoritariamente de apartamentos, con demanda activa de usuarios finales e inversores.'
+              : 'Predominantly apartment-led submarket with active demand from both owner-occupiers and investors.'
+        };
+      return { name, summary: item.summary || '', realEstate: item.realEstate || '' };
+    });
 
     res.render('properties-for-sale-dubai', {
       title: titles[lang] || titles.en,
@@ -3031,6 +3128,7 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
       pageMetaDescription: metaDescriptions[lang] || metaDescriptions.en,
       dubaiPagePaths,
       dubaiContent,
+      dubaiNeighborhoods,
       locations,
       recommendedProperties,
       baseUrl: res.locals.baseUrl
@@ -3116,7 +3214,11 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
         bestAreasLimassol: 'The island\'s primary business and investment hub, known for higher-end developments and strong international activity.',
         bestAreasLarnaca: 'A growing coastal market with expanding infrastructure and competitive entry pricing.',
         bestAreasNicosia: 'The administrative capital, offering stable domestic demand and long-term residential security.',
-        bestAreasOutro: 'Paphos continues to attract buyers seeking a balance between investment potential, lifestyle quality, and EU market stability.'
+        bestAreasOutro: 'Paphos continues to attract buyers seeking a balance between investment potential, lifestyle quality, and EU market stability.',
+        neighborhoodsTitle: 'Paphos Neighborhoods Guide',
+        neighborhoodsHint: 'Click a neighborhood to expand local context and real-estate profile.',
+        neighborhoodsRealEstateLabel: 'Real estate',
+        neighborhoodsSourcesLabel: 'Sources'
       },
       de: {
         whyInvestTitle: 'Warum in Immobilien in Zypern investieren?',
@@ -3128,7 +3230,11 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
         bestAreasLimassol: 'Führendes Wirtschafts- und Investmentzentrum mit höherpreisigen Projekten und internationaler Ausrichtung.',
         bestAreasLarnaca: 'Wachsende Küstenregion mit zunehmender Infrastrukturentwicklung und wettbewerbsfähigen Einstiegspreisen.',
         bestAreasNicosia: 'Verwaltungs- und Geschäftszentrum mit stabiler Inlandsnachfrage.',
-        bestAreasOutro: 'Paphos bleibt insbesondere für internationale Investoren eine ausgewogene Kombination aus Renditepotenzial und hoher Lebensqualität innerhalb der EU.'
+        bestAreasOutro: 'Paphos bleibt insbesondere für internationale Investoren eine ausgewogene Kombination aus Renditepotenzial und hoher Lebensqualität innerhalb der EU.',
+        neighborhoodsTitle: 'Paphos Stadtteile Guide',
+        neighborhoodsHint: 'Klicken Sie auf ein Gebiet, um lokalen Kontext und Immobilienprofil zu sehen.',
+        neighborhoodsRealEstateLabel: 'Immobilien',
+        neighborhoodsSourcesLabel: 'Quellen'
       },
       es: {
         whyInvestTitle: '¿Por qué invertir en el mercado inmobiliario de Chipre?',
@@ -3140,10 +3246,93 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
         bestAreasLimassol: 'Principal centro empresarial e inversor de la isla, con proyectos de mayor nivel y fuerte presencia internacional.',
         bestAreasLarnaca: 'Zona costera en crecimiento con mejoras de infraestructura y precios de entrada más accesibles.',
         bestAreasNicosia: 'Capital administrativa con demanda residencial estable y enfoque más doméstico.',
-        bestAreasOutro: 'Pafos continúa posicionándose como una opción equilibrada entre inversión, estilo de vida y estabilidad dentro del mercado de la Unión Europea.'
+        bestAreasOutro: 'Pafos continúa posicionándose como una opción equilibrada entre inversión, estilo de vida y estabilidad dentro del mercado de la Unión Europea.',
+        neighborhoodsTitle: 'Guía de Barrios de Pafos',
+        neighborhoodsHint: 'Haz clic en un barrio para ver contexto local y su perfil inmobiliario.',
+        neighborhoodsRealEstateLabel: 'Inmobiliario',
+        neighborhoodsSourcesLabel: 'Fuentes'
       }
     };
     const cyprusContent = cyprusSectionContent[lang] || cyprusSectionContent.en;
+    const paphosNeighborhoodNames = (((locations || {}).Cyprus || {}).Paphos && Array.isArray(locations.Cyprus.Paphos))
+      ? locations.Cyprus.Paphos
+      : [];
+    const normalizePaphosKey = (value) => String(value || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '');
+    const paphosNeighborhoodContent = {
+      en: {
+        'Kato Paphos': { summary: 'Coastal core of Paphos with promenade access, hospitality infrastructure and year-round international footfall.', realEstate: 'Strong concentration of apartments and holiday-oriented units; robust short- and medium-term rental demand profile.' },
+        'Tombs of the Kings': { summary: 'Popular west-coast zone near beach corridors and major services, favored by international residents.', realEstate: 'Apartment-heavy stock with active resale market and broad buyer base seeking coastal accessibility.' },
+        'Universal': { summary: 'Established residential quarter close to central Paphos and seafront areas, with practical everyday amenities.', realEstate: 'Mix of apartments and townhouse-style communities, often targeted by buyers seeking balanced value and location.' },
+        'Chloraka': { summary: 'Suburban coastal belt between central Paphos and Coral Bay, combining village feel with city access.', realEstate: 'Diverse inventory from low-rise apartments to villas, with steady owner-occupier and second-home demand.' },
+        'Geroskipou': { summary: 'Municipality east of central Paphos with growing residential footprint and local service base.', realEstate: 'Balanced market of apartments and detached homes, popular with long-term residents and relocation buyers.' },
+        'Yeroskipou': { summary: 'Municipality east of central Paphos with growing residential footprint and local service base.', realEstate: 'Balanced market of apartments and detached homes, popular with long-term residents and relocation buyers.' },
+        'Peyia': { summary: 'Hillside municipality north-west of Paphos with sea views and proximity to Coral Bay.', realEstate: 'Villa-led segment with strong second-home appeal and resilient demand in view-oriented micro-locations.' },
+        'Coral Bay': { summary: 'Prime beachfront leisure area with strong tourism profile and established hospitality ecosystem.', realEstate: 'Coastal villas and holiday apartments command premium seasonality and sustained international interest.' },
+        'Tala': { summary: 'Elevated residential village above Paphos known for cooler climate and panoramic outlook.', realEstate: 'Predominantly detached housing with demand from buyers prioritizing space, views and long-term residency.' },
+        'Konia': { summary: 'Residential village on the eastern approach to Paphos, with direct road access toward city and highway links.', realEstate: 'Mostly houses and low-density projects, attractive for families and owner-occupiers.' },
+        'Emba': { summary: 'Traditional village area near central Paphos with convenient access to schools and daily services.', realEstate: 'Blend of local housing stock and newer residential projects at generally mid-market pricing.' }
+      },
+      de: {
+        'Kato Paphos': { summary: 'Küstennaher Kernbereich von Paphos mit Promenade, touristischer Infrastruktur und internationaler Nachfrage.', realEstate: 'Hoher Apartmentanteil mit starker Nachfrage im Ferien- und Langzeitvermietungssegment.' },
+        'Tombs of the Kings': { summary: 'Beliebte Westküstenlage nahe Strand und Versorgungseinrichtungen, besonders bei internationalen Käufern.', realEstate: 'Apartmentlastiger Bestand mit aktivem Wiederverkaufsmarkt und breiter Käuferbasis.' },
+        'Universal': { summary: 'Etabliertes Wohnquartier nahe Zentrum und Küste mit guter Alltagsinfrastruktur.', realEstate: 'Mischung aus Apartments und Townhouse-Anlagen, häufig mit attraktivem Preis-Lage-Verhältnis.' },
+        'Chloraka': { summary: 'Küstennahe Vorstadt zwischen Paphos Zentrum und Coral Bay mit guter Erreichbarkeit.', realEstate: 'Diverses Angebot von Apartments bis Villen; stabile Nachfrage von Eigennutzern und Zweitwohnsitzkäufern.' },
+        'Geroskipou': { summary: 'Gemeinde östlich von Paphos mit wachsender Wohnstruktur und lokalem Dienstleistungsangebot.', realEstate: 'Ausgewogener Markt aus Apartments und Einfamilienhäusern, gefragt bei Langzeitnutzern.' },
+        'Yeroskipou': { summary: 'Gemeinde östlich von Paphos mit wachsender Wohnstruktur und lokalem Dienstleistungsangebot.', realEstate: 'Ausgewogener Markt aus Apartments und Einfamilienhäusern, gefragt bei Langzeitnutzern.' },
+        'Peyia': { summary: 'Hügellage nordwestlich von Paphos mit Meerblick und Nähe zu Coral Bay.', realEstate: 'Villenorientierter Teilmarkt mit starker Nachfrage im Zweitwohnsitzsegment.' },
+        'Coral Bay': { summary: 'Strandnahe Prime-Lage mit ausgeprägtem Tourismus- und Freizeitprofil.', realEstate: 'Küstenvillen und Ferienapartments erzielen überdurchschnittliche Nachfrage in internationalen Zielgruppen.' },
+        'Tala': { summary: 'Erhöht gelegenes Wohngebiet oberhalb von Paphos mit Panorama und ruhigerem Wohnumfeld.', realEstate: 'Vor allem freistehende Häuser, beliebt bei Käufern mit Fokus auf Raum und Ausblick.' },
+        'Konia': { summary: 'Wohnort am östlichen Stadtrand von Paphos mit direkter Anbindung an Stadt und Fernstraßen.', realEstate: 'Überwiegend Häuser und niedrig verdichtete Projekte, attraktiv für Familien.' },
+        'Emba': { summary: 'Traditionell geprägtes Gebiet nahe Paphos Zentrum mit guter Nähe zu Schulen und Nahversorgung.', realEstate: 'Kombination aus Bestandsobjekten und neueren Wohnprojekten im mittleren Preissegment.' }
+      },
+      es: {
+        'Kato Paphos': { summary: 'Núcleo costero de Pafos con paseo marítimo, infraestructura turística y demanda internacional estable.', realEstate: 'Alta concentración de apartamentos y vivienda vacacional; mercado de alquiler muy activo.' },
+        'Tombs of the Kings': { summary: 'Zona costera popular cerca de playa y servicios, muy demandada por compradores internacionales.', realEstate: 'Stock mayoritario de apartamentos con mercado de reventa dinámico y base compradora amplia.' },
+        'Universal': { summary: 'Barrio residencial consolidado cerca del centro de Pafos y de la franja costera.', realEstate: 'Mezcla de apartamentos y complejos tipo townhouse, valorado por equilibrio entre precio y ubicación.' },
+        'Chloraka': { summary: 'Franja suburbana costera entre el centro de Pafos y Coral Bay, con buena conectividad.', realEstate: 'Oferta diversa de apartamentos y villas, con demanda estable de residencia habitual y segunda vivienda.' },
+        'Geroskipou': { summary: 'Municipio al este de Pafos con crecimiento residencial y servicios locales consolidados.', realEstate: 'Mercado equilibrado de apartamentos y viviendas unifamiliares, atractivo para compradores de largo plazo.' },
+        'Yeroskipou': { summary: 'Municipio al este de Pafos con crecimiento residencial y servicios locales consolidados.', realEstate: 'Mercado equilibrado de apartamentos y viviendas unifamiliares, atractivo para compradores de largo plazo.' },
+        'Peyia': { summary: 'Municipio en ladera al noroeste de Pafos, con vistas al mar y cercanía a Coral Bay.', realEstate: 'Segmento más orientado a villas, con alta tracción en segunda residencia internacional.' },
+        'Coral Bay': { summary: 'Zona prime de playa con fuerte componente turístico y de ocio.', realEstate: 'Villas costeras y apartamentos vacacionales con demanda internacional sostenida.' },
+        'Tala': { summary: 'Área residencial elevada sobre Pafos, conocida por su entorno tranquilo y vistas panorámicas.', realEstate: 'Predominio de vivienda unifamiliar, demandada por compradores que priorizan espacio y calidad de vida.' },
+        'Konia': { summary: 'Zona residencial en el acceso este de Pafos, bien conectada con ciudad y vías principales.', realEstate: 'Principalmente casas y desarrollos de baja densidad, con perfil familiar.' },
+        'Emba': { summary: 'Área tradicional próxima al centro de Pafos, con acceso cómodo a colegios y servicios diarios.', realEstate: 'Combinación de stock local y proyectos residenciales recientes en rangos de precio medios.' }
+      }
+    };
+    const selectedPaphosNeighborhoodContent = paphosNeighborhoodContent[lang] || paphosNeighborhoodContent.en;
+    const fallbackPaphosNeighborhoodContent = paphosNeighborhoodContent.en;
+    const selectedPaphosByNormalized = Object.entries(selectedPaphosNeighborhoodContent).reduce((acc, [key, val]) => {
+      acc[normalizePaphosKey(key)] = val;
+      return acc;
+    }, {});
+    const fallbackPaphosByNormalized = Object.entries(fallbackPaphosNeighborhoodContent).reduce((acc, [key, val]) => {
+      acc[normalizePaphosKey(key)] = val;
+      return acc;
+    }, {});
+    const paphosNeighborhoods = paphosNeighborhoodNames.map((name) => {
+      const normalized = normalizePaphosKey(name);
+      const item = selectedPaphosNeighborhoodContent[name]
+        || selectedPaphosByNormalized[normalized]
+        || fallbackPaphosNeighborhoodContent[name]
+        || fallbackPaphosByNormalized[normalized]
+        || {
+          summary: lang === 'de'
+            ? 'Wohngebiet im Großraum Paphos mit lokaler Infrastruktur und guter Erreichbarkeit zur Küste.'
+            : lang === 'es'
+              ? 'Zona residencial del área de Pafos con servicios locales y buen acceso a la costa.'
+              : 'Residential area in greater Paphos with local amenities and convenient access to coastal zones.',
+          realEstate: lang === 'de'
+            ? 'Gemischter Wohnungs- und Hausbestand mit stabiler Nachfrage von Eigennutzern und Zweitwohnsitzkäufern.'
+            : lang === 'es'
+              ? 'Stock mixto de apartamentos y viviendas, con demanda estable de usuarios finales y segunda residencia.'
+              : 'Mixed stock of apartments and houses with stable demand from owner-occupiers and second-home buyers.'
+        };
+      return { name, summary: item.summary || '', realEstate: item.realEstate || '' };
+    });
 
     res.render('properties-for-sale-cyprus', {
       title: titles[lang] || titles.en,
@@ -3155,6 +3344,7 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
       pageMetaDescription: metaDescriptions[lang] || metaDescriptions.en,
       cyprusPagePaths,
       cyprusContent,
+      paphosNeighborhoods,
       locations,
       recommendedProperties,
       baseUrl: res.locals.baseUrl
