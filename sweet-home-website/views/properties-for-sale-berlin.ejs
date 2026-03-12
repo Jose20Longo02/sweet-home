@@ -287,6 +287,14 @@ document.querySelectorAll('[data-neighborhood-toggle]').forEach(function(btn) {
     }
   });
 });
+
+document.querySelectorAll('[data-neighborhood-card]').forEach(function(card) {
+  card.addEventListener('click', function(event) {
+    if (event.target.closest('[data-neighborhood-toggle]')) return;
+    var toggle = card.querySelector('[data-neighborhood-toggle]');
+    if (toggle) toggle.click();
+  });
+});
 </script>
 <script>
 // Header solidify on scroll (same as home)
