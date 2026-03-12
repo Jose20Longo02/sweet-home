@@ -609,11 +609,37 @@ function initCardsCarousel(rootSelector) {
       rightSpacer.className = 'edge-spacer right';
       track.appendChild(rightSpacer);
     }
+    if (isFeatured) {
+      // Infinite featured carousel should not show edge gutters.
+      leftSpacer.style.flex = '0 0 0px';
+      rightSpacer.style.flex = '0 0 0px';
+      return;
+    }
     const styles = window.getComputedStyle(track);
     const gapPx = parseFloat(styles.gap || styles.columnGap || '0') || 0;
     const gutter = Math.max(0, (track.clientWidth - first.offsetWidth) / 2 - (gapPx / 2));
     leftSpacer.style.flex = '0 0 ' + gutter + 'px';
     rightSpacer.style.flex = '0 0 ' + gutter + 'px';
+  }
+
+  function ensureFeaturedMinimumCards() {
+    if (!isFeatured) return;
+    const rightSpacer = track.querySelector('.edge-spacer.right');
+    if (!rightSpacer) return;
+    const baseCards = getAllCards().filter((c) => !c.hasAttribute('data-clone') && !c.hasAttribute('data-repeat'));
+    if (!baseCards.length) return;
+    const desiredCount = Math.max(6, baseCards.length);
+    const neededRepeats = Math.max(0, desiredCount - baseCards.length);
+    const existingRepeats = [...track.querySelectorAll('[data-repeat="true"]')];
+    if (existingRepeats.length === neededRepeats) return;
+    existingRepeats.forEach((n) => n.remove());
+    for (let i = 0; i < neededRepeats; i++) {
+      const src = baseCards[i % baseCards.length];
+      const repeat = src.cloneNode(true);
+      repeat.setAttribute('data-repeat', 'true');
+      repeat.setAttribute('aria-hidden', 'true');
+      rightSpacer.insertAdjacentElement('beforebegin', repeat);
+    }
   }
 
   function setupInfiniteFeatured() {
@@ -653,12 +679,16 @@ function initCardsCarousel(rootSelector) {
   }
 
   ensureSpacers();
+  ensureFeaturedMinimumCards();
+  ensureSpacers();
   setupInfiniteFeatured();
   window.addEventListener('resize', ensureSpacers);
 
   // Recompute spacers when children change (after async content loads)
   const mo = new MutationObserver(() => {
     requestAnimationFrame(() => {
+      ensureSpacers();
+      ensureFeaturedMinimumCards();
       ensureSpacers();
       setupInfiniteFeatured();
       if (isFeatured && !didInitialCenter) {
@@ -722,6 +752,8 @@ function initCardsCarousel(rootSelector) {
 
   // Initial center mark
   setTimeout(() => {
+    ensureSpacers();
+    ensureFeaturedMinimumCards();
     ensureSpacers();
     setupInfiniteFeatured();
     if (isFeatured && !didInitialCenter) {
