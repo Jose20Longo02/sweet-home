@@ -390,6 +390,12 @@ app.use((req, res, next) => {
   }
   // Canonical base URL for all absolute links (canonical, hreflang, sitemap, etc.) - prefers real domain over Render URL
   res.locals.baseUrl = getCanonicalBaseUrl(req);
+  // Translate location (country/city) for display - e.g. Cyprus -> Zypern (de), Chipre (es)
+  res.locals.translateLocation = (kind, value) => {
+    if (!value || typeof value !== 'string') return value || '';
+    const key = 'locations.' + (kind === 'city' ? 'cities' : 'countries') + '.' + value;
+    return (res.locals.t && res.locals.t(key, value)) || value;
+  };
   next();
 });
 

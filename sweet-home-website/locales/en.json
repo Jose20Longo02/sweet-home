@@ -500,6 +500,10 @@
       "in": "in"
     }
   },
+  "locations": {
+    "countries": { "Germany": "Germany", "UAE": "UAE", "Cyprus": "Cyprus", "North Cyprus": "North Cyprus" },
+    "cities": { "Berlin": "Berlin", "Dubai": "Dubai", "Paphos": "Paphos", "Limassol": "Limassol", "Nicosia": "Nicosia", "Larnaca": "Larnaca" }
+  },
   "forms": {
     "country": "Country",
     "anyCountry": "Any country",

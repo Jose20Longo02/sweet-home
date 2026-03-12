@@ -385,6 +385,10 @@
       "clearFilters": "Limpiar filtros"
     }
   },
+  "locations": {
+    "countries": { "Germany": "Alemania", "UAE": "EAU", "Cyprus": "Chipre", "North Cyprus": "Chipre del Norte" },
+    "cities": { "Berlin": "Berlín", "Dubai": "Dubái", "Paphos": "Pafos", "Limassol": "Limassol", "Nicosia": "Nicosia", "Larnaca": "Lárnaca" }
+  },
   "forms": {
     "country": "País",
     "anyCountry": "Cualquier país",

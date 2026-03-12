@@ -37,7 +37,7 @@
               <select id="filterCountry" name="country" class="form-select" onchange="updateCities()">
                 <option value=""><%= t('forms.anyCountry','Any country') %></option>
                 <% Object.keys(locations).forEach(country => { %>
-                  <option value="<%= country %>" <%= locals.filters?.country === country ? 'selected' : '' %>><%= country %></option>
+                  <option value="<%= country %>" <%= locals.filters?.country === country ? 'selected' : '' %>><%= (typeof translateLocation === 'function') ? translateLocation('country', country) : country %></option>
                 <% }); %>
               </select>
             </div>
@@ -120,7 +120,7 @@
                   <%= t('projects.list.for','for') %> "<%= locals.query %>"
                 <% } %>
                 <% if (locals.filters.country || locals.filters.city) { %>
-                  <%= t('projects.list.in','in') %> <%= locals.filters.city || locals.filters.country %>
+                  <%= t('projects.list.in','in') %> <%= (typeof translateLocation === 'function') ? (locals.filters.city ? translateLocation('city', locals.filters.city) : translateLocation('country', locals.filters.country)) : (locals.filters.city || locals.filters.country) %>
                 <% } %>
               <% } else { %>
                 <%= t('projects.list.browseAll','Browse all available development projects') %>
@@ -133,13 +133,13 @@
                 <span class="active-filters-label"><%= t('projects.list.activeFilters','Active filters:') %></span>
                 <% if (locals.filters.country) { %>
                   <span class="filter-tag">
-                    <%= locals.filters.country %>
+                    <%= (typeof translateLocation === 'function') ? translateLocation('country', locals.filters.country) : locals.filters.country %>
                     <button onclick="removeFilter('country')" class="filter-remove">&times;</button>
                   </span>
                 <% } %>
                 <% if (locals.filters.city) { %>
                   <span class="filter-tag">
-                    <%= locals.filters.city %>
+                    <%= (typeof translateLocation === 'function') ? translateLocation('city', locals.filters.city) : locals.filters.city %>
                     <button onclick="removeFilter('city')" class="filter-remove">&times;</button>
                   </span>
                 <% } %>
@@ -224,7 +224,7 @@
                     
                     <div class="project-location">
                       <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: #000;"></span>
-                      <%= project.city %>, <%= project.country %>
+                      <%= (typeof translateLocation === 'function') ? translateLocation('city', project.city) : project.city %>, <%= (typeof translateLocation === 'function') ? translateLocation('country', project.country) : project.country %>
                     </div>
                     
                     <div class="project-details">

@@ -484,6 +484,10 @@
       "clearFilters": "Filter löschen"
     }
   },
+  "locations": {
+    "countries": { "Germany": "Deutschland", "UAE": "VAE", "Cyprus": "Zypern", "North Cyprus": "Nordzypern" },
+    "cities": { "Berlin": "Berlin", "Dubai": "Dubai", "Paphos": "Paphos", "Limassol": "Limassol", "Nicosia": "Nikosia", "Larnaca": "Larnaka" }
+  },
   "forms": {
     "country": "Land",
     "anyCountry": "Beliebiges Land",

@@ -12,9 +12,9 @@
       <nav class="breadcrumb">
         <a href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>"><%= t('nav.projects','Projects') %></a>
         <span class="separator">/</span>
-        <a href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>?country=<%= project.country %>"><%= project.country %></a>
+        <a href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>?country=<%= project.country %>"><%= (typeof translateLocation === 'function') ? translateLocation('country', project.country) : project.country %></a>
         <span class="separator">/</span>
-        <a href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>?country=<%= project.country %>&city=<%= project.city %>"><%= project.city %></a>
+        <a href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>?country=<%= project.country %>&city=<%= project.city %>"><%= (typeof translateLocation === 'function') ? translateLocation('city', project.city) : project.city %></a>
         <span class="separator">/</span>
         <span class="current"><%= project.title %></span>
       </nav>
@@ -31,7 +31,7 @@
         
         <div class="project-location">
           <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: #fff;"></span>
-          <span><%= project.city %>, <%= project.country %></span>
+          <span><%= (typeof translateLocation === 'function') ? translateLocation('city', project.city) : project.city %>, <%= (typeof translateLocation === 'function') ? translateLocation('country', project.country) : project.country %></span>
           <% if (project.neighborhood) { %>
             <span class="neighborhood">• <%= project.neighborhood %></span>
           <% } %>
@@ -445,7 +445,7 @@
                     
                     <div class="related-project-content">
                       <h4><%= relatedProject.title %></h4>
-                      <p class="location"><%= relatedProject.city %>, <%= relatedProject.country %></p>
+                      <p class="location"><%= (typeof translateLocation === 'function') ? translateLocation('city', relatedProject.city) : relatedProject.city %>, <%= (typeof translateLocation === 'function') ? translateLocation('country', relatedProject.country) : relatedProject.country %></p>
                     </div>
                   </a>
                 <% }) %>
