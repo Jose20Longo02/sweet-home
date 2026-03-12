@@ -162,48 +162,52 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
   <div class="container">
     <h2 class="section-title"><%= t('home.newDevelopment.title','New development') %></h2>
     <% const devRows = (typeof newDevelopmentRows !== 'undefined' && Array.isArray(newDevelopmentRows)) ? newDevelopmentRows : []; %>
-    <% const devCards = []; devRows.forEach(function(r){ (r.cards || []).forEach(function(c){ devCards.push(c); }); }); %>
     <% if (devRows.length > 0) { %>
-      <div class="dev-grid">
-        <% devCards.slice(0, 9).forEach(function(card){ %>
-          <article class="dev-card">
-            <a class="dev-media" href="<%= (typeof localePath === 'function') ? localePath('/projects/' + card.slug) : '/projects/' + card.slug %>">
-              <img src="<%= card.photo %>" alt="<%= card.title %>" loading="lazy" onerror="this.src='/img/property-placeholder.jpg'">
-            </a>
-            <div class="dev-meta">
-              <a class="dev-title" href="<%= (typeof localePath === 'function') ? localePath('/projects/' + card.slug) : '/projects/' + card.slug %>"><%= card.title %></a>
-              <p class="dev-location">
-                <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
-                <%= card.locationDisplay %>
-              </p>
-              <div class="dev-info">
-                <% if (card.unit_types && card.unit_types.length) { %>
-                  <span class="dev-chip"><%= card.unit_types.slice(0, 2).join(', ') %></span>
-                <% } %>
-                <% if (card.min_unit_size || card.max_unit_size) { %>
-                  <span class="dev-chip"><%= t('home.newDevelopment.size','Size') %>: <%= card.min_unit_size ? Math.round(card.min_unit_size) : '?' %><% if (card.max_unit_size && card.max_unit_size !== card.min_unit_size) { %>-<%= Math.round(card.max_unit_size) %><% } %> m²</span>
-                <% } %>
-                <% if (card.total_units) { %>
-                  <span class="dev-chip"><%= card.total_units %> <%= t('home.newDevelopment.units','units') %></span>
-                <% } %>
-              </div>
-              <div class="dev-bottom">
-                <span class="dev-price">
-                  <span class="dev-price-label"><%= t('home.newDevelopment.fromPrice','From') %></span>
-                  <% if (card.min_price) { %>
-                    <span class="dev-price-value">€<%= Number(card.min_price).toLocaleString('en-US') %></span>
-                  <% } else { %>
-                    <span class="dev-price-request"><%= t('home.newDevelopment.uponRequest','Upon request') %></span>
-                  <% } %>
-                </span>
-                <% if (card.completion_date) { %>
-                  <span class="dev-completion"><%= t('home.newDevelopment.completion','Completion') %>: <%= card.completionDisplay || card.completion_date %></span>
-                <% } %>
-              </div>
-            </div>
-          </article>
-        <% }) %>
-      </div>
+      <% devRows.forEach(function(row){ %>
+        <div class="dev-row">
+          <h3 class="dev-row-title"><%= t('home.newDevelopment.rows.' + row.key, row.key) %></h3>
+          <div class="dev-grid">
+            <% (row.cards || []).slice(0,3).forEach(function(card){ %>
+              <article class="dev-card">
+                <a class="dev-media" href="<%= (typeof localePath === 'function') ? localePath('/projects/' + card.slug) : '/projects/' + card.slug %>">
+                  <img src="<%= card.photo %>" alt="<%= card.title %>" loading="lazy" onerror="this.src='/img/property-placeholder.jpg'">
+                </a>
+                <div class="dev-meta">
+                  <a class="dev-title" href="<%= (typeof localePath === 'function') ? localePath('/projects/' + card.slug) : '/projects/' + card.slug %>"><%= card.title %></a>
+                  <p class="dev-location">
+                    <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                    <%= card.locationDisplay %>
+                  </p>
+                  <div class="dev-info">
+                    <% if (card.unit_types && card.unit_types.length) { %>
+                      <span class="dev-chip"><%= card.unit_types.slice(0, 2).join(', ') %></span>
+                    <% } %>
+                    <% if (card.min_unit_size || card.max_unit_size) { %>
+                      <span class="dev-chip"><%= t('home.newDevelopment.size','Size') %>: <%= card.min_unit_size ? Math.round(card.min_unit_size) : '?' %><% if (card.max_unit_size && card.max_unit_size !== card.min_unit_size) { %>-<%= Math.round(card.max_unit_size) %><% } %> m²</span>
+                    <% } %>
+                    <% if (card.total_units) { %>
+                      <span class="dev-chip"><%= card.total_units %> <%= t('home.newDevelopment.units','units') %></span>
+                    <% } %>
+                  </div>
+                  <div class="dev-bottom">
+                    <span class="dev-price">
+                      <span class="dev-price-label"><%= t('home.newDevelopment.fromPrice','From') %></span>
+                      <% if (card.min_price) { %>
+                        <span class="dev-price-value">€<%= Number(card.min_price).toLocaleString('en-US') %></span>
+                      <% } else { %>
+                        <span class="dev-price-request"><%= t('home.newDevelopment.uponRequest','Upon request') %></span>
+                      <% } %>
+                    </span>
+                    <% if (card.completion_date) { %>
+                      <span class="dev-completion"><%= t('home.newDevelopment.completion','Completion') %>: <%= card.completionDisplay || card.completion_date %></span>
+                    <% } %>
+                  </div>
+                </div>
+              </article>
+            <% }) %>
+          </div>
+        </div>
+      <% }) %>
     <% } else { %>
       <p class="section-empty"><%= t('home.newDevelopment.empty','No developments available right now.') %></p>
     <% } %>
