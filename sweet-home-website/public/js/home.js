@@ -695,7 +695,11 @@ function initCardsCarousel(rootSelector) {
   ensureFeaturedMinimumCards();
   ensureSpacers();
   setupInfiniteFeatured();
-  window.addEventListener('resize', ensureSpacers);
+  if (isFeatured) requestAnimationFrame(() => updateLoopMetrics());
+  window.addEventListener('resize', () => {
+    ensureSpacers();
+    if (isFeatured) updateLoopMetrics();
+  });
 
   // Recompute spacers when children change (after async content loads)
   const mo = new MutationObserver(() => {
@@ -704,10 +708,7 @@ function initCardsCarousel(rootSelector) {
       ensureFeaturedMinimumCards();
       ensureSpacers();
       setupInfiniteFeatured();
-      if (isFeatured && !didInitialCenter) {
-        const cards = getCards();
-        if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; }
-      }
+      if (isFeatured) { updateLoopMetrics(); if (!didInitialCenter) { const cards = getCards(); if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; } } }
       markCenterCard(track);
     });
   });
@@ -742,30 +743,47 @@ function initCardsCarousel(rootSelector) {
     centerCardByIndex(i + 1);
   });
 
-  // Keep center highlight in sync on scroll
+  // Infinite: adjust scroll position when in clone zone so user never sees an end.
+  // Jump by loop width to keep same visual content (clone and original look identical).
+  let loopWidth = 0;
+  let originalsStart = 0;
+  let headClonesStart = 0;
+
+  function updateLoopMetrics() {
+    if (!isFeatured || !infiniteReady) return;
+    const originals = getCards();
+    if (originals.length < 2) return;
+    const first = originals[0];
+    const last = originals[originals.length - 1];
+    originalsStart = first.offsetLeft;
+    loopWidth = (last.offsetLeft + last.offsetWidth) - first.offsetLeft;
+    const rightSpacer = track.querySelector('.edge-spacer.right');
+    const firstHeadClone = rightSpacer?.previousElementSibling;
+    headClonesStart = (firstHeadClone && firstHeadClone.getAttribute('data-clone') === 'true')
+      ? firstHeadClone.offsetLeft
+      : track.scrollWidth;
+  }
+
   track?.addEventListener('scroll', () => {
     markCenterCard(track);
-    if (!isFeatured || isWrapping || !infiniteReady) return;
-    const allCards = getAllCards();
-    const originals = getCards();
-    if (allCards.length < 2 || originals.length < 2) return;
+    if (!isFeatured || isWrapping || !infiniteReady || loopWidth <= 0) return;
 
-    // If centered card is a clone, snap to its original counterpart.
-    const center = track.scrollLeft + track.clientWidth / 2;
-    let closest = null, minDist = Infinity;
-    allCards.forEach((card) => {
-      const cx = card.offsetLeft + card.offsetWidth / 2;
-      const dist = Math.abs(cx - center);
-      if (dist < minDist) { minDist = dist; closest = card; }
-    });
-    if (closest && closest.getAttribute('data-clone') === 'true') {
-      const originIndex = Number(closest.getAttribute('data-origin-index') || '0');
-      const target = originals[originIndex];
-      if (target) {
-        isWrapping = true;
-        centerElement(target, 'auto');
-        requestAnimationFrame(() => { isWrapping = false; });
-      }
+    updateLoopMetrics();
+    const scrollLeft = track.scrollLeft;
+    const viewCenter = scrollLeft + track.clientWidth / 2;
+
+    // Scrolled into head clones (right): jump back by one loop – same visual, no visible change.
+    if (viewCenter >= headClonesStart) {
+      isWrapping = true;
+      track.scrollLeft = scrollLeft - loopWidth;
+      requestAnimationFrame(() => { isWrapping = false; });
+      return;
+    }
+    // Scrolled into tail clones (left): jump forward by one loop.
+    if (viewCenter < originalsStart) {
+      isWrapping = true;
+      track.scrollLeft = scrollLeft + loopWidth;
+      requestAnimationFrame(() => { isWrapping = false; });
     }
   });
 
@@ -787,10 +805,7 @@ function initCardsCarousel(rootSelector) {
     ensureFeaturedMinimumCards();
     ensureSpacers();
     setupInfiniteFeatured();
-    if (isFeatured && !didInitialCenter) {
-      const cards = getCards();
-      if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; }
-    }
+    if (isFeatured) { updateLoopMetrics(); if (!didInitialCenter) { const cards = getCards(); if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; } } }
     markCenterCard(track);
   }, 0);
 }
