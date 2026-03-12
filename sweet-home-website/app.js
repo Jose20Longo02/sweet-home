@@ -626,7 +626,7 @@ async function renderHomePage(req, res, langPath, next) {
          LIMIT 6
       `;
       const { rows: featRows } = await query(featSql);
-      if (featRows && featRows.length >= 4) {
+      if (featRows && featRows.length >= 1) {
         const translateLocation = res.locals.translateLocation;
         featuredProperties = featRows.map(p => {
           const titleI18n = p.title_i18n && typeof p.title_i18n === 'object' ? p.title_i18n : null;

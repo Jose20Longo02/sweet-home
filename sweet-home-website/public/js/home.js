@@ -226,7 +226,7 @@ async function loadFeaturedProperties() {
   const featuredCarousel = document.getElementById('featuredCarousel');
   if (!featuredContainer || !featuredSection) return;
   const existingCards = featuredContainer.querySelectorAll('.property-card:not(.loading-placeholder)');
-  if (existingCards.length >= 4) {
+  if (existingCards.length >= 1) {
     featuredSection.style.display = '';
     return;
   }
@@ -268,23 +268,24 @@ async function loadFeaturedProperties() {
     }
     
     const properties = await response.json();
+    // Prefer i18n-home (already parsed for current locale); fallback to #locations-data
+    let locTr = (HOME_I18N && HOME_I18N.locations && typeof HOME_I18N.locations === 'object')
+      ? { countries: HOME_I18N.locations.countries || {}, cities: HOME_I18N.locations.cities || {} }
+      : { countries: {}, cities: {} };
     const locsData = document.getElementById('locations-data');
-    let locTr = { countries: {}, cities: {} };
-    if (locsData) {
+    if ((!locTr.countries || Object.keys(locTr.countries).length === 0) && locsData) {
       try {
         const raw = locsData.getAttribute('data-locations-translations');
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (parsed && typeof parsed === 'object') {
-            locTr = { countries: parsed.countries || {}, cities: parsed.cities || {} };
-          }
+          if (parsed && typeof parsed === 'object') locTr = { countries: parsed.countries || {}, cities: parsed.cities || {} };
         }
       } catch (_) {}
     }
     const trCity = (c) => (locTr.cities && locTr.cities[c]) || c;
     const trCountry = (c) => (locTr.countries && locTr.countries[c]) || c;
-    let learnMoreText = 'Learn more';
-    if (locsData) {
+    let learnMoreText = hGet('featured.learnMore', 'Learn more');
+    if (learnMoreText === 'Learn more' && locsData) {
       const attr = locsData.getAttribute('data-learn-more');
       if (attr) learnMoreText = attr.replace(/&quot;/g, '"');
     }

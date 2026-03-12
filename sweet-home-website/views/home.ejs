@@ -95,7 +95,7 @@
   <div class="cards-carousel" id="featuredCarousel" aria-label="Featured properties">
     <button class="carousel-nav prev" data-target="#featuredCarousel" aria-label="<%= t('common.previous','Previous') %>">&#8249;</button>
     <div class="cards-track" id="featuredProperties">
-      <% if (typeof featuredProperties !== 'undefined' && featuredProperties && featuredProperties.length >= 4) { %>
+      <% if (typeof featuredProperties !== 'undefined' && featuredProperties && featuredProperties.length >= 1) { %>
         <% featuredProperties.forEach(property => { %>
           <% const locationText = (typeof property.locationDisplay !== 'undefined' && property.locationDisplay) ? property.locationDisplay : ((property.city || '') + ', ' + (property.country || '')); %>
           <% const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString('en-US') : ''; %>
