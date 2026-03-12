@@ -535,23 +535,14 @@ function calculateMortgage() {
   });
 }
 
-// ===== New: simple carousel helpers =====
+// ===== Simple carousel (no infinite/endless) =====
 function initCardsCarousel(rootSelector) {
   const root = document.querySelector(rootSelector);
   if (!root) return;
   const track = root.querySelector('.cards-track');
   const prev = root.querySelector('.prev');
   const next = root.querySelector('.next');
-  const getAllCards = () => [...track.querySelectorAll('.property-card, .testimonial-card')];
-  const isFeatured = root.id === 'featuredCarousel';
-  const getCards = () => isFeatured ? getAllCards().filter(c => !c.hasAttribute('data-clone')) : getAllCards();
-  let didInitialCenter = false;
-  let infiniteReady = false;
-
-  function trackCenterX() {
-    const r = track.getBoundingClientRect();
-    return r.left + r.width / 2;
-  }
+  const getCards = () => [...track.querySelectorAll('.property-card, .testimonial-card')];
 
   function centerElement(card, behavior = 'smooth') {
     if (!card) return;
@@ -581,21 +572,6 @@ function initCardsCarousel(rootSelector) {
     return best;
   }
 
-  function currentCenteredFlowIndex() {
-    const cards = getAllCards();
-    if (!cards.length) return 0;
-    const center = track.scrollLeft + track.clientWidth / 2;
-    let min = Infinity, best = 0;
-    cards.forEach((c, i) => {
-      const cx = c.offsetLeft + c.offsetWidth / 2;
-      const d = Math.abs(cx - center);
-      if (d < min) { min = d; best = i; }
-    });
-    return best;
-  }
-
-  // Allow first/last card to be centered by adding dynamic side padding
-  // Hide native scrollbar (visual only)
   track.classList.add('no-scrollbar');
   if (!document.getElementById('no-scrollbar-style')) {
     const style = document.createElement('style');
@@ -604,7 +580,6 @@ function initCardsCarousel(rootSelector) {
     document.head.appendChild(style);
   }
 
-  // Create spacer elements so first/last items can be centered without clipping
   function ensureSpacers() {
     const cards = getCards();
     const first = cards[0];
@@ -621,12 +596,6 @@ function initCardsCarousel(rootSelector) {
       rightSpacer.className = 'edge-spacer right';
       track.appendChild(rightSpacer);
     }
-    if (isFeatured) {
-      // Infinite featured carousel should not show edge gutters.
-      leftSpacer.style.flex = '0 0 0px';
-      rightSpacer.style.flex = '0 0 0px';
-      return;
-    }
     const styles = window.getComputedStyle(track);
     const gapPx = parseFloat(styles.gap || styles.columnGap || '0') || 0;
     const gutter = Math.max(0, (track.clientWidth - first.offsetWidth) / 2 - (gapPx / 2));
@@ -634,134 +603,40 @@ function initCardsCarousel(rootSelector) {
     rightSpacer.style.flex = '0 0 ' + gutter + 'px';
   }
 
-  function ensureFeaturedMinimumCards() {
-    if (!isFeatured) return;
-    const rightSpacer = track.querySelector('.edge-spacer.right');
-    if (!rightSpacer) return;
-    const baseCards = getAllCards().filter((c) => !c.hasAttribute('data-clone') && !c.hasAttribute('data-repeat'));
-    if (!baseCards.length) return;
-    const desiredCount = Math.max(6, baseCards.length);
-    const neededRepeats = Math.max(0, desiredCount - baseCards.length);
-    const existingRepeats = [...track.querySelectorAll('[data-repeat="true"]')];
-    if (existingRepeats.length === neededRepeats) return;
-    existingRepeats.forEach((n) => n.remove());
-    for (let i = 0; i < neededRepeats; i++) {
-      const src = baseCards[i % baseCards.length];
-      const repeat = src.cloneNode(true);
-      repeat.setAttribute('data-repeat', 'true');
-      repeat.setAttribute('aria-hidden', 'true');
-      rightSpacer.insertAdjacentElement('beforebegin', repeat);
-    }
-  }
-
-  function setupInfiniteFeatured() {
-    if (!isFeatured) return;
-    // Remove old clones first
-    track.querySelectorAll('[data-clone="true"]').forEach(n => n.remove());
-    const originals = getCards();
-    const leftSpacer = track.querySelector('.edge-spacer.left');
-    const rightSpacer = track.querySelector('.edge-spacer.right');
-    if (!leftSpacer || !rightSpacer || originals.length < 2) {
-      infiniteReady = false;
-      return;
-    }
-
-    originals.forEach((card, index) => {
-      card.setAttribute('data-origin-index', String(index));
-    });
-
-    const cloneCount = Math.min(3, originals.length);
-    const head = originals.slice(0, cloneCount).map((card) => {
-      const clone = card.cloneNode(true);
-      clone.setAttribute('data-clone', 'true');
-      clone.setAttribute('aria-hidden', 'true');
-      return clone;
-    });
-    const tail = originals.slice(-cloneCount).map((card) => {
-      const clone = card.cloneNode(true);
-      clone.setAttribute('data-clone', 'true');
-      clone.setAttribute('aria-hidden', 'true');
-      return clone;
-    });
-
-    // order: leftSpacer, tail clones, originals, head clones, rightSpacer
-    [...tail].reverse().forEach((clone) => leftSpacer.insertAdjacentElement('afterend', clone));
-    head.forEach((clone) => rightSpacer.insertAdjacentElement('beforebegin', clone));
-    infiniteReady = true;
-  }
-
   ensureSpacers();
-  ensureFeaturedMinimumCards();
-  ensureSpacers();
-  setupInfiniteFeatured();
   window.addEventListener('resize', () => ensureSpacers());
 
-  // Recompute spacers when children change (after async content loads)
   const mo = new MutationObserver(() => {
     requestAnimationFrame(() => {
       ensureSpacers();
-      ensureFeaturedMinimumCards();
-      ensureSpacers();
-      setupInfiniteFeatured();
-      if (isFeatured && !didInitialCenter) { const cards = getCards(); if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; } }
       markCenterCard(track);
     });
   });
   mo.observe(track, { childList: true });
 
   prev?.addEventListener('click', () => {
-    if (isFeatured && infiniteReady) {
-      const flow = getAllCards();
-      if (!flow.length) return;
-      const i = currentCenteredFlowIndex();
-      const nextIdx = (i - 1 + flow.length) % flow.length;
-      centerElement(flow[nextIdx]);
-      return;
-    }
     const cards = getCards();
     if (!cards.length) return;
     const i = currentCenteredIndex();
     centerCardByIndex(i - 1);
   });
   next?.addEventListener('click', () => {
-    if (isFeatured && infiniteReady) {
-      const flow = getAllCards();
-      if (!flow.length) return;
-      const i = currentCenteredFlowIndex();
-      const nextIdx = (i + 1) % flow.length;
-      centerElement(flow[nextIdx]);
-      return;
-    }
     const cards = getCards();
     if (!cards.length) return;
     const i = currentCenteredIndex();
     centerCardByIndex(i + 1);
   });
 
-  // Sync center highlight on scroll; no autoscroll, no scroll-triggered jumps.
   track?.addEventListener('scroll', () => markCenterCard(track));
 
-  // Center card on click
   track?.addEventListener('click', (e) => {
     const card = e.target.closest('.property-card, .testimonial-card');
     if (!card || !track.contains(card)) return;
-    if (isFeatured && infiniteReady) {
-      centerElement(card);
-      return;
-    }
     const i = getCards().indexOf(card);
     if (i >= 0) centerCardByIndex(i);
   });
 
-  // Initial center mark
-  setTimeout(() => {
-    ensureSpacers();
-    ensureFeaturedMinimumCards();
-    ensureSpacers();
-    setupInfiniteFeatured();
-    if (isFeatured && !didInitialCenter) { const cards = getCards(); if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; } }
-    markCenterCard(track);
-  }, 0);
+  setTimeout(() => markCenterCard(track), 0);
 }
 
 function markCenterCard(container) {
