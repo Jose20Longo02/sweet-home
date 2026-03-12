@@ -622,9 +622,17 @@ function markCenterCard(container) {
   if (!cards.length) return;
   // First: remove center from all so they render in dimmed state (opacity .7, scale .94).
   cards.forEach(card => card.classList.remove('is-center'));
-  const center = container.scrollLeft + container.clientWidth / 2;
+  const viewLeft = container.scrollLeft;
+  const viewRight = viewLeft + container.clientWidth;
+  const center = viewLeft + container.clientWidth / 2;
   let closest = null, minDist = Infinity;
   cards.forEach(card => {
+    const cardLeft = card.offsetLeft;
+    const cardRight = cardLeft + card.offsetWidth;
+    const visibleWidth = Math.max(0, Math.min(cardRight, viewRight) - Math.max(cardLeft, viewLeft));
+    const visibleRatio = card.offsetWidth > 0 ? (visibleWidth / card.offsetWidth) : 0;
+    // Ignore cards that are still entering/leaving the viewport.
+    if (visibleRatio < 0.85) return;
     const cx = card.offsetLeft + card.offsetWidth / 2;
     const dist = Math.abs(cx - center);
     if (dist < minDist) { minDist = dist; closest = card; }
