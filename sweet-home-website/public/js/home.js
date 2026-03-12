@@ -545,13 +545,14 @@ function initCardsCarousel(rootSelector) {
   const getCards = () => [...track.querySelectorAll('.property-card, .testimonial-card')];
   const isFeatured = root.id === 'featuredCarousel';
   let didInitialCenter = false;
+  let isWrapping = false;
 
   function trackCenterX() {
     const r = track.getBoundingClientRect();
     return r.left + r.width / 2;
   }
 
-  function centerCardByIndex(i) {
+  function centerCardByIndex(i, behavior = 'smooth') {
     const cards = getCards();
     if (!cards.length) return;
     const idx = Math.max(0, Math.min(cards.length - 1, i));
@@ -559,7 +560,7 @@ function initCardsCarousel(rootSelector) {
     const target = card.offsetLeft + (card.offsetWidth / 2) - (track.clientWidth / 2);
     const max = Math.max(0, track.scrollWidth - track.clientWidth);
     const clamped = Math.max(0, Math.min(target, max));
-    track.scrollTo({ left: clamped, behavior: 'smooth' });
+    track.scrollTo({ left: clamped, behavior });
   }
 
   function currentCenteredIndex() {
@@ -626,16 +627,37 @@ function initCardsCarousel(rootSelector) {
   mo.observe(track, { childList: true });
 
   prev?.addEventListener('click', () => {
+    const cards = getCards();
+    if (!cards.length) return;
     const i = currentCenteredIndex();
-    centerCardByIndex(i - 1);
+    if (isFeatured && i <= 0) centerCardByIndex(cards.length - 1);
+    else centerCardByIndex(i - 1);
   });
   next?.addEventListener('click', () => {
+    const cards = getCards();
+    if (!cards.length) return;
     const i = currentCenteredIndex();
-    centerCardByIndex(i + 1);
+    if (isFeatured && i >= cards.length - 1) centerCardByIndex(0);
+    else centerCardByIndex(i + 1);
   });
 
   // Keep center highlight in sync on scroll
-  track?.addEventListener('scroll', () => markCenterCard(track));
+  track?.addEventListener('scroll', () => {
+    markCenterCard(track);
+    // Featured carousel: when user reaches an edge, jump to opposite side
+    // so the sequence appears endless.
+    if (!isFeatured || isWrapping) return;
+    const cards = getCards();
+    if (cards.length < 2) return;
+    const max = Math.max(0, track.scrollWidth - track.clientWidth);
+    const atLeftEdge = track.scrollLeft <= 1;
+    const atRightEdge = track.scrollLeft >= (max - 1);
+    if (!atLeftEdge && !atRightEdge) return;
+    isWrapping = true;
+    if (atRightEdge) centerCardByIndex(0, 'auto');
+    else if (atLeftEdge) centerCardByIndex(cards.length - 1, 'auto');
+    requestAnimationFrame(() => { isWrapping = false; });
+  });
 
   // Center card on click
   track?.addEventListener('click', (e) => {
