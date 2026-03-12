@@ -299,6 +299,11 @@
         "germany": "Germany"
       }
     },
+    "berlinApartments": {
+      "title": "Apartments in Berlin",
+      "viewAll": "View all apartments in Berlin",
+      "empty": "No apartments available in Berlin right now."
+    },
     "berlinNeighborhoods": {
       "title": "What Neighborhood should I choose in Berlin?",
       "hint": "Click a neighborhood to expand key local context and real-estate profile.",

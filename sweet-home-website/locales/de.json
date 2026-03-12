@@ -281,6 +281,11 @@
         "germany": "Deutschland"
       }
     },
+    "berlinApartments": {
+      "title": "Wohnungen in Berlin",
+      "viewAll": "Alle Wohnungen in Berlin ansehen",
+      "empty": "Aktuell sind keine Wohnungen in Berlin verfuegbar."
+    },
     "berlinNeighborhoods": {
       "title": "Welchen Stadtteil sollte ich in Berlin waehlen?",
       "hint": "Klicken Sie auf einen Stadtteil, um lokale Einordnung und Immobilienprofil zu sehen.",
