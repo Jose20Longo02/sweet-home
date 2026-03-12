@@ -157,55 +157,46 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
   </div>
 </section>
 
-<!-- Recommended Project (between Featured Properties and International) -->
-<% if (typeof recommendedProject !== 'undefined' && recommendedProject) { %>
-<section class="section recommended-project" aria-label="Recommended Project">
+<!-- New Development -->
+<section class="section new-development" aria-label="<%= t('home.newDevelopment.title','New development') %>">
   <div class="container">
-    <div class="project-hero">
-      <div class="slides" data-count="<%= recommendedProject.photos.length %>">
-        <% (recommendedProject.photos || []).slice(0,6).forEach(function(src, i){ %>
-          <div class="slide <%= i === 0 ? 'is-active' : '' %>" style="background-image:url('<%= src %>')"></div>
-        <% }) %>
-      </div>
-      <div class="overlay">
-        <div class="badge-top-right"><%= t('home.recommendedProject.title','Recommended Project') %></div>
-        <div class="meta">
-          <h2 class="title"><%= recommendedProject.title %></h2>
-          <p class="location">
-            <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
-            <%= (typeof translateLocation === 'function') ? translateLocation('city', recommendedProject.city) : recommendedProject.city %>, <%= (typeof translateLocation === 'function') ? translateLocation('country', recommendedProject.country) : recommendedProject.country %>
-          </p>
-          
-          <div class="info-grid">
-            <% if (recommendedProject.min_price) { %>
-              <div class="info-card">
-                <div class="info-label"><%= t('home.recommendedProject.startingAt','Starting at') %></div>
-                <div class="info-value">€<%= Number(recommendedProject.min_price).toLocaleString('en-US') %></div>
-              </div>
-            <% } %>
-            <% if (recommendedProject.min_unit_size || recommendedProject.max_unit_size) { %>
-              <div class="info-card">
-                <div class="info-label"><%= t('home.recommendedProject.sizeRange','Size range') %></div>
-                <div class="info-value">
-                  <%= recommendedProject.min_unit_size ? Math.round(recommendedProject.min_unit_size) : '?' %>–<%= recommendedProject.max_unit_size ? Math.round(recommendedProject.max_unit_size) : '?' %> m²
+    <h2 class="section-title"><%= t('home.newDevelopment.title','New development') %></h2>
+    <% const devRows = (typeof newDevelopmentRows !== 'undefined' && Array.isArray(newDevelopmentRows)) ? newDevelopmentRows : []; %>
+    <% if (devRows.length > 0) { %>
+      <% devRows.forEach(function(row){ %>
+        <div class="dev-row">
+          <h3 class="dev-row-title"><%= t('home.newDevelopment.rows.' + row.key, row.key) %></h3>
+          <div class="dev-grid">
+            <% (row.cards || []).slice(0,3).forEach(function(card){ %>
+              <article class="dev-card">
+                <a class="dev-media" href="<%= (typeof localePath === 'function') ? localePath('/projects/' + card.slug) : '/projects/' + card.slug %>">
+                  <img src="<%= card.photo %>" alt="<%= card.title %>" loading="lazy" onerror="this.src='/img/property-placeholder.jpg'">
+                </a>
+                <div class="dev-meta">
+                  <a class="dev-title" href="<%= (typeof localePath === 'function') ? localePath('/projects/' + card.slug) : '/projects/' + card.slug %>"><%= card.title %></a>
+                  <p class="dev-location">
+                    <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                    <%= card.locationDisplay %>
+                  </p>
+                  <div class="dev-bottom">
+                    <% if (card.min_price) { %>
+                      <span class="dev-price">€<%= Number(card.min_price).toLocaleString('en-US') %></span>
+                    <% } %>
+                    <% if (card.completion_date) { %>
+                      <span class="dev-completion"><%= t('home.newDevelopment.completion','Completion') %>: <%= card.completion_date %></span>
+                    <% } %>
+                  </div>
                 </div>
-              </div>
-            <% } %>
-          </div>
-          
-          <div class="actions">
-            <a class="btn btn-primary" href="<%= (typeof localePath === 'function') ? localePath('/projects/' + recommendedProject.slug) : '/projects/' + recommendedProject.slug %>"><%= t('home.recommendedProject.viewProject','View project') %></a>
+              </article>
+            <% }) %>
           </div>
         </div>
-        <div class="controls" role="group" aria-label="Slide controls">
-          <button class="ctrl prev" aria-label="Previous">&#8249;</button>
-          <button class="ctrl next" aria-label="Next">&#8250;</button>
-        </div>
-      </div>
-    </div>
+      <% }) %>
+    <% } else { %>
+      <p class="section-empty"><%= t('home.newDevelopment.empty','No developments available right now.') %></p>
+    <% } %>
   </div>
 </section>
-<% } %>
 
 <!-- 4) International Real Estate – stretch/collapse carousel -->
 <section class="section international">

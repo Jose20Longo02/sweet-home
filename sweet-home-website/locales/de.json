@@ -266,6 +266,16 @@
       "viewAll": "Alle Immobilien anzeigen"
     },
     "international": { "title": "Internationales Immobilienangebot", "see": "Immobilien ansehen" },
+    "newDevelopment": {
+      "title": "Neue Projekte",
+      "completion": "Fertigstellung",
+      "empty": "Aktuell sind keine Projekte verfügbar.",
+      "rows": {
+        "dubai": "Dubai",
+        "cyprus": "Zypern",
+        "germany": "Deutschland"
+      }
+    },
     "recommendedProject": {
       "title": "Empfohlenes Projekt",
       "startingAt": "Ab",

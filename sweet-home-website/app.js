@@ -565,54 +565,62 @@ function setHomePageData(data) {
   homePageCache = { data, expires: Date.now() + HOME_PAGE_CACHE_TTL_MS };
 }
 
-// Shared home page render logic (optimized: parallel queries, simple project query, optional cache)
+// Shared home page render logic (optimized: cached development rows + featured query)
 async function renderHomePage(req, res, langPath, next) {
   try {
     const lang = (res.locals && res.locals.lang) ? res.locals.lang : (req.cookies && req.cookies.lang) ? req.cookies.lang : 'en';
 
-    let recommendedProject = null;
+    let newDevelopmentRows = null;
     let featuredProperties = null;
 
     const cached = getHomePageData();
     if (cached) {
-      recommendedProject = cached.recommendedProject;
+      newDevelopmentRows = cached.newDevelopmentRows;
     } else {
-      const projectsResult = await query(`
-        SELECT id, title, slug, country, city, neighborhood, photos,
-               min_price, max_price, min_unit_size, max_unit_size, unit_types, status
+      const regionDefs = [
+        { key: 'dubai', country: 'UAE' },
+        { key: 'cyprus', country: 'Cyprus' },
+        { key: 'germany', country: 'Germany' }
+      ];
+      const regionQueries = regionDefs.map(r => query(`
+        SELECT id, title, title_i18n, slug, country, city, neighborhood, photos, min_price, completion_date
           FROM projects
-         WHERE status = 'active'
-         ORDER BY id DESC
-         LIMIT 1
-      `);
-      const rows = (projectsResult && projectsResult.rows) ? projectsResult.rows : [];
-
-      if (rows.length > 0) {
-        const p = rows[0];
-        const arr = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
-        const photos = arr.map(ph => {
-          if (!ph) return ph;
-          const s = String(ph);
-          if (s.startsWith('/uploads/') || s.startsWith('http')) return s;
-          return `/uploads/projects/${p.id}/${s}`;
+         WHERE status = 'active' AND country = $1
+         ORDER BY created_at DESC, id DESC
+         LIMIT 3
+      `, [r.country]));
+      const regionResults = await Promise.all(regionQueries);
+      const translateLocation = res.locals.translateLocation;
+      newDevelopmentRows = regionDefs.map((region, idx) => {
+        const rows = (regionResults[idx] && regionResults[idx].rows) ? regionResults[idx].rows : [];
+        const cards = rows.map(p => {
+          const titleI18n = p.title_i18n && typeof p.title_i18n === 'object' ? p.title_i18n : null;
+          const title = (titleI18n && (titleI18n[lang] || titleI18n.en)) || p.title || '';
+          const arr = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+          const photos = arr.map(ph => {
+            if (!ph) return ph;
+            const s = String(ph);
+            if (s.startsWith('/uploads/') || s.startsWith('http')) return s;
+            return `/uploads/projects/${p.id}/${s}`;
+          });
+          const cityTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('city', p.city || '') : (p.city || '');
+          const countryTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('country', p.country || '') : (p.country || '');
+          return {
+            id: p.id,
+            slug: p.slug,
+            title,
+            city: p.city,
+            country: p.country,
+            locationDisplay: [cityTr, countryTr].filter(Boolean).join(', '),
+            photo: photos[0] || '/img/property-placeholder.jpg',
+            min_price: p.min_price,
+            completion_date: p.completion_date
+          };
         });
-        recommendedProject = {
-          id: p.id,
-          title: p.title,
-          slug: p.slug,
-          country: p.country,
-          city: p.city,
-          neighborhood: p.neighborhood,
-          photos,
-          min_price: p.min_price,
-          max_price: p.max_price,
-          min_unit_size: p.min_unit_size,
-          max_unit_size: p.max_unit_size,
-          unit_types: Array.isArray(p.unit_types) ? p.unit_types : (p.unit_types ? [p.unit_types] : [])
-        };
-      }
+        return { key: region.key, cards };
+      });
 
-      setHomePageData({ recommendedProject });
+      setHomePageData({ newDevelopmentRows });
     }
 
     // Featured properties (server-rendered for correct i18n of location and CTA)
@@ -678,7 +686,7 @@ async function renderHomePage(req, res, langPath, next) {
       title: pageTitle,
       user: req.session.user || null,
       locations,
-      recommendedProject,
+      newDevelopmentRows,
       featuredProperties,
       learnMoreText,
       canonicalUrl,

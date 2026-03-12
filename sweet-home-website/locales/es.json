@@ -257,6 +257,16 @@
       "viewAll": "Ver todas las propiedades"
     },
     "international": { "title": "Inmobiliaria internacional", "see": "Ver propiedades" },
+    "newDevelopment": {
+      "title": "Nuevos desarrollos",
+      "completion": "Entrega",
+      "empty": "No hay desarrollos disponibles por ahora.",
+      "rows": {
+        "dubai": "Dubái",
+        "cyprus": "Chipre",
+        "germany": "Alemania"
+      }
+    },
     "recommendedProject": {
       "title": "Proyecto recomendado",
       "startingAt": "Desde",

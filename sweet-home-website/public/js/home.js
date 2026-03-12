@@ -73,8 +73,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     // Mobile hero slideshow (single panel rotates every 5s)
     initMobileHeroSlideshow();
-    // Init Recommended Project slider if present
-    initRecommendedProject();
     // Initialize search form
     initializeSearchForm();
     // Bind mortgage calculator
@@ -691,30 +689,6 @@ function initStretchCarousel(rootSelector) {
   prev?.addEventListener('click', () => { idx = (idx - 1 + cards.length) % cards.length; setFocused(idx); });
   next?.addEventListener('click', () => { idx = (idx + 1) % cards.length; setFocused(idx); });
   cards.forEach((c, j) => c.addEventListener('click', () => { idx = j; setFocused(idx); }));
-}
-
-// Recommended Project slider
-function initRecommendedProject() {
-  const hero = document.querySelector('.project-hero');
-  if (!hero) return;
-  const slides = [...hero.querySelectorAll('.slide')];
-  if (slides.length <= 1) return; // nothing to rotate
-  const prev = hero.querySelector('.ctrl.prev');
-  const next = hero.querySelector('.ctrl.next');
-  let idx = 0;
-
-  function apply(i) {
-    slides.forEach((s, j) => s.classList.toggle('is-active', j === i));
-  }
-
-  function go(delta) {
-    idx = (idx + delta + slides.length) % slides.length;
-    apply(idx);
-  }
-
-  // Manual controls only (auto-rotate disabled)
-  prev && prev.addEventListener('click', () => { go(-1); });
-  next && next.addEventListener('click', () => { go(1); });
 }
 
 function initMobileHeroSlideshow() {

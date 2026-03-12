@@ -284,6 +284,16 @@
       "viewAll": "View All Properties"
     },
     "international": { "title": "International Real Estate", "see": "See properties" },
+    "newDevelopment": {
+      "title": "New development",
+      "completion": "Completion",
+      "empty": "No developments available right now.",
+      "rows": {
+        "dubai": "Dubai",
+        "cyprus": "Cyprus",
+        "germany": "Germany"
+      }
+    },
     "recommendedProject": {
       "title": "Recommended Project",
       "startingAt": "Starting at",
