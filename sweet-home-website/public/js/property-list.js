@@ -27,6 +27,17 @@ let propertiesData = [];
 let LOCATIONS = {};
 let LOCATION_COLORS = {};
 
+// Get locale prefix for links (preserves Spanish/German when navigating)
+function getLocalePrefix() {
+  const loc = document.getElementById('locations-data');
+  const fromAttr = loc && loc.getAttribute('data-locale-prefix');
+  if (fromAttr) return fromAttr;
+  const path = (window.location && window.location.pathname) || '';
+  if (path.startsWith('/es')) return '/es';
+  if (path.startsWith('/de')) return '/de';
+  return '';
+}
+
 // Apply inline country colors to property cards for mapped countries
 function applyLocationColors() {
   try {
@@ -160,8 +171,9 @@ function updateNeighborhoods() {
 
 // Function to clear all filters
 function clearAllFilters() {
-  // Navigate to base listing URL (clears all URL params and refreshes results)
-  window.location.href = '/properties';
+  // Navigate to base listing URL (clears all URL params and refreshes results, preserves locale)
+  const prefix = getLocalePrefix();
+  window.location.href = prefix + '/properties';
 }
 
 // Function to remove a specific filter
@@ -441,7 +453,7 @@ function createMarkerPopup(property) {
           <span>${property.bathrooms || 0} ${bathsLabel}</span>
           <span>${property.size || 0} ${sqmLabel}</span>
         </div>
-        <a href="${(document.getElementById('locations-data')?.getAttribute('data-locale-prefix') || '') + '/properties/' + property.slug}" class="popup-link">${viewDetails}</a>
+        <a href="${getLocalePrefix()}/properties/${property.slug}" class="popup-link">${viewDetails}</a>
       </div>
     </div>
   `;
@@ -879,8 +891,9 @@ function applySavedSearch(searchId) {
   search.lastUsed = new Date().toISOString();
   localStorage.setItem('savedSearches', JSON.stringify(savedSearches));
   
-  // Build URL with saved filters
-  const url = new URL('/properties', window.location.origin);
+  // Build URL with saved filters (preserve locale)
+  const prefix = getLocalePrefix();
+  const url = new URL(prefix + '/properties', window.location.origin);
   
   Object.entries(search.filters).forEach(([key, value]) => {
     if (Array.isArray(value)) {
@@ -1112,9 +1125,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const card = e.target.closest('.property-card');
         const slug = card && card.getAttribute('data-slug');
         if (slug) {
-          const loc = document.getElementById('locations-data');
-          const prefix = (loc && loc.getAttribute('data-locale-prefix')) || '';
-          window.location.href = (prefix || '') + '/properties/' + slug;
+          window.location.href = getLocalePrefix() + '/properties/' + slug;
         }
         return;
       }
@@ -1122,9 +1133,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (card) {
         const slug = card.getAttribute('data-slug');
         if (slug) {
-          const loc = document.getElementById('locations-data');
-          const prefix = (loc && loc.getAttribute('data-locale-prefix')) || '';
-          window.location.href = (prefix || '') + '/properties/' + slug;
+          window.location.href = getLocalePrefix() + '/properties/' + slug;
         }
       }
     });

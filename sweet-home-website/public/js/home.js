@@ -393,8 +393,9 @@ function initializeSearchForm() {
       }
     }
     
-    // Redirect to properties page with search parameters
-    const searchUrl = `/properties?${searchParams.toString()}`;
+    // Redirect to properties page with search parameters (preserve locale prefix)
+    const prefix = (document.getElementById('locations-data')?.getAttribute('data-locale-prefix') || '');
+    const searchUrl = `${prefix}/properties?${searchParams.toString()}`;
     console.log('🔍 Redirecting to:', searchUrl);
     window.location.href = searchUrl;
   });
