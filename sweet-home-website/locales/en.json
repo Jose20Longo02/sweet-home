@@ -250,7 +250,7 @@
       "map": { "title": "Property Map View", "hint": "Click on map markers to view property details", "error": "Unable to load map. Please try refreshing the page." },
       "noResults": { "title": "No Properties Found", "hint": "Try adjusting your search criteria or browse all available properties." },
       "clearFilters": "Clear Filters",
-      "meta": { "sqm": "m²", "beds": "beds", "baths": "baths" },
+      "meta": { "sqm": "m²", "beds": "beds", "baths": "baths", "rooms": "rooms" },
       "showing": "Showing",
       "of": "of",
       "results": "results",

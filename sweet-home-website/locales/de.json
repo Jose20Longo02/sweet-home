@@ -237,7 +237,7 @@
       "map": { "title": "Kartenansicht", "hint": "Klicken Sie auf die Marker, um Details zu sehen", "error": "Karte konnte nicht geladen werden. Bitte Seite neu laden." },
       "noResults": { "title": "Keine Immobilien gefunden", "hint": "Passen Sie die Suche an oder zeigen Sie alle verfügbaren Immobilien an." },
       "clearFilters": "Filter löschen",
-      "meta": { "sqm": "m²", "beds": "SZ", "baths": "Bad" },
+      "meta": { "sqm": "m²", "beds": "SZ", "baths": "Bad", "rooms": "Zimmer" },
       "saved": {
         "noneTitle": "Keine gespeicherten Suchen",
         "noneHint": "Speichern Sie Ihre Suchen, um später schnell darauf zuzugreifen.",
