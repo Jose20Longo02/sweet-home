@@ -546,7 +546,6 @@ function initCardsCarousel(rootSelector) {
   const isFeatured = root.id === 'featuredCarousel';
   const getCards = () => isFeatured ? getAllCards().filter(c => !c.hasAttribute('data-clone')) : getAllCards();
   let didInitialCenter = false;
-  let isWrapping = false;
   let infiniteReady = false;
 
   function trackCenterX() {
@@ -695,11 +694,7 @@ function initCardsCarousel(rootSelector) {
   ensureFeaturedMinimumCards();
   ensureSpacers();
   setupInfiniteFeatured();
-  if (isFeatured) requestAnimationFrame(() => updateLoopMetrics());
-  window.addEventListener('resize', () => {
-    ensureSpacers();
-    if (isFeatured) updateLoopMetrics();
-  });
+  window.addEventListener('resize', () => ensureSpacers());
 
   // Recompute spacers when children change (after async content loads)
   const mo = new MutationObserver(() => {
@@ -708,7 +703,7 @@ function initCardsCarousel(rootSelector) {
       ensureFeaturedMinimumCards();
       ensureSpacers();
       setupInfiniteFeatured();
-      if (isFeatured) { updateLoopMetrics(); if (!didInitialCenter) { const cards = getCards(); if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; } } }
+      if (isFeatured && !didInitialCenter) { const cards = getCards(); if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; } }
       markCenterCard(track);
     });
   });
@@ -743,49 +738,8 @@ function initCardsCarousel(rootSelector) {
     centerCardByIndex(i + 1);
   });
 
-  // Infinite: adjust scroll position when in clone zone so user never sees an end.
-  // Jump by loop width to keep same visual content (clone and original look identical).
-  let loopWidth = 0;
-  let originalsStart = 0;
-  let headClonesStart = 0;
-
-  function updateLoopMetrics() {
-    if (!isFeatured || !infiniteReady) return;
-    const originals = getCards();
-    if (originals.length < 2) return;
-    const first = originals[0];
-    const last = originals[originals.length - 1];
-    originalsStart = first.offsetLeft;
-    loopWidth = (last.offsetLeft + last.offsetWidth) - first.offsetLeft;
-    const rightSpacer = track.querySelector('.edge-spacer.right');
-    const firstHeadClone = rightSpacer?.previousElementSibling;
-    headClonesStart = (firstHeadClone && firstHeadClone.getAttribute('data-clone') === 'true')
-      ? firstHeadClone.offsetLeft
-      : track.scrollWidth;
-  }
-
-  track?.addEventListener('scroll', () => {
-    markCenterCard(track);
-    if (!isFeatured || isWrapping || !infiniteReady || loopWidth <= 0) return;
-
-    updateLoopMetrics();
-    const scrollLeft = track.scrollLeft;
-    const viewCenter = scrollLeft + track.clientWidth / 2;
-
-    // Scrolled into head clones (right): jump back by one loop – same visual, no visible change.
-    if (viewCenter >= headClonesStart) {
-      isWrapping = true;
-      track.scrollLeft = scrollLeft - loopWidth;
-      requestAnimationFrame(() => { isWrapping = false; });
-      return;
-    }
-    // Scrolled into tail clones (left): jump forward by one loop.
-    if (viewCenter < originalsStart) {
-      isWrapping = true;
-      track.scrollLeft = scrollLeft + loopWidth;
-      requestAnimationFrame(() => { isWrapping = false; });
-    }
-  });
+  // Sync center highlight on scroll; no autoscroll, no scroll-triggered jumps.
+  track?.addEventListener('scroll', () => markCenterCard(track));
 
   // Center card on click
   track?.addEventListener('click', (e) => {
@@ -805,7 +759,7 @@ function initCardsCarousel(rootSelector) {
     ensureFeaturedMinimumCards();
     ensureSpacers();
     setupInfiniteFeatured();
-    if (isFeatured) { updateLoopMetrics(); if (!didInitialCenter) { const cards = getCards(); if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; } } }
+    if (isFeatured && !didInitialCenter) { const cards = getCards(); if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; } }
     markCenterCard(track);
   }, 0);
 }
