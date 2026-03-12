@@ -179,50 +179,6 @@ function initializeCityDropdown() {
   console.log('🎯 Event listeners attached to country and city dropdowns');
 }
 
-// Add test function for debugging
-function testDropdowns() {
-  console.log('🧪 Testing dropdowns...');
-  
-  const countrySelect = document.getElementById('country');
-  const citySelect = document.getElementById('city');
-  const neighborhoodSelect = document.getElementById('neighborhood');
-  
-  console.log('🔍 Dropdown elements found:', {
-    country: countrySelect ? countrySelect.value : 'Not found',
-    city: citySelect ? citySelect.value : 'Not found',
-    neighborhood: neighborhoodSelect ? neighborhoodSelect.value : 'Not found'
-  });
-  
-  console.log('🔍 Dropdown states:', {
-    countryDisabled: countrySelect ? countrySelect.disabled : 'N/A',
-    cityDisabled: citySelect ? citySelect.disabled : 'N/A',
-    neighborhoodDisabled: neighborhoodSelect ? neighborhoodSelect.disabled : 'N/A'
-  });
-  
-  console.log('🔍 Dropdown options:', {
-    countryOptions: countrySelect ? countrySelect.options.length : 'N/A',
-    cityOptions: citySelect ? citySelect.options.length : 'N/A',
-    neighborhoodOptions: neighborhoodSelect ? neighborhoodSelect.options.length : 'N/A'
-  });
-  
-  console.log('🔍 Locations data available:', window.locations);
-  
-  // Try to manually populate city dropdown
-  if (countrySelect && countrySelect.value && window.locations[countrySelect.value]) {
-    console.log('🧪 Manually populating city dropdown...');
-    const cities = Object.keys(window.locations[countrySelect.value]);
-    citySelect.innerHTML = `<option value="">${anyCityText}</option>`;
-    cities.forEach(city => {
-      const option = document.createElement('option');
-      option.value = city;
-      option.textContent = city;
-      citySelect.appendChild(option);
-    });
-    citySelect.disabled = false;
-    console.log('✅ City dropdown populated with', cities.length, 'cities');
-  }
-}
-
 // Load featured properties (only when not server-rendered)
 async function loadFeaturedProperties() {
   const featuredContainer = document.getElementById('featuredProperties');
@@ -545,11 +501,6 @@ function initCardsCarousel(rootSelector) {
   const getCards = () => [...track.querySelectorAll('.property-card, .testimonial-card')];
   const isFeatured = root.id === 'featuredCarousel';
   let didInitialCenter = false;
-
-  function trackCenterX() {
-    const r = track.getBoundingClientRect();
-    return r.left + r.width / 2;
-  }
 
   function centerCardByIndex(i) {
     const cards = getCards();
