@@ -273,7 +273,7 @@
       }
     },
     "berlinNeighborhoods": {
-      "title": "Que barrio deberia elegir en Berlin?",
+      "title": "Guía de Barrios de Berlín",
       "hint": "Haz clic en un barrio para ver contexto local y su perfil inmobiliario.",
       "realEstate": "Inmobiliario",
       "exploreCta": "Explorar apartamentos"

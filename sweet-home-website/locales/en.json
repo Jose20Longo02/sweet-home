@@ -300,7 +300,7 @@
       }
     },
     "berlinNeighborhoods": {
-      "title": "What Neighborhood should I choose in Berlin?",
+      "title": "Berlin Neighborhoods Guide",
       "hint": "Click a neighborhood to expand key local context and real-estate profile.",
       "realEstate": "Real estate",
       "exploreCta": "Explore apartments"

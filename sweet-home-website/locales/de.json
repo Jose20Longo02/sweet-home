@@ -282,7 +282,7 @@
       }
     },
     "berlinNeighborhoods": {
-      "title": "Welchen Stadtteil sollte ich in Berlin waehlen?",
+      "title": "Berliner Stadtteile Guide",
       "hint": "Klicken Sie auf einen Stadtteil, um lokale Einordnung und Immobilienprofil zu sehen.",
       "realEstate": "Immobilien",
       "exploreCta": "Wohnungen entdecken"
