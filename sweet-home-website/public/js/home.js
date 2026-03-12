@@ -585,8 +585,13 @@ function initCardsCarousel(rootSelector) {
     centerCardByIndex(i + 1);
   });
 
-  // Keep center highlight in sync on scroll
-  track?.addEventListener('scroll', () => markCenterCard(track));
+  // Keep previous center while scrolling; update only when scrolling settles.
+  // This avoids incoming cards flashing focused during smooth scroll frames.
+  let scrollEndTimer = null;
+  track?.addEventListener('scroll', () => {
+    if (scrollEndTimer) clearTimeout(scrollEndTimer);
+    scrollEndTimer = setTimeout(() => markCenterCard(track), 120);
+  });
 
   // Center card on click
   track?.addEventListener('click', (e) => {
