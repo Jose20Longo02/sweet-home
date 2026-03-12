@@ -143,7 +143,7 @@
                <select id="filterCountry" name="country" class="form-select">
                 <option value=""><%= t('forms.anyCountry','Any country') %></option>
                 <% Object.keys(locations).forEach(country => { %>
-                  <option value="<%= country %>" <%= locals.filters?.country === country ? 'selected' : '' %>><%= country %></option>
+                  <option value="<%= country %>" <%= locals.filters?.country === country ? 'selected' : '' %>><%= (typeof translateLocation === 'function') ? translateLocation('country', country) : country %></option>
                 <% }); %>
               </select>
             </div>
@@ -400,7 +400,7 @@
                   <%= t('properties.list.for','for') %> "<%= locals.query %>"
                 <% } %>
                 <% if (locals.filters.country || locals.filters.city) { %>
-                  <%= t('properties.list.in','in') %> <%= locals.filters.city || locals.filters.country %>
+                  <%= t('properties.list.in','in') %> <%= (typeof translateLocation === 'function') ? (locals.filters.city ? translateLocation('city', locals.filters.city) : translateLocation('country', locals.filters.country)) : (locals.filters.city || locals.filters.country) %>
                 <% } %>
               <% } else { %>
                 <%= t('properties.list.browseAll','Browse all available properties') %>
@@ -413,13 +413,13 @@
                 <span class="active-filters-label"><%= t('properties.list.activeFilters','Active filters:') %></span>
                 <% if (locals.filters.country) { %>
                   <span class="filter-tag">
-                    <%= locals.filters.country %>
+                    <%= (typeof translateLocation === 'function') ? translateLocation('country', locals.filters.country) : locals.filters.country %>
                     <button onclick="removeFilter('country')" class="filter-remove">&times;</button>
                   </span>
                 <% } %>
                 <% if (locals.filters.city) { %>
                   <span class="filter-tag">
-                    <%= locals.filters.city %>
+                    <%= (typeof translateLocation === 'function') ? translateLocation('city', locals.filters.city) : locals.filters.city %>
                     <button onclick="removeFilter('city')" class="filter-remove">&times;</button>
                   </span>
                 <% } %>
@@ -555,7 +555,7 @@
                     
                     <!-- Neighborhood Badge (top-right) -->
                     <div class="property-neighborhood-badge">
-                      <span class="badge badge-neighborhood"><%= property.neighborhood || property.city %></span>
+                      <span class="badge badge-neighborhood"><%= property.neighborhood || (typeof translateLocation === 'function' ? translateLocation('city', property.city) : property.city) %></span>
                     </div>
                   </div>
                   
@@ -565,7 +565,7 @@
                     
                     <div class="property-location">
                       <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: #000;"></span>
-                      <%= property.neighborhood || property.city %>, <%= property.country %><% if (property.full_address && String(property.full_address).trim()) { %> (<%= property.full_address %>)<% } %>
+                      <%= property.neighborhood || (typeof translateLocation === 'function' ? translateLocation('city', property.city) : property.city) %>, <%= (typeof translateLocation === 'function') ? translateLocation('country', property.country) : property.country %><% if (property.full_address && String(property.full_address).trim()) { %> (<%= property.full_address %>)<% } %>
                     </div>
                     
                     <div class="property-details">

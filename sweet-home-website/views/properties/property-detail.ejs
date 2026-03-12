@@ -56,8 +56,8 @@
       <ol class="breadcrumb">
         <li><a href="<%= (typeof localePath === 'function') ? localePath('/') : '/' %>"><%= t('nav.home','Home') %></a></li>
         <li><a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>"><%= t('nav.properties','Properties') %></a></li>
-        <li><a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=<%= property.country %>"><%= property.country %></a></li>
-        <li><a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=<%= property.country %>&city=<%= property.city %>"><%= property.city %></a></li>
+        <li><a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=<%= property.country %>"><%= (typeof translateLocation === 'function') ? translateLocation('country', property.country) : property.country %></a></li>
+        <li><a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=<%= property.country %>&city=<%= property.city %>"><%= (typeof translateLocation === 'function') ? translateLocation('city', property.city) : property.city %></a></li>
         <li class="active"><%= property.title %></li>
       </ol>
     </div>
@@ -70,7 +70,7 @@
         <h1 class="property-title"><%= property.title %></h1>
         <div class="property-location">
           <span class="icon icon-20 icon-inline icon-mask icon-location" style="color: #000;"></span>
-          <%= property.neighborhood %>, <%= property.city %>, <%= property.country %><% if (property.full_address && String(property.full_address).trim()) { %> (<%= property.full_address %>)<% } %>
+          <%= property.neighborhood %>, <%= (typeof translateLocation === 'function') ? translateLocation('city', property.city) : property.city %>, <%= (typeof translateLocation === 'function') ? translateLocation('country', property.country) : property.country %><% if (property.full_address && String(property.full_address).trim()) { %> (<%= property.full_address %>)<% } %>
         </div>
         <div class="property-meta">
           <span class="property-price-header">€<%= Number(property.price || 0).toLocaleString('en-US') %></span>
@@ -502,10 +502,10 @@
           <div class="location-info">
             <div class="location-details">
               <div class="location-item">
-                <strong><%= t('forms.country','Country') %>:</strong> <%= property.country %>
+                <strong><%= t('forms.country','Country') %>:</strong> <%= (typeof translateLocation === 'function') ? translateLocation('country', property.country) : property.country %>
               </div>
               <div class="location-item">
-                <strong><%= t('forms.city','City') %>:</strong> <%= property.city %>
+                <strong><%= t('forms.city','City') %>:</strong> <%= (typeof translateLocation === 'function') ? translateLocation('city', property.city) : property.city %>
               </div>
               <div class="location-item">
                 <strong><%= t('forms.neighborhood','Neighborhood') %>:</strong> <%= property.neighborhood %>
