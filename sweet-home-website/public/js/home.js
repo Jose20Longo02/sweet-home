@@ -265,19 +265,22 @@ async function loadFeaturedProperties() {
     
     const properties = await response.json();
     const locsData = document.getElementById('locations-data');
-    let locTr = (HOME_I18N.locations && (HOME_I18N.locations.countries || HOME_I18N.locations.cities))
-      ? HOME_I18N.locations : null;
-    if (!locTr && locsData) {
+    let locTr = { countries: {}, cities: {} };
+    if (locsData) {
       try {
-        const raw = locsData.getAttribute('data-locations-translations') || '{}';
-        locTr = JSON.parse(raw);
-      } catch (_) { locTr = {}; }
+        const raw = locsData.getAttribute('data-locations-translations');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') {
+            locTr = { countries: parsed.countries || {}, cities: parsed.cities || {} };
+          }
+        }
+      } catch (_) {}
     }
-    locTr = locTr || { countries: {}, cities: {} };
     const trCity = (c) => (locTr.cities && locTr.cities[c]) || c;
     const trCountry = (c) => (locTr.countries && locTr.countries[c]) || c;
-    let learnMoreText = hGet('featured.learnMore', 'Learn more');
-    if (learnMoreText === 'Learn more' && locsData) {
+    let learnMoreText = 'Learn more';
+    if (locsData) {
       const attr = locsData.getAttribute('data-learn-more');
       if (attr) learnMoreText = attr.replace(/&quot;/g, '"');
     }
