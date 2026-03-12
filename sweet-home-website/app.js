@@ -41,25 +41,25 @@ connectDB();
 
 // Initialize geolocation database (non-blocking)
 initializeGeolocation().catch(err => {
-console.warn('[app] Failed to initialize geolocation:', err.message);
+  console.warn('[app] Failed to initialize geolocation:', err.message);
 });
 
 // Sentry integration removed
 
 // Enforce SESSION_SECRET in production
 if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
-// eslint-disable-next-line no-console
-console.error('FATAL: SESSION_SECRET is not set in production. Set process.env.SESSION_SECRET');
-process.exit(1);
+  // eslint-disable-next-line no-console
+  console.error('FATAL: SESSION_SECRET is not set in production. Set process.env.SESSION_SECRET');
+  process.exit(1);
 }
 
 // Optional: verify SMTP on startup (logs only)
 try {
-sendMail.summary && console.log('SMTP runtime summary:', sendMail.summary());
+  sendMail.summary && console.log('SMTP runtime summary:', sendMail.summary());
 } catch (_) {}
 sendMail.verify && sendMail.verify()
-.then(() => console.log('SMTP verified'))
-.catch(err => console.warn('SMTP verify failed:', err && (err.stack || err.message || err)));
+  .then(() => console.log('SMTP verified'))
+  .catch(err => console.warn('SMTP verify failed:', err && (err.stack || err.message || err)));
 
 // Security headers + CSP
 const isProd = process.env.NODE_ENV === 'production';
@@ -67,61 +67,61 @@ app.use(helmet());
 // Apply the same CSP in all envs (no reportOnly) to avoid mixed behavior
 // script-src and script-src-elem allow 'unsafe-inline' so GA and Meta Pixel inline scripts run (helmet does not support function directives for nonce in this version)
 app.use(
-helmet.contentSecurityPolicy({
-useDefaults: true,
-directives: {
-"default-src": ["'self'"],
-"base-uri": ["'self'"],
-"form-action": ["'self'"],
-// permit CDN images broadly; Spaces CDN is HTTPS
-"img-src": ["'self'", 'data:', 'blob:', 'https:', 'https://*.tile.openstreetmap.org', 'https://unpkg.com', 'https://www.google-analytics.com', 'https://*.google-analytics.com'],
-"media-src": ["'self'", 'blob:', 'https:'],
-"script-src": ["'self'", "'unsafe-inline'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com', 'https://connect.facebook.net'],
-"script-src-elem": ["'self'", "'unsafe-inline'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com', 'https://connect.facebook.net'],
-"script-src-attr": ["'none'"],
-"style-src": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
-"style-src-elem": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
-"style-src-attr": ["'unsafe-inline'"],
-"font-src": ["'self'", 'data:', 'https://fonts.gstatic.com'],
-"connect-src": ["'self'", 'https://nominatim.openstreetmap.org', 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://www.google-analytics.com', 'https://region1.google-analytics.com', 'https://*.google-analytics.com', 'https://www.googletagmanager.com'],
-"frame-src": ['https://www.google.com', 'https://www.youtube.com', 'https://player.vimeo.com']
-}
-})
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      "default-src": ["'self'"],
+      "base-uri": ["'self'"],
+      "form-action": ["'self'"],
+      // permit CDN images broadly; Spaces CDN is HTTPS
+      "img-src": ["'self'", 'data:', 'blob:', 'https:', 'https://*.tile.openstreetmap.org', 'https://unpkg.com', 'https://www.google-analytics.com', 'https://*.google-analytics.com'],
+      "media-src": ["'self'", 'blob:', 'https:'],
+      "script-src": ["'self'", "'unsafe-inline'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com', 'https://connect.facebook.net'],
+      "script-src-elem": ["'self'", "'unsafe-inline'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com', 'https://connect.facebook.net'],
+      "script-src-attr": ["'none'"],
+      "style-src": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
+      "style-src-elem": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
+      "style-src-attr": ["'unsafe-inline'"],
+      "font-src": ["'self'", 'data:', 'https://fonts.gstatic.com'],
+      "connect-src": ["'self'", 'https://nominatim.openstreetmap.org', 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://www.google-analytics.com', 'https://region1.google-analytics.com', 'https://*.google-analytics.com', 'https://www.googletagmanager.com'],
+      "frame-src": ['https://www.google.com', 'https://www.youtube.com', 'https://player.vimeo.com']
+    }
+  })
 );
 
 // Logging & compression
 if (process.env.NODE_ENV === 'production') {
-// JSON structured logs
-morgan.token('pid', () => process.pid);
-morgan.token('hostname', () => os.hostname());
-const jsonFormat = (tokens, req, res) => JSON.stringify({
-time: new Date().toISOString(),
-level: 'info',
-pid: tokens.pid(req, res),
-hostname: tokens.hostname(req, res),
-method: tokens.method(req, res),
-url: tokens.url(req, res),
-status: Number(tokens.status(req, res)),
-content_length: Number(tokens.res(req, res, 'content-length') || 0),
-referrer: tokens.referrer(req, res) || undefined,
-user_agent: tokens['user-agent'](req, res),
-response_time_ms: Number(tokens['response-time'](req, res))
-});
-app.use(morgan(jsonFormat));
-// Optional file rotation via LOG_FILE env
-if (process.env.LOG_FILE) {
-const rfs = (() => { try { return require('rotating-file-stream'); } catch (_) { return null; } })();
-if (rfs) {
-const stream = rfs.createStream(process.env.LOG_FILE, {
-size: process.env.LOG_ROTATE_SIZE || '10M',
-interval: process.env.LOG_ROTATE_INTERVAL || '1d',
-compress: 'gzip'
-});
-app.use(morgan(jsonFormat, { stream }));
-}
-}
+  // JSON structured logs
+  morgan.token('pid', () => process.pid);
+  morgan.token('hostname', () => os.hostname());
+  const jsonFormat = (tokens, req, res) => JSON.stringify({
+    time: new Date().toISOString(),
+    level: 'info',
+    pid: tokens.pid(req, res),
+    hostname: tokens.hostname(req, res),
+    method: tokens.method(req, res),
+    url: tokens.url(req, res),
+    status: Number(tokens.status(req, res)),
+    content_length: Number(tokens.res(req, res, 'content-length') || 0),
+    referrer: tokens.referrer(req, res) || undefined,
+    user_agent: tokens['user-agent'](req, res),
+    response_time_ms: Number(tokens['response-time'](req, res))
+  });
+  app.use(morgan(jsonFormat));
+  // Optional file rotation via LOG_FILE env
+  if (process.env.LOG_FILE) {
+    const rfs = (() => { try { return require('rotating-file-stream'); } catch (_) { return null; } })();
+    if (rfs) {
+      const stream = rfs.createStream(process.env.LOG_FILE, {
+        size: process.env.LOG_ROTATE_SIZE || '10M',
+        interval: process.env.LOG_ROTATE_INTERVAL || '1d',
+        compress: 'gzip'
+      });
+      app.use(morgan(jsonFormat, { stream }));
+    }
+  }
 } else {
-app.use(morgan('dev'));
+  app.use(morgan('dev'));
 }
 app.use(compression());
 
@@ -133,15 +133,15 @@ const minifyAssets = require('./middleware/minify-assets');
 app.use(minifyAssets);
 // Static assets: long caching for hashed assets, shorter for others
 app.use(express.static(path.join(__dirname, 'public'), {
-setHeaders: (res, filePath) => {
-// If filename contains a hash-like pattern (e.g., .min.[hash].css or -123abc.), cache longer
-const hashed = /\.[0-9a-f]{6,}\./i.test(filePath) || /-[0-9a-f]{6,}\./i.test(filePath);
-if (hashed) {
-res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-} else {
-res.setHeader('Cache-Control', 'public, max-age=3600');
-}
-}
+  setHeaders: (res, filePath) => {
+    // If filename contains a hash-like pattern (e.g., .min.[hash].css or -123abc.), cache longer
+    const hashed = /\.[0-9a-f]{6,}\./i.test(filePath) || /-[0-9a-f]{6,}\./i.test(filePath);
+    if (hashed) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=3600');
+    }
+  }
 }));
 
 // Local uploads (e.g. profile pictures when DO_SPACES_BUCKET is not set)
@@ -149,10 +149,10 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), { maxAge: '1
 
 // Vendor bundles served locally to avoid CSP/network issues (e.g., Chart.js for analytics dashboard)
 app.use(
-'/vendor/chartjs',
-express.static(path.join(__dirname, 'node_modules', 'chart.js', 'dist'), {
-maxAge: '7d'
-})
+  '/vendor/chartjs',
+  express.static(path.join(__dirname, 'node_modules', 'chart.js', 'dist'), {
+    maxAge: '7d'
+  })
 );
 app.use(cookieParser());
 // Internationalization: must come immediately after cookies so it can read lang.
@@ -166,77 +166,77 @@ app.use((req, res, next) => { res.locals.GA_MEASUREMENT_ID = process.env.GA_MEAS
 // Default to 'granted' for analytics_storage to enable proper user tracking
 // Set GA_CONSENT_DEFAULT=denied in .env if you need to implement a consent banner
 app.use((req, res, next) => { 
-res.locals.GA_CONSENT_DEFAULT = process.env.GA_CONSENT_DEFAULT || 'granted'; 
-next(); 
+  res.locals.GA_CONSENT_DEFAULT = process.env.GA_CONSENT_DEFAULT || 'granted'; 
+  next(); 
 });
 // Expose a simple asset version for cache busting of non-hashed files (e.g., CSS)
 app.use((req, res, next) => { res.locals.assetVersion = process.env.ASSET_VERSION || (process.env.NODE_ENV === 'production' ? '1' : String(Date.now())); next(); });
 
 // Icon theme helper - make getIconPath available to all views
 app.use((req, res, next) => {
-res.locals.getIconPath = iconThemes.getIconPath;
-res.locals.getActiveTheme = iconThemes.getActiveTheme;
-res.locals.getAvailableThemes = iconThemes.getAvailableThemes;
-// Helper to minify JSON for data attributes (removes unnecessary whitespace and undefined/null values)
-res.locals.minifyJSON = function(obj) {
-// Remove undefined and null values recursively
-const clean = function(o) {
-if (Array.isArray(o)) {
-return o.map(clean).filter(v => v !== undefined && v !== null);
-} else if (o && typeof o === 'object') {
-const cleaned = {};
-for (const key in o) {
-if (o.hasOwnProperty(key)) {
-const value = clean(o[key]);
-if (value !== undefined && value !== null) {
-cleaned[key] = value;
-}
-}
-}
-return cleaned;
-}
-return o;
-};
-const cleaned = clean(obj);
-return JSON.stringify(cleaned).replace(/\s+/g, ' ').trim();
-};
-next();
+  res.locals.getIconPath = iconThemes.getIconPath;
+  res.locals.getActiveTheme = iconThemes.getActiveTheme;
+  res.locals.getAvailableThemes = iconThemes.getAvailableThemes;
+  // Helper to minify JSON for data attributes (removes unnecessary whitespace and undefined/null values)
+  res.locals.minifyJSON = function(obj) {
+    // Remove undefined and null values recursively
+    const clean = function(o) {
+      if (Array.isArray(o)) {
+        return o.map(clean).filter(v => v !== undefined && v !== null);
+      } else if (o && typeof o === 'object') {
+        const cleaned = {};
+        for (const key in o) {
+          if (o.hasOwnProperty(key)) {
+            const value = clean(o[key]);
+            if (value !== undefined && value !== null) {
+              cleaned[key] = value;
+            }
+          }
+        }
+        return cleaned;
+      }
+      return o;
+    };
+    const cleaned = clean(obj);
+    return JSON.stringify(cleaned).replace(/\s+/g, ' ').trim();
+  };
+  next();
 });
 app.use(session({
-store: new PgSession({
-pool,
-tableName: 'session'
-}),
-secret: process.env.SESSION_SECRET || (process.env.NODE_ENV === 'production' ? 'unset' : 'dev-only-secret'),
-resave: false,
-saveUninitialized: false,
-cookie: {
-httpOnly: true,
-sameSite: 'lax',
-secure: 'auto',
-maxAge: 1000 * 60 * 60 * 24 * 7
-}
+  store: new PgSession({
+    pool,
+    tableName: 'session'
+  }),
+  secret: process.env.SESSION_SECRET || (process.env.NODE_ENV === 'production' ? 'unset' : 'dev-only-secret'),
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: 'auto',
+    maxAge: 1000 * 60 * 60 * 24 * 7
+  }
 }));
 
 // Trust proxy (for secure cookies/Heroku/Nginx)
 if (process.env.TRUST_PROXY === 'true') {
-app.set('trust proxy', 1);
+  app.set('trust proxy', 1);
 }
 
 // Canonical base URL: prefer real domain (sweet-home.co.il) over Render URL (sweet-home-ien7.onrender.com)
 // When APP_URL or request host is onrender.com, use the real domain so links don't point to Render
 const CANONICAL_DOMAIN = 'https://sweet-home.co.il';
 function getCanonicalBaseUrl(req) {
-const appUrl = (process.env.APP_URL || '').replace(/\/$/, '');
-if (appUrl && !appUrl.includes('onrender.com') && !appUrl.includes('localhost')) {
-return appUrl;
-}
-const host = (req.get && req.get('x-forwarded-host')) || (req.get && req.get('host')) || '';
-if (host.includes('onrender.com')) {
-return CANONICAL_DOMAIN;
-}
-const proto = (req.get && req.get('x-forwarded-proto')) || req.protocol || 'https';
-return `${proto}://${host}`.replace(/\/$/, '');
+  const appUrl = (process.env.APP_URL || '').replace(/\/$/, '');
+  if (appUrl && !appUrl.includes('onrender.com') && !appUrl.includes('localhost')) {
+    return appUrl;
+  }
+  const host = (req.get && req.get('x-forwarded-host')) || (req.get && req.get('host')) || '';
+  if (host.includes('onrender.com')) {
+    return CANONICAL_DOMAIN;
+  }
+  const proto = (req.get && req.get('x-forwarded-proto')) || req.protocol || 'https';
+  return `${proto}://${host}`.replace(/\/$/, '');
 }
 
 // 1) Set up EJS **first**
@@ -255,207 +255,207 @@ const csrfProtection = csrf({ cookie: true });
 // Exempt test endpoints from CSRF for easier testing
 let csrfSkipped = false;
 app.use((req, res, next) => {
-if (req.path === '/api/leads/test-seller-webhook' && (req.method === 'GET' || req.method === 'POST')) {
-csrfSkipped = true;
-return next();
-}
-csrfSkipped = false;
-return csrfProtection(req, res, next);
+  if (req.path === '/api/leads/test-seller-webhook' && (req.method === 'GET' || req.method === 'POST')) {
+    csrfSkipped = true;
+    return next();
+  }
+  csrfSkipped = false;
+  return csrfProtection(req, res, next);
 });
 
 // Make csrfToken available to all views and expose for JS (only if CSRF was applied)
 app.use((req, res, next) => {
-if (req.csrfToken && typeof req.csrfToken === 'function') {
-res.locals.csrfToken = req.csrfToken();
-} else {
-res.locals.csrfToken = null;
-}
-// Expose user to all views
-res.locals.user = req.session.user || null;
-next();
+  if (req.csrfToken && typeof req.csrfToken === 'function') {
+    res.locals.csrfToken = req.csrfToken();
+  } else {
+    res.locals.csrfToken = null;
+  }
+  // Expose user to all views
+  res.locals.user = req.session.user || null;
+  next();
 });
 
 // Passive analytics: log page views for HTML responses (non-API)
 app.use((req, res, next) => {
-const isGet = req.method === 'GET';
-const isApi = req.path.startsWith('/api/');
-const hasExtension = /\.[a-z0-9]{2,8}$/i.test(req.path);
-// Explicitly exclude admin/superadmin pages from analytics
-const isAdminPage = req.path && /^\/(admin|superadmin)/.test(req.path);
-
-if (isGet && !isApi && !hasExtension && !isAdminPage) {
-// Ensure session is initialized for tracking (needed when saveUninitialized: false)
-// Setting a property forces session creation and ensures sessionID exists
-if (req.session) {
-if (!req.session.analyticsInitialized) {
-req.session.analyticsInitialized = true;
-}
-}
-res.on('finish', () => {
-const contentType = res.get('Content-Type') || '';
-if (res.statusCode < 400 && contentType.includes('text/html')) {
-// Use setImmediate to ensure session is saved before logging
-setImmediate(() => {
-logEvent({
-eventType: 'page_view',
-entityType: 'page',
-meta: {
-path: req.path,
-query: Object.keys(req.query || {}).length ? req.query : undefined
-},
-req
-});
-});
-}
-});
-}
-next();
+  const isGet = req.method === 'GET';
+  const isApi = req.path.startsWith('/api/');
+  const hasExtension = /\.[a-z0-9]{2,8}$/i.test(req.path);
+  // Explicitly exclude admin/superadmin pages from analytics
+  const isAdminPage = req.path && /^\/(admin|superadmin)/.test(req.path);
+  
+  if (isGet && !isApi && !hasExtension && !isAdminPage) {
+    // Ensure session is initialized for tracking (needed when saveUninitialized: false)
+    // Setting a property forces session creation and ensures sessionID exists
+    if (req.session) {
+      if (!req.session.analyticsInitialized) {
+        req.session.analyticsInitialized = true;
+      }
+    }
+    res.on('finish', () => {
+      const contentType = res.get('Content-Type') || '';
+      if (res.statusCode < 400 && contentType.includes('text/html')) {
+        // Use setImmediate to ensure session is saved before logging
+        setImmediate(() => {
+          logEvent({
+            eventType: 'page_view',
+            entityType: 'page',
+            meta: {
+              path: req.path,
+              query: Object.keys(req.query || {}).length ? req.query : undefined
+            },
+            req
+          });
+        });
+      }
+    });
+  }
+  next();
 });
 
 // (i18n already mounted above)
 
 // Basic rate limiter for public APIs
 const apiLimiter = rateLimit({
-windowMs: 15 * 60 * 1000,
-max: 100,
-standardHeaders: true,
-legacyHeaders: false
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false
 });
 app.use(['/api', '/auth', '/properties/api', '/projects/api'], apiLimiter);
 
 // Non-prefixed detail URLs: redirect to locale version when user has Spanish/German cookie so language persists.
 // e.g. /properties/slug + cookie=es → redirect to /es/properties/slug
 app.use((req, res, next) => {
-if (req.method !== 'GET') return next();
-if (req.path.startsWith('/de/') || req.path.startsWith('/es/')) return next();
-if (/^\/(admin|superadmin|auth|api)/.test(req.path)) return next();
-const isPropertyDetail = /^\/properties\/[^/]+$/.test(req.path) && req.path !== '/properties/new';
-const isProjectDetail = /^\/projects\/[^/]+$/.test(req.path) && req.path !== '/projects/regions';
-const isBlogDetail = /^\/blog\/[^/]+$/.test(req.path);
-const isDetailPage = isPropertyDetail || isProjectDetail || isBlogDetail;
-if (isDetailPage) {
-const cLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase().slice(0, 2) : '';
-let chosenLang = (cLang === 'de' || cLang === 'es') ? cLang : '';
-if (!chosenLang) {
-// Fallback to referer locale so opening a detail from /es/* or /de/* keeps language
-const referer = String(req.get('referer') || '');
-const host = req.get('host');
-try {
-const refUrl = referer ? new URL(referer) : null;
-const sameHost = !!(refUrl && host && refUrl.host === host);
-if (sameHost) {
-if (refUrl.pathname === '/de' || refUrl.pathname.startsWith('/de/')) chosenLang = 'de';
-else if (refUrl.pathname === '/es' || refUrl.pathname.startsWith('/es/')) chosenLang = 'es';
-}
-} catch (_) { /* ignore malformed referer */ }
-}
-if (chosenLang) {
-let localePath;
-if (isPropertyDetail) localePath = `/${chosenLang}/properties${req.path.slice('/properties'.length)}`;
-else if (isProjectDetail) localePath = `/${chosenLang}/projects${req.path.slice('/projects'.length)}`;
-else if (isBlogDetail) localePath = `/${chosenLang}/blog${req.path.slice('/blog'.length)}`;
-if (localePath) return res.redirect(302, localePath + (req.originalUrl.includes('?') ? '?' + req.originalUrl.split('?')[1] : ''));
-}
-}
-next();
+  if (req.method !== 'GET') return next();
+  if (req.path.startsWith('/de/') || req.path.startsWith('/es/')) return next();
+  if (/^\/(admin|superadmin|auth|api)/.test(req.path)) return next();
+  const isPropertyDetail = /^\/properties\/[^/]+$/.test(req.path) && req.path !== '/properties/new';
+  const isProjectDetail = /^\/projects\/[^/]+$/.test(req.path) && req.path !== '/projects/regions';
+  const isBlogDetail = /^\/blog\/[^/]+$/.test(req.path);
+  const isDetailPage = isPropertyDetail || isProjectDetail || isBlogDetail;
+  if (isDetailPage) {
+    const cLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase().slice(0, 2) : '';
+    let chosenLang = (cLang === 'de' || cLang === 'es') ? cLang : '';
+    if (!chosenLang) {
+      // Fallback to referer locale so opening a detail from /es/* or /de/* keeps language
+      const referer = String(req.get('referer') || '');
+      const host = req.get('host');
+      try {
+        const refUrl = referer ? new URL(referer) : null;
+        const sameHost = !!(refUrl && host && refUrl.host === host);
+        if (sameHost) {
+          if (refUrl.pathname === '/de' || refUrl.pathname.startsWith('/de/')) chosenLang = 'de';
+          else if (refUrl.pathname === '/es' || refUrl.pathname.startsWith('/es/')) chosenLang = 'es';
+        }
+      } catch (_) { /* ignore malformed referer */ }
+    }
+    if (chosenLang) {
+      let localePath;
+      if (isPropertyDetail) localePath = `/${chosenLang}/properties${req.path.slice('/properties'.length)}`;
+      else if (isProjectDetail) localePath = `/${chosenLang}/projects${req.path.slice('/projects'.length)}`;
+      else if (isBlogDetail) localePath = `/${chosenLang}/blog${req.path.slice('/blog'.length)}`;
+      if (localePath) return res.redirect(302, localePath + (req.originalUrl.includes('?') ? '?' + req.originalUrl.split('?')[1] : ''));
+    }
+  }
+  next();
 });
 
 // Expose current path to views so layout can pick header variant
 app.use((req, res, next) => {
-res.locals.currentPath = req.path;
-// Flag: use path-based locale links when we have a locale prefix (/, /de, /es or any /de/*, /es/*)
-res.locals.homeLangPaths = (req.path === '/' || req.path === '/de' || req.path === '/es' || req.path.startsWith('/de/') || req.path.startsWith('/es/'));
-// Helper: prepend locale prefix to a path. e.g. localePath('/properties') -> '/de/properties' when on /de/* pages
-const prefix = res.locals.localePrefix || '';
-res.locals.localePath = (p) => {
-if (!p || p === '/') return prefix || '/';
-const clean = String(p).replace(/^\//, '');
-return prefix + (clean ? '/' + clean : '');
-};
-// Property landing pages have different URLs per language (not just /de + path)
-const PROPERTY_PAGE_ALTERNATES = {
-'/properties-for-sale-berlin': { en: '/properties-for-sale-berlin', de: '/de/immobilien-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
-'/de/immobilien-berlin-kaufen': { en: '/properties-for-sale-berlin', de: '/de/immobilien-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
-'/es/propiedades-en-venta-berlin': { en: '/properties-for-sale-berlin', de: '/de/immobilien-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
-'/properties-for-sale-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
-'/de/immobilien-dubai-kaufen': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
-'/es/propiedades-en-venta-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
-'/properties-for-sale-cyprus': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' },
-'/de/immobilien-zypern-kaufen': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' },
-'/es/propiedades-en-venta-chipre': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' }
-};
-const propertyAlternates = PROPERTY_PAGE_ALTERNATES[req.path];
+  res.locals.currentPath = req.path;
+  // Flag: use path-based locale links when we have a locale prefix (/, /de, /es or any /de/*, /es/*)
+  res.locals.homeLangPaths = (req.path === '/' || req.path === '/de' || req.path === '/es' || req.path.startsWith('/de/') || req.path.startsWith('/es/'));
+  // Helper: prepend locale prefix to a path. e.g. localePath('/properties') -> '/de/properties' when on /de/* pages
+  const prefix = res.locals.localePrefix || '';
+  res.locals.localePath = (p) => {
+    if (!p || p === '/') return prefix || '/';
+    const clean = String(p).replace(/^\//, '');
+    return prefix + (clean ? '/' + clean : '');
+  };
+  // Property landing pages have different URLs per language (not just /de + path)
+  const PROPERTY_PAGE_ALTERNATES = {
+    '/properties-for-sale-berlin': { en: '/properties-for-sale-berlin', de: '/de/immobilien-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
+    '/de/immobilien-berlin-kaufen': { en: '/properties-for-sale-berlin', de: '/de/immobilien-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
+    '/es/propiedades-en-venta-berlin': { en: '/properties-for-sale-berlin', de: '/de/immobilien-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
+    '/properties-for-sale-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
+    '/de/immobilien-dubai-kaufen': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
+    '/es/propiedades-en-venta-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
+    '/properties-for-sale-cyprus': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' },
+    '/de/immobilien-zypern-kaufen': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' },
+    '/es/propiedades-en-venta-chipre': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' }
+  };
+  const propertyAlternates = PROPERTY_PAGE_ALTERNATES[req.path];
 
-// For lang switcher: path-based links for all public pages (so URL reflects language)
-if (propertyAlternates) {
-res.locals.localeAlternatePaths = propertyAlternates;
-} else if (prefix) {
-const pathWithoutLocale = req.path.slice(prefix.length) || '/';
-res.locals.localeAlternatePaths = {
-en: pathWithoutLocale === '/' ? '/' : pathWithoutLocale,
-de: '/de' + pathWithoutLocale,
-es: '/es' + pathWithoutLocale
-};
-} else {
-// Non-prefixed URL: still offer /de/... and /es/... so switching lang updates the URL
-const isPublic = !/^\/(admin|superadmin|auth|api)/.test(req.path);
-if (isPublic) {
-res.locals.localeAlternatePaths = {
-en: req.path === '/' ? '/' : req.path,
-de: req.path === '/' ? '/de' : '/de' + req.path,
-es: req.path === '/' ? '/es' : '/es' + req.path
-};
-} else {
-res.locals.localeAlternatePaths = null;
-}
-}
-// Canonical base URL for all absolute links (canonical, hreflang, sitemap, etc.) - prefers real domain over Render URL
-res.locals.baseUrl = getCanonicalBaseUrl(req);
-// Translate location (country/city) for display - e.g. Cyprus -> Zypern (de), Chipre (es)
-res.locals.translateLocation = (kind, value) => {
-if (!value || typeof value !== 'string') return value || '';
-const key = 'locations.' + (kind === 'city' ? 'cities' : 'countries') + '.' + value;
-return (res.locals.t && res.locals.t(key, value)) || value;
-};
-next();
+  // For lang switcher: path-based links for all public pages (so URL reflects language)
+  if (propertyAlternates) {
+    res.locals.localeAlternatePaths = propertyAlternates;
+  } else if (prefix) {
+    const pathWithoutLocale = req.path.slice(prefix.length) || '/';
+    res.locals.localeAlternatePaths = {
+      en: pathWithoutLocale === '/' ? '/' : pathWithoutLocale,
+      de: '/de' + pathWithoutLocale,
+      es: '/es' + pathWithoutLocale
+    };
+  } else {
+    // Non-prefixed URL: still offer /de/... and /es/... so switching lang updates the URL
+    const isPublic = !/^\/(admin|superadmin|auth|api)/.test(req.path);
+    if (isPublic) {
+      res.locals.localeAlternatePaths = {
+        en: req.path === '/' ? '/' : req.path,
+        de: req.path === '/' ? '/de' : '/de' + req.path,
+        es: req.path === '/' ? '/es' : '/es' + req.path
+      };
+    } else {
+      res.locals.localeAlternatePaths = null;
+    }
+  }
+  // Canonical base URL for all absolute links (canonical, hreflang, sitemap, etc.) - prefers real domain over Render URL
+  res.locals.baseUrl = getCanonicalBaseUrl(req);
+  // Translate location (country/city) for display - e.g. Cyprus -> Zypern (de), Chipre (es)
+  res.locals.translateLocation = (kind, value) => {
+    if (!value || typeof value !== 'string') return value || '';
+    const key = 'locations.' + (kind === 'city' ? 'cities' : 'countries') + '.' + value;
+    return (res.locals.t && res.locals.t(key, value)) || value;
+  };
+  next();
 });
 
 // Language setter (CSP-safe): sets cookie and redirects back
 // For crawlers: return 200 with minimal noindex page (no 301/302 so no redirect reports, no 403 so no broken links)
 app.get('/lang/:code', (req, res) => {
-const code = String(req.params.code || '').slice(0,2).toLowerCase();
-const supported = ['en','es','de'];
-const referer = req.get('referer') || '';
-const origin = req.protocol + '://' + req.get('host');
-const back = (referer && referer.startsWith(origin)) ? referer : '/';
-if (!supported.includes(code)) return res.redirect(302, back);
+  const code = String(req.params.code || '').slice(0,2).toLowerCase();
+  const supported = ['en','es','de'];
+  const referer = req.get('referer') || '';
+  const origin = req.protocol + '://' + req.get('host');
+  const back = (referer && referer.startsWith(origin)) ? referer : '/';
+  if (!supported.includes(code)) return res.redirect(302, back);
 
-const userAgent = (req.get('user-agent') || '').toLowerCase();
-const knownBots = [
-'googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 'yandexbot',
-'sogou', 'exabot', 'facebot', 'ia_archiver', 'semrushbot', 'ahrefsbot',
-'mj12bot', 'dotbot', 'petalbot', 'applebot', 'facebookexternalhit',
-'twitterbot', 'linkedinbot', 'whatsapp', 'telegrambot', 'discordbot',
-'slackbot', 'pinterest', 'redditbot', 'msnbot', 'adsbot', 'mediapartners',
-'adsbot-google', 'feedfetcher', 'semrush', 'ahrefs', 'screaming frog'
-];
-const isBot = knownBots.some(bot => userAgent.includes(bot));
-if (isBot) {
-res.status(200).contentType('text/html').send('<!DOCTYPE html><html lang="' + code + '"><head><meta charset="utf-8"><title>Sweet Home</title><link rel="canonical" href="' + origin + '/"><meta name="robots" content="noindex, follow"></head><body><p><a href="' + origin + '/">Sweet Home</a></p></body></html>');
-return;
-}
+  const userAgent = (req.get('user-agent') || '').toLowerCase();
+  const knownBots = [
+    'googlebot', 'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 'yandexbot',
+    'sogou', 'exabot', 'facebot', 'ia_archiver', 'semrushbot', 'ahrefsbot',
+    'mj12bot', 'dotbot', 'petalbot', 'applebot', 'facebookexternalhit',
+    'twitterbot', 'linkedinbot', 'whatsapp', 'telegrambot', 'discordbot',
+    'slackbot', 'pinterest', 'redditbot', 'msnbot', 'adsbot', 'mediapartners',
+    'adsbot-google', 'feedfetcher', 'semrush', 'ahrefs', 'screaming frog'
+  ];
+  const isBot = knownBots.some(bot => userAgent.includes(bot));
+  if (isBot) {
+    res.status(200).contentType('text/html').send('<!DOCTYPE html><html lang="' + code + '"><head><meta charset="utf-8"><title>Sweet Home</title><link rel="canonical" href="' + origin + '/"><meta name="robots" content="noindex, follow"></head><body><p><a href="' + origin + '/">Sweet Home</a></p></body></html>');
+    return;
+  }
 
-const currentLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase() : 'en';
-if (currentLang === code) return res.redirect(302, back);
-try { res.cookie('lang', code, { httpOnly: false, sameSite: 'lax', maxAge: 30 * 24 * 60 * 60 * 1000 }); } catch (_) {}
-return res.redirect(302, back);
+  const currentLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase() : 'en';
+  if (currentLang === code) return res.redirect(302, back);
+  try { res.cookie('lang', code, { httpOnly: false, sameSite: 'lax', maxAge: 30 * 24 * 60 * 60 * 1000 }); } catch (_) {}
+  return res.redirect(302, back);
 });
 
 // Icon theme test page (for debugging)
 app.get('/test-icons', (req, res) => {
-res.render('test-icons', {
-title: 'Icon Theme Test'
-});
+  res.render('test-icons', {
+    title: 'Icon Theme Test'
+  });
 });
 
 // Routes
@@ -464,58 +464,58 @@ app.use('/superadmin/dashboard/projects', projectRoutes);
 app.use('/projects', publicProjectRoutes);
 // Static pages top-level shortcuts
 app.get('/about', async (req, res, next) => {
-try {
-const { rows } = await query(`
-     SELECT id, name, email, role, area, position, profile_picture
-       FROM users
-      WHERE approved = true
-      ORDER BY
-        CASE LOWER(COALESCE(area,'unknown'))
-          WHEN 'administrative' THEN 1
-          WHEN 'management' THEN 2
-          WHEN 'sales' THEN 3
-          ELSE 4
-        END,
-        COALESCE(position,'zzzz'),
-        name
-   `);
-// Filter out developer accounts (by email)
-const DEV_EMAILS = (process.env.DEVELOPER_EMAILS || '')
-.split(',')
-.map(e => e.trim().toLowerCase())
-.filter(Boolean);
-const filtered = rows.filter(u => !DEV_EMAILS.includes(String(u.email || '').toLowerCase()));
+  try {
+    const { rows } = await query(`
+      SELECT id, name, email, role, area, position, profile_picture
+        FROM users
+       WHERE approved = true
+       ORDER BY
+         CASE LOWER(COALESCE(area,'unknown'))
+           WHEN 'administrative' THEN 1
+           WHEN 'management' THEN 2
+           WHEN 'sales' THEN 3
+           ELSE 4
+         END,
+         COALESCE(position,'zzzz'),
+         name
+    `);
+    // Filter out developer accounts (by email)
+    const DEV_EMAILS = (process.env.DEVELOPER_EMAILS || '')
+      .split(',')
+      .map(e => e.trim().toLowerCase())
+      .filter(Boolean);
+    const filtered = rows.filter(u => !DEV_EMAILS.includes(String(u.email || '').toLowerCase()));
 
-let areaOrder = [];
-try {
-areaOrder = Object.keys(require('./config/roles')) || [];
-} catch (_) { areaOrder = []; }
-res.render('about', {
-title: 'About',
-team: filtered,
-useMainContainer: false,
-areaOrder
-});
-} catch (err) { next(err); }
+    let areaOrder = [];
+    try {
+      areaOrder = Object.keys(require('./config/roles')) || [];
+    } catch (_) { areaOrder = []; }
+    res.render('about', {
+      title: 'About',
+      team: filtered,
+      useMainContainer: false,
+      areaOrder
+    });
+  } catch (err) { next(err); }
 });
 app.get('/contact', (req, res) => {
-res.render('contact', { title: 'Contact' });
+  res.render('contact', { title: 'Contact' });
 });
 app.get('/terms', (req, res) => {
-const baseUrl = res.locals.baseUrl;
-res.render('terms', { 
-title: 'Terms & Conditions',
-headPartial: '../partials/seo/terms-head',
-canonicalUrl: `${baseUrl}/terms`
-});
+  const baseUrl = res.locals.baseUrl;
+  res.render('terms', { 
+    title: 'Terms & Conditions',
+    headPartial: '../partials/seo/terms-head',
+    canonicalUrl: `${baseUrl}/terms`
+  });
 });
 app.get('/privacy', (req, res) => {
-const baseUrl = res.locals.baseUrl;
-res.render('privacy', { 
-title: 'Privacy Policy', 
-headPartial: '../partials/seo/privacy-head',
-canonicalUrl: `${baseUrl}/privacy`
-});
+  const baseUrl = res.locals.baseUrl;
+  res.render('privacy', { 
+    title: 'Privacy Policy', 
+    headPartial: '../partials/seo/privacy-head',
+    canonicalUrl: `${baseUrl}/privacy`
+  });
 });
 app.get('/cookies', (req, res) => res.render('cookies', { title: 'Cookies Policy' }));
 app.use('/admin/dashboard', adminUserRoutes);
@@ -554,369 +554,367 @@ app.use('/admin/properties', propertyRoutes);
 const HOME_PAGE_CACHE_TTL_MS = 60 * 1000; // 60 seconds
 let homePageCache = { data: null, expires: 0 };
 const HOME_BERLIN_NEIGHBORHOOD_CONTENT = {
-en: {
-'Mitte': {
-summary: 'Berlin\'s historic and business core with institutions, culture, and premium central addresses.',
-realEstate: 'Prime mix of renovated Altbau and high-spec new condominiums; high liquidity and persistent rental demand.'
-},
-'Friedrichshain-Kreuzberg': {
-summary: 'Creative, dense inner-city district known for riverside locations, gastronomy, and strong urban lifestyle appeal.',
-realEstate: 'Mix of classic stock and modern projects; tenant demand remains strong for well-connected micro-locations.'
-},
-'Neukolln': {
-summary: 'Diverse, fast-evolving south-central area with established local neighborhoods and active retail corridors.',
-realEstate: 'Wide price range with strong absorption in rental stock; selected pockets continue to upgrade in quality.'
-},
-'Charlottenburg-Wilmersdorf': {
-summary: 'Established West Berlin district with major shopping streets, parks, and long-term residential prestige.',
-realEstate: 'Large period apartments and quality post-war buildings support stable owner-occupier and premium rental demand.'
-},
-'Prenzlauer Berg': {
-summary: 'Family-oriented central neighborhood with cafes, schools, and highly walkable streets.',
-realEstate: 'Highly sought-after renovated period buildings; low vacancy and limited available inventory.'
-},
-'Pankow': {
-summary: 'Leafier northern area combining urban access with calmer residential pockets.',
-realEstate: 'Attractive for families and long-term owners, with a balance of existing stock and new developments.'
-},
-'Tempelhof': {
-summary: 'South-central district anchored by Tempelhofer Feld and strong transit links.',
-realEstate: 'Mostly mid-market apartments with practical layouts; valued for space, connectivity, and neighborhood services.'
-},
-'Reinickendorf': {
-summary: 'Northern district with green areas, lakes, and quieter residential streets.',
-realEstate: 'Generally more accessible entry points than central districts, with solid family-oriented demand.'
-},
-'Wedding (Gesundbrunnen)': {
-summary: 'Inner-north area with excellent rail access and a broad social and cultural mix.',
-realEstate: 'Diverse stock from classic buildings to newer infill projects; investors monitor ongoing neighborhood improvements.'
-},
-'Kreuzberg': {
-summary: 'Internationally known urban quarter with strong identity, nightlife, and canal-side micro-locations.',
-realEstate: 'High demand for compact units and renovated apartments keeps central submarkets highly competitive.'
-},
-'Moabit': {
-summary: 'Central district near government and waterfront areas, with mixed-use streets and active local commerce.',
-realEstate: 'Mixed building ages and gradual upgrades make it a target for buyers seeking central value potential.'
-},
-'Reinickendorf (Am Schafersee)': {
-summary: 'Residential pocket around Schafersee known for local calm and everyday amenities.',
-realEstate: 'Neighborhood apartments with strong end-user appeal for buyers prioritizing quiet living and transit access.'
-},
-'Schoneberg': {
-summary: 'Classic west-central area with elegant boulevards, cafes, and strong neighborhood identity.',
-realEstate: 'Altbau streets and established rental demand create resilient long-term residential performance.'
-},
-'Spandau': {
-summary: 'Western district with historic core, Havel waterfronts, and substantial newer residential quarters.',
-realEstate: 'Family-friendly pricing and ongoing development pipeline support both owner-occupier and investment demand.'
-}
-},
-de: {
-'Mitte': {
-summary: 'Historisches und wirtschaftliches Zentrum Berlins mit Institutionen, Kultur und zentralen Premiumlagen.',
-realEstate: 'Gefragter Mix aus sanierten Altbauten und hochwertigen Neubauwohnungen; hohe Marktliquiditaet und stabile Mietnachfrage.'
-},
-'Friedrichshain-Kreuzberg': {
-summary: 'Kreativer, dichter Innenstadtbezirk mit Spreelagen, Gastronomie und starkem urbanem Lifestyle.',
-realEstate: 'Mischung aus klassischem Bestand und modernen Projekten; in gut angebundenen Mikrolagen bleibt die Nachfrage hoch.'
-},
-'Neukolln': {
-summary: 'Vielfaeltiger, dynamischer Bezirk im Sueden der Innenstadt mit gewachsenen Kiezen und aktiven Einkaufsachsen.',
-realEstate: 'Breites Preisniveau mit starker Aufnahmefaehigkeit im Mietmarkt; ausgewaehlte Teilmaerkte werten sich weiter auf.'
-},
-'Charlottenburg-Wilmersdorf': {
-summary: 'Etablierter West-Berliner Bezirk mit grossen Einkaufsstrassen, Parks und langfristiger Wohnqualitaet.',
-realEstate: 'Grosszuegige Altbauwohnungen und solide Nachkriegsbestaende tragen eine stabile Eigennutzer- und Premium-Mietnachfrage.'
-},
-'Prenzlauer Berg': {
-summary: 'Familienorientierter Innenstadtteil mit Cafes, Schulen und hoher Aufenthaltsqualitaet.',
-realEstate: 'Sehr gefragte sanierte Altbauten; niedriger Leerstand und begrenztes verfuegbares Angebot.'
-},
-'Pankow': {
-summary: 'Gruener Norden mit guter Innenstadtanbindung und ruhigen Wohnlagen.',
-realEstate: 'Attraktiv fuer Familien und langfristige Eigennutzer, mit ausgewogener Kombination aus Bestand und Neubau.'
-},
-'Tempelhof': {
-summary: 'Sued-zentraler Bezirk rund um das Tempelhofer Feld mit guter Verkehrsanbindung.',
-realEstate: 'Ueberwiegend mittleres Preissegment mit funktionalen Grundrissen; gefragt wegen Platz, Infrastruktur und Alltagstauglichkeit.'
-},
-'Reinickendorf': {
-summary: 'Noerdlicher Bezirk mit viel Gruen, Seen und ruhigeren Wohnstrassen.',
-realEstate: 'Im Vergleich zu zentralen Lagen oft guenstigere Einstiege bei solider, familienorientierter Nachfrage.'
-},
-'Wedding (Gesundbrunnen)': {
-summary: 'Innerstaedtischer Nordbereich mit sehr guter Bahn-Anbindung und breiter sozialer Mischung.',
-realEstate: 'Vielfaeltiger Bestand von Altbau bis Nachverdichtung; Investoren beobachten die fortlaufende Quartiersentwicklung.'
-},
-'Kreuzberg': {
-summary: 'International bekanntes urbanes Viertel mit starker Identitaet, Ausgehkultur und Kanallagen.',
-realEstate: 'Hohe Nachfrage nach kompakten Einheiten und sanierten Wohnungen haelt zentrale Teillagen wettbewerbsintensiv.'
-},
-'Moabit': {
-summary: 'Zentraler Stadtteil nahe Regierungsviertel und Wasserlagen mit gemischter Nutzungsstruktur.',
-realEstate: 'Unterschiedliche Baualtersklassen und schrittweise Aufwertung machen den Teilmarkt fuer wertorientierte Kaeufer interessant.'
-},
-'Reinickendorf (Am Schafersee)': {
-summary: 'Wohngepraegte Lage rund um den Schafersee mit ruhigem Umfeld und guter Nahversorgung.',
-realEstate: 'Wohnungen mit starker Eigennutzer-Nachfrage bei Fokus auf ruhiges Wohnen und OePNV-Naehe.'
-},
-'Schoneberg': {
-summary: 'Klassischer west-zentraler Stadtteil mit eleganten Boulevards, Cafes und klarer Kiezidentitaet.',
-realEstate: 'Altbaustrassen und etablierte Mietnachfrage sorgen fuer robuste, langfristige Wohnmarktqualitaet.'
-},
-'Spandau': {
-summary: 'Westlicher Bezirk mit historischer Altstadt, Havel-Lagen und groesseren neuen Wohnquartieren.',
-realEstate: 'Familienfreundliche Preise und laufende Projektpipeline unterstuetzen Eigennutzer- und Investmentnachfrage.'
-}
-},
-es: {
-'Mitte': {
-summary: 'Centro historico y de negocios de Berlin, con instituciones, cultura y direcciones prime.',
-realEstate: 'Combinacion premium de Altbau renovado y obra nueva de alta calidad; gran liquidez y demanda de alquiler constante.'
-},
-'Friedrichshain-Kreuzberg': {
-summary: 'Distrito centrico, creativo y denso, con zonas junto al rio y fuerte atractivo de estilo de vida urbano.',
-realEstate: 'Mezcla de parque residencial clasico y proyectos modernos; la demanda de inquilinos sigue siendo muy solida.'
-},
-'Neukolln': {
-summary: 'Zona diversa y en rapida evolucion al sur del centro, con barrios consolidados y ejes comerciales activos.',
-realEstate: 'Amplio rango de precios y alta absorcion en alquiler; algunas microzonas continuan mejorando su calidad.'
-},
-'Charlottenburg-Wilmersdorf': {
-summary: 'Distrito consolidado del oeste con avenidas comerciales, parques y prestigio residencial sostenido.',
-realEstate: 'Apartamentos amplios de epoca y edificios de posguerra de calidad sostienen demanda estable de compra y alquiler premium.'
-},
-'Prenzlauer Berg': {
-summary: 'Barrio centrico orientado a familias, con cafes, colegios y calles muy caminables.',
-realEstate: 'Edificios de epoca renovados muy demandados; baja vacancia y oferta disponible limitada.'
-},
-'Pankow': {
-summary: 'Area norte mas verde que combina acceso urbano con zonas residenciales tranquilas.',
-realEstate: 'Atractiva para familias y compradores de largo plazo, con equilibrio entre stock existente y nuevos desarrollos.'
-},
-'Tempelhof': {
-summary: 'Distrito centro-sur articulado por Tempelhofer Feld y buenas conexiones de transporte.',
-realEstate: 'Principalmente apartamentos de segmento medio con distribuciones funcionales; valorado por espacio y conectividad.'
-},
-'Reinickendorf': {
-summary: 'Distrito del norte con zonas verdes, lagos y calles residenciales mas calmadas.',
-realEstate: 'Suele ofrecer puntos de entrada mas accesibles que areas centricas, con demanda solida de perfil familiar.'
-},
-'Wedding (Gesundbrunnen)': {
-summary: 'Area interior del norte con excelente conexion ferroviaria y mezcla social y cultural amplia.',
-realEstate: 'Parque inmobiliario diverso, desde edificios clasicos hasta proyectos de relleno; se sigue de cerca su mejora urbana.'
-},
-'Kreuzberg': {
-summary: 'Barrio urbano de fama internacional, con identidad fuerte, vida nocturna y microzonas junto al canal.',
-realEstate: 'La alta demanda de unidades compactas y pisos renovados mantiene estos submercados muy competitivos.'
-},
-'Moabit': {
-summary: 'Distrito central cerca del gobierno y del agua, con calles de uso mixto y comercio local activo.',
-realEstate: 'Edificios de distintas epocas y mejora gradual lo vuelven atractivo para compradores que buscan valor en zona central.'
-},
-'Reinickendorf (Am Schafersee)': {
-summary: 'Microzona residencial alrededor de Schafersee, conocida por su ambiente tranquilo y servicios cotidianos.',
-realEstate: 'Apartamentos con fuerte atractivo para usuario final que prioriza tranquilidad y buen acceso al transporte publico.'
-},
-'Schoneberg': {
-summary: 'Zona clasica del oeste-centro con bulevares elegantes, cafes y fuerte identidad de barrio.',
-realEstate: 'Calles de Altbau y demanda consolidada de alquiler ofrecen un desempeno residencial resiliente a largo plazo.'
-},
-'Spandau': {
-summary: 'Distrito occidental con casco historico, frentes de agua en el Havel y nuevos barrios residenciales.',
-realEstate: 'Precios mas familiares y pipeline de desarrollo activo respaldan demanda tanto de vivienda propia como de inversion.'
-}
-}
+  en: {
+    'Mitte': {
+      summary: 'Berlin\'s historic and business core with institutions, culture, and premium central addresses.',
+      realEstate: 'Prime mix of renovated Altbau and high-spec new condominiums; high liquidity and persistent rental demand.'
+    },
+    'Friedrichshain-Kreuzberg': {
+      summary: 'Creative, dense inner-city district known for riverside locations, gastronomy, and strong urban lifestyle appeal.',
+      realEstate: 'Mix of classic stock and modern projects; tenant demand remains strong for well-connected micro-locations.'
+    },
+    'Neukolln': {
+      summary: 'Diverse, fast-evolving south-central area with established local neighborhoods and active retail corridors.',
+      realEstate: 'Wide price range with strong absorption in rental stock; selected pockets continue to upgrade in quality.'
+    },
+    'Charlottenburg-Wilmersdorf': {
+      summary: 'Established West Berlin district with major shopping streets, parks, and long-term residential prestige.',
+      realEstate: 'Large period apartments and quality post-war buildings support stable owner-occupier and premium rental demand.'
+    },
+    'Prenzlauer Berg': {
+      summary: 'Family-oriented central neighborhood with cafes, schools, and highly walkable streets.',
+      realEstate: 'Highly sought-after renovated period buildings; low vacancy and limited available inventory.'
+    },
+    'Pankow': {
+      summary: 'Leafier northern area combining urban access with calmer residential pockets.',
+      realEstate: 'Attractive for families and long-term owners, with a balance of existing stock and new developments.'
+    },
+    'Tempelhof': {
+      summary: 'South-central district anchored by Tempelhofer Feld and strong transit links.',
+      realEstate: 'Mostly mid-market apartments with practical layouts; valued for space, connectivity, and neighborhood services.'
+    },
+    'Reinickendorf': {
+      summary: 'Northern district with green areas, lakes, and quieter residential streets.',
+      realEstate: 'Generally more accessible entry points than central districts, with solid family-oriented demand.'
+    },
+    'Wedding (Gesundbrunnen)': {
+      summary: 'Inner-north area with excellent rail access and a broad social and cultural mix.',
+      realEstate: 'Diverse stock from classic buildings to newer infill projects; investors monitor ongoing neighborhood improvements.'
+    },
+    'Kreuzberg': {
+      summary: 'Internationally known urban quarter with strong identity, nightlife, and canal-side micro-locations.',
+      realEstate: 'High demand for compact units and renovated apartments keeps central submarkets highly competitive.'
+    },
+    'Moabit': {
+      summary: 'Central district near government and waterfront areas, with mixed-use streets and active local commerce.',
+      realEstate: 'Mixed building ages and gradual upgrades make it a target for buyers seeking central value potential.'
+    },
+    'Reinickendorf (Am Schafersee)': {
+      summary: 'Residential pocket around Schafersee known for local calm and everyday amenities.',
+      realEstate: 'Neighborhood apartments with strong end-user appeal for buyers prioritizing quiet living and transit access.'
+    },
+    'Schoneberg': {
+      summary: 'Classic west-central area with elegant boulevards, cafes, and strong neighborhood identity.',
+      realEstate: 'Altbau streets and established rental demand create resilient long-term residential performance.'
+    },
+    'Spandau': {
+      summary: 'Western district with historic core, Havel waterfronts, and substantial newer residential quarters.',
+      realEstate: 'Family-friendly pricing and ongoing development pipeline support both owner-occupier and investment demand.'
+    }
+  },
+  de: {
+    'Mitte': {
+      summary: 'Historisches und wirtschaftliches Zentrum Berlins mit Institutionen, Kultur und zentralen Premiumlagen.',
+      realEstate: 'Gefragter Mix aus sanierten Altbauten und hochwertigen Neubauwohnungen; hohe Marktliquiditaet und stabile Mietnachfrage.'
+    },
+    'Friedrichshain-Kreuzberg': {
+      summary: 'Kreativer, dichter Innenstadtbezirk mit Spreelagen, Gastronomie und starkem urbanem Lifestyle.',
+      realEstate: 'Mischung aus klassischem Bestand und modernen Projekten; in gut angebundenen Mikrolagen bleibt die Nachfrage hoch.'
+    },
+    'Neukolln': {
+      summary: 'Vielfaeltiger, dynamischer Bezirk im Sueden der Innenstadt mit gewachsenen Kiezen und aktiven Einkaufsachsen.',
+      realEstate: 'Breites Preisniveau mit starker Aufnahmefaehigkeit im Mietmarkt; ausgewaehlte Teilmaerkte werten sich weiter auf.'
+    },
+    'Charlottenburg-Wilmersdorf': {
+      summary: 'Etablierter West-Berliner Bezirk mit grossen Einkaufsstrassen, Parks und langfristiger Wohnqualitaet.',
+      realEstate: 'Grosszuegige Altbauwohnungen und solide Nachkriegsbestaende tragen eine stabile Eigennutzer- und Premium-Mietnachfrage.'
+    },
+    'Prenzlauer Berg': {
+      summary: 'Familienorientierter Innenstadtteil mit Cafes, Schulen und hoher Aufenthaltsqualitaet.',
+      realEstate: 'Sehr gefragte sanierte Altbauten; niedriger Leerstand und begrenztes verfuegbares Angebot.'
+    },
+    'Pankow': {
+      summary: 'Gruener Norden mit guter Innenstadtanbindung und ruhigen Wohnlagen.',
+      realEstate: 'Attraktiv fuer Familien und langfristige Eigennutzer, mit ausgewogener Kombination aus Bestand und Neubau.'
+    },
+    'Tempelhof': {
+      summary: 'Sued-zentraler Bezirk rund um das Tempelhofer Feld mit guter Verkehrsanbindung.',
+      realEstate: 'Ueberwiegend mittleres Preissegment mit funktionalen Grundrissen; gefragt wegen Platz, Infrastruktur und Alltagstauglichkeit.'
+    },
+    'Reinickendorf': {
+      summary: 'Noerdlicher Bezirk mit viel Gruen, Seen und ruhigeren Wohnstrassen.',
+      realEstate: 'Im Vergleich zu zentralen Lagen oft guenstigere Einstiege bei solider, familienorientierter Nachfrage.'
+    },
+    'Wedding (Gesundbrunnen)': {
+      summary: 'Innerstaedtischer Nordbereich mit sehr guter Bahn-Anbindung und breiter sozialer Mischung.',
+      realEstate: 'Vielfaeltiger Bestand von Altbau bis Nachverdichtung; Investoren beobachten die fortlaufende Quartiersentwicklung.'
+    },
+    'Kreuzberg': {
+      summary: 'International bekanntes urbanes Viertel mit starker Identitaet, Ausgehkultur und Kanallagen.',
+      realEstate: 'Hohe Nachfrage nach kompakten Einheiten und sanierten Wohnungen haelt zentrale Teillagen wettbewerbsintensiv.'
+    },
+    'Moabit': {
+      summary: 'Zentraler Stadtteil nahe Regierungsviertel und Wasserlagen mit gemischter Nutzungsstruktur.',
+      realEstate: 'Unterschiedliche Baualtersklassen und schrittweise Aufwertung machen den Teilmarkt fuer wertorientierte Kaeufer interessant.'
+    },
+    'Reinickendorf (Am Schafersee)': {
+      summary: 'Wohngepraegte Lage rund um den Schafersee mit ruhigem Umfeld und guter Nahversorgung.',
+      realEstate: 'Wohnungen mit starker Eigennutzer-Nachfrage bei Fokus auf ruhiges Wohnen und OePNV-Naehe.'
+    },
+    'Schoneberg': {
+      summary: 'Klassischer west-zentraler Stadtteil mit eleganten Boulevards, Cafes und klarer Kiezidentitaet.',
+      realEstate: 'Altbaustrassen und etablierte Mietnachfrage sorgen fuer robuste, langfristige Wohnmarktqualitaet.'
+    },
+    'Spandau': {
+      summary: 'Westlicher Bezirk mit historischer Altstadt, Havel-Lagen und groesseren neuen Wohnquartieren.',
+      realEstate: 'Familienfreundliche Preise und laufende Projektpipeline unterstuetzen Eigennutzer- und Investmentnachfrage.'
+    }
+  },
+  es: {
+    'Mitte': {
+      summary: 'Centro historico y de negocios de Berlin, con instituciones, cultura y direcciones prime.',
+      realEstate: 'Combinacion premium de Altbau renovado y obra nueva de alta calidad; gran liquidez y demanda de alquiler constante.'
+    },
+    'Friedrichshain-Kreuzberg': {
+      summary: 'Distrito centrico, creativo y denso, con zonas junto al rio y fuerte atractivo de estilo de vida urbano.',
+      realEstate: 'Mezcla de parque residencial clasico y proyectos modernos; la demanda de inquilinos sigue siendo muy solida.'
+    },
+    'Neukolln': {
+      summary: 'Zona diversa y en rapida evolucion al sur del centro, con barrios consolidados y ejes comerciales activos.',
+      realEstate: 'Amplio rango de precios y alta absorcion en alquiler; algunas microzonas continuan mejorando su calidad.'
+    },
+    'Charlottenburg-Wilmersdorf': {
+      summary: 'Distrito consolidado del oeste con avenidas comerciales, parques y prestigio residencial sostenido.',
+      realEstate: 'Apartamentos amplios de epoca y edificios de posguerra de calidad sostienen demanda estable de compra y alquiler premium.'
+    },
+    'Prenzlauer Berg': {
+      summary: 'Barrio centrico orientado a familias, con cafes, colegios y calles muy caminables.',
+      realEstate: 'Edificios de epoca renovados muy demandados; baja vacancia y oferta disponible limitada.'
+    },
+    'Pankow': {
+      summary: 'Area norte mas verde que combina acceso urbano con zonas residenciales tranquilas.',
+      realEstate: 'Atractiva para familias y compradores de largo plazo, con equilibrio entre stock existente y nuevos desarrollos.'
+    },
+    'Tempelhof': {
+      summary: 'Distrito centro-sur articulado por Tempelhofer Feld y buenas conexiones de transporte.',
+      realEstate: 'Principalmente apartamentos de segmento medio con distribuciones funcionales; valorado por espacio y conectividad.'
+    },
+    'Reinickendorf': {
+      summary: 'Distrito del norte con zonas verdes, lagos y calles residenciales mas calmadas.',
+      realEstate: 'Suele ofrecer puntos de entrada mas accesibles que areas centricas, con demanda solida de perfil familiar.'
+    },
+    'Wedding (Gesundbrunnen)': {
+      summary: 'Area interior del norte con excelente conexion ferroviaria y mezcla social y cultural amplia.',
+      realEstate: 'Parque inmobiliario diverso, desde edificios clasicos hasta proyectos de relleno; se sigue de cerca su mejora urbana.'
+    },
+    'Kreuzberg': {
+      summary: 'Barrio urbano de fama internacional, con identidad fuerte, vida nocturna y microzonas junto al canal.',
+      realEstate: 'La alta demanda de unidades compactas y pisos renovados mantiene estos submercados muy competitivos.'
+    },
+    'Moabit': {
+      summary: 'Distrito central cerca del gobierno y del agua, con calles de uso mixto y comercio local activo.',
+      realEstate: 'Edificios de distintas epocas y mejora gradual lo vuelven atractivo para compradores que buscan valor en zona central.'
+    },
+    'Reinickendorf (Am Schafersee)': {
+      summary: 'Microzona residencial alrededor de Schafersee, conocida por su ambiente tranquilo y servicios cotidianos.',
+      realEstate: 'Apartamentos con fuerte atractivo para usuario final que prioriza tranquilidad y buen acceso al transporte publico.'
+    },
+    'Schoneberg': {
+      summary: 'Zona clasica del oeste-centro con bulevares elegantes, cafes y fuerte identidad de barrio.',
+      realEstate: 'Calles de Altbau y demanda consolidada de alquiler ofrecen un desempeno residencial resiliente a largo plazo.'
+    },
+    'Spandau': {
+      summary: 'Distrito occidental con casco historico, frentes de agua en el Havel y nuevos barrios residenciales.',
+      realEstate: 'Precios mas familiares y pipeline de desarrollo activo respaldan demanda tanto de vivienda propia como de inversion.'
+    }
+  }
 };
 
 function getHomePageData() {
-if (homePageCache.data && Date.now() < homePageCache.expires) {
-return homePageCache.data;
-}
-return null;
+  if (homePageCache.data && Date.now() < homePageCache.expires) {
+    return homePageCache.data;
+  }
+  return null;
 }
 
 function setHomePageData(data) {
-homePageCache = { data, expires: Date.now() + HOME_PAGE_CACHE_TTL_MS };
+  homePageCache = { data, expires: Date.now() + HOME_PAGE_CACHE_TTL_MS };
 }
 
 // Shared home page render logic (optimized: cached development rows + featured query)
 async function renderHomePage(req, res, langPath, next) {
-try {
-const lang = (res.locals && res.locals.lang) ? res.locals.lang : (req.cookies && req.cookies.lang) ? req.cookies.lang : 'en';
+  try {
+    const lang = (res.locals && res.locals.lang) ? res.locals.lang : (req.cookies && req.cookies.lang) ? req.cookies.lang : 'en';
 
-let newDevelopmentRows = null;
-let featuredProperties = null;
+    let newDevelopmentRows = null;
+    let featuredProperties = null;
 
-const cached = getHomePageData();
-if (cached) {
-newDevelopmentRows = cached.newDevelopmentRows;
-} else {
-const regionDefs = [
-{ key: 'dubai', country: 'UAE' },
-{ key: 'cyprus', country: 'Cyprus' },
-{ key: 'germany', country: 'Germany' }
-];
-const regionQueries = regionDefs.map(r => query(`
-       SELECT id, title, title_i18n, slug, country, city, neighborhood, photos,
-              min_price, min_unit_size, max_unit_size, total_units, unit_types, completion_date
-         FROM projects
-        WHERE status = 'active' AND country = $1
-        ORDER BY (
-          SELECT COUNT(*)
-            FROM analytics_events ae
-           WHERE ae.event_type = 'project_view'
-             AND ae.entity_type = 'project'
-             AND ae.entity_id = projects.id
-        ) DESC,
-        created_at DESC, id DESC
-        LIMIT 3
-     `, [r.country]));
-const regionResults = await Promise.all(regionQueries);
-const translateLocation = res.locals.translateLocation;
-newDevelopmentRows = regionDefs.map((region, idx) => {
-const rows = (regionResults[idx] && regionResults[idx].rows) ? regionResults[idx].rows : [];
-const cards = rows.map(p => {
-const titleI18n = p.title_i18n && typeof p.title_i18n === 'object' ? p.title_i18n : null;
-const title = (titleI18n && (titleI18n[lang] || titleI18n.en)) || p.title || '';
-const arr = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
-const photos = arr.map(ph => {
-if (!ph) return ph;
-const s = String(ph);
-if (s.startsWith('/uploads/') || s.startsWith('http')) return s;
-return `/uploads/projects/${p.id}/${s}`;
-});
-const cityTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('city', p.city || '') : (p.city || '');
-const countryTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('country', p.country || '') : (p.country || '');
-let completionDisplay = '';
-try {
-if (p.completion_date) {
-const dt = new Date(p.completion_date);
-if (!Number.isNaN(dt.getTime())) {
-const locale = lang === 'de' ? 'de-DE' : (lang === 'es' ? 'es-ES' : 'en-US');
-completionDisplay = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' }).format(dt);
-} else {
-completionDisplay = String(p.completion_date);
-}
-}
-} catch (_) { completionDisplay = p.completion_date ? String(p.completion_date) : ''; }
-return {
-id: p.id,
-slug: p.slug,
-title,
-city: p.city,
-country: p.country,
-locationDisplay: [cityTr, countryTr].filter(Boolean).join(', '),
-photo: photos[0] || '/img/property-placeholder.jpg',
-min_price: p.min_price,
-min_unit_size: p.min_unit_size,
-max_unit_size: p.max_unit_size,
-total_units: p.total_units,
-unit_types: Array.isArray(p.unit_types) ? p.unit_types : (p.unit_types ? [p.unit_types] : []),
-completion_date: p.completion_date,
-completionDisplay
-};
-});
-return { key: region.key, cards };
-});
+    const cached = getHomePageData();
+    if (cached) {
+      newDevelopmentRows = cached.newDevelopmentRows;
+    } else {
+      const regionDefs = [
+        { key: 'dubai', country: 'UAE' },
+        { key: 'cyprus', country: 'Cyprus' },
+        { key: 'germany', country: 'Germany' }
+      ];
+      const regionQueries = regionDefs.map(r => query(`
+        SELECT id, title, title_i18n, slug, country, city, neighborhood, photos,
+               min_price, min_unit_size, max_unit_size, total_units, unit_types, completion_date
+          FROM projects
+         WHERE status = 'active' AND country = $1
+         ORDER BY (
+           SELECT COUNT(*)
+             FROM analytics_events ae
+            WHERE ae.event_type = 'project_view'
+              AND ae.entity_type = 'project'
+              AND ae.entity_id = projects.id
+         ) DESC,
+         created_at DESC, id DESC
+         LIMIT 3
+      `, [r.country]));
+      const regionResults = await Promise.all(regionQueries);
+      const translateLocation = res.locals.translateLocation;
+      newDevelopmentRows = regionDefs.map((region, idx) => {
+        const rows = (regionResults[idx] && regionResults[idx].rows) ? regionResults[idx].rows : [];
+        const cards = rows.map(p => {
+          const titleI18n = p.title_i18n && typeof p.title_i18n === 'object' ? p.title_i18n : null;
+          const title = (titleI18n && (titleI18n[lang] || titleI18n.en)) || p.title || '';
+          const arr = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+          const photos = arr.map(ph => {
+            if (!ph) return ph;
+            const s = String(ph);
+            if (s.startsWith('/uploads/') || s.startsWith('http')) return s;
+            return `/uploads/projects/${p.id}/${s}`;
+          });
+          const cityTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('city', p.city || '') : (p.city || '');
+          const countryTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('country', p.country || '') : (p.country || '');
+          let completionDisplay = '';
+          try {
+            if (p.completion_date) {
+              const dt = new Date(p.completion_date);
+              if (!Number.isNaN(dt.getTime())) {
+                const locale = lang === 'de' ? 'de-DE' : (lang === 'es' ? 'es-ES' : 'en-US');
+                completionDisplay = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' }).format(dt);
+              } else {
+                completionDisplay = String(p.completion_date);
+              }
+            }
+          } catch (_) { completionDisplay = p.completion_date ? String(p.completion_date) : ''; }
+          return {
+            id: p.id,
+            slug: p.slug,
+            title,
+            city: p.city,
+            country: p.country,
+            locationDisplay: [cityTr, countryTr].filter(Boolean).join(', '),
+            photo: photos[0] || '/img/property-placeholder.jpg',
+            min_price: p.min_price,
+            min_unit_size: p.min_unit_size,
+            max_unit_size: p.max_unit_size,
+            total_units: p.total_units,
+            unit_types: Array.isArray(p.unit_types) ? p.unit_types : (p.unit_types ? [p.unit_types] : []),
+            completion_date: p.completion_date,
+            completionDisplay
+          };
+        });
+        return { key: region.key, cards };
+      });
 
-setHomePageData({ newDevelopmentRows });
-}
+      setHomePageData({ newDevelopmentRows });
+    }
 
-// Featured properties (server-rendered for correct i18n of location and CTA)
-try {
-const featSql = `
-       SELECT p.id, p.title, p.title_i18n, p.slug, p.country, p.city, p.neighborhood,
-              p.price, p.photos, p.type, p.rooms, p.bathrooms,
-              CASE WHEN p.type = 'Apartment' THEN p.apartment_size
-                   WHEN p.type IN ('House', 'Villa') THEN p.living_space
-                   WHEN p.type = 'Land' THEN p.land_size ELSE NULL END as size,
-              COALESCE(ps.views, 0) AS views
-         FROM properties p
-         LEFT JOIN property_stats ps ON ps.property_id = p.id
-        WHERE p.slug IS NOT NULL
-         ORDER BY COALESCE(ps.views, 0) DESC, RANDOM()
-         LIMIT 6
+    // Featured properties (server-rendered for correct i18n of location and CTA)
+    try {
+      const featSql = `
+        SELECT p.id, p.title, p.title_i18n, p.slug, p.country, p.city, p.neighborhood,
+               p.price, p.photos, p.type, p.rooms, p.bathrooms,
+               CASE WHEN p.type = 'Apartment' THEN p.apartment_size
+                    WHEN p.type IN ('House', 'Villa') THEN p.living_space
+                    WHEN p.type = 'Land' THEN p.land_size ELSE NULL END as size,
+               COALESCE(ps.views, 0) AS views
+          FROM properties p
+          LEFT JOIN property_stats ps ON ps.property_id = p.id
+         WHERE p.slug IS NOT NULL
            AND p.country = 'Germany'
            AND p.city = 'Berlin'
            AND p.type = 'Apartment'
          ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
          LIMIT 9
-     `;
-const { rows: featRows } = await query(featSql);
-if (featRows && featRows.length >= 1) {
-const translateLocation = res.locals.translateLocation;
-featuredProperties = featRows.map(p => {
-const titleI18n = p.title_i18n && typeof p.title_i18n === 'object' ? p.title_i18n : null;
-const title = (titleI18n && (titleI18n[lang] || titleI18n.en)) || p.title || '';
-const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
-const cityTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('city', p.city || '') : (p.city || '');
-const countryTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('country', p.country || '') : (p.country || '');
-const locationDisplay = [cityTr, countryTr].filter(Boolean).join(', ') || ((p.city || '') + ', ' + (p.country || ''));
-return {
-id: p.id,
-title,
-slug: p.slug,
-country: p.country,
-city: p.city,
-locationDisplay,
-neighborhood: p.neighborhood,
-price: p.price,
-photos,
-type: p.type,
-rooms: p.rooms,
-bathrooms: p.bathrooms,
-size: p.size
-};
-});
-}
-} catch (_) { /* non-fatal */ }
+      `;
+      const { rows: featRows } = await query(featSql);
+      if (featRows && featRows.length >= 1) {
+        const translateLocation = res.locals.translateLocation;
+        featuredProperties = featRows.map(p => {
+          const titleI18n = p.title_i18n && typeof p.title_i18n === 'object' ? p.title_i18n : null;
+          const title = (titleI18n && (titleI18n[lang] || titleI18n.en)) || p.title || '';
+          const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+          const cityTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('city', p.city || '') : (p.city || '');
+          const countryTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('country', p.country || '') : (p.country || '');
+          const locationDisplay = [cityTr, countryTr].filter(Boolean).join(', ') || ((p.city || '') + ', ' + (p.country || ''));
+          return {
+            id: p.id,
+            title,
+            slug: p.slug,
+            country: p.country,
+            city: p.city,
+            locationDisplay,
+            neighborhood: p.neighborhood,
+            price: p.price,
+            photos,
+            type: p.type,
+            rooms: p.rooms,
+            bathrooms: p.bathrooms,
+            size: p.size
+          };
+        });
+      }
+    } catch (_) { /* non-fatal */ }
 
-const baseUrl = res.locals.baseUrl;
-const canonicalUrl = `${baseUrl}${langPath}`;
-const hreflangAlternates = {
-'en-us': `${baseUrl}/`,
-'de-de': `${baseUrl}/de`,
-'es-es': `${baseUrl}/es`
-};
-const homeTitles = {
-en: 'International Real Estate Investment Company',
-de: 'Internationales Immobilien Investment Unternehmen',
-es: 'Agencia internacional de inversión inmobiliaria'
-};
-const pageTitle = homeTitles[lang] || homeTitles.en;
-const t = res.locals.t;
-const learnMoreText = t && typeof t === 'function' ? t('common.learnMore', 'Learn more') : 'Learn more';
-const berlinNeighborhoodNames = (((locations || {}).Germany || {}).Berlin && Array.isArray(locations.Germany.Berlin))
-? locations.Germany.Berlin
-: [];
-const selectedNeighborhoodContent = HOME_BERLIN_NEIGHBORHOOD_CONTENT[lang] || HOME_BERLIN_NEIGHBORHOOD_CONTENT.en;
-const fallbackNeighborhoodContent = HOME_BERLIN_NEIGHBORHOOD_CONTENT.en;
-const berlinNeighborhoods = berlinNeighborhoodNames.map((name) => {
-const normalizedName = String(name || '').replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/Ä/g, 'A').replace(/Ö/g, 'O').replace(/Ü/g, 'U').replace(/ß/g, 'ss');
-const item = selectedNeighborhoodContent[name] || selectedNeighborhoodContent[normalizedName] || fallbackNeighborhoodContent[name] || fallbackNeighborhoodContent[normalizedName] || {};
-return {
-name,
-summary: item.summary || '',
-realEstate: item.realEstate || ''
-};
-});
+    const baseUrl = res.locals.baseUrl;
+    const canonicalUrl = `${baseUrl}${langPath}`;
+    const hreflangAlternates = {
+      'en-us': `${baseUrl}/`,
+      'de-de': `${baseUrl}/de`,
+      'es-es': `${baseUrl}/es`
+    };
+    const homeTitles = {
+      en: 'International Real Estate Investment Company',
+      de: 'Internationales Immobilien Investment Unternehmen',
+      es: 'Agencia internacional de inversión inmobiliaria'
+    };
+    const pageTitle = homeTitles[lang] || homeTitles.en;
+    const t = res.locals.t;
+    const learnMoreText = t && typeof t === 'function' ? t('common.learnMore', 'Learn more') : 'Learn more';
+    const berlinNeighborhoodNames = (((locations || {}).Germany || {}).Berlin && Array.isArray(locations.Germany.Berlin))
+      ? locations.Germany.Berlin
+      : [];
+    const selectedNeighborhoodContent = HOME_BERLIN_NEIGHBORHOOD_CONTENT[lang] || HOME_BERLIN_NEIGHBORHOOD_CONTENT.en;
+    const fallbackNeighborhoodContent = HOME_BERLIN_NEIGHBORHOOD_CONTENT.en;
+    const berlinNeighborhoods = berlinNeighborhoodNames.map((name) => {
+      const normalizedName = String(name || '').replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/Ä/g, 'A').replace(/Ö/g, 'O').replace(/Ü/g, 'U').replace(/ß/g, 'ss');
+      const item = selectedNeighborhoodContent[name] || selectedNeighborhoodContent[normalizedName] || fallbackNeighborhoodContent[name] || fallbackNeighborhoodContent[normalizedName] || {};
+      return {
+        name,
+        summary: item.summary || '',
+        realEstate: item.realEstate || ''
+      };
+    });
 
-res.render('home', {
-title: pageTitle,
-user: req.session.user || null,
-locations,
-newDevelopmentRows,
-berlinNeighborhoods,
-featuredProperties,
-learnMoreText,
-canonicalUrl,
-hreflangAlternates,
-headPartial: '../partials/seo/home-head',
-pageMetaDescription: 'Find your dream property in Cyprus, Dubai, and Berlin. Browse luxury apartments, villas, and real estate investments. Expert guidance for buyers and sellers.'
-});
-} catch (e) { next(e); }
+    res.render('home', {
+      title: pageTitle,
+      user: req.session.user || null,
+      locations,
+      newDevelopmentRows,
+      berlinNeighborhoods,
+      featuredProperties,
+      learnMoreText,
+      canonicalUrl,
+      hreflangAlternates,
+      headPartial: '../partials/seo/home-head',
+      pageMetaDescription: 'Find your dream property in Cyprus, Dubai, and Berlin. Browse luxury apartments, villas, and real estate investments. Expert guidance for buyers and sellers.'
+    });
+  } catch (e) { next(e); }
 }
 
 // Home page: / (English default), /de, /es (i18n reads lang from path)
@@ -930,126 +928,126 @@ app.use('/es', createLocaleRouter(renderHomePage));
 
 // Staff convenience entry — bookmarkable
 app.get('/admin', (req, res) => {
-const u = req.session.user;
-if (u && u.role === 'SuperAdmin') return res.redirect('/superadmin/dashboard');
-if (u && u.role === 'Admin') return res.redirect('/admin/dashboard');
-return res.redirect('/auth/login');
+  const u = req.session.user;
+  if (u && u.role === 'SuperAdmin') return res.redirect('/superadmin/dashboard');
+  if (u && u.role === 'Admin') return res.redirect('/admin/dashboard');
+  return res.redirect('/auth/login');
 });
 
 // Services page
 app.get('/services', (req, res) => {
-const baseUrl = res.locals.baseUrl;
-const canonicalUrl = `${baseUrl}/services`;
-const title = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('nav.services', 'Services') : 'Services';
-res.render('services', {
-title,
-useMainContainer: false,
-canonicalUrl
-});
+  const baseUrl = res.locals.baseUrl;
+  const canonicalUrl = `${baseUrl}/services`;
+  const title = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('nav.services', 'Services') : 'Services';
+  res.render('services', {
+    title,
+    useMainContainer: false,
+    canonicalUrl
+  });
 });
 
 // Owners landing page (public)
 app.get('/owners', async (req, res, next) => {
-try {
-const { rows } = await query(`
-     SELECT id, title, slug, city, neighborhood, country, photos, sold_at
-       FROM properties
-      WHERE sold = true AND sold_at IS NOT NULL
-      ORDER BY sold_at DESC
-      LIMIT 5
-   `);
-const properties = rows.map(p => ({
-...p,
-photos: Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : [])
-}));
-const baseUrl = res.locals.baseUrl;
-res.render('owners', {
-title: 'For Sellers',
-useMainContainer: false,
-soldProperties: properties,
-canonicalUrl: `${baseUrl}/owners`
-});
-} catch (e) { next(e); }
+  try {
+    const { rows } = await query(`
+      SELECT id, title, slug, city, neighborhood, country, photos, sold_at
+        FROM properties
+       WHERE sold = true AND sold_at IS NOT NULL
+       ORDER BY sold_at DESC
+       LIMIT 5
+    `);
+    const properties = rows.map(p => ({
+      ...p,
+      photos: Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : [])
+    }));
+    const baseUrl = res.locals.baseUrl;
+    res.render('owners', {
+      title: 'For Sellers',
+      useMainContainer: false,
+      soldProperties: properties,
+      canonicalUrl: `${baseUrl}/owners`
+    });
+  } catch (e) { next(e); }
 });
 
 // robots.txt
 // Dynamic icon theme CSS endpoint - generates CSS based on active theme
 app.get('/css/icon-theme.css', (req, res) => {
-try {
-const iconPathFunc = iconThemes.getIconPath;
-const bedPath = iconPathFunc('bed');
-const bathPath = iconPathFunc('bath');
-const sizePath = iconPathFunc('size');
-const locationPath = iconPathFunc('location');
-const propertyTypePath = iconPathFunc('propertyType');
-const occupancyPath = iconPathFunc('occupancy');
-const rentalPath = iconPathFunc('rental');
-
-const isPng = (path) => path && path.toLowerCase().indexOf('.png') !== -1;
-const bedIsPng = isPng(bedPath);
-const bathIsPng = isPng(bathPath);
-const sizeIsPng = isPng(sizePath);
-const locationIsPng = isPng(locationPath);
-const propertyTypeIsPng = isPng(propertyTypePath);
-const occupancyIsPng = isPng(occupancyPath);
-const rentalIsPng = isPng(rentalPath);
-
-let css = ':root{';
-css += `--icon-bed:url('${bedPath}');`;
-css += `--icon-bath:url('${bathPath}');`;
-css += `--icon-size:url('${sizePath}');`;
-css += `--icon-location:url('${locationPath}');`;
-if (propertyTypePath) css += `--icon-property-type:url('${propertyTypePath}');`;
-if (occupancyPath) css += `--icon-occupancy:url('${occupancyPath}');`;
-if (rentalPath) css += `--icon-rental:url('${rentalPath}');`;
-css += '}';
-
-const generateIconClass = (name, path, isPng) => {
-let result = `.icon-${name}{--icon:var(--icon-${name})!important;`;
-if (isPng) {
-result += `background-image:var(--icon-${name})!important;background-size:contain!important;background-repeat:no-repeat!important;background-position:center!important;-webkit-mask:none!important;mask:none!important;background-color:transparent!important;`;
-}
-result += '}';
-return result;
-};
-
-css += generateIconClass('bed', bedPath, bedIsPng);
-css += generateIconClass('bath', bathPath, bathIsPng);
-css += generateIconClass('size', sizePath, sizeIsPng);
-css += generateIconClass('location', locationPath, locationIsPng);
-if (propertyTypePath) css += generateIconClass('property-type', propertyTypePath, propertyTypeIsPng);
-if (occupancyPath) css += generateIconClass('occupancy', occupancyPath, occupancyIsPng);
-if (rentalPath) css += generateIconClass('rental', rentalPath, rentalIsPng);
-
-const activeTheme = iconThemes.getActiveTheme();
-if (activeTheme === 'christmas') {
-css += 'body[data-icon-theme="christmas"] .icon-bed,body[data-icon-theme="christmas"] .icon-bath,body[data-icon-theme="christmas"] .icon-size,body[data-icon-theme="christmas"] .icon-location,body[data-icon-theme="christmas"] .icon-property-type,body[data-icon-theme="christmas"] .icon-occupancy,body[data-icon-theme="christmas"] .icon-rental{transform:scale(1.5);transform-origin:center;}';
-}
-
-res.setHeader('Content-Type', 'text/css');
-res.setHeader('Cache-Control', 'public, max-age=3600');
-res.send(css);
-} catch (err) {
-console.error('Error generating icon theme CSS:', err);
-res.status(500).send('/* Error generating CSS */');
-}
+  try {
+    const iconPathFunc = iconThemes.getIconPath;
+    const bedPath = iconPathFunc('bed');
+    const bathPath = iconPathFunc('bath');
+    const sizePath = iconPathFunc('size');
+    const locationPath = iconPathFunc('location');
+    const propertyTypePath = iconPathFunc('propertyType');
+    const occupancyPath = iconPathFunc('occupancy');
+    const rentalPath = iconPathFunc('rental');
+    
+    const isPng = (path) => path && path.toLowerCase().indexOf('.png') !== -1;
+    const bedIsPng = isPng(bedPath);
+    const bathIsPng = isPng(bathPath);
+    const sizeIsPng = isPng(sizePath);
+    const locationIsPng = isPng(locationPath);
+    const propertyTypeIsPng = isPng(propertyTypePath);
+    const occupancyIsPng = isPng(occupancyPath);
+    const rentalIsPng = isPng(rentalPath);
+    
+    let css = ':root{';
+    css += `--icon-bed:url('${bedPath}');`;
+    css += `--icon-bath:url('${bathPath}');`;
+    css += `--icon-size:url('${sizePath}');`;
+    css += `--icon-location:url('${locationPath}');`;
+    if (propertyTypePath) css += `--icon-property-type:url('${propertyTypePath}');`;
+    if (occupancyPath) css += `--icon-occupancy:url('${occupancyPath}');`;
+    if (rentalPath) css += `--icon-rental:url('${rentalPath}');`;
+    css += '}';
+    
+    const generateIconClass = (name, path, isPng) => {
+      let result = `.icon-${name}{--icon:var(--icon-${name})!important;`;
+      if (isPng) {
+        result += `background-image:var(--icon-${name})!important;background-size:contain!important;background-repeat:no-repeat!important;background-position:center!important;-webkit-mask:none!important;mask:none!important;background-color:transparent!important;`;
+      }
+      result += '}';
+      return result;
+    };
+    
+    css += generateIconClass('bed', bedPath, bedIsPng);
+    css += generateIconClass('bath', bathPath, bathIsPng);
+    css += generateIconClass('size', sizePath, sizeIsPng);
+    css += generateIconClass('location', locationPath, locationIsPng);
+    if (propertyTypePath) css += generateIconClass('property-type', propertyTypePath, propertyTypeIsPng);
+    if (occupancyPath) css += generateIconClass('occupancy', occupancyPath, occupancyIsPng);
+    if (rentalPath) css += generateIconClass('rental', rentalPath, rentalIsPng);
+    
+    const activeTheme = iconThemes.getActiveTheme();
+    if (activeTheme === 'christmas') {
+      css += 'body[data-icon-theme="christmas"] .icon-bed,body[data-icon-theme="christmas"] .icon-bath,body[data-icon-theme="christmas"] .icon-size,body[data-icon-theme="christmas"] .icon-location,body[data-icon-theme="christmas"] .icon-property-type,body[data-icon-theme="christmas"] .icon-occupancy,body[data-icon-theme="christmas"] .icon-rental{transform:scale(1.5);transform-origin:center;}';
+    }
+    
+    res.setHeader('Content-Type', 'text/css');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.send(css);
+  } catch (err) {
+    console.error('Error generating icon theme CSS:', err);
+    res.status(500).send('/* Error generating CSS */');
+  }
 });
 
 app.get('/robots.txt', (req, res) => {
-res.type('text/plain');
-const baseUrl = res.locals.baseUrl;
-const allowAll = process.env.ROBOTS_ALLOW !== 'false';
-const robotsContent = allowAll 
-? `User-agent: *\nAllow: /\n\nSitemap: ${baseUrl}/sitemap.xml` 
-: `User-agent: *\nDisallow: /\n\nSitemap: ${baseUrl}/sitemap.xml`;
-res.send(robotsContent);
+  res.type('text/plain');
+  const baseUrl = res.locals.baseUrl;
+  const allowAll = process.env.ROBOTS_ALLOW !== 'false';
+  const robotsContent = allowAll 
+    ? `User-agent: *\nAllow: /\n\nSitemap: ${baseUrl}/sitemap.xml` 
+    : `User-agent: *\nDisallow: /\n\nSitemap: ${baseUrl}/sitemap.xml`;
+  res.send(robotsContent);
 });
 
 // llms.txt for AI search engines
 app.get('/llms.txt', (req, res) => {
-res.type('text/plain');
-const baseUrl = res.locals.baseUrl;
-const llmsContent = `# Sweet Home Real Estate Platform
+  res.type('text/plain');
+  const baseUrl = res.locals.baseUrl;
+  const llmsContent = `# Sweet Home Real Estate Platform
 
 ## About
 Sweet Home is a real estate agency platform specializing in luxury properties in Cyprus, Dubai, and Berlin. We help buyers find their dream homes and assist sellers with property management and sales services.
@@ -1089,96 +1087,97 @@ For a complete list of all pages, see: ${baseUrl}/sitemap.xml
 ## Contact
 For inquiries, visit: ${baseUrl}/contact
 `;
-res.send(llmsContent);
+  res.send(llmsContent);
 });
 
 // sitemap.xml (basic; can be expanded to pull from DB)
 app.get('/sitemap.xml', async (req, res, next) => {
-try {
-const base = res.locals.baseUrl;
+  try {
+    const base = res.locals.baseUrl;
 
-// Static pages (including locale-prefixed variants)
-const staticPaths = ['', 'about', 'contact', 'projects', 'properties', 'privacy', 'terms', 'cookies', 'services', 'owners'];
-const staticUrls = staticPaths.map(p => ({ 
-loc: `${base}/${p}`.replace(/\/$/, '/'), 
-lastmod: null,
-changefreq: p === '' ? 'daily' : 'weekly',
-priority: p === '' ? '1.0' : '0.8'
-}));
-// Locale-prefixed home pages
-staticUrls.push({ loc: `${base}/de`, lastmod: null, changefreq: 'daily', priority: '1.0' });
-staticUrls.push({ loc: `${base}/es`, lastmod: null, changefreq: 'daily', priority: '1.0' });
+    // Static pages (including locale-prefixed variants)
+    const staticPaths = ['', 'about', 'contact', 'projects', 'properties', 'privacy', 'terms', 'cookies', 'services', 'owners'];
+    const staticUrls = staticPaths.map(p => ({ 
+      loc: `${base}/${p}`.replace(/\/$/, '/'), 
+      lastmod: null,
+      changefreq: p === '' ? 'daily' : 'weekly',
+      priority: p === '' ? '1.0' : '0.8'
+    }));
+    // Locale-prefixed home pages
+    staticUrls.push({ loc: `${base}/de`, lastmod: null, changefreq: 'daily', priority: '1.0' });
+    staticUrls.push({ loc: `${base}/es`, lastmod: null, changefreq: 'daily', priority: '1.0' });
 
-// Dynamic properties
-const props = await query(`SELECT slug, updated_at, created_at FROM properties WHERE slug IS NOT NULL ORDER BY updated_at DESC NULLS LAST, created_at DESC NULLS LAST LIMIT 5000`);
-const propUrls = (props.rows || []).map(r => ({
-loc: `${base}/properties/${r.slug}`,
-lastmod: (r.updated_at || r.created_at) ? new Date(r.updated_at || r.created_at).toISOString() : null,
-changefreq: 'weekly',
-priority: '0.9'
-}));
+    // Dynamic properties
+    const props = await query(`SELECT slug, updated_at, created_at FROM properties WHERE slug IS NOT NULL ORDER BY updated_at DESC NULLS LAST, created_at DESC NULLS LAST LIMIT 5000`);
+    const propUrls = (props.rows || []).map(r => ({
+      loc: `${base}/properties/${r.slug}`,
+      lastmod: (r.updated_at || r.created_at) ? new Date(r.updated_at || r.created_at).toISOString() : null,
+      changefreq: 'weekly',
+      priority: '0.9'
+    }));
 
-// Dynamic projects
-const projs = await query(`SELECT slug, updated_at, created_at FROM projects WHERE slug IS NOT NULL ORDER BY updated_at DESC NULLS LAST, created_at DESC NULLS LAST LIMIT 5000`);
-const projUrls = (projs.rows || []).map(r => ({
-loc: `${base}/projects/${r.slug}`,
-lastmod: (r.updated_at || r.created_at) ? new Date(r.updated_at || r.created_at).toISOString() : null,
-changefreq: 'monthly',
-priority: '0.8'
-}));
+    // Dynamic projects
+    const projs = await query(`SELECT slug, updated_at, created_at FROM projects WHERE slug IS NOT NULL ORDER BY updated_at DESC NULLS LAST, created_at DESC NULLS LAST LIMIT 5000`);
+    const projUrls = (projs.rows || []).map(r => ({
+      loc: `${base}/projects/${r.slug}`,
+      lastmod: (r.updated_at || r.created_at) ? new Date(r.updated_at || r.created_at).toISOString() : null,
+      changefreq: 'monthly',
+      priority: '0.8'
+    }));
 
-// Dynamic blog posts
-const posts = await query(`SELECT slug, updated_at, created_at, status, published_at FROM blog_posts WHERE slug IS NOT NULL AND status = 'published' ORDER BY COALESCE(updated_at, created_at) DESC NULLS LAST LIMIT 5000`);
-const blogUrls = (posts.rows || []).map(r => ({
-loc: `${base}/blog/${r.slug}`,
-lastmod: (r.updated_at || r.published_at || r.created_at) ? new Date(r.updated_at || r.published_at || r.created_at).toISOString() : null,
-changefreq: 'monthly',
-priority: '0.7'
-}));
+    // Dynamic blog posts
+    const posts = await query(`SELECT slug, updated_at, created_at, status, published_at FROM blog_posts WHERE slug IS NOT NULL AND status = 'published' ORDER BY COALESCE(updated_at, created_at) DESC NULLS LAST LIMIT 5000`);
+    const blogUrls = (posts.rows || []).map(r => ({
+      loc: `${base}/blog/${r.slug}`,
+      lastmod: (r.updated_at || r.published_at || r.created_at) ? new Date(r.updated_at || r.published_at || r.created_at).toISOString() : null,
+      changefreq: 'monthly',
+      priority: '0.7'
+    }));
 
-const all = [...staticUrls, ...propUrls, ...projUrls, ...blogUrls];
-const xml = `<?xml version="1.0" encoding="UTF-8"?>\n` +
-`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` +
-all.map(u => `\n  <url>` +
-`<loc>${u.loc}</loc>` +
-(u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : '') +
-(u.changefreq ? `<changefreq>${u.changefreq}</changefreq>` : '') +
-(u.priority ? `<priority>${u.priority}</priority>` : '') +
-`</url>`).join('') +
-`\n</urlset>`;
-res.type('application/xml').send(xml);
-} catch (e) { next(e); }
+    const all = [...staticUrls, ...propUrls, ...projUrls, ...blogUrls];
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n` +
+      `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` +
+      all.map(u => `\n  <url>` +
+        `<loc>${u.loc}</loc>` +
+        (u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : '') +
+        (u.changefreq ? `<changefreq>${u.changefreq}</changefreq>` : '') +
+        (u.priority ? `<priority>${u.priority}</priority>` : '') +
+      `</url>`).join('') +
+      `\n</urlset>`;
+    res.type('application/xml').send(xml);
+  } catch (e) { next(e); }
 });
 
 // Basic health check endpoint
 app.get('/health', async (req, res) => {
-try {
-const dbOk = await pool.query('SELECT 1');
-res.json({ status: 'ok', db: dbOk ? 'up' : 'down', time: new Date().toISOString() });
-} catch (e) {
-res.status(503).json({ status: 'degraded', db: 'down', time: new Date().toISOString() });
-}
+  try {
+    const dbOk = await pool.query('SELECT 1');
+    res.json({ status: 'ok', db: dbOk ? 'up' : 'down', time: new Date().toISOString() });
+  } catch (e) {
+    res.status(503).json({ status: 'degraded', db: 'down', time: new Date().toISOString() });
+  }
 });
 
 // 404 handler (last non-error middleware)
 // Ensure error views always have t() (in case they're rendered before i18n ran)
 const fallbackT = (key, fallback) => (typeof fallback !== 'undefined' ? fallback : '');
 app.use((req, res, next) => {
-if (res.headersSent) return next();
-return res.status(404).render('errors/404', { t: res.locals.t || fallbackT });
+  if (res.headersSent) return next();
+  return res.status(404).render('errors/404', { t: res.locals.t || fallbackT });
 });
 
 // Global error handler (must have 4 args)
 app.use((err, req, res, next) => {
-if (err && err.code === 'EBADCSRFTOKEN') {
-return res.status(403).render('errors/500', { error: new Error('Invalid CSRF token'), t: res.locals.t || fallbackT });
-}
-const status = err && err.status ? err.status : 500;
-const error = err || new Error('Internal Server Error');
-if (process.env.NODE_ENV !== 'production') {
-try { console.error(error.stack || error); } catch (_) {}
-}
-return res.status(status).render('errors/500', { error, t: res.locals.t || fallbackT });
+  if (err && err.code === 'EBADCSRFTOKEN') {
+    return res.status(403).render('errors/500', { error: new Error('Invalid CSRF token'), t: res.locals.t || fallbackT });
+  }
+  const status = err && err.status ? err.status : 500;
+  const error = err || new Error('Internal Server Error');
+  if (process.env.NODE_ENV !== 'production') {
+    try { console.error(error.stack || error); } catch (_) {}
+  }
+  return res.status(status).render('errors/500', { error, t: res.locals.t || fallbackT });
 });
 
 const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
