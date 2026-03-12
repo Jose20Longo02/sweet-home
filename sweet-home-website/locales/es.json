@@ -278,6 +278,11 @@
       "realEstate": "Inmobiliario",
       "exploreCta": "Explorar apartamentos"
     },
+    "neighborhoodGuides": {
+      "title": "Guías de Barrios",
+      "hint": "Elige una ciudad y haz clic en un barrio para ver contexto local y su perfil inmobiliario.",
+      "switcherLabel": "Guías por ciudad"
+    },
     "recommendedProject": {
       "title": "Proyecto recomendado",
       "startingAt": "Desde",

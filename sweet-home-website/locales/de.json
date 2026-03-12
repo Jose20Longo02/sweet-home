@@ -287,6 +287,11 @@
       "realEstate": "Immobilien",
       "exploreCta": "Wohnungen entdecken"
     },
+    "neighborhoodGuides": {
+      "title": "Stadtteile Guides",
+      "hint": "Waehlen Sie eine Stadt und klicken Sie auf einen Stadtteil, um lokalen Kontext und Immobilienprofil zu sehen.",
+      "switcherLabel": "Stadt Guides"
+    },
     "recommendedProject": {
       "title": "Empfohlenes Projekt",
       "startingAt": "Ab",

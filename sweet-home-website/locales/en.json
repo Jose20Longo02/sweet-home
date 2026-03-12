@@ -305,6 +305,11 @@
       "realEstate": "Real estate",
       "exploreCta": "Explore apartments"
     },
+    "neighborhoodGuides": {
+      "title": "Neighborhoods Guides",
+      "hint": "Choose a city and click a neighborhood to expand local context and real-estate profile.",
+      "switcherLabel": "City guides"
+    },
     "recommendedProject": {
       "title": "Recommended Project",
       "startingAt": "Starting at",

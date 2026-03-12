@@ -217,41 +217,74 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
   </div>
 </section>
 
-<!-- Berlin neighborhoods helper section -->
-<section class="section home-berlin-neighborhoods" aria-label="<%= t('home.berlinNeighborhoods.title','Berlin Neighborhoods Guide') %>">
+<!-- Neighborhoods guides helper section -->
+<section class="section home-berlin-neighborhoods home-neighborhood-guides" aria-label="<%= t('home.neighborhoodGuides.title','Neighborhoods Guides') %>">
   <div class="container">
-    <h2 class="section-title"><%= t('home.berlinNeighborhoods.title','Berlin Neighborhoods Guide') %></h2>
-    <p class="home-berlin-neighborhoods__hint"><%= t('home.berlinNeighborhoods.hint','Click a neighborhood to expand key local context and real-estate profile.') %></p>
-    <% const homeBerlinNeighborhoods = (typeof berlinNeighborhoods !== 'undefined' && Array.isArray(berlinNeighborhoods)) ? berlinNeighborhoods : []; %>
-    <div class="home-berlin-neighborhoods__grid">
-      <% homeBerlinNeighborhoods.forEach(function(item, idx){ %>
-        <% const panelId = `home-berlin-neighborhood-panel-${idx}`; %>
-        <% const triggerId = `home-berlin-neighborhood-trigger-${idx}`; %>
-        <article class="home-berlin-neighborhood-card" data-home-neighborhood-card>
+    <h2 class="section-title"><%= t('home.neighborhoodGuides.title','Neighborhoods Guides') %></h2>
+    <p class="home-berlin-neighborhoods__hint"><%= t('home.neighborhoodGuides.hint','Choose a city and click a neighborhood to expand local context and real-estate profile.') %></p>
+    <% const guides = (typeof homeNeighborhoodGuides !== 'undefined' && Array.isArray(homeNeighborhoodGuides)) ? homeNeighborhoodGuides : []; %>
+    <% if (guides.length > 0) { %>
+      <div class="home-neighborhood-guides__tabs" role="tablist" aria-label="<%= t('home.neighborhoodGuides.switcherLabel','City guides') %>">
+        <% guides.forEach(function(guide, idx){ %>
           <button
             type="button"
-            id="<%= triggerId %>"
-            class="home-berlin-neighborhood-card__trigger"
-            data-home-neighborhood-toggle
-            aria-expanded="false"
-            aria-controls="<%= panelId %>"
+            class="home-neighborhood-guides__tab <%= idx === 0 ? 'is-active' : '' %>"
+            role="tab"
+            id="home-guide-tab-<%= guide.id %>"
+            aria-selected="<%= idx === 0 ? 'true' : 'false' %>"
+            aria-controls="home-guide-panel-<%= guide.id %>"
+            data-home-guide-tab
+            data-guide-id="<%= guide.id %>"
+            tabindex="<%= idx === 0 ? '0' : '-1' %>"
           >
-            <span class="home-berlin-neighborhood-card__name"><%= item.name %></span>
-            <span class="home-berlin-neighborhood-card__icon" aria-hidden="true"></span>
+            <%= guide.cityLabel %>
           </button>
-          <div class="home-berlin-neighborhood-card__panel" id="<%= panelId %>" role="region" aria-labelledby="<%= triggerId %>" hidden>
-            <p><%= item.summary %></p>
-            <p><strong><%= t('home.berlinNeighborhoods.realEstate','Real estate') %>:</strong> <%= item.realEstate %></p>
-            <a
-              class="btn btn-green home-berlin-neighborhood-card__cta"
-              href="<%= ((typeof localePath === 'function') ? localePath('/properties') : '/properties') + '?country=Germany&city=Berlin&neighborhood=' + encodeURIComponent(item.name) %>"
-            >
-              <%= t('home.berlinNeighborhoods.exploreCta','Explore apartments') %>
-            </a>
+        <% }) %>
+      </div>
+      <% guides.forEach(function(guide, gidx){ %>
+        <div
+          id="home-guide-panel-<%= guide.id %>"
+          class="home-neighborhood-guides__panel"
+          role="tabpanel"
+          aria-labelledby="home-guide-tab-<%= guide.id %>"
+          data-home-guide-panel
+          data-guide-id="<%= guide.id %>"
+          <%= gidx === 0 ? '' : 'hidden' %>
+        >
+          <div class="home-berlin-neighborhoods__grid">
+            <% (guide.neighborhoods || []).forEach(function(item, idx){ %>
+              <% const panelId = `home-${guide.id}-neighborhood-panel-${idx}`; %>
+              <% const triggerId = `home-${guide.id}-neighborhood-trigger-${idx}`; %>
+              <article class="home-berlin-neighborhood-card" data-home-neighborhood-card>
+                <button
+                  type="button"
+                  id="<%= triggerId %>"
+                  class="home-berlin-neighborhood-card__trigger"
+                  data-home-neighborhood-toggle
+                  aria-expanded="false"
+                  aria-controls="<%= panelId %>"
+                >
+                  <span class="home-berlin-neighborhood-card__name"><%= item.name %></span>
+                  <span class="home-berlin-neighborhood-card__icon" aria-hidden="true"></span>
+                </button>
+                <div class="home-berlin-neighborhood-card__panel" id="<%= panelId %>" role="region" aria-labelledby="<%= triggerId %>" hidden>
+                  <p><%= item.summary %></p>
+                  <p><strong><%= t('home.berlinNeighborhoods.realEstate','Real estate') %>:</strong> <%= item.realEstate %></p>
+                  <a
+                    class="btn btn-green home-berlin-neighborhood-card__cta"
+                    href="<%= ((typeof localePath === 'function') ? localePath('/properties') : '/properties') + '?country=' + encodeURIComponent(guide.country) + '&city=' + encodeURIComponent(guide.city) + '&neighborhood=' + encodeURIComponent(item.name) %>"
+                  >
+                    <%= t('home.berlinNeighborhoods.exploreCta','Explore apartments') %>
+                  </a>
+                </div>
+              </article>
+            <% }) %>
           </div>
-        </article>
+        </div>
       <% }) %>
-    </div>
+    <% } else { %>
+      <p class="section-empty"><%= t('properties.list.noResults','No properties found.') %></p>
+    <% } %>
   </div>
 </section>
 
@@ -491,41 +524,67 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
 <script src="/js/home.js"></script>
 <script src="/js/contact.js" defer></script>
 <script>
-document.querySelectorAll('[data-home-neighborhood-toggle]').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    var currentExpanded = this.getAttribute('aria-expanded') === 'true';
-    var currentPanelId = this.getAttribute('aria-controls');
-    var currentPanel = currentPanelId ? document.getElementById(currentPanelId) : null;
-    var currentCard = this.closest('[data-home-neighborhood-card]');
-
-    document.querySelectorAll('[data-home-neighborhood-toggle]').forEach(function(otherBtn) {
-      var expanded = otherBtn.getAttribute('aria-expanded') === 'true';
-      if (!expanded) return;
-      otherBtn.setAttribute('aria-expanded', 'false');
-      var panelId = otherBtn.getAttribute('aria-controls');
+(function initHomeNeighborhoodGuides() {
+  function closeOpenCards(scope) {
+    (scope || document).querySelectorAll('[data-home-neighborhood-toggle]').forEach(function(btn) {
+      btn.setAttribute('aria-expanded', 'false');
+      var panelId = btn.getAttribute('aria-controls');
       var panel = panelId ? document.getElementById(panelId) : null;
       if (panel) panel.hidden = true;
-      var card = otherBtn.closest('[data-home-neighborhood-card]');
+      var card = btn.closest('[data-home-neighborhood-card]');
       if (card) card.classList.remove('is-open');
     });
+  }
 
-    if (!currentExpanded) {
-      this.setAttribute('aria-expanded', 'true');
-      if (currentPanel) currentPanel.hidden = false;
-      if (currentCard) currentCard.classList.add('is-open');
-    } else {
-      this.setAttribute('aria-expanded', 'false');
-      if (currentPanel) currentPanel.hidden = true;
-      if (currentCard) currentCard.classList.remove('is-open');
-    }
-  });
-});
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[data-home-guide-tab]'));
+  var panels = Array.prototype.slice.call(document.querySelectorAll('[data-home-guide-panel]'));
 
-document.querySelectorAll('[data-home-neighborhood-card]').forEach(function(card) {
-  card.addEventListener('click', function(event) {
-    if (event.target.closest('a, button, input, select, textarea, label')) return;
-    var toggle = card.querySelector('[data-home-neighborhood-toggle]');
-    if (toggle) toggle.click();
+  function activateGuide(guideId) {
+    tabs.forEach(function(tab) {
+      var active = tab.getAttribute('data-guide-id') === guideId;
+      tab.classList.toggle('is-active', active);
+      tab.setAttribute('aria-selected', active ? 'true' : 'false');
+      tab.setAttribute('tabindex', active ? '0' : '-1');
+    });
+    panels.forEach(function(panel) {
+      var active = panel.getAttribute('data-guide-id') === guideId;
+      panel.hidden = !active;
+      if (active) closeOpenCards(panel);
+    });
+  }
+
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      activateGuide(tab.getAttribute('data-guide-id'));
+    });
   });
-});
+
+  document.querySelectorAll('[data-home-neighborhood-toggle]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var parentPanel = this.closest('[data-home-guide-panel]') || document;
+      var currentExpanded = this.getAttribute('aria-expanded') === 'true';
+      var currentPanelId = this.getAttribute('aria-controls');
+      var currentPanel = currentPanelId ? document.getElementById(currentPanelId) : null;
+      var currentCard = this.closest('[data-home-neighborhood-card]');
+
+      closeOpenCards(parentPanel);
+
+      if (!currentExpanded) {
+        this.setAttribute('aria-expanded', 'true');
+        if (currentPanel) currentPanel.hidden = false;
+        if (currentCard) currentCard.classList.add('is-open');
+      }
+    });
+  });
+
+  document.querySelectorAll('[data-home-neighborhood-card]').forEach(function(card) {
+    card.addEventListener('click', function(event) {
+      if (event.target.closest('a, button, input, select, textarea, label')) return;
+      var toggle = card.querySelector('[data-home-neighborhood-toggle]');
+      if (toggle) toggle.click();
+    });
+  });
+
+  if (tabs.length) activateGuide(tabs[0].getAttribute('data-guide-id'));
+})();
 </script>
