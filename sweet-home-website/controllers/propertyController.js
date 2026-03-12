@@ -2584,7 +2584,7 @@ exports.getFeaturedProperties = async (req, res, next) => {
   }
 };
 
-// Berlin landing page: Properties for Sale Berlin (8 most-viewed in Germany)
+// Berlin landing page: Properties for Sale Berlin (most-viewed in Germany)
 exports.berlinPropertiesPage = async (req, res, next) => {
   try {
     const sql = `
@@ -2605,7 +2605,7 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       LEFT JOIN property_stats ps ON ps.property_id = p.id
       WHERE p.country = 'Germany'
       ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
-      LIMIT 12
+      LIMIT 15
     `;
     const { rows: properties } = await query(sql);
     const lang = res.locals.lang || 'en';
