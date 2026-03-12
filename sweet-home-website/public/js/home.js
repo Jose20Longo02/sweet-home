@@ -571,7 +571,7 @@ function initCardsCarousel(rootSelector) {
         const cards = getCards();
         if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; }
       }
-      markCenterCard(track);
+      initCenterState();
     });
   });
   mo.observe(track, { childList: true });
@@ -596,30 +596,40 @@ function initCardsCarousel(rootSelector) {
     if (i >= 0) centerCardByIndex(i);
   });
 
-  // Initial center mark
+  // Initial center mark: first force all cards to dimmed state, then apply center after paint.
+  // This prevents cards from entering enhanced on first scroll (they need base state applied first).
+  function initCenterState() {
+    const cards = getCards();
+    cards.forEach(c => c.classList.remove('is-center'));
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        markCenterCard(track);
+      });
+    });
+  }
   setTimeout(() => {
     ensureSpacers();
     if (isFeatured && !didInitialCenter) {
       const cards = getCards();
       if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; }
     }
-    markCenterCard(track);
+    initCenterState();
   }, 0);
 }
 
 function markCenterCard(container) {
   const cards = [...container.querySelectorAll('.property-card, .testimonial-card')];
   if (!cards.length) return;
+  // First: remove center from all so they render in dimmed state (opacity .7, scale .94).
+  cards.forEach(card => card.classList.remove('is-center'));
   const center = container.scrollLeft + container.clientWidth / 2;
   let closest = null, minDist = Infinity;
   cards.forEach(card => {
     const cx = card.offsetLeft + card.offsetWidth / 2;
     const dist = Math.abs(cx - center);
     if (dist < minDist) { minDist = dist; closest = card; }
-    card.classList.remove('is-center');
   });
-  // Only mark as center if the card is actually well-centered (within ~40% of card width).
-  // This prevents cards entering from the side from appearing enhanced before they settle.
+  // Only mark as center if well-centered (within ~40% of card width from view center).
   if (closest && minDist < closest.offsetWidth * 0.4) {
     closest.classList.add('is-center');
   }
