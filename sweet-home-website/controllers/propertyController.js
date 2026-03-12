@@ -2661,7 +2661,11 @@ exports.berlinPropertiesPage = async (req, res, next) => {
         bestAreasPankow: 'Popular with families and young professionals, showing rental growth momentum and ongoing development.',
         bestAreasNeukoelln: 'Dynamic district with strong rent increases and continued urban transformation.',
         bestAreasLichtenberg: 'More affordable entry points with emerging growth potential as rental spreads narrow across the city.',
-        bestAreasOutro: 'These districts reflect Berlin\'s diverse residential landscape, from prime core locations to growth-oriented submarkets benefiting from citywide supply constraints.'
+        bestAreasOutro: 'These districts reflect Berlin\'s diverse residential landscape, from prime core locations to growth-oriented submarkets benefiting from citywide supply constraints.',
+        neighborhoodsTitle: 'Neighborhoods',
+        neighborhoodsHint: 'Click a neighborhood to expand key local context and real-estate profile.',
+        neighborhoodsRealEstateLabel: 'Real estate',
+        neighborhoodsSourcesLabel: 'Sources'
       },
       de: {
         whyInvestTitle: 'Warum in Berliner Immobilien investieren?',
@@ -2674,7 +2678,11 @@ exports.berlinPropertiesPage = async (req, res, next) => {
         bestAreasPankow: 'Beliebt bei Familien und jungen Berufstätigen, mit dynamischer Mietentwicklung und fortlaufender Quartiersentwicklung.',
         bestAreasNeukoelln: 'Wachstumsorientierter Bezirk mit deutlichen Mietsteigerungen und fortschreitender urbaner Transformation.',
         bestAreasLichtenberg: 'Preislich attraktivere Einstiegslagen mit zunehmendem Entwicklungspotenzial im Zuge stadtweiter Angebotsknappheit.',
-        bestAreasOutro: 'Diese Bezirke spiegeln die Vielfalt des Berliner Wohnimmobilienmarktes wider – von zentralen Premiumlagen für Eigentumswohnungen in Berlin bis hin zu wachstumsstarken Teilmärkten, die von strukturellem Angebotsmangel profitieren.'
+        bestAreasOutro: 'Diese Bezirke spiegeln die Vielfalt des Berliner Wohnimmobilienmarktes wider – von zentralen Premiumlagen für Eigentumswohnungen in Berlin bis hin zu wachstumsstarken Teilmärkten, die von strukturellem Angebotsmangel profitieren.',
+        neighborhoodsTitle: 'Stadtteile',
+        neighborhoodsHint: 'Klicken Sie auf einen Stadtteil, um lokale Einordnung und Immobilienprofil zu sehen.',
+        neighborhoodsRealEstateLabel: 'Immobilien',
+        neighborhoodsSourcesLabel: 'Quellen'
       },
       es: {
         whyInvestTitle: '¿Por qué invertir en el mercado inmobiliario de Berlín?',
@@ -2687,10 +2695,203 @@ exports.berlinPropertiesPage = async (req, res, next) => {
         bestAreasPankow: 'Popular entre familias y jóvenes profesionales, con fuerte dinamismo en el mercado de alquiler y desarrollo continuo.',
         bestAreasNeukoelln: 'Distrito dinámico con importantes incrementos de renta y transformación urbana constante.',
         bestAreasLichtenberg: 'Puntos de entrada más accesibles con potencial de crecimiento a medida que se reducen las diferencias de precios dentro de la ciudad.',
-        bestAreasOutro: 'Estas zonas reflejan la diversidad del mercado inmobiliario berlinés, desde áreas prime consolidadas hasta submercados con potencial de crecimiento impulsados por la escasez estructural de oferta.'
+        bestAreasOutro: 'Estas zonas reflejan la diversidad del mercado inmobiliario berlinés, desde áreas prime consolidadas hasta submercados con potencial de crecimiento impulsados por la escasez estructural de oferta.',
+        neighborhoodsTitle: 'Barrios',
+        neighborhoodsHint: 'Haz clic en un barrio para ver contexto local y su perfil inmobiliario.',
+        neighborhoodsRealEstateLabel: 'Inmobiliario',
+        neighborhoodsSourcesLabel: 'Fuentes'
+      }
+    };
+    const berlinNeighborhoodContent = {
+      en: {
+        'Mitte': {
+          summary: 'Berlin\'s historic and business core with institutions, culture, and premium central addresses.',
+          realEstate: 'Prime mix of renovated Altbau and high-spec new condominiums; high liquidity and persistent rental demand.'
+        },
+        'Friedrichshain-Kreuzberg': {
+          summary: 'Creative, dense inner-city district known for riverside locations, gastronomy, and strong urban lifestyle appeal.',
+          realEstate: 'Mix of classic stock and modern projects; tenant demand remains strong for well-connected micro-locations.'
+        },
+        'Neukölln': {
+          summary: 'Diverse, fast-evolving south-central area with established local neighborhoods and active retail corridors.',
+          realEstate: 'Wide price range with strong absorption in rental stock; selected pockets continue to upgrade in quality.'
+        },
+        'Charlottenburg-Wilmersdorf': {
+          summary: 'Established West Berlin district with major shopping streets, parks, and long-term residential prestige.',
+          realEstate: 'Large period apartments and quality post-war buildings support stable owner-occupier and premium rental demand.'
+        },
+        'Prenzlauer Berg': {
+          summary: 'Family-oriented central neighborhood with cafes, schools, and highly walkable streets.',
+          realEstate: 'Highly sought-after renovated period buildings; low vacancy and limited available inventory.'
+        },
+        'Pankow': {
+          summary: 'Leafier northern area combining urban access with calmer residential pockets.',
+          realEstate: 'Attractive for families and long-term owners, with a balance of existing stock and new developments.'
+        },
+        'Tempelhof': {
+          summary: 'South-central district anchored by Tempelhofer Feld and strong transit links.',
+          realEstate: 'Mostly mid-market apartments with practical layouts; valued for space, connectivity, and neighborhood services.'
+        },
+        'Reinickendorf': {
+          summary: 'Northern district with green areas, lakes, and quieter residential streets.',
+          realEstate: 'Generally more accessible entry points than central districts, with solid family-oriented demand.'
+        },
+        'Wedding (Gesundbrunnen)': {
+          summary: 'Inner-north area with excellent rail access and a broad social and cultural mix.',
+          realEstate: 'Diverse stock from classic buildings to newer infill projects; investors monitor ongoing neighborhood improvements.'
+        },
+        'Kreuzberg': {
+          summary: 'Internationally known urban quarter with strong identity, nightlife, and canal-side micro-locations.',
+          realEstate: 'High demand for compact units and renovated apartments keeps central submarkets highly competitive.'
+        },
+        'Moabit': {
+          summary: 'Central district near government and waterfront areas, with mixed-use streets and active local commerce.',
+          realEstate: 'Mixed building ages and gradual upgrades make it a target for buyers seeking central value potential.'
+        },
+        'Reinickendorf (Am Schäfersee)': {
+          summary: 'Residential pocket around Schaefersee known for local calm and everyday amenities.',
+          realEstate: 'Neighborhood apartments with strong end-user appeal for buyers prioritizing quiet living and transit access.'
+        },
+        'Schöneberg': {
+          summary: 'Classic west-central area with elegant boulevards, cafes, and strong neighborhood identity.',
+          realEstate: 'Altbau streets and established rental demand create resilient long-term residential performance.'
+        },
+        'Spandau': {
+          summary: 'Western district with historic core, Havel waterfronts, and substantial newer residential quarters.',
+          realEstate: 'Family-friendly pricing and ongoing development pipeline support both owner-occupier and investment demand.'
+        }
+      },
+      de: {
+        'Mitte': {
+          summary: 'Historisches und wirtschaftliches Zentrum Berlins mit Institutionen, Kultur und zentralen Premiumlagen.',
+          realEstate: 'Gefragter Mix aus sanierten Altbauten und hochwertigen Neubauwohnungen; hohe Marktliquidität und stabile Mietnachfrage.'
+        },
+        'Friedrichshain-Kreuzberg': {
+          summary: 'Kreativer, dichter Innenstadtbezirk mit Spreelagen, Gastronomie und starkem urbanem Lifestyle.',
+          realEstate: 'Mischung aus klassischem Bestand und modernen Projekten; in gut angebundenen Mikrolagen bleibt die Nachfrage hoch.'
+        },
+        'Neukölln': {
+          summary: 'Vielfältiger, dynamischer Bezirk im Süden der Innenstadt mit gewachsenen Kiezen und aktiven Einkaufsachsen.',
+          realEstate: 'Breites Preisniveau mit starker Aufnahmefähigkeit im Mietmarkt; ausgewählte Teilmärkte werten sich weiter auf.'
+        },
+        'Charlottenburg-Wilmersdorf': {
+          summary: 'Etablierter West-Berliner Bezirk mit großen Einkaufsstraßen, Parks und langfristiger Wohnqualität.',
+          realEstate: 'Großzügige Altbauwohnungen und solide Nachkriegsbestände tragen eine stabile Eigennutzer- und Premium-Mietnachfrage.'
+        },
+        'Prenzlauer Berg': {
+          summary: 'Familienorientierter Innenstadtteil mit Cafés, Schulen und hoher Aufenthaltsqualität.',
+          realEstate: 'Sehr gefragte sanierte Altbauten; niedriger Leerstand und begrenztes verfügbares Angebot.'
+        },
+        'Pankow': {
+          summary: 'Grüner Norden mit guter Innenstadtanbindung und ruhigen Wohnlagen.',
+          realEstate: 'Attraktiv für Familien und langfristige Eigennutzer, mit ausgewogener Kombination aus Bestand und Neubau.'
+        },
+        'Tempelhof': {
+          summary: 'Süd-zentraler Bezirk rund um das Tempelhofer Feld mit guter Verkehrsanbindung.',
+          realEstate: 'Überwiegend mittleres Preissegment mit funktionalen Grundrissen; gefragt wegen Platz, Infrastruktur und Alltagstauglichkeit.'
+        },
+        'Reinickendorf': {
+          summary: 'Nördlicher Bezirk mit viel Grün, Seen und ruhigeren Wohnstraßen.',
+          realEstate: 'Im Vergleich zu zentralen Lagen oft günstigere Einstiege bei solider, familienorientierter Nachfrage.'
+        },
+        'Wedding (Gesundbrunnen)': {
+          summary: 'Innerstädtischer Nordbereich mit sehr guter Bahn-Anbindung und breiter sozialer Mischung.',
+          realEstate: 'Vielfältiger Bestand von Altbau bis Nachverdichtung; Investoren beobachten die fortlaufende Quartiersentwicklung.'
+        },
+        'Kreuzberg': {
+          summary: 'International bekanntes urbanes Viertel mit starker Identität, Ausgehkultur und Kanallagen.',
+          realEstate: 'Hohe Nachfrage nach kompakten Einheiten und sanierten Wohnungen hält zentrale Teillagen wettbewerbsintensiv.'
+        },
+        'Moabit': {
+          summary: 'Zentraler Stadtteil nahe Regierungsviertel und Wasserlagen mit gemischter Nutzungsstruktur.',
+          realEstate: 'Unterschiedliche Baualtersklassen und schrittweise Aufwertung machen den Teilmarkt für wertorientierte Käufer interessant.'
+        },
+        'Reinickendorf (Am Schäfersee)': {
+          summary: 'Wohngeprägte Lage rund um den Schäfersee mit ruhigem Umfeld und guter Nahversorgung.',
+          realEstate: 'Wohnungen mit starker Eigennutzer-Nachfrage bei Fokus auf ruhiges Wohnen und ÖPNV-Nähe.'
+        },
+        'Schöneberg': {
+          summary: 'Klassischer west-zentraler Stadtteil mit eleganten Boulevards, Cafés und klarer Kiezidentität.',
+          realEstate: 'Altbaustraßen und etablierte Mietnachfrage sorgen für robuste, langfristige Wohnmarktqualität.'
+        },
+        'Spandau': {
+          summary: 'Westlicher Bezirk mit historischer Altstadt, Havel-Lagen und größeren neuen Wohnquartieren.',
+          realEstate: 'Familienfreundliche Preise und laufende Projektpipeline unterstützen Eigennutzer- und Investmentnachfrage.'
+        }
+      },
+      es: {
+        'Mitte': {
+          summary: 'Centro histórico y de negocios de Berlín, con instituciones, cultura y direcciones prime.',
+          realEstate: 'Combinación premium de Altbau renovado y obra nueva de alta calidad; gran liquidez y demanda de alquiler constante.'
+        },
+        'Friedrichshain-Kreuzberg': {
+          summary: 'Distrito céntrico, creativo y denso, con zonas junto al río y fuerte atractivo de estilo de vida urbano.',
+          realEstate: 'Mezcla de parque residencial clásico y proyectos modernos; la demanda de inquilinos sigue siendo muy sólida.'
+        },
+        'Neukölln': {
+          summary: 'Zona diversa y en rápida evolución al sur del centro, con barrios consolidados y ejes comerciales activos.',
+          realEstate: 'Amplio rango de precios y alta absorción en alquiler; algunas microzonas continúan mejorando su calidad.'
+        },
+        'Charlottenburg-Wilmersdorf': {
+          summary: 'Distrito consolidado del oeste con avenidas comerciales, parques y prestigio residencial sostenido.',
+          realEstate: 'Apartamentos amplios de época y edificios de posguerra de calidad sostienen demanda estable de compra y alquiler premium.'
+        },
+        'Prenzlauer Berg': {
+          summary: 'Barrio céntrico orientado a familias, con cafés, colegios y calles muy caminables.',
+          realEstate: 'Edificios de época renovados muy demandados; baja vacancia y oferta disponible limitada.'
+        },
+        'Pankow': {
+          summary: 'Área norte más verde que combina acceso urbano con zonas residenciales tranquilas.',
+          realEstate: 'Atractiva para familias y compradores de largo plazo, con equilibrio entre stock existente y nuevos desarrollos.'
+        },
+        'Tempelhof': {
+          summary: 'Distrito centro-sur articulado por Tempelhofer Feld y buenas conexiones de transporte.',
+          realEstate: 'Principalmente apartamentos de segmento medio con distribuciones funcionales; valorado por espacio y conectividad.'
+        },
+        'Reinickendorf': {
+          summary: 'Distrito del norte con zonas verdes, lagos y calles residenciales más calmadas.',
+          realEstate: 'Suele ofrecer puntos de entrada más accesibles que áreas céntricas, con demanda sólida de perfil familiar.'
+        },
+        'Wedding (Gesundbrunnen)': {
+          summary: 'Área interior del norte con excelente conexión ferroviaria y mezcla social y cultural amplia.',
+          realEstate: 'Parque inmobiliario diverso, desde edificios clásicos hasta proyectos de relleno; se sigue de cerca su mejora urbana.'
+        },
+        'Kreuzberg': {
+          summary: 'Barrio urbano de fama internacional, con identidad fuerte, vida nocturna y microzonas junto al canal.',
+          realEstate: 'La alta demanda de unidades compactas y pisos renovados mantiene estos submercados muy competitivos.'
+        },
+        'Moabit': {
+          summary: 'Distrito central cerca del gobierno y del agua, con calles de uso mixto y comercio local activo.',
+          realEstate: 'Edificios de distintas épocas y mejora gradual lo vuelven atractivo para compradores que buscan valor en zona central.'
+        },
+        'Reinickendorf (Am Schäfersee)': {
+          summary: 'Microzona residencial alrededor de Schaefersee, conocida por su ambiente tranquilo y servicios cotidianos.',
+          realEstate: 'Apartamentos con fuerte atractivo para usuario final que prioriza tranquilidad y buen acceso al transporte público.'
+        },
+        'Schöneberg': {
+          summary: 'Zona clásica del oeste-centro con bulevares elegantes, cafés y fuerte identidad de barrio.',
+          realEstate: 'Calles de Altbau y demanda consolidada de alquiler ofrecen un desempeño residencial resiliente a largo plazo.'
+        },
+        'Spandau': {
+          summary: 'Distrito occidental con casco histórico, frentes de agua en el Havel y nuevos barrios residenciales.',
+          realEstate: 'Precios más familiares y pipeline de desarrollo activo respaldan demanda tanto de vivienda propia como de inversión.'
+        }
       }
     };
     const berlinContent = berlinSectionContent[lang] || berlinSectionContent.en;
+    const berlinNeighborhoodNames = (((locations || {}).Germany || {}).Berlin && Array.isArray(locations.Germany.Berlin))
+      ? locations.Germany.Berlin
+      : [];
+    const selectedNeighborhoodContent = berlinNeighborhoodContent[lang] || berlinNeighborhoodContent.en;
+    const fallbackNeighborhoodContent = berlinNeighborhoodContent.en;
+    const berlinNeighborhoods = berlinNeighborhoodNames.map((name) => {
+      const item = selectedNeighborhoodContent[name] || fallbackNeighborhoodContent[name] || {};
+      return {
+        name,
+        summary: item.summary || '',
+        realEstate: item.realEstate || ''
+      };
+    });
 
     res.render('properties-for-sale-berlin', {
       title: titles[lang] || titles.en,
@@ -2702,6 +2903,7 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       pageMetaDescription: metaDescriptions[lang] || metaDescriptions.en,
       berlinPagePaths,
       berlinContent,
+      berlinNeighborhoods,
       locations,
       recommendedProperties,
       baseUrl: res.locals.baseUrl
