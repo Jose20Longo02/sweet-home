@@ -25,10 +25,9 @@
       downTooHigh: t("home.calc.errors.downTooHigh","Down payment cannot be greater than or equal to property price.")
     }
   },
-  aria: {
-    prev: t('common.previous','Previous'),
-    next: t('common.next','Next')
-  }
+  aria: { prev: t('common.previous','Previous'), next: t('common.next','Next') },
+  featured: { learnMore: t('common.learnMore','Learn more') },
+  locations: (typeof locationsTranslations !== 'undefined' && locationsTranslations) ? locationsTranslations : { countries: {}, cities: {} }
 }) : JSON.stringify({
   calc: {
     placeholders: {
@@ -41,10 +40,9 @@
       downTooHigh: t("home.calc.errors.downTooHigh","Down payment cannot be greater than or equal to property price.")
     }
   },
-  aria: {
-    prev: t('common.previous','Previous'),
-    next: t('common.next','Next')
-  }
+  aria: { prev: t('common.previous','Previous'), next: t('common.next','Next') },
+  featured: { learnMore: t('common.learnMore','Learn more') },
+  locations: (typeof locationsTranslations !== 'undefined' && locationsTranslations) ? locationsTranslations : { countries: {}, cities: {} }
 })).replace(/'/g, '&#39;') %>' style="display:none"></div>
 
 <!-- 1) Header overlayed hero with 3 vertical panels and centered search -->

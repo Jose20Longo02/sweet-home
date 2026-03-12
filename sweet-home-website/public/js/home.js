@@ -264,6 +264,11 @@ async function loadFeaturedProperties() {
     }
     
     const properties = await response.json();
+    const locTr = (HOME_I18N.locations && (HOME_I18N.locations.countries || HOME_I18N.locations.cities))
+      ? HOME_I18N.locations : { countries: {}, cities: {} };
+    const trCity = (c) => (locTr.cities && locTr.cities[c]) || c;
+    const trCountry = (c) => (locTr.countries && locTr.countries[c]) || c;
+    const learnMoreText = hGet('featured.learnMore', 'Learn more');
     
     // Require at least 4 properties to show the section
     if (properties.length >= 4) {
@@ -273,6 +278,9 @@ async function loadFeaturedProperties() {
         const beds = Number.isFinite(property.rooms) && property.rooms !== null ? `${property.rooms}` : null;
         const baths = Number.isFinite(property.bathrooms) && property.bathrooms !== null ? `${property.bathrooms}` : null;
         const priceText = property.price ? formatEuro(property.price) : '';
+        const cityTr = trCity(property.city || '');
+        const countryTr = trCountry(property.country || '');
+        const locationText = [cityTr, countryTr].filter(Boolean).join(', ') || (property.city + ', ' + property.country);
         return `
         <article class="property-card">
           <div class="img-wrap" ${priceText ? `data-price="${priceText}"` : ''}>
@@ -283,7 +291,7 @@ async function loadFeaturedProperties() {
             ${priceText ? `<div class="price">${priceText}</div>` : ''}
             <div class="location">
               <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
-              ${property.city}, ${property.country}
+              ${locationText}
             </div>
             <div class="features-row">
               ${size ? `
@@ -302,7 +310,7 @@ async function loadFeaturedProperties() {
                 <span>${baths} bath${Number(baths) === 1 ? '' : 's'}</span>
               </div>` : ''}
             </div>
-            <a class="learn-more" href="${(document.getElementById('locations-data')?.getAttribute('data-locale-prefix') || '')}/properties/${property.slug}">Learn more →</a>
+            <a class="learn-more" href="${(document.getElementById('locations-data')?.getAttribute('data-locale-prefix') || '')}/properties/${property.slug}">${learnMoreText} →</a>
           </div>
         </article>`;
       }).join('');
