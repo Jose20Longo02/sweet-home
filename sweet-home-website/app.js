@@ -836,8 +836,11 @@ async function renderHomePage(req, res, langPath, next) {
           FROM properties p
           LEFT JOIN property_stats ps ON ps.property_id = p.id
          WHERE p.slug IS NOT NULL
-         ORDER BY COALESCE(ps.views, 0) DESC, RANDOM()
-         LIMIT 6
+           AND p.country = 'Germany'
+           AND p.city = 'Berlin'
+           AND p.type = 'Apartment'
+         ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+         LIMIT 9
       `;
       const { rows: featRows } = await query(featSql);
       if (featRows && featRows.length >= 1) {
