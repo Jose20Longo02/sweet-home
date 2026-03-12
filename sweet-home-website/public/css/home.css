@@ -832,7 +832,7 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 .see-link { color: #fff; text-decoration: underline; }
 
 /* New Development */
-.section.new-development { padding: 72px 0 24px; background: #fff; }
+.section.new-development { padding: 0px 0 24px; background: #fff; }
 .section.new-development .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
 .new-development .section-title { margin-bottom: 28px; }
 .new-development .dev-row { margin-bottom: 30px; }
