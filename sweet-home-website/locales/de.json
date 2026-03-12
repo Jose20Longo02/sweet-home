@@ -269,6 +269,10 @@
     "newDevelopment": {
       "title": "Neue Projekte",
       "completion": "Fertigstellung",
+      "fromPrice": "Ab",
+      "size": "Groesse",
+      "units": "Einheiten",
+      "viewMore": "Mehr Projekte ansehen",
       "empty": "Aktuell sind keine Projekte verfügbar.",
       "rows": {
         "dubai": "Dubai",

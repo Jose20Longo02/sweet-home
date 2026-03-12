@@ -260,6 +260,10 @@
     "newDevelopment": {
       "title": "Nuevos desarrollos",
       "completion": "Entrega",
+      "fromPrice": "Desde",
+      "size": "Tamano",
+      "units": "unidades",
+      "viewMore": "Ver mas desarrollos",
       "empty": "No hay desarrollos disponibles por ahora.",
       "rows": {
         "dubai": "Dubái",

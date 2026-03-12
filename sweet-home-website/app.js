@@ -583,7 +583,8 @@ async function renderHomePage(req, res, langPath, next) {
         { key: 'germany', country: 'Germany' }
       ];
       const regionQueries = regionDefs.map(r => query(`
-        SELECT id, title, title_i18n, slug, country, city, neighborhood, photos, min_price, completion_date
+        SELECT id, title, title_i18n, slug, country, city, neighborhood, photos,
+               min_price, min_unit_size, max_unit_size, total_units, unit_types, completion_date
           FROM projects
          WHERE status = 'active' AND country = $1
          ORDER BY created_at DESC, id DESC
@@ -605,6 +606,18 @@ async function renderHomePage(req, res, langPath, next) {
           });
           const cityTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('city', p.city || '') : (p.city || '');
           const countryTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('country', p.country || '') : (p.country || '');
+          let completionDisplay = '';
+          try {
+            if (p.completion_date) {
+              const dt = new Date(p.completion_date);
+              if (!Number.isNaN(dt.getTime())) {
+                const locale = lang === 'de' ? 'de-DE' : (lang === 'es' ? 'es-ES' : 'en-US');
+                completionDisplay = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' }).format(dt);
+              } else {
+                completionDisplay = String(p.completion_date);
+              }
+            }
+          } catch (_) { completionDisplay = p.completion_date ? String(p.completion_date) : ''; }
           return {
             id: p.id,
             slug: p.slug,
@@ -614,7 +627,12 @@ async function renderHomePage(req, res, langPath, next) {
             locationDisplay: [cityTr, countryTr].filter(Boolean).join(', '),
             photo: photos[0] || '/img/property-placeholder.jpg',
             min_price: p.min_price,
-            completion_date: p.completion_date
+            min_unit_size: p.min_unit_size,
+            max_unit_size: p.max_unit_size,
+            total_units: p.total_units,
+            unit_types: Array.isArray(p.unit_types) ? p.unit_types : (p.unit_types ? [p.unit_types] : []),
+            completion_date: p.completion_date,
+            completionDisplay
           };
         });
         return { key: region.key, cards };

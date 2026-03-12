@@ -178,12 +178,23 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
                     <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
                     <%= card.locationDisplay %>
                   </p>
+                  <div class="dev-info">
+                    <% if (card.unit_types && card.unit_types.length) { %>
+                      <span class="dev-chip"><%= card.unit_types.slice(0, 2).join(', ') %></span>
+                    <% } %>
+                    <% if (card.min_unit_size || card.max_unit_size) { %>
+                      <span class="dev-chip"><%= t('home.newDevelopment.size','Size') %>: <%= card.min_unit_size ? Math.round(card.min_unit_size) : '?' %><% if (card.max_unit_size && card.max_unit_size !== card.min_unit_size) { %>-<%= Math.round(card.max_unit_size) %><% } %> m²</span>
+                    <% } %>
+                    <% if (card.total_units) { %>
+                      <span class="dev-chip"><%= card.total_units %> <%= t('home.newDevelopment.units','units') %></span>
+                    <% } %>
+                  </div>
                   <div class="dev-bottom">
                     <% if (card.min_price) { %>
-                      <span class="dev-price">€<%= Number(card.min_price).toLocaleString('en-US') %></span>
+                      <span class="dev-price"><small><%= t('home.newDevelopment.fromPrice','From') %></small> €<%= Number(card.min_price).toLocaleString('en-US') %></span>
                     <% } %>
                     <% if (card.completion_date) { %>
-                      <span class="dev-completion"><%= t('home.newDevelopment.completion','Completion') %>: <%= card.completion_date %></span>
+                      <span class="dev-completion"><%= t('home.newDevelopment.completion','Completion') %>: <%= card.completionDisplay || card.completion_date %></span>
                     <% } %>
                   </div>
                 </div>
@@ -195,6 +206,9 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
     <% } else { %>
       <p class="section-empty"><%= t('home.newDevelopment.empty','No developments available right now.') %></p>
     <% } %>
+    <div class="dev-cta-wrap">
+      <a class="btn btn-green dev-cta" href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>"><%= t('home.newDevelopment.viewMore','View more developments') %></a>
+    </div>
   </div>
 </section>
 

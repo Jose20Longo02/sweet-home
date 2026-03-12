@@ -287,6 +287,10 @@
     "newDevelopment": {
       "title": "New development",
       "completion": "Completion",
+      "fromPrice": "From",
+      "size": "Size",
+      "units": "units",
+      "viewMore": "View more developments",
       "empty": "No developments available right now.",
       "rows": {
         "dubai": "Dubai",
