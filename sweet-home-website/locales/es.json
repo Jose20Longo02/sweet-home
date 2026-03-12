@@ -272,6 +272,12 @@
         "germany": "Alemania"
       }
     },
+    "berlinNeighborhoods": {
+      "title": "Que barrio deberia elegir en Berlin?",
+      "hint": "Haz clic en un barrio para ver contexto local y su perfil inmobiliario.",
+      "realEstate": "Inmobiliario",
+      "exploreCta": "Explorar apartamentos"
+    },
     "recommendedProject": {
       "title": "Proyecto recomendado",
       "startingAt": "Desde",

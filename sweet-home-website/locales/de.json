@@ -281,6 +281,12 @@
         "germany": "Deutschland"
       }
     },
+    "berlinNeighborhoods": {
+      "title": "Welchen Stadtteil sollte ich in Berlin waehlen?",
+      "hint": "Klicken Sie auf einen Stadtteil, um lokale Einordnung und Immobilienprofil zu sehen.",
+      "realEstate": "Immobilien",
+      "exploreCta": "Wohnungen entdecken"
+    },
     "recommendedProject": {
       "title": "Empfohlenes Projekt",
       "startingAt": "Ab",

@@ -217,6 +217,44 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
   </div>
 </section>
 
+<!-- Berlin neighborhoods helper section -->
+<section class="section home-berlin-neighborhoods" aria-label="<%= t('home.berlinNeighborhoods.title','What Neighborhood should I choose in Berlin?') %>">
+  <div class="container">
+    <h2 class="section-title"><%= t('home.berlinNeighborhoods.title','What Neighborhood should I choose in Berlin?') %></h2>
+    <p class="home-berlin-neighborhoods__hint"><%= t('home.berlinNeighborhoods.hint','Click a neighborhood to expand key local context and real-estate profile.') %></p>
+    <% const homeBerlinNeighborhoods = (typeof berlinNeighborhoods !== 'undefined' && Array.isArray(berlinNeighborhoods)) ? berlinNeighborhoods : []; %>
+    <div class="home-berlin-neighborhoods__grid">
+      <% homeBerlinNeighborhoods.forEach(function(item, idx){ %>
+        <% const panelId = `home-berlin-neighborhood-panel-${idx}`; %>
+        <% const triggerId = `home-berlin-neighborhood-trigger-${idx}`; %>
+        <article class="home-berlin-neighborhood-card" data-home-neighborhood-card>
+          <button
+            type="button"
+            id="<%= triggerId %>"
+            class="home-berlin-neighborhood-card__trigger"
+            data-home-neighborhood-toggle
+            aria-expanded="false"
+            aria-controls="<%= panelId %>"
+          >
+            <span class="home-berlin-neighborhood-card__name"><%= item.name %></span>
+            <span class="home-berlin-neighborhood-card__icon" aria-hidden="true"></span>
+          </button>
+          <div class="home-berlin-neighborhood-card__panel" id="<%= panelId %>" role="region" aria-labelledby="<%= triggerId %>" hidden>
+            <p><%= item.summary %></p>
+            <p><strong><%= t('home.berlinNeighborhoods.realEstate','Real estate') %>:</strong> <%= item.realEstate %></p>
+            <a
+              class="btn btn-green home-berlin-neighborhood-card__cta"
+              href="<%= ((typeof localePath === 'function') ? localePath('/properties') : '/properties') + '?country=Germany&city=Berlin&neighborhood=' + encodeURIComponent(item.name) %>"
+            >
+              <%= t('home.berlinNeighborhoods.exploreCta','Explore apartments') %>
+            </a>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
 <!-- 4) International Real Estate – stretch/collapse carousel -->
 <section class="section international">
   <h2 class="section-title"><%= t('home.international.title','International Real Estate') %></h2>
@@ -452,3 +490,42 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
 
 <script src="/js/home.js"></script>
 <script src="/js/contact.js" defer></script>
+<script>
+document.querySelectorAll('[data-home-neighborhood-toggle]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var currentExpanded = this.getAttribute('aria-expanded') === 'true';
+    var currentPanelId = this.getAttribute('aria-controls');
+    var currentPanel = currentPanelId ? document.getElementById(currentPanelId) : null;
+    var currentCard = this.closest('[data-home-neighborhood-card]');
+
+    document.querySelectorAll('[data-home-neighborhood-toggle]').forEach(function(otherBtn) {
+      var expanded = otherBtn.getAttribute('aria-expanded') === 'true';
+      if (!expanded) return;
+      otherBtn.setAttribute('aria-expanded', 'false');
+      var panelId = otherBtn.getAttribute('aria-controls');
+      var panel = panelId ? document.getElementById(panelId) : null;
+      if (panel) panel.hidden = true;
+      var card = otherBtn.closest('[data-home-neighborhood-card]');
+      if (card) card.classList.remove('is-open');
+    });
+
+    if (!currentExpanded) {
+      this.setAttribute('aria-expanded', 'true');
+      if (currentPanel) currentPanel.hidden = false;
+      if (currentCard) currentCard.classList.add('is-open');
+    } else {
+      this.setAttribute('aria-expanded', 'false');
+      if (currentPanel) currentPanel.hidden = true;
+      if (currentCard) currentCard.classList.remove('is-open');
+    }
+  });
+});
+
+document.querySelectorAll('[data-home-neighborhood-card]').forEach(function(card) {
+  card.addEventListener('click', function(event) {
+    if (event.target.closest('a, button, input, select, textarea, label')) return;
+    var toggle = card.querySelector('[data-home-neighborhood-toggle]');
+    if (toggle) toggle.click();
+  });
+});
+</script>
