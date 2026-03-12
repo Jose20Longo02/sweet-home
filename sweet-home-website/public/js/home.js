@@ -542,25 +542,31 @@ function initCardsCarousel(rootSelector) {
   const track = root.querySelector('.cards-track');
   const prev = root.querySelector('.prev');
   const next = root.querySelector('.next');
-  const getCards = () => [...track.querySelectorAll('.property-card, .testimonial-card')];
+  const getAllCards = () => [...track.querySelectorAll('.property-card, .testimonial-card')];
   const isFeatured = root.id === 'featuredCarousel';
+  const getCards = () => isFeatured ? getAllCards().filter(c => !c.hasAttribute('data-clone')) : getAllCards();
   let didInitialCenter = false;
   let isWrapping = false;
+  let infiniteReady = false;
 
   function trackCenterX() {
     const r = track.getBoundingClientRect();
     return r.left + r.width / 2;
   }
 
-  function centerCardByIndex(i, behavior = 'smooth') {
-    const cards = getCards();
-    if (!cards.length) return;
-    const idx = Math.max(0, Math.min(cards.length - 1, i));
-    const card = cards[idx];
+  function centerElement(card, behavior = 'smooth') {
+    if (!card) return;
     const target = card.offsetLeft + (card.offsetWidth / 2) - (track.clientWidth / 2);
     const max = Math.max(0, track.scrollWidth - track.clientWidth);
     const clamped = Math.max(0, Math.min(target, max));
     track.scrollTo({ left: clamped, behavior });
+  }
+
+  function centerCardByIndex(i, behavior = 'smooth') {
+    const cards = getCards();
+    if (!cards.length) return;
+    const idx = Math.max(0, Math.min(cards.length - 1, i));
+    centerElement(cards[idx], behavior);
   }
 
   function currentCenteredIndex() {
@@ -610,13 +616,51 @@ function initCardsCarousel(rootSelector) {
     rightSpacer.style.flex = '0 0 ' + gutter + 'px';
   }
 
+  function setupInfiniteFeatured() {
+    if (!isFeatured) return;
+    // Remove old clones first
+    track.querySelectorAll('[data-clone="true"]').forEach(n => n.remove());
+    const originals = getCards();
+    const leftSpacer = track.querySelector('.edge-spacer.left');
+    const rightSpacer = track.querySelector('.edge-spacer.right');
+    if (!leftSpacer || !rightSpacer || originals.length < 2) {
+      infiniteReady = false;
+      return;
+    }
+
+    originals.forEach((card, index) => {
+      card.setAttribute('data-origin-index', String(index));
+    });
+
+    const cloneCount = Math.min(3, originals.length);
+    const head = originals.slice(0, cloneCount).map((card) => {
+      const clone = card.cloneNode(true);
+      clone.setAttribute('data-clone', 'true');
+      clone.setAttribute('aria-hidden', 'true');
+      return clone;
+    });
+    const tail = originals.slice(-cloneCount).map((card) => {
+      const clone = card.cloneNode(true);
+      clone.setAttribute('data-clone', 'true');
+      clone.setAttribute('aria-hidden', 'true');
+      return clone;
+    });
+
+    // order: leftSpacer, tail clones, originals, head clones, rightSpacer
+    [...tail].reverse().forEach((clone) => leftSpacer.insertAdjacentElement('afterend', clone));
+    head.forEach((clone) => rightSpacer.insertAdjacentElement('beforebegin', clone));
+    infiniteReady = true;
+  }
+
   ensureSpacers();
+  setupInfiniteFeatured();
   window.addEventListener('resize', ensureSpacers);
 
   // Recompute spacers when children change (after async content loads)
   const mo = new MutationObserver(() => {
     requestAnimationFrame(() => {
       ensureSpacers();
+      setupInfiniteFeatured();
       if (isFeatured && !didInitialCenter) {
         const cards = getCards();
         if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; }
@@ -644,19 +688,28 @@ function initCardsCarousel(rootSelector) {
   // Keep center highlight in sync on scroll
   track?.addEventListener('scroll', () => {
     markCenterCard(track);
-    // Featured carousel: when user reaches an edge, jump to opposite side
-    // so the sequence appears endless.
-    if (!isFeatured || isWrapping) return;
-    const cards = getCards();
-    if (cards.length < 2) return;
-    const max = Math.max(0, track.scrollWidth - track.clientWidth);
-    const atLeftEdge = track.scrollLeft <= 1;
-    const atRightEdge = track.scrollLeft >= (max - 1);
-    if (!atLeftEdge && !atRightEdge) return;
-    isWrapping = true;
-    if (atRightEdge) centerCardByIndex(0, 'auto');
-    else if (atLeftEdge) centerCardByIndex(cards.length - 1, 'auto');
-    requestAnimationFrame(() => { isWrapping = false; });
+    if (!isFeatured || isWrapping || !infiniteReady) return;
+    const allCards = getAllCards();
+    const originals = getCards();
+    if (allCards.length < 2 || originals.length < 2) return;
+
+    // If centered card is a clone, snap to its original counterpart.
+    const center = track.scrollLeft + track.clientWidth / 2;
+    let closest = null, minDist = Infinity;
+    allCards.forEach((card) => {
+      const cx = card.offsetLeft + card.offsetWidth / 2;
+      const dist = Math.abs(cx - center);
+      if (dist < minDist) { minDist = dist; closest = card; }
+    });
+    if (closest && closest.getAttribute('data-clone') === 'true') {
+      const originIndex = Number(closest.getAttribute('data-origin-index') || '0');
+      const target = originals[originIndex];
+      if (target) {
+        isWrapping = true;
+        centerElement(target, 'auto');
+        requestAnimationFrame(() => { isWrapping = false; });
+      }
+    }
   });
 
   // Center card on click
@@ -670,6 +723,7 @@ function initCardsCarousel(rootSelector) {
   // Initial center mark
   setTimeout(() => {
     ensureSpacers();
+    setupInfiniteFeatured();
     if (isFeatured && !didInitialCenter) {
       const cards = getCards();
       if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; }
