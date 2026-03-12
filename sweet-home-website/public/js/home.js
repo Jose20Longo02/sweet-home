@@ -535,7 +535,7 @@ function calculateMortgage() {
   });
 }
 
-// ===== Simple carousel (no infinite/endless) =====
+// ===== New: simple carousel helpers =====
 function initCardsCarousel(rootSelector) {
   const root = document.querySelector(rootSelector);
   if (!root) return;
@@ -543,20 +543,23 @@ function initCardsCarousel(rootSelector) {
   const prev = root.querySelector('.prev');
   const next = root.querySelector('.next');
   const getCards = () => [...track.querySelectorAll('.property-card, .testimonial-card')];
+  const isFeatured = root.id === 'featuredCarousel';
+  let didInitialCenter = false;
 
-  function centerElement(card, behavior = 'smooth') {
-    if (!card) return;
-    const target = card.offsetLeft + (card.offsetWidth / 2) - (track.clientWidth / 2);
-    const max = Math.max(0, track.scrollWidth - track.clientWidth);
-    const clamped = Math.max(0, Math.min(target, max));
-    track.scrollTo({ left: clamped, behavior });
+  function trackCenterX() {
+    const r = track.getBoundingClientRect();
+    return r.left + r.width / 2;
   }
 
-  function centerCardByIndex(i, behavior = 'smooth') {
+  function centerCardByIndex(i) {
     const cards = getCards();
     if (!cards.length) return;
     const idx = Math.max(0, Math.min(cards.length - 1, i));
-    centerElement(cards[idx], behavior);
+    const card = cards[idx];
+    const target = card.offsetLeft + (card.offsetWidth / 2) - (track.clientWidth / 2);
+    const max = Math.max(0, track.scrollWidth - track.clientWidth);
+    const clamped = Math.max(0, Math.min(target, max));
+    track.scrollTo({ left: clamped, behavior: 'smooth' });
   }
 
   function currentCenteredIndex() {
@@ -572,6 +575,8 @@ function initCardsCarousel(rootSelector) {
     return best;
   }
 
+  // Allow first/last card to be centered by adding dynamic side padding
+  // Hide native scrollbar (visual only)
   track.classList.add('no-scrollbar');
   if (!document.getElementById('no-scrollbar-style')) {
     const style = document.createElement('style');
@@ -580,6 +585,7 @@ function initCardsCarousel(rootSelector) {
     document.head.appendChild(style);
   }
 
+  // Create spacer elements so first/last items can be centered without clipping
   function ensureSpacers() {
     const cards = getCards();
     const first = cards[0];
@@ -604,31 +610,34 @@ function initCardsCarousel(rootSelector) {
   }
 
   ensureSpacers();
-  window.addEventListener('resize', () => ensureSpacers());
+  window.addEventListener('resize', ensureSpacers);
 
+  // Recompute spacers when children change (after async content loads)
   const mo = new MutationObserver(() => {
     requestAnimationFrame(() => {
       ensureSpacers();
+      if (isFeatured && !didInitialCenter) {
+        const cards = getCards();
+        if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; }
+      }
       markCenterCard(track);
     });
   });
   mo.observe(track, { childList: true });
 
   prev?.addEventListener('click', () => {
-    const cards = getCards();
-    if (!cards.length) return;
     const i = currentCenteredIndex();
     centerCardByIndex(i - 1);
   });
   next?.addEventListener('click', () => {
-    const cards = getCards();
-    if (!cards.length) return;
     const i = currentCenteredIndex();
     centerCardByIndex(i + 1);
   });
 
+  // Keep center highlight in sync on scroll
   track?.addEventListener('scroll', () => markCenterCard(track));
 
+  // Center card on click
   track?.addEventListener('click', (e) => {
     const card = e.target.closest('.property-card, .testimonial-card');
     if (!card || !track.contains(card)) return;
@@ -636,7 +645,15 @@ function initCardsCarousel(rootSelector) {
     if (i >= 0) centerCardByIndex(i);
   });
 
-  setTimeout(() => markCenterCard(track), 0);
+  // Initial center mark
+  setTimeout(() => {
+    ensureSpacers();
+    if (isFeatured && !didInitialCenter) {
+      const cards = getCards();
+      if (cards.length >= 2) { centerCardByIndex(1); didInitialCenter = true; }
+    }
+    markCenterCard(track);
+  }, 0);
 }
 
 function markCenterCard(container) {
