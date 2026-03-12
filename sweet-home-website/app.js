@@ -323,21 +323,25 @@ const apiLimiter = rateLimit({
 });
 app.use(['/api', '/auth', '/properties/api', '/projects/api'], apiLimiter);
 
-// Non-prefixed URLs (/properties/slug, /projects/slug, /blog/slug) = English. Never redirect them to /de/... or /es/...
-// so that "Switch to English" works on every page; set cookie to en when serving these.
+// Non-prefixed detail URLs: redirect to locale version when user has Spanish/German cookie so language persists.
+// e.g. /properties/slug + cookie=es → redirect to /es/properties/slug
 app.use((req, res, next) => {
   if (req.method !== 'GET') return next();
   if (req.path.startsWith('/de/') || req.path.startsWith('/es/')) return next();
   if (/^\/(admin|superadmin|auth|api)/.test(req.path)) return next();
-  const isDetailPage = (/^\/properties\/[^/]+$/.test(req.path) && req.path !== '/properties/new') ||
-    (/^\/projects\/[^/]+$/.test(req.path) && req.path !== '/projects/regions') ||
-    /^\/blog\/[^/]+$/.test(req.path);
+  const isPropertyDetail = /^\/properties\/[^/]+$/.test(req.path) && req.path !== '/properties/new';
+  const isProjectDetail = /^\/projects\/[^/]+$/.test(req.path) && req.path !== '/projects/regions';
+  const isBlogDetail = /^\/blog\/[^/]+$/.test(req.path);
+  const isDetailPage = isPropertyDetail || isProjectDetail || isBlogDetail;
   if (isDetailPage) {
-    const cLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase() : '';
+    const cLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase().slice(0, 2) : '';
     if (cLang === 'de' || cLang === 'es') {
-      try { res.cookie('lang', 'en', { httpOnly: false, sameSite: 'lax', maxAge: 30 * 24 * 60 * 60 * 1000 }); } catch (_) {}
+      let localePath;
+      if (isPropertyDetail) localePath = `/${cLang}/properties${req.path.slice('/properties'.length)}`;
+      else if (isProjectDetail) localePath = `/${cLang}/projects${req.path.slice('/projects'.length)}`;
+      else if (isBlogDetail) localePath = `/${cLang}/blog${req.path.slice('/blog'.length)}`;
+      if (localePath) return res.redirect(302, localePath + (req.originalUrl.includes('?') ? '?' + req.originalUrl.split('?')[1] : ''));
     }
-    return next();
   }
   next();
 });
