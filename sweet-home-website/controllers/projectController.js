@@ -1264,7 +1264,7 @@ exports.showProject = async (req, res, next) => {
     const { rows: projects } = await query(`
       SELECT
         p.id, p.title, p.title_i18n, p.slug, p.country, p.city, p.neighborhood,
-        p.description, p.photos, p.video_url, p.brochure_url, p.created_at, p.status,
+        p.description, p.description_i18n, p.photos, p.video_url, p.brochure_url, p.created_at, p.status,
         p.total_units, p.completion_date, p.price_range, p.features,
         p.amenities, p.specifications, p.location_details
       FROM projects p
@@ -1280,10 +1280,10 @@ exports.showProject = async (req, res, next) => {
 
     const project = projects[0];
     const langDetail = res.locals.lang || 'en';
-    // Do NOT translate project title on public detail; show original
-    // project.title remains as stored
-    if (project.description_i18n && project.description_i18n[langDetail]) {
-      project.description = project.description_i18n[langDetail];
+    // Localize description
+    const descI18n = project.description_i18n && typeof project.description_i18n === 'object' ? project.description_i18n : null;
+    if (descI18n && (descI18n[langDetail] || descI18n.en)) {
+      project.description = descI18n[langDetail] || descI18n.en;
     }
     
     // Normalize photos - handle both local paths and DigitalOcean Spaces URLs
