@@ -587,7 +587,14 @@ async function renderHomePage(req, res, langPath, next) {
                min_price, min_unit_size, max_unit_size, total_units, unit_types, completion_date
           FROM projects
          WHERE status = 'active' AND country = $1
-         ORDER BY created_at DESC, id DESC
+         ORDER BY (
+           SELECT COUNT(*)
+             FROM analytics_events ae
+            WHERE ae.event_type = 'project_view'
+              AND ae.entity_type = 'project'
+              AND ae.entity_id = projects.id
+         ) DESC,
+         created_at DESC, id DESC
          LIMIT 3
       `, [r.country]));
       const regionResults = await Promise.all(regionQueries);

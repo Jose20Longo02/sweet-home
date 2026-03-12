@@ -189,7 +189,12 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
               </div>
               <div class="dev-bottom">
                 <% if (card.min_price) { %>
-                  <span class="dev-price"><small><%= t('home.newDevelopment.fromPrice','From') %></small> €<%= Number(card.min_price).toLocaleString('en-US') %></span>
+                  <span class="dev-price">
+                    <span class="dev-price-label"><%= t('home.newDevelopment.fromPrice','From') %></span>
+                    <span class="dev-price-value">€<%= Number(card.min_price).toLocaleString('en-US') %></span>
+                  </span>
+                <% } else { %>
+                  <span class="dev-price dev-price-request"><%= t('home.newDevelopment.uponRequest','Upon request') %></span>
                 <% } %>
                 <% if (card.completion_date) { %>
                   <span class="dev-completion"><%= t('home.newDevelopment.completion','Completion') %>: <%= card.completionDisplay || card.completion_date %></span>
