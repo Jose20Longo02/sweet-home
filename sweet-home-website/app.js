@@ -367,8 +367,24 @@ app.use((req, res, next) => {
     const clean = String(p).replace(/^\//, '');
     return prefix + (clean ? '/' + clean : '');
   };
+  // Property landing pages have different URLs per language (not just /de + path)
+  const PROPERTY_PAGE_ALTERNATES = {
+    '/properties-for-sale-berlin': { en: '/properties-for-sale-berlin', de: '/de/immobilien-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
+    '/de/immobilien-berlin-kaufen': { en: '/properties-for-sale-berlin', de: '/de/immobilien-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
+    '/es/propiedades-en-venta-berlin': { en: '/properties-for-sale-berlin', de: '/de/immobilien-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
+    '/properties-for-sale-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
+    '/de/immobilien-dubai-kaufen': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
+    '/es/propiedades-en-venta-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
+    '/properties-for-sale-cyprus': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' },
+    '/de/immobilien-zypern-kaufen': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' },
+    '/es/propiedades-en-venta-chipre': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' }
+  };
+  const propertyAlternates = PROPERTY_PAGE_ALTERNATES[req.path];
+
   // For lang switcher: path-based links for all public pages (so URL reflects language)
-  if (prefix) {
+  if (propertyAlternates) {
+    res.locals.localeAlternatePaths = propertyAlternates;
+  } else if (prefix) {
     const pathWithoutLocale = req.path.slice(prefix.length) || '/';
     res.locals.localeAlternatePaths = {
       en: pathWithoutLocale === '/' ? '/' : pathWithoutLocale,
