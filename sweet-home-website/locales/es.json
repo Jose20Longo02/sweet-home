@@ -346,6 +346,11 @@
     "viewDetails": "Ver detalles del proyecto",
     "amenitiesTitle": "Comodidades del proyecto",
     "detail": {
+      "properties": "Propiedades en este proyecto",
+      "property": "propiedad",
+      "propertiesCount": "propiedades",
+      "available": "disponibles",
+      "viewAllProperties": "Ver todas las propiedades",
       "defaultType": "Desarrollo",
       "noImages": "No hay imágenes disponibles",
       "overview": "Descripción del proyecto",

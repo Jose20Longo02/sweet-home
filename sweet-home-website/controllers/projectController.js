@@ -1404,7 +1404,8 @@ exports.showProject = async (req, res, next) => {
     // Normalize property data
     const normalizedProjectProperties = projectProperties.map(prop => {
       const lang = res.locals.lang || 'en';
-      const localizedTitle = (prop.title_i18n && prop.title_i18n[lang]) || prop.title;
+      const i18n = prop.title_i18n && typeof prop.title_i18n === 'object' ? prop.title_i18n : null;
+      const localizedTitle = (i18n && (i18n[lang] || i18n.en)) || prop.title;
       
       // Normalize photos
       const photos = Array.isArray(prop.photos) ? prop.photos : (prop.photos ? [prop.photos] : []);

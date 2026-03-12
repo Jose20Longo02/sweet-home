@@ -456,6 +456,11 @@
     "viewDetails": "View project details",
     "amenitiesTitle": "Amenities of the project",
     "detail": {
+      "properties": "Properties in this Project",
+      "property": "property",
+      "propertiesCount": "properties",
+      "available": "available",
+      "viewAllProperties": "View All Properties",
       "defaultType": "Development",
       "noImages": "No images available",
       "overview": "Project Overview",

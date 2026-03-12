@@ -445,6 +445,11 @@
     "viewDetails": "Projektdetails ansehen",
     "amenitiesTitle": "Ausstattung des Projekts",
     "detail": {
+      "properties": "Immobilien in diesem Projekt",
+      "property": "Immobilie",
+      "propertiesCount": "Immobilien",
+      "available": "verfügbar",
+      "viewAllProperties": "Alle Immobilien anzeigen",
       "defaultType": "Projektentwicklung",
       "noImages": "Keine Bilder verfügbar",
       "overview": "Projektübersicht",
