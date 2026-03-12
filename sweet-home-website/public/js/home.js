@@ -582,6 +582,19 @@ function initCardsCarousel(rootSelector) {
     return best;
   }
 
+  function currentCenteredFlowIndex() {
+    const cards = getAllCards();
+    if (!cards.length) return 0;
+    const center = track.scrollLeft + track.clientWidth / 2;
+    let min = Infinity, best = 0;
+    cards.forEach((c, i) => {
+      const cx = c.offsetLeft + c.offsetWidth / 2;
+      const d = Math.abs(cx - center);
+      if (d < min) { min = d; best = i; }
+    });
+    return best;
+  }
+
   // Allow first/last card to be centered by adding dynamic side padding
   // Hide native scrollbar (visual only)
   track.classList.add('no-scrollbar');
@@ -701,18 +714,32 @@ function initCardsCarousel(rootSelector) {
   mo.observe(track, { childList: true });
 
   prev?.addEventListener('click', () => {
+    if (isFeatured && infiniteReady) {
+      const flow = getAllCards();
+      if (!flow.length) return;
+      const i = currentCenteredFlowIndex();
+      const nextIdx = (i - 1 + flow.length) % flow.length;
+      centerElement(flow[nextIdx]);
+      return;
+    }
     const cards = getCards();
     if (!cards.length) return;
     const i = currentCenteredIndex();
-    if (isFeatured && i <= 0) centerCardByIndex(cards.length - 1);
-    else centerCardByIndex(i - 1);
+    centerCardByIndex(i - 1);
   });
   next?.addEventListener('click', () => {
+    if (isFeatured && infiniteReady) {
+      const flow = getAllCards();
+      if (!flow.length) return;
+      const i = currentCenteredFlowIndex();
+      const nextIdx = (i + 1) % flow.length;
+      centerElement(flow[nextIdx]);
+      return;
+    }
     const cards = getCards();
     if (!cards.length) return;
     const i = currentCenteredIndex();
-    if (isFeatured && i >= cards.length - 1) centerCardByIndex(0);
-    else centerCardByIndex(i + 1);
+    centerCardByIndex(i + 1);
   });
 
   // Keep center highlight in sync on scroll
@@ -746,6 +773,10 @@ function initCardsCarousel(rootSelector) {
   track?.addEventListener('click', (e) => {
     const card = e.target.closest('.property-card, .testimonial-card');
     if (!card || !track.contains(card)) return;
+    if (isFeatured && infiniteReady) {
+      centerElement(card);
+      return;
+    }
     const i = getCards().indexOf(card);
     if (i >= 0) centerCardByIndex(i);
   });
