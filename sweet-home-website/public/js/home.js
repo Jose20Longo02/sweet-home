@@ -618,7 +618,11 @@ function markCenterCard(container) {
     if (dist < minDist) { minDist = dist; closest = card; }
     card.classList.remove('is-center');
   });
-  closest?.classList.add('is-center');
+  // Only mark as center if the card is actually well-centered (within ~40% of card width).
+  // This prevents cards entering from the side from appearing enhanced before they settle.
+  if (closest && minDist < closest.offsetWidth * 0.4) {
+    closest.classList.add('is-center');
+  }
 }
 
 function initStretchCarousel(rootSelector) {
