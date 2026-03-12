@@ -405,7 +405,7 @@ exports.showProperty = async (req, res, next) => {
         p.features,
         p.video_url, p.floorplan_url, p.plan_photo_url,
         p.is_in_project, p.project_id,
-        pr.title AS project_title, pr.title_i18n AS project_title_i18n, pr.slug AS project_slug, pr.amenities AS project_amenities, pr.video_url AS project_video_url, pr.photos AS project_photos,
+        pr.title AS project_title, pr.title_i18n AS project_title_i18n, pr.slug AS project_slug, pr.amenities AS project_amenities, pr.amenities_i18n AS project_amenities_i18n, pr.video_url AS project_video_url, pr.photos AS project_photos,
         u.name as agent_name, u.profile_picture as agent_profile_picture
       FROM properties p
       LEFT JOIN users u ON p.agent_id = u.id
@@ -445,15 +445,25 @@ exports.showProperty = async (req, res, next) => {
       photos,
       has_main_variants: hasMainVariants,
       main_variant_base: mainVariantBase,
-      project: (p.is_in_project && p.project_id) ? {
-        id: p.project_id,
-        slug: p.project_slug || null,
-        // Do NOT translate linked project title; use original
-        title: p.project_title || null,
-        amenities: Array.isArray(p.project_amenities) ? p.project_amenities : [],
-        video_url: p.project_video_url || null,
-        photos: Array.isArray(p.project_photos) ? p.project_photos : (p.project_photos ? [p.project_photos] : [])
-      } : null,
+      project: (p.is_in_project && p.project_id) ? (() => {
+        const rawAmenities = Array.isArray(p.project_amenities) ? p.project_amenities : [];
+        const amenitiesI18n = p.project_amenities_i18n && typeof p.project_amenities_i18n === 'object' ? p.project_amenities_i18n : null;
+        let amenities = rawAmenities;
+        if (rawAmenities.length > 0 && amenitiesI18n) {
+          const localized = amenitiesI18n[lang] || amenitiesI18n.en;
+          if (Array.isArray(localized) && localized.length === rawAmenities.length) {
+            amenities = localized;
+          }
+        }
+        return {
+          id: p.project_id,
+          slug: p.project_slug || null,
+          title: p.project_title || null,
+          amenities,
+          video_url: p.project_video_url || null,
+          photos: Array.isArray(p.project_photos) ? p.project_photos : (p.project_photos ? [p.project_photos] : [])
+        };
+      })() : null,
       agent: {
         name: p.agent_name || 'Agent',
         profile_picture: p.agent_profile_picture || null

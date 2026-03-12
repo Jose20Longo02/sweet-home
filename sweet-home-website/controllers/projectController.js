@@ -5,7 +5,7 @@ const locations   = require('../config/locations');
 const { generateVariants } = require('../middleware/imageVariants');
 const { ensureLocalizedFields } = require('../config/translator');
 const { detectLanguageFromFields, getTargetLanguages } = require('../utils/languageDetection');
-const { ensureCompleteTranslations } = require('../utils/translationHelper');
+const { ensureCompleteTranslations, ensureAmenitiesTranslations } = require('../utils/translationHelper');
 const { generateSEOFileName } = require('../utils/imageNaming');
 const { logEvent } = require('../utils/analytics');
 const path = require('path');
@@ -280,12 +280,24 @@ exports.createProject = async (req, res, next) => {
       const existingI18n = {}; // Empty for new projects
       const completeI18n = await ensureCompleteTranslations(fields, existingI18n);
       
+      let amenitiesI18n = null;
+      if (Array.isArray(amenities) && amenities.length > 0) {
+        amenitiesI18n = await ensureAmenitiesTranslations(amenities, sourceLang, {});
+      }
+      
       console.log(`[createProject] Complete i18n result:`, completeI18n);
       
-      await query(
-        `UPDATE projects SET title_i18n = $1, description_i18n = $2 WHERE id = $3`,
-        [completeI18n.title_i18n, completeI18n.description_i18n, newId]
-      );
+      if (amenitiesI18n) {
+        await query(
+          `UPDATE projects SET title_i18n = $1, description_i18n = $2, amenities_i18n = $3 WHERE id = $4`,
+          [completeI18n.title_i18n, completeI18n.description_i18n, JSON.stringify(amenitiesI18n), newId]
+        );
+      } else {
+        await query(
+          `UPDATE projects SET title_i18n = $1, description_i18n = $2 WHERE id = $3`,
+          [completeI18n.title_i18n, completeI18n.description_i18n, newId]
+        );
+      }
       
       console.log(`[createProject] Translation update completed successfully`);
     } catch (error) { 
@@ -791,12 +803,25 @@ exports.updateProject = async (req, res, next) => {
       const fields = { title: currentTitle, description: currentDescription };
       const completeI18n = await ensureCompleteTranslations(fields, existingI18n);
       
+      let amenitiesI18n = null;
+      const existingAmenitiesI18n = existing.amenities_i18n && typeof existing.amenities_i18n === 'object' ? existing.amenities_i18n : {};
+      if (Array.isArray(amenities) && amenities.length > 0) {
+        amenitiesI18n = await ensureAmenitiesTranslations(amenities, sourceLang, existingAmenitiesI18n);
+      }
+      
       console.log(`[updateProject] Complete i18n result:`, completeI18n);
       
-      await query(
-        `UPDATE projects SET title_i18n = $1, description_i18n = $2 WHERE id = $3`,
-        [completeI18n.title_i18n, completeI18n.description_i18n, projId]
-      );
+      if (amenitiesI18n) {
+        await query(
+          `UPDATE projects SET title_i18n = $1, description_i18n = $2, amenities_i18n = $3 WHERE id = $4`,
+          [completeI18n.title_i18n, completeI18n.description_i18n, JSON.stringify(amenitiesI18n), projId]
+        );
+      } else {
+        await query(
+          `UPDATE projects SET title_i18n = $1, description_i18n = $2 WHERE id = $3`,
+          [completeI18n.title_i18n, completeI18n.description_i18n, projId]
+        );
+      }
       
       console.log(`[updateProject] Translation update completed successfully`);
     } catch (error) { 
@@ -1270,7 +1295,7 @@ exports.showProject = async (req, res, next) => {
         p.id, p.title, p.title_i18n, p.slug, p.country, p.city, p.neighborhood,
         p.description, p.description_i18n, p.photos, p.video_url, p.brochure_url, p.created_at, p.status,
         p.total_units, p.completion_date, p.price_range, p.features,
-        p.amenities, p.specifications, p.location_details
+        p.amenities, p.amenities_i18n, p.specifications, p.location_details
       FROM projects p
       WHERE p.slug = $1 AND p.status = 'active'
     `, [slug]);
@@ -1327,6 +1352,14 @@ exports.showProject = async (req, res, next) => {
       }
       if (project.amenities && typeof project.amenities === 'string') {
         project.amenities = JSON.parse(project.amenities);
+      }
+      // Use localized amenities when available
+      const amenitiesI18n = project.amenities_i18n && typeof project.amenities_i18n === 'object' ? project.amenities_i18n : null;
+      if (Array.isArray(project.amenities) && project.amenities.length > 0 && amenitiesI18n) {
+        const localized = amenitiesI18n[langDetail] || amenitiesI18n.en;
+        if (Array.isArray(localized) && localized.length === project.amenities.length) {
+          project.amenities = localized;
+        }
       }
       if (project.specifications && typeof project.specifications === 'string') {
         project.specifications = JSON.parse(project.specifications);

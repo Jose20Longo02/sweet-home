@@ -191,8 +191,61 @@ async function ensureCompleteTranslations(fields, existingI18n = {}) {
   }
 }
 
+/**
+ * Translate an array of amenity strings to all target languages.
+ * Returns { en: [...], de: [...], es: [...] } - each lang maps to an array of translated strings.
+ * @param {string[]} amenities - Array of amenity strings (e.g. ["Elevator access to all floors", ...])
+ * @param {string} sourceLang - Source language of the amenities
+ * @param {Object} existingAmenitiesI18n - Optional existing amenities_i18n from DB to preserve/fill
+ * @returns {Object} - amenities_i18n object
+ */
+async function ensureAmenitiesTranslations(amenities, sourceLang, existingAmenitiesI18n = {}) {
+  if (!Array.isArray(amenities) || amenities.length === 0) {
+    return existingAmenitiesI18n || {};
+  }
+
+  const { getTargetLanguages } = require('./languageDetection');
+  const { translateText } = require('../config/translator');
+  const targetLangs = getTargetLanguages(sourceLang);
+  const delay = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const result = { [sourceLang]: amenities.filter(Boolean).map(s => String(s || '').trim()) };
+  for (const t of targetLangs) {
+    result[t] = [];
+  }
+
+  const validAmenities = amenities.map(s => String(s || '').trim()).filter(Boolean);
+  const existingByLang = {};
+  for (const tl of targetLangs) {
+    existingByLang[tl] = existingAmenitiesI18n[tl] && Array.isArray(existingAmenitiesI18n[tl]) ? existingAmenitiesI18n[tl] : [];
+  }
+
+  for (let i = 0; i < validAmenities.length; i++) {
+    const item = validAmenities[i];
+    if (!item) continue;
+
+    for (const tl of targetLangs) {
+      const existing = existingByLang[tl][i];
+      if (existing && String(existing).trim() && String(existing).trim() !== item) {
+        result[tl].push(String(existing).trim());
+        continue;
+      }
+      await delay(400);
+      try {
+        const translated = await translateText(item, tl, { sourceLang });
+        result[tl].push(translated || item);
+      } catch (_) {
+        result[tl].push(item);
+      }
+    }
+  }
+
+  return result;
+}
+
 module.exports = {
   getMissingTranslations,
   generateMissingTranslations,
-  ensureCompleteTranslations
+  ensureCompleteTranslations,
+  ensureAmenitiesTranslations
 };
