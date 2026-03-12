@@ -11,7 +11,7 @@
 <!-- Preload the primary hero image for faster first paint -->
 <link rel="preload" as="image" href="/images/dubai-hero.jpg" imagesrcset="/images/dubai-hero.jpg" />
 
-<div id="locations-data" data-locations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locations) : JSON.stringify(locations)).replace(/'/g, '&#39;') %>' data-locale-prefix="<%= (typeof localePrefix !== 'undefined' && localePrefix) ? localePrefix : '' %>" style="display:none"></div>
+<div id="locations-data" data-locations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locations) : JSON.stringify(locations)).replace(/'/g, '&#39;') %>' data-locale-prefix="<%= (typeof localePrefix !== 'undefined' && localePrefix) ? localePrefix : '' %>" data-locations-translations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(typeof locationsTranslations !== 'undefined' && locationsTranslations ? locationsTranslations : { countries: {}, cities: {} }) : JSON.stringify(typeof locationsTranslations !== 'undefined' && locationsTranslations ? locationsTranslations : { countries: {}, cities: {} })).replace(/'/g, '&#39;') %>' data-learn-more="<%= (typeof t === 'function' ? t('common.learnMore', 'Learn more') : 'Learn more').replace(/"/g, '&quot;') %>" style="display:none"></div>
 <!-- i18n strings for Home JS -->
 <div id="i18n-home" data-i18n='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   calc: {

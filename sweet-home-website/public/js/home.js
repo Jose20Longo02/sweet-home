@@ -264,11 +264,23 @@ async function loadFeaturedProperties() {
     }
     
     const properties = await response.json();
-    const locTr = (HOME_I18N.locations && (HOME_I18N.locations.countries || HOME_I18N.locations.cities))
-      ? HOME_I18N.locations : { countries: {}, cities: {} };
+    const locsData = document.getElementById('locations-data');
+    let locTr = (HOME_I18N.locations && (HOME_I18N.locations.countries || HOME_I18N.locations.cities))
+      ? HOME_I18N.locations : null;
+    if (!locTr && locsData) {
+      try {
+        const raw = locsData.getAttribute('data-locations-translations') || '{}';
+        locTr = JSON.parse(raw);
+      } catch (_) { locTr = {}; }
+    }
+    locTr = locTr || { countries: {}, cities: {} };
     const trCity = (c) => (locTr.cities && locTr.cities[c]) || c;
     const trCountry = (c) => (locTr.countries && locTr.countries[c]) || c;
-    const learnMoreText = hGet('featured.learnMore', 'Learn more');
+    let learnMoreText = hGet('featured.learnMore', 'Learn more');
+    if (learnMoreText === 'Learn more' && locsData) {
+      const attr = locsData.getAttribute('data-learn-more');
+      if (attr) learnMoreText = attr.replace(/&quot;/g, '"');
+    }
     
     // Require at least 4 properties to show the section
     if (properties.length >= 4) {
