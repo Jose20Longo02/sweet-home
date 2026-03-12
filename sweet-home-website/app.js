@@ -627,16 +627,21 @@ async function renderHomePage(req, res, langPath, next) {
       `;
       const { rows: featRows } = await query(featSql);
       if (featRows && featRows.length >= 4) {
+        const translateLocation = res.locals.translateLocation;
         featuredProperties = featRows.map(p => {
           const titleI18n = p.title_i18n && typeof p.title_i18n === 'object' ? p.title_i18n : null;
           const title = (titleI18n && (titleI18n[lang] || titleI18n.en)) || p.title || '';
           const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+          const cityTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('city', p.city || '') : (p.city || '');
+          const countryTr = translateLocation && typeof translateLocation === 'function' ? translateLocation('country', p.country || '') : (p.country || '');
+          const locationDisplay = [cityTr, countryTr].filter(Boolean).join(', ') || ((p.city || '') + ', ' + (p.country || ''));
           return {
             id: p.id,
             title,
             slug: p.slug,
             country: p.country,
             city: p.city,
+            locationDisplay,
             neighborhood: p.neighborhood,
             price: p.price,
             photos,
@@ -662,12 +667,15 @@ async function renderHomePage(req, res, langPath, next) {
       es: 'Agencia internacional de inversión inmobiliaria'
     };
     const pageTitle = homeTitles[lang] || homeTitles.en;
+    const t = res.locals.t;
+    const learnMoreText = t && typeof t === 'function' ? t('common.learnMore', 'Learn more') : 'Learn more';
     res.render('home', {
       title: pageTitle,
       user: req.session.user || null,
       locations,
       recommendedProject,
       featuredProperties,
+      learnMoreText,
       canonicalUrl,
       hreflangAlternates,
       headPartial: '../partials/seo/home-head',

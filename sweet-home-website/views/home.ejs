@@ -97,9 +97,7 @@
     <div class="cards-track" id="featuredProperties">
       <% if (typeof featuredProperties !== 'undefined' && featuredProperties && featuredProperties.length >= 4) { %>
         <% featuredProperties.forEach(property => { %>
-          <% const locCity = (typeof translateLocation === 'function') ? translateLocation('city', property.city || '') : (property.city || ''); %>
-          <% const locCountry = (typeof translateLocation === 'function') ? translateLocation('country', property.country || '') : (property.country || ''); %>
-          <% const locationText = [locCity, locCountry].filter(Boolean).join(', ') || ((property.city || '') + ', ' + (property.country || '')); %>
+          <% const locationText = (typeof property.locationDisplay !== 'undefined' && property.locationDisplay) ? property.locationDisplay : ((property.city || '') + ', ' + (property.country || '')); %>
           <% const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString('en-US') : ''; %>
           <article class="property-card">
             <div class="img-wrap"<% if (priceText) { %> data-price="<%= priceText %>"<% } %>>
@@ -132,7 +130,7 @@
                 </div>
                 <% } %>
               </div>
-              <a class="learn-more" href="<%= (typeof localePath === 'function') ? localePath('/properties/' + property.slug) : '/properties/' + property.slug %>"><%= t('common.learnMore','Learn more') %> →</a>
+              <a class="learn-more" href="<%= (typeof localePath === 'function') ? localePath('/properties/' + property.slug) : '/properties/' + property.slug %>"><%= (typeof learnMoreText !== 'undefined' ? learnMoreText : (typeof t === 'function' ? t('common.learnMore','Learn more') : 'Learn more')) %> →</a>
             </div>
           </article>
         <% }); %>
