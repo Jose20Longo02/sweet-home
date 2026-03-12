@@ -620,27 +620,43 @@ function initCardsCarousel(rootSelector) {
 function markCenterCard(container) {
   const cards = [...container.querySelectorAll('.property-card, .testimonial-card')];
   if (!cards.length) return;
-  // First: remove center from all so they render in dimmed state (opacity .7, scale .94).
-  cards.forEach(card => card.classList.remove('is-center'));
   const viewLeft = container.scrollLeft;
   const viewRight = viewLeft + container.clientWidth;
   const center = viewLeft + container.clientWidth / 2;
-  let closest = null, minDist = Infinity;
+  let closest = null;
+  let minDist = Infinity;
   cards.forEach(card => {
     const cardLeft = card.offsetLeft;
     const cardRight = cardLeft + card.offsetWidth;
     const visibleWidth = Math.max(0, Math.min(cardRight, viewRight) - Math.max(cardLeft, viewLeft));
     const visibleRatio = card.offsetWidth > 0 ? (visibleWidth / card.offsetWidth) : 0;
     // Ignore cards that are still entering/leaving the viewport.
-    if (visibleRatio < 0.85) return;
+    if (visibleRatio < 0.9) return;
     const cx = card.offsetLeft + card.offsetWidth / 2;
     const dist = Math.abs(cx - center);
     if (dist < minDist) { minDist = dist; closest = card; }
   });
-  // Only mark as center if well-centered (within ~40% of card width from view center).
-  if (closest && minDist < closest.offsetWidth * 0.4) {
-    closest.classList.add('is-center');
+  const current = container.querySelector('.property-card.is-center, .testimonial-card.is-center');
+  let target = current || null;
+
+  if (!current) {
+    // Initial assignment: only if really close to center.
+    if (closest && minDist < closest.offsetWidth * 0.2) target = closest;
+  } else {
+    const currentLeft = current.offsetLeft;
+    const currentRight = currentLeft + current.offsetWidth;
+    const currentVisibleWidth = Math.max(0, Math.min(currentRight, viewRight) - Math.max(currentLeft, viewLeft));
+    const currentVisibleRatio = current.offsetWidth > 0 ? (currentVisibleWidth / current.offsetWidth) : 0;
+    const currentDist = Math.abs((current.offsetLeft + current.offsetWidth / 2) - center);
+
+    // Hysteresis: keep current center until a new card is clearly more centered.
+    // This prevents entering cards from flashing focused during the first smooth scroll.
+    const currentIsStillGood = currentVisibleRatio >= 0.55 && currentDist < current.offsetWidth * 0.32;
+    const challengerIsClearlyCentered = closest && minDist < closest.offsetWidth * 0.18;
+    target = (!currentIsStillGood && challengerIsClearlyCentered) ? closest : current;
   }
+
+  cards.forEach(card => card.classList.toggle('is-center', card === target));
 }
 
 function initStretchCarousel(rootSelector) {
