@@ -442,6 +442,27 @@
       "dubaiTitle": "Projekte in Dubai",
       "cta": "Alle Projekte ansehen"
     },
+    "amenityTerms": {
+      "Swimming Pool": "Schwimmbad",
+      "Pool": "Pool",
+      "Private Pool": "Privater Pool",
+      "Gym": "Fitnessstudio",
+      "Fitness Center": "Fitnesscenter",
+      "Beach Access": "Strandzugang",
+      "Garden": "Garten",
+      "Parking": "Parkplatz",
+      "Security": "Sicherheit",
+      "Concierge": "Concierge",
+      "Spa": "Spa",
+      "Tennis Court": "Tennisplatz",
+      "Golf": "Golf",
+      "Playground": "Spielplatz",
+      "BBQ": "Grillplatz",
+      "Rooftop": "Dachterrasse",
+      "Elevator": "Aufzug",
+      "Air Conditioning": "Klimaanlage",
+      "Landscaped Gardens": "Gepflegte Gärten"
+    },
     "viewDetails": "Projektdetails ansehen",
     "amenitiesTitle": "Ausstattung des Projekts",
     "detail": {

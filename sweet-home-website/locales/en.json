@@ -453,6 +453,27 @@
     }
   },
   "projects": {
+    "amenityTerms": {
+      "Swimming Pool": "Swimming Pool",
+      "Pool": "Pool",
+      "Private Pool": "Private Pool",
+      "Gym": "Gym",
+      "Fitness Center": "Fitness Center",
+      "Beach Access": "Beach Access",
+      "Garden": "Garden",
+      "Parking": "Parking",
+      "Security": "Security",
+      "Concierge": "Concierge",
+      "Spa": "Spa",
+      "Tennis Court": "Tennis Court",
+      "Golf": "Golf",
+      "Playground": "Playground",
+      "BBQ": "BBQ",
+      "Rooftop": "Rooftop",
+      "Elevator": "Elevator",
+      "Air Conditioning": "Air Conditioning",
+      "Landscaped Gardens": "Landscaped Gardens"
+    },
     "viewDetails": "View project details",
     "amenitiesTitle": "Amenities of the project",
     "detail": {

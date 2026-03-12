@@ -196,7 +196,7 @@
                 <% project.amenities.forEach(amenity => { %>
                   <div class="amenity-item">
                     <i class="fas fa-star"></i>
-                    <span><%= amenity %></span>
+                    <span><%= (typeof t === 'function') ? t('projects.amenityTerms.' + String(amenity || '').replace(/\./g, '_'), amenity || '') : (amenity || '') %></span>
                   </div>
                 <% }) %>
               </div>

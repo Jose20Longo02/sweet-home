@@ -336,6 +336,27 @@
     "500": { "title": "Algo salió mal", "heading": "Ocurrió un error inesperado", "hint": "Inténtalo de nuevo. Si el problema persiste, contacta soporte." }
   },
   "projects": {
+    "amenityTerms": {
+      "Swimming Pool": "Piscina",
+      "Pool": "Piscina",
+      "Private Pool": "Piscina privada",
+      "Gym": "Gimnasio",
+      "Fitness Center": "Centro de fitness",
+      "Beach Access": "Acceso a la playa",
+      "Garden": "Jardín",
+      "Parking": "Aparcamiento",
+      "Security": "Seguridad",
+      "Concierge": "Conserjería",
+      "Spa": "Spa",
+      "Tennis Court": "Pista de tenis",
+      "Golf": "Golf",
+      "Playground": "Parque infantil",
+      "BBQ": "Zona de barbacoa",
+      "Rooftop": "Azotea",
+      "Elevator": "Ascensor",
+      "Air Conditioning": "Aire acondicionado",
+      "Landscaped Gardens": "Jardines paisajísticos"
+    },
     "regions": {
       "title": "Proyectos por región",
       "aria": { "page": "Proyectos por región", "cyprus": "Ver todos los proyectos en Chipre", "dubai": "Ver todos los proyectos en Dubái" },

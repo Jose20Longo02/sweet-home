@@ -230,7 +230,7 @@
               <% property.project.amenities.forEach(function(a){ %>
                 <div class="amenity-chip">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"></polyline></svg>
-                  <span><%= a %></span>
+                  <span><%= (typeof t === 'function') ? t('projects.amenityTerms.' + String(a || '').replace(/\./g, '_'), a || '') : (a || '') %></span>
                 </div>
               <% }) %>
             </div>
