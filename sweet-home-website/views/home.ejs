@@ -94,7 +94,52 @@
   <h2 class="section-title"><%= t('home.featured.title','Featured Properties') %></h2>
   <div class="cards-carousel" id="featuredCarousel" aria-label="Featured properties">
     <button class="carousel-nav prev" data-target="#featuredCarousel" aria-label="<%= t('common.previous','Previous') %>">&#8249;</button>
-    <div class="cards-track" id="featuredProperties"><!-- populated by JS --></div>
+    <div class="cards-track" id="featuredProperties">
+      <% if (typeof featuredProperties !== 'undefined' && featuredProperties && featuredProperties.length >= 4) { %>
+        <% featuredProperties.forEach(property => { %>
+          <% const locCity = (typeof translateLocation === 'function') ? translateLocation('city', property.city || '') : (property.city || ''); %>
+          <% const locCountry = (typeof translateLocation === 'function') ? translateLocation('country', property.country || '') : (property.country || ''); %>
+          <% const locationText = [locCity, locCountry].filter(Boolean).join(', ') || ((property.city || '') + ', ' + (property.country || '')); %>
+          <% const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString('en-US') : ''; %>
+          <article class="property-card">
+            <div class="img-wrap"<% if (priceText) { %> data-price="<%= priceText %>"<% } %>>
+              <img src="<%= (property.photos && property.photos[0]) ? property.photos[0] : '/img/property-placeholder.jpg' %>" alt="<%= property.title %>" loading="lazy" onerror="this.src='/img/property-placeholder.jpg'">
+            </div>
+            <div class="meta">
+              <div class="title"><%= property.title %></div>
+              <% if (priceText) { %><div class="price"><%= priceText %></div><% } %>
+              <div class="location">
+                <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                <%= locationText %>
+              </div>
+              <div class="features-row">
+                <% if (property.size) { %>
+                <div class="feature">
+                  <span class="icon icon-16 icon-inline icon-mask icon-size"></span>
+                  <span><%= property.size %> m²</span>
+                </div>
+                <% } %>
+                <% if (typeof property.rooms !== 'undefined' && property.rooms !== null) { %>
+                <div class="feature">
+                  <span class="icon icon-16 icon-inline icon-mask icon-bed"></span>
+                  <span><%= property.rooms %> <%= t('properties.list.meta.beds','beds') %></span>
+                </div>
+                <% } %>
+                <% if (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) { %>
+                <div class="feature">
+                  <span class="icon icon-16 icon-inline icon-mask icon-bath"></span>
+                  <span><%= property.bathrooms %> <%= t('properties.list.meta.baths','baths') %></span>
+                </div>
+                <% } %>
+              </div>
+              <a class="learn-more" href="<%= (typeof localePath === 'function') ? localePath('/properties/' + property.slug) : '/properties/' + property.slug %>"><%= t('common.learnMore','Learn more') %> →</a>
+            </div>
+          </article>
+        <% }); %>
+      <% } else { %>
+        <!-- fallback: populated by JS -->
+      <% } %>
+    </div>
     <button class="carousel-nav next" data-target="#featuredCarousel" aria-label="<%= t('common.next','Next') %>">&#8250;</button>
   </div>
 </section>

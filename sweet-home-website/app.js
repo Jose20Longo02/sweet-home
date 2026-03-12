@@ -566,6 +566,7 @@ async function renderHomePage(req, res, langPath, next) {
     const lang = (res.locals && res.locals.lang) ? res.locals.lang : (req.cookies && req.cookies.lang) ? req.cookies.lang : 'en';
 
     let recommendedProject = null;
+    let featuredProperties = null;
 
     const cached = getHomePageData();
     if (cached) {
@@ -609,6 +610,45 @@ async function renderHomePage(req, res, langPath, next) {
       setHomePageData({ recommendedProject });
     }
 
+    // Featured properties (server-rendered for correct i18n of location and CTA)
+    try {
+      const featSql = `
+        SELECT p.id, p.title, p.title_i18n, p.slug, p.country, p.city, p.neighborhood,
+               p.price, p.photos, p.type, p.rooms, p.bathrooms,
+               CASE WHEN p.type = 'Apartment' THEN p.apartment_size
+                    WHEN p.type IN ('House', 'Villa') THEN p.living_space
+                    WHEN p.type = 'Land' THEN p.land_size ELSE NULL END as size,
+               COALESCE(ps.views, 0) AS views
+          FROM properties p
+          LEFT JOIN property_stats ps ON ps.property_id = p.id
+         WHERE p.slug IS NOT NULL
+         ORDER BY COALESCE(ps.views, 0) DESC, RANDOM()
+         LIMIT 6
+      `;
+      const { rows: featRows } = await query(featSql);
+      if (featRows && featRows.length >= 4) {
+        featuredProperties = featRows.map(p => {
+          const titleI18n = p.title_i18n && typeof p.title_i18n === 'object' ? p.title_i18n : null;
+          const title = (titleI18n && (titleI18n[lang] || titleI18n.en)) || p.title || '';
+          const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+          return {
+            id: p.id,
+            title,
+            slug: p.slug,
+            country: p.country,
+            city: p.city,
+            neighborhood: p.neighborhood,
+            price: p.price,
+            photos,
+            type: p.type,
+            rooms: p.rooms,
+            bathrooms: p.bathrooms,
+            size: p.size
+          };
+        });
+      }
+    } catch (_) { /* non-fatal */ }
+
     const baseUrl = res.locals.baseUrl;
     const canonicalUrl = `${baseUrl}${langPath}`;
     const hreflangAlternates = {
@@ -627,6 +667,7 @@ async function renderHomePage(req, res, langPath, next) {
       user: req.session.user || null,
       locations,
       recommendedProject,
+      featuredProperties,
       canonicalUrl,
       hreflangAlternates,
       headPartial: '../partials/seo/home-head',

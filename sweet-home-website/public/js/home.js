@@ -219,15 +219,19 @@ function testDropdowns() {
   }
 }
 
-// Load featured properties
+// Load featured properties (only when not server-rendered)
 async function loadFeaturedProperties() {
   const featuredContainer = document.getElementById('featuredProperties');
   const featuredSection = document.querySelector('.section.featured');
   const featuredCarousel = document.getElementById('featuredCarousel');
   if (!featuredContainer || !featuredSection) return;
-  // Hide section until we confirm we have enough items
+  const existingCards = featuredContainer.querySelectorAll('.property-card:not(.loading-placeholder)');
+  if (existingCards.length >= 4) {
+    featuredSection.style.display = '';
+    return;
+  }
   featuredSection.style.display = 'none';
-  
+
   try {
     // Show loading state
     featuredContainer.innerHTML = `
