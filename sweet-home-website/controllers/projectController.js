@@ -1112,8 +1112,8 @@ exports.listProjectsPublic = async (req, res, next) => {
     // Build the base query
     let baseQuery = `
       SELECT
-        p.id, p.title, p.slug, p.country, p.city, p.neighborhood,
-        p.description, p.photos, p.created_at,
+        p.id, p.title, p.title_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.description, p.description_i18n, p.photos, p.created_at,
         p.min_price, p.max_price, p.unit_types
       FROM projects p
       WHERE 1=1
@@ -1185,10 +1185,14 @@ exports.listProjectsPublic = async (req, res, next) => {
         // Otherwise, assume it's a filename and prepend the project path
         return `/uploads/projects/${p.id}/${phStr}`;
       });
+      const ti18n = p.title_i18n && typeof p.title_i18n === 'object' ? p.title_i18n : null;
+      const di18n = p.description_i18n && typeof p.description_i18n === 'object' ? p.description_i18n : null;
+      const localizedTitle = (ti18n && (ti18n[langPub] || ti18n.en)) || p.title;
+      const localizedDescription = (di18n && (di18n[langPub] || di18n.en)) || p.description;
       return {
         ...p,
-        // Do NOT translate project title on public list; show original as requested
-        title: p.title,
+        title: localizedTitle,
+        description: localizedDescription,
         photos: normalized,
         slug: p.slug || `project-${p.id}`
       };
