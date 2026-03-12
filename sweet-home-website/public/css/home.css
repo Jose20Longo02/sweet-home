@@ -710,6 +710,14 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 .property-card .img-wrap { position: relative; }
 .property-card .img-wrap::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(46,168,98,1) 0%, rgba(46,168,98,.75) 45%, rgba(46,168,98,.25) 85%, rgba(46,168,98,0) 100%); opacity: 0; transition: opacity .25s ease; z-index: 1; }
 .property-card .img-wrap::before { content: attr(data-price); position: absolute; left: 50%; top: 75%; transform: translate(-50%, -50%); color: #fff; font-weight: 300; font-size: 28px; letter-spacing: .2px; opacity: 0; transition: opacity .25s ease, transform .25s ease; pointer-events: none; z-index: 2; }
+/* Keep incoming cards visually de-emphasized at all times until they are truly centered. */
+.cards-track > .property-card:not(.is-center) .img-wrap::after {
+  background: rgba(255, 255, 255, 0.28);
+  opacity: 1;
+}
+.cards-track > .property-card.is-center .img-wrap::after {
+  opacity: 0;
+}
 /* Hover effects removed */
 .property-card .meta { 
   padding: 20px 20px; 
