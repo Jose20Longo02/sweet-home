@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-// Simple i18n loader using locales/*.json and a query/cookie switch
+// Simple i18n loader using locales/*.json
 module.exports = function i18nMiddleware(req, res, next) {
   try {
     const localesDir = path.join(__dirname, '..', 'locales');

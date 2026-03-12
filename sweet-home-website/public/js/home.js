@@ -114,6 +114,12 @@ function initializeCityDropdown() {
   // Set initial state - city and neighborhood should be disabled initially
   citySelect.disabled = true;
   neighborhoodSelect.disabled = true;
+  const locTr = (HOME_I18N && HOME_I18N.locations && typeof HOME_I18N.locations === 'object')
+    ? { countries: HOME_I18N.locations.countries || {}, cities: HOME_I18N.locations.cities || {} }
+    : { countries: {}, cities: {} };
+  const trCity = (c) => (locTr.cities && locTr.cities[c]) || c;
+  const anyCityText = hGet('forms.anyCity', 'Any City');
+  const anyNeighborhoodText = hGet('forms.anyNeighborhood', 'Any Neighborhood');
   
   // Keep default as "Any country"; do not auto-select the first country
   
@@ -122,8 +128,8 @@ function initializeCityDropdown() {
     const selectedCountry = this.value;
     
     // Reset city and neighborhood dropdowns
-    citySelect.innerHTML = '<option value="">Any City</option>';
-    neighborhoodSelect.innerHTML = '<option value="">Any Neighborhood</option>';
+    citySelect.innerHTML = `<option value="">${anyCityText}</option>`;
+    neighborhoodSelect.innerHTML = `<option value="">${anyNeighborhoodText}</option>`;
     
     if (selectedCountry && window.locations[selectedCountry]) {
       const cities = Object.keys(window.locations[selectedCountry]);
@@ -132,7 +138,7 @@ function initializeCityDropdown() {
       cities.forEach(city => {
         const option = document.createElement('option');
         option.value = city;
-        option.textContent = city;
+        option.textContent = trCity(city);
         citySelect.appendChild(option);
       });
       citySelect.disabled = false;
@@ -152,7 +158,7 @@ function initializeCityDropdown() {
     const selectedCity = this.value;
     
     // Reset neighborhood dropdown
-    neighborhoodSelect.innerHTML = '<option value="">Any Neighborhood</option>';
+    neighborhoodSelect.innerHTML = `<option value="">${anyNeighborhoodText}</option>`;
     
     if (selectedCity && window.locations[selectedCountry] && window.locations[selectedCountry][selectedCity]) {
       const neighborhoods = window.locations[selectedCountry][selectedCity];
@@ -207,7 +213,7 @@ function testDropdowns() {
   if (countrySelect && countrySelect.value && window.locations[countrySelect.value]) {
     console.log('🧪 Manually populating city dropdown...');
     const cities = Object.keys(window.locations[countrySelect.value]);
-    citySelect.innerHTML = '<option value="">Any City</option>';
+    citySelect.innerHTML = `<option value="">${anyCityText}</option>`;
     cities.forEach(city => {
       const option = document.createElement('option');
       option.value = city;

@@ -156,7 +156,7 @@ app.use(
 );
 app.use(cookieParser());
 // Internationalization: must come immediately after cookies so it can read lang.
-// Language is determined by URL path when on /es, /de or explicit English paths; otherwise the cookie is used so the user's choice persists across navigation.
+// Language is path-first (/es/*, /de/*, or non-prefixed public routes) and cookie-backed for persistence.
 app.use(i18nMiddleware);
 // Expose current lang for diagnostics
 app.use((req, res, next) => { try { res.set('X-App-Lang', res.locals.lang || ''); } catch (_) {} next(); });
@@ -247,7 +247,7 @@ app.set('view engine', 'ejs');
 app.use(expressLayouts);
 app.set('layout', 'layouts/main');   // this is your default layout
 
-// (i18n already mounted above cookies)
+// (i18n is already mounted above)
 
 
 // CSRF protection (cookie-based tokens)

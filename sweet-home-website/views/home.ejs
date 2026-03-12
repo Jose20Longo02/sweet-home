@@ -26,6 +26,10 @@
     }
   },
   aria: { prev: t('common.previous','Previous'), next: t('common.next','Next') },
+  forms: {
+    anyCity: t('forms.anyCity','Any City'),
+    anyNeighborhood: t('forms.anyNeighborhood','Any Neighborhood')
+  },
   featured: { learnMore: t('common.learnMore','Learn more') },
   locations: (typeof locationsTranslations !== 'undefined' && locationsTranslations) ? locationsTranslations : { countries: {}, cities: {} }
 }) : JSON.stringify({
@@ -41,6 +45,10 @@
     }
   },
   aria: { prev: t('common.previous','Previous'), next: t('common.next','Next') },
+  forms: {
+    anyCity: t('forms.anyCity','Any City'),
+    anyNeighborhood: t('forms.anyNeighborhood','Any Neighborhood')
+  },
   featured: { learnMore: t('common.learnMore','Learn more') },
   locations: (typeof locationsTranslations !== 'undefined' && locationsTranslations) ? locationsTranslations : { countries: {}, cities: {} }
 })).replace(/'/g, '&#39;') %>' style="display:none"></div>
@@ -59,7 +67,7 @@
       <select id="country" name="country">
         <option value=""><%= t('forms.country','Country') %></option>
         <% Object.keys(locations).forEach(country => { %>
-          <option value="<%= country %>"><%= country %></option>
+          <option value="<%= country %>"><%= (typeof translateLocation === 'function') ? translateLocation('country', country) : country %></option>
         <% }); %>
       </select>
       <label class="sr-only" for="city"><%= t('forms.city','City') %></label>
@@ -165,7 +173,7 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
           <h2 class="title"><%= recommendedProject.title %></h2>
           <p class="location">
             <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
-            <%= recommendedProject.city %>, <%= recommendedProject.country %>
+            <%= (typeof translateLocation === 'function') ? translateLocation('city', recommendedProject.city) : recommendedProject.city %>, <%= (typeof translateLocation === 'function') ? translateLocation('country', recommendedProject.country) : recommendedProject.country %>
           </p>
           
           <div class="info-grid">
@@ -205,27 +213,27 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
   <div class="stretch-carousel" id="intlCarousel">
     <button class="carousel-nav prev" data-target="#intlCarousel" aria-label="<%= t('common.previous','Previous') %>">&#8249;</button>
     <div class="stretch-track">
-      <article class="stretch-card is-collapsed" data-title="North Cyprus">
+      <article class="stretch-card is-collapsed" data-title="<%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %>">
         <img src="/images/cyprus-international.jpg" alt="" loading="lazy">
-        <span class="vertical-title">North Cyprus</span>
+        <span class="vertical-title"><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></span>
         <div class="expanded-info">
-          <h3>North Cyprus</h3>
+          <h3><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></h3>
           <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Cyprus" class="see-link"><%= t('home.international.see','See properties') %></a>
         </div>
       </article>
-      <article class="stretch-card is-collapsed" data-title="Dubai, UAE">
+      <article class="stretch-card is-collapsed" data-title="<%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %>">
         <img src="/images/dubai-international.jpg" alt="" loading="lazy">
-        <span class="vertical-title">Dubai, UAE</span>
+        <span class="vertical-title"><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %></span>
         <div class="expanded-info">
-          <h3>Dubai, UAE</h3>
+          <h3><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %></h3>
           <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=UAE&city=Dubai" class="see-link"><%= t('home.international.see','See properties') %></a>
         </div>
       </article>
-      <article class="stretch-card is-focused" data-title="Berlin, Germany">
+      <article class="stretch-card is-focused" data-title="<%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Berlin') : 'Berlin') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'Germany') : 'Germany') %>">
         <img src="/images/berlin-international.jpg" alt="" loading="lazy">
-        <span class="vertical-title">Berlin, Germany</span>
+        <span class="vertical-title"><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Berlin') : 'Berlin') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'Germany') : 'Germany') %></span>
         <div class="expanded-info">
-          <h3>Berlin, Germany</h3>
+          <h3><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Berlin') : 'Berlin') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'Germany') : 'Germany') %></h3>
           <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Germany&city=Berlin" class="see-link"><%= t('home.international.see','See properties') %></a>
         </div>
       </article>
