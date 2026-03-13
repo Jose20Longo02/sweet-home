@@ -1,23 +1,59 @@
 <%
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
-  const blogListUrl = `${siteBaseUrl}/blog${(typeof page !== 'undefined' && page > 1) ? `?page=${page}` : ''}`;
+  const localePrefixSafe = (typeof localePrefix !== 'undefined' && localePrefix) ? localePrefix : '';
+  const blogBasePath = `${localePrefixSafe}/blog` || '/blog';
+  const topicParam = (typeof activeTopic !== 'undefined' && activeTopic) ? String(activeTopic) : '';
+  const pageParam = (typeof page !== 'undefined' && page > 1) ? Number(page) : 0;
+  const buildQuery = (pageValue) => {
+    const parts = [];
+    if (topicParam) parts.push(`topic=${encodeURIComponent(topicParam)}`);
+    if (pageValue && pageValue > 1) parts.push(`page=${pageValue}`);
+    return parts.length ? `?${parts.join('&')}` : '';
+  };
+  const blogListUrl = `${siteBaseUrl}${blogBasePath}${buildQuery(pageParam)}`;
+  const enUrl = `${siteBaseUrl}/blog${buildQuery(pageParam)}`;
+  const deUrl = `${siteBaseUrl}/de/blog${buildQuery(pageParam)}`;
+  const esUrl = `${siteBaseUrl}/es/blog${buildQuery(pageParam)}`;
+  const ogLocale = (typeof lang !== 'undefined' && lang === 'de') ? 'de_DE' : (typeof lang !== 'undefined' && lang === 'es') ? 'es_ES' : 'en_US';
+  const normalizeText = (value) => String(value || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  const clampText = (value, max) => {
+    const clean = normalizeText(value);
+    if (clean.length <= max) return clean;
+    return `${clean.slice(0, Math.max(0, max - 1)).trim()}…`;
+  };
   const baseDesc = 'Browse our real estate blog for insights on property markets in Cyprus, Dubai, and Berlin. Expert advice, market trends, and investment guides.';
-  const listDesc = (typeof page !== 'undefined' && page > 1) ? `Browse our real estate blog - Page ${page}. Insights on property markets in Cyprus, Dubai, and Berlin. Expert advice, market trends, and investment guides.` : baseDesc;
+  const topicDesc = topicParam && typeof t === 'function'
+    ? t(`blog.topicIntro.${topicParam}.metaDescription`, baseDesc)
+    : baseDesc;
+  const rawDesc = (typeof page !== 'undefined' && page > 1) ? `${topicDesc} - Page ${page}.` : topicDesc;
+  const listDesc = clampText(rawDesc, 155);
+  const rawTitle = (typeof title !== 'undefined' && title) ? title : 'Blog - Real Estate Insights';
+  const socialTitle = clampText(rawTitle, 65);
 %>
 <meta name="description" content="<%= listDesc %>">
 <link rel="canonical" href="<%= blogListUrl %>">
+<link rel="alternate" hreflang="en-us" href="<%= enUrl %>">
+<link rel="alternate" hreflang="de-de" href="<%= deUrl %>">
+<link rel="alternate" hreflang="es-es" href="<%= esUrl %>">
+<link rel="alternate" hreflang="x-default" href="<%= enUrl %>">
+<% if (typeof page !== 'undefined' && page > 1) { %>
+<link rel="prev" href="<%= `${siteBaseUrl}${blogBasePath}${buildQuery((page - 1) > 1 ? (page - 1) : 0)}` %>">
+<% } %>
+<% if (typeof page !== 'undefined' && typeof totalPages !== 'undefined' && page < totalPages) { %>
+<link rel="next" href="<%= `${siteBaseUrl}${blogBasePath}${buildQuery(page + 1)}` %>">
+<% } %>
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Blog - Real Estate Insights' %>">
+<meta property="og:title" content="<%= socialTitle %>">
 <meta property="og:description" content="<%= listDesc %>">
 <meta property="og:url" content="<%= blogListUrl %>">
 <meta property="og:site_name" content="Sweet Home">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="<%= ogLocale %>">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'Blog - Real Estate Insights' %>">
+<meta name="twitter:title" content="<%= socialTitle %>">
 <meta name="twitter:description" content="<%= listDesc %>">
 
 <!-- JSON-LD ItemList for blog posts (only if posts exist) -->
@@ -30,9 +66,9 @@
     position: idx + 1,
     item: {
       '@type': 'BlogPosting',
-      '@id': `${siteBaseUrl}/blog/${post.slug}`,
+      '@id': `${siteBaseUrl}${blogBasePath}/${post.slug}`,
       name: post.title,
-      url: `${siteBaseUrl}/blog/${post.slug}`
+      url: `${siteBaseUrl}${blogBasePath}/${post.slug}`
     }
   }))
 }) : JSON.stringify({
@@ -43,9 +79,9 @@
     position: idx + 1,
     item: {
       '@type': 'BlogPosting',
-      '@id': `${siteBaseUrl}/blog/${post.slug}`,
+      '@id': `${siteBaseUrl}${blogBasePath}/${post.slug}`,
       name: post.title,
-      url: `${siteBaseUrl}/blog/${post.slug}`
+      url: `${siteBaseUrl}${blogBasePath}/${post.slug}`
     }
   }))
 })) %></script>

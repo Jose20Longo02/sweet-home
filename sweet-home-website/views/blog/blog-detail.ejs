@@ -3,7 +3,7 @@
 <article class="container main blog-detail">
   <div class="blog-detail-grid">
     <aside class="blog-recommended">
-      <h3><%= t('blog.detail.recent','Recent articles') %></h3>
+      <h3><%= t((postTopicIds && postTopicIds.length) ? 'blog.detail.related' : 'blog.detail.recent', (postTopicIds && postTopicIds.length) ? 'Related articles' : 'Recent articles') %></h3>
       <% if ((recommendedPosts || []).length === 0) { %>
         <p class="empty"><%= t('blog.detail.noRecent','No recent posts.') %></p>
       <% } else { %>
@@ -33,12 +33,33 @@
         <% if (post.author_name) { %>
           <p class="meta"><%= t('blog.by','By') %> <%= post.author_name %></p>
         <% } %>
+        <% if ((postTopicIds || []).length > 0) { %>
+          <div class="post-topics">
+            <% postTopicIds.forEach(topicId => { %>
+              <a
+                class="topic-chip subtle"
+                href="<%= ((typeof localePath === 'function') ? localePath('/blog') : '/blog') + '?topic=' + encodeURIComponent(topicId) %>"
+              >
+                <%= t('blog.topics.' + topicId, topicId) %>
+              </a>
+            <% }) %>
+          </div>
+        <% } %>
         <% if (post.cover_image) { %>
           <img src="<%= post.cover_image %>" alt="<%= post.title %>" class="cover" />
         <% } %>
       </header>
       <section class="content">
         <%- post.content %>
+      </section>
+      <section class="blog-author-expertise" aria-label="<%= t('blog.detail.authorBoxLabel','Author expertise') %>">
+        <h2><%= t('blog.detail.authorExpertiseTitle','Author expertise') %></h2>
+        <p>
+          <%= t('blog.detail.authorExpertiseBody', 'This article is reviewed by our real estate team for local market accuracy and practical buyer guidance.') %>
+        </p>
+        <% if (post.author_name) { %>
+          <p class="author-name"><%= t('blog.detail.authorNamePrefix','Reviewed by') %> <strong><%= post.author_name %></strong></p>
+        <% } %>
       </section>
     </div>
   </div>

@@ -380,8 +380,100 @@
     "by": "By",
     "publishedBy": "Published by",
     "read": "Read article",
-    "list": { "empty": "No articles yet." },
-    "detail": { "recent": "Recent articles", "noRecent": "No recent posts." }
+    "list": {
+      "empty": "No articles yet.",
+      "topicsLabel": "Blog topics",
+      "allTopics": "All topics",
+      "topicIntroLabel": "Topic overview",
+      "topicIntroFallback": "Explore hand-picked articles from our team."
+    },
+    "detail": {
+      "recent": "Recent articles",
+      "related": "Related articles",
+      "noRecent": "No recent posts.",
+      "authorBoxLabel": "Author expertise",
+      "authorExpertiseTitle": "Author expertise",
+      "authorExpertiseBody": "This article is reviewed by our real estate team for local market accuracy and practical buyer guidance.",
+      "authorNamePrefix": "Reviewed by",
+      "faq": {
+        "berlin": {
+          "q1": "Which Berlin neighborhoods are best for long-term value?",
+          "a1": "Focus on districts with strong transit, stable rental demand, and active regeneration, as these usually support resilient long-term value.",
+          "q2": "Is Berlin better for rental yield or capital appreciation?",
+          "a2": "Both are possible: central areas are often steadier, while emerging districts can offer more upside with higher risk."
+        },
+        "dubai": {
+          "q1": "What should buyers check first when investing in Dubai?",
+          "a1": "Check developer track record, service charges, and realistic rent assumptions for the exact building and community.",
+          "q2": "Are off-plan properties in Dubai suitable for all investors?",
+          "a2": "Not always; off-plan can improve entry price, but delivery timelines and execution risk must fit your liquidity and strategy."
+        },
+        "cyprus": {
+          "q1": "Which parts of Cyprus attract international buyers most?",
+          "a1": "Paphos and Limassol usually lead due to lifestyle demand, stronger resale liquidity, and established international communities.",
+          "q2": "What legal step is essential before buying in Cyprus?",
+          "a2": "Run independent legal due diligence on title, permits, and contract terms before signing or paying any deposit."
+        },
+        "investment": {
+          "q1": "How can I compare two properties as investments?",
+          "a1": "Compare net yield, vacancy exposure, exit liquidity, and full holding costs, not just headline purchase price.",
+          "q2": "What is a healthy risk check before buying?",
+          "a2": "Stress-test for lower rent and higher costs; if returns still work in conservative scenarios, risk is better controlled."
+        },
+        "market": {
+          "q1": "Which signals matter most in a real estate market update?",
+          "a1": "Track supply pipeline, transaction volume, financing conditions, and days-on-market to read market momentum correctly.",
+          "q2": "Can short-term price changes define a long-term trend?",
+          "a2": "No, not alone; combine short-term pricing with structural indicators before making long-term strategic decisions."
+        },
+        "buying": {
+          "q1": "What should I prepare before making an offer?",
+          "a1": "Prepare budget limits, financing readiness, and non-negotiable criteria so you can act quickly without overextending.",
+          "q2": "How do I avoid common buyer mistakes?",
+          "a2": "Use independent legal and technical checks, confirm total costs, and avoid decisions based only on marketing."
+        }
+      }
+    },
+    "topics": {
+      "berlin": "Berlin",
+      "dubai": "Dubai",
+      "cyprus": "Cyprus",
+      "investment": "Investment",
+      "market": "Market trends",
+      "buying": "Buying guides"
+    },
+    "topicIntro": {
+      "berlin": {
+        "title": "Berlin Property Insights",
+        "body": "Guides focused on Berlin districts, buyer strategy, and practical steps for selecting neighborhoods with long-term potential.",
+        "metaDescription": "Berlin real estate blog articles about neighborhoods, buying strategy, and market insights for smart property decisions."
+      },
+      "dubai": {
+        "title": "Dubai Property Insights",
+        "body": "Explore Dubai-focused articles on communities, off-plan vs ready units, rental dynamics, and investor due diligence.",
+        "metaDescription": "Dubai real estate blog articles covering communities, investment strategy, and practical buying guidance."
+      },
+      "cyprus": {
+        "title": "Cyprus Property Insights",
+        "body": "Read expert content about Cyprus locations, legal checks, and lifestyle-driven investment decisions across key cities.",
+        "metaDescription": "Cyprus real estate blog articles about neighborhoods, legal considerations, and buyer-friendly market guidance."
+      },
+      "investment": {
+        "title": "Investment Guides",
+        "body": "Actionable frameworks for yield analysis, risk management, and portfolio decisions in international real estate markets.",
+        "metaDescription": "Real estate investment articles on yield, risk, and strategy for data-backed property decisions."
+      },
+      "market": {
+        "title": "Market Trend Analysis",
+        "body": "Follow market movement with practical interpretation of demand, pricing, and supply signals across our core regions.",
+        "metaDescription": "Property market trend articles with practical analysis of price movement, demand, and supply."
+      },
+      "buying": {
+        "title": "Property Buying Guides",
+        "body": "Step-by-step buying content to help you plan budget, evaluate options, and close with confidence in your target market.",
+        "metaDescription": "Property buying guide articles with practical steps, checklists, and expert advice for confident purchases."
+      }
+    }
   },
   "errors": {
     "common": { "home": "Go back home", "back": "Go back" },

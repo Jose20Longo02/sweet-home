@@ -362,8 +362,100 @@
     "by": "Von",
     "publishedBy": "Veröffentlicht von",
     "read": "Artikel lesen",
-    "list": { "empty": "Noch keine Artikel." },
-    "detail": { "recent": "Neueste Artikel", "noRecent": "Keine aktuellen Beiträge." }
+    "list": {
+      "empty": "Noch keine Artikel.",
+      "topicsLabel": "Blog-Themen",
+      "allTopics": "Alle Themen",
+      "topicIntroLabel": "Themenuberblick",
+      "topicIntroFallback": "Entdecken Sie kuratierte Artikel unseres Teams."
+    },
+    "detail": {
+      "recent": "Neueste Artikel",
+      "related": "Ähnliche Artikel",
+      "noRecent": "Keine aktuellen Beiträge.",
+      "authorBoxLabel": "Autor-Expertise",
+      "authorExpertiseTitle": "Autor-Expertise",
+      "authorExpertiseBody": "Dieser Artikel wird von unserem Immobilien-Team auf lokale Marktgenauigkeit und praxisnahe Käuferhinweise geprüft.",
+      "authorNamePrefix": "Gepruft von",
+      "faq": {
+        "berlin": {
+          "q1": "Welche Berliner Stadtteile sind fur langfristigen Wert besonders geeignet?",
+          "a1": "Stadtteile mit guter Anbindung, stabiler Mietnachfrage und laufender Entwicklung sind meist langfristig wertstabiler.",
+          "q2": "Ist Berlin besser fur Mietrendite oder Wertsteigerung?",
+          "a2": "Beides ist moglich: zentrale Lagen sind oft stabiler, aufstrebende Bezirke bieten haufig mehr Wertsteigerung bei mehr Risiko."
+        },
+        "dubai": {
+          "q1": "Was sollten Kaufer bei einer Investition in Dubai zuerst prufen?",
+          "a1": "Prufen Sie zuerst Entwicklerqualitat, Servicegebuhren und realistische Mietertragsannahmen fur Gebaude und Community.",
+          "q2": "Sind Off-Plan-Immobilien in Dubai fur alle Investoren geeignet?",
+          "a2": "Nicht immer; Off-Plan kann Einstiegsvorteile bringen, muss aber zu Ihrer Liquiditat und Risikostrategie passen."
+        },
+        "cyprus": {
+          "q1": "Welche Regionen in Zypern sind bei internationalen Kaufern besonders beliebt?",
+          "a1": "Paphos und Limassol sind oft gefragt wegen Lifestyle-Nachfrage, besserer Wiederverkaufbarkeit und etablierter Expat-Community.",
+          "q2": "Welcher rechtliche Schritt ist vor dem Kauf in Zypern entscheidend?",
+          "a2": "Vor jeder Zahlung ist eine unabhangige rechtliche Prufung von Eigentumstitel, Genehmigungen und Vertrag zentral."
+        },
+        "investment": {
+          "q1": "Wie vergleiche ich zwei Immobilien als Kapitalanlage?",
+          "a1": "Vergleichen Sie Nettorendite, Leerstandsrisiko, Exit-Liquiditat und Gesamtkosten statt nur den Einstiegspreis.",
+          "q2": "Welche Risiko-Prufung ist vor dem Kauf sinnvoll?",
+          "a2": "Rechnen Sie konservative Szenarien mit hoheren Kosten und niedrigeren Mieten, bevor Sie final entscheiden."
+        },
+        "market": {
+          "q1": "Welche Signale sind in Marktanalysen am wichtigsten?",
+          "a1": "Wichtig sind Neubaupipeline, Transaktionsvolumen, Finanzierungskonditionen und Vermarktungsdauer.",
+          "q2": "Reichen kurzfristige Preisanderungen fur einen Langfristtrend aus?",
+          "a2": "Nein, nicht allein; kombinieren Sie kurzfristige Preise mit strukturellen Indikatoren fur belastbare Trends."
+        },
+        "buying": {
+          "q1": "Was sollte ich vor einem Angebot vorbereiten?",
+          "a1": "Definieren Sie Budgetgrenzen, bereiten Sie Finanzierung vor und legen Sie klare Muss-Kriterien fest.",
+          "q2": "Wie vermeide ich typische Kauf-Fehler?",
+          "a2": "Nutzen Sie unabhangige rechtliche und technische Prufungen und kalkulieren Sie alle Nebenkosten vollstandig ein."
+        }
+      }
+    },
+    "topics": {
+      "berlin": "Berlin",
+      "dubai": "Dubai",
+      "cyprus": "Zypern",
+      "investment": "Investition",
+      "market": "Markttrends",
+      "buying": "Kaufleitfäden"
+    },
+    "topicIntro": {
+      "berlin": {
+        "title": "Berliner Immobilien-Insights",
+        "body": "Leitfaden zu Berliner Bezirken, Kaufstrategie und praktischen Schritten fur die Auswahl von Lagen mit Potenzial.",
+        "metaDescription": "Berliner Immobilienblog mit Artikeln zu Stadtteilen, Kaufstrategie und Marktanalysen."
+      },
+      "dubai": {
+        "title": "Dubai Immobilien-Insights",
+        "body": "Artikel uber Communities, Off-Plan vs. Bestand, Mietdynamik und wichtige Due-Diligence-Punkte in Dubai.",
+        "metaDescription": "Dubai Immobilienblog mit Artikeln zu Communities, Investmentstrategie und Kaufpraxis."
+      },
+      "cyprus": {
+        "title": "Zypern Immobilien-Insights",
+        "body": "Experteninhalte zu Regionen in Zypern, rechtlichen Prufungen und lifestyle-orientierten Investitionsentscheidungen.",
+        "metaDescription": "Zypern Immobilienblog mit Artikeln zu Regionen, Rechtsthemen und Kaufentscheidungen."
+      },
+      "investment": {
+        "title": "Investment-Leitfaden",
+        "body": "Praktische Modelle fur Renditeanalyse, Risikosteuerung und Portfolioentscheidungen in internationalen Markten.",
+        "metaDescription": "Artikel zu Immobilien-Investments, Rendite, Risiko und datenbasierter Strategie."
+      },
+      "market": {
+        "title": "Markttrend-Analyse",
+        "body": "Verstehen Sie Marktbewegungen anhand von Nachfrage-, Preis- und Angebotsindikatoren in unseren Kernregionen.",
+        "metaDescription": "Markttrend-Artikel mit praxisnaher Analyse von Preisen, Nachfrage und Angebot."
+      },
+      "buying": {
+        "title": "Kaufleitfaden",
+        "body": "Schritt-fur-Schritt Inhalte fur Budgetplanung, Objektbewertung und sicheren Abschluss im Zielmarkt.",
+        "metaDescription": "Kaufleitfaden-Artikel mit Checklisten und Expertenhinweisen fur sichere Immobilienkaufe."
+      }
+    }
   },
   "errors": {
     "common": { "home": "Zur Startseite", "back": "Zurück" },

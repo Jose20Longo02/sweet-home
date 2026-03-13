@@ -353,8 +353,100 @@
     "by": "Por",
     "publishedBy": "Publicado por",
     "read": "Leer artículo",
-    "list": { "empty": "Aún no hay artículos." },
-    "detail": { "recent": "Artículos recientes", "noRecent": "No hay publicaciones recientes." }
+    "list": {
+      "empty": "Aún no hay artículos.",
+      "topicsLabel": "Temas del blog",
+      "allTopics": "Todos los temas",
+      "topicIntroLabel": "Resumen del tema",
+      "topicIntroFallback": "Explora artículos seleccionados por nuestro equipo."
+    },
+    "detail": {
+      "recent": "Artículos recientes",
+      "related": "Artículos relacionados",
+      "noRecent": "No hay publicaciones recientes.",
+      "authorBoxLabel": "Experiencia del autor",
+      "authorExpertiseTitle": "Experiencia del autor",
+      "authorExpertiseBody": "Este artículo es revisado por nuestro equipo inmobiliario para asegurar precisión local del mercado y orientación práctica para compradores.",
+      "authorNamePrefix": "Revisado por",
+      "faq": {
+        "berlin": {
+          "q1": "Que barrios de Berlin suelen tener mejor valor a largo plazo?",
+          "a1": "Los barrios con buena conexion, demanda de alquiler estable y mejora urbana continua suelen sostener mejor el valor.",
+          "q2": "Berlin conviene mas por renta o por revalorizacion?",
+          "a2": "Ambas opciones existen: zonas centrales suelen ser mas estables y distritos emergentes pueden ofrecer mas potencial con mas riesgo."
+        },
+        "dubai": {
+          "q1": "Que debe revisar primero un comprador en Dubai?",
+          "a1": "Revisa primero historial del promotor, gastos de servicio y supuestos realistas de alquiler para ese edificio y comunidad.",
+          "q2": "Las propiedades off-plan en Dubai son para cualquier inversor?",
+          "a2": "No siempre; pueden mejorar el precio de entrada, pero el plazo y riesgo de entrega deben encajar con tu estrategia."
+        },
+        "cyprus": {
+          "q1": "Que zonas de Chipre atraen mas compradores internacionales?",
+          "a1": "Paphos y Limassol suelen destacar por demanda de estilo de vida, mejor liquidez de reventa y comunidad internacional activa.",
+          "q2": "Que paso legal es clave antes de comprar en Chipre?",
+          "a2": "Haz due diligence legal independiente sobre titulo, permisos y contrato antes de firmar o entregar cualquier pago."
+        },
+        "investment": {
+          "q1": "Como comparo dos propiedades como inversion?",
+          "a1": "Compara rentabilidad neta, riesgo de vacancia, liquidez de salida y costo total de tenencia, no solo el precio inicial.",
+          "q2": "Que control de riesgo conviene hacer antes de comprar?",
+          "a2": "Haz escenarios conservadores con menos renta y mas costos para confirmar que la inversion sigue siendo viable."
+        },
+        "market": {
+          "q1": "Que indicadores importan mas en un analisis de mercado?",
+          "a1": "Oferta futura, volumen de transacciones, financiacion y tiempo de venta son claves para leer la tendencia real.",
+          "q2": "Un cambio de precio a corto plazo define una tendencia larga?",
+          "a2": "No por si solo; combina cambios de corto plazo con indicadores estructurales antes de tomar decisiones estrategicas."
+        },
+        "buying": {
+          "q1": "Que debo preparar antes de hacer una oferta?",
+          "a1": "Define presupuesto, prepara financiacion y fija criterios no negociables para actuar rapido y con seguridad.",
+          "q2": "Como evito errores comunes al comprar?",
+          "a2": "Apoyate en revision legal y tecnica independiente, valida costos totales y evita decidir solo por marketing."
+        }
+      }
+    },
+    "topics": {
+      "berlin": "Berlín",
+      "dubai": "Dubái",
+      "cyprus": "Chipre",
+      "investment": "Inversión",
+      "market": "Tendencias del mercado",
+      "buying": "Guías de compra"
+    },
+    "topicIntro": {
+      "berlin": {
+        "title": "Insights inmobiliarios de Berlin",
+        "body": "Guías sobre distritos de Berlin, estrategia de compra y pasos prácticos para elegir zonas con potencial sostenible.",
+        "metaDescription": "Artículos del blog inmobiliario de Berlin sobre barrios, estrategia de compra y análisis de mercado."
+      },
+      "dubai": {
+        "title": "Insights inmobiliarios de Dubai",
+        "body": "Contenido sobre comunidades en Dubai, off-plan vs terminado, dinámica de alquiler y due diligence para invertir.",
+        "metaDescription": "Artículos del blog inmobiliario de Dubai sobre comunidades, inversión y compra con criterio."
+      },
+      "cyprus": {
+        "title": "Insights inmobiliarios de Chipre",
+        "body": "Análisis experto sobre zonas de Chipre, revisión legal y decisiones de inversión orientadas al estilo de vida.",
+        "metaDescription": "Artículos del blog inmobiliario de Chipre sobre zonas, aspectos legales y guía para compradores."
+      },
+      "investment": {
+        "title": "Guías de inversión",
+        "body": "Frameworks accionables para rentabilidad, gestión de riesgo y decisiones de portafolio en mercados internacionales.",
+        "metaDescription": "Artículos de inversión inmobiliaria sobre rentabilidad, riesgo y estrategia basada en datos."
+      },
+      "market": {
+        "title": "Análisis de tendencias del mercado",
+        "body": "Sigue el movimiento del mercado con interpretación práctica de señales de demanda, precio y oferta.",
+        "metaDescription": "Artículos sobre tendencias del mercado inmobiliario con análisis práctico de precio, demanda y oferta."
+      },
+      "buying": {
+        "title": "Guías de compra de propiedades",
+        "body": "Contenido paso a paso para planificar presupuesto, evaluar opciones y cerrar la compra con confianza.",
+        "metaDescription": "Artículos con guías de compra inmobiliaria, checklist y consejos expertos para comprar con seguridad."
+      }
+    }
   },
   "errors": {
     "common": { "home": "Volver al inicio", "back": "Volver" },

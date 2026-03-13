@@ -30,7 +30,7 @@
       </a>
       <a href="/services"><%= t('nav.services','Services') %></a>
       <a href="/about"><%= t('nav.about','About') %></a>
-      <a href="/blog"><%= t('nav.blog','Blog') %></a>
+      <a href="<%= (typeof localePath === 'function') ? localePath('/blog') : '/blog' %>"><%= t('nav.blog','Blog') %></a>
     </nav>
     <div class="lang-switcher-wrap">
       <%- include('./lang-switcher') %>

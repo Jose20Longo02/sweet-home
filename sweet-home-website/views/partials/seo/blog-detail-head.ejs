@@ -1,25 +1,53 @@
 <% if (typeof post !== 'undefined' && post) { 
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
-  const blogUrl = `${siteBaseUrl}/blog/${post.slug}`;
+  const localePrefixSafe = (typeof localePrefix !== 'undefined' && localePrefix) ? localePrefix : '';
+  const blogUrl = `${siteBaseUrl}${localePrefixSafe}/blog/${post.slug}`;
+  const enUrl = `${siteBaseUrl}/blog/${post.slug}`;
+  const deUrl = `${siteBaseUrl}/de/blog/${post.slug}`;
+  const esUrl = `${siteBaseUrl}/es/blog/${post.slug}`;
+  const ogLocale = (typeof lang !== 'undefined' && lang === 'de') ? 'de_DE' : (typeof lang !== 'undefined' && lang === 'es') ? 'es_ES' : 'en_US';
   const blogImage = post.cover_image 
     ? (post.cover_image.startsWith('http') ? post.cover_image : `${siteBaseUrl}${post.cover_image}`)
     : `${siteBaseUrl}/img/property-placeholder.jpg`;
-  const blogDescription = (post.excerpt || post.description || '').slice(0, 160) || post.title;
+  const normalizeText = (value) => String(value || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  const clampText = (value, max) => {
+    const clean = normalizeText(value);
+    if (clean.length <= max) return clean;
+    return `${clean.slice(0, Math.max(0, max - 1)).trim()}…`;
+  };
+  const blogDescription = clampText(post.excerpt || post.description || post.title, 155);
   const publishedDate = post.published_at || post.created_at;
   const modifiedDate = post.updated_at || publishedDate;
   const pageTitle = (typeof title !== 'undefined' && title) ? title : post.title;
+  const socialTitle = clampText(pageTitle, 65);
+  const topicIds = Array.isArray(postTopicIds) ? postTopicIds : [];
+  const faqTopic = topicIds.find((id) => ['berlin','dubai','cyprus','investment','market','buying'].includes(id)) || 'buying';
+  const faqItems = (typeof t === 'function') ? [
+    {
+      q: t(`blog.detail.faq.${faqTopic}.q1`, ''),
+      a: t(`blog.detail.faq.${faqTopic}.a1`, '')
+    },
+    {
+      q: t(`blog.detail.faq.${faqTopic}.q2`, ''),
+      a: t(`blog.detail.faq.${faqTopic}.a2`, '')
+    }
+  ].filter((item) => item.q && item.a) : [];
 %>
 <meta name="description" content="<%= blogDescription %>">
 <link rel="canonical" href="<%= blogUrl %>">
+<link rel="alternate" hreflang="en-us" href="<%= enUrl %>">
+<link rel="alternate" hreflang="de-de" href="<%= deUrl %>">
+<link rel="alternate" hreflang="es-es" href="<%= esUrl %>">
+<link rel="alternate" hreflang="x-default" href="<%= enUrl %>">
 
 <!-- Open Graph -->
 <meta property="og:type" content="article">
-<meta property="og:title" content="<%= pageTitle %>">
+<meta property="og:title" content="<%= socialTitle %>">
 <meta property="og:description" content="<%= blogDescription %>">
 <meta property="og:url" content="<%= blogUrl %>">
 <meta property="og:image" content="<%= blogImage %>">
 <meta property="og:site_name" content="Sweet Home">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="<%= ogLocale %>">
 <% if (publishedDate) { %>
 <meta property="article:published_time" content="<%= new Date(publishedDate).toISOString() %>">
 <% } %>
@@ -32,7 +60,7 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<%= pageTitle %>">
+<meta name="twitter:title" content="<%= socialTitle %>">
 <meta name="twitter:description" content="<%= blogDescription %>">
 <meta name="twitter:image" content="<%= blogImage %>">
 
@@ -96,7 +124,7 @@
       '@type': 'ListItem',
       position: 1,
       name: 'Blog',
-      item: `${siteBaseUrl}/blog`
+      item: `${siteBaseUrl}${localePrefixSafe}/blog`
     },
     {
       '@type': 'ListItem',
@@ -113,7 +141,7 @@
       '@type': 'ListItem',
       position: 1,
       name: 'Blog',
-      item: `${siteBaseUrl}/blog`
+      item: `${siteBaseUrl}${localePrefixSafe}/blog`
     },
     {
       '@type': 'ListItem',
@@ -123,5 +151,30 @@
     }
   ]
 })) %></script>
+<% if (faqItems.length > 0) { %>
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a
+    }
+  }))
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a
+    }
+  }))
+})) %></script>
+<% } %>
 <% } %>
 

@@ -1389,7 +1389,7 @@ app.get('/sitemap.xml', async (req, res, next) => {
     const base = res.locals.baseUrl;
 
     // Static pages (including locale-prefixed variants)
-    const staticPaths = ['', 'about', 'contact', 'projects', 'properties', 'privacy', 'terms', 'cookies', 'services', 'owners'];
+    const staticPaths = ['', 'about', 'contact', 'projects', 'properties', 'blog', 'privacy', 'terms', 'cookies', 'services', 'owners'];
     const staticUrls = staticPaths.map(p => ({ 
       loc: `${base}/${p}`.replace(/\/$/, '/'), 
       lastmod: null,
@@ -1399,6 +1399,8 @@ app.get('/sitemap.xml', async (req, res, next) => {
     // Locale-prefixed home pages
     staticUrls.push({ loc: `${base}/de`, lastmod: null, changefreq: 'daily', priority: '1.0' });
     staticUrls.push({ loc: `${base}/es`, lastmod: null, changefreq: 'daily', priority: '1.0' });
+    staticUrls.push({ loc: `${base}/de/blog`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/es/blog`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
 
     // Dynamic properties
     const props = await query(`SELECT slug, updated_at, created_at FROM properties WHERE slug IS NOT NULL ORDER BY updated_at DESC NULLS LAST, created_at DESC NULLS LAST LIMIT 5000`);
@@ -1426,8 +1428,15 @@ app.get('/sitemap.xml', async (req, res, next) => {
       changefreq: 'monthly',
       priority: '0.7'
     }));
+    const localizedBlogUrls = (posts.rows || []).flatMap(r => {
+      const lastmod = (r.updated_at || r.published_at || r.created_at) ? new Date(r.updated_at || r.published_at || r.created_at).toISOString() : null;
+      return ([
+        { loc: `${base}/de/blog/${r.slug}`, lastmod, changefreq: 'monthly', priority: '0.7' },
+        { loc: `${base}/es/blog/${r.slug}`, lastmod, changefreq: 'monthly', priority: '0.7' }
+      ]);
+    });
 
-    const all = [...staticUrls, ...propUrls, ...projUrls, ...blogUrls];
+    const all = [...staticUrls, ...propUrls, ...projUrls, ...blogUrls, ...localizedBlogUrls];
     const xml = `<?xml version="1.0" encoding="UTF-8"?>\n` +
       `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` +
       all.map(u => `\n  <url>` +

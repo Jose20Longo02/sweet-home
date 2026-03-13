@@ -3,6 +3,47 @@ const BlogPost = require('../models/BlogPost');
 const { query } = require('../config/db');
 const { ensureLocalizedFields } = require('../config/translator');
 
+const BLOG_TOPIC_DEFS = {
+  berlin: ['berlin', 'mitte', 'kreuzberg', 'charlottenburg', 'pankow', 'schoneberg', 'spandau'],
+  dubai: ['dubai', 'uae', 'marina', 'downtown', 'business bay', 'palm jumeirah', 'jvc'],
+  cyprus: ['cyprus', 'paphos', 'limassol', 'larnaca', 'nicosia', 'peyia', 'kato paphos'],
+  investment: ['invest', 'investment', 'yield', 'returns', 'roi', 'cash flow', 'portfolio'],
+  market: ['market', 'trend', 'price', 'prices', 'forecast', 'demand', 'supply', 'report'],
+  buying: ['buy', 'buying', 'mortgage', 'financing', 'tax', 'legal', 'guide', 'checklist']
+};
+
+function getTopicEntries() {
+  return Object.entries(BLOG_TOPIC_DEFS);
+}
+
+function inferTopicIds(text) {
+  const source = String(text || '').toLowerCase();
+  if (!source) return [];
+  return getTopicEntries()
+    .filter(([, terms]) => terms.some((term) => source.includes(term)))
+    .map(([id]) => id);
+}
+
+function buildTopicSql(topicId, paramStartIndex = 1) {
+  const terms = BLOG_TOPIC_DEFS[topicId];
+  if (!terms || !terms.length) return null;
+  const clauses = terms.map((_, idx) => {
+    const p = `$${paramStartIndex + idx}`;
+    return `(LOWER(COALESCE(bp.title,'')) LIKE ${p} OR LOWER(COALESCE(bp.excerpt,'')) LIKE ${p} OR LOWER(COALESCE(bp.content,'')) LIKE ${p})`;
+  });
+  return {
+    sql: `(${clauses.join(' OR ')})`,
+    values: terms.map((term) => `%${term.toLowerCase()}%`)
+  };
+}
+
+function clampForSeo(text, max = 60) {
+  const normalized = String(text || '').replace(/\s+/g, ' ').trim();
+  if (!normalized) return '';
+  if (normalized.length <= max) return normalized;
+  return `${normalized.slice(0, Math.max(0, max - 1)).trim()}…`;
+}
+
 // Helper function to add ALT attributes to images in HTML content
 function addAltToImages(htmlContent, fallbackAlt = 'Blog post image') {
   if (!htmlContent || typeof htmlContent !== 'string') return htmlContent;
@@ -59,29 +100,62 @@ exports.listPublic = async (req, res, next) => {
     // 301 redirect /blog?page=1 to /blog to eliminate duplicate URL/title
     const keys = Object.keys(req.query);
     if (keys.length === 1 && (req.query.page === '1' || req.query.page === 1)) {
-      return res.redirect(301, '/blog');
+      return res.redirect(301, req.baseUrl || '/blog');
     }
 
     const page = Math.max(parseInt(req.query.page || '1', 10), 1);
     const pageSize = 9; // 3 per row looks cleaner
     const offset = (page - 1) * pageSize;
-    const posts = await BlogPost.findPublic({ limit: pageSize, offset });
+    const requestedTopic = String(req.query.topic || '').trim().toLowerCase();
+    const topicFilter = BLOG_TOPIC_DEFS[requestedTopic] ? requestedTopic : '';
+    const topicSql = topicFilter ? buildTopicSql(topicFilter, 3) : null;
+    const whereSql = topicSql ? `bp.status = 'published' AND ${topicSql.sql}` : `bp.status = 'published'`;
+    const params = topicSql
+      ? [...topicSql.values, pageSize, offset]
+      : [pageSize, offset];
+    const listSql = `
+      SELECT bp.*, u.name AS author_name
+        FROM blog_posts bp
+        LEFT JOIN users u ON u.id = bp.author_id
+       WHERE ${whereSql}
+       ORDER BY COALESCE(bp.published_at, bp.created_at) DESC
+       LIMIT $${topicSql ? topicSql.values.length + 1 : 1}
+      OFFSET $${topicSql ? topicSql.values.length + 2 : 2}
+    `;
+    const listRows = await query(listSql, params);
+    const posts = listRows.rows || [];
     const lang = res.locals.lang || 'en';
     const localizedPosts = (posts || []).map(p => ({
       ...p,
       title: (p.title_i18n && p.title_i18n[lang]) || p.title,
-      excerpt: (p.excerpt_i18n && p.excerpt_i18n[lang]) || p.excerpt
+      excerpt: (p.excerpt_i18n && p.excerpt_i18n[lang]) || p.excerpt,
+      topicIds: inferTopicIds([
+        (p.title_i18n && p.title_i18n[lang]) || p.title || '',
+        (p.excerpt_i18n && p.excerpt_i18n[lang]) || p.excerpt || ''
+      ].join(' '))
     }));
-    const { rows: countRows } = await query(`SELECT COUNT(*)::int AS count FROM blog_posts WHERE status = 'published'`);
+    const countSql = topicSql
+      ? `SELECT COUNT(*)::int AS count FROM blog_posts bp WHERE ${whereSql}`
+      : `SELECT COUNT(*)::int AS count FROM blog_posts bp WHERE bp.status = 'published'`;
+    const { rows: countRows } = await query(countSql, topicSql ? topicSql.values : []);
     const total = (countRows && countRows[0] && countRows[0].count) || 0;
     const totalPages = Math.max(1, Math.ceil(total / pageSize));
-    const pageTitle = page > 1 ? `Blog - Page ${page}` : 'Blog';
+    const blogTitle = (res.locals.t && typeof res.locals.t === 'function')
+      ? res.locals.t('nav.blog', 'Blog')
+      : 'Blog';
+    const topicLabel = topicFilter && res.locals.t && typeof res.locals.t === 'function'
+      ? res.locals.t(`blog.topics.${topicFilter}`, topicFilter)
+      : '';
+    const rawPageTitle = `${blogTitle}${topicLabel ? `: ${topicLabel}` : ''}${page > 1 ? ` - Page ${page}` : ''}`;
+    const pageTitle = clampForSeo(rawPageTitle, 56);
     res.render('blog/blog-list', {
       title: pageTitle,
       posts: localizedPosts,
       page,
       hasNext: page < totalPages,
       totalPages,
+      activeTopic: topicFilter,
+      availableTopics: Object.keys(BLOG_TOPIC_DEFS),
       stickyFooter: true,
       baseUrl: res.locals.baseUrl
     });
@@ -112,20 +186,53 @@ exports.showPublic = async (req, res, next) => {
     if (slugSuffix && slugSuffix[1]) {
       pageTitle = `${localizedPost.title} (${slugSuffix[1]})`;
     }
-    // Recent/recommended posts (up to 4, excluding current)
-    const { rows: recommendedPosts } = await query(
-      `SELECT bp.title, bp.slug, bp.cover_image, COALESCE(bp.published_at, bp.created_at) AS published_at, u.name AS author_name
+    pageTitle = clampForSeo(pageTitle, 56);
+    const inferredTopicIds = inferTopicIds([
+      localizedPost.title || '',
+      localizedPost.excerpt || '',
+      localizedPost.content || ''
+    ].join(' '));
+    let recommendedPosts = [];
+    if (inferredTopicIds.length > 0) {
+      const primaryTopic = inferredTopicIds[0];
+      const topicClause = buildTopicSql(primaryTopic, 2);
+      if (topicClause) {
+        const { rows } = await query(
+          `SELECT bp.title, bp.slug, bp.cover_image, COALESCE(bp.published_at, bp.created_at) AS published_at, u.name AS author_name
+             FROM blog_posts bp
+             LEFT JOIN users u ON u.id = bp.author_id
+            WHERE bp.status = 'published' AND bp.slug <> $1 AND ${topicClause.sql}
+            ORDER BY COALESCE(bp.published_at, bp.created_at) DESC
+            LIMIT 4`,
+          [req.params.slug, ...topicClause.values]
+        );
+        recommendedPosts = rows || [];
+      }
+    }
+    // Fill with recent posts if topic-related list is short
+    if (recommendedPosts.length < 4) {
+      const { rows: recentRows } = await query(
+        `SELECT bp.title, bp.slug, bp.cover_image, COALESCE(bp.published_at, bp.created_at) AS published_at, u.name AS author_name
          FROM blog_posts bp
          LEFT JOIN users u ON u.id = bp.author_id
         WHERE bp.status = 'published' AND bp.slug <> $1
         ORDER BY COALESCE(bp.published_at, bp.created_at) DESC
-        LIMIT 4`,
+        LIMIT 8`,
       [req.params.slug]
-    );
+      );
+      const seen = new Set(recommendedPosts.map((p) => p.slug));
+      for (const row of (recentRows || [])) {
+        if (seen.has(row.slug)) continue;
+        recommendedPosts.push(row);
+        seen.add(row.slug);
+        if (recommendedPosts.length >= 4) break;
+      }
+    }
     res.render('blog/blog-detail', {
       title: pageTitle,
       post: localizedPost,
       recommendedPosts: recommendedPosts || [],
+      postTopicIds: inferredTopicIds,
       stickyFooter: true,
       baseUrl: res.locals.baseUrl
     });
