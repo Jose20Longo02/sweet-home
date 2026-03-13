@@ -1140,6 +1140,9 @@ async function renderHomePage(req, res, langPath, next) {
       const names = ((((locations || {})[country] || {})[city]) && Array.isArray((locations || {})[country][city]))
         ? (locations || {})[country][city]
         : [];
+      const filteredNames = (country === 'Germany' && city === 'Berlin')
+        ? names.filter((name) => normalizeNeighborhoodKey(name) !== 'reinickendorfamschafersee')
+        : names;
       const selected = contentByLang[lang] || contentByLang.en || {};
       const fallback = contentByLang.en || {};
       const selectedNormalized = Object.entries(selected).reduce((acc, [key, val]) => {
@@ -1150,7 +1153,7 @@ async function renderHomePage(req, res, langPath, next) {
         acc[normalizeNeighborhoodKey(key)] = val;
         return acc;
       }, {});
-      return names.map((name) => {
+      return filteredNames.map((name) => {
         const normalized = normalizeNeighborhoodKey(name);
         const item = selected[name]
           || selectedNormalized[normalized]

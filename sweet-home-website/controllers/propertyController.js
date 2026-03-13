@@ -2879,9 +2879,17 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       }
     };
     const berlinContent = berlinSectionContent[lang] || berlinSectionContent.en;
-    const berlinNeighborhoodNames = (((locations || {}).Germany || {}).Berlin && Array.isArray(locations.Germany.Berlin))
+    const berlinNeighborhoodNamesRaw = (((locations || {}).Germany || {}).Berlin && Array.isArray(locations.Germany.Berlin))
       ? locations.Germany.Berlin
       : [];
+    const berlinNeighborhoodNames = berlinNeighborhoodNamesRaw.filter((name) => {
+      const normalized = String(name || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '');
+      return normalized !== 'reinickendorfamschafersee';
+    });
     const selectedNeighborhoodContent = berlinNeighborhoodContent[lang] || berlinNeighborhoodContent.en;
     const fallbackNeighborhoodContent = berlinNeighborhoodContent.en;
     const berlinNeighborhoods = berlinNeighborhoodNames.map((name) => {
