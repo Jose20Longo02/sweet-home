@@ -108,7 +108,7 @@ exports.listPublic = async (req, res, next) => {
     const offset = (page - 1) * pageSize;
     const requestedTopic = String(req.query.topic || '').trim().toLowerCase();
     const topicFilter = BLOG_TOPIC_DEFS[requestedTopic] ? requestedTopic : '';
-    const topicSql = topicFilter ? buildTopicSql(topicFilter, 3) : null;
+    const topicSql = topicFilter ? buildTopicSql(topicFilter, 1) : null;
     const whereSql = topicSql ? `bp.status = 'published' AND ${topicSql.sql}` : `bp.status = 'published'`;
     const params = topicSql
       ? [...topicSql.values, pageSize, offset]
