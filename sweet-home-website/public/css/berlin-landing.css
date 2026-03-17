@@ -333,6 +333,13 @@
   margin-top: 32px;
 }
 
+.berlin-featured .section-cta .btn.btn-primary:hover,
+.berlin-featured .section-cta .btn.btn-primary:focus,
+.berlin-featured .section-cta .btn.btn-primary:focus-visible,
+.berlin-featured .section-cta .btn.btn-primary:active {
+  color: #fff;
+}
+
 .berlin-featured .section-empty {
   text-align: center;
   color: var(--gray-600);
