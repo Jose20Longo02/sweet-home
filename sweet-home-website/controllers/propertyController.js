@@ -2587,7 +2587,7 @@ exports.getFeaturedProperties = async (req, res, next) => {
 // Berlin landing page: Properties for Sale Berlin (most-viewed in Germany)
 exports.berlinPropertiesPage = async (req, res, next) => {
   try {
-    const sql = `
+    const propertiesSql = `
       SELECT
         p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
         p.price, p.photos, p.type, p.rooms, p.bathrooms,
@@ -2607,7 +2607,33 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
       LIMIT 30
     `;
-    const { rows: properties } = await query(sql);
+    const projectsSql = `
+      SELECT
+        p.id,
+        p.slug,
+        p.title,
+        p.title_i18n,
+        p.description,
+        p.description_i18n,
+        p.country,
+        p.city,
+        p.photos,
+        p.min_price,
+        p.max_price,
+        p.total_units,
+        p.completion_date,
+        p.created_at
+      FROM projects p
+      WHERE p.status = 'active'
+        AND p.country = 'Germany'
+        AND p.city = 'Berlin'
+      ORDER BY p.created_at DESC
+      LIMIT 9
+    `;
+    const [{ rows: properties }, { rows: projects }] = await Promise.all([
+      query(propertiesSql),
+      query(projectsSql)
+    ]);
     const lang = res.locals.lang || 'en';
     const recommendedProperties = (properties || []).map(p => {
       const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
@@ -2617,6 +2643,24 @@ exports.berlinPropertiesPage = async (req, res, next) => {
         description: (p.description_i18n && p.description_i18n[lang]) || p.description,
         photos,
         agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+    const berlinProjects = (projects || []).map((project) => {
+      const photos = Array.isArray(project.photos) ? project.photos : (project.photos ? [project.photos] : []);
+      const normalizedPhotos = photos.map((ph) => {
+        if (!ph) return ph;
+        const phStr = String(ph);
+        if (phStr.startsWith('/uploads/') || phStr.startsWith('http')) return phStr;
+        return `/uploads/projects/${project.id}/${phStr}`;
+      });
+      const titleI18n = project.title_i18n && typeof project.title_i18n === 'object' ? project.title_i18n : null;
+      const descriptionI18n = project.description_i18n && typeof project.description_i18n === 'object' ? project.description_i18n : null;
+      return {
+        ...project,
+        title: (titleI18n && (titleI18n[lang] || titleI18n.en)) || project.title,
+        description: (descriptionI18n && (descriptionI18n[lang] || descriptionI18n.en)) || project.description,
+        photos: normalizedPhotos,
+        slug: project.slug || `project-${project.id}`
       };
     });
 
@@ -2914,6 +2958,7 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       berlinNeighborhoods,
       locations,
       recommendedProperties,
+      berlinProjects,
       baseUrl: res.locals.baseUrl
     });
   } catch (err) {

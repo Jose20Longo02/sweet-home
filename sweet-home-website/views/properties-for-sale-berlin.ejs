@@ -119,6 +119,63 @@
     <% } %>
   </section>
 
+  <!-- 3a) New developments in Berlin -->
+  <section class="section featured berlin-featured" aria-labelledby="berlin-projects-heading">
+    <h2 id="berlin-projects-heading" class="berlin-featured__title"><%= t('berlin.newDevelopmentsTitle','New developments in Berlin') %></h2>
+    <div class="berlin-featured__grid" id="berlinProjectsGrid">
+      <% (berlinProjects || []).forEach(project => { %>
+        <%
+          const photoUrl = (project.photos && project.photos[0]) ? project.photos[0] : '/img/project-placeholder.jpg';
+          const fromPrice = project.min_price && Number(project.min_price) > 0
+            ? '€' + Number(project.min_price).toLocaleString('en-US')
+            : '';
+          const completionYear = project.completion_date ? new Date(project.completion_date).getFullYear() : null;
+          const cityLabel = (typeof translateLocation === 'function') ? translateLocation('city', project.city) : project.city;
+          const countryLabel = (typeof translateLocation === 'function') ? translateLocation('country', project.country) : project.country;
+        %>
+        <article class="property-card">
+          <a href="<%= (typeof localePath === 'function') ? localePath('/projects/' + project.slug) : '/projects/' + project.slug %>" class="property-card-link">
+            <div class="img-wrap" <%= fromPrice ? `data-price="${t('home.newDevelopment.fromPrice','From')} ${fromPrice}"` : '' %>>
+              <img src="<%= photoUrl %>" alt="<%= project.title %>" loading="lazy" decoding="async" onerror="this.src='/img/project-placeholder.jpg'">
+            </div>
+            <div class="meta">
+              <div class="title"><%= project.title %></div>
+              <% if (fromPrice) { %>
+                <div class="price"><%= t('home.newDevelopment.fromPrice','From') %> <%= fromPrice %></div>
+              <% } %>
+              <div class="location">
+                <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                <%= cityLabel %>, <%= countryLabel %>
+              </div>
+              <div class="features-row">
+                <% if (project.total_units) { %>
+                  <div class="feature">
+                    <span class="icon icon-16 icon-inline icon-mask icon-size"></span>
+                    <span><%= project.total_units %> <%= t('home.newDevelopment.units','units') %></span>
+                  </div>
+                <% } %>
+                <% if (completionYear) { %>
+                  <div class="feature">
+                    <span class="icon icon-16 icon-inline icon-mask icon-bath"></span>
+                    <span><%= t('home.newDevelopment.completion','Completion') %> <%= completionYear %></span>
+                  </div>
+                <% } %>
+              </div>
+              <span class="learn-more"><%= t('home.recommendedProject.viewProject','View project') %> →</span>
+            </div>
+          </a>
+        </article>
+      <% }); %>
+    </div>
+    <% if (!berlinProjects || berlinProjects.length === 0) { %>
+      <p class="section-empty"><%= t('home.newDevelopment.empty','No developments available right now.') %></p>
+    <% } else { %>
+      <p class="section-cta">
+        <a href="<%= ((typeof localePath === 'function') ? localePath('/projects') : '/projects') %>?country=Germany&city=Berlin" class="btn btn-primary"><%= t('berlin.viewAllProjects','See all projects in Berlin') %></a>
+      </p>
+    <% } %>
+  </section>
+
   <!-- 3b) Neighborhoods grid with expandable cards -->
   <section class="section berlin-neighborhoods" aria-labelledby="berlin-neighborhoods-heading">
     <h2 id="berlin-neighborhoods-heading" class="berlin-neighborhoods__title"><%= berlinContent.neighborhoodsTitle %></h2>
