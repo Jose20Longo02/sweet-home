@@ -2667,7 +2667,7 @@ exports.berlinPropertiesPage = async (req, res, next) => {
     const baseUrl = res.locals.baseUrl;
     const berlinUrls = {
       en: `${baseUrl}/properties-for-sale-berlin`,
-      de: `${baseUrl}/de/immobilien-berlin-kaufen`,
+      de: `${baseUrl}/de/wohnungen-berlin-kaufen`,
       es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const canonicalUrl = berlinUrls[lang] || berlinUrls.en;
@@ -2688,7 +2688,7 @@ exports.berlinPropertiesPage = async (req, res, next) => {
     };
     const berlinPagePaths = {
       en: '/properties-for-sale-berlin',
-      de: '/de/immobilien-berlin-kaufen',
+      de: '/de/wohnungen-berlin-kaufen',
       es: '/es/propiedades-en-venta-berlin'
     };
 

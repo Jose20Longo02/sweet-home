@@ -374,9 +374,10 @@ app.use((req, res, next) => {
   };
   // Property landing pages have different URLs per language (not just /de + path)
   const PROPERTY_PAGE_ALTERNATES = {
-    '/properties-for-sale-berlin': { en: '/properties-for-sale-berlin', de: '/de/immobilien-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
-    '/de/immobilien-berlin-kaufen': { en: '/properties-for-sale-berlin', de: '/de/immobilien-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
-    '/es/propiedades-en-venta-berlin': { en: '/properties-for-sale-berlin', de: '/de/immobilien-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
+    '/properties-for-sale-berlin': { en: '/properties-for-sale-berlin', de: '/de/wohnungen-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnungen-berlin-kaufen': { en: '/properties-for-sale-berlin', de: '/de/wohnungen-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
+    '/de/immobilien-berlin-kaufen': { en: '/properties-for-sale-berlin', de: '/de/wohnungen-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
+    '/es/propiedades-en-venta-berlin': { en: '/properties-for-sale-berlin', de: '/de/wohnungen-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
     '/properties-for-sale-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
     '/de/immobilien-dubai-kaufen': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
     '/es/propiedades-en-venta-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
@@ -528,7 +529,11 @@ app.use('/superadmin/dashboard/blog', blogSuperAdminRoutes);
 
 // Berlin landing page (before /properties so path is explicit)
 app.get('/properties-for-sale-berlin', propertyController.berlinPropertiesPage);
-app.get('/de/immobilien-berlin-kaufen', propertyController.berlinPropertiesPage);
+app.get('/de/wohnungen-berlin-kaufen', propertyController.berlinPropertiesPage);
+app.get('/de/immobilien-berlin-kaufen', (req, res) => {
+  const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
+  return res.redirect(301, `/de/wohnungen-berlin-kaufen${query}`);
+});
 app.get('/es/propiedades-en-venta-berlin', propertyController.berlinPropertiesPage);
 
 // Dubai landing page
