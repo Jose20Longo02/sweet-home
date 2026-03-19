@@ -487,10 +487,12 @@
 
         <% if (typeof seoLandingLinks !== 'undefined' && Array.isArray(seoLandingLinks) && seoLandingLinks.length > 0) { %>
           <nav class="results-internal-links" aria-label="<%= t('properties.list.seo.exploreCities','Explore city property pages') %>">
-            <strong><%= t('properties.list.seo.exploreCities','Explore city property pages') %>:</strong>
-            <% seoLandingLinks.forEach((link, idx) => { %>
-              <a href="<%= link.href %>"><%= link.label %></a><%= idx < seoLandingLinks.length - 1 ? ' · ' : '' %>
-            <% }); %>
+            <span class="results-internal-links__label"><%= t('properties.list.seo.exploreCities','Explore city property pages') %></span>
+            <div class="results-internal-links__items">
+              <% seoLandingLinks.forEach((link) => { %>
+                <a class="results-internal-links__chip" href="<%= link.href %>"><%= link.label %></a>
+              <% }); %>
+            </div>
           </nav>
         <% } %>
 
