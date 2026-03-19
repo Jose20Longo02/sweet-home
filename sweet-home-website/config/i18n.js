@@ -35,16 +35,36 @@ module.exports = function i18nMiddleware(req, res, next) {
       usedLang = 'en';
     }
 
-    // Helper for templates: t('key.path', fallback)
-    res.locals.t = function translate(key, fallback) {
+    // Helper for templates: t('key.path', fallback, vars)
+    // Supports simple interpolation, e.g. "Hello {name}" with { name: "Luis" }.
+    res.locals.t = function translate(key, fallback, vars) {
+      const interpolate = (text, map) => {
+        if (typeof text !== 'string') return text;
+        if (!map || typeof map !== 'object') return text;
+        return text.replace(/\{([^}]+)\}/g, (full, token) => {
+          const raw = map[token];
+          return (raw === undefined || raw === null) ? full : String(raw);
+        });
+      };
+
+      // Allow shorthand: t('key.path', { name: '...' })
+      let fallbackValue = fallback;
+      let interpolationVars = vars;
+      if (fallback && typeof fallback === 'object' && !Array.isArray(fallback) && vars === undefined) {
+        interpolationVars = fallback;
+        fallbackValue = undefined;
+      }
+
       if (!key) return fallback || '';
       const parts = String(key).split('.');
       let cur = messages;
       for (const p of parts) {
         if (cur && Object.prototype.hasOwnProperty.call(cur, p)) cur = cur[p]; else { cur = undefined; break; }
       }
-      if (cur === undefined || cur === null) return (fallback !== undefined ? fallback : '');
-      return cur;
+      if (cur === undefined || cur === null) {
+        return interpolate((fallbackValue !== undefined ? fallbackValue : ''), interpolationVars);
+      }
+      return interpolate(cur, interpolationVars);
     };
     res.locals.lang = lang;
     res.locals.supportedLanguages = supported;
