@@ -566,21 +566,6 @@ exports.listPropertiesPublic = async (req, res, next) => {
       ? `${baseUrl}${buildPageUrl(pagePathForPagination, queryForPagination, currentPage + 1)}`
       : null;
 
-    const landingLinks = [
-      {
-        label: res.locals.t('nav.propertiesBerlin', 'Berlin'),
-        href: lang === 'de' ? '/de/wohnungen-berlin-kaufen' : (lang === 'es' ? '/es/propiedades-en-venta-berlin' : '/properties-for-sale-berlin')
-      },
-      {
-        label: res.locals.t('nav.propertiesDubai', 'Dubai'),
-        href: lang === 'de' ? '/de/immobilien-dubai-kaufen' : (lang === 'es' ? '/es/propiedades-en-venta-dubai' : '/properties-for-sale-dubai')
-      },
-      {
-        label: res.locals.t('nav.propertiesCyprus', 'Cyprus'),
-        href: lang === 'de' ? '/de/immobilien-zypern-kaufen' : (lang === 'es' ? '/es/propiedades-en-venta-chipre' : '/properties-for-sale-cyprus')
-      }
-    ];
-
     res.render('properties/property-list', {
       properties: normalizedProperties,
       locations,
@@ -601,8 +586,7 @@ exports.listPropertiesPublic = async (req, res, next) => {
       robotsMeta,
       prevPageUrl,
       nextPageUrl,
-      seoItemList: normalizedProperties,
-      seoLandingLinks: landingLinks
+      seoItemList: normalizedProperties
     });
   } catch (err) {
     next(err);

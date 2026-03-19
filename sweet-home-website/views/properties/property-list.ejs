@@ -485,17 +485,6 @@
           </div>
         </div>
 
-        <% if (typeof seoLandingLinks !== 'undefined' && Array.isArray(seoLandingLinks) && seoLandingLinks.length > 0) { %>
-          <nav class="results-internal-links" aria-label="<%= t('properties.list.seo.exploreCities','Explore city property pages') %>">
-            <span class="results-internal-links__label"><%= t('properties.list.seo.exploreCities','Explore city property pages') %></span>
-            <div class="results-internal-links__items">
-              <% seoLandingLinks.forEach((link) => { %>
-                <a class="results-internal-links__chip" href="<%= link.href %>"><%= link.label %></a>
-              <% }); %>
-            </div>
-          </nav>
-        <% } %>
-
         <!-- Properties Grid -->
         <div class="properties-container">
           <% if (properties.length > 0) { %>
