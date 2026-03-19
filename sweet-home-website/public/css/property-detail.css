@@ -851,6 +851,28 @@
   position: relative;
 }
 
+/* Custom map marker for property location (image-free, resilient). */
+.property-map-pin {
+  width: 24px !important;
+  height: 24px !important;
+  background: #2f9e56;
+  border: 2px solid #ffffff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.property-map-pin__dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  top: 6px;
+  left: 6px;
+  border-radius: 50%;
+  background: #ffffff;
+  transform: rotate(45deg);
+}
+
 .map-loading {
   display: flex;
   flex-direction: column;

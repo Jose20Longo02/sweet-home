@@ -471,15 +471,6 @@ class PropertyDetailPage {
 
     const initLeaflet = (clat, clng) => {
       try {
-        // Leaflet default marker images are not bundled locally; use CDN assets explicitly.
-        if (L && L.Icon && L.Icon.Default) {
-          L.Icon.Default.mergeOptions({
-            iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
-          });
-        }
-
         this.map = L.map('propertyMap').setView([clat, clng], 15);
         const primaryTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; OpenStreetMap contributors',
@@ -500,7 +491,15 @@ class PropertyDetailPage {
           }).addTo(this.map);
         });
 
-        const propertyMarker = L.marker([clat, clng]).addTo(this.map);
+        // Use a CSS-based marker so map pin does not depend on external marker PNG assets.
+        const propertyIcon = L.divIcon({
+          className: 'property-map-pin',
+          html: '<span class="property-map-pin__dot" aria-hidden="true"></span>',
+          iconSize: [24, 24],
+          iconAnchor: [12, 24],
+          popupAnchor: [0, -20]
+        });
+        const propertyMarker = L.marker([clat, clng], { icon: propertyIcon }).addTo(this.map);
         const propertyTitle = document.querySelector('.property-title').textContent;
         const propertyLocation = document.querySelector('.property-location').textContent.trim();
         propertyMarker.bindPopup(`
