@@ -543,6 +543,37 @@
   color: var(--gray-600);
 }
 
+/* Internal SEO links (city landing pages) */
+.results-internal-links {
+  margin: 0 0 var(--spacing-6);
+  padding: var(--spacing-3) var(--spacing-4);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background: var(--gray-50);
+  color: var(--gray-700);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+.results-internal-links strong {
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.results-internal-links a {
+  color: var(--primary-700);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition-fast), text-decoration-color var(--transition-fast);
+}
+
+.results-internal-links a:hover,
+.results-internal-links a:focus-visible {
+  color: var(--primary-800);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* Active Filters */
 .active-filters {
   margin-top: var(--spacing-3);
@@ -1505,6 +1536,12 @@
   .results-controls {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .results-internal-links {
+    margin-bottom: var(--spacing-5);
+    padding: var(--spacing-3);
+    font-size: var(--font-size-xs);
   }
   
   .properties-grid {
