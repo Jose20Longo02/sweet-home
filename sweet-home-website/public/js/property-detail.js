@@ -471,10 +471,35 @@ class PropertyDetailPage {
 
     const initLeaflet = (clat, clng) => {
       try {
+        // Leaflet default marker images are not bundled locally; use CDN assets explicitly.
+        if (L && L.Icon && L.Icon.Default) {
+          L.Icon.Default.mergeOptions({
+            iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
+          });
+        }
+
         this.map = L.map('propertyMap').setView([clat, clng], 15);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '© OpenStreetMap contributors'
-        }).addTo(this.map);
+        const primaryTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors',
+          crossOrigin: true
+        });
+        primaryTileLayer.addTo(this.map);
+
+        // Fallback provider if OSM tiles are blocked (e.g. missing referer / 403).
+        let fallbackApplied = false;
+        primaryTileLayer.on('tileerror', () => {
+          if (fallbackApplied || !this.map) return;
+          fallbackApplied = true;
+          this.map.removeLayer(primaryTileLayer);
+          L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+            subdomains: 'abcd',
+            crossOrigin: true
+          }).addTo(this.map);
+        });
+
         const propertyMarker = L.marker([clat, clng]).addTo(this.map);
         const propertyTitle = document.querySelector('.property-title').textContent;
         const propertyLocation = document.querySelector('.property-location').textContent.trim();

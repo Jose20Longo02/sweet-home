@@ -63,7 +63,9 @@ sendMail.verify && sendMail.verify()
 
 // Security headers + CSP
 const isProd = process.env.NODE_ENV === 'production';
-app.use(helmet());
+app.use(helmet({
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
+}));
 // Apply the same CSP in all envs (no reportOnly) to avoid mixed behavior
 // script-src and script-src-elem allow 'unsafe-inline' so GA and Meta Pixel inline scripts run (helmet does not support function directives for nonce in this version)
 app.use(
