@@ -1406,6 +1406,25 @@ app.get('/sitemap.xml', async (req, res, next) => {
     staticUrls.push({ loc: `${base}/es`, lastmod: null, changefreq: 'daily', priority: '1.0' });
     staticUrls.push({ loc: `${base}/de/blog`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/es/blog`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    // Clean SEO property search URLs (country + city)
+    staticUrls.push({ loc: `${base}/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/properties/for-sale/uae`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/properties/for-sale/uae/dubai`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/properties/for-sale/cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/properties/for-sale/cyprus/paphos`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/de/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/de/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/de/properties/for-sale/uae`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/de/properties/for-sale/uae/dubai`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/de/properties/for-sale/cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/de/properties/for-sale/cyprus/paphos`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/es/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/es/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/es/properties/for-sale/uae`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/es/properties/for-sale/uae/dubai`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/es/properties/for-sale/cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/es/properties/for-sale/cyprus/paphos`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
 
     // Dynamic properties
     const props = await query(`SELECT slug, updated_at, created_at FROM properties WHERE slug IS NOT NULL ORDER BY updated_at DESC NULLS LAST, created_at DESC NULLS LAST LIMIT 5000`);

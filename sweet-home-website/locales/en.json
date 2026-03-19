@@ -262,6 +262,24 @@
       "results": "results",
       "for": "for",
       "in": "in",
+      "h1": {
+        "default": "Properties for Sale - Find Your Dream Home",
+        "country": "Properties for Sale in {country}",
+        "city": "Properties for Sale in {city}, {country}"
+      },
+      "seo": {
+        "operationSale": "for sale",
+        "operationRent": "for rent",
+        "defaultTitle": "Properties for Sale",
+        "defaultDescription": "Browse available properties in key markets with updated prices, photos, and location details.",
+        "cityTitle": "{count} properties {operation} in {city}, {country}",
+        "cityDescription": "Explore {count} properties {operation} in {city}, {country}. Compare prices, photos, and neighborhood context.",
+        "countryTitle": "{count} properties {operation} in {country}",
+        "countryDescription": "Discover {count} properties {operation} in {country}. Updated listings, photos, and pricing from Sweet Home.",
+        "allTitle": "{count} properties for sale",
+        "allDescription": "Browse {count} active property listings across Berlin, Dubai, and Cyprus.",
+        "exploreCities": "Explore city property pages"
+      },
       "saved": {
         "noneTitle": "No Saved Searches",
         "noneHint": "Save your property searches to quickly access them later.",

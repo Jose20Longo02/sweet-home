@@ -244,6 +244,24 @@
       "noResults": { "title": "Keine Immobilien gefunden", "hint": "Passen Sie die Suche an oder zeigen Sie alle verfügbaren Immobilien an." },
       "clearFilters": "Filter löschen",
       "meta": { "sqm": "m²", "beds": "SZ", "baths": "Bad", "rooms": "Zimmer" },
+      "h1": {
+        "default": "Immobilien zum Verkauf - Finden Sie Ihr Traumhaus",
+        "country": "Immobilien zum Verkauf in {country}",
+        "city": "Immobilien zum Verkauf in {city}, {country}"
+      },
+      "seo": {
+        "operationSale": "zum Verkauf",
+        "operationRent": "zur Miete",
+        "defaultTitle": "Immobilien zum Verkauf",
+        "defaultDescription": "Durchsuchen Sie verfügbare Immobilien in wichtigen Märkten mit aktuellen Preisen, Fotos und Standortdetails.",
+        "cityTitle": "{count} Immobilien {operation} in {city}, {country}",
+        "cityDescription": "Entdecken Sie {count} Immobilien {operation} in {city}, {country}. Vergleichen Sie Preise, Fotos und Nachbarschaftsinformationen.",
+        "countryTitle": "{count} Immobilien {operation} in {country}",
+        "countryDescription": "Entdecken Sie {count} Immobilien {operation} in {country}. Aktuelle Angebote mit Fotos und Preisen von Sweet Home.",
+        "allTitle": "{count} Immobilien zum Verkauf",
+        "allDescription": "Durchsuchen Sie {count} aktive Immobilienangebote in Berlin, Dubai und Zypern.",
+        "exploreCities": "Stadt-Immobilienseiten entdecken"
+      },
       "saved": {
         "noneTitle": "Keine gespeicherten Suchen",
         "noneHint": "Speichern Sie Ihre Suchen, um später schnell darauf zuzugreifen.",

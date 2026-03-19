@@ -235,6 +235,24 @@
       "noResults": { "title": "No se encontraron propiedades", "hint": "Ajusta los criterios de búsqueda o explora todas las propiedades disponibles." },
       "clearFilters": "Limpiar filtros",
       "meta": { "sqm": "m²", "beds": "hab", "baths": "baños", "rooms": "hab" },
+      "h1": {
+        "default": "Propiedades en venta - Encuentra la casa de tus sueños",
+        "country": "Propiedades en venta en {country}",
+        "city": "Propiedades en venta en {city}, {country}"
+      },
+      "seo": {
+        "operationSale": "en venta",
+        "operationRent": "en alquiler",
+        "defaultTitle": "Propiedades en venta",
+        "defaultDescription": "Explora propiedades disponibles en mercados clave con precios actualizados, fotos y detalles de ubicación.",
+        "cityTitle": "{count} propiedades {operation} en {city}, {country}",
+        "cityDescription": "Explora {count} propiedades {operation} en {city}, {country}. Compara precios, fotos y contexto del barrio.",
+        "countryTitle": "{count} propiedades {operation} en {country}",
+        "countryDescription": "Descubre {count} propiedades {operation} en {country}. Listados actualizados con fotos y precios de Sweet Home.",
+        "allTitle": "{count} propiedades en venta",
+        "allDescription": "Explora {count} propiedades activas en Berlín, Dubái y Chipre.",
+        "exploreCities": "Explorar páginas de propiedades por ciudad"
+      },
       "saved": {
         "noneTitle": "No hay búsquedas guardadas",
         "noneHint": "Guarda tus búsquedas para acceder a ellas rápidamente.",

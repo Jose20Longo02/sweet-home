@@ -1,4 +1,7 @@
-<% title = 'Property Search Results'; headPartial = '../partials/seo/property-list-head' %>
+<%
+  title = (typeof seoTitle !== 'undefined' && seoTitle) ? seoTitle : 'Property Search Results';
+  headPartial = '../partials/seo/property-list-head';
+%>
 <link rel="stylesheet" href="/css/property-list.css" />
 <link rel="stylesheet" href="/css/libs/leaflet.min.css" />
 
@@ -118,13 +121,7 @@
 <div class="property-search-page">
   <!-- Search Header removed per design request; dark header enabled in layout -->
   <div class="container-wide">
-    <h1 class="sr-only"><%= 
-      (locals.filters?.country && locals.filters?.city) 
-        ? t('properties.list.h1.city', 'Properties for Sale in {city}, {country}', {city: locals.filters.city, country: locals.filters.country})
-        : (locals.filters?.country)
-          ? t('properties.list.h1.country', 'Properties for Sale in {country}', {country: locals.filters.country})
-          : t('properties.list.h1.default', 'Properties for Sale - Find Your Dream Home')
-    %></h1>
+    <h1 class="sr-only"><%= (typeof seoH1 !== 'undefined' && seoH1) ? seoH1 : t('properties.list.h1.default', 'Properties for Sale - Find Your Dream Home') %></h1>
     <div class="property-layout">
       <!-- Filters Sidebar -->
       <aside class="filters-sidebar" id="filtersSidebar" aria-hidden="true">
@@ -488,6 +485,15 @@
           </div>
         </div>
 
+        <% if (typeof seoLandingLinks !== 'undefined' && Array.isArray(seoLandingLinks) && seoLandingLinks.length > 0) { %>
+          <nav class="results-internal-links" aria-label="<%= t('properties.list.seo.exploreCities','Explore city property pages') %>">
+            <strong><%= t('properties.list.seo.exploreCities','Explore city property pages') %>:</strong>
+            <% seoLandingLinks.forEach((link, idx) => { %>
+              <a href="<%= link.href %>"><%= link.label %></a><%= idx < seoLandingLinks.length - 1 ? ' · ' : '' %>
+            <% }); %>
+          </nav>
+        <% } %>
+
         <!-- Properties Grid -->
         <div class="properties-container">
           <% if (properties.length > 0) { %>
@@ -631,7 +637,7 @@
             <% if (totalPages > 1) { %>
               <div class="pagination">
                 <% if (currentPage > 1) { %>
-                  <a href="?<%= new URLSearchParams({...queryParams, page: currentPage - 1}) %>" class="page-link">Previous</a>
+                  <a href="?<%= new URLSearchParams({...queryParams, page: currentPage - 1}) %>" class="page-link"><%= t('common.previous','Previous') %></a>
                 <% } %>
                 
                 <% for (let i = 1; i <= totalPages; i++) { %>
@@ -645,7 +651,7 @@
                 <% } %>
                 
                 <% if (currentPage < totalPages) { %>
-                  <a href="?<%= new URLSearchParams({...queryParams, page: currentPage + 1}) %>" class="page-link">Next</a>
+                  <a href="?<%= new URLSearchParams({...queryParams, page: currentPage + 1}) %>" class="page-link"><%= t('common.next','Next') %></a>
                 <% } %>
               </div>
             <% } %>
@@ -653,8 +659,8 @@
           <% } else { %>
             <div class="no-results">
               <div class="no-results-icon">🏠</div>
-              <h3>No Properties Found</h3>
-              <p>Try adjusting your search criteria or browse all available properties.</p>
+              <h3><%= t('properties.list.noResults.title', 'No Properties Found') %></h3>
+              <p><%= t('properties.list.noResults.hint', 'Try adjusting your search criteria or browse all available properties.') %></p>
               <div class="no-results-actions">
                 <button type="button" class="btn btn-secondary clear-all-filters-btn">Clear Filters</button>
                 <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>" class="btn btn-primary">Browse All Properties</a>

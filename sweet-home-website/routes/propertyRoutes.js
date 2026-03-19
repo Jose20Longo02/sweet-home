@@ -68,6 +68,10 @@ publicRouter.get('/api/properties/similar',  propertyController.getSimilarProper
 // PDF expose generation (must be before slug route)
 publicRouter.get('/:slug/pdf',   pdfController.generatePropertyPDF);
 
+// Clean SEO routes for core location searches
+publicRouter.get('/for-sale/:countrySlug/:citySlug', propertyController.listPropertiesByLocationSlug);
+publicRouter.get('/for-sale/:countrySlug', propertyController.listPropertiesByLocationSlug);
+
 // Keep slug route last
 publicRouter.get('/:slug',        showProperty);
 

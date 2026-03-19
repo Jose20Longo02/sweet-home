@@ -15,6 +15,82 @@ const { ensureCompleteTranslations } = require('../utils/translationHelper');
 const { generateSEOFileName } = require('../utils/imageNaming');
 const { logEvent } = require('../utils/analytics');
 
+function normalizeSlug(value) {
+  return slugify(String(value || ''), { lower: true, strict: true, locale: 'en' });
+}
+
+function nonEmptyQueryEntries(query) {
+  return Object.entries(query || {}).filter(([, value]) => {
+    if (Array.isArray(value)) return value.some(v => String(v || '').trim() !== '');
+    return String(value || '').trim() !== '';
+  });
+}
+
+function getOperationValue(value) {
+  const raw = String(value || '').trim().toLowerCase();
+  if (raw === 'rent' || raw === 'for-rent') return 'rent';
+  if (raw === 'buy' || raw === 'sale' || raw === 'for-sale') return 'sale';
+  return '';
+}
+
+function getPropertiesBasePath(req) {
+  const base = String((req && req.baseUrl) || '/properties').replace(/\/$/, '');
+  return base || '/properties';
+}
+
+function getCurrentListPath(req) {
+  const base = getPropertiesBasePath(req);
+  const subPath = String((req && req.path) || '/');
+  return subPath === '/' ? base : `${base}${subPath}`;
+}
+
+function buildLocationSearchPath(req, country, city) {
+  const base = getPropertiesBasePath(req);
+  const countrySlug = normalizeSlug(country);
+  if (!countrySlug) return base;
+  const citySlug = normalizeSlug(city);
+  return citySlug
+    ? `${base}/for-sale/${countrySlug}/${citySlug}`
+    : `${base}/for-sale/${countrySlug}`;
+}
+
+function resolveCountryBySlug(slugValue) {
+  const slug = normalizeSlug(slugValue);
+  const country = Object.keys(locations || {}).find((name) => normalizeSlug(name) === slug);
+  return country || null;
+}
+
+function resolveCityBySlug(country, slugValue) {
+  const cities = country && locations && locations[country] ? Object.keys(locations[country]) : [];
+  const slug = normalizeSlug(slugValue);
+  const city = cities.find((name) => normalizeSlug(name) === slug);
+  return city || null;
+}
+
+function cleanQueryParams(queryObj) {
+  const params = new URLSearchParams();
+  Object.entries(queryObj || {}).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((item) => {
+        const normalized = String(item || '').trim();
+        if (normalized) params.append(key, normalized);
+      });
+      return;
+    }
+    const normalized = String(value || '').trim();
+    if (normalized) params.set(key, normalized);
+  });
+  return params;
+}
+
+function buildPageUrl(pathname, queryObj, pageNumber) {
+  const params = cleanQueryParams(queryObj);
+  if (pageNumber > 1) params.set('page', String(pageNumber));
+  else params.delete('page');
+  const qs = params.toString();
+  return qs ? `${pathname}?${qs}` : pathname;
+}
+
 // Extract coordinates from common map link formats or raw "lat,lng"
 function extractCoordsFromLink(input) {
   if (!input || typeof input !== 'string') return { lat: null, lng: null };
@@ -46,6 +122,7 @@ exports.listPropertiesPublic = async (req, res, next) => {
   try {
     const {
       q = '', // search query
+      operation = '',
       country = '',
       city = '',
       neighborhood = '',
@@ -65,6 +142,32 @@ exports.listPropertiesPublic = async (req, res, next) => {
       sort = 'relevance',
       page = 1
     } = req.query;
+
+    const parsedPage = Number.parseInt(page, 10);
+    const currentPage = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+    const normalizedSort = String(sort || '').trim().toLowerCase() || 'relevance';
+    const operationMode = getOperationValue(operation);
+
+    // Redirect clean indexable location queries to stable SEO paths.
+    const queryEntries = nonEmptyQueryEntries(req.query);
+    const queryKeys = new Set(queryEntries.map(([key]) => key));
+    const allowedRedirectKeys = new Set(['country', 'city', 'operation', 'page', 'sort']);
+    const hasDisallowedRedirectKeys = Array.from(queryKeys).some((key) => !allowedRedirectKeys.has(key));
+    const hasLocationInQuery = String(country || '').trim() !== '';
+    const routeIsBaseResults = String(req.path || '') === '/';
+    const canRedirectToCleanPath = routeIsBaseResults
+      && hasLocationInQuery
+      && !hasDisallowedRedirectKeys
+      && (normalizedSort === 'relevance');
+
+    if (canRedirectToCleanPath) {
+      const redirectPath = buildLocationSearchPath(req, country, city);
+      const redirectParams = new URLSearchParams();
+      if (operationMode) redirectParams.set('operation', operationMode);
+      if (currentPage > 1) redirectParams.set('page', String(currentPage));
+      const redirectTarget = redirectParams.toString() ? `${redirectPath}?${redirectParams.toString()}` : redirectPath;
+      return res.redirect(301, redirectTarget);
+    }
 
     // Build WHERE clause for filtering
     const whereConditions = [];
@@ -303,7 +406,7 @@ exports.listPropertiesPublic = async (req, res, next) => {
     // Add pagination
     const itemsPerPage = 12;
     const totalPages = Math.ceil(totalProperties / itemsPerPage);
-    const offset = (parseInt(page) - 1) * itemsPerPage;
+    const offset = (currentPage - 1) * itemsPerPage;
     
     baseQuery += ` LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
     queryParams.push(itemsPerPage, offset);
@@ -313,7 +416,7 @@ exports.listPropertiesPublic = async (req, res, next) => {
 
     // Normalize photos array and agent info for each property
     const publicDir = path.join(__dirname, '../public');
-    const lang = res.locals.lang || 'en';
+    const currentLang = res.locals.lang || 'en';
     const normalizedProperties = properties.map(p => {
       const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
       let hasVariants = false;
@@ -333,8 +436,8 @@ exports.listPropertiesPublic = async (req, res, next) => {
         }
       }
       // Localize
-      const localizedTitle = getLocalizedTitle(p, lang);
-      const localizedDescription = (p.description_i18n && p.description_i18n[lang]) || p.description;
+      const localizedTitle = getLocalizedTitle(p, currentLang);
+      const localizedDescription = (p.description_i18n && p.description_i18n[currentLang]) || p.description;
       return {
         ...p,
         title: localizedTitle,
@@ -369,18 +472,161 @@ exports.listPropertiesPublic = async (req, res, next) => {
       status: Array.isArray(status) ? status : (status ? [status] : [])
     };
 
-    res.render('properties/property-list', { 
+    // SEO context for canonical/noindex and metadata on search results.
+    const lang = currentLang;
+    const baseUrl = res.locals.baseUrl || '';
+    const translateLocation = typeof res.locals.translateLocation === 'function'
+      ? res.locals.translateLocation
+      : (_kind, value) => value;
+    const displayCountry = country ? translateLocation('country', country) : '';
+    const displayCity = city ? translateLocation('city', city) : '';
+    const queryPath = getCurrentListPath(req);
+    const locationPath = buildLocationSearchPath(req, country, city);
+
+    const indexableKeys = new Set(['country', 'city', 'operation', 'page', 'sort']);
+    const hasDisallowedIndexKeys = Array.from(queryKeys).some((key) => !indexableKeys.has(key));
+    const hasOnlyLocationAndPagination = !hasDisallowedIndexKeys && normalizedSort === 'relevance';
+    const hasValidLocationHierarchy = !city || !!country;
+    const isIndexable = hasValidLocationHierarchy
+      && hasOnlyLocationAndPagination
+      && !q
+      && totalProperties > 0;
+    const robotsMeta = isIndexable ? 'index,follow' : 'noindex,follow';
+
+    const canonicalPath = country ? locationPath : getPropertiesBasePath(req);
+    const canonicalQuery = new URLSearchParams();
+    if (isIndexable && currentPage > 1) canonicalQuery.set('page', String(currentPage));
+    if (isIndexable && operationMode) canonicalQuery.set('operation', operationMode);
+    const canonicalUrl = canonicalQuery.toString()
+      ? `${baseUrl}${canonicalPath}?${canonicalQuery.toString()}`
+      : `${baseUrl}${canonicalPath}`;
+
+    const neutralPath = canonicalPath.replace(/^\/(de|es)(?=\/)/, '');
+    const enPath = neutralPath;
+    const dePath = `/de${neutralPath}`;
+    const esPath = `/es${neutralPath}`;
+    const hreflangAlternates = {
+      'en-us': canonicalQuery.toString() ? `${baseUrl}${enPath}?${canonicalQuery.toString()}` : `${baseUrl}${enPath}`,
+      'de-de': canonicalQuery.toString() ? `${baseUrl}${dePath}?${canonicalQuery.toString()}` : `${baseUrl}${dePath}`,
+      'es-es': canonicalQuery.toString() ? `${baseUrl}${esPath}?${canonicalQuery.toString()}` : `${baseUrl}${esPath}`
+    };
+
+    const resultsNoun = res.locals.t('properties.list.results', 'results');
+    const operationLabel = operationMode === 'rent'
+      ? res.locals.t('properties.list.seo.operationRent', 'for rent')
+      : res.locals.t('properties.list.seo.operationSale', 'for sale');
+
+    let seoTitle = res.locals.t('properties.list.seo.defaultTitle', 'Properties for Sale');
+    let seoDescription = res.locals.t('properties.list.seo.defaultDescription', 'Browse available properties in key markets with updated prices, photos, and location details.');
+    let seoH1 = res.locals.t('properties.list.h1.default', 'Properties for Sale - Find Your Dream Home');
+
+    if (displayCity && displayCountry) {
+      seoTitle = res.locals.t('properties.list.seo.cityTitle', '{count} properties {operation} in {city}, {country}', {
+        count: totalProperties,
+        operation: operationLabel,
+        city: displayCity,
+        country: displayCountry
+      });
+      seoDescription = res.locals.t(
+        'properties.list.seo.cityDescription',
+        'Explore {count} properties {operation} in {city}, {country}. Compare prices, photos, and neighborhood context.',
+        { count: totalProperties, operation: operationLabel, city: displayCity, country: displayCountry }
+      );
+      seoH1 = res.locals.t('properties.list.h1.city', 'Properties for Sale in {city}, {country}', {
+        city: displayCity,
+        country: displayCountry
+      });
+    } else if (displayCountry) {
+      seoTitle = res.locals.t('properties.list.seo.countryTitle', '{count} properties {operation} in {country}', {
+        count: totalProperties,
+        operation: operationLabel,
+        country: displayCountry
+      });
+      seoDescription = res.locals.t(
+        'properties.list.seo.countryDescription',
+        'Discover {count} properties {operation} in {country}. Updated listings, photos, and pricing from Sweet Home.',
+        { count: totalProperties, operation: operationLabel, country: displayCountry }
+      );
+      seoH1 = res.locals.t('properties.list.h1.country', 'Properties for Sale in {country}', { country: displayCountry });
+    } else if (!q && totalProperties > 0) {
+      seoTitle = res.locals.t('properties.list.seo.allTitle', '{count} properties for sale', { count: totalProperties });
+      seoDescription = res.locals.t(
+        'properties.list.seo.allDescription',
+        'Browse {count} active property listings across Berlin, Dubai, and Cyprus.',
+        { count: totalProperties }
+      );
+    }
+
+    const pagePathForPagination = queryPath;
+    const queryForPagination = { ...req.query };
+    const prevPageUrl = currentPage > 1
+      ? `${baseUrl}${buildPageUrl(pagePathForPagination, queryForPagination, currentPage - 1)}`
+      : null;
+    const nextPageUrl = currentPage < totalPages
+      ? `${baseUrl}${buildPageUrl(pagePathForPagination, queryForPagination, currentPage + 1)}`
+      : null;
+
+    const landingLinks = [
+      {
+        label: res.locals.t('nav.propertiesBerlin', 'Berlin'),
+        href: lang === 'de' ? '/de/wohnungen-berlin-kaufen' : (lang === 'es' ? '/es/propiedades-en-venta-berlin' : '/properties-for-sale-berlin')
+      },
+      {
+        label: res.locals.t('nav.propertiesDubai', 'Dubai'),
+        href: lang === 'de' ? '/de/immobilien-dubai-kaufen' : (lang === 'es' ? '/es/propiedades-en-venta-dubai' : '/properties-for-sale-dubai')
+      },
+      {
+        label: res.locals.t('nav.propertiesCyprus', 'Cyprus'),
+        href: lang === 'de' ? '/de/immobilien-zypern-kaufen' : (lang === 'es' ? '/es/propiedades-en-venta-chipre' : '/properties-for-sale-cyprus')
+      }
+    ];
+
+    res.render('properties/property-list', {
       properties: normalizedProperties,
       locations,
       locationColors,
       filters,
       query: q,
       sort,
-      currentPage: parseInt(page),
+      currentPage,
       totalPages,
       totalProperties,
-      queryParams: req.query
+      queryParams: req.query,
+      title: seoTitle,
+      seoTitle,
+      seoDescription,
+      seoH1,
+      canonicalUrl,
+      hreflangAlternates,
+      robotsMeta,
+      prevPageUrl,
+      nextPageUrl,
+      seoItemList: normalizedProperties,
+      seoLandingLinks: landingLinks
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.listPropertiesByLocationSlug = async (req, res, next) => {
+  try {
+    const country = resolveCountryBySlug(req.params.countrySlug);
+    if (!country) return res.status(404).render('errors/404');
+
+    let city = '';
+    if (req.params.citySlug) {
+      city = resolveCityBySlug(country, req.params.citySlug);
+      if (!city) return res.status(404).render('errors/404');
+    }
+
+    req.query = {
+      ...req.query,
+      country,
+      city
+    };
+
+    return exports.listPropertiesPublic(req, res, next);
   } catch (err) {
     next(err);
   }
