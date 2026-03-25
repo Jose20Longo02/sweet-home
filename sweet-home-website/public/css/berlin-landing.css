@@ -484,28 +484,51 @@
   margin-top: auto;
   margin-inline: 16px;
   margin-bottom: 16px;
+  width: calc(100% - 32px);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 36px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--primary-color, #2ea862);
-  color: var(--primary-color, #2ea862);
-  background: rgba(46, 168, 98, 0.08);
+  gap: 8px;
+  min-height: 42px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(46, 168, 98, 0.92);
+  color: #fff;
+  background: linear-gradient(135deg, #2ea862 0%, #249454 100%);
   text-decoration: none;
-  font-size: 0.86rem;
+  font-size: 0.88rem;
   font-weight: 700;
   line-height: 1.2;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  letter-spacing: 0.01em;
+  box-shadow: 0 8px 18px rgba(36, 148, 84, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.berlin-neighborhood-card__cta::after {
+  content: "→";
+  font-size: 0.98rem;
+  line-height: 1;
 }
 
 .berlin-neighborhood-card__cta:hover {
-  background: rgba(46, 168, 98, 0.14);
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 22px rgba(36, 148, 84, 0.34);
+}
+
+.berlin-neighborhood-card__cta:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 16px rgba(36, 148, 84, 0.3);
+}
+
+.berlin-neighborhood-card__cta:link,
+.berlin-neighborhood-card__cta:visited {
+  color: #fff;
+  text-decoration: none;
 }
 
 .berlin-neighborhood-card__cta:focus-visible {
-  outline: 2px solid rgba(46, 168, 98, 0.7);
+  outline: 2px solid rgba(46, 168, 98, 0.75);
   outline-offset: 2px;
 }
 
@@ -517,13 +540,16 @@
 }
 
 .berlin-neighborhood-card.is-open .berlin-neighborhood-card__cta {
-  border-color: rgba(255, 255, 255, 0.75);
+  border-color: rgba(255, 255, 255, 0.3);
   color: #fff;
-  background: rgba(255, 255, 255, 0.14);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.18) 100%);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(1px);
 }
 
 .berlin-neighborhood-card.is-open .berlin-neighborhood-card__cta:hover {
-  background: rgba(255, 255, 255, 0.22);
+  filter: brightness(1.08);
+  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.22);
 }
 
 .berlin-neighborhood-card.is-open .berlin-neighborhood-card__cta:focus-visible {
