@@ -4274,3 +4274,266 @@ exports.friedrichshainKreuzbergPropertiesPageDe = async (req, res, next) => {
     next(err);
   }
 };
+
+// German district landing page: Schoeneberg (Berlin)
+exports.schoenebergPropertiesPageDe = async (req, res, next) => {
+  try {
+    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
+    const patternWithUmlaut = '%schöneberg%';
+    const patternWithoutUmlaut = '%schoneberg%';
+    const propertiesSql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.created_at,
+        p.description,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name,
+        u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND (
+          LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+          OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2
+        )
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 30
+    `;
+    const projectsSql = `
+      SELECT
+        p.id, p.slug, p.title, p.title_i18n, p.description, p.description_i18n,
+        p.country, p.city, p.neighborhood, p.photos, p.min_price, p.max_price,
+        p.total_units, p.completion_date, p.created_at
+      FROM projects p
+      WHERE p.status = 'active'
+        AND p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND (
+          LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+          OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2
+        )
+      ORDER BY p.created_at DESC
+      LIMIT 9
+    `;
+
+    const [{ rows: properties }, { rows: projects }] = await Promise.all([
+      query(propertiesSql, [patternWithUmlaut, patternWithoutUmlaut]),
+      query(projectsSql, [patternWithUmlaut, patternWithoutUmlaut])
+    ]);
+
+    const lang = 'de';
+    const recommendedProperties = (properties || []).map((p) => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: getLocalizedTitle(p, lang),
+        description: (p.description_i18n && p.description_i18n[lang]) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+    const schoenebergProjects = (projects || []).map((project) => {
+      const photos = Array.isArray(project.photos) ? project.photos : (project.photos ? [project.photos] : []);
+      const normalizedPhotos = photos.map((ph) => {
+        if (!ph) return ph;
+        const phStr = String(ph);
+        if (phStr.startsWith('/uploads/') || phStr.startsWith('http')) return phStr;
+        return `/uploads/projects/${project.id}/${phStr}`;
+      });
+      const titleI18n = project.title_i18n && typeof project.title_i18n === 'object' ? project.title_i18n : null;
+      const descriptionI18n = project.description_i18n && typeof project.description_i18n === 'object' ? project.description_i18n : null;
+      return {
+        ...project,
+        title: (titleI18n && (titleI18n[lang] || titleI18n.en)) || project.title,
+        description: (descriptionI18n && (descriptionI18n[lang] || descriptionI18n.en)) || project.description,
+        photos: normalizedPhotos,
+        slug: project.slug || `project-${project.id}`
+      };
+    });
+
+    const baseUrl = res.locals.baseUrl;
+    const districtUrls = {
+      en: `${baseUrl}/properties-for-sale-berlin`,
+      de: `${baseUrl}/de/wohnung-kaufen-schoeneberg`,
+      es: `${baseUrl}/es/propiedades-en-venta-berlin`
+    };
+    const districtContent = {
+      heroTitle: 'Wohnung kaufen Schöneberg',
+      heroDescription: 'Schöneberg vereint Berliner Altbaucharme, zentrale Lage und starke Kiezqualität. Der Bezirk bleibt für Eigennutzer und Kapitalanleger ein gefragter Teilmarkt mit hoher Wohnnachfrage.',
+      sectionTitleProperties: 'Eigentumswohnungen in Schöneberg',
+      sectionTitleProjects: 'Neubauprojekte in Schöneberg',
+      sectionTitleWhy: 'Warum Schöneberg als Wohnlage überzeugt',
+      whyP1: 'Schöneberg bietet eine ausgewogene Mischung aus urbanem Leben, ruhigen Wohnstraßen und sehr guter Infrastruktur. Die Nähe zu City-West, Mitte und wichtigen Verkehrsknoten stützt die Nachfrage nachhaltig.',
+      whyP2: 'Für Käufer ist Schöneberg attraktiv durch seine vielseitige Mikrolagenstruktur und stabile Marktliquidität. Besonders gefragt sind modernisierte Altbauwohnungen sowie gut angebundene Familiengrundrisse.',
+      sectionTitleMicro: 'Gefragte Mikrolagen in Schöneberg',
+      microAreas: [
+        'Akazienkiez – beliebtes Quartier mit starker Nahversorgung.',
+        'Bayerisches Viertel – ruhige Wohnlage mit hochwertigem Bestand.',
+        'Nollendorfplatz-Umfeld – zentral, lebendig und international nachgefragt.',
+        'Rote Insel – gewachsener Kiez mit stabiler Wohnnachfrage.'
+      ],
+      sectionTitleFaq: 'Häufige Fragen zu Wohnungen in Schöneberg',
+      faq: [
+        { q: 'Ist Schöneberg für Eigennutzer geeignet?', a: 'Ja, insbesondere durch die gute Infrastruktur, zentrale Lage und die hohe Lebensqualität in den gewachsenen Kiezen.' },
+        { q: 'Wie attraktiv ist Schöneberg für Kapitalanleger?', a: 'Schöneberg ist ein liquider Teilmarkt mit konstantem Nachfrageprofil. Gut positionierte Objekte weisen in der Regel eine solide Vermietbarkeit auf.' },
+        { q: 'Welche Wohnungstypen sind besonders gefragt?', a: 'Gefragt sind vor allem modernisierte Altbauten, 2- bis 4-Zimmer-Wohnungen sowie familiengerechte Grundrisse in ruhigen Seitenlagen.' },
+        { q: 'Wie begleitet Sweet Home den Kauf in Schöneberg?', a: 'Wir übernehmen die strukturierte Objektselektion, Lage- und Preisbewertung, Verhandlung sowie den Support bis zum Abschluss.' }
+      ]
+    };
+
+    res.render('properties-schoeneberg-de', {
+      title: 'Wohnung kaufen Schöneberg: Eigentumswohnungen in Berlin',
+      useMainContainer: false,
+      useHomeHeader: true,
+      headPartial: '../partials/seo/schoeneberg-properties-head',
+      canonicalUrl: districtUrls.de,
+      hreflangAlternates: { 'en-us': districtUrls.en, 'de-de': districtUrls.de, 'es-es': districtUrls.es },
+      pageMetaDescription: 'Wohnung kaufen Schöneberg: Entdecken Sie ausgewählte Eigentumswohnungen in Schöneberg mit lokalen Markt-Insights und persönlicher Beratung.',
+      districtContent,
+      locations,
+      neighborhoodCounts,
+      recommendedProperties,
+      schoenebergProjects,
+      baseUrl: res.locals.baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// German district landing page: Prenzlauer Berg (Berlin)
+exports.prenzlauerBergPropertiesPageDe = async (req, res, next) => {
+  try {
+    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
+    const districtPattern = '%prenzlauer berg%';
+    const propertiesSql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.created_at,
+        p.description,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name,
+        u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 30
+    `;
+    const projectsSql = `
+      SELECT
+        p.id, p.slug, p.title, p.title_i18n, p.description, p.description_i18n,
+        p.country, p.city, p.neighborhood, p.photos, p.min_price, p.max_price,
+        p.total_units, p.completion_date, p.created_at
+      FROM projects p
+      WHERE p.status = 'active'
+        AND p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+      ORDER BY p.created_at DESC
+      LIMIT 9
+    `;
+
+    const [{ rows: properties }, { rows: projects }] = await Promise.all([
+      query(propertiesSql, [districtPattern]),
+      query(projectsSql, [districtPattern])
+    ]);
+
+    const lang = 'de';
+    const recommendedProperties = (properties || []).map((p) => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: getLocalizedTitle(p, lang),
+        description: (p.description_i18n && p.description_i18n[lang]) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+    const prenzlauerBergProjects = (projects || []).map((project) => {
+      const photos = Array.isArray(project.photos) ? project.photos : (project.photos ? [project.photos] : []);
+      const normalizedPhotos = photos.map((ph) => {
+        if (!ph) return ph;
+        const phStr = String(ph);
+        if (phStr.startsWith('/uploads/') || phStr.startsWith('http')) return phStr;
+        return `/uploads/projects/${project.id}/${phStr}`;
+      });
+      const titleI18n = project.title_i18n && typeof project.title_i18n === 'object' ? project.title_i18n : null;
+      const descriptionI18n = project.description_i18n && typeof project.description_i18n === 'object' ? project.description_i18n : null;
+      return {
+        ...project,
+        title: (titleI18n && (titleI18n[lang] || titleI18n.en)) || project.title,
+        description: (descriptionI18n && (descriptionI18n[lang] || descriptionI18n.en)) || project.description,
+        photos: normalizedPhotos,
+        slug: project.slug || `project-${project.id}`
+      };
+    });
+
+    const baseUrl = res.locals.baseUrl;
+    const districtUrls = {
+      en: `${baseUrl}/properties-for-sale-berlin`,
+      de: `${baseUrl}/de/wohnung-kaufen-prenzlauer-berg`,
+      es: `${baseUrl}/es/propiedades-en-venta-berlin`
+    };
+    const districtContent = {
+      heroTitle: 'Wohnung kaufen Prenzlauer Berg',
+      heroDescription: 'Prenzlauer Berg ist einer der begehrtesten Berliner Wohnstandorte. Der Bezirk verbindet historische Altbausubstanz, familienfreundliche Kieze und hohe Nachfrage in zentraler Lage.',
+      sectionTitleProperties: 'Eigentumswohnungen in Prenzlauer Berg',
+      sectionTitleProjects: 'Neubauprojekte in Prenzlauer Berg',
+      sectionTitleWhy: 'Warum Prenzlauer Berg für Immobilienkäufer attraktiv ist',
+      whyP1: 'Prenzlauer Berg bietet starke Kiezstrukturen, hohe Lebensqualität und eine stabile Käufernachfrage. Die Kombination aus Altbaucharme, Infrastruktur und urbanem Umfeld macht den Teilmarkt besonders resilient.',
+      whyP2: 'Für Eigennutzer sind die familienfreundlichen Strukturen, Schulen und Nahversorgung zentral. Kapitalanleger profitieren von der dauerhaft hohen Nachfrage und der Markttiefe in gut positionierten Lagen.',
+      sectionTitleMicro: 'Gefragte Mikrolagen in Prenzlauer Berg',
+      microAreas: [
+        'Kollwitzkiez – hochwertige Wohnlagen mit starkem Nachfrageprofil.',
+        'Helmholtzkiez – familienorientiert und urban zugleich.',
+        'Winsviertel – beliebte Altbaustruktur mit gewachsenem Kiezcharakter.',
+        'Bötzowviertel – ruhiger, etablierter Wohnstandort mit hoher Standortqualität.'
+      ],
+      sectionTitleFaq: 'Häufige Fragen zu Wohnungen in Prenzlauer Berg',
+      faq: [
+        { q: 'Ist Prenzlauer Berg eher ein Premium-Teilmarkt?', a: 'Ja, viele Mikrolagen gelten als premiumorientiert und weisen eine konstant hohe Nachfrage bei Eigennutzern und Kapitalanlegern auf.' },
+        { q: 'Für welche Käufer ist Prenzlauer Berg besonders geeignet?', a: 'Der Bezirk ist besonders attraktiv für Familien, Berufstätige und internationale Käufer, die zentrale Lage mit hoher Lebensqualität verbinden möchten.' },
+        { q: 'Welche Objekttypen sind in Prenzlauer Berg gefragt?', a: 'Vor allem modernisierte Altbauwohnungen, großzügige Familiengrundrisse und hochwertige sanierte Bestandsobjekte.' },
+        { q: 'Wie unterstützt Sweet Home beim Kauf in Prenzlauer Berg?', a: 'Wir unterstützen bei der Selektion passender Objekte, der Einordnung von Mikrolagen, der Verhandlung und der vollständigen Kaufabwicklung.' }
+      ]
+    };
+
+    res.render('properties-prenzlauer-berg-de', {
+      title: 'Wohnung kaufen Prenzlauer Berg: Eigentumswohnungen in Berlin',
+      useMainContainer: false,
+      useHomeHeader: true,
+      headPartial: '../partials/seo/prenzlauer-berg-properties-head',
+      canonicalUrl: districtUrls.de,
+      hreflangAlternates: { 'en-us': districtUrls.en, 'de-de': districtUrls.de, 'es-es': districtUrls.es },
+      pageMetaDescription: 'Wohnung kaufen Prenzlauer Berg: Entdecken Sie ausgewählte Eigentumswohnungen in Prenzlauer Berg mit lokalen Markt-Insights und persönlicher Beratung.',
+      districtContent,
+      locations,
+      neighborhoodCounts,
+      recommendedProperties,
+      prenzlauerBergProjects,
+      baseUrl: res.locals.baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+};

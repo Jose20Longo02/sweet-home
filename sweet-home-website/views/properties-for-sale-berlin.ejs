@@ -190,6 +190,8 @@
         <% if (normalizedNeighborhood.indexOf('charlottenburg') !== -1) germanDistrictPath = '/de/wohnung-kaufen-charlottenburg'; %>
         <% if (normalizedNeighborhood === 'moabit') germanDistrictPath = '/de/wohnung-kaufen-moabit'; %>
         <% if (normalizedNeighborhood.indexOf('friedrichshain-kreuzberg') !== -1) germanDistrictPath = '/de/wohnung-kaufen-friedrichshain-kreuzberg'; %>
+        <% if (normalizedNeighborhood.indexOf('schöneberg') !== -1 || normalizedNeighborhood.indexOf('schoneberg') !== -1) germanDistrictPath = '/de/wohnung-kaufen-schoeneberg'; %>
+        <% if (normalizedNeighborhood.indexOf('prenzlauer berg') !== -1) germanDistrictPath = '/de/wohnung-kaufen-prenzlauer-berg'; %>
         <% const neighborhoodHref = (lang === 'de' && germanDistrictPath)
           ? germanDistrictPath
           : `${baseNeighborhoodPath}?neighborhood=${encodeURIComponent(item.name)}`; %>
