@@ -1,0 +1,110 @@
+<%
+  const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
+  const pageUrl = `${siteBaseUrl}/de/wohnung-kaufen-moabit`;
+  const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : 'Wohnung kaufen Moabit: Eigentumswohnungen und Markt-Insights für Käufer in Berlin.';
+  const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Wohnung kaufen Moabit';
+  const pageOgLocale = 'de_DE';
+  const pageFaq = (typeof districtContent !== 'undefined' && districtContent && Array.isArray(districtContent.faq)) ? districtContent.faq : [];
+%>
+<meta name="description" content="<%= pageDesc %>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="<%= pageTitle %> | Sweet Home">
+<meta property="og:description" content="<%= pageDesc %>">
+<meta property="og:url" content="<%= (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl %>">
+<meta property="og:image" content="<%= siteBaseUrl %>/images/berlin-hero.jpg">
+<meta property="og:image:alt" content="Wohnung kaufen in Moabit, Berlin">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="<%= pageOgLocale %>">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= pageTitle %> | Sweet Home">
+<meta name="twitter:description" content="<%= pageDesc %>">
+<meta name="twitter:image" content="<%= siteBaseUrl %>/images/berlin-hero.jpg">
+<meta name="twitter:image:alt" content="Wohnung kaufen in Moabit, Berlin">
+
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': pageUrl + '#webpage',
+      name: pageTitle + ' | Sweet Home',
+      description: pageDesc,
+      url: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl,
+      isPartOf: { '@type': 'WebSite', '@id': siteBaseUrl + '/#website', name: 'Sweet Home' }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Startseite', item: siteBaseUrl + '/de' },
+        { '@type': 'ListItem', position: 2, name: 'Wohnungen in Berlin', item: siteBaseUrl + '/de/wohnungen-berlin-kaufen' },
+        { '@type': 'ListItem', position: 3, name: 'Wohnung kaufen Moabit', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
+      ]
+    }
+  ]
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': pageUrl + '#webpage',
+      name: pageTitle + ' | Sweet Home',
+      description: pageDesc,
+      url: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl,
+      isPartOf: { '@type': 'WebSite', '@id': siteBaseUrl + '/#website', name: 'Sweet Home' }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Startseite', item: siteBaseUrl + '/de' },
+        { '@type': 'ListItem', position: 2, name: 'Wohnungen in Berlin', item: siteBaseUrl + '/de/wohnungen-berlin-kaufen' },
+        { '@type': 'ListItem', position: 3, name: 'Wohnung kaufen Moabit', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
+      ]
+    }
+  ]
+})) %></script>
+
+<% if (pageFaq.length > 0) { %>
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: pageFaq.map((item) => ({ '@type': 'Question', name: item.q, acceptedAnswer: { '@type': 'Answer', text: item.a } }))
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: pageFaq.map((item) => ({ '@type': 'Question', name: item.q, acceptedAnswer: { '@type': 'Answer', text: item.a } }))
+})) %></script>
+<% } %>
+
+<% if (typeof recommendedProperties !== 'undefined' && recommendedProperties && recommendedProperties.length > 0) { %>
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Eigentumswohnungen in Moabit',
+  description: pageDesc,
+  itemListElement: recommendedProperties.map((p, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'RealEstateListing',
+      name: p.title,
+      url: `${siteBaseUrl}/properties/${p.slug}`,
+      address: { '@type': 'PostalAddress', addressLocality: p.city || 'Berlin', addressCountry: p.country || 'Germany' }
+    }
+  }))
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Eigentumswohnungen in Moabit',
+  description: pageDesc,
+  itemListElement: recommendedProperties.map((p, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'RealEstateListing',
+      name: p.title,
+      url: `${siteBaseUrl}/properties/${p.slug}`,
+      address: { '@type': 'PostalAddress', addressLocality: p.city || 'Berlin', addressCountry: p.country || 'Germany' }
+    }
+  }))
+})) %></script>
+<% } %>

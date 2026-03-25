@@ -185,9 +185,13 @@
         <% const panelId = `berlin-neighborhood-panel-${idx}`; %>
         <% const buttonId = `berlin-neighborhood-trigger-${idx}`; %>
         <% const baseNeighborhoodPath = (typeof localePath === 'function') ? localePath('/properties/for-sale/germany/berlin') : '/properties/for-sale/germany/berlin'; %>
-        <% const isCharlottenburg = String(item.name || '').toLowerCase().indexOf('charlottenburg') !== -1; %>
-        <% const neighborhoodHref = (lang === 'de' && isCharlottenburg)
-          ? '/de/wohnung-kaufen-charlottenburg'
+        <% const normalizedNeighborhood = String(item.name || '').toLowerCase(); %>
+        <% let germanDistrictPath = ''; %>
+        <% if (normalizedNeighborhood.indexOf('charlottenburg') !== -1) germanDistrictPath = '/de/wohnung-kaufen-charlottenburg'; %>
+        <% if (normalizedNeighborhood === 'moabit') germanDistrictPath = '/de/wohnung-kaufen-moabit'; %>
+        <% if (normalizedNeighborhood.indexOf('friedrichshain-kreuzberg') !== -1) germanDistrictPath = '/de/wohnung-kaufen-friedrichshain-kreuzberg'; %>
+        <% const neighborhoodHref = (lang === 'de' && germanDistrictPath)
+          ? germanDistrictPath
           : `${baseNeighborhoodPath}?neighborhood=${encodeURIComponent(item.name)}`; %>
         <% const neighborhoodCta = (berlinContent.neighborhoodsExploreCta || 'Explore properties in {name}').replace('{name}', item.name); %>
         <article class="berlin-neighborhood-card" data-neighborhood-card>

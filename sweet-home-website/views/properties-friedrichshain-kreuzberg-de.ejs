@@ -1,0 +1,244 @@
+<% useMainContainer = false %>
+<% useHomeHeader = true %>
+<link rel="stylesheet" href="/css/home.css" />
+<link rel="stylesheet" href="/css/berlin-landing.min.css?v=20260326-1" />
+
+<div id="locations-data" data-locations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locations) : JSON.stringify(locations)).replace(/'/g, '&#39;') %>' data-neighborhood-counts='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(typeof neighborhoodCounts !== 'undefined' && neighborhoodCounts ? neighborhoodCounts : {}) : JSON.stringify(typeof neighborhoodCounts !== 'undefined' && neighborhoodCounts ? neighborhoodCounts : {})).replace(/'/g, '&#39;') %>' style="display:none"></div>
+
+<div class="berlin-landing-page">
+  <section class="berlin-hero" aria-labelledby="fk-hero-title">
+    <div class="berlin-hero__bg">
+      <img src="/images/Friedrichshain-Kreuzberg.jpg" alt="Wohnung kaufen in Friedrichshain-Kreuzberg, Berlin" fetchpriority="high" decoding="async">
+    </div>
+    <div class="berlin-hero__overlay"></div>
+    <div class="berlin-hero__content">
+      <h1 id="fk-hero-title" class="berlin-hero__title"><%= districtContent.heroTitle %></h1>
+      <p class="berlin-hero__description"><%= districtContent.heroDescription %></p>
+    </div>
+  </section>
+
+  <section id="fk-search" class="berlin-search" aria-labelledby="fk-search-title">
+    <h2 id="fk-search-title" class="berlin-search__title sr-only">Immobilien suchen</h2>
+    <form action="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>" method="get" class="berlin-search__form">
+      <div class="berlin-search__row">
+        <label class="sr-only" for="country">Land</label>
+        <select id="country" name="country" aria-label="Land">
+          <option value="">Land</option>
+          <% Object.keys(locations).forEach(c => { %>
+            <option value="<%= c %>" <%= c === 'Germany' ? 'selected' : '' %>><%= c %></option>
+          <% }); %>
+        </select>
+        <label class="sr-only" for="city">Stadt</label>
+        <select id="city" name="city" aria-label="Stadt">
+          <option value="">Stadt</option>
+          <% if (locations.Germany) { Object.keys(locations.Germany).forEach(ct => { %>
+            <option value="<%= ct %>" <%= ct === 'Berlin' ? 'selected' : '' %>><%= ct %></option>
+          <% }); } %>
+        </select>
+        <label class="sr-only" for="neighborhood">Stadtteil</label>
+        <select id="neighborhood" name="neighborhood" aria-label="Stadtteil">
+          <option value="">Stadtteil</option>
+        </select>
+        <label class="sr-only" for="operation">Operation</label>
+        <select id="operation" name="operation">
+          <option value="">Any Operation</option>
+          <option value="buy" selected>Kaufen</option>
+          <option value="rent">Mieten</option>
+        </select>
+        <label class="sr-only" for="type">Objekttyp</label>
+        <select id="type" name="type">
+          <option value="">Any Type</option>
+          <option>Apartment</option>
+          <option>House</option>
+          <option>Villa</option>
+          <option>Land</option>
+        </select>
+        <button type="submit">Immobilien suchen</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="section featured berlin-featured" aria-labelledby="fk-properties-heading">
+    <h2 id="fk-properties-heading" class="berlin-featured__title"><%= districtContent.sectionTitleProperties %></h2>
+    <div class="berlin-featured__grid">
+      <% (recommendedProperties || []).forEach(property => { %>
+        <%
+          const photoUrl = (property.photos && property.photos[0]) ? property.photos[0] : '/img/property-placeholder.jpg';
+          const size = property.size ? `${property.size} m²` : null;
+          const beds = (typeof property.rooms !== 'undefined' && property.rooms !== null) ? property.rooms : null;
+          const baths = (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) ? property.bathrooms : null;
+          const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString('de-DE') : '';
+        %>
+        <article class="property-card">
+          <a href="<%= (typeof localePath === 'function') ? localePath('/properties/' + property.slug) : '/properties/' + property.slug %>" class="property-card-link">
+            <div class="img-wrap" <%= priceText ? `data-price="${priceText}"` : '' %>>
+              <img src="<%= photoUrl %>" alt="<%= property.title %>" loading="lazy" decoding="async" onerror="this.src='/img/property-placeholder.jpg'">
+            </div>
+            <div class="meta">
+              <div class="title"><%= property.title %></div>
+              <% if (priceText) { %><div class="price"><%= priceText %></div><% } %>
+              <div class="location">
+                <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                <%= property.neighborhood || property.city %>, <%= property.country %>
+              </div>
+              <div class="features-row">
+                <% if (size) { %><div class="feature"><span class="icon icon-16 icon-inline icon-mask icon-size"></span><span><%= size %></span></div><% } %>
+                <% if (beds !== null) { %><div class="feature"><span class="icon icon-16 icon-inline icon-mask icon-bed"></span><span><%= beds %> Zimmer</span></div><% } %>
+                <% if (baths !== null) { %><div class="feature"><span class="icon icon-16 icon-inline icon-mask icon-bath"></span><span><%= baths %> Bad<%= Number(baths) === 1 ? '' : 'er' %></span></div><% } %>
+              </div>
+              <span class="learn-more">Details ansehen →</span>
+            </div>
+          </a>
+        </article>
+      <% }); %>
+    </div>
+    <% if (!recommendedProperties || recommendedProperties.length === 0) { %>
+      <p class="section-empty">Aktuell sind keine Objekte für Friedrichshain-Kreuzberg verfügbar.</p>
+    <% } else { %>
+      <p class="section-cta">
+        <a href="<%= (typeof localePath === 'function') ? localePath('/properties/for-sale/germany/berlin') : '/properties/for-sale/germany/berlin' %>?neighborhood=Friedrichshain-Kreuzberg" class="btn btn-primary">Alle Angebote in Friedrichshain-Kreuzberg ansehen</a>
+      </p>
+    <% } %>
+  </section>
+
+  <% if (friedrichshainKreuzbergProjects && friedrichshainKreuzbergProjects.length > 0) { %>
+    <section class="section featured berlin-featured" aria-labelledby="fk-projects-heading">
+      <h2 id="fk-projects-heading" class="berlin-featured__title"><%= districtContent.sectionTitleProjects %></h2>
+      <div class="berlin-featured__grid">
+        <% (friedrichshainKreuzbergProjects || []).forEach(project => { %>
+          <%
+            const photoUrl = (project.photos && project.photos[0]) ? project.photos[0] : '/img/project-placeholder.jpg';
+            const fromPrice = project.min_price && Number(project.min_price) > 0 ? '€' + Number(project.min_price).toLocaleString('de-DE') : '';
+            const completionYear = project.completion_date ? new Date(project.completion_date).getFullYear() : null;
+          %>
+          <article class="property-card">
+            <a href="<%= (typeof localePath === 'function') ? localePath('/projects/' + project.slug) : '/projects/' + project.slug %>" class="property-card-link">
+              <div class="img-wrap" <%= fromPrice ? `data-price="Ab ${fromPrice}"` : '' %>>
+                <img src="<%= photoUrl %>" alt="<%= project.title %>" loading="lazy" decoding="async" onerror="this.src='/img/project-placeholder.jpg'">
+              </div>
+              <div class="meta">
+                <div class="title"><%= project.title %></div>
+                <% if (fromPrice) { %><div class="price">Ab <%= fromPrice %></div><% } %>
+                <div class="location">
+                  <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                  <%= project.neighborhood || project.city %>, <%= project.country %>
+                </div>
+                <div class="features-row">
+                  <% if (project.total_units) { %><div class="feature"><span class="icon icon-16 icon-inline icon-mask icon-size"></span><span><%= project.total_units %> Einheiten</span></div><% } %>
+                  <% if (completionYear) { %><div class="feature"><span class="icon icon-16 icon-inline icon-mask icon-bath"></span><span>Fertigstellung <%= completionYear %></span></div><% } %>
+                </div>
+                <span class="learn-more">Projekt ansehen →</span>
+              </div>
+            </a>
+          </article>
+        <% }); %>
+      </div>
+      <p class="section-cta">
+        <a href="<%= ((typeof localePath === 'function') ? localePath('/projects') : '/projects') %>?country=Germany&city=Berlin&neighborhood=Friedrichshain-Kreuzberg" class="btn btn-primary">Alle Projekte in Friedrichshain-Kreuzberg ansehen</a>
+      </p>
+    </section>
+  <% } %>
+
+  <section class="berlin-content section berlin-why-invest" aria-labelledby="fk-why-heading">
+    <div class="berlin-content__inner">
+      <h2 id="fk-why-heading" class="berlin-content__title"><%= districtContent.sectionTitleWhy %></h2>
+      <div class="berlin-content__body">
+        <p><%= districtContent.whyP1 %></p>
+        <p><%= districtContent.whyP2 %></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="berlin-content section berlin-best-areas" aria-labelledby="fk-micro-heading">
+    <div class="berlin-content__inner">
+      <h2 id="fk-micro-heading" class="berlin-content__title"><%= districtContent.sectionTitleMicro %></h2>
+      <ul class="berlin-areas__list">
+        <% (districtContent.microAreas || []).forEach(function(item){ %>
+          <li class="berlin-areas__item"><%= item %></li>
+        <% }); %>
+      </ul>
+    </div>
+  </section>
+
+  <section class="berlin-faq section" aria-labelledby="fk-faq-heading">
+    <h2 id="fk-faq-heading" class="berlin-faq__title"><%= districtContent.sectionTitleFaq %></h2>
+    <div class="berlin-faq__list">
+      <% (districtContent.faq || []).forEach(function(item, idx){ %>
+        <% const qId = `fk-faq-q${idx + 1}`; %>
+        <% const aId = `fk-faq-a${idx + 1}`; %>
+        <article class="berlin-faq__item">
+          <h3 class="berlin-faq__question">
+            <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="<%= aId %>" id="<%= qId %>" data-faq-toggle>
+              <%= item.q %>
+            </button>
+          </h3>
+          <div class="berlin-faq__answer" id="<%= aId %>" role="region" aria-labelledby="<%= qId %>" hidden>
+            <p><%= item.a %></p>
+          </div>
+        </article>
+      <% }); %>
+    </div>
+  </section>
+</div>
+
+<script>
+document.querySelectorAll('[data-faq-toggle]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var expanded = this.getAttribute('aria-expanded') === 'true';
+    var targetId = this.getAttribute('aria-controls');
+    var target = targetId ? document.getElementById(targetId) : null;
+    this.setAttribute('aria-expanded', !expanded);
+    if (target) target.hidden = expanded;
+  });
+});
+
+(function() {
+  var locationsEl = document.getElementById('locations-data');
+  var neighborhoodCounts = {};
+  if (locationsEl && typeof window !== 'undefined') {
+    try { window.locations = JSON.parse(locationsEl.getAttribute('data-locations') || '{}'); } catch (e) {}
+    try { neighborhoodCounts = JSON.parse(locationsEl.getAttribute('data-neighborhood-counts') || '{}'); } catch (e) { neighborhoodCounts = {}; }
+  }
+  var countrySelect = document.getElementById('country');
+  var citySelect = document.getElementById('city');
+  var neighborhoodSelect = document.getElementById('neighborhood');
+  var defaultNeighborhood = 'Friedrichshain-Kreuzberg';
+  if (countrySelect && citySelect && neighborhoodSelect && window.locations) {
+    countrySelect.addEventListener('change', function() {
+      var country = this.value;
+      citySelect.innerHTML = '<option value="">Stadt</option>';
+      neighborhoodSelect.innerHTML = '<option value="">Stadtteil</option>';
+      neighborhoodSelect.disabled = true;
+      if (country && window.locations[country]) {
+        Object.keys(window.locations[country]).forEach(function(ct) {
+          var opt = document.createElement('option');
+          opt.value = ct;
+          opt.textContent = ct;
+          citySelect.appendChild(opt);
+        });
+        citySelect.disabled = false;
+      } else citySelect.disabled = true;
+    });
+    citySelect.addEventListener('change', function() {
+      var country = countrySelect.value;
+      var city = this.value;
+      neighborhoodSelect.innerHTML = '<option value="">Stadtteil</option>';
+      if (country && city && window.locations[country] && window.locations[country][city]) {
+        var neighborhoods = window.locations[country][city];
+        neighborhoods.forEach(function(n) {
+          var count = Number((neighborhoodCounts[country] && neighborhoodCounts[country][city] && neighborhoodCounts[country][city][n]) || 0) || 0;
+          var opt = document.createElement('option');
+          opt.value = n;
+          opt.textContent = n + ' (' + count + ')';
+          neighborhoodSelect.appendChild(opt);
+        });
+        neighborhoodSelect.disabled = false;
+        if (neighborhoods.indexOf(defaultNeighborhood) !== -1) neighborhoodSelect.value = defaultNeighborhood;
+      } else neighborhoodSelect.disabled = true;
+    });
+    countrySelect.value = 'Germany';
+    citySelect.value = 'Berlin';
+    citySelect.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+})();
+</script>

@@ -22,11 +22,23 @@ Tracks page-level keyword targeting by language, including estimated search volu
 | wohnung berlin zu verkaufen | 320 | 30 | Secondary |
 | wohnungen zu verkaufen berlin | 320 | 31 | Secondary |
 
+## German (`de`) - Charlottenburg District Landing Page
+
+- **Page:** `/de/wohnung-kaufen-charlottenburg`
+- **Template:** `views/properties-charlottenburg-de.ejs`
+- **Intent:** Transactional (buy apartment/property in Charlottenburg, Berlin)
+- **Status:** Live (initial optimization complete)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| wohnung kaufen charlottenburg | 720 | 26 | Primary |
+| eigentumswohnung charlottenburg | n/a | n/a | Secondary |
+| immobilie charlottenburg kaufen | n/a | n/a | Secondary |
+
 ### Reserved for future neighborhood pages (not Berlin hub primary target)
 
 | Keyword | Search Volume | SEO Difficulty | Notes |
 |---|---:|---:|---|
-| wohnung kaufen charlottenburg | 720 | 26 | Future dedicated district page |
 | wohnungen kaufen berlin mitte | 720 | 18 | Future dedicated district page |
 | wohnung kaufen spandau | 590 | 21 | Future dedicated district page |
 | wohnung kaufen zehlendorf | 390 | 20 | Future dedicated district page (if inventory supports it) |

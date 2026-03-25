@@ -3953,3 +3953,325 @@ exports.charlottenburgPropertiesPageDe = async (req, res, next) => {
     next(err);
   }
 };
+
+// German district landing page: Moabit (Berlin)
+exports.moabitPropertiesPageDe = async (req, res, next) => {
+  try {
+    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
+    const districtPattern = '%moabit%';
+    const propertiesSql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.created_at,
+        p.description,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name,
+        u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 30
+    `;
+    const projectsSql = `
+      SELECT
+        p.id,
+        p.slug,
+        p.title,
+        p.title_i18n,
+        p.description,
+        p.description_i18n,
+        p.country,
+        p.city,
+        p.neighborhood,
+        p.photos,
+        p.min_price,
+        p.max_price,
+        p.total_units,
+        p.completion_date,
+        p.created_at
+      FROM projects p
+      WHERE p.status = 'active'
+        AND p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+      ORDER BY p.created_at DESC
+      LIMIT 9
+    `;
+
+    const [{ rows: properties }, { rows: projects }] = await Promise.all([
+      query(propertiesSql, [districtPattern]),
+      query(projectsSql, [districtPattern])
+    ]);
+
+    const lang = 'de';
+    const recommendedProperties = (properties || []).map((p) => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: getLocalizedTitle(p, lang),
+        description: (p.description_i18n && p.description_i18n[lang]) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+
+    const moabitProjects = (projects || []).map((project) => {
+      const photos = Array.isArray(project.photos) ? project.photos : (project.photos ? [project.photos] : []);
+      const normalizedPhotos = photos.map((ph) => {
+        if (!ph) return ph;
+        const phStr = String(ph);
+        if (phStr.startsWith('/uploads/') || phStr.startsWith('http')) return phStr;
+        return `/uploads/projects/${project.id}/${phStr}`;
+      });
+      const titleI18n = project.title_i18n && typeof project.title_i18n === 'object' ? project.title_i18n : null;
+      const descriptionI18n = project.description_i18n && typeof project.description_i18n === 'object' ? project.description_i18n : null;
+      return {
+        ...project,
+        title: (titleI18n && (titleI18n[lang] || titleI18n.en)) || project.title,
+        description: (descriptionI18n && (descriptionI18n[lang] || descriptionI18n.en)) || project.description,
+        photos: normalizedPhotos,
+        slug: project.slug || `project-${project.id}`
+      };
+    });
+
+    const baseUrl = res.locals.baseUrl;
+    const districtUrls = {
+      en: `${baseUrl}/properties-for-sale-berlin`,
+      de: `${baseUrl}/de/wohnung-kaufen-moabit`,
+      es: `${baseUrl}/es/propiedades-en-venta-berlin`
+    };
+    const canonicalUrl = districtUrls.de;
+    const hreflangAlternates = {
+      'en-us': districtUrls.en,
+      'de-de': districtUrls.de,
+      'es-es': districtUrls.es
+    };
+    const pageMetaDescription = 'Wohnung kaufen Moabit: Entdecken Sie ausgewählte Eigentumswohnungen in Moabit mit Lage-Insights, aktuellen Angeboten und persönlicher Beratung von Sweet Home.';
+    const pageTitle = 'Wohnung kaufen Moabit: Eigentumswohnungen in Berlin';
+    const districtContent = {
+      heroTitle: 'Wohnung kaufen Moabit',
+      heroDescription: 'Moabit entwickelt sich dynamisch und verbindet zentrale Lage, urbane Vielfalt und attraktive Wohnquartiere. Der Teilmarkt ist besonders interessant für Käufer, die Berlin-Mitte-Nähe mit Preis-Leistungs-Potenzial suchen.',
+      sectionTitleProperties: 'Eigentumswohnungen in Moabit',
+      sectionTitleProjects: 'Neubauprojekte in Moabit',
+      sectionTitleWhy: 'Warum Moabit als Wohn- und Investmentstandort überzeugt',
+      whyP1: 'Moabit profitiert von seiner Lage zwischen Mitte, Tiergarten und Hauptbahnhof. Die Mischung aus gewachsenen Kiezen, Wasserlagen und laufender Quartiersentwicklung sorgt für hohe Nachfrage bei Eigennutzern und Kapitalanlegern.',
+      whyP2: 'Durch die zentrale Anbindung und die zunehmende Aufwertung einzelner Mikrolagen bietet Moabit Chancen auf stabile Vermietbarkeit und langfristige Wertentwicklung. Besonders gefragte Segmente sind gut geschnittene Altbau- und modernisierte Bestandswohnungen.',
+      sectionTitleMicro: 'Gefragte Mikrolagen in Moabit',
+      microAreas: [
+        'Arminiusmarkthalle & Stephankiez – urbanes Kiezleben mit hoher Wohnnachfrage.',
+        'Spree- und Kanalnähe – attraktive Wohnlagen mit guter Aufenthaltsqualität.',
+        'Umfeld Hauptbahnhof – stark angebunden, beliebt bei Berufspendlern und internationalen Käufern.',
+        'Beusselkiez – gewachsener Bestand mit Entwicklungspotenzial.'
+      ],
+      sectionTitleFaq: 'Häufige Fragen zu Wohnungen in Moabit',
+      faq: [
+        {
+          q: 'Ist Moabit eher ein aufstrebender oder bereits etablierter Teilmarkt?',
+          a: 'Moabit gilt als etablierter, aber weiterhin dynamischer Teilmarkt. In vielen Mikrolagen ist die Nachfrage konstant hoch, während einzelne Quartiere noch zusätzliches Aufwertungspotenzial bieten.'
+        },
+        {
+          q: 'Für welche Käuferprofile ist Moabit besonders geeignet?',
+          a: 'Moabit ist attraktiv für Eigennutzer mit Wunsch nach zentraler Lage sowie für Kapitalanleger, die auf stabile Vermietbarkeit und gute Verkehrsanbindung setzen.'
+        },
+        {
+          q: 'Wie ist die Mikrolagen-Struktur in Moabit zu bewerten?',
+          a: 'Es gibt deutliche Unterschiede zwischen ruhigen Wohnstraßen, wassergeprägten Lagen und stärker frequentierten Achsen. Eine differenzierte Objekt- und Lagenprüfung ist deshalb entscheidend.'
+        },
+        {
+          q: 'Wie unterstützt Sweet Home beim Kauf in Moabit?',
+          a: 'Wir begleiten die Auswahl passender Objekte, ordnen Preisniveaus und Mikrolagen ein, verhandeln mit Verkäufern und begleiten den Prozess bis zum Abschluss.'
+        }
+      ]
+    };
+
+    res.render('properties-moabit-de', {
+      title: pageTitle,
+      useMainContainer: false,
+      useHomeHeader: true,
+      headPartial: '../partials/seo/moabit-properties-head',
+      canonicalUrl,
+      hreflangAlternates,
+      pageMetaDescription,
+      districtContent,
+      locations,
+      neighborhoodCounts,
+      recommendedProperties,
+      moabitProjects,
+      baseUrl: res.locals.baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// German district landing page: Friedrichshain-Kreuzberg (Berlin)
+exports.friedrichshainKreuzbergPropertiesPageDe = async (req, res, next) => {
+  try {
+    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
+    const districtPattern = '%friedrichshain-kreuzberg%';
+    const propertiesSql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.created_at,
+        p.description,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name,
+        u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 30
+    `;
+    const projectsSql = `
+      SELECT
+        p.id,
+        p.slug,
+        p.title,
+        p.title_i18n,
+        p.description,
+        p.description_i18n,
+        p.country,
+        p.city,
+        p.neighborhood,
+        p.photos,
+        p.min_price,
+        p.max_price,
+        p.total_units,
+        p.completion_date,
+        p.created_at
+      FROM projects p
+      WHERE p.status = 'active'
+        AND p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+      ORDER BY p.created_at DESC
+      LIMIT 9
+    `;
+
+    const [{ rows: properties }, { rows: projects }] = await Promise.all([
+      query(propertiesSql, [districtPattern]),
+      query(projectsSql, [districtPattern])
+    ]);
+
+    const lang = 'de';
+    const recommendedProperties = (properties || []).map((p) => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: getLocalizedTitle(p, lang),
+        description: (p.description_i18n && p.description_i18n[lang]) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+
+    const friedrichshainKreuzbergProjects = (projects || []).map((project) => {
+      const photos = Array.isArray(project.photos) ? project.photos : (project.photos ? [project.photos] : []);
+      const normalizedPhotos = photos.map((ph) => {
+        if (!ph) return ph;
+        const phStr = String(ph);
+        if (phStr.startsWith('/uploads/') || phStr.startsWith('http')) return phStr;
+        return `/uploads/projects/${project.id}/${phStr}`;
+      });
+      const titleI18n = project.title_i18n && typeof project.title_i18n === 'object' ? project.title_i18n : null;
+      const descriptionI18n = project.description_i18n && typeof project.description_i18n === 'object' ? project.description_i18n : null;
+      return {
+        ...project,
+        title: (titleI18n && (titleI18n[lang] || titleI18n.en)) || project.title,
+        description: (descriptionI18n && (descriptionI18n[lang] || descriptionI18n.en)) || project.description,
+        photos: normalizedPhotos,
+        slug: project.slug || `project-${project.id}`
+      };
+    });
+
+    const baseUrl = res.locals.baseUrl;
+    const districtUrls = {
+      en: `${baseUrl}/properties-for-sale-berlin`,
+      de: `${baseUrl}/de/wohnung-kaufen-friedrichshain-kreuzberg`,
+      es: `${baseUrl}/es/propiedades-en-venta-berlin`
+    };
+    const canonicalUrl = districtUrls.de;
+    const hreflangAlternates = {
+      'en-us': districtUrls.en,
+      'de-de': districtUrls.de,
+      'es-es': districtUrls.es
+    };
+    const pageMetaDescription = 'Wohnung kaufen Friedrichshain-Kreuzberg: Finden Sie ausgewählte Eigentumswohnungen in einem der gefragtesten Berliner Bezirke – mit Markt-Insights und persönlicher Beratung.';
+    const pageTitle = 'Wohnung kaufen Friedrichshain-Kreuzberg: Eigentumswohnungen in Berlin';
+    const districtContent = {
+      heroTitle: 'Wohnung kaufen Friedrichshain-Kreuzberg',
+      heroDescription: 'Friedrichshain-Kreuzberg zählt zu den nachfragestärksten Wohnmärkten Berlins. Der Bezirk verbindet urbanen Lifestyle, kreative Quartiere und starke Mikrostandorte mit hoher Kauf- und Mietdynamik.',
+      sectionTitleProperties: 'Eigentumswohnungen in Friedrichshain-Kreuzberg',
+      sectionTitleProjects: 'Neubauprojekte in Friedrichshain-Kreuzberg',
+      sectionTitleWhy: 'Warum Friedrichshain-Kreuzberg für Käufer besonders attraktiv ist',
+      whyP1: 'Der Bezirk profitiert von seiner zentralen Lage, starken Kiezidentität und anhaltenden Nachfrage bei nationalen und internationalen Käufern. Viele Teilmärkte zeigen eine stabile Preisbereitschaft trotz begrenztem Angebot.',
+      whyP2: 'Für Eigennutzer bietet Friedrichshain-Kreuzberg hohe Lebensqualität und kurze Wege. Für Investoren sind die langfristige Vermietbarkeit, die urbane Anziehungskraft und die hohe Liquidität zentrale Pluspunkte.',
+      sectionTitleMicro: 'Gefragte Mikrolagen in Friedrichshain-Kreuzberg',
+      microAreas: [
+        'Bergmannkiez – etablierte Wohnlage mit hoher Nachfrage und starker Kiezstruktur.',
+        'Wrangelkiez & Spreeumfeld – urbane Lage mit internationaler Strahlkraft.',
+        'Samariterkiez – beliebter Friedrichshainer Wohnbereich mit guter Infrastruktur.',
+        'Ostkreuz-Umfeld – dynamische Entwicklung und sehr gute Anbindung.'
+      ],
+      sectionTitleFaq: 'Häufige Fragen zu Wohnungen in Friedrichshain-Kreuzberg',
+      faq: [
+        {
+          q: 'Ist Friedrichshain-Kreuzberg für Eigennutzer geeignet?',
+          a: 'Ja. Der Bezirk bietet ein urbanes Wohnumfeld, starke Nahversorgung und sehr gute Verkehrsanbindung. Besonders gefragt sind gut geschnittene Wohnungen in etablierten Kiezen.'
+        },
+        {
+          q: 'Wie attraktiv ist der Bezirk für Kapitalanleger?',
+          a: 'Friedrichshain-Kreuzberg gilt als sehr liquider Teilmarkt mit stabiler Nachfrage. Für Kapitalanleger sind Vermietbarkeit, Standortimage und langfristige Werthaltigkeit besonders relevant.'
+        },
+        {
+          q: 'Gibt es große Preisunterschiede innerhalb des Bezirks?',
+          a: 'Ja, deutlich. Zwischen einzelnen Mikrolagen bestehen teils erhebliche Unterschiede bei Preisniveau, Nachfrage und Käuferstruktur. Eine genaue Lageanalyse ist essenziell.'
+        },
+        {
+          q: 'Wie unterstützt Sweet Home beim Kauf im Bezirk?',
+          a: 'Wir unterstützen bei Objektselektion, Preis- und Lagenbewertung, Besichtigungskoordination, Verhandlung und begleiten Sie bis zum erfolgreichen Abschluss.'
+        }
+      ]
+    };
+
+    res.render('properties-friedrichshain-kreuzberg-de', {
+      title: pageTitle,
+      useMainContainer: false,
+      useHomeHeader: true,
+      headPartial: '../partials/seo/friedrichshain-kreuzberg-properties-head',
+      canonicalUrl,
+      hreflangAlternates,
+      pageMetaDescription,
+      districtContent,
+      locations,
+      neighborhoodCounts,
+      recommendedProperties,
+      friedrichshainKreuzbergProjects,
+      baseUrl: res.locals.baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+};
