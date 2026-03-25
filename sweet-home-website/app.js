@@ -1445,6 +1445,16 @@ app.get('/sitemap.xml', async (req, res, next) => {
     staticUrls.push({ loc: `${base}/es`, lastmod: null, changefreq: 'daily', priority: '1.0' });
     staticUrls.push({ loc: `${base}/de/blog`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/es/blog`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    // Core city landing pages (all languages)
+    staticUrls.push({ loc: `${base}/properties-for-sale-berlin`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/de/wohnungen-berlin-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/es/propiedades-en-venta-berlin`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/properties-for-sale-dubai`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/de/immobilien-dubai-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/es/propiedades-en-venta-dubai`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/properties-for-sale-cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/de/immobilien-zypern-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/es/propiedades-en-venta-chipre`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     // Clean SEO property search URLs (country + city)
     staticUrls.push({ loc: `${base}/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
