@@ -123,8 +123,8 @@ exports.listPropertiesPublic = async (req, res, next) => {
     const {
       q = '', // search query
       operation = '',
-      country = '',
-      city = '',
+      country: queryCountry = '',
+      city: queryCity = '',
       neighborhood = '',
       type = [],
       min_price = '',
@@ -143,17 +143,39 @@ exports.listPropertiesPublic = async (req, res, next) => {
       page = 1
     } = req.query;
 
+    // Fallback to clean URL params when query params are absent.
+    // Example: /properties/for-sale/uae should behave as country=UAE.
+    let country = queryCountry;
+    let city = queryCity;
+    if (!country && req.params && req.params.countrySlug) {
+      country = resolveCountryBySlug(req.params.countrySlug) || '';
+    }
+    if (!city && req.params && req.params.citySlug && country) {
+      city = resolveCityBySlug(country, req.params.citySlug) || '';
+    }
+
     const parsedPage = Number.parseInt(page, 10);
     const currentPage = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
     const normalizedSort = String(sort || '').trim().toLowerCase() || 'relevance';
     const operationMode = getOperationValue(operation);
+    // Source country/city from clean URL params when present.
+    let selectedCountry = country;
+    let selectedCity = city;
+    if (req.params && req.params.countrySlug) {
+      const countryFromSlug = resolveCountryBySlug(req.params.countrySlug);
+      if (countryFromSlug) selectedCountry = countryFromSlug;
+    }
+    if (req.params && req.params.citySlug) {
+      const cityFromSlug = resolveCityBySlug(selectedCountry, req.params.citySlug);
+      if (cityFromSlug) selectedCity = cityFromSlug;
+    }
 
     // Redirect clean indexable location queries to stable SEO paths.
     const queryEntries = nonEmptyQueryEntries(req.query);
     const queryKeys = new Set(queryEntries.map(([key]) => key));
     const allowedRedirectKeys = new Set(['country', 'city', 'operation', 'page', 'sort']);
     const hasDisallowedRedirectKeys = Array.from(queryKeys).some((key) => !allowedRedirectKeys.has(key));
-    const hasLocationInQuery = String(country || '').trim() !== '';
+    const hasLocationInQuery = String(selectedCountry || '').trim() !== '';
     const routeIsBaseResults = String(req.path || '') === '/';
     const canRedirectToCleanPath = routeIsBaseResults
       && hasLocationInQuery
@@ -161,7 +183,7 @@ exports.listPropertiesPublic = async (req, res, next) => {
       && (normalizedSort === 'relevance');
 
     if (canRedirectToCleanPath) {
-      const redirectPath = buildLocationSearchPath(req, country, city);
+      const redirectPath = buildLocationSearchPath(req, selectedCountry, selectedCity);
       const redirectParams = new URLSearchParams();
       if (operationMode) redirectParams.set('operation', operationMode);
       if (currentPage > 1) redirectParams.set('page', String(currentPage));
@@ -191,14 +213,14 @@ exports.listPropertiesPublic = async (req, res, next) => {
     }
 
     // Location filters
-    if (country) {
+    if (selectedCountry) {
       whereConditions.push(`p.country = $${paramIndex}`);
-      queryParams.push(country);
+      queryParams.push(selectedCountry);
       paramIndex++;
     }
-    if (city) {
+    if (selectedCity) {
       whereConditions.push(`p.city = $${paramIndex}`);
-      queryParams.push(city);
+      queryParams.push(selectedCity);
       paramIndex++;
     }
     if (neighborhood) {
@@ -457,8 +479,8 @@ exports.listPropertiesPublic = async (req, res, next) => {
 
     // Prepare filters object for the view
     const filters = {
-      country,
-      city,
+      country: selectedCountry,
+      city: selectedCity,
       neighborhood,
       type: Array.isArray(type) ? type : (type ? [type] : []),
       min_price,
@@ -481,22 +503,22 @@ exports.listPropertiesPublic = async (req, res, next) => {
     const translateLocation = typeof res.locals.translateLocation === 'function'
       ? res.locals.translateLocation
       : (_kind, value) => value;
-    const displayCountry = country ? translateLocation('country', country) : '';
-    const displayCity = city ? translateLocation('city', city) : '';
+    const displayCountry = selectedCountry ? translateLocation('country', selectedCountry) : '';
+    const displayCity = selectedCity ? translateLocation('city', selectedCity) : '';
     const queryPath = getCurrentListPath(req);
-    const locationPath = buildLocationSearchPath(req, country, city);
+    const locationPath = buildLocationSearchPath(req, selectedCountry, selectedCity);
 
     const indexableKeys = new Set(['country', 'city', 'operation', 'page', 'sort']);
     const hasDisallowedIndexKeys = Array.from(queryKeys).some((key) => !indexableKeys.has(key));
     const hasOnlyLocationAndPagination = !hasDisallowedIndexKeys && normalizedSort === 'relevance';
-    const hasValidLocationHierarchy = !city || !!country;
+    const hasValidLocationHierarchy = !selectedCity || !!selectedCountry;
     const isIndexable = hasValidLocationHierarchy
       && hasOnlyLocationAndPagination
       && !q
       && totalProperties > 0;
     const robotsMeta = isIndexable ? 'index,follow' : 'noindex,follow';
 
-    const canonicalPath = country ? locationPath : getPropertiesBasePath(req);
+    const canonicalPath = selectedCountry ? locationPath : getPropertiesBasePath(req);
     const canonicalQuery = new URLSearchParams();
     if (isIndexable && currentPage > 1) canonicalQuery.set('page', String(currentPage));
     if (isIndexable && operationMode) canonicalQuery.set('operation', operationMode);
