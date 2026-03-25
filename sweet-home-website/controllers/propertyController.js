@@ -14,6 +14,7 @@ const { detectLanguageFromFields, getTargetLanguages } = require('../utils/langu
 const { ensureCompleteTranslations } = require('../utils/translationHelper');
 const { generateSEOFileName } = require('../utils/imageNaming');
 const { logEvent } = require('../utils/analytics');
+const { getNeighborhoodCountMap } = require('../utils/neighborhoodCounts');
 
 function normalizeSlug(value) {
   return slugify(String(value || ''), { lower: true, strict: true, locale: 'en' });
@@ -591,9 +592,12 @@ exports.listPropertiesPublic = async (req, res, next) => {
       ? `${baseUrl}${buildPageUrl(pagePathForPagination, queryForPagination, currentPage + 1)}`
       : null;
 
+    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
+
     res.render('properties/property-list', {
       properties: normalizedProperties,
       locations,
+      neighborhoodCounts,
       locationColors,
       filters,
       query: q,
@@ -2843,6 +2847,7 @@ exports.getFeaturedProperties = async (req, res, next) => {
 // Berlin landing page: Properties for Sale Berlin (most-viewed in Germany)
 exports.berlinPropertiesPage = async (req, res, next) => {
   try {
+    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
     const propertiesSql = `
       SELECT
         p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
@@ -3216,6 +3221,7 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       berlinContent,
       berlinNeighborhoods,
       locations,
+      neighborhoodCounts,
       recommendedProperties,
       berlinProjects,
       baseUrl: res.locals.baseUrl
@@ -3228,6 +3234,7 @@ exports.berlinPropertiesPage = async (req, res, next) => {
 // Dubai landing page: Properties for Sale Dubai (9 most-viewed in UAE)
 exports.dubaiPropertiesPage = async (req, res, next) => {
   try {
+    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
     const propertiesSql = `
       SELECT
         p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
@@ -3486,6 +3493,7 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
       dubaiContent,
       dubaiNeighborhoods,
       locations,
+      neighborhoodCounts,
       recommendedProperties,
       dubaiProjects,
       baseUrl: res.locals.baseUrl
@@ -3498,6 +3506,7 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
 // Cyprus landing page: Properties for Sale Cyprus (9 most-viewed in Cyprus)
 exports.cyprusPropertiesPage = async (req, res, next) => {
   try {
+    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
     const propertiesSql = `
       SELECT
         p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
@@ -3746,6 +3755,7 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
       cyprusContent,
       paphosNeighborhoods,
       locations,
+      neighborhoodCounts,
       recommendedProperties,
       cyprusProjects,
       baseUrl: res.locals.baseUrl

@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/css/home.css" />
 <link rel="stylesheet" href="/css/berlin-landing.min.css?v=20260325-3" />
 
-<div id="locations-data" data-locations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locations) : JSON.stringify(locations)).replace(/'/g, '&#39;') %>' style="display:none"></div>
+<div id="locations-data" data-locations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locations) : JSON.stringify(locations)).replace(/'/g, '&#39;') %>' data-neighborhood-counts='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(typeof neighborhoodCounts !== 'undefined' && neighborhoodCounts ? neighborhoodCounts : {}) : JSON.stringify(typeof neighborhoodCounts !== 'undefined' && neighborhoodCounts ? neighborhoodCounts : {})).replace(/'/g, '&#39;') %>' style="display:none"></div>
 
 <div class="berlin-landing-page">
   <!-- 1) Hero: title, description, CTA -->
@@ -379,10 +379,14 @@ document.querySelectorAll('[data-neighborhood-card]').forEach(function(card) {
 
 (function() {
   var locationsEl = document.getElementById('locations-data');
+  var neighborhoodCounts = {};
   if (locationsEl && typeof window !== 'undefined') {
     try {
       window.locations = JSON.parse(locationsEl.getAttribute('data-locations') || '{}');
     } catch (e) {}
+    try {
+      neighborhoodCounts = JSON.parse(locationsEl.getAttribute('data-neighborhood-counts') || '{}');
+    } catch (e) { neighborhoodCounts = {}; }
   }
   var countrySelect = document.getElementById('country');
   var citySelect = document.getElementById('city');
@@ -414,9 +418,10 @@ document.querySelectorAll('[data-neighborhood-card]').forEach(function(card) {
         var neighborhoods = window.locations[country][city];
         if (Array.isArray(neighborhoods) && neighborhoods.length > 0) {
           neighborhoods.forEach(function(n) {
+            var count = Number((neighborhoodCounts[country] && neighborhoodCounts[country][city] && neighborhoodCounts[country][city][n]) || 0) || 0;
             var opt = document.createElement('option');
             opt.value = n;
-            opt.textContent = n;
+            opt.textContent = n + ' (' + count + ')';
             neighborhoodSelect.appendChild(opt);
           });
           neighborhoodSelect.disabled = false;

@@ -33,6 +33,7 @@ const i18nMiddleware = require('./config/i18n');
 const { logEvent }   = require('./utils/analytics');
 const iconThemes     = require('./config/iconThemes');
 const { initializeGeolocation } = require('./utils/geolocation');
+const { getNeighborhoodCountMap } = require('./utils/neighborhoodCounts');
 
 // Sentry removed per request
 
@@ -994,6 +995,7 @@ function setHomePageData(data) {
 async function renderHomePage(req, res, langPath, next) {
   try {
     const lang = (res.locals && res.locals.lang) ? res.locals.lang : (req.cookies && req.cookies.lang) ? req.cookies.lang : 'en';
+    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
 
     let newDevelopmentRows = null;
     let featuredProperties = null;
@@ -1217,6 +1219,7 @@ async function renderHomePage(req, res, langPath, next) {
       title: pageTitle,
       user: req.session.user || null,
       locations,
+      neighborhoodCounts,
       newDevelopmentRows,
       homeNeighborhoodGuides,
       featuredProperties,

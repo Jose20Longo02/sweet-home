@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Get locations data from the page
   window.locations = {};
+  window.neighborhoodCounts = {};
   
   // Load locations data from data attribute
   const locationsData = document.getElementById('locations-data');
@@ -29,6 +30,9 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       window.locations = JSON.parse(locationsData.getAttribute('data-locations') || '{}');
     } catch (_) { window.locations = {}; }
+    try {
+      window.neighborhoodCounts = JSON.parse(locationsData.getAttribute('data-neighborhood-counts') || '{}');
+    } catch (_) { window.neighborhoodCounts = {}; }
   }
 
   // Validate locations data structure
@@ -118,6 +122,17 @@ function initializeCityDropdown() {
   const trCity = (c) => (locTr.cities && locTr.cities[c]) || c;
   const anyCityText = hGet('forms.anyCity', 'Any City');
   const anyNeighborhoodText = hGet('forms.anyNeighborhood', 'Any Neighborhood');
+  function getNeighborhoodCount(country, city, neighborhood) {
+    try {
+      const value = window.neighborhoodCounts
+        && window.neighborhoodCounts[country]
+        && window.neighborhoodCounts[country][city]
+        && window.neighborhoodCounts[country][city][neighborhood];
+      return Number.isFinite(Number(value)) ? Number(value) : 0;
+    } catch (_) {
+      return 0;
+    }
+  }
   
   // Keep default as "Any country"; do not auto-select the first country
   
@@ -165,8 +180,9 @@ function initializeCityDropdown() {
       // Populate neighborhoods
       neighborhoods.forEach(neighborhood => {
         const option = document.createElement('option');
+        const count = getNeighborhoodCount(selectedCountry, selectedCity, neighborhood);
         option.value = neighborhood;
-        option.textContent = neighborhood;
+        option.textContent = `${neighborhood} (${count})`;
         neighborhoodSelect.appendChild(option);
       });
       neighborhoodSelect.disabled = false;

@@ -26,6 +26,7 @@ let propertiesData = [];
 // Locations data for dynamic city population
 let LOCATIONS = {};
 let LOCATION_COLORS = {};
+let NEIGHBORHOOD_COUNTS = {};
 
 // Get locale prefix for links (preserves Spanish/German when navigating)
 function getLocalePrefix() {
@@ -148,7 +149,7 @@ function updateNeighborhoods() {
   console.log('🏙️ Updating neighborhoods for city:', selectedCity, 'in country:', selectedCountry);
   
   // Clear existing neighborhood options
-  neighborhoodSelect.innerHTML = '<option value="">Any Neighborhood</option>';
+  neighborhoodSelect.innerHTML = `<option value="">${i18nGet('forms.anyNeighborhood','Any Neighborhood')}</option>`;
   
   if (selectedCountry && selectedCity && LOCATIONS[selectedCountry] && LOCATIONS[selectedCountry][selectedCity]) {
     // Add neighborhoods for selected city
@@ -156,9 +157,14 @@ function updateNeighborhoods() {
     console.log('🏘️ Found neighborhoods:', neighborhoods);
     
     neighborhoods.forEach(neighborhood => {
+      const count = Number(
+        (NEIGHBORHOOD_COUNTS[selectedCountry]
+          && NEIGHBORHOOD_COUNTS[selectedCountry][selectedCity]
+          && NEIGHBORHOOD_COUNTS[selectedCountry][selectedCity][neighborhood]) || 0
+      ) || 0;
       const option = document.createElement('option');
       option.value = neighborhood;
-      option.textContent = neighborhood;
+      option.textContent = `${neighborhood} (${count})`;
       neighborhoodSelect.appendChild(option);
     });
     neighborhoodSelect.disabled = false;
@@ -998,9 +1004,16 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('Raw data:', locationsData.getAttribute('data-locations'));
       LOCATIONS = {};
     }
+    try {
+      const rawCounts = locationsData.getAttribute('data-neighborhood-counts') || '{}';
+      NEIGHBORHOOD_COUNTS = JSON.parse(rawCounts);
+    } catch (_) {
+      NEIGHBORHOOD_COUNTS = {};
+    }
   } else {
     console.warn('❌ Locations data element not found');
     LOCATIONS = {};
+    NEIGHBORHOOD_COUNTS = {};
   }
 
   // Get location colors data from the page if available
