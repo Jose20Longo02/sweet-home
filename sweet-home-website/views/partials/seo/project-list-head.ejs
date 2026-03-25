@@ -13,6 +13,10 @@
   const country = f.country || '';
   const city = f.city || '';
   const currentPage = typeof currentPage !== 'undefined' ? currentPage : 1;
+  const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+  const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
+    ? ogLocale
+    : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
   let listDesc = 'Browse luxury development projects in Cyprus, Dubai, and Berlin. Find your perfect real estate investment opportunity.';
   if (country && city) {
     listDesc = `Browse luxury development projects in ${city}, ${country}. Find your perfect real estate investment opportunity.`;
@@ -32,7 +36,7 @@
 <meta property="og:description" content="<%= listDesc %>">
 <meta property="og:url" content="<%= projectListUrl %>">
 <meta property="og:site_name" content="Sweet Home">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="<%= pageOgLocale %>">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary">

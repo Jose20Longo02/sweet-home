@@ -169,6 +169,27 @@ exports.listPropertiesPublic = async (req, res, next) => {
       return res.redirect(301, redirectTarget);
     }
 
+    // Normalize duplicate query URLs for crawl efficiency:
+    // - remove page=1
+    // - remove sort=relevance
+    // - normalize operation aliases to sale/rent
+    // - drop empty query params
+    const normalizedParams = cleanQueryParams(req.query);
+    if (operationMode) normalizedParams.set('operation', operationMode);
+    else normalizedParams.delete('operation');
+    if (currentPage > 1) normalizedParams.set('page', String(currentPage));
+    else normalizedParams.delete('page');
+    if (normalizedSort === 'relevance') normalizedParams.delete('sort');
+    else normalizedParams.set('sort', normalizedSort);
+
+    const requestPath = getCurrentListPath(req);
+    const normalizedTarget = normalizedParams.toString() ? `${requestPath}?${normalizedParams.toString()}` : requestPath;
+    const originalQueryString = req.originalUrl.includes('?') ? req.originalUrl.split('?')[1] : '';
+    const originalTarget = originalQueryString ? `${requestPath}?${originalQueryString}` : requestPath;
+    if (normalizedTarget !== originalTarget) {
+      return res.redirect(301, normalizedTarget);
+    }
+
     // Build WHERE clause for filtering
     const whereConditions = [];
     const queryParams = [];

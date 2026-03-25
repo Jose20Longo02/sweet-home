@@ -63,38 +63,21 @@
     /></noscript>
     <!-- End Meta Pixel Code -->
   <% } %>
-  <% if (typeof canonicalUrl !== 'undefined' && canonicalUrl) { 
+  <% if (typeof canonicalUrl !== 'undefined' && canonicalUrl) {
     const canonicalHref = String(canonicalUrl).trim();
-    if (typeof hreflangAlternates !== 'undefined' && hreflangAlternates && typeof hreflangAlternates === 'object') {
-      // URL-based language variants (e.g. home /en, /de, /es): each lang has its own URL
+    const alternates = (typeof hreflangAlternates !== 'undefined' && hreflangAlternates && typeof hreflangAlternates === 'object')
+      ? hreflangAlternates
+      : ((typeof localeAlternateUrls !== 'undefined' && localeAlternateUrls && typeof localeAlternateUrls === 'object')
+          ? localeAlternateUrls
+          : null);
   %>
     <link rel="canonical" href="<%= canonicalHref %>">
-    <% Object.keys(hreflangAlternates).forEach(function(hreflangCode) { %>
-    <link rel="alternate" hreflang="<%= hreflangCode %>" href="<%= hreflangAlternates[hreflangCode] %>">
-    <% }); %>
-    <link rel="alternate" hreflang="x-default" href="<%= hreflangAlternates['en-us'] || canonicalHref %>">
-  <% } else {
-      // Single-URL pages (cookie-based lang): canonical and all hreflang point to same URL
-      const supportedHreflangs = [
-        { lang: 'en', region: 'us' },
-        { lang: 'es', region: 'es' },
-        { lang: 'de', region: 'de' }
-      ];
-      const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
-      const currentHreflang = supportedHreflangs.find(h => h.lang === currentLang) || supportedHreflangs[0];
-      const currentHreflangValue = currentHreflang.lang + '-' + currentHreflang.region;
-  %>
-    <link rel="canonical" href="<%= canonicalHref %>">
-    <link rel="alternate" hreflang="<%= currentHreflangValue %>" href="<%= canonicalHref %>">
-    <% supportedHreflangs.forEach(function(hreflang) { 
-      const hreflangValue = hreflang.lang + '-' + hreflang.region;
-      if (hreflangValue !== currentHreflangValue) {
-    %>
-    <link rel="alternate" hreflang="<%= hreflangValue %>" href="<%= canonicalHref %>">
-    <%   }
-    }); %>
-    <link rel="alternate" hreflang="x-default" href="<%= canonicalHref %>">
-  <% } %>
+    <% if (alternates) { %>
+      <% Object.keys(alternates).forEach(function(hreflangCode) { %>
+    <link rel="alternate" hreflang="<%= hreflangCode %>" href="<%= alternates[hreflangCode] %>">
+      <% }); %>
+    <link rel="alternate" hreflang="x-default" href="<%= alternates['en-us'] || canonicalHref %>">
+    <% } %>
   <% } %>
   <% if ((typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) && !(typeof currentPath !== 'undefined' && (/^\/(admin|superadmin)/).test(currentPath))) { %>
     <meta name="ga-measurement-id" content="<%= GA_MEASUREMENT_ID %>">

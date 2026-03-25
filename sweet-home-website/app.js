@@ -414,6 +414,18 @@ app.use((req, res, next) => {
   }
   // Canonical base URL for all absolute links (canonical, hreflang, sitemap, etc.) - prefers real domain over Render URL
   res.locals.baseUrl = getCanonicalBaseUrl(req);
+  const localeToOg = { en: 'en_US', de: 'de_DE', es: 'es_ES' };
+  res.locals.ogLocale = localeToOg[res.locals.lang] || 'en_US';
+  if (res.locals.localeAlternatePaths && typeof res.locals.localeAlternatePaths === 'object') {
+    const base = res.locals.baseUrl;
+    res.locals.localeAlternateUrls = {
+      'en-us': base + (res.locals.localeAlternatePaths.en || '/'),
+      'de-de': base + (res.locals.localeAlternatePaths.de || '/de'),
+      'es-es': base + (res.locals.localeAlternatePaths.es || '/es')
+    };
+  } else {
+    res.locals.localeAlternateUrls = null;
+  }
   // Translate location (country/city) for display - e.g. Cyprus -> Zypern (de), Chipre (es)
   res.locals.translateLocation = (kind, value) => {
     if (!value || typeof value !== 'string') return value || '';

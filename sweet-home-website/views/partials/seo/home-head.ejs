@@ -5,6 +5,10 @@
   const siteName = 'Sweet Home';
   const defaultDescription = 'Find your dream property in Cyprus, Dubai, and Berlin. Browse luxury apartments, villas, and real estate investments. Expert guidance for buyers and sellers.';
   const pageMetaDescription = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : defaultDescription;
+  const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+  const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
+    ? ogLocale
+    : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
 %>
 <meta name="description" content="<%= pageMetaDescription %>">
 <!-- Canonical URL is handled by main layout to avoid conflicts with hreflang -->
@@ -16,7 +20,7 @@
 <meta property="og:url" content="<%= (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : baseUrl + '/' %>">
 <meta property="og:image" content="<%= baseUrl %>/images/dubai-hero.jpg">
 <meta property="og:site_name" content="<%= siteName %>">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="<%= pageOgLocale %>">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">

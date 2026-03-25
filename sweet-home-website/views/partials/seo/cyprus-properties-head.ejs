@@ -3,6 +3,10 @@
   const pageUrl = `${siteBaseUrl}/properties-for-sale-cyprus`;
   const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : 'Find properties for sale in Cyprus. Browse apartments, villas and coastal homes. Expert real estate guidance from Sweet Home.';
   const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Properties for Sale in Cyprus';
+  const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+  const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
+    ? ogLocale
+    : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
 %>
 <meta name="description" content="<%= pageDesc %>">
 <!-- Canonical and hreflang are output by main layout when canonicalUrl is passed -->
@@ -15,7 +19,7 @@
 <meta property="og:image" content="<%= siteBaseUrl %>/images/cyprus-international.jpg">
 <meta property="og:image:alt" content="Properties for sale in Cyprus – Sweet Home real estate">
 <meta property="og:site_name" content="Sweet Home">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="<%= pageOgLocale %>">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">

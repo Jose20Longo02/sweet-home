@@ -1,6 +1,10 @@
 <% if (typeof property !== 'undefined' && property) { 
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
   const propertyUrl = `${siteBaseUrl}/properties/${property.slug}`;
+  const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+  const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
+    ? ogLocale
+    : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
   const propertyImage = (property.photos && property.photos[0]) 
     ? (property.photos[0].startsWith('http') ? property.photos[0] : `${siteBaseUrl}${property.photos[0]}`)
     : `${siteBaseUrl}/img/property-placeholder.jpg`;
@@ -15,7 +19,7 @@
   <meta property="og:url" content="<%= propertyUrl %>">
   <meta property="og:image" content="<%= propertyImage %>">
   <meta property="og:site_name" content="Sweet Home">
-  <meta property="og:locale" content="en_US">
+  <meta property="og:locale" content="<%= pageOgLocale %>">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">

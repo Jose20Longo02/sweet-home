@@ -4,6 +4,10 @@
     : ((process.env.APP_URL || 'https://sweethome.com').replace(/\/$/, ''));
   const forgotUrl = `${siteBaseUrl}/auth/forgot`;
   const metaDescription = 'Reset your password for your Sweet Home account. Enter your email to receive a password reset code.';
+  const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+  const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
+    ? ogLocale
+    : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
 %>
 <meta name="description" content="<%= metaDescription %>">
 <!-- Canonical URL is handled by main layout to avoid conflicts with hreflang -->
@@ -15,7 +19,7 @@
 <meta property="og:description" content="<%= metaDescription %>">
 <meta property="og:url" content="<%= forgotUrl %>">
 <meta property="og:site_name" content="Sweet Home">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="<%= pageOgLocale %>">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary">

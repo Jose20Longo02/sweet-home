@@ -2,6 +2,10 @@
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
   const aboutUrl = `${siteBaseUrl}/about`;
   const pageDesc = 'Learn about Sweet Home - your trusted real estate partner in Cyprus, Dubai, and Berlin. Meet our expert team dedicated to helping you find your dream property.';
+  const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+  const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
+    ? ogLocale
+    : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
 %>
 <meta name="description" content="<%= pageDesc %>">
 <link rel="canonical" href="<%= aboutUrl %>">
@@ -12,7 +16,7 @@
 <meta property="og:description" content="<%= pageDesc %>">
 <meta property="og:url" content="<%= aboutUrl %>">
 <meta property="og:site_name" content="Sweet Home">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="<%= pageOgLocale %>">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
