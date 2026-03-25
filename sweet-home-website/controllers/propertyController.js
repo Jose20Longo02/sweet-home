@@ -2934,12 +2934,12 @@ exports.berlinPropertiesPage = async (req, res, next) => {
     };
     const titles = {
       en: 'Properties for Sale in Berlin',
-      de: 'Immobilien Berlin kaufen',
+      de: 'Wohnung in Berlin kaufen: Eigentumswohnungen & Immobilien',
       es: 'Propiedades en venta en Berlín'
     };
     const metaDescriptions = {
       en: 'Find properties for sale in Berlin, Germany. Browse the most viewed apartments, houses, and villas. Expert real estate guidance from Sweet Home.',
-      de: 'Immobilien in Berlin kaufen: Ausgewählte Wohnungen, Häuser und Villen. Sweet Home unterstützt internationale Käufer und Investoren mit Beratung und Zugang zu Wohn- und Anlagemöglichkeiten.',
+      de: 'Wohnung in Berlin kaufen: Entdecken Sie Eigentumswohnungen und Immobilien in Berlin. Aktuelle Angebote, Stadtteile im Überblick und Beratung für Käufer und Investoren.',
       es: 'Encuentra propiedades en venta en Berlín, Alemania. Apartamentos, casas y villas. Asesoramiento inmobiliario de Sweet Home para compradores e inversores internacionales.'
     };
     const berlinPagePaths = {
