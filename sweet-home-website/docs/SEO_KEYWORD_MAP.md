@@ -35,7 +35,59 @@ Tracks page-level keyword targeting by language, including estimated search volu
 | eigentumswohnung charlottenburg | n/a | n/a | Secondary |
 | immobilie charlottenburg kaufen | n/a | n/a | Secondary |
 
-### Reserved for future neighborhood pages (not Berlin hub primary target)
+## German (`de`) - Moabit District Landing Page
+
+- **Page:** `/de/wohnung-kaufen-moabit`
+- **Template:** `views/properties-moabit-de.ejs`
+- **Intent:** Transactional (buy apartment/property in Moabit, Berlin)
+- **Status:** Live (initial optimization complete)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| wohnung kaufen moabit | n/a | n/a | Primary |
+| eigentumswohnung moabit | n/a | n/a | Secondary |
+| immobilie moabit kaufen | n/a | n/a | Secondary |
+
+## German (`de`) - Friedrichshain-Kreuzberg District Landing Page
+
+- **Page:** `/de/wohnung-kaufen-friedrichshain-kreuzberg`
+- **Template:** `views/properties-friedrichshain-kreuzberg-de.ejs`
+- **Intent:** Transactional (buy apartment/property in Friedrichshain-Kreuzberg, Berlin)
+- **Status:** Live (initial optimization complete)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| wohnung kaufen friedrichshain-kreuzberg | n/a | n/a | Primary |
+| eigentumswohnung friedrichshain-kreuzberg | n/a | n/a | Secondary |
+| immobilie friedrichshain-kreuzberg kaufen | n/a | n/a | Secondary |
+
+## German (`de`) - Schöneberg District Landing Page
+
+- **Page:** `/de/wohnung-kaufen-schoeneberg`
+- **Template:** `views/properties-schoeneberg-de.ejs`
+- **Intent:** Transactional (buy apartment/property in Schöneberg, Berlin)
+- **Status:** Live (initial optimization complete)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| wohnung kaufen schöneberg | n/a | n/a | Primary |
+| eigentumswohnung schöneberg | n/a | n/a | Secondary |
+| immobilie schöneberg kaufen | n/a | n/a | Secondary |
+
+## German (`de`) - Prenzlauer Berg District Landing Page
+
+- **Page:** `/de/wohnung-kaufen-prenzlauer-berg`
+- **Template:** `views/properties-prenzlauer-berg-de.ejs`
+- **Intent:** Transactional (buy apartment/property in Prenzlauer Berg, Berlin)
+- **Status:** Live (initial optimization complete)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| wohnung kaufen prenzlauer berg | n/a | n/a | Primary |
+| eigentumswohnung prenzlauer berg | n/a | n/a | Secondary |
+| immobilie prenzlauer berg kaufen | n/a | n/a | Secondary |
+
+### Reserved for next neighborhood pages (not yet created)
 
 | Keyword | Search Volume | SEO Difficulty | Notes |
 |---|---:|---:|---|
