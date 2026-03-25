@@ -113,11 +113,62 @@ Tracks page-level keyword targeting by language, including estimated search volu
 | eigentumswohnung tempelhof | n/a | n/a | Secondary |
 | immobilie tempelhof kaufen | n/a | n/a | Secondary |
 
+## German (`de`) - Neukölln District Landing Page
+
+- **Page:** `/de/wohnung-kaufen-neukoelln`
+- **Template:** `views/properties-berlin-district-de.ejs`
+- **Intent:** Transactional (buy apartment/property in Neukölln, Berlin)
+- **Status:** Live (initial optimization complete)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| wohnung kaufen neukölln | n/a | n/a | Primary |
+| eigentumswohnung neukölln | n/a | n/a | Secondary |
+| immobilie neukölln kaufen | n/a | n/a | Secondary |
+
+## German (`de`) - Reinickendorf District Landing Page
+
+- **Page:** `/de/wohnung-kaufen-reinickendorf`
+- **Template:** `views/properties-berlin-district-de.ejs`
+- **Intent:** Transactional (buy apartment/property in Reinickendorf, Berlin)
+- **Status:** Live (initial optimization complete)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| wohnung kaufen reinickendorf | n/a | n/a | Primary |
+| eigentumswohnung reinickendorf | n/a | n/a | Secondary |
+| immobilie reinickendorf kaufen | n/a | n/a | Secondary |
+
+## German (`de`) - Kreuzberg District Landing Page
+
+- **Page:** `/de/wohnung-kaufen-kreuzberg`
+- **Template:** `views/properties-berlin-district-de.ejs`
+- **Intent:** Transactional (buy apartment/property in Kreuzberg, Berlin)
+- **Status:** Live (initial optimization complete)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| wohnung kaufen kreuzberg | n/a | n/a | Primary |
+| eigentumswohnung kreuzberg | n/a | n/a | Secondary |
+| immobilie kreuzberg kaufen | n/a | n/a | Secondary |
+
+## German (`de`) - Spandau District Landing Page
+
+- **Page:** `/de/wohnung-kaufen-spandau`
+- **Template:** `views/properties-berlin-district-de.ejs`
+- **Intent:** Transactional (buy apartment/property in Spandau, Berlin)
+- **Status:** Live (initial optimization complete)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| wohnung kaufen spandau | 590 | 21 | Primary |
+| eigentumswohnung spandau | n/a | n/a | Secondary |
+| immobilie spandau kaufen | n/a | n/a | Secondary |
+
 ### Reserved for next neighborhood pages (not yet created)
 
 | Keyword | Search Volume | SEO Difficulty | Notes |
 |---|---:|---:|---|
 | wohnungen kaufen berlin mitte | 720 | 18 | Future dedicated district page |
-| wohnung kaufen spandau | 590 | 21 | Future dedicated district page |
 | wohnung kaufen zehlendorf | 390 | 20 | Future dedicated district page (if inventory supports it) |
 
