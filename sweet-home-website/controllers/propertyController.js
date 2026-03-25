@@ -4537,3 +4537,264 @@ exports.prenzlauerBergPropertiesPageDe = async (req, res, next) => {
     next(err);
   }
 };
+
+// German district landing page: Wedding (Berlin)
+exports.weddingPropertiesPageDe = async (req, res, next) => {
+  try {
+    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
+    const patternWedding = '%wedding%';
+    const patternGesundbrunnen = '%gesundbrunnen%';
+    const propertiesSql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.created_at,
+        p.description,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name,
+        u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND (
+          LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+          OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2
+        )
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 30
+    `;
+    const projectsSql = `
+      SELECT
+        p.id, p.slug, p.title, p.title_i18n, p.description, p.description_i18n,
+        p.country, p.city, p.neighborhood, p.photos, p.min_price, p.max_price,
+        p.total_units, p.completion_date, p.created_at
+      FROM projects p
+      WHERE p.status = 'active'
+        AND p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND (
+          LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+          OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2
+        )
+      ORDER BY p.created_at DESC
+      LIMIT 9
+    `;
+    const [{ rows: properties }, { rows: projects }] = await Promise.all([
+      query(propertiesSql, [patternWedding, patternGesundbrunnen]),
+      query(projectsSql, [patternWedding, patternGesundbrunnen])
+    ]);
+
+    const lang = 'de';
+    const recommendedProperties = (properties || []).map((p) => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: getLocalizedTitle(p, lang),
+        description: (p.description_i18n && p.description_i18n[lang]) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+    const weddingProjects = (projects || []).map((project) => {
+      const photos = Array.isArray(project.photos) ? project.photos : (project.photos ? [project.photos] : []);
+      const normalizedPhotos = photos.map((ph) => {
+        if (!ph) return ph;
+        const phStr = String(ph);
+        if (phStr.startsWith('/uploads/') || phStr.startsWith('http')) return phStr;
+        return `/uploads/projects/${project.id}/${phStr}`;
+      });
+      const titleI18n = project.title_i18n && typeof project.title_i18n === 'object' ? project.title_i18n : null;
+      const descriptionI18n = project.description_i18n && typeof project.description_i18n === 'object' ? project.description_i18n : null;
+      return {
+        ...project,
+        title: (titleI18n && (titleI18n[lang] || titleI18n.en)) || project.title,
+        description: (descriptionI18n && (descriptionI18n[lang] || descriptionI18n.en)) || project.description,
+        photos: normalizedPhotos,
+        slug: project.slug || `project-${project.id}`
+      };
+    });
+
+    const baseUrl = res.locals.baseUrl;
+    const districtUrls = {
+      en: `${baseUrl}/properties-for-sale-berlin`,
+      de: `${baseUrl}/de/wohnung-kaufen-wedding`,
+      es: `${baseUrl}/es/propiedades-en-venta-berlin`
+    };
+    const districtContent = {
+      heroTitle: 'Wohnung kaufen Wedding',
+      heroDescription: 'Wedding bietet zentrale Lage, gewachsene Kiezstrukturen und dynamische Entwicklung. Der Bezirk ist besonders interessant für Käufer, die Potenzial, Urbanität und solide Nachfrage kombinieren wollen.',
+      sectionTitleProperties: 'Eigentumswohnungen in Wedding',
+      sectionTitleProjects: 'Neubauprojekte in Wedding',
+      sectionTitleWhy: 'Warum Wedding als Wohn- und Investmentstandort attraktiv ist',
+      whyP1: 'Wedding profitiert von seiner Nähe zu Mitte, einer starken Verkehrsanbindung und einem vielfältigen Wohnungsbestand. Viele Teilbereiche zeigen weiterhin Aufwertungspotenzial.',
+      whyP2: 'Für Eigennutzer bietet Wedding urbane Alltagstauglichkeit, für Kapitalanleger eine breite Nachfragebasis. Besonders gefragt sind sanierte Bestandswohnungen und gut angebundene Mikrolagen.',
+      sectionTitleMicro: 'Gefragte Mikrolagen in Wedding',
+      microAreas: [
+        'Sprengelkiez – stark nachgefragte Wohnlage mit urbanem Kiezcharakter.',
+        'Leopoldplatz-Umfeld – zentral, belebt und infrastrukturell gut erschlossen.',
+        'Gesundbrunnen-Nähe – sehr gut angebunden mit laufender Entwicklung.',
+        'Wedding Nord – gewachsene Wohnquartiere mit Potenzial.'
+      ],
+      sectionTitleFaq: 'Häufige Fragen zu Wohnungen in Wedding',
+      faq: [
+        { q: 'Ist Wedding eher ein Entwicklungs- oder Kernmarkt?', a: 'Wedding ist ein etablierter Berliner Teilmarkt mit aktiver Entwicklung. Je nach Mikrolage unterscheiden sich Preisniveau und Dynamik deutlich.' },
+        { q: 'Für wen ist Wedding besonders geeignet?', a: 'Der Bezirk ist attraktiv für Eigennutzer mit urbanem Lebensstil sowie für Kapitalanleger, die auf Nachfrage, Lagevorteile und Entwicklungspotenzial setzen.' },
+        { q: 'Welche Wohnungssegmente sind in Wedding gefragt?', a: 'Vor allem gut geschnittene 2- bis 4-Zimmer-Wohnungen, sanierte Altbauten und modernisierte Bestandsobjekte in gut angebundenen Lagen.' },
+        { q: 'Wie unterstützt Sweet Home beim Kauf in Wedding?', a: 'Wir begleiten Sie von der Objektauswahl bis zum Abschluss mit Lageanalyse, Preisbewertung, Verhandlung und Transaktionssupport.' }
+      ]
+    };
+
+    res.render('properties-wedding-de', {
+      title: 'Wohnung kaufen Wedding: Eigentumswohnungen in Berlin',
+      useMainContainer: false,
+      useHomeHeader: true,
+      headPartial: '../partials/seo/wedding-properties-head',
+      canonicalUrl: districtUrls.de,
+      hreflangAlternates: { 'en-us': districtUrls.en, 'de-de': districtUrls.de, 'es-es': districtUrls.es },
+      pageMetaDescription: 'Wohnung kaufen Wedding: Entdecken Sie ausgewählte Eigentumswohnungen in Wedding mit lokalen Markt-Insights und persönlicher Beratung.',
+      districtContent,
+      locations,
+      neighborhoodCounts,
+      recommendedProperties,
+      weddingProjects,
+      baseUrl: res.locals.baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// German district landing page: Tempelhof (Berlin)
+exports.tempelhofPropertiesPageDe = async (req, res, next) => {
+  try {
+    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
+    const districtPattern = '%tempelhof%';
+    const propertiesSql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.created_at,
+        p.description,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name,
+        u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 30
+    `;
+    const projectsSql = `
+      SELECT
+        p.id, p.slug, p.title, p.title_i18n, p.description, p.description_i18n,
+        p.country, p.city, p.neighborhood, p.photos, p.min_price, p.max_price,
+        p.total_units, p.completion_date, p.created_at
+      FROM projects p
+      WHERE p.status = 'active'
+        AND p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+      ORDER BY p.created_at DESC
+      LIMIT 9
+    `;
+    const [{ rows: properties }, { rows: projects }] = await Promise.all([
+      query(propertiesSql, [districtPattern]),
+      query(projectsSql, [districtPattern])
+    ]);
+
+    const lang = 'de';
+    const recommendedProperties = (properties || []).map((p) => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: getLocalizedTitle(p, lang),
+        description: (p.description_i18n && p.description_i18n[lang]) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+    const tempelhofProjects = (projects || []).map((project) => {
+      const photos = Array.isArray(project.photos) ? project.photos : (project.photos ? [project.photos] : []);
+      const normalizedPhotos = photos.map((ph) => {
+        if (!ph) return ph;
+        const phStr = String(ph);
+        if (phStr.startsWith('/uploads/') || phStr.startsWith('http')) return phStr;
+        return `/uploads/projects/${project.id}/${phStr}`;
+      });
+      const titleI18n = project.title_i18n && typeof project.title_i18n === 'object' ? project.title_i18n : null;
+      const descriptionI18n = project.description_i18n && typeof project.description_i18n === 'object' ? project.description_i18n : null;
+      return {
+        ...project,
+        title: (titleI18n && (titleI18n[lang] || titleI18n.en)) || project.title,
+        description: (descriptionI18n && (descriptionI18n[lang] || descriptionI18n.en)) || project.description,
+        photos: normalizedPhotos,
+        slug: project.slug || `project-${project.id}`
+      };
+    });
+
+    const baseUrl = res.locals.baseUrl;
+    const districtUrls = {
+      en: `${baseUrl}/properties-for-sale-berlin`,
+      de: `${baseUrl}/de/wohnung-kaufen-tempelhof`,
+      es: `${baseUrl}/es/propiedades-en-venta-berlin`
+    };
+    const districtContent = {
+      heroTitle: 'Wohnung kaufen Tempelhof',
+      heroDescription: 'Tempelhof kombiniert ruhige Wohnlagen, sehr gute Anbindung und gewachsene Nachbarschaften. Der Bezirk ist für Eigennutzer und Kapitalanleger ein stabiler Teilmarkt mit solider Nachfrage.',
+      sectionTitleProperties: 'Eigentumswohnungen in Tempelhof',
+      sectionTitleProjects: 'Neubauprojekte in Tempelhof',
+      sectionTitleWhy: 'Warum Tempelhof für Immobilienkäufer interessant ist',
+      whyP1: 'Tempelhof bietet eine ausgewogene Wohnstruktur mit guten Schulen, Nahversorgung und Parkflächen. Die Verkehrsanbindung in Richtung Innenstadt und Süd-Berlin ist ein klarer Standortvorteil.',
+      whyP2: 'Käufer profitieren von einem stabilen Nachfrageprofil und vielseitigen Wohnungsangeboten. Besonders beliebt sind gut geschnittene Familienwohnungen und modernisierte Bestandsobjekte.',
+      sectionTitleMicro: 'Gefragte Mikrolagen in Tempelhof',
+      microAreas: [
+        'Tempelhofer Damm-Umfeld – zentral und infrastrukturell stark.',
+        'Tempelhofer Feld-Nähe – hohe Freizeitqualität und Wohnattraktivität.',
+        'Alt-Tempelhof – gewachsene Nachbarschaften mit stabiler Nachfrage.',
+        'Übergang zu Neukölln/Schöneberg – sehr gut angebundene Mikrolagen.'
+      ],
+      sectionTitleFaq: 'Häufige Fragen zu Wohnungen in Tempelhof',
+      faq: [
+        { q: 'Ist Tempelhof eher für Familien oder Singles geeignet?', a: 'Tempelhof ist für beide Zielgruppen geeignet. Familien schätzen die ruhigen Wohnlagen, Singles die gute Anbindung und Nahversorgung.' },
+        { q: 'Wie ist die Nachfrage im Tempelhofer Wohnungsmarkt?', a: 'Die Nachfrage gilt als stabil, insbesondere bei gut angebundenen Objekten mit funktionalen Grundrissen und solider Gebäudequalität.' },
+        { q: 'Welche Lagen sind in Tempelhof besonders gefragt?', a: 'Gefragt sind insbesondere Lagen rund um das Tempelhofer Feld, Alt-Tempelhof und gut erschlossene Bereiche entlang wichtiger Verkehrsachsen.' },
+        { q: 'Wie hilft Sweet Home beim Kauf in Tempelhof?', a: 'Wir unterstützen mit datenbasierter Lage- und Preisanalyse, passender Objektselektion und vollständiger Begleitung bis zum Kaufabschluss.' }
+      ]
+    };
+
+    res.render('properties-tempelhof-de', {
+      title: 'Wohnung kaufen Tempelhof: Eigentumswohnungen in Berlin',
+      useMainContainer: false,
+      useHomeHeader: true,
+      headPartial: '../partials/seo/tempelhof-properties-head',
+      canonicalUrl: districtUrls.de,
+      hreflangAlternates: { 'en-us': districtUrls.en, 'de-de': districtUrls.de, 'es-es': districtUrls.es },
+      pageMetaDescription: 'Wohnung kaufen Tempelhof: Entdecken Sie ausgewählte Eigentumswohnungen in Tempelhof mit lokalen Markt-Insights und persönlicher Beratung.',
+      districtContent,
+      locations,
+      neighborhoodCounts,
+      recommendedProperties,
+      tempelhofProjects,
+      baseUrl: res.locals.baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+};

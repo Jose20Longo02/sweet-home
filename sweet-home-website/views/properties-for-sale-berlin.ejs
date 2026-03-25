@@ -192,6 +192,8 @@
         <% if (normalizedNeighborhood.indexOf('friedrichshain-kreuzberg') !== -1) germanDistrictPath = '/de/wohnung-kaufen-friedrichshain-kreuzberg'; %>
         <% if (normalizedNeighborhood.indexOf('schöneberg') !== -1 || normalizedNeighborhood.indexOf('schoneberg') !== -1) germanDistrictPath = '/de/wohnung-kaufen-schoeneberg'; %>
         <% if (normalizedNeighborhood.indexOf('prenzlauer berg') !== -1) germanDistrictPath = '/de/wohnung-kaufen-prenzlauer-berg'; %>
+        <% if (normalizedNeighborhood.indexOf('wedding') !== -1) germanDistrictPath = '/de/wohnung-kaufen-wedding'; %>
+        <% if (normalizedNeighborhood.indexOf('tempelhof') !== -1) germanDistrictPath = '/de/wohnung-kaufen-tempelhof'; %>
         <% const neighborhoodHref = (lang === 'de' && germanDistrictPath)
           ? germanDistrictPath
           : `${baseNeighborhoodPath}?neighborhood=${encodeURIComponent(item.name)}`; %>

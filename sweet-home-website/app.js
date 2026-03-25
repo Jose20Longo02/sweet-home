@@ -386,6 +386,8 @@ app.use((req, res, next) => {
     '/de/wohnung-kaufen-friedrichshain-kreuzberg': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-friedrichshain-kreuzberg', es: '/es/propiedades-en-venta-berlin' },
     '/de/wohnung-kaufen-schoeneberg': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-schoeneberg', es: '/es/propiedades-en-venta-berlin' },
     '/de/wohnung-kaufen-prenzlauer-berg': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-prenzlauer-berg', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-wedding': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-wedding', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-tempelhof': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-tempelhof', es: '/es/propiedades-en-venta-berlin' },
     '/properties-for-sale-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
     '/de/immobilien-dubai-kaufen': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
     '/es/propiedades-en-venta-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
@@ -559,6 +561,8 @@ app.get('/de/wohnung-kaufen-moabit', propertyController.moabitPropertiesPageDe);
 app.get('/de/wohnung-kaufen-friedrichshain-kreuzberg', propertyController.friedrichshainKreuzbergPropertiesPageDe);
 app.get('/de/wohnung-kaufen-schoeneberg', propertyController.schoenebergPropertiesPageDe);
 app.get('/de/wohnung-kaufen-prenzlauer-berg', propertyController.prenzlauerBergPropertiesPageDe);
+app.get('/de/wohnung-kaufen-wedding', propertyController.weddingPropertiesPageDe);
+app.get('/de/wohnung-kaufen-tempelhof', propertyController.tempelhofPropertiesPageDe);
 app.get('/es/propiedades-en-venta-berlin', propertyController.berlinPropertiesPage);
 
 // Dubai landing page
@@ -1451,6 +1455,8 @@ app.get('/sitemap.xml', async (req, res, next) => {
     staticUrls.push({ loc: `${base}/de/wohnung-kaufen-friedrichshain-kreuzberg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/de/wohnung-kaufen-schoeneberg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/de/wohnung-kaufen-prenzlauer-berg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-wedding`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-tempelhof`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/es/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/es/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/es/properties/for-sale/uae`, lastmod: null, changefreq: 'weekly', priority: '0.7' });

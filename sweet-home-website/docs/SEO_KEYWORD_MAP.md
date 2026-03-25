@@ -87,6 +87,32 @@ Tracks page-level keyword targeting by language, including estimated search volu
 | eigentumswohnung prenzlauer berg | n/a | n/a | Secondary |
 | immobilie prenzlauer berg kaufen | n/a | n/a | Secondary |
 
+## German (`de`) - Wedding District Landing Page
+
+- **Page:** `/de/wohnung-kaufen-wedding`
+- **Template:** `views/properties-wedding-de.ejs`
+- **Intent:** Transactional (buy apartment/property in Wedding, Berlin)
+- **Status:** Live (initial optimization complete)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| wohnung kaufen wedding | n/a | n/a | Primary |
+| eigentumswohnung wedding | n/a | n/a | Secondary |
+| immobilie wedding kaufen | n/a | n/a | Secondary |
+
+## German (`de`) - Tempelhof District Landing Page
+
+- **Page:** `/de/wohnung-kaufen-tempelhof`
+- **Template:** `views/properties-tempelhof-de.ejs`
+- **Intent:** Transactional (buy apartment/property in Tempelhof, Berlin)
+- **Status:** Live (initial optimization complete)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| wohnung kaufen tempelhof | n/a | n/a | Primary |
+| eigentumswohnung tempelhof | n/a | n/a | Secondary |
+| immobilie tempelhof kaufen | n/a | n/a | Secondary |
+
 ### Reserved for next neighborhood pages (not yet created)
 
 | Keyword | Search Volume | SEO Difficulty | Notes |
