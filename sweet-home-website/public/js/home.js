@@ -330,7 +330,7 @@ async function loadFeaturedProperties() {
 
 // Initialize search form
 function initializeSearchForm() {
-  const searchForm = document.querySelector('.search-form');
+  const searchForm = document.querySelector('.hero-search, .search-form');
   if (!searchForm) {
     console.warn('❌ Search form not found');
     return;
@@ -341,6 +341,17 @@ function initializeSearchForm() {
   searchForm.addEventListener('submit', function(e) {
     e.preventDefault();
     console.log('🔍 Search form submitted');
+
+    // Disabled selects are not included in FormData. If they hold a value, enable
+    // them just before serialization so selected filters are preserved.
+    const citySelect = this.querySelector('#city');
+    const neighborhoodSelect = this.querySelector('#neighborhood');
+    if (citySelect && citySelect.disabled && String(citySelect.value || '').trim() !== '') {
+      citySelect.disabled = false;
+    }
+    if (neighborhoodSelect && neighborhoodSelect.disabled && String(neighborhoodSelect.value || '').trim() !== '') {
+      neighborhoodSelect.disabled = false;
+    }
     
     const formData = new FormData(this);
     const searchParams = new URLSearchParams();
