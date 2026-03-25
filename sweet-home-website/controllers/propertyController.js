@@ -2878,6 +2878,7 @@ exports.berlinPropertiesPage = async (req, res, next) => {
         p.description_i18n,
         p.country,
         p.city,
+        p.neighborhood,
         p.photos,
         p.min_price,
         p.max_price,
@@ -2888,6 +2889,7 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       WHERE p.status = 'active'
         AND p.country = 'Germany'
         AND p.city = 'Berlin'
+        AND LOWER(COALESCE(p.neighborhood, '')) LIKE $1
       ORDER BY p.created_at DESC
       LIMIT 9
     `;
@@ -3837,7 +3839,7 @@ exports.charlottenburgPropertiesPageDe = async (req, res, next) => {
 
     const [{ rows: properties }, { rows: projects }, { rows: statsRows }] = await Promise.all([
       query(propertiesSql, [districtPattern]),
-      query(projectsSql),
+      query(projectsSql, [districtPattern]),
       query(statsSql, [districtPattern])
     ]);
 
