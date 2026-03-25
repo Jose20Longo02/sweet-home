@@ -480,11 +480,54 @@
   color: inherit;
 }
 
+.berlin-neighborhood-card__cta {
+  margin-top: auto;
+  margin-inline: 16px;
+  margin-bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--primary-color, #2ea862);
+  color: var(--primary-color, #2ea862);
+  background: rgba(46, 168, 98, 0.08);
+  text-decoration: none;
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.2;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.berlin-neighborhood-card__cta:hover {
+  background: rgba(46, 168, 98, 0.14);
+}
+
+.berlin-neighborhood-card__cta:focus-visible {
+  outline: 2px solid rgba(46, 168, 98, 0.7);
+  outline-offset: 2px;
+}
+
 .berlin-neighborhood-card.is-open .berlin-neighborhood-card__trigger,
 .berlin-neighborhood-card.is-open .berlin-neighborhood-card__panel,
 .berlin-neighborhood-card.is-open .berlin-neighborhood-card__panel p,
 .berlin-neighborhood-card.is-open .berlin-neighborhood-card__panel strong {
   color: #fff;
+}
+
+.berlin-neighborhood-card.is-open .berlin-neighborhood-card__cta {
+  border-color: rgba(255, 255, 255, 0.75);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.berlin-neighborhood-card.is-open .berlin-neighborhood-card__cta:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.berlin-neighborhood-card.is-open .berlin-neighborhood-card__cta:focus-visible {
+  outline-color: rgba(255, 255, 255, 0.9);
 }
 
 .berlin-neighborhoods__source {

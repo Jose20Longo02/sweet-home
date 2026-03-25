@@ -2965,7 +2965,8 @@ exports.berlinPropertiesPage = async (req, res, next) => {
         neighborhoodsTitle: 'Neighborhoods',
         neighborhoodsHint: 'Click a neighborhood to expand key local context and real-estate profile.',
         neighborhoodsRealEstateLabel: 'Real estate',
-        neighborhoodsSourcesLabel: 'Sources'
+        neighborhoodsSourcesLabel: 'Sources',
+        neighborhoodsExploreCta: 'Explore properties in {name}'
       },
       de: {
         whyInvestTitle: 'Warum in Berliner Immobilien investieren?',
@@ -2982,7 +2983,8 @@ exports.berlinPropertiesPage = async (req, res, next) => {
         neighborhoodsTitle: 'Stadtteile',
         neighborhoodsHint: 'Klicken Sie auf einen Stadtteil, um lokale Einordnung und Immobilienprofil zu sehen.',
         neighborhoodsRealEstateLabel: 'Immobilien',
-        neighborhoodsSourcesLabel: 'Quellen'
+        neighborhoodsSourcesLabel: 'Quellen',
+        neighborhoodsExploreCta: 'Immobilien in {name} entdecken'
       },
       es: {
         whyInvestTitle: '¿Por qué invertir en el mercado inmobiliario de Berlín?',
@@ -2999,7 +3001,8 @@ exports.berlinPropertiesPage = async (req, res, next) => {
         neighborhoodsTitle: 'Barrios',
         neighborhoodsHint: 'Haz clic en un barrio para ver contexto local y su perfil inmobiliario.',
         neighborhoodsRealEstateLabel: 'Inmobiliario',
-        neighborhoodsSourcesLabel: 'Fuentes'
+        neighborhoodsSourcesLabel: 'Fuentes',
+        neighborhoodsExploreCta: 'Explorar propiedades en {name}'
       }
     };
     const berlinNeighborhoodContent = {

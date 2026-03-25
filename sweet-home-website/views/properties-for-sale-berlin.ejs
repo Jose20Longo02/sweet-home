@@ -184,6 +184,9 @@
       <% (berlinNeighborhoods || []).forEach(function(item, idx){ %>
         <% const panelId = `berlin-neighborhood-panel-${idx}`; %>
         <% const buttonId = `berlin-neighborhood-trigger-${idx}`; %>
+        <% const baseNeighborhoodPath = (typeof localePath === 'function') ? localePath('/properties/for-sale/germany/berlin') : '/properties/for-sale/germany/berlin'; %>
+        <% const neighborhoodHref = `${baseNeighborhoodPath}?neighborhood=${encodeURIComponent(item.name)}`; %>
+        <% const neighborhoodCta = (berlinContent.neighborhoodsExploreCta || 'Explore properties in {name}').replace('{name}', item.name); %>
         <article class="berlin-neighborhood-card" data-neighborhood-card>
           <button
             type="button"
@@ -200,6 +203,7 @@
             <p><%= item.summary %></p>
             <p><strong><%= berlinContent.neighborhoodsRealEstateLabel %>:</strong> <%= item.realEstate %></p>
           </div>
+          <a class="berlin-neighborhood-card__cta" data-neighborhood-cta href="<%= neighborhoodHref %>"><%= neighborhoodCta %></a>
         </article>
       <% }); %>
     </div>
@@ -347,7 +351,7 @@ document.querySelectorAll('[data-neighborhood-toggle]').forEach(function(btn) {
 
 document.querySelectorAll('[data-neighborhood-card]').forEach(function(card) {
   card.addEventListener('click', function(event) {
-    if (event.target.closest('[data-neighborhood-toggle]')) return;
+    if (event.target.closest('[data-neighborhood-toggle]') || event.target.closest('[data-neighborhood-cta]')) return;
     var toggle = card.querySelector('[data-neighborhood-toggle]');
     if (toggle) toggle.click();
   });
