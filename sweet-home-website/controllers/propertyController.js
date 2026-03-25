@@ -607,11 +607,12 @@ exports.listPropertiesByLocationSlug = async (req, res, next) => {
       if (!city) return res.status(404).render('errors/404');
     }
 
-    req.query = {
-      ...req.query,
-      country,
-      city
-    };
+    // Mutate req.query in place (Express may expose it via getter),
+    // so downstream filtering reliably receives country/city.
+    if (!req.query || typeof req.query !== 'object') req.query = {};
+    req.query.country = country;
+    if (city) req.query.city = city;
+    else delete req.query.city;
 
     return exports.listPropertiesPublic(req, res, next);
   } catch (err) {
