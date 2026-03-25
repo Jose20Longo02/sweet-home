@@ -388,6 +388,10 @@ app.use((req, res, next) => {
     '/de/wohnung-kaufen-prenzlauer-berg': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-prenzlauer-berg', es: '/es/propiedades-en-venta-berlin' },
     '/de/wohnung-kaufen-wedding': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-wedding', es: '/es/propiedades-en-venta-berlin' },
     '/de/wohnung-kaufen-tempelhof': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-tempelhof', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-neukoelln': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-neukoelln', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-reinickendorf': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-reinickendorf', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-kreuzberg': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-kreuzberg', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-spandau': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-spandau', es: '/es/propiedades-en-venta-berlin' },
     '/properties-for-sale-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
     '/de/immobilien-dubai-kaufen': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
     '/es/propiedades-en-venta-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
@@ -563,6 +567,10 @@ app.get('/de/wohnung-kaufen-schoeneberg', propertyController.schoenebergProperti
 app.get('/de/wohnung-kaufen-prenzlauer-berg', propertyController.prenzlauerBergPropertiesPageDe);
 app.get('/de/wohnung-kaufen-wedding', propertyController.weddingPropertiesPageDe);
 app.get('/de/wohnung-kaufen-tempelhof', propertyController.tempelhofPropertiesPageDe);
+app.get('/de/wohnung-kaufen-neukoelln', propertyController.neukoellnPropertiesPageDe);
+app.get('/de/wohnung-kaufen-reinickendorf', propertyController.reinickendorfPropertiesPageDe);
+app.get('/de/wohnung-kaufen-kreuzberg', propertyController.kreuzbergPropertiesPageDe);
+app.get('/de/wohnung-kaufen-spandau', propertyController.spandauPropertiesPageDe);
 app.get('/es/propiedades-en-venta-berlin', propertyController.berlinPropertiesPage);
 
 // Dubai landing page
@@ -1457,6 +1465,10 @@ app.get('/sitemap.xml', async (req, res, next) => {
     staticUrls.push({ loc: `${base}/de/wohnung-kaufen-prenzlauer-berg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/de/wohnung-kaufen-wedding`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/de/wohnung-kaufen-tempelhof`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-neukoelln`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-reinickendorf`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-kreuzberg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-spandau`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/es/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/es/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/es/properties/for-sale/uae`, lastmod: null, changefreq: 'weekly', priority: '0.7' });

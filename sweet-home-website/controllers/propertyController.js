@@ -4798,3 +4798,258 @@ exports.tempelhofPropertiesPageDe = async (req, res, next) => {
     next(err);
   }
 };
+
+async function renderBerlinDistrictPageDe(req, res, next, config) {
+  try {
+    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
+    const propertiesSql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.created_at,
+        p.description,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name,
+        u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND ${config.propertiesWhere}
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 30
+    `;
+    const projectsSql = `
+      SELECT
+        p.id, p.slug, p.title, p.title_i18n, p.description, p.description_i18n,
+        p.country, p.city, p.neighborhood, p.photos, p.min_price, p.max_price,
+        p.total_units, p.completion_date, p.created_at
+      FROM projects p
+      WHERE p.status = 'active'
+        AND p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND ${config.projectsWhere}
+      ORDER BY p.created_at DESC
+      LIMIT 9
+    `;
+
+    const [{ rows: properties }, { rows: projects }] = await Promise.all([
+      query(propertiesSql, config.propertiesParams || []),
+      query(projectsSql, config.projectsParams || [])
+    ]);
+
+    const lang = 'de';
+    const recommendedProperties = (properties || []).map((p) => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: getLocalizedTitle(p, lang),
+        description: (p.description_i18n && p.description_i18n[lang]) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+
+    const districtProjects = (projects || []).map((project) => {
+      const photos = Array.isArray(project.photos) ? project.photos : (project.photos ? [project.photos] : []);
+      const normalizedPhotos = photos.map((ph) => {
+        if (!ph) return ph;
+        const phStr = String(ph);
+        if (phStr.startsWith('/uploads/') || phStr.startsWith('http')) return phStr;
+        return `/uploads/projects/${project.id}/${phStr}`;
+      });
+      const titleI18n = project.title_i18n && typeof project.title_i18n === 'object' ? project.title_i18n : null;
+      const descriptionI18n = project.description_i18n && typeof project.description_i18n === 'object' ? project.description_i18n : null;
+      return {
+        ...project,
+        title: (titleI18n && (titleI18n[lang] || titleI18n.en)) || project.title,
+        description: (descriptionI18n && (descriptionI18n[lang] || descriptionI18n.en)) || project.description,
+        photos: normalizedPhotos,
+        slug: project.slug || `project-${project.id}`
+      };
+    });
+
+    const baseUrl = res.locals.baseUrl;
+    const districtUrls = {
+      en: `${baseUrl}/properties-for-sale-berlin`,
+      de: `${baseUrl}${config.path}`,
+      es: `${baseUrl}/es/propiedades-en-venta-berlin`
+    };
+
+    res.render('properties-berlin-district-de', {
+      title: config.title,
+      useMainContainer: false,
+      useHomeHeader: true,
+      headPartial: '../partials/seo/berlin-district-properties-head',
+      canonicalUrl: districtUrls.de,
+      hreflangAlternates: { 'en-us': districtUrls.en, 'de-de': districtUrls.de, 'es-es': districtUrls.es },
+      pageMetaDescription: config.metaDescription,
+      districtContent: config.content,
+      districtDisplayName: config.displayName,
+      districtHeroImage: config.heroImage,
+      defaultNeighborhood: config.defaultNeighborhood || config.displayName,
+      locations,
+      neighborhoodCounts,
+      recommendedProperties,
+      districtProjects,
+      baseUrl: res.locals.baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// German district landing page: Neukölln (Berlin)
+exports.neukoellnPropertiesPageDe = async (req, res, next) => renderBerlinDistrictPageDe(req, res, next, {
+  path: '/de/wohnung-kaufen-neukoelln',
+  displayName: 'Neukölln',
+  defaultNeighborhood: 'Neukölln',
+  heroImage: '/images/Neukölln.jpg',
+  title: 'Wohnung kaufen Neukölln: Eigentumswohnungen in Berlin',
+  metaDescription: 'Wohnung kaufen Neukölln: Entdecken Sie ausgewählte Eigentumswohnungen in Neukölln mit Markt-Insights, Mikrolagen und persönlicher Kaufberatung.',
+  propertiesWhere: "(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2)",
+  propertiesParams: ['%neukölln%', '%neukolln%'],
+  projectsWhere: "(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2)",
+  projectsParams: ['%neukölln%', '%neukolln%'],
+  content: {
+    heroTitle: 'Wohnung kaufen Neukölln',
+    heroDescription: 'Neukölln verbindet urbanes Leben, hohe Dynamik und vielfältige Mikrolagen. Der Bezirk ist für Eigennutzer und Investoren interessant, die Entwicklungspotenzial und Nachfrage suchen.',
+    sectionTitleProperties: 'Eigentumswohnungen in Neukölln',
+    sectionTitleProjects: 'Neubauprojekte in Neukölln',
+    sectionTitleWhy: 'Warum Neukölln für Immobilienkäufer interessant ist',
+    whyP1: 'Neukölln bietet eine starke urbane Nachfrage, gute ÖPNV-Anbindung und ein breites Angebot von Altbau bis modernisiertem Bestand. Viele Kieze haben in den letzten Jahren deutlich an Attraktivität gewonnen.',
+    whyP2: 'Käufer profitieren von lebendigen Quartieren, internationalem Umfeld und einer stabilen Vermietbarkeit. Je nach Mikrolage sind unterschiedliche Preisniveaus und Renditechancen möglich.',
+    sectionTitleMicro: 'Gefragte Mikrolagen in Neukölln',
+    microAreas: [
+      'Reuterkiez – urban, nachgefragt und sehr lebendig.',
+      'Schillerkiez – nahe Tempelhofer Feld mit hoher Lebensqualität.',
+      'Rixdorf / Böhmisches Dorf – charaktervolle Altbau-Lagen.',
+      'Britz-Nord – ruhigeres Umfeld mit guter Infrastruktur.'
+    ],
+    sectionTitleFaq: 'Häufige Fragen zu Wohnungen in Neukölln',
+    faq: [
+      { q: 'Ist Neukölln für Kapitalanlage geeignet?', a: 'Ja, in vielen Mikrolagen besteht eine stabile Mietnachfrage. Eine saubere Lage- und Objektprüfung bleibt dennoch entscheidend.' },
+      { q: 'Welche Lagen in Neukölln sind besonders gefragt?', a: 'Besonders gefragt sind zentrumsnahe Kieze wie Reuterkiez und Schillerkiez sowie gut angebundene Wohnstraßen mit gewachsener Infrastruktur.' },
+      { q: 'Wie entwickelt sich der Markt in Neukölln?', a: 'Neukölln zeigt seit Jahren eine robuste Nachfrage. Unterschiede zwischen den Mikrolagen sind groß, daher lohnt eine datenbasierte Auswahl.' },
+      { q: 'Wie unterstützt Sweet Home beim Kauf in Neukölln?', a: 'Wir begleiten Sie mit Preisanalyse, passender Objektselektion und der gesamten Kaufabwicklung bis zum Abschluss.' }
+    ]
+  }
+});
+
+// German district landing page: Reinickendorf (Berlin)
+exports.reinickendorfPropertiesPageDe = async (req, res, next) => renderBerlinDistrictPageDe(req, res, next, {
+  path: '/de/wohnung-kaufen-reinickendorf',
+  displayName: 'Reinickendorf',
+  defaultNeighborhood: 'Reinickendorf',
+  heroImage: '/images/reinickendorf.webp',
+  title: 'Wohnung kaufen Reinickendorf: Eigentumswohnungen in Berlin',
+  metaDescription: 'Wohnung kaufen Reinickendorf: Finden Sie Eigentumswohnungen in Reinickendorf mit lokalen Marktinformationen, gefragten Lagen und persönlicher Beratung.',
+  propertiesWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
+  propertiesParams: ['%reinickendorf%'],
+  projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
+  projectsParams: ['%reinickendorf%'],
+  content: {
+    heroTitle: 'Wohnung kaufen Reinickendorf',
+    heroDescription: 'Reinickendorf steht für ruhigeres Wohnen, viel Grün und gute Erreichbarkeit. Der Bezirk ist vor allem bei Familien und Käufern mit langfristigem Anlagehorizont gefragt.',
+    sectionTitleProperties: 'Eigentumswohnungen in Reinickendorf',
+    sectionTitleProjects: 'Neubauprojekte in Reinickendorf',
+    sectionTitleWhy: 'Warum Reinickendorf für Immobilienkäufer interessant ist',
+    whyP1: 'Der Bezirk bietet zahlreiche Wohnquartiere mit solider Infrastruktur, Schulen und Freizeitflächen. Im Vergleich zu zentralen Innenstadtlagen sind die Preise oft ausgewogener.',
+    whyP2: 'Für Käufer interessant sind stabile Nachfragesegmente und ein breites Angebot aus Bestandswohnungen und punktuellen Neubauprojekten.',
+    sectionTitleMicro: 'Gefragte Mikrolagen in Reinickendorf',
+    microAreas: [
+      'Alt-Tegel – wassernahe Lagen und gewachsenes Umfeld.',
+      'Waidmannslust – ruhige Wohnstraßen mit Familienfokus.',
+      'Hermsdorf – grün, etabliert und hochwertig nachgefragt.',
+      'Reinickendorf-Ost – gute Anbindung und urbane Infrastruktur.'
+    ],
+    sectionTitleFaq: 'Häufige Fragen zu Wohnungen in Reinickendorf',
+    faq: [
+      { q: 'Für wen eignet sich Reinickendorf besonders?', a: 'Reinickendorf eignet sich besonders für Familien, Eigennutzer mit Platzbedarf und Anleger, die auf stabile Wohnlagen setzen.' },
+      { q: 'Wie ist das Preisniveau in Reinickendorf?', a: 'Das Preisniveau variiert nach Mikrolage, liegt aber oft unter sehr zentralen Innenstadtbezirken bei gleichzeitig guter Wohnqualität.' },
+      { q: 'Welche Teile von Reinickendorf sind besonders gefragt?', a: 'Tegel, Hermsdorf und gut angebundene Teile von Reinickendorf-Ost zählen zu den gefragteren Bereichen.' },
+      { q: 'Wie hilft Sweet Home beim Immobilienkauf?', a: 'Wir analysieren Lage und Preis, kuratieren passende Objekte und begleiten Sie bis zur notariellen Beurkundung.' }
+    ]
+  }
+});
+
+// German district landing page: Kreuzberg (Berlin)
+exports.kreuzbergPropertiesPageDe = async (req, res, next) => renderBerlinDistrictPageDe(req, res, next, {
+  path: '/de/wohnung-kaufen-kreuzberg',
+  displayName: 'Kreuzberg',
+  defaultNeighborhood: 'Kreuzberg',
+  heroImage: '/images/kreuzberg.jpg',
+  title: 'Wohnung kaufen Kreuzberg: Eigentumswohnungen in Berlin',
+  metaDescription: 'Wohnung kaufen Kreuzberg: Entdecken Sie Eigentumswohnungen in Kreuzberg mit Kiez-Insights, Lagevergleich und persönlicher Kaufbegleitung.',
+  propertiesWhere: "LOWER(COALESCE(p.neighborhood, '')) = $1",
+  propertiesParams: ['kreuzberg'],
+  projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) = $1",
+  projectsParams: ['kreuzberg'],
+  content: {
+    heroTitle: 'Wohnung kaufen Kreuzberg',
+    heroDescription: 'Kreuzberg zählt zu den bekanntesten Berliner Bezirken mit starker urbaner Nachfrage. Die Mischung aus Kultur, Kiezleben und zentraler Lage macht den Teilmarkt besonders attraktiv.',
+    sectionTitleProperties: 'Eigentumswohnungen in Kreuzberg',
+    sectionTitleProjects: 'Neubauprojekte in Kreuzberg',
+    sectionTitleWhy: 'Warum Kreuzberg für Immobilienkäufer interessant ist',
+    whyP1: 'Kreuzberg bietet eine hohe Standortqualität mit Restaurants, Kultur, Parks und sehr guter Mobilität. Wohnungen in gefragten Mikrolagen sind dauerhaft stark nachgefragt.',
+    whyP2: 'Für Anleger ist die kontinuierliche Vermietungsnachfrage ein Plus, während Eigennutzer vor allem die urbane Lebensqualität schätzen.',
+    sectionTitleMicro: 'Gefragte Mikrolagen in Kreuzberg',
+    microAreas: [
+      'Bergmannkiez – klassischer Altbau, hohe Wohnattraktivität.',
+      'Wrangelkiez – lebendig, urban und stark nachgefragt.',
+      'Viktoriapark-Umfeld – grün und zugleich zentral.',
+      'Südstern-Umfeld – sehr gute Verkehrsanbindung.'
+    ],
+    sectionTitleFaq: 'Häufige Fragen zu Wohnungen in Kreuzberg',
+    faq: [
+      { q: 'Ist Kreuzberg als Investmentlage geeignet?', a: 'Ja, Kreuzberg gilt als stabil nachgefragter Teilmarkt. Entscheidend bleiben Lagequalität, Zustand und realistische Mietannahmen.' },
+      { q: 'Welche Mikrolagen in Kreuzberg sind besonders gefragt?', a: 'Bergmannkiez, Wrangelkiez und Lagen rund um Viktoriapark gehören zu den bekanntesten und gefragtesten Bereichen.' },
+      { q: 'Wie hoch ist die Konkurrenz beim Kauf?', a: 'In beliebten Lagen ist die Konkurrenz oft hoch. Eine schnelle, gut vorbereitete Finanzierung verbessert die Chancen deutlich.' },
+      { q: 'Wie unterstützt Sweet Home beim Kauf in Kreuzberg?', a: 'Wir helfen bei der Bewertung, verhandeln strukturiert und begleiten den Prozess bis zum Notartermin.' }
+    ]
+  }
+});
+
+// German district landing page: Spandau (Berlin)
+exports.spandauPropertiesPageDe = async (req, res, next) => renderBerlinDistrictPageDe(req, res, next, {
+  path: '/de/wohnung-kaufen-spandau',
+  displayName: 'Spandau',
+  defaultNeighborhood: 'Spandau',
+  heroImage: '/images/spandau.jpeg',
+  title: 'Wohnung kaufen Spandau: Eigentumswohnungen in Berlin',
+  metaDescription: 'Wohnung kaufen Spandau: Entdecken Sie Eigentumswohnungen in Spandau mit Marktüberblick, gefragten Mikrolagen und persönlicher Beratung.',
+  propertiesWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
+  propertiesParams: ['%spandau%'],
+  projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
+  projectsParams: ['%spandau%'],
+  content: {
+    heroTitle: 'Wohnung kaufen Spandau',
+    heroDescription: 'Spandau bietet viel Wohnraum, grünere Lagen und ein attraktives Preis-Leistungs-Verhältnis innerhalb Berlins. Der Bezirk ist für Eigennutzer und langfristig orientierte Anleger relevant.',
+    sectionTitleProperties: 'Eigentumswohnungen in Spandau',
+    sectionTitleProjects: 'Neubauprojekte in Spandau',
+    sectionTitleWhy: 'Warum Spandau für Immobilienkäufer interessant ist',
+    whyP1: 'In Spandau finden Käufer häufig größere Wohnflächen und familienfreundliche Quartiere. Der Bezirk kombiniert gewachsene Kieze mit neuen Entwicklungsflächen.',
+    whyP2: 'Für Investoren sind stabile Nachfrage in vielen Segmenten und teils attraktivere Einstiegspreise im Berliner Vergleich wichtige Argumente.',
+    sectionTitleMicro: 'Gefragte Mikrolagen in Spandau',
+    microAreas: [
+      'Altstadt Spandau – zentrale Versorgung und S/U-Bahn-Nähe.',
+      'Kladow – grün, wassernahe Wohnlagen mit hoher Qualität.',
+      'Wilhelmstadt – familienfreundliche Quartiere mit Potenzial.',
+      'Haselhorst – gute Anbindung und Neubauentwicklung.'
+    ],
+    sectionTitleFaq: 'Häufige Fragen zu Wohnungen in Spandau',
+    faq: [
+      { q: 'Ist Spandau für Familien geeignet?', a: 'Ja, Spandau ist wegen größerer Wohnflächen, grüner Umgebung und guter Nahversorgung bei Familien sehr beliebt.' },
+      { q: 'Wie unterscheidet sich Spandau von zentralen Berliner Lagen?', a: 'Spandau bietet oft mehr Fläche pro Budget und ruhigere Wohnumfelder, bei weiterhin guter Erreichbarkeit wichtiger Stadtbereiche.' },
+      { q: 'Welche Lagen in Spandau sind besonders gefragt?', a: 'Gefragt sind insbesondere gut angebundene Bereiche rund um Altstadt Spandau, Wilhelmstadt und ausgewählte wassernahe Lagen.' },
+      { q: 'Wie hilft Sweet Home beim Wohnungskauf in Spandau?', a: 'Wir unterstützen mit Lagevergleich, Objektprüfung, Verhandlung und vollständiger Transaktionsbegleitung.' }
+    ]
+  }
+});
