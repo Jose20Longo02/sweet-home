@@ -8,7 +8,7 @@
 <div class="berlin-landing-page">
   <section class="berlin-hero" aria-labelledby="charlottenburg-hero-title">
     <div class="berlin-hero__bg">
-      <img src="/images/berlin-international.jpg" alt="Wohnung kaufen in Charlottenburg, Berlin" fetchpriority="high" decoding="async">
+      <img src="/images/Charlottenburg.jpg" alt="Wohnung kaufen in Charlottenburg, Berlin" fetchpriority="high" decoding="async">
     </div>
     <div class="berlin-hero__overlay"></div>
     <div class="berlin-hero__content">
@@ -56,24 +56,6 @@
         <button type="submit">Immobilien suchen</button>
       </div>
     </form>
-  </section>
-
-  <section class="section district-snapshot" aria-labelledby="district-snapshot-heading">
-    <h2 id="district-snapshot-heading" class="berlin-featured__title">Marktüberblick Charlottenburg</h2>
-    <div class="district-snapshot__grid">
-      <article class="district-snapshot__card">
-        <h3>Aktive Angebote</h3>
-        <p><%= Number(districtStats.totalProperties || 0).toLocaleString('de-DE') %></p>
-      </article>
-      <article class="district-snapshot__card">
-        <h3>Ø Angebotspreis</h3>
-        <p><%= districtStats.avgPrice ? ('€' + Number(districtStats.avgPrice).toLocaleString('de-DE')) : 'Auf Anfrage' %></p>
-      </article>
-      <article class="district-snapshot__card">
-        <h3>Ø Wohnfläche</h3>
-        <p><%= districtStats.avgSize ? (Number(districtStats.avgSize).toLocaleString('de-DE') + ' m²') : 'n/a' %></p>
-      </article>
-    </div>
   </section>
 
   <section class="section featured berlin-featured" aria-labelledby="charlottenburg-properties-heading">
