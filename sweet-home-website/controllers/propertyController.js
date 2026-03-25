@@ -2889,7 +2889,6 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       WHERE p.status = 'active'
         AND p.country = 'Germany'
         AND p.city = 'Berlin'
-        AND LOWER(COALESCE(p.neighborhood, '')) LIKE $1
       ORDER BY p.created_at DESC
       LIMIT 9
     `;
