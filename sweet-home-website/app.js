@@ -381,6 +381,7 @@ app.use((req, res, next) => {
     '/de/wohnungen-berlin-kaufen': { en: '/properties-for-sale-berlin', de: '/de/wohnungen-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
     '/de/immobilien-berlin-kaufen': { en: '/properties-for-sale-berlin', de: '/de/wohnungen-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
     '/es/propiedades-en-venta-berlin': { en: '/properties-for-sale-berlin', de: '/de/wohnungen-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-charlottenburg': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-charlottenburg', es: '/es/propiedades-en-venta-berlin' },
     '/properties-for-sale-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
     '/de/immobilien-dubai-kaufen': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
     '/es/propiedades-en-venta-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
@@ -549,6 +550,7 @@ app.get('/de/immobilien-berlin-kaufen', (req, res) => {
   const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
   return res.redirect(301, `/de/wohnungen-berlin-kaufen${query}`);
 });
+app.get('/de/wohnung-kaufen-charlottenburg', propertyController.charlottenburgPropertiesPageDe);
 app.get('/es/propiedades-en-venta-berlin', propertyController.berlinPropertiesPage);
 
 // Dubai landing page
@@ -1436,6 +1438,7 @@ app.get('/sitemap.xml', async (req, res, next) => {
     staticUrls.push({ loc: `${base}/de/properties/for-sale/uae/dubai`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/de/properties/for-sale/cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/de/properties/for-sale/cyprus/paphos`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-charlottenburg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/es/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/es/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/es/properties/for-sale/uae`, lastmod: null, changefreq: 'weekly', priority: '0.7' });

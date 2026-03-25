@@ -3764,3 +3764,188 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
     next(err);
   }
 };
+
+// German district landing page: Charlottenburg (Berlin)
+exports.charlottenburgPropertiesPageDe = async (req, res, next) => {
+  try {
+    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
+    const districtPattern = '%charlottenburg%';
+    const propertiesSql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.created_at,
+        p.description,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name,
+        u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 30
+    `;
+    const projectsSql = `
+      SELECT
+        p.id,
+        p.slug,
+        p.title,
+        p.title_i18n,
+        p.description,
+        p.description_i18n,
+        p.country,
+        p.city,
+        p.photos,
+        p.min_price,
+        p.max_price,
+        p.total_units,
+        p.completion_date,
+        p.created_at
+      FROM projects p
+      WHERE p.status = 'active'
+        AND p.country = 'Germany'
+        AND p.city = 'Berlin'
+      ORDER BY p.created_at DESC
+      LIMIT 9
+    `;
+    const statsSql = `
+      SELECT
+        COUNT(*)::int AS total_properties,
+        ROUND(AVG(p.price))::int AS avg_price,
+        ROUND(AVG(
+          CASE
+            WHEN p.type = 'Apartment' THEN p.apartment_size
+            WHEN p.type IN ('House', 'Villa') THEN p.living_space
+            WHEN p.type = 'Land' THEN p.land_size
+            ELSE NULL
+          END
+        ))::int AS avg_size
+      FROM properties p
+      WHERE p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+    `;
+
+    const [{ rows: properties }, { rows: projects }, { rows: statsRows }] = await Promise.all([
+      query(propertiesSql, [districtPattern]),
+      query(projectsSql),
+      query(statsSql, [districtPattern])
+    ]);
+
+    const lang = 'de';
+    const recommendedProperties = (properties || []).map((p) => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: getLocalizedTitle(p, lang),
+        description: (p.description_i18n && p.description_i18n[lang]) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+
+    const charlottenburgProjects = (projects || []).map((project) => {
+      const photos = Array.isArray(project.photos) ? project.photos : (project.photos ? [project.photos] : []);
+      const normalizedPhotos = photos.map((ph) => {
+        if (!ph) return ph;
+        const phStr = String(ph);
+        if (phStr.startsWith('/uploads/') || phStr.startsWith('http')) return phStr;
+        return `/uploads/projects/${project.id}/${phStr}`;
+      });
+      const titleI18n = project.title_i18n && typeof project.title_i18n === 'object' ? project.title_i18n : null;
+      const descriptionI18n = project.description_i18n && typeof project.description_i18n === 'object' ? project.description_i18n : null;
+      return {
+        ...project,
+        title: (titleI18n && (titleI18n[lang] || titleI18n.en)) || project.title,
+        description: (descriptionI18n && (descriptionI18n[lang] || descriptionI18n.en)) || project.description,
+        photos: normalizedPhotos,
+        slug: project.slug || `project-${project.id}`
+      };
+    });
+
+    const stats = statsRows && statsRows[0] ? statsRows[0] : {};
+    const districtStats = {
+      totalProperties: Number(stats.total_properties) || 0,
+      avgPrice: Number(stats.avg_price) || 0,
+      avgSize: Number(stats.avg_size) || 0
+    };
+
+    const baseUrl = res.locals.baseUrl;
+    const charlottenburgUrls = {
+      en: `${baseUrl}/properties-for-sale-berlin`,
+      de: `${baseUrl}/de/wohnung-kaufen-charlottenburg`,
+      es: `${baseUrl}/es/propiedades-en-venta-berlin`
+    };
+    const canonicalUrl = charlottenburgUrls.de;
+    const hreflangAlternates = {
+      'en-us': charlottenburgUrls.en,
+      'de-de': charlottenburgUrls.de,
+      'es-es': charlottenburgUrls.es
+    };
+    const pageMetaDescription = 'Wohnung kaufen Charlottenburg: Entdecken Sie ausgewählte Eigentumswohnungen in Charlottenburg, inklusive Marktüberblick, Preisen, Lage-Insights und persönlicher Beratung durch Sweet Home.';
+    const pageTitle = 'Wohnung kaufen Charlottenburg: Eigentumswohnungen in Berlin';
+    const districtContent = {
+      heroTitle: 'Wohnung kaufen Charlottenburg',
+      heroDescription: 'Charlottenburg gehört zu den gefragtesten Wohnlagen Berlins. Hier treffen klassische Altbauten, hochwertige Modernisierungen und starke Mikrolagen auf eine stabile Nachfrage von Eigennutzern und Kapitalanlegern.',
+      sectionTitleProperties: 'Eigentumswohnungen in Charlottenburg',
+      sectionTitleProjects: 'Neubauprojekte in und um Charlottenburg',
+      sectionTitleWhy: 'Warum Charlottenburg für Immobilienkäufer so attraktiv ist',
+      whyP1: 'Charlottenburg überzeugt mit urbaner Lebensqualität, exzellenter Infrastruktur und hoher Standortstabilität. Die Kombination aus repräsentativen Straßenzügen, Naherholung und starker Anbindung macht den Bezirk für unterschiedliche Käuferprofile attraktiv.',
+      whyP2: 'Für Investoren bietet der Teilmarkt eine solide Vermietbarkeit, während Eigennutzer von etablierten Kiezen, kurzen Wegen und einer konstant hohen Nachfrage profitieren. Besonders zentrale Mikrolagen zeigen langfristig robuste Wertentwicklung.',
+      sectionTitleMicro: 'Beliebte Mikrolagen in Charlottenburg',
+      microAreas: [
+        'Savignyplatz & Umgebung – urban, lebendig und architektonisch stark gefragt.',
+        'Lietzensee – ruhiges, hochwertiges Wohnumfeld mit hoher Aufenthaltsqualität.',
+        'Kurfürstendamm-Nähe – repräsentative Lage mit internationaler Nachfrage.',
+        'Schloss Charlottenburg – charmante Bestandsquartiere mit stabilem Käuferinteresse.'
+      ],
+      sectionTitleFaq: 'Häufige Fragen zu Wohnungen in Charlottenburg',
+      faq: [
+        {
+          q: 'Ist Charlottenburg eher für Eigennutzer oder Kapitalanleger geeignet?',
+          a: 'Beides. Eigennutzer schätzen Lagequalität und Infrastruktur, Kapitalanleger die stabile Nachfrage, gute Vermietbarkeit und die hohe Standortresilienz.'
+        },
+        {
+          q: 'Welche Wohnungsarten sind in Charlottenburg besonders gefragt?',
+          a: 'Sehr gefragt sind modernisierte Altbauwohnungen, gut geschnittene 2- bis 4-Zimmer-Einheiten und hochwertige Neubauwohnungen in zentralen Mikrolagen.'
+        },
+        {
+          q: 'Wie unterscheidet sich Charlottenburg von anderen Berliner Bezirken?',
+          a: 'Charlottenburg bietet eine seltene Kombination aus Prestige, gewachsener Nachbarschaft, starker Infrastruktur und langfristig stabiler Nachfrage im Kaufsegment.'
+        },
+        {
+          q: 'Wie unterstützt Sweet Home beim Wohnungskauf in Charlottenburg?',
+          a: 'Wir begleiten den gesamten Kaufprozess: Objektselektion, Markt-Einordnung, Besichtigungskoordination, Verhandlung und Support bis zum Abschluss.'
+        }
+      ]
+    };
+
+    res.render('properties-charlottenburg-de', {
+      title: pageTitle,
+      useMainContainer: false,
+      useHomeHeader: true,
+      headPartial: '../partials/seo/charlottenburg-properties-head',
+      canonicalUrl,
+      hreflangAlternates,
+      pageMetaDescription,
+      districtContent,
+      districtStats,
+      locations,
+      neighborhoodCounts,
+      recommendedProperties,
+      charlottenburgProjects,
+      baseUrl: res.locals.baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+};
