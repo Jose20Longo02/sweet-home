@@ -3599,12 +3599,12 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
     };
     const titles = {
       en: 'Properties for Sale in Cyprus',
-      de: 'Immobilien Zypern kaufen',
+      de: 'Haus kaufen Zypern: Immobilien & Wohnungen auf Zypern kaufen',
       es: 'Propiedades en venta en Chipre'
     };
     const metaDescriptions = {
       en: 'Find properties for sale in Cyprus. Browse apartments, villas and coastal homes. Expert real estate guidance from Sweet Home.',
-      de: 'Immobilien in Zypern kaufen: Wohnungen, Villen und Strandhäuser. Sweet Home unterstützt internationale Käufer und Investoren.',
+      de: 'Haus kaufen Zypern oder Wohnung Zypern kaufen: Entdecken Sie Immobilien auf Zypern in Paphos, Limassol, Larnaka und Nikosia mit professioneller Beratung von Sweet Home.',
       es: 'Encuentra propiedades en venta en Chipre. Apartamentos, villas y viviendas costeras. Asesoramiento de Sweet Home.'
     };
     const cyprusPagePaths = {
@@ -3632,16 +3632,16 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
         neighborhoodsSourcesLabel: 'Sources'
       },
       de: {
-        whyInvestTitle: 'Warum in Immobilien in Zypern investieren?',
-        whyInvestP1: 'Zypern bietet einen stabilen und wachsenden Immobilienmarkt, gestützt durch solide wirtschaftliche Fundamentaldaten und die EU-Mitgliedschaft. Im Jahr 2024 blieb das Transaktionsvolumen mit rund 5,7 Milliarden Euro auf hohem Niveau, wobei Wohnimmobilien den Großteil der Marktaktivität ausmachten. Das Wirtschaftswachstum liegt weiterhin über dem EU-Durchschnitt, während sich die Inflation normalisiert hat und das Land mehrfach im Investment-Grade-Bereich hochgestuft wurde.',
-        whyInvestP2: 'Die Nachfrage nach Wohnimmobilien wird weiterhin durch internationale Käufer, eine starke Tourismusentwicklung und stabile Inlandsnachfrage unterstützt. Gleichzeitig ist der Wert der erteilten Baugenehmigungen im Jahr 2024 deutlich gestiegen, was auf erneute Entwicklungsdynamik hinweist. Diese Faktoren schaffen attraktive langfristige Rahmenbedingungen für Investoren, die stabile Erträge und Kapitalerhalt in einem regulierten EU-Markt suchen.',
-        bestAreasTitle: 'Beste Regionen für den Immobilienkauf in Zypern',
-        bestAreasIntro: 'Zypern bietet mehrere regionale Immobilienmärkte, wobei Paphos als besonders attraktive Küstenregion für internationale Käufer und Investoren hervorsticht.',
-        bestAreasPaphos: 'Einer der gefragtesten Standorte für Wohn- und Ferienimmobilien mit hoher internationaler Nachfrage. Die Region verbindet Lebensqualität am Meer mit stabiler Wohnraumnachfrage und moderner Projektentwicklung. Im Vergleich zu anderen Mittelmeerstandorten bietet Paphos ein attraktives Preisniveau bei solidem langfristigem Wertpotenzial.',
+        whyInvestTitle: 'Immobilien auf Zypern kaufen: Warum Zypern?',
+        whyInvestP1: 'Wer Immobilien auf Zypern kaufen möchte, profitiert von einem stabilen EU-Rechtsrahmen, wachsender internationaler Nachfrage und einem breit aufgestellten Markt aus Wohnungen, Häusern und Neubauprojekten. 2024 lag der Gesamttransaktionswert mit rund 5,7 Milliarden Euro weiterhin auf sehr hohem Niveau, wobei Wohnimmobilien den größten Anteil der Marktaktivität stellten.',
+        whyInvestP2: 'Für Käufer mit Fokus auf Haus kaufen Zypern oder Wohnung Zypern kaufen sprechen die solide Tourismusbasis, die laufende Infrastrukturentwicklung und die breite regionale Auswahl. Die Kombination aus Eigennutzung, Zweitwohnsitz und Vermietungspotenzial macht den Markt langfristig attraktiv.',
+        bestAreasTitle: 'Haus oder Wohnung in Zypern kaufen: Beste Regionen',
+        bestAreasIntro: 'Ob Sie ein Haus kaufen in Zypern oder gezielt nach Zypern Immobilien in Küstenlage suchen: Die wichtigsten Regionen unterscheiden sich bei Preisniveau, Renditechancen und Lebensstil deutlich.',
+        bestAreasPaphos: 'Starker Küstenmarkt mit hoher internationaler Nachfrage. Besonders attraktiv für Käufer, die eine Wohnung in Zypern oder ein Haus am Meer suchen.',
         bestAreasLimassol: 'Führendes Wirtschafts- und Investmentzentrum mit höherpreisigen Projekten und internationaler Ausrichtung.',
         bestAreasLarnaca: 'Wachsende Küstenregion mit zunehmender Infrastrukturentwicklung und wettbewerbsfähigen Einstiegspreisen.',
         bestAreasNicosia: 'Verwaltungs- und Geschäftszentrum mit stabiler Inlandsnachfrage.',
-        bestAreasOutro: 'Paphos bleibt insbesondere für internationale Investoren eine ausgewogene Kombination aus Renditepotenzial und hoher Lebensqualität innerhalb der EU.',
+        bestAreasOutro: 'Für viele Käufer bleibt Paphos der ausgewogene Einstieg, wenn das Ziel lautet: Immobilien Zypern kaufen mit guter Balance aus Preis, Lage und Nachfrage.',
         neighborhoodsTitle: 'Paphos Stadtteile Guide',
         neighborhoodsHint: 'Klicken Sie auf ein Gebiet, um lokalen Kontext und Immobilienprofil zu sehen.',
         neighborhoodsRealEstateLabel: 'Immobilien',

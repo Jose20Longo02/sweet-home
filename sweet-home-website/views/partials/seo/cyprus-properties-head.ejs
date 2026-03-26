@@ -1,12 +1,45 @@
 <%
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
-  const pageUrl = `${siteBaseUrl}/properties-for-sale-cyprus`;
+  const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+  const cyprusPagePaths = {
+    en: '/properties-for-sale-cyprus',
+    de: '/de/immobilien-zypern-kaufen',
+    es: '/es/propiedades-en-venta-chipre'
+  };
+  const pagePath = cyprusPagePaths[currentLang] || cyprusPagePaths.en;
+  const pageUrl = `${siteBaseUrl}${pagePath}`;
   const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : 'Find properties for sale in Cyprus. Browse apartments, villas and coastal homes. Expert real estate guidance from Sweet Home.';
   const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Properties for Sale in Cyprus';
-  const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+  const breadcrumbHome = currentLang === 'de' ? 'Startseite' : (currentLang === 'es' ? 'Inicio' : 'Home');
+  const ogImageAlt = currentLang === 'de'
+    ? 'Immobilien in Zypern kaufen - Sweet Home'
+    : (currentLang === 'es' ? 'Propiedades en venta en Chipre - Sweet Home' : 'Properties for sale in Cyprus - Sweet Home');
   const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
     ? ogLocale
     : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
+
+  const faqByLang = {
+    en: [
+      { q: 'Why invest in Cyprus real estate?', a: 'Cyprus is an EU member with an attractive tax regime (e.g. corporate tax 12.5%), double tax treaties, and common-law legal system. Real estate and construction contributed 16% of GVA in 2023. In 2024 total transaction value reached €5.7bn; residential demand drove 67%. Sovereign ratings were upgraded to investment grade with positive outlook.' },
+      { q: 'How active is the Cyprus residential market?', a: 'In 2024, 23,900 transactions were recorded (3% drop vs 2023) with total value €5.71bn (1% growth). Limassol had 44% of value, Nicosia and Paphos 18% each, Larnaca 16%. By volume: Limassol 29%, Nicosia 27%, Larnaca 21%. Residential made up 67% of total transaction value.' },
+      { q: 'Where are the most active areas in Cyprus?', a: 'Limassol leads in volume (29%) and value (44%). Nicosia 27% volume, 18% value; Larnaca 21% volume, 16% value; Paphos 18% value. For foreign buyers, Paphos and Limassol led in 2024 (32% and 29%). Limassol led apartment transactions in 2023 (€1.8bn, 3,053 units).' },
+      { q: 'How have property prices and the high-end segment performed?', a: 'Residential property prices showed around 7% year-on-year increase in 2024 (to Q3). High-end segment (≥€1.5m): 188 transactions in 2024, €550m total value, 4% YoY increase. New building permits value increased 2% in 2024.' },
+      { q: 'Is now a good time to buy property in Cyprus?', a: 'The Cyprus real estate market has shown resilience with record-high transaction values. Sovereign rating upgrades and improved lending (new mortgages +7% in 2024) support investment. Sweet Home can help with expert guidance for buying or investing in Cyprus.' }
+    ],
+    de: [
+      { q: 'Lohnt sich ein Hauskauf in Zypern aktuell?', a: 'Der Markt bleibt für Käufer interessant: Zypern ist EU-Mitglied, verzeichnete 2024 ein hohes Transaktionsvolumen und profitiert von internationaler Nachfrage. Wer ein Haus kaufen in Zypern möchte, findet in Küstenregionen wie Paphos und Larnaka weiterhin eine große Auswahl aus Bestands- und Neubauobjekten.' },
+      { q: 'Welche Regionen sind geeignet, wenn ich Zypern Immobilien kaufen möchte?', a: 'Für viele internationale Käufer stehen Paphos und Limassol im Fokus. Paphos ist besonders stark bei Lifestyle- und Küstenimmobilien, während Limassol als Business- und Premiummarkt gilt. Larnaka bietet oft günstigere Einstiegsniveaus und Nikosia stabilere lokale Nachfrage.' },
+      { q: 'Was ist besser: Wohnung in Zypern kaufen oder Haus in Zypern kaufen?', a: 'Wohnungen in Zypern sind häufig leichter vermietbar und haben meist geringere Einstiegspreise. Häuser bieten mehr Privatsphäre, Außenflächen und eignen sich gut für Eigennutzung oder Familien. Die beste Wahl hängt von Budget, Standort und Nutzungsziel ab.' },
+      { q: 'Wie entwickeln sich Preise bei Immobilien auf Zypern?', a: 'Die Preisentwicklung war in den letzten Jahren überwiegend positiv, getragen durch Nachfrage aus dem In- und Ausland. Gleichzeitig unterscheiden sich die Mikro-Lagen stark: Strandnahe Gebiete und moderne Projekte reagieren oft dynamischer als weniger zentrale Lagen.' },
+      { q: 'Wie finde ich passende Immobilien auf Zypern zum Kauf?', a: 'Definieren Sie zuerst Zielregion, Budget und Nutzung (Eigennutzung, Ferienimmobilie oder Investment). Danach vergleichen Sie gezielt Objekte nach Lage, Bauqualität, Nebenkosten und Vermietungspotenzial. Sweet Home begleitet Sie strukturiert durch den gesamten Prozess.' }
+    ],
+    es: [
+      { q: 'Por que invertir en propiedades en Chipre?', a: 'Chipre es miembro de la UE, con fundamentos economicos solidos y una demanda internacional estable en el mercado residencial.' },
+      { q: 'Que zonas destacan para comprar vivienda en Chipre?', a: 'Pafos y Limassol suelen liderar el interes internacional; Larnaca ofrece entradas mas competitivas y Nicosia demanda local estable.' },
+      { q: 'Es mejor comprar apartamento o casa en Chipre?', a: 'Depende del objetivo: apartamentos suelen facilitar rentabilidad y casas aportan mayor espacio y uso familiar.' }
+    ]
+  };
+  const faqEntries = faqByLang[currentLang] || faqByLang.en;
 %>
 <meta name="description" content="<%= pageDesc %>">
 <!-- Canonical and hreflang are output by main layout when canonicalUrl is passed -->
@@ -17,7 +50,7 @@
 <meta property="og:description" content="<%= pageDesc %>">
 <meta property="og:url" content="<%= (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl %>">
 <meta property="og:image" content="<%= siteBaseUrl %>/images/cyprus-international.jpg">
-<meta property="og:image:alt" content="Properties for sale in Cyprus – Sweet Home real estate">
+<meta property="og:image:alt" content="<%= ogImageAlt %>">
 <meta property="og:site_name" content="Sweet Home">
 <meta property="og:locale" content="<%= pageOgLocale %>">
 
@@ -26,7 +59,7 @@
 <meta name="twitter:title" content="<%= pageTitle %> | Sweet Home">
 <meta name="twitter:description" content="<%= pageDesc %>">
 <meta name="twitter:image" content="<%= siteBaseUrl %>/images/cyprus-international.jpg">
-<meta name="twitter:image:alt" content="Properties for sale in Cyprus – Sweet Home real estate">
+<meta name="twitter:image:alt" content="<%= ogImageAlt %>">
 
 <!-- JSON-LD WebPage + BreadcrumbList -->
 <script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
@@ -43,7 +76,7 @@
     {
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: siteBaseUrl + '/' },
+        { '@type': 'ListItem', position: 1, name: breadcrumbHome, item: siteBaseUrl + '/' },
         { '@type': 'ListItem', position: 2, name: pageTitle, item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
       ]
     }
@@ -62,7 +95,7 @@
     {
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: siteBaseUrl + '/' },
+        { '@type': 'ListItem', position: 1, name: breadcrumbHome, item: siteBaseUrl + '/' },
         { '@type': 'ListItem', position: 2, name: pageTitle, item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
       ]
     }
@@ -73,23 +106,25 @@
 <script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    { '@type': 'Question', name: 'Why invest in Cyprus real estate?', acceptedAnswer: { '@type': 'Answer', text: 'Cyprus is an EU member with an attractive tax regime (e.g. corporate tax 12.5%), double tax treaties, and common-law legal system. Real estate and construction contributed 16% of GVA in 2023. In 2024 total transaction value reached €5.7bn; residential demand drove 67%. Sovereign ratings were upgraded to investment grade with positive outlook.' } },
-    { '@type': 'Question', name: 'How active is the Cyprus residential market?', acceptedAnswer: { '@type': 'Answer', text: 'In 2024, 23,900 transactions were recorded (3% drop vs 2023) with total value €5.71bn (1% growth). Limassol had 44% of value, Nicosia and Paphos 18% each, Larnaca 16%. By volume: Limassol 29%, Nicosia 27%, Larnaca 21%. Residential made up 67% of total transaction value.' } },
-    { '@type': 'Question', name: 'Where are the most active areas in Cyprus?', acceptedAnswer: { '@type': 'Answer', text: 'Limassol leads in volume (29%) and value (44%). Nicosia 27% volume, 18% value; Larnaca 21% volume, 16% value; Paphos 18% value. For foreign buyers, Paphos and Limassol led in 2024 (32% and 29%). Limassol led apartment transactions in 2023 (€1.8bn, 3,053 units).' } },
-    { '@type': 'Question', name: 'How have property prices and the high-end segment performed?', acceptedAnswer: { '@type': 'Answer', text: 'Residential property prices showed around 7% year-on-year increase in 2024 (to Q3). High-end segment (≥€1.5m): 188 transactions in 2024, €550m total value, 4% YoY increase. New building permits value increased 2% in 2024.' } },
-    { '@type': 'Question', name: 'Is now a good time to buy property in Cyprus?', acceptedAnswer: { '@type': 'Answer', text: 'The Cyprus real estate market has shown resilience with record-high transaction values. Sovereign rating upgrades and improved lending (new mortgages +7% in 2024) support investment. Sweet Home can help with expert guidance for buying or investing in Cyprus.' } }
-  ]
+  mainEntity: faqEntries.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a
+    }
+  }))
 }) : JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    { '@type': 'Question', name: 'Why invest in Cyprus real estate?', acceptedAnswer: { '@type': 'Answer', text: 'Cyprus is an EU member with attractive tax regime and investment-grade sovereign ratings. Real estate contributed 16% GVA; 2024 transaction value €5.7bn, 67% residential.' } },
-    { '@type': 'Question', name: 'How active is the Cyprus residential market?', acceptedAnswer: { '@type': 'Answer', text: '23,900 transactions in 2024, €5.71bn value. Limassol 44% value; Nicosia and Paphos 18% each. Residential 67% of total value.' } },
-    { '@type': 'Question', name: 'Where are the most active areas in Cyprus?', acceptedAnswer: { '@type': 'Answer', text: 'Limassol leads (29% volume, 44% value). Nicosia, Larnaca, Paphos follow. Foreign buyers concentrated in Paphos (32%) and Limassol (29%).' } },
-    { '@type': 'Question', name: 'How have property prices and the high-end segment performed?', acceptedAnswer: { '@type': 'Answer', text: 'Residential prices c.7% YoY in 2024. High-end ≥€1.5m: 188 transactions, €550m, 4% YoY. Building permits value +2%.' } },
-    { '@type': 'Question', name: 'Is now a good time to buy property in Cyprus?', acceptedAnswer: { '@type': 'Answer', text: 'Market resilience, sovereign upgrades, and improved lending support investment. Sweet Home can help with expert guidance for buying or investing in Cyprus.' } }
-  ]
+  mainEntity: faqEntries.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a
+    }
+  }))
 })) %></script>
 
 <!-- JSON-LD ItemList for recommended properties -->
@@ -97,7 +132,7 @@
 <script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'Properties for Sale in Cyprus',
+  name: currentLang === 'de' ? 'Immobilien in Zypern kaufen' : (currentLang === 'es' ? 'Propiedades en venta en Chipre' : 'Properties for Sale in Cyprus'),
   description: pageDesc,
   itemListElement: recommendedProperties.map((p, idx) => ({
     '@type': 'ListItem',
@@ -116,7 +151,7 @@
 }) : JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'Properties for Sale in Cyprus',
+  name: currentLang === 'de' ? 'Immobilien in Zypern kaufen' : (currentLang === 'es' ? 'Propiedades en venta en Chipre' : 'Properties for Sale in Cyprus'),
   description: pageDesc,
   itemListElement: recommendedProperties.map((p, idx) => ({
     '@type': 'ListItem',
