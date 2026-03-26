@@ -234,23 +234,47 @@
 
   <section class="berlin-content section berlin-best-areas" aria-labelledby="berlin-internal-links-heading">
     <div class="berlin-content__inner">
-      <h2 id="berlin-internal-links-heading" class="berlin-content__title">Berlin Stadtteile: Weitere Immobilienseiten entdecken</h2>
-      <p class="berlin-content__intro">Für eine schnelle Standortanalyse finden Sie hier unsere wichtigsten Berlin-Immobilienseiten mit direktem Einstieg in jeden Bezirk.</p>
-      <ul class="berlin-areas__list">
-        <li class="berlin-areas__item"><a href="/de/wohnungen-berlin-kaufen">Wohnungen in Berlin kaufen (Hauptseite)</a></li>
-        <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-charlottenburg">Wohnung kaufen Charlottenburg</a></li>
-        <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-moabit">Wohnung kaufen Moabit</a></li>
-        <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-friedrichshain-kreuzberg">Wohnung kaufen Friedrichshain-Kreuzberg</a></li>
-        <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-schoeneberg">Wohnung kaufen Schöneberg</a></li>
-        <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-prenzlauer-berg">Wohnung kaufen Prenzlauer Berg</a></li>
-        <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-wedding">Wohnung kaufen Wedding</a></li>
-        <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-tempelhof">Wohnung kaufen Tempelhof</a></li>
-        <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-neukoelln">Wohnung kaufen Neukölln</a></li>
-        <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-reinickendorf">Wohnung kaufen Reinickendorf</a></li>
-        <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-kreuzberg">Wohnung kaufen Kreuzberg</a></li>
-        <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-spandau">Wohnung kaufen Spandau</a></li>
-      </ul>
-      <p class="berlin-content__outro">Interne Verlinkung zwischen Hub und Stadtteilseiten verbessert die thematische Relevanz und hilft Suchmaschinen, die Seitenhierarchie klarer zu verstehen.</p>
+      <% const berlinHubPath = (typeof localePath === 'function') ? localePath('/properties-for-sale-berlin') : '/properties-for-sale-berlin'; %>
+      <% const berlinSearchPath = (typeof localePath === 'function') ? localePath('/properties/for-sale/germany/berlin') : '/properties/for-sale/germany/berlin'; %>
+      <% if (lang === 'de') { %>
+        <h2 id="berlin-internal-links-heading" class="berlin-content__title">Berlin Stadtteile: Weitere Immobilienseiten entdecken</h2>
+        <p class="berlin-content__intro">Für eine schnelle Standortanalyse finden Sie hier unsere wichtigsten Berlin-Immobilienseiten mit direktem Einstieg in jeden Bezirk.</p>
+        <ul class="berlin-areas__list">
+          <li class="berlin-areas__item"><a href="/de/wohnungen-berlin-kaufen">Wohnungen in Berlin kaufen (Hauptseite)</a></li>
+          <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-charlottenburg">Wohnung kaufen Charlottenburg</a></li>
+          <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-moabit">Wohnung kaufen Moabit</a></li>
+          <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-friedrichshain-kreuzberg">Wohnung kaufen Friedrichshain-Kreuzberg</a></li>
+          <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-schoeneberg">Wohnung kaufen Schöneberg</a></li>
+          <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-prenzlauer-berg">Wohnung kaufen Prenzlauer Berg</a></li>
+          <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-wedding">Wohnung kaufen Wedding</a></li>
+          <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-tempelhof">Wohnung kaufen Tempelhof</a></li>
+          <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-neukoelln">Wohnung kaufen Neukölln</a></li>
+          <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-reinickendorf">Wohnung kaufen Reinickendorf</a></li>
+          <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-kreuzberg">Wohnung kaufen Kreuzberg</a></li>
+          <li class="berlin-areas__item"><a href="/de/wohnung-kaufen-spandau">Wohnung kaufen Spandau</a></li>
+        </ul>
+        <p class="berlin-content__outro">Interne Verlinkung zwischen Hub und Stadtteilseiten verbessert die thematische Relevanz und hilft Suchmaschinen, die Seitenhierarchie klarer zu verstehen.</p>
+      <% } else if (lang === 'es') { %>
+        <h2 id="berlin-internal-links-heading" class="berlin-content__title">Zonas de Berlín: explorar propiedades por barrio</h2>
+        <p class="berlin-content__intro">Estos enlaces ayudan a comparar barrios y encontrar propiedades en Berlín según presupuesto, estilo de vida y potencial de inversión.</p>
+        <ul class="berlin-areas__list">
+          <li class="berlin-areas__item"><a href="<%= berlinHubPath %>">Propiedades en venta en Berlín (página principal)</a></li>
+          <% (berlinNeighborhoods || []).forEach(function(item){ %>
+            <li class="berlin-areas__item"><a href="<%= berlinSearchPath %>?neighborhood=<%= encodeURIComponent(item.name) %>">Propiedades en <%= item.name %></a></li>
+          <% }); %>
+        </ul>
+        <p class="berlin-content__outro">Una estructura interna clara entre página principal y resultados por barrio mejora la exploración del usuario y la interpretación temática para buscadores.</p>
+      <% } else { %>
+        <h2 id="berlin-internal-links-heading" class="berlin-content__title">Berlin Neighborhoods: Explore Properties by District</h2>
+        <p class="berlin-content__intro">Use these links to compare neighborhoods and find Berlin apartments for sale by budget, lifestyle fit, and investment profile.</p>
+        <ul class="berlin-areas__list">
+          <li class="berlin-areas__item"><a href="<%= berlinHubPath %>">Apartments for Sale in Berlin (main page)</a></li>
+          <% (berlinNeighborhoods || []).forEach(function(item){ %>
+            <li class="berlin-areas__item"><a href="<%= berlinSearchPath %>?neighborhood=<%= encodeURIComponent(item.name) %>">Apartments in <%= item.name %> for sale</a></li>
+          <% }); %>
+        </ul>
+        <p class="berlin-content__outro">This internal linking setup keeps the Berlin hub connected to district-level search paths without creating thin duplicate landing pages.</p>
+      <% } %>
     </div>
   </section>
 
