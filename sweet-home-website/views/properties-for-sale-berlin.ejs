@@ -378,6 +378,38 @@
           <p><%= t('berlin.faqA5','Current conditions can be favourable for certain investors: purchase prices for condominiums and apartment buildings have adjusted from previous highs, while demand for housing and rental growth remain strong. The recalibration of the market to a new price level is seen as largely complete, and institutional interest in residential assets has increased again due to housing shortage and the resilience of the sector. Whether it\'s the right time for you depends on your goals, financing, and target area. Sweet Home can help you explore carefully selected properties and provide expert guidance for buying or investing in Berlin.') %></p>
         </div>
       </article>
+      <% if (lang === 'en') { %>
+      <article class="berlin-faq__item">
+        <h3 class="berlin-faq__question">
+          <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="berlin-faq-a6" id="berlin-faq-q6" data-faq-toggle>
+            What should I know about buying apartment Berlin as an international buyer?
+          </button>
+        </h3>
+        <div class="berlin-faq__answer" id="berlin-faq-a6" role="region" aria-labelledby="berlin-faq-q6" hidden>
+          <p>Buying apartment Berlin usually starts with district selection, financing pre-check, and legal due diligence. International buyers should verify ownership structure, ancillary purchase costs, and occupancy status before signing. Working with a local advisor helps you compare listings faster and avoid overpriced micro-locations.</p>
+        </div>
+      </article>
+      <article class="berlin-faq__item">
+        <h3 class="berlin-faq__question">
+          <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="berlin-faq-a7" id="berlin-faq-q7" data-faq-toggle>
+            Where can I find Berlin flats for sale with strong rental potential?
+          </button>
+        </h3>
+        <div class="berlin-faq__answer" id="berlin-faq-a7" role="region" aria-labelledby="berlin-faq-q7" hidden>
+          <p>Berlin flats for sale with stable rental demand are commonly found in well-connected neighborhoods such as Moabit, Neukölln, Friedrichshain-Kreuzberg, and parts of Wedding. Focus on transport links, building condition, and realistic rent benchmarks rather than headline asking prices alone.</p>
+        </div>
+      </article>
+      <article class="berlin-faq__item">
+        <h3 class="berlin-faq__question">
+          <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="berlin-faq-a8" id="berlin-faq-q8" data-faq-toggle>
+            Are Berlin flats for sale better for investment or owner-occupancy?
+          </button>
+        </h3>
+        <div class="berlin-faq__answer" id="berlin-faq-a8" role="region" aria-labelledby="berlin-faq-q8" hidden>
+          <p>Both can work. For investment, prioritize yield resilience, tenant demand, and building quality. For owner-occupancy, prioritize neighborhood fit, layout, and long-term livability. The best choice depends on your timeline, financing profile, and risk tolerance.</p>
+        </div>
+      </article>
+      <% } %>
     </div>
     <p class="berlin-faq__source"><%= t('berlin.faqSource','Sources: Berlin Hyp & CBRE Housing Market Report Berlin 2025.') %> <a href="https://www.berlinhyp.de/en/newsroom/press-information/housing-market-report-berlin-2025-asking-rents-continue-to-rise-rapidly" rel="noopener noreferrer" target="_blank">Berlin Hyp &amp; CBRE Housing Market Report Berlin 2025</a></p>
   </section>
