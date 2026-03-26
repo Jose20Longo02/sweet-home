@@ -749,6 +749,13 @@
   min-width: 280px;
 }
 
+.cyprus-villas-banner__cta .btn.btn-primary:hover,
+.cyprus-villas-banner__cta .btn.btn-primary:focus,
+.cyprus-villas-banner__cta .btn.btn-primary:focus-visible,
+.cyprus-villas-banner__cta .btn.btn-primary:active {
+  color: #ffffff !important;
+}
+
 .berlin-content__intro {
   margin-bottom: 28px;
 }
