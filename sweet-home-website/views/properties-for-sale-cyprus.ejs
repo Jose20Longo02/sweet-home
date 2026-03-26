@@ -245,6 +245,123 @@
     </div>
   </section>
 
+  <% if (currentLocale === 'de') { %>
+  <section class="berlin-content section berlin-buyer-playbook" aria-labelledby="cyprus-buying-guide-heading">
+    <div class="berlin-content__inner berlin-buyer-playbook__inner">
+      <h2 id="cyprus-buying-guide-heading" class="berlin-content__title">Immobilien auf Zypern kaufen: Kaufnebenkosten und Ablauf</h2>
+      <p class="berlin-content__intro">Diese Orientierung hilft Ihnen beim Vergleich von Objekten: voraussichtliche Nebenkosten beim Immobilienkauf in Zypern und ein realistischer Ablauf bis zur Umschreibung. Alle Referenzen basieren auf offiziellen Stellen.</p>
+
+      <div class="berlin-buyer-playbook__tabs" role="tablist" aria-label="Kaufguide Zypern Tabs">
+        <button type="button" class="berlin-buyer-playbook__tab is-active" role="tab" aria-selected="true" aria-controls="cyprus-playbook-costs" id="cyprus-playbook-tab-costs" data-cy-playbook-tab="costs">Kostenplaner</button>
+        <button type="button" class="berlin-buyer-playbook__tab" role="tab" aria-selected="false" aria-controls="cyprus-playbook-timeline" id="cyprus-playbook-tab-timeline" data-cy-playbook-tab="timeline">Kaufablauf</button>
+      </div>
+
+      <div class="berlin-buyer-playbook__panel is-active" id="cyprus-playbook-costs" role="tabpanel" aria-labelledby="cyprus-playbook-tab-costs" data-cy-playbook-panel="costs">
+        <div class="berlin-cost-planner">
+          <div class="berlin-cost-planner__controls">
+            <label for="cyprus-cost-price">Kaufpreis (EUR)</label>
+            <input id="cyprus-cost-price" type="number" min="50000" step="1000" value="350000" data-cy-cost-input="price">
+
+            <label for="cyprus-cost-transfer">Transfer Fee Schätzung (%)</label>
+            <input id="cyprus-cost-transfer" type="number" min="0" max="8" step="0.1" value="4" data-cy-cost-input="transfer">
+
+            <label for="cyprus-cost-legal">Rechts-/Pruefkosten Schätzung (%)</label>
+            <input id="cyprus-cost-legal" type="number" min="0" max="3" step="0.1" value="1" data-cy-cost-input="legal">
+
+            <label for="cyprus-cost-other">Weitere Nebenkosten Schätzung (%)</label>
+            <input id="cyprus-cost-other" type="number" min="0" max="3" step="0.1" value="0.5" data-cy-cost-input="other">
+          </div>
+          <div class="berlin-cost-planner__results" aria-live="polite">
+            <div class="berlin-cost-pill">
+              <span>Kaufpreis</span>
+              <strong id="cyprus-cost-price-value">EUR 350,000</strong>
+            </div>
+            <div class="berlin-cost-pill">
+              <span>Transfer Fee (Schaetzung)</span>
+              <strong id="cyprus-cost-transfer-value">EUR 14,000</strong>
+            </div>
+            <div class="berlin-cost-pill">
+              <span>Rechts-/Pruefkosten (Schaetzung)</span>
+              <strong id="cyprus-cost-legal-value">EUR 3,500</strong>
+            </div>
+            <div class="berlin-cost-pill">
+              <span>Weitere Nebenkosten (Schaetzung)</span>
+              <strong id="cyprus-cost-other-value">EUR 1,750</strong>
+            </div>
+            <div class="berlin-cost-pill berlin-cost-pill--total">
+              <span>Gesamter Mittelbedarf (Schaetzung)</span>
+              <strong id="cyprus-cost-total-value">EUR 369,250</strong>
+            </div>
+          </div>
+        </div>
+        <div class="berlin-buyer-playbook__table-wrap">
+          <table class="berlin-buyer-playbook__table">
+            <thead>
+              <tr>
+                <th>Kosten-/Prozesspunkt</th>
+                <th>Wichtig fuer Kaeufer</th>
+                <th>Offizielle Quelle</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Transfer Fee / Registrierung</td>
+                <td>Die Umschreibung und Gebuehren richten sich nach den Vorgaben des Department of Lands and Surveys.</td>
+                <td><a href="https://www.gov.cy/en/service/calculation-of-real-estates-transfer-fees/" target="_blank" rel="noopener noreferrer">Gov.cy</a></td>
+              </tr>
+              <tr>
+                <td>Steuerliche Einordnung (inkl. VAT-Themen)</td>
+                <td>Die konkrete steuerliche Behandlung haengt vom Objekttyp und Nutzungszweck ab.</td>
+                <td><a href="https://www.mof.gov.cy/mof/tax/taxdep.nsf/index_en/index_en?OpenDocument" target="_blank" rel="noopener noreferrer">Tax Department (Ministry of Finance)</a></td>
+              </tr>
+              <tr>
+                <td>Land Registry / Verfahren</td>
+                <td>Verfahrensschritte, Einreichungen und Statuspruefungen laufen ueber die offiziellen DLS-Stellen.</td>
+                <td><a href="https://portal.dls.moi.gov.cy/en/" target="_blank" rel="noopener noreferrer">Department of Lands and Surveys</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="berlin-buyer-playbook__panel" id="cyprus-playbook-timeline" role="tabpanel" aria-labelledby="cyprus-playbook-tab-timeline" data-cy-playbook-panel="timeline" hidden>
+        <div class="berlin-timeline">
+          <article class="berlin-timeline__step">
+            <button type="button" class="berlin-timeline__trigger" data-cy-timeline-toggle aria-expanded="false" aria-controls="cyprus-timeline-step-1" id="cyprus-timeline-btn-1">1) Suche, Budget und Vorpruefung (haeufig 1-3 Wochen)</button>
+            <div class="berlin-timeline__content" id="cyprus-timeline-step-1" role="region" aria-labelledby="cyprus-timeline-btn-1" hidden>
+              <p>Objekte nach Lage, Nutzung und Budget vorfiltern. Parallel Finanzierung, Kaufstruktur und Dokumente vorbereiten.</p>
+            </div>
+          </article>
+          <article class="berlin-timeline__step">
+            <button type="button" class="berlin-timeline__trigger" data-cy-timeline-toggle aria-expanded="false" aria-controls="cyprus-timeline-step-2" id="cyprus-timeline-btn-2">2) Rechtliche und steuerliche Pruefung (haeufig 1-4 Wochen)</button>
+            <div class="berlin-timeline__content" id="cyprus-timeline-step-2" role="region" aria-labelledby="cyprus-timeline-btn-2" hidden>
+              <p>Vertragspruefung, Eigentums- und Lastencheck sowie steuerliche Einordnung auf Basis offizieller Vorgaben.</p>
+            </div>
+          </article>
+          <article class="berlin-timeline__step">
+            <button type="button" class="berlin-timeline__trigger" data-cy-timeline-toggle aria-expanded="false" aria-controls="cyprus-timeline-step-3" id="cyprus-timeline-btn-3">3) Vertragsunterzeichnung und Zahlungen (haeufig 1-3 Wochen)</button>
+            <div class="berlin-timeline__content" id="cyprus-timeline-step-3" role="region" aria-labelledby="cyprus-timeline-btn-3" hidden>
+              <p>Nach Freigaben erfolgen Unterschrift, Zahlungsabwicklung und die notwendigen Einreichungen bei den zustaendigen Stellen.</p>
+            </div>
+          </article>
+          <article class="berlin-timeline__step">
+            <button type="button" class="berlin-timeline__trigger" data-cy-timeline-toggle aria-expanded="false" aria-controls="cyprus-timeline-step-4" id="cyprus-timeline-btn-4">4) Registrierung/Umschreibung und Uebergabe (haeufig 2-8+ Wochen)</button>
+            <div class="berlin-timeline__content" id="cyprus-timeline-step-4" role="region" aria-labelledby="cyprus-timeline-btn-4" hidden>
+              <p>Die Dauer haengt vom Einzelfall und der Bearbeitungskapazitaet der Behoerden ab; planen Sie deshalb mit Zeitpuffer.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+      <p class="berlin-buyer-playbook__note">Hinweis: Diese Angaben sind eine allgemeine Orientierung und keine Rechts-, Steuer- oder Finanzberatung.</p>
+      <p class="berlin-buyer-playbook__sources">Offizielle Quellen:
+        <a href="https://www.gov.cy/en/service/calculation-of-real-estates-transfer-fees/" target="_blank" rel="noopener noreferrer">Gov.cy Transfer Fees</a>,
+        <a href="https://portal.dls.moi.gov.cy/en/" target="_blank" rel="noopener noreferrer">DLS Portal</a>,
+        <a href="https://www.mof.gov.cy/mof/tax/taxdep.nsf/index_en/index_en?OpenDocument" target="_blank" rel="noopener noreferrer">Tax Department (MoF)</a>.
+      </p>
+    </div>
+  </section>
+  <% } %>
+
   <!-- 6) FAQ: Cyprus real estate (from KPMG 13th Edition & PwC Year in Review 2024) -->
   <section class="berlin-faq section" aria-labelledby="cyprus-faq-heading">
     <h2 id="cyprus-faq-heading" class="berlin-faq__title"><%= t('cyprus.faqTitle','Frequently asked questions about buying property in Cyprus') %></h2>
@@ -353,6 +470,81 @@ document.querySelectorAll('[data-neighborhood-card]').forEach(function(card) {
     if (toggle) toggle.click();
   });
 });
+</script>
+<script>
+(function initCyprusBuyerPlaybook() {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[data-cy-playbook-tab]'));
+  var panels = Array.prototype.slice.call(document.querySelectorAll('[data-cy-playbook-panel]'));
+  if (!tabs.length || !panels.length) return;
+
+  function activateTab(name) {
+    tabs.forEach(function(btn) {
+      var active = btn.getAttribute('data-cy-playbook-tab') === name;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    panels.forEach(function(panel) {
+      var active = panel.getAttribute('data-cy-playbook-panel') === name;
+      panel.classList.toggle('is-active', active);
+      panel.hidden = !active;
+    });
+  }
+
+  tabs.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      activateTab(btn.getAttribute('data-cy-playbook-tab'));
+    });
+  });
+
+  var priceInput = document.querySelector('[data-cy-cost-input="price"]');
+  var transferInput = document.querySelector('[data-cy-cost-input="transfer"]');
+  var legalInput = document.querySelector('[data-cy-cost-input="legal"]');
+  var otherInput = document.querySelector('[data-cy-cost-input="other"]');
+  if (priceInput && transferInput && legalInput && otherInput) {
+    var priceValueEl = document.getElementById('cyprus-cost-price-value');
+    var transferValueEl = document.getElementById('cyprus-cost-transfer-value');
+    var legalValueEl = document.getElementById('cyprus-cost-legal-value');
+    var otherValueEl = document.getElementById('cyprus-cost-other-value');
+    var totalValueEl = document.getElementById('cyprus-cost-total-value');
+
+    function formatEur(value) {
+      return 'EUR ' + Number(value || 0).toLocaleString('de-DE', { maximumFractionDigits: 0 });
+    }
+
+    function recalcCosts() {
+      var price = Math.max(Number(priceInput.value) || 0, 0);
+      var transferPct = Math.max(Number(transferInput.value) || 0, 0);
+      var legalPct = Math.max(Number(legalInput.value) || 0, 0);
+      var otherPct = Math.max(Number(otherInput.value) || 0, 0);
+      var transferCost = price * (transferPct / 100);
+      var legalCost = price * (legalPct / 100);
+      var otherCost = price * (otherPct / 100);
+      var total = price + transferCost + legalCost + otherCost;
+
+      if (priceValueEl) priceValueEl.textContent = formatEur(price);
+      if (transferValueEl) transferValueEl.textContent = formatEur(transferCost);
+      if (legalValueEl) legalValueEl.textContent = formatEur(legalCost);
+      if (otherValueEl) otherValueEl.textContent = formatEur(otherCost);
+      if (totalValueEl) totalValueEl.textContent = formatEur(total);
+    }
+
+    [priceInput, transferInput, legalInput, otherInput].forEach(function(input) {
+      input.addEventListener('input', recalcCosts);
+      input.addEventListener('change', recalcCosts);
+    });
+    recalcCosts();
+  }
+
+  document.querySelectorAll('[data-cy-timeline-toggle]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var expanded = btn.getAttribute('aria-expanded') === 'true';
+      var targetId = btn.getAttribute('aria-controls');
+      var target = targetId ? document.getElementById(targetId) : null;
+      btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      if (target) target.hidden = expanded;
+    });
+  });
+})();
 </script>
 <script>
 (function headerShrink() {
