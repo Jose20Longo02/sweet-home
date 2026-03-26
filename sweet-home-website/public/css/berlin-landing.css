@@ -697,21 +697,32 @@
   background: #fff;
 }
 
-.cyprus-villas-banner {
+.cyprus-villas-banner,
+.cyprus-villas-main-hub-cta {
   position: relative;
   overflow: hidden;
   border-radius: 16px;
   min-height: 380px;
   max-width: 1060px;
   margin: 10px auto 26px;
-  background-image:
-    linear-gradient(120deg, rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.58)),
-    url('/images/Villa%20cyprus.avif');
   background-size: cover;
   background-position: center;
 }
 
-.cyprus-villas-banner .berlin-content__inner {
+.cyprus-villas-banner {
+  background-image:
+    linear-gradient(120deg, rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.58)),
+    url('/images/Villa%20cyprus.avif');
+}
+
+.cyprus-villas-main-hub-cta {
+  background-image:
+    linear-gradient(120deg, rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.58)),
+    url('/images/Apartments%20Cyprus.webp');
+}
+
+.cyprus-villas-banner .berlin-content__inner,
+.cyprus-villas-main-hub-cta .berlin-content__inner {
   position: relative;
   z-index: 1;
   max-width: 840px;
@@ -726,18 +737,22 @@
 }
 
 .cyprus-villas-banner .berlin-content__title,
-.cyprus-villas-banner .berlin-content__intro {
+.cyprus-villas-banner .berlin-content__intro,
+.cyprus-villas-main-hub-cta .berlin-content__title,
+.cyprus-villas-main-hub-cta .berlin-content__intro {
   color: #ffffff;
   text-align: center;
 }
 
-.cyprus-villas-banner .berlin-content__title {
+.cyprus-villas-banner .berlin-content__title,
+.cyprus-villas-main-hub-cta .berlin-content__title {
   font-size: clamp(1.7rem, 3.2vw, 2.2rem);
   line-height: 1.2;
   margin: 0;
 }
 
-.cyprus-villas-banner .berlin-content__intro {
+.cyprus-villas-banner .berlin-content__intro,
+.cyprus-villas-main-hub-cta .berlin-content__intro {
   max-width: 600px;
   margin: 0;
 }
@@ -747,21 +762,25 @@
   text-align: center;
 }
 
-.cyprus-villas-banner__cta .btn.btn-primary {
+.cyprus-villas-main-hub-cta__cta {
+  margin: 0;
+  text-align: center;
+}
+
+.cyprus-villas-banner__cta .btn.btn-primary,
+.cyprus-villas-main-hub-cta__cta .btn.btn-primary {
   min-width: 280px;
 }
 
 .cyprus-villas-banner__cta .btn.btn-primary:hover,
 .cyprus-villas-banner__cta .btn.btn-primary:focus,
 .cyprus-villas-banner__cta .btn.btn-primary:focus-visible,
-.cyprus-villas-banner__cta .btn.btn-primary:active {
+.cyprus-villas-banner__cta .btn.btn-primary:active,
+.cyprus-villas-main-hub-cta__cta .btn.btn-primary:hover,
+.cyprus-villas-main-hub-cta__cta .btn.btn-primary:focus,
+.cyprus-villas-main-hub-cta__cta .btn.btn-primary:focus-visible,
+.cyprus-villas-main-hub-cta__cta .btn.btn-primary:active {
   color: #ffffff !important;
-}
-
-.cyprus-villas-main-hub-cta .berlin-content__inner,
-.cyprus-villas-main-hub-cta .berlin-content__intro,
-.cyprus-villas-main-hub-cta .section-cta {
-  text-align: center;
 }
 
 .berlin-content__intro {
@@ -1090,13 +1109,15 @@
     grid-template-columns: 1fr;
   }
 
-  .cyprus-villas-banner {
+  .cyprus-villas-banner,
+  .cyprus-villas-main-hub-cta {
     min-height: 330px;
     margin: 10px 16px 22px;
     border-radius: 14px;
   }
 
-  .cyprus-villas-banner__cta .btn.btn-primary {
+  .cyprus-villas-banner__cta .btn.btn-primary,
+  .cyprus-villas-main-hub-cta__cta .btn.btn-primary {
     min-width: 0;
     width: 100%;
   }
