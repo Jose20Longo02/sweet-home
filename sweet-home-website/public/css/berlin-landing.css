@@ -758,6 +758,12 @@
   color: #ffffff !important;
 }
 
+.cyprus-villas-main-hub-cta .berlin-content__inner,
+.cyprus-villas-main-hub-cta .berlin-content__intro,
+.cyprus-villas-main-hub-cta .section-cta {
+  text-align: center;
+}
+
 .berlin-content__intro {
   margin-bottom: 28px;
 }
