@@ -81,9 +81,9 @@
     "aria": { "hero": "For Sellers hero", "primaryActions": "Primary actions", "heroNote": "Hero background image has a decorative dark overlay to improve text contrast", "reasons": "Reasons list", "recentlySoldCarousel": "Recently sold carousel" }
   },
   "berlin": {
-    "heroTitle": "Properties for Sale in Berlin",
-    "heroDescription": "Discover carefully selected properties for sale in Berlin, one of Europe's most attractive real estate markets. Sweet Home supports international buyers and investors with expert guidance and access to residential and investment opportunities across the city.",
-    "heroImgAlt": "Berlin skyline – properties for sale in Berlin, Germany",
+    "heroTitle": "Apartments for Sale in Berlin",
+    "heroDescription": "Discover apartments in Berlin for sale, from central Altbau homes to modern investment-ready units. Sweet Home helps international buyers compare Berlin apartments for sale with local guidance, pricing context, and district-by-district insights.",
+    "heroImgAlt": "Berlin skyline – apartments for sale in Berlin, Germany",
     "featuredTitle": "Apartments in Berlin",
     "viewAll": "View all apartments in Berlin",
     "newDevelopmentsTitle": "New developments in Berlin",
@@ -99,7 +99,7 @@
     "bestAreasNeukoelln": "Dynamic district with strong rent increases and continued urban transformation.",
     "bestAreasLichtenberg": "More affordable entry points with emerging growth potential as rental spreads narrow across the city.",
     "bestAreasOutro": "These districts reflect Berlin's diverse residential landscape, from prime core locations to growth-oriented submarkets benefiting from citywide supply constraints.",
-    "faqTitle": "Frequently asked questions about buying property in Berlin",
+    "faqTitle": "Frequently asked questions about buying an apartment in Berlin",
     "faqSource": "Sources: Berlin Hyp & CBRE Housing Market Report Berlin 2025.",
     "faqQ1": "Why should I consider investing in Berlin real estate?",
     "faqA1": "Berlin is one of Europe's most attractive real estate markets. The city has strong demographic growth, a robust economy, and ongoing demand for housing. According to the Berlin Housing Market Report 2025 (Berlin Hyp & CBRE), the capital needs around 222,000 new apartments by 2040, plus land provision for a further 50,000 units. Asking rents rose again in 2024 (by 12% to €15.79 per m² on average), making Berlin one of the top cities in Germany for rental dynamics. For investors, this combination of demand, limited supply, and rental growth supports long-term value and income potential.",

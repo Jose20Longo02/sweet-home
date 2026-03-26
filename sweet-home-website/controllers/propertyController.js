@@ -2939,12 +2939,12 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       'es-es': berlinUrls.es
     };
     const titles = {
-      en: 'Properties for Sale in Berlin',
+      en: 'Apartments for Sale in Berlin | Berlin Flats for Sale',
       de: 'Wohnung in Berlin kaufen: Eigentumswohnungen & Immobilien',
       es: 'Propiedades en venta en Berlín'
     };
     const metaDescriptions = {
-      en: 'Find properties for sale in Berlin, Germany. Browse the most viewed apartments, houses, and villas. Expert real estate guidance from Sweet Home.',
+      en: 'Explore apartments for sale in Berlin, including Berlin flats for sale and investment-ready homes. Compare neighborhoods, pricing, and expert support for buying an apartment in Berlin.',
       de: 'Wohnung in Berlin kaufen: Entdecken Sie Eigentumswohnungen und Immobilien in Berlin. Aktuelle Angebote, Stadtteile im Überblick und Beratung für Käufer und Investoren.',
       es: 'Encuentra propiedades en venta en Berlín, Alemania. Apartamentos, casas y villas. Asesoramiento inmobiliario de Sweet Home para compradores e inversores internacionales.'
     };

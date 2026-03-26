@@ -2,6 +2,22 @@
 
 Tracks page-level keyword targeting by language, including estimated search volume and SEO difficulty.
 
+## English (`en`) - Berlin Landing Page
+
+- **Page:** `/properties-for-sale-berlin`
+- **Template:** `views/properties-for-sale-berlin.ejs`
+- **Intent:** Transactional (buy apartment/property in Berlin)
+- **Status:** Optimized (Berlin EN apartment/flat terms)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| apartment for sale in berlin | 590 | 33 | Primary |
+| berlin apartments for sale | 590 | 34 | Primary |
+| apartments in berlin for sale | 480 | 28 | Secondary |
+| berlin flats for sale | 480 | 32 | Secondary |
+| flats for sale berlin | 480 | 32 | Secondary |
+| buying apartment berlin | 590 | 26 | Secondary |
+
 ## German (`de`) - Berlin Landing Page
 
 - **Page:** `/de/wohnungen-berlin-kaufen`
