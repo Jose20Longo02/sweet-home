@@ -480,8 +480,8 @@ app.get('/lang/:code', (req, res) => {
 
 // Legacy URL cleanup: recover value from old site while removing crawl waste.
 app.use((req, res, next) => {
-  const path = String(req.path || '/');
-  const lowerPath = path.toLowerCase();
+  const requestPath = String(req.path || '/');
+  const lowerPath = requestPath.toLowerCase();
 
   const localeFromPath = () => {
     if (lowerPath === '/de' || lowerPath.startsWith('/de/')) return 'de';
@@ -496,6 +496,31 @@ app.use((req, res, next) => {
     return normalized;
   };
   const locale = localeFromPath();
+  const host = String(req.get('host') || '');
+  const forwardedProto = String(req.get('x-forwarded-proto') || req.protocol || 'https');
+
+  // Canonical host/protocol to consolidate duplicate host variants from legacy URLs.
+  if (/^www\./i.test(host)) {
+    const cleanHost = host.replace(/^www\./i, '');
+    return res.redirect(301, `https://${cleanHost}${req.originalUrl || requestPath}`);
+  }
+  if (host && forwardedProto && forwardedProto.toLowerCase() === 'http') {
+    return res.redirect(301, `https://${host}${req.originalUrl || requestPath}`);
+  }
+
+  // Old lang query variant (?lang=de|en|es) -> clean URL.
+  const langQuery = String((req.query && req.query.lang) || '').toLowerCase();
+  if (langQuery === 'en' || langQuery === 'de' || langQuery === 'es') {
+    const queryPairs = Object.keys(req.query || {})
+      .filter((k) => k !== 'lang')
+      .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(String(req.query[k] ?? ''))}`);
+    const cleanedPath = lowerPath.startsWith('/en/') ? lowerPath.slice(3) || '/' : lowerPath;
+    const targetPath = cleanedPath === '/de' || cleanedPath.startsWith('/de/') || cleanedPath === '/es' || cleanedPath.startsWith('/es/')
+      ? cleanedPath
+      : localePath(cleanedPath, langQuery);
+    const querySuffix = queryPairs.length ? `?${queryPairs.join('&')}` : '';
+    return res.redirect(301, `${targetPath}${querySuffix}`);
+  }
 
   // Old language setter endpoints in coverage reports.
   if (lowerPath === '/lang/de') return res.redirect(301, '/de');
@@ -508,6 +533,29 @@ app.use((req, res, next) => {
   if (lowerPath === '/de/kontakt' || lowerPath === '/de/kontakt/') return res.redirect(301, '/de/contact');
   if (lowerPath === '/en/about-us-2' || lowerPath === '/en/about-us-2/') return res.redirect(301, '/about');
   if (lowerPath === '/en/staff' || lowerPath === '/en/staff/') return res.redirect(301, '/about');
+  if (lowerPath === '/default' || lowerPath === '/default.asp') return res.redirect(301, '/');
+  if (lowerPath === '/ru' || lowerPath === '/ru/' || lowerPath === '/he' || lowerPath === '/he/') return res.redirect(301, '/');
+
+  const districtRedirects = {
+    '/de/charlottenburg': '/de/wohnung-kaufen-charlottenburg',
+    '/de/moabit': '/de/wohnung-kaufen-moabit',
+    '/de/friedrichshain-kreuzberg': '/de/wohnung-kaufen-friedrichshain-kreuzberg',
+    '/de/schoeneberg': '/de/wohnung-kaufen-schoeneberg',
+    '/de/schoneberg': '/de/wohnung-kaufen-schoeneberg',
+    '/de/prenzlauer-berg': '/de/wohnung-kaufen-prenzlauer-berg',
+    '/de/wedding': '/de/wohnung-kaufen-wedding',
+    '/de/tempelhof': '/de/wohnung-kaufen-tempelhof',
+    '/de/neukoelln': '/de/wohnung-kaufen-neukoelln',
+    '/de/neukolln': '/de/wohnung-kaufen-neukoelln',
+    '/de/reinickendorf': '/de/wohnung-kaufen-reinickendorf',
+    '/de/kreuzberg': '/de/wohnung-kaufen-kreuzberg',
+    '/de/spandau': '/de/wohnung-kaufen-spandau'
+  };
+  if (districtRedirects[lowerPath]) return res.redirect(301, districtRedirects[lowerPath]);
+  const districtAreaMatch = lowerPath.match(/^\/de\/area\/([a-z-]+)-de\/?$/);
+  if (districtAreaMatch && districtRedirects[`/de/${districtAreaMatch[1]}`]) {
+    return res.redirect(301, districtRedirects[`/de/${districtAreaMatch[1]}`]);
+  }
 
   // Obvious legacy junk/spam paths: return 410 (faster deindex than persistent 404).
   if (lowerPath.startsWith('/content-hub/index.php')) return res.status(410).type('text/plain').send('Gone');
@@ -524,9 +572,19 @@ app.use((req, res, next) => {
   if (/^\/(?:(en|de|es)\/)?properties-feed(?:\/|$)/.test(lowerPath)) {
     return res.redirect(301, localePath('/properties', locale));
   }
-  if (/^\/de\/immobilien\/.+/.test(lowerPath)) {
-    return res.redirect(301, '/de/properties');
+  const deImmobilienSlugMatch = lowerPath.match(/^\/de\/immobilien\/([^/]+)\/?$/);
+  if (deImmobilienSlugMatch) {
+    return res.redirect(301, `/properties/${deImmobilienSlugMatch[1]}`);
   }
+  if (/^\/de\/immobilien\/.+/.test(lowerPath)) return res.redirect(301, '/de/properties');
+  if (/^\/(?:(en|de|es)\/)?(?:category|tag)(?:\/|$)/.test(lowerPath)) return res.redirect(301, localePath('/blog', locale));
+  if (/^\/(?:(en|de|es)\/)?comments\/feed\/?$/.test(lowerPath)) return res.redirect(301, localePath('/blog', locale));
+
+  // Locale-prefixed details from old site -> canonical non-prefixed detail URLs.
+  const legacyPropertyDetailMatch = lowerPath.match(/^\/(?:en|de|es)\/properties\/([^/]+)\/?$/);
+  if (legacyPropertyDetailMatch) return res.redirect(301, `/properties/${legacyPropertyDetailMatch[1]}`);
+  const legacyProjectDetailMatch = lowerPath.match(/^\/(?:en|de|es)\/projects\/([^/]+)\/?$/);
+  if (legacyProjectDetailMatch) return res.redirect(301, `/projects/${legacyProjectDetailMatch[1]}`);
 
   // Old query-style property feed links.
   const postType = String((req.query && req.query.post_type) || '').toLowerCase();
