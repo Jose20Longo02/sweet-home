@@ -1,0 +1,134 @@
+<% useMainContainer = false %>
+<% useHomeHeader = true %>
+<link rel="stylesheet" href="/css/home.css" />
+<link rel="stylesheet" href="/css/berlin-landing.min.css" />
+
+<div class="berlin-landing-page">
+  <section class="berlin-hero" aria-labelledby="cyprus-villas-hero-title">
+    <div class="berlin-hero__bg">
+      <img src="/images/cyprus-international.jpg" alt="Cyprus villas for sale in coastal locations" fetchpriority="high" decoding="async">
+    </div>
+    <div class="berlin-hero__overlay"></div>
+    <div class="berlin-hero__content">
+      <h1 id="cyprus-villas-hero-title" class="berlin-hero__title">Cyprus Villas for Sale</h1>
+      <p class="berlin-hero__description">Explore villas in Cyprus for sale, including villas in Paphos and other high-demand coastal locations. Compare layouts, pricing, and location context with Sweet Home guidance.</p>
+    </div>
+  </section>
+
+  <section class="section featured berlin-featured" aria-labelledby="cyprus-villas-featured-heading">
+    <h2 id="cyprus-villas-featured-heading" class="berlin-featured__title">Featured Villas in Cyprus</h2>
+    <div class="berlin-featured__grid">
+      <% (recommendedProperties || []).forEach(property => { %>
+        <%
+          const photoUrl = (property.photos && property.photos[0]) ? property.photos[0] : '/img/property-placeholder.jpg';
+          const size = property.size ? `${property.size} m²` : null;
+          const beds = (typeof property.rooms !== 'undefined' && property.rooms !== null) ? property.rooms : null;
+          const baths = (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) ? property.bathrooms : null;
+          const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString('en-US') : '';
+        %>
+        <article class="property-card">
+          <a href="/properties/<%= property.slug %>" class="property-card-link">
+            <div class="img-wrap" <%= priceText ? `data-price="${priceText}"` : '' %>>
+              <img src="<%= photoUrl %>" alt="<%= property.title %>" loading="lazy" decoding="async" onerror="this.src='/img/property-placeholder.jpg'">
+            </div>
+            <div class="meta">
+              <div class="title"><%= property.title %></div>
+              <% if (priceText) { %><div class="price"><%= priceText %></div><% } %>
+              <div class="location">
+                <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                <%= property.neighborhood || property.city %>, <%= property.country %>
+              </div>
+              <div class="features-row">
+                <% if (size) { %>
+                  <div class="feature"><span class="icon icon-16 icon-inline icon-mask icon-size"></span><span><%= size %></span></div>
+                <% } %>
+                <% if (beds !== null) { %>
+                  <div class="feature"><span class="icon icon-16 icon-inline icon-mask icon-bed"></span><span><%= beds %> bed<%= Number(beds) === 1 ? '' : 's' %></span></div>
+                <% } %>
+                <% if (baths !== null) { %>
+                  <div class="feature"><span class="icon icon-16 icon-inline icon-mask icon-bath"></span><span><%= baths %> bath<%= Number(baths) === 1 ? '' : 's' %></span></div>
+                <% } %>
+              </div>
+              <span class="learn-more">View details →</span>
+            </div>
+          </a>
+        </article>
+      <% }); %>
+    </div>
+    <% if (!recommendedProperties || recommendedProperties.length === 0) { %>
+      <p class="section-empty">No villas found right now. <a href="/properties?country=Cyprus&type=Villa">Search villas in Cyprus</a></p>
+    <% } else { %>
+      <p class="section-cta">
+        <a href="/properties?country=Cyprus&type=Villa" class="btn btn-primary">View all villas in Cyprus</a>
+      </p>
+    <% } %>
+  </section>
+
+  <section class="berlin-content section berlin-why-invest" aria-labelledby="villas-cyprus-guide-heading">
+    <div class="berlin-content__inner">
+      <h2 id="villas-cyprus-guide-heading" class="berlin-content__title">Villa Sale Cyprus: What to Compare Before You Buy</h2>
+      <div class="berlin-content__body">
+        <p>When evaluating villa sales Cyprus listings, focus on location quality, sea-view premium, build quality, and year-round accessibility. Coastal micro-locations can vary significantly in liquidity and long-term value.</p>
+        <p>Paphos remains one of the most searched areas for villas in Cyprus Paphos terms, especially among international buyers looking for lifestyle and second-home options. Limassol often serves premium and business-oriented demand, while Larnaca can offer lower entry points.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="berlin-content section berlin-best-areas" aria-labelledby="cyprus-villas-main-link-heading">
+    <div class="berlin-content__inner">
+      <h2 id="cyprus-villas-main-link-heading" class="berlin-content__title">Also exploring all homes in Cyprus?</h2>
+      <p class="berlin-content__intro">Use our main Cyprus property page to compare apartments, houses, and villas across the island.</p>
+      <p class="section-cta" style="margin-top:1rem;">
+        <a href="/properties-for-sale-cyprus" class="btn btn-primary">Go to Cyprus Property for Sale Hub</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="berlin-faq section" aria-labelledby="cyprus-villas-faq-heading">
+    <h2 id="cyprus-villas-faq-heading" class="berlin-faq__title">FAQs about villas in Cyprus</h2>
+    <div class="berlin-faq__list">
+      <article class="berlin-faq__item">
+        <h3 class="berlin-faq__question">
+          <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="cyprus-villas-faq-a1" id="cyprus-villas-faq-q1" data-faq-toggle>
+            Where are villas in Cyprus most in demand?
+          </button>
+        </h3>
+        <div class="berlin-faq__answer" id="cyprus-villas-faq-a1" role="region" aria-labelledby="cyprus-villas-faq-q1" hidden>
+          <p>Paphos and Limassol are typically among the most in-demand villa markets. Paphos is especially strong for lifestyle-driven and second-home demand.</p>
+        </div>
+      </article>
+      <article class="berlin-faq__item">
+        <h3 class="berlin-faq__question">
+          <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="cyprus-villas-faq-a2" id="cyprus-villas-faq-q2" data-faq-toggle>
+            Is there a difference between "villa sale Cyprus" and "cyprus villas for sale" intent?
+          </button>
+        </h3>
+        <div class="berlin-faq__answer" id="cyprus-villas-faq-a2" role="region" aria-labelledby="cyprus-villas-faq-q2" hidden>
+          <p>Both terms express purchase intent and usually indicate users looking for villa listings in Cyprus. This page is optimized for both query styles.</p>
+        </div>
+      </article>
+      <article class="berlin-faq__item">
+        <h3 class="berlin-faq__question">
+          <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="cyprus-villas-faq-a3" id="cyprus-villas-faq-q3" data-faq-toggle>
+            Are villas in Paphos a good option for international buyers?
+          </button>
+        </h3>
+        <div class="berlin-faq__answer" id="cyprus-villas-faq-a3" role="region" aria-labelledby="cyprus-villas-faq-q3" hidden>
+          <p>Villas in Paphos are popular due to coastal lifestyle, established international demand, and broad inventory from modern projects to resale homes.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>
+
+<script>
+document.querySelectorAll('[data-faq-toggle]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var expanded = this.getAttribute('aria-expanded') === 'true';
+    var targetId = this.getAttribute('aria-controls');
+    var target = targetId ? document.getElementById(targetId) : null;
+    this.setAttribute('aria-expanded', !expanded);
+    if (target) target.hidden = expanded;
+  });
+});
+</script>

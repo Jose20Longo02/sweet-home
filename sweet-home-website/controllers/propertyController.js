@@ -3598,12 +3598,12 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
       'es-es': cyprusUrls.es
     };
     const titles = {
-      en: 'Properties for Sale in Cyprus',
+      en: 'Cyprus Property for Sale: Homes for Sale in Cyprus',
       de: 'Haus kaufen Zypern: Immobilien & Wohnungen auf Zypern kaufen',
       es: 'Propiedades en venta en Chipre'
     };
     const metaDescriptions = {
-      en: 'Find properties for sale in Cyprus. Browse apartments, villas and coastal homes. Expert real estate guidance from Sweet Home.',
+      en: 'Explore Cyprus property for sale and homes for sale in Cyprus across Paphos, Limassol, Larnaca, and Nicosia. Compare listings with local guidance from Sweet Home.',
       de: 'Haus kaufen Zypern oder Wohnung Zypern kaufen: Entdecken Sie Immobilien auf Zypern in Paphos, Limassol, Larnaka und Nikosia mit professioneller Beratung von Sweet Home.',
       es: 'Encuentra propiedades en venta en Chipre. Apartamentos, villas y viviendas costeras. Asesoramiento de Sweet Home.'
     };
@@ -3616,16 +3616,16 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
     // Cyprus page uses URL-per-language; content by route language
     const cyprusSectionContent = {
       en: {
-        whyInvestTitle: 'Why Invest in Cyprus Real Estate?',
-        whyInvestP1: 'Cyprus offers a resilient and growing real estate market supported by strong economic fundamentals and EU membership. In 2024, total property transaction values remained near record levels at approximately €5.7 billion, with residential properties representing the majority of market activity. Economic growth continues to outperform the eurozone average, while inflation has moderated and sovereign credit ratings have been upgraded to investment-grade levels.',
-        whyInvestP2: 'Residential demand remains supported by international buyers, tourism recovery, and sustained domestic activity. Building permit values increased significantly during 2024, reflecting renewed development momentum. These fundamentals create an attractive long-term environment for investors seeking stable income, lifestyle appeal, and capital preservation within a regulated EU market.',
-        bestAreasTitle: 'Best Areas to Buy Property in Cyprus',
-        bestAreasIntro: 'Cyprus offers several regional markets, with Paphos standing out as one of the most attractive destinations for international buyers and investors.',
-        bestAreasPaphos: 'A leading coastal market combining lifestyle appeal with strong international demand. Popular among European buyers and long-term residents, Paphos benefits from tourism activity, stable residential demand, and a wide range of modern developments. The area offers attractive pricing compared to other Mediterranean destinations while maintaining solid long-term value potential.',
+        whyInvestTitle: 'Cyprus Property for Sale: Why Buyers Focus on Cyprus',
+        whyInvestP1: 'The Cyprus market combines EU legal stability, strong lifestyle demand, and diverse stock ranging from city apartments to coastal homes. For buyers searching property for sale in Cyprus, the market offers broad regional choice and active transaction flow across key cities.',
+        whyInvestP2: 'Demand is supported by international relocation, tourism-linked housing activity, and ongoing development. This creates a practical environment for end-users and investors comparing homes for sale in Cyprus by budget, location, and long-term value potential.',
+        bestAreasTitle: 'Best Areas for Property for Sale in Cyprus',
+        bestAreasIntro: 'If you are evaluating Cyprus property for sale, each region serves a different buyer profile and price segment.',
+        bestAreasPaphos: 'Popular with international buyers seeking coastal homes, retirement lifestyle, and balanced entry pricing.',
         bestAreasLimassol: 'The island\'s primary business and investment hub, known for higher-end developments and strong international activity.',
         bestAreasLarnaca: 'A growing coastal market with expanding infrastructure and competitive entry pricing.',
         bestAreasNicosia: 'The administrative capital, offering stable domestic demand and long-term residential security.',
-        bestAreasOutro: 'Paphos continues to attract buyers seeking a balance between investment potential, lifestyle quality, and EU market stability.',
+        bestAreasOutro: 'For broad market intent keywords like homes for sale Cyprus, Cyprus property for sale, and property for sale in Cyprus, this page helps compare the island\'s core locations in one place.',
         neighborhoodsTitle: 'Paphos Neighborhoods Guide',
         neighborhoodsHint: 'Click a neighborhood to expand local context and real-estate profile.',
         neighborhoodsRealEstateLabel: 'Real estate',
@@ -3761,6 +3761,62 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
       recommendedProperties,
       cyprusProjects,
       baseUrl: res.locals.baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Cyprus EN dedicated landing page: Villas for Sale in Cyprus
+exports.villasForSaleCyprusPage = async (req, res, next) => {
+  try {
+    const propertiesSql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.created_at, p.description,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name, u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'Cyprus'
+        AND LOWER(COALESCE(p.type, '')) = 'villa'
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 30
+    `;
+    const { rows: properties } = await query(propertiesSql);
+    const recommendedProperties = (properties || []).map((p) => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: getLocalizedTitle(p, 'en'),
+        description: (p.description_i18n && p.description_i18n.en) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+
+    const baseUrl = res.locals.baseUrl;
+    const canonicalUrl = `${baseUrl}/villas-for-sale-cyprus`;
+    const hreflangAlternates = { 'en-us': canonicalUrl };
+
+    res.render('villas-for-sale-cyprus', {
+      title: 'Cyprus Villas for Sale: Villas in Cyprus and Paphos',
+      useMainContainer: false,
+      useHomeHeader: true,
+      headPartial: '../partials/seo/cyprus-villas-head',
+      canonicalUrl,
+      hreflangAlternates,
+      pageMetaDescription: 'Discover Cyprus villas for sale, including villas in Cyprus Paphos and premium coastal homes. Compare villa sale Cyprus listings with expert guidance from Sweet Home.',
+      recommendedProperties,
+      baseUrl
     });
   } catch (err) {
     next(err);

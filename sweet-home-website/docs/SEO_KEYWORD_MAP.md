@@ -18,6 +18,37 @@ Tracks page-level keyword targeting by language, including estimated search volu
 | flats for sale berlin | 480 | 32 | Secondary |
 | buying apartment berlin | 590 | 26 | Secondary |
 
+## English (`en`) - Cyprus Landing Page
+
+- **Page:** `/properties-for-sale-cyprus`
+- **Template:** `views/properties-for-sale-cyprus.ejs`
+- **Intent:** Transactional (broad Cyprus property/home search intent)
+- **Status:** Optimized (broad EN terms + cross-link to villas page)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| cyprus property for sale | 8,100 | 32 | Primary |
+| property for sale in cyprus | 8,100 | 34 | Primary |
+| homes in cyprus for sale | 5,400 | 25 | Primary |
+| homes for sale cyprus | 5,400 | 21 | Primary |
+| buy property paphos | 1,900 | 24 | Secondary |
+
+## English (`en`) - Cyprus Villas Landing Page
+
+- **Page:** `/villas-for-sale-cyprus`
+- **Template:** `views/villas-for-sale-cyprus.ejs`
+- **Intent:** Transactional (villa-specific Cyprus/Paphos searches)
+- **Status:** Live (initial optimization complete)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| cyprus villas for sale | 8,100 | 19 | Primary |
+| villa sale cyprus | 8,100 | 20 | Primary |
+| villa sales cyprus | 8,100 | 19 | Primary |
+| villas in cyprus | 9,900 | 31 | Secondary |
+| villas in cyprus paphos | 2,900 | 26 | Secondary |
+| villas in paphos | 2,900 | 21 | Secondary |
+
 ## German (`de`) - Berlin Landing Page
 
 - **Page:** `/de/wohnungen-berlin-kaufen`
@@ -37,6 +68,29 @@ Tracks page-level keyword targeting by language, including estimated search volu
 | berlin wohnungen zu verkaufen | 320 | 31 | Secondary |
 | wohnung berlin zu verkaufen | 320 | 30 | Secondary |
 | wohnungen zu verkaufen berlin | 320 | 31 | Secondary |
+
+## German (`de`) - Cyprus Landing Page
+
+- **Page:** `/de/immobilien-zypern-kaufen`
+- **Template:** `views/properties-for-sale-cyprus.ejs`
+- **Intent:** Transactional (buy house/apartment/property in Cyprus)
+- **Status:** Optimized (on-page + schema + DE buyer costs/timeline module)
+- **Recent SEO additions:** DE buyer costs/timeline block with official-source references; CTR variants documented in `docs/CYPRUS_DE_CTR_TEST_PLAN.md`
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| haus kaufen zypern | 3,600 | 18 | Primary |
+| zypern haus kaufen | 3,600 | 15 | Primary |
+| immobilien zypern | 2,400 | 14 | Primary |
+| zypern immobilien | 2,400 | 16 | Primary |
+| immobilien auf zypern | 2,400 | 16 | Secondary |
+| zypern wohnung kaufen | 880 | 13 | Secondary |
+| zypern häuser | 880 | 20 | Secondary |
+| zypern wohnung | 720 | 21 | Secondary |
+| wohnung zypern | 720 | 12 | Secondary |
+| immobilien auf zypern kaufen | 480 | 16 | Secondary |
+| immobilien zypern kaufen | 480 | 13 | Secondary |
+| haus kaufen in zypern | 480 | 16 | Secondary |
 
 ## German (`de`) - Charlottenburg District Landing Page
 

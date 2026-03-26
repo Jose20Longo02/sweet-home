@@ -397,7 +397,8 @@ app.use((req, res, next) => {
     '/es/propiedades-en-venta-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
     '/properties-for-sale-cyprus': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' },
     '/de/immobilien-zypern-kaufen': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' },
-    '/es/propiedades-en-venta-chipre': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' }
+    '/es/propiedades-en-venta-chipre': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' },
+    '/villas-for-sale-cyprus': { en: '/villas-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' }
   };
   const propertyAlternates = PROPERTY_PAGE_ALTERNATES[req.path];
 
@@ -704,6 +705,7 @@ app.get('/es/propiedades-en-venta-dubai', propertyController.dubaiPropertiesPage
 app.get('/properties-for-sale-cyprus', propertyController.cyprusPropertiesPage);
 app.get('/de/immobilien-zypern-kaufen', propertyController.cyprusPropertiesPage);
 app.get('/es/propiedades-en-venta-chipre', propertyController.cyprusPropertiesPage);
+app.get('/villas-for-sale-cyprus', propertyController.villasForSaleCyprusPage);
 
 // Public & agent routes
 app.use('/properties', propertyRoutes);
@@ -1577,6 +1579,7 @@ app.get('/sitemap.xml', async (req, res, next) => {
     staticUrls.push({ loc: `${base}/properties-for-sale-cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     staticUrls.push({ loc: `${base}/de/immobilien-zypern-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     staticUrls.push({ loc: `${base}/es/propiedades-en-venta-chipre`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/villas-for-sale-cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     // Clean SEO property search URLs (country + city)
     staticUrls.push({ loc: `${base}/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
