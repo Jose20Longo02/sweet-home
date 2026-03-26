@@ -1314,6 +1314,9 @@ exports.showProject = async (req, res, next) => {
     if (descI18n && (descI18n[langDetail] || descI18n.en)) {
       project.description = descI18n[langDetail] || descI18n.en;
     }
+    // Prevent template crashes when legacy/imported records have null/invalid text fields.
+    if (typeof project.description !== 'string') project.description = '';
+    if (typeof project.title !== 'string') project.title = '';
     
     // Normalize photos - handle both local paths and DigitalOcean Spaces URLs
     const arr = Array.isArray(project.photos) ? project.photos : (project.photos ? [project.photos] : []);

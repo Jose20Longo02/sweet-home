@@ -478,6 +478,70 @@ app.get('/lang/:code', (req, res) => {
   return res.redirect(302, back);
 });
 
+// Legacy URL cleanup: recover value from old site while removing crawl waste.
+app.use((req, res, next) => {
+  const path = String(req.path || '/');
+  const lowerPath = path.toLowerCase();
+
+  const localeFromPath = () => {
+    if (lowerPath === '/de' || lowerPath.startsWith('/de/')) return 'de';
+    if (lowerPath === '/es' || lowerPath.startsWith('/es/')) return 'es';
+    if (lowerPath === '/en' || lowerPath.startsWith('/en/')) return 'en';
+    return 'en';
+  };
+  const localePath = (basePath, locale) => {
+    const normalized = basePath.startsWith('/') ? basePath : `/${basePath}`;
+    if (locale === 'de') return `/de${normalized === '/' ? '' : normalized}`;
+    if (locale === 'es') return `/es${normalized === '/' ? '' : normalized}`;
+    return normalized;
+  };
+  const locale = localeFromPath();
+
+  // Old language setter endpoints in coverage reports.
+  if (lowerPath === '/lang/de') return res.redirect(301, '/de');
+  if (lowerPath === '/lang/es') return res.redirect(301, '/es');
+  if (lowerPath === '/lang/en') return res.redirect(301, '/');
+
+  // Old English prefix routes from previous CMS.
+  if (lowerPath === '/en' || lowerPath === '/en/') return res.redirect(301, '/');
+  if (lowerPath === '/de/uber-uns-2' || lowerPath === '/de/uber-uns-2/') return res.redirect(301, '/de/about');
+  if (lowerPath === '/de/kontakt' || lowerPath === '/de/kontakt/') return res.redirect(301, '/de/contact');
+  if (lowerPath === '/en/about-us-2' || lowerPath === '/en/about-us-2/') return res.redirect(301, '/about');
+  if (lowerPath === '/en/staff' || lowerPath === '/en/staff/') return res.redirect(301, '/about');
+
+  // Obvious legacy junk/spam paths: return 410 (faster deindex than persistent 404).
+  if (lowerPath.startsWith('/content-hub/index.php')) return res.status(410).type('text/plain').send('Gone');
+  if (/^\/item\/[^/]+\.html$/.test(lowerPath)) return res.status(410).type('text/plain').send('Gone');
+  if (/^\/\d+(\.htm)?$/.test(lowerPath)) return res.status(410).type('text/plain').send('Gone');
+
+  // Old CMS search/taxonomy endpoints -> current property results page.
+  if (/^\/(?:(en|de|es)\/)?advanced-search(?:\/page\/\d+\/?)?$/.test(lowerPath)) {
+    return res.redirect(301, localePath('/properties', locale));
+  }
+  if (/^\/(?:(en|de|es)\/)?(?:area|city|state|listings)(?:\/|$)/.test(lowerPath)) {
+    return res.redirect(301, localePath('/properties', locale));
+  }
+  if (/^\/(?:(en|de|es)\/)?properties-feed(?:\/|$)/.test(lowerPath)) {
+    return res.redirect(301, localePath('/properties', locale));
+  }
+  if (/^\/de\/immobilien\/.+/.test(lowerPath)) {
+    return res.redirect(301, '/de/properties');
+  }
+
+  // Old query-style property feed links.
+  const postType = String((req.query && req.query.post_type) || '').toLowerCase();
+  if (postType === 'estate_property_feed') {
+    return res.redirect(301, localePath('/properties', locale));
+  }
+
+  // Legacy project listing pages.
+  if (/^\/(?:en|de)?\/?project-template(?:-[a-z0-9]+)?\/?$/.test(lowerPath)) {
+    return res.redirect(301, localePath('/projects', locale));
+  }
+
+  next();
+});
+
 // Icon theme test page (for debugging)
 app.get('/test-icons', (req, res) => {
   res.render('test-icons', {
