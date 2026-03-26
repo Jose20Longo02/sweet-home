@@ -21,7 +21,7 @@
   <!-- 2) Search bar section (Germany default) -->
   <section id="berlin-search" class="berlin-search" aria-labelledby="berlin-search-title">
     <h2 id="berlin-search-title" class="berlin-search__title sr-only"><%= t('home.search.cta','Search Properties') %></h2>
-    <form action="/properties" method="get" class="berlin-search__form">
+    <form action="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>" method="get" class="berlin-search__form">
       <div class="berlin-search__row">
         <label class="sr-only" for="country"><%= t('forms.country','Country') %></label>
         <select id="country" name="country" aria-label="<%= t('forms.country','Country') %>">
@@ -70,7 +70,8 @@
           const size = property.size ? `${property.size} m²` : null;
           const beds = (typeof property.rooms !== 'undefined' && property.rooms !== null) ? property.rooms : null;
           const baths = (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) ? property.bathrooms : null;
-          const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString('en-US') : '';
+          const numberLocale = lang === 'de' ? 'de-DE' : (lang === 'es' ? 'es-ES' : 'en-US');
+          const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString(numberLocale) : '';
         %>
         <article class="property-card">
           <a href="<%= (typeof localePath === 'function') ? localePath('/properties/' + property.slug) : '/properties/' + property.slug %>" class="property-card-link">
@@ -126,8 +127,9 @@
       <% (berlinProjects || []).forEach(project => { %>
         <%
           const photoUrl = (project.photos && project.photos[0]) ? project.photos[0] : '/img/project-placeholder.jpg';
+          const numberLocale = lang === 'de' ? 'de-DE' : (lang === 'es' ? 'es-ES' : 'en-US');
           const fromPrice = project.min_price && Number(project.min_price) > 0
-            ? '€' + Number(project.min_price).toLocaleString('en-US')
+            ? '€' + Number(project.min_price).toLocaleString(numberLocale)
             : '';
           const completionYear = project.completion_date ? new Date(project.completion_date).getFullYear() : null;
           const cityLabel = (typeof translateLocation === 'function') ? translateLocation('city', project.city) : project.city;

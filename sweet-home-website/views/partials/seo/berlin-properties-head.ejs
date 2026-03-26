@@ -1,12 +1,91 @@
 <%
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
-  const pageUrl = `${siteBaseUrl}/properties-for-sale-berlin`;
+  const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+  const localePathMap = (typeof berlinPagePaths !== 'undefined' && berlinPagePaths && typeof berlinPagePaths === 'object')
+    ? berlinPagePaths
+    : { en: '/properties-for-sale-berlin', de: '/de/wohnungen-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' };
+  const pagePath = localePathMap[currentLang] || localePathMap.en;
+  const pageUrl = `${siteBaseUrl}${pagePath}`;
   const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : 'Find properties for sale in Berlin, Germany. Browse the most viewed apartments, houses, and villas. Expert real estate guidance from Sweet Home.';
   const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Properties for Sale in Berlin';
-  const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
   const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
     ? ogLocale
     : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
+  const breadcrumbHome = currentLang === 'de' ? 'Startseite' : (currentLang === 'es' ? 'Inicio' : 'Home');
+  const ogImageAlt = currentLang === 'de'
+    ? 'Wohnungen und Immobilien in Berlin kaufen – Sweet Home'
+    : (currentLang === 'es'
+      ? 'Propiedades en venta en Berlín – Sweet Home'
+      : 'Properties for sale in Berlin, Germany – Sweet Home real estate');
+  const faqByLang = {
+    en: [
+      {
+        q: 'Why should I consider investing in Berlin real estate?',
+        a: 'Berlin is one of Europe\'s most attractive real estate markets with strong demographic growth, a robust economy, and ongoing demand for housing. The capital needs around 222,000 new apartments by 2040. Asking rents rose again in 2024 (12% to €15.79/m² on average), making Berlin one of the top cities in Germany for rental dynamics. For investors, this supports long-term value and income potential.'
+      },
+      {
+        q: 'How have Berlin property prices developed recently?',
+        a: 'In 2024, asking prices for condominiums decreased by 0.9% to €5,696/m² and for apartment buildings by 4.4% to €3,041/m². Asking rents increased by 12% to €15.79/m², with Berlin showing the highest rent dynamics among Germany\'s seven largest cities. Purchase prices have corrected while rental income potential has strengthened.'
+      },
+      {
+        q: 'What is the long-term outlook for the Berlin housing market?',
+        a: 'Population forecasts assume growth of around 5% to 2040; the Urban Development Plan Housing 2040 targets 222,000 new apartments plus land for 50,000 more. Transaction volume recovered in 2024 to €2.9 billion. If interest rates remain stable, a further slight increase in the transaction market is expected in 2025.'
+      },
+      {
+        q: 'Where is new housing being built in Berlin?',
+        a: 'In 2024, around 215 projects with roughly 43,530 new apartments were in planning or construction. Most large rental projects are outside the S-Bahn ring and in the metropolitan area; only about 14.6% were within the ring. Districts such as Marzahn-Hellersdorf, Spandau, Pankow, and the metropolitan area see substantial new development.'
+      },
+      {
+        q: 'Is now a good time to buy property in Berlin?',
+        a: 'Purchase prices have adjusted from previous highs while demand and rental growth remain strong. The market recalibration is largely complete and institutional interest in residential assets has increased. Sweet Home can help you explore carefully selected properties and provide expert guidance for buying or investing in Berlin.'
+      }
+    ],
+    de: [
+      {
+        q: 'Warum sollte ich in Berliner Immobilien investieren?',
+        a: 'Berlin zählt zu den attraktivsten Immobilienmärkten Europas. Das Bevölkerungswachstum bleibt hoch und die Wohnungsnachfrage übersteigt das Angebot deutlich. Bis 2040 werden laut Stadtentwicklungsplan rund 222.000 zusätzliche Wohnungen benötigt. Gleichzeitig steigen die Angebotsmieten weiter, was die langfristigen Perspektiven für Eigennutzer und Investoren stärkt.'
+      },
+      {
+        q: 'Wie haben sich die Kaufpreise für Wohnungen in Berlin zuletzt entwickelt?',
+        a: '2024 haben sich die Angebotspreise für Eigentumswohnungen leicht korrigiert, während die Mieten weiter gestiegen sind. Damit verbessert sich in vielen Fällen das Verhältnis zwischen Einstiegspreis und Mietpotenzial, besonders in nachgefragten Mikrolagen.'
+      },
+      {
+        q: 'Wie ist der langfristige Ausblick für den Berliner Wohnungsmarkt?',
+        a: 'Die Bevölkerungsprognose und der anhaltende Wohnungsmangel sprechen für strukturell hohe Nachfrage. Auch wenn der Markt zyklisch schwankt, bleibt Berlin als Wohn- und Investitionsstandort langfristig robust.'
+      },
+      {
+        q: 'In welchen Berliner Bezirken entstehen neue Wohnungen?',
+        a: 'Ein großer Teil der Neubauaktivität liegt außerhalb des S-Bahn-Rings sowie im Berliner Umland. Bezirke wie Pankow, Spandau und Marzahn-Hellersdorf verzeichnen weiterhin relevante Entwicklungsprojekte.'
+      },
+      {
+        q: 'Ist jetzt ein guter Zeitpunkt, um eine Wohnung in Berlin zu kaufen?',
+        a: 'Für viele Käufer ja: Nach der Preisanpassung sind wieder attraktivere Einstiege möglich, während die Nachfrage am Mietmarkt hoch bleibt. Entscheidend sind Lage, Objektqualität und eine saubere Finanzierungsstrategie.'
+      }
+    ],
+    es: [
+      {
+        q: '¿Por qué invertir en inmuebles en Berlín?',
+        a: 'Berlín sigue siendo uno de los mercados más sólidos de Europa, con crecimiento demográfico y una demanda de vivienda superior a la oferta. Esto favorece el potencial de valorización y alquiler a largo plazo.'
+      },
+      {
+        q: '¿Cómo han evolucionado los precios recientemente?',
+        a: 'Los precios de compra se ajustaron ligeramente en 2024, mientras que los alquileres mantuvieron una tendencia de crecimiento. Esta combinación mejora el potencial de rentabilidad en varios segmentos.'
+      },
+      {
+        q: '¿Cuál es la perspectiva a largo plazo del mercado berlinés?',
+        a: 'Las previsiones de población y el déficit estructural de vivienda respaldan una demanda sostenida en el tiempo, especialmente en zonas bien conectadas y con servicios consolidados.'
+      },
+      {
+        q: '¿Dónde se concentra la nueva construcción en Berlín?',
+        a: 'Gran parte del nuevo desarrollo residencial se concentra fuera del anillo S-Bahn y en el área metropolitana, con fuerte actividad en distritos como Pankow y Spandau.'
+      },
+      {
+        q: '¿Es buen momento para comprar en Berlín?',
+        a: 'Para muchos perfiles sí: tras la corrección de precios, existen entradas más atractivas mientras la demanda de alquiler continúa elevada. La selección de micro-ubicación es clave.'
+      }
+    ]
+  };
+  const schemaFaq = faqByLang[currentLang] || faqByLang.en;
 %>
 <meta name="description" content="<%= pageDesc %>">
 <!-- Canonical and hreflang are output by main layout when canonicalUrl is passed -->
@@ -17,7 +96,7 @@
 <meta property="og:description" content="<%= pageDesc %>">
 <meta property="og:url" content="<%= (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl %>">
 <meta property="og:image" content="<%= siteBaseUrl %>/images/berlin-hero.jpg">
-<meta property="og:image:alt" content="Properties for sale in Berlin, Germany – Sweet Home real estate">
+<meta property="og:image:alt" content="<%= ogImageAlt %>">
 <meta property="og:site_name" content="Sweet Home">
 <meta property="og:locale" content="<%= pageOgLocale %>">
 
@@ -43,7 +122,7 @@
     {
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: siteBaseUrl + '/' },
+        { '@type': 'ListItem', position: 1, name: breadcrumbHome, item: siteBaseUrl + '/' },
         { '@type': 'ListItem', position: 2, name: pageTitle, item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
       ]
     }
@@ -62,7 +141,7 @@
     {
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: siteBaseUrl + '/' },
+        { '@type': 'ListItem', position: 1, name: breadcrumbHome, item: siteBaseUrl + '/' },
         { '@type': 'ListItem', position: 2, name: pageTitle, item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
       ]
     }
@@ -73,58 +152,25 @@
 <script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'Why should I consider investing in Berlin real estate?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Berlin is one of Europe\'s most attractive real estate markets with strong demographic growth, a robust economy, and ongoing demand for housing. The capital needs around 222,000 new apartments by 2040. Asking rents rose again in 2024 (12% to €15.79/m² on average), making Berlin one of the top cities in Germany for rental dynamics. For investors, this supports long-term value and income potential.'
-      }
-    },
-    {
-      '@type': 'Question',
-      name: 'How have Berlin property prices developed recently?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'In 2024, asking prices for condominiums decreased by 0.9% to €5,696/m² and for apartment buildings by 4.4% to €3,041/m². Asking rents increased by 12% to €15.79/m², with Berlin showing the highest rent dynamics among Germany\'s seven largest cities. Purchase prices have corrected while rental income potential has strengthened.'
-      }
-    },
-    {
-      '@type': 'Question',
-      name: 'What is the long-term outlook for the Berlin housing market?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Population forecasts assume growth of around 5% to 2040; the Urban Development Plan Housing 2040 targets 222,000 new apartments plus land for 50,000 more. Transaction volume recovered in 2024 to €2.9 billion. If interest rates remain stable, a further slight increase in the transaction market is expected in 2025.'
-      }
-    },
-    {
-      '@type': 'Question',
-      name: 'Where is new housing being built in Berlin?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'In 2024, around 215 projects with roughly 43,530 new apartments were in planning or construction. Most large rental projects are outside the S-Bahn ring and in the metropolitan area; only about 14.6% were within the ring. Districts such as Marzahn-Hellersdorf, Spandau, Pankow, and the metropolitan area see substantial new development.'
-      }
-    },
-    {
-      '@type': 'Question',
-      name: 'Is now a good time to buy property in Berlin?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Purchase prices have adjusted from previous highs while demand and rental growth remain strong. The market recalibration is largely complete and institutional interest in residential assets has increased. Sweet Home can help you explore carefully selected properties and provide expert guidance for buying or investing in Berlin.'
-      }
+  mainEntity: schemaFaq.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a
     }
-  ]
+  }))
 }) : JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    { '@type': 'Question', name: 'Why should I consider investing in Berlin real estate?', acceptedAnswer: { '@type': 'Answer', text: 'Berlin is one of Europe\'s most attractive real estate markets with strong demographic growth and ongoing demand. The capital needs around 222,000 new apartments by 2040. Asking rents rose 12% in 2024 to €15.79/m² on average, supporting long-term value and income potential for investors.' } },
-    { '@type': 'Question', name: 'How have Berlin property prices developed recently?', acceptedAnswer: { '@type': 'Answer', text: 'In 2024, condo prices decreased 0.9% to €5,696/m² and apartment building prices 4.4% to €3,041/m². Rents increased 12% to €15.79/m². Purchase prices have corrected while rental income potential has strengthened.' } },
-    { '@type': 'Question', name: 'What is the long-term outlook for the Berlin housing market?', acceptedAnswer: { '@type': 'Answer', text: 'Population growth of around 5% to 2040; 222,000 new apartments targeted. Transaction volume recovered to €2.9bn in 2024. A further slight increase in the transaction market is expected in 2025 if interest rates remain stable.' } },
-    { '@type': 'Question', name: 'Where is new housing being built in Berlin?', acceptedAnswer: { '@type': 'Answer', text: 'Around 215 projects with ~43,530 apartments in 2024. Most development is outside the S-Bahn ring and in the metropolitan area. Districts like Marzahn-Hellersdorf, Spandau, Pankow and the metropolitan area see substantial new construction.' } },
-    { '@type': 'Question', name: 'Is now a good time to buy property in Berlin?', acceptedAnswer: { '@type': 'Answer', text: 'Prices have adjusted while demand and rental growth remain strong. Market recalibration is largely complete. Sweet Home can help you explore properties and provide expert guidance for buying or investing in Berlin.' } }
-  ]
+  mainEntity: schemaFaq.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a
+    }
+  }))
 })) %></script>
 
 <!-- JSON-LD ItemList for recommended properties -->
@@ -132,7 +178,7 @@
 <script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'Properties for Sale in Berlin',
+  name: currentLang === 'de' ? 'Wohnungen in Berlin kaufen' : (currentLang === 'es' ? 'Propiedades en venta en Berlín' : 'Properties for Sale in Berlin'),
   description: pageDesc,
   itemListElement: recommendedProperties.map((p, idx) => ({
     '@type': 'ListItem',
