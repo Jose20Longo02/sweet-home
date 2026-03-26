@@ -702,10 +702,8 @@
   overflow: hidden;
   border-radius: 16px;
   min-height: 380px;
-  margin-left: 16px;
-  margin-right: 16px;
-  margin-top: 10px;
-  margin-bottom: 26px;
+  max-width: 1060px;
+  margin: 10px auto 26px;
   background-image:
     linear-gradient(120deg, rgba(15, 23, 42, 0.62), rgba(15, 23, 42, 0.45)),
     url('/images/Villa%20cyprus.avif');
@@ -1079,10 +1077,7 @@
 
   .cyprus-villas-banner {
     min-height: 330px;
-    margin-left: 16px;
-    margin-right: 16px;
-    margin-top: 10px;
-    margin-bottom: 22px;
+    margin: 10px 16px 22px;
     border-radius: 14px;
   }
 
