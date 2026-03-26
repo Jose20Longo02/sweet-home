@@ -1,7 +1,7 @@
 <% useMainContainer = false %>
 <% useHomeHeader = true %>
 <link rel="stylesheet" href="/css/home.css" />
-<link rel="stylesheet" href="/css/berlin-landing.min.css?v=20260325-3" />
+<link rel="stylesheet" href="/css/berlin-landing.min.css?v=20260326-3" />
 
 <div id="locations-data" data-locations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locations) : JSON.stringify(locations)).replace(/'/g, '&#39;') %>' data-neighborhood-counts='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(typeof neighborhoodCounts !== 'undefined' && neighborhoodCounts ? neighborhoodCounts : {}) : JSON.stringify(typeof neighborhoodCounts !== 'undefined' && neighborhoodCounts ? neighborhoodCounts : {})).replace(/'/g, '&#39;') %>' style="display:none"></div>
 
