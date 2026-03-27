@@ -3327,12 +3327,12 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
       'es-es': dubaiUrls.es
     };
     const titles = {
-      en: 'Properties for Sale in Dubai',
+      en: 'Flats for Sale Dubai: Apartments and Property Investment',
       de: 'Dubai Wohnung kaufen: Immobilien, Häuser und Villen',
       es: 'Propiedades en venta en Dubái'
     };
     const metaDescriptions = {
-      en: 'Find properties for sale in Dubai, UAE. Browse apartments, villas and off-plan. Expert real estate guidance from Sweet Home.',
+      en: 'Explore properties on sale in Dubai, including flats for sale Dubai and apartments in Dubai. Compare areas and opportunities for Dubai property investment with Sweet Home guidance.',
       de: 'Dubai Immobilien kaufen: Wohnung in Dubai kaufen, Häuser in Dubai kaufen und ausgewählte Villen. Vergleichen Sie Lagen und Angebote mit Beratung von Sweet Home.',
       es: 'Encuentra propiedades en venta en Dubái, EAU. Apartamentos, villas y plan futuro. Asesoramiento de Sweet Home.'
     };
@@ -3345,17 +3345,17 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
     // Dubai page uses URL-per-language; content by route language
     const dubaiSectionContent = {
       en: {
-        whyInvestTitle: 'Why Invest in Dubai Real Estate?',
-        whyInvestP1: 'Dubai\'s residential market continues to demonstrate strong expansionary momentum, supported by sustained population growth and solid economic performance. The city\'s population surpassed 3.8 million in 2024, growing by 5% year-on-year, while GDP expanded by 3.2% in the first half of the year.',
-        whyInvestP2: 'Residential values increased by approximately 20% in 2024, with rents rising by 19% over the same period. By Q1 2025, citywide prices had reached AED 1,749 per square foot, now significantly above the previous market peak. Transaction activity remains robust, with 43,000 deals recorded in Q1 2025 alone, totaling AED 114.7 billion, and cash buyers accounting for 87% of purchases. This combination of price growth, rental expansion, liquidity, and international capital inflows reinforces Dubai\'s position as one of the most dynamic global real estate markets for both yield-oriented and capital appreciation strategies.',
-        bestAreasTitle: 'Best Areas to Buy Property in Dubai',
-        bestAreasIntro: 'Dubai offers diverse submarkets aligned with different investment profiles:',
+        whyInvestTitle: 'Why Buy or Invest in Dubai Property?',
+        whyInvestP1: 'Dubai remains one of the most active real estate markets globally, with strong population growth and sustained transaction activity. Buyers searching for flats for sale Dubai or apartments in Dubai can access a wide range of stock, from central towers to master-community homes.',
+        whyInvestP2: 'For investors, Dubai combines liquidity, rental demand, and multiple entry points by budget and location. Whether your goal is to invest in Dubai property for yield or long-term appreciation, area selection and asset quality remain the key drivers of performance.',
+        bestAreasTitle: 'Best Areas for Flats and Apartments in Dubai',
+        bestAreasIntro: 'If you are comparing properties on sale in Dubai, each district offers a different balance of price, demand, and investment profile:',
         bestAreasPalmJumeirah: 'A prime waterfront location where villa and apartment prices remain among the highest in the city, supported by strong luxury demand and international buyers.',
         bestAreasDowntown: 'Core central district benefiting from sustained demand and premium pricing near the Burj Khalifa and DIFC corridor.',
         bestAreasMarina: 'Established waterfront community with high transaction volumes and consistent rental demand.',
         bestAreasBusinessBay: 'Mixed-use district with strong price growth and proximity to Downtown.',
         bestAreasHillsJVC: 'Growth-oriented communities attracting off-plan activity and mid-market investors.',
-        bestAreasOutro: 'These districts reflect Dubai\'s diversified property landscape, from ultra-prime waterfront assets to high-growth residential communities supported by continued population expansion and investor demand.',
+        bestAreasOutro: 'These submarkets cover both end-user and investment intent, from apartments in Dubai to broader Dubai property investment opportunities.',
         neighborhoodsTitle: 'Dubai Neighborhoods Guide',
         neighborhoodsHint: 'Click a neighborhood to expand local context and real-estate profile.',
         neighborhoodsRealEstateLabel: 'Real estate',

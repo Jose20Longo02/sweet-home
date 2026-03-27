@@ -18,6 +18,24 @@ Tracks page-level keyword targeting by language, including estimated search volu
 | flats for sale berlin | 480 | 32 | Secondary |
 | buying apartment berlin | 590 | 26 | Secondary |
 
+## English (`en`) - Dubai Landing Page
+
+- **Page:** `/properties-for-sale-dubai`
+- **Template:** `views/properties-for-sale-dubai.ejs`
+- **Intent:** Transactional (buy flats/apartments + investment intent in Dubai)
+- **Status:** Optimized (EN keyword-focused title/meta/content)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| flats for sale dubai | 5,400 | 35 | Primary |
+| sale flat in dubai | 5,400 | 31 | Primary |
+| properties on sale in dubai | 5,400 | 30 | Primary |
+| apartments for sale uae | 5,400 | 26 | Secondary |
+| apartments in dubai | 2,400 | 26 | Secondary |
+| invest in dubai property | 1,000 | 27 | Secondary |
+| dubai property investment | 1,000 | 33 | Secondary |
+| investment property dubai | 1,000 | 31 | Secondary |
+
 ## English (`en`) - Cyprus Landing Page
 
 - **Page:** `/properties-for-sale-cyprus`
