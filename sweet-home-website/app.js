@@ -395,6 +395,7 @@ app.use((req, res, next) => {
     '/properties-for-sale-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
     '/de/immobilien-dubai-kaufen': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
     '/es/propiedades-en-venta-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
+    '/de/villa-kaufen-dubai': { en: '/properties-for-sale-dubai', de: '/de/villa-kaufen-dubai', es: '/es/propiedades-en-venta-dubai' },
     '/properties-for-sale-cyprus': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' },
     '/de/immobilien-zypern-kaufen': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' },
     '/es/propiedades-en-venta-chipre': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' },
@@ -700,6 +701,7 @@ app.get('/es/propiedades-en-venta-berlin', propertyController.berlinPropertiesPa
 app.get('/properties-for-sale-dubai', propertyController.dubaiPropertiesPage);
 app.get('/de/immobilien-dubai-kaufen', propertyController.dubaiPropertiesPage);
 app.get('/es/propiedades-en-venta-dubai', propertyController.dubaiPropertiesPage);
+app.get('/de/villa-kaufen-dubai', propertyController.villaKaufenDubaiPageDe);
 
 // Cyprus landing page
 app.get('/properties-for-sale-cyprus', propertyController.cyprusPropertiesPage);
@@ -1576,6 +1578,7 @@ app.get('/sitemap.xml', async (req, res, next) => {
     staticUrls.push({ loc: `${base}/properties-for-sale-dubai`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     staticUrls.push({ loc: `${base}/de/immobilien-dubai-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     staticUrls.push({ loc: `${base}/es/propiedades-en-venta-dubai`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/de/villa-kaufen-dubai`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/properties-for-sale-cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     staticUrls.push({ loc: `${base}/de/immobilien-zypern-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     staticUrls.push({ loc: `${base}/es/propiedades-en-venta-chipre`, lastmod: null, changefreq: 'weekly', priority: '0.9' });

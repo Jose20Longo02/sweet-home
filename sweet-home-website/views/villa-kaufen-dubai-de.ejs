@@ -1,0 +1,86 @@
+<% useMainContainer = false %>
+<% useHomeHeader = true %>
+<link rel="stylesheet" href="/css/home.css" />
+<link rel="stylesheet" href="/css/berlin-landing.min.css" />
+
+<div class="berlin-landing-page">
+  <section class="berlin-hero" aria-labelledby="dubai-villa-hero-title">
+    <div class="berlin-hero__bg">
+      <img src="/images/dubai-international.jpg" alt="Dubai Villen und Häuser kaufen" fetchpriority="high" decoding="async">
+    </div>
+    <div class="berlin-hero__overlay"></div>
+    <div class="berlin-hero__content">
+      <h1 id="dubai-villa-hero-title" class="berlin-hero__title">Dubai Villa kaufen</h1>
+      <p class="berlin-hero__description">Entdecken Sie ausgewählte Villen und Häuser in Dubai. Vergleichen Sie Lagen, Preisniveaus und Objektprofile für Eigennutzung oder Investment.</p>
+    </div>
+  </section>
+
+  <section class="section featured berlin-featured" aria-labelledby="dubai-villa-featured-heading">
+    <h2 id="dubai-villa-featured-heading" class="berlin-featured__title">Villen in Dubai kaufen</h2>
+    <div class="berlin-featured__grid">
+      <% (recommendedProperties || []).forEach(property => { %>
+        <%
+          const photoUrl = (property.photos && property.photos[0]) ? property.photos[0] : '/img/property-placeholder.jpg';
+          const size = property.size ? `${property.size} m²` : null;
+          const beds = (typeof property.rooms !== 'undefined' && property.rooms !== null) ? property.rooms : null;
+          const baths = (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) ? property.bathrooms : null;
+          const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString('de-DE') : '';
+        %>
+        <article class="property-card">
+          <a href="/de/properties/<%= property.slug %>" class="property-card-link">
+            <div class="img-wrap" <%= priceText ? `data-price="${priceText}"` : '' %>>
+              <img src="<%= photoUrl %>" alt="<%= property.title %>" loading="lazy" decoding="async" onerror="this.src='/img/property-placeholder.jpg'">
+            </div>
+            <div class="meta">
+              <div class="title"><%= property.title %></div>
+              <% if (priceText) { %><div class="price"><%= priceText %></div><% } %>
+              <div class="location">
+                <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                <%= property.neighborhood || property.city %>, <%= property.country %>
+              </div>
+              <div class="features-row">
+                <% if (size) { %>
+                  <div class="feature"><span class="icon icon-16 icon-inline icon-mask icon-size"></span><span><%= size %></span></div>
+                <% } %>
+                <% if (beds !== null) { %>
+                  <div class="feature"><span class="icon icon-16 icon-inline icon-mask icon-bed"></span><span><%= beds %> Schlafzimmer</span></div>
+                <% } %>
+                <% if (baths !== null) { %>
+                  <div class="feature"><span class="icon icon-16 icon-inline icon-mask icon-bath"></span><span><%= baths %> Badezimmer</span></div>
+                <% } %>
+              </div>
+              <span class="learn-more">Details ansehen →</span>
+            </div>
+          </a>
+        </article>
+      <% }); %>
+    </div>
+    <% if (!recommendedProperties || recommendedProperties.length === 0) { %>
+      <p class="section-empty">Aktuell keine Villen gefunden. <a href="/de/properties?country=UAE&city=Dubai&type=Villa">Villen in Dubai suchen</a></p>
+    <% } else { %>
+      <p class="section-cta">
+        <a href="/de/properties?country=UAE&city=Dubai&type=Villa" class="btn btn-primary">Alle Villen in Dubai anzeigen</a>
+      </p>
+    <% } %>
+  </section>
+
+  <section class="berlin-content section berlin-why-invest" aria-labelledby="dubai-villa-guide-heading">
+    <div class="berlin-content__inner">
+      <h2 id="dubai-villa-guide-heading" class="berlin-content__title">Haus kaufen Dubai: Was ist bei Villen wichtig?</h2>
+      <div class="berlin-content__body">
+        <p>Für Käufer mit Fokus auf Haus kaufen Dubai oder Dubai Haus kaufen sind Mikro-Lage, Community-Qualität und Bauzustand entscheidend. Villenmärkte unterscheiden sich stark zwischen Prime-Waterfront, Golf-Communities und familienorientierten Suburbs.</p>
+        <p>Vergleichen Sie nicht nur den Angebotspreis, sondern auch Grundstücksgröße, Service Charges, Erreichbarkeit und zukünftige Infrastruktur im direkten Umfeld.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="berlin-content section berlin-best-areas" aria-labelledby="dubai-villa-hub-link-heading">
+    <div class="berlin-content__inner">
+      <h2 id="dubai-villa-hub-link-heading" class="berlin-content__title">Auch Wohnungen und allgemeine Dubai Immobilien vergleichen?</h2>
+      <p class="berlin-content__intro">Zur Hauptseite mit Wohnungen, Häusern und Projekten in Dubai.</p>
+      <p class="section-cta">
+        <a href="/de/immobilien-dubai-kaufen" class="btn btn-primary">Zur Dubai Immobilien Hauptseite</a>
+      </p>
+    </div>
+  </section>
+</div>

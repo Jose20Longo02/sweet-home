@@ -3328,12 +3328,12 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
     };
     const titles = {
       en: 'Properties for Sale in Dubai',
-      de: 'Immobilien Dubai kaufen',
+      de: 'Dubai Wohnung kaufen: Immobilien, Häuser und Villen',
       es: 'Propiedades en venta en Dubái'
     };
     const metaDescriptions = {
       en: 'Find properties for sale in Dubai, UAE. Browse apartments, villas and off-plan. Expert real estate guidance from Sweet Home.',
-      de: 'Immobilien in Dubai kaufen: Wohnungen, Villen und Off-Plan. Sweet Home unterstützt internationale Käufer und Investoren.',
+      de: 'Dubai Immobilien kaufen: Wohnung in Dubai kaufen, Häuser in Dubai kaufen und ausgewählte Villen. Vergleichen Sie Lagen und Angebote mit Beratung von Sweet Home.',
       es: 'Encuentra propiedades en venta en Dubái, EAU. Apartamentos, villas y plan futuro. Asesoramiento de Sweet Home.'
     };
     const dubaiPagePaths = {
@@ -3362,17 +3362,17 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
         neighborhoodsSourcesLabel: 'Sources'
       },
       de: {
-        whyInvestTitle: 'Warum in Immobilien in Dubai investieren?',
-        whyInvestP1: 'Der Immobilienmarkt in Dubai befindet sich weiterhin in einer starken Wachstumsphase, gestützt durch anhaltendes Bevölkerungswachstum und solide wirtschaftliche Fundamentaldaten. Die Bevölkerung überschritt 2024 die Marke von 3,8 Millionen Einwohnern, während das Bruttoinlandsprodukt im ersten Halbjahr um 3,2 % wuchs.',
-        whyInvestP2: 'Die Kaufpreise für Wohnimmobilien stiegen 2024 um rund 20 %, während die Mieten um etwa 19 % zunahmen. Im ersten Quartal 2025 erreichten die durchschnittlichen Verkaufspreise AED 1.749 pro Quadratfuß und lagen damit deutlich über dem vorherigen Marktzyklus. Mit 43.000 Transaktionen allein im ersten Quartal 2025 und einem hohen Anteil von rund 87 % Bar-Käufern zeigt sich die starke Liquidität des Marktes. Diese Kombination aus Preiswachstum, Mietdynamik und internationalem Kapitalzufluss macht Dubai zu einem der attraktivsten globalen Standorte für renditeorientierte und wachstumsbasierte Immobilieninvestitionen.',
-        bestAreasTitle: 'Beste Lagen für den Immobilienkauf in Dubai',
-        bestAreasIntro: 'Dubai bietet unterschiedliche Teilmärkte für verschiedene Investitionsstrategien:',
+        whyInvestTitle: 'Dubai Immobilien kaufen: Warum Dubai?',
+        whyInvestP1: 'Wer Immobilien in Dubai kaufen möchte, profitiert von einem international gefragten Markt mit hoher Liquidität, starkem Bevölkerungswachstum und laufender Stadtentwicklung. Für Käufer, die eine Wohnung in Dubai kaufen oder gezielt ein Haus kaufen in Dubai wollen, bietet der Markt eine breite Auswahl von zentralen City-Lagen bis zu Master-Communities.',
+        whyInvestP2: 'Die Kombination aus aktiver Transaktionsdynamik, stabiler internationaler Nachfrage und differenzierten Teilmärkten macht Dubai für Eigennutzer und Investoren attraktiv. Ob Wohnungen kaufen Dubai oder Häuser in Dubai kaufen: Standortqualität, Bauqualität und Nutzungskonzept bleiben die zentralen Hebel für langfristigen Erfolg.',
+        bestAreasTitle: 'Beste Lagen, um in Dubai Immobilien zu kaufen',
+        bestAreasIntro: 'Wenn Sie in Dubai eine Wohnung kaufen oder ein Haus kaufen möchten, unterscheiden sich die wichtigsten Teilmärkte deutlich bei Preisniveau, Zielgruppe und Potenzial:',
         bestAreasPalmJumeirah: 'Premium-Wasserlage mit hoher internationaler Nachfrage und starkem Luxussegment.',
         bestAreasDowntown: 'Zentrale Top-Lage rund um den Burj Khalifa mit stabiler Nachfrage und Premiumpreisen.',
         bestAreasMarina: 'Etablierte Waterfront-Community mit konstant hoher Transaktionsaktivität und Mietnachfrage.',
         bestAreasBusinessBay: 'Wachstumsstarker Mixed-Use-Distrikt in unmittelbarer Nähe zu Downtown.',
         bestAreasHillsJVC: 'Beliebte Wohnquartiere mit hohem Off-Plan-Anteil und attraktiven Einstiegsmöglichkeiten für Investoren.',
-        bestAreasOutro: 'Diese Standorte spiegeln Dubais diversifizierten Immobilienmarkt wider – von internationalen Luxuslagen bis hin zu wachstumsorientierten Wohnquartieren mit starker Nachfrage.',
+        bestAreasOutro: 'Diese Lagen decken die wichtigsten Suchintentionen ab: von Wohnung in Dubai kaufen bis Haus kaufen Dubai und Dubai Villa kaufen.',
         neighborhoodsTitle: 'Dubai Stadtteile Guide',
         neighborhoodsHint: 'Klicken Sie auf einen Stadtteil, um lokalen Kontext und Immobilienprofil zu sehen.',
         neighborhoodsRealEstateLabel: 'Immobilien',
@@ -3499,6 +3499,67 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
       recommendedProperties,
       dubaiProjects,
       baseUrl: res.locals.baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// German dedicated landing page: Villas in Dubai
+exports.villaKaufenDubaiPageDe = async (req, res, next) => {
+  try {
+    const propertiesSql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.created_at, p.description,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name, u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'UAE'
+        AND p.city = 'Dubai'
+        AND LOWER(COALESCE(p.type, '')) = 'villa'
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 30
+    `;
+    const { rows: properties } = await query(propertiesSql);
+    const recommendedProperties = (properties || []).map((p) => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: getLocalizedTitle(p, 'de'),
+        description: (p.description_i18n && p.description_i18n.de) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+
+    const baseUrl = res.locals.baseUrl;
+    const canonicalUrl = `${baseUrl}/de/villa-kaufen-dubai`;
+    const hreflangAlternates = {
+      'en-us': `${baseUrl}/properties-for-sale-dubai`,
+      'de-de': canonicalUrl,
+      'es-es': `${baseUrl}/es/propiedades-en-venta-dubai`
+    };
+
+    res.render('villa-kaufen-dubai-de', {
+      title: 'Dubai Villa kaufen: Häuser und Villen in Dubai',
+      useMainContainer: false,
+      useHomeHeader: true,
+      headPartial: '../partials/seo/dubai-villas-head',
+      canonicalUrl,
+      hreflangAlternates,
+      pageMetaDescription: 'Dubai Villa kaufen: Entdecken Sie ausgewählte Villen und Häuser in Dubai. Vergleichen Sie Lagen, Preise und Objektprofile mit Beratung von Sweet Home.',
+      recommendedProperties,
+      baseUrl
     });
   } catch (err) {
     next(err);

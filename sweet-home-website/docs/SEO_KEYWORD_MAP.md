@@ -69,6 +69,38 @@ Tracks page-level keyword targeting by language, including estimated search volu
 | wohnung berlin zu verkaufen | 320 | 30 | Secondary |
 | wohnungen zu verkaufen berlin | 320 | 31 | Secondary |
 
+## German (`de`) - Dubai Landing Page
+
+- **Page:** `/de/immobilien-dubai-kaufen`
+- **Template:** `views/properties-for-sale-dubai.ejs`
+- **Intent:** Transactional (buy apartment/house/property in Dubai)
+- **Status:** Optimized (DE keyword-focused title/meta/content)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| dubai wohnung kaufen | 4,400 | 27 | Primary |
+| wohnungen kaufen dubai | 4,400 | 29 | Primary |
+| dubai immobilien | 2,900 | 29 | Primary |
+| immobilie dubai | 2,900 | 29 | Primary |
+| haus kaufen dubai | 1,900 | 31 | Secondary |
+| dubai haus kaufen | 1,900 | 26 | Secondary |
+| haus kauf dubai | 1,600 | 21 | Secondary |
+| dubai immobilien kaufen | 1,000 | 29 | Secondary |
+| haus kaufen in dubai | 880 | 21 | Secondary |
+| häuser in dubai kaufen | 880 | 21 | Secondary |
+| wohnung in dubai kaufen | 1,300 | 27 | Secondary |
+
+## German (`de`) - Dubai Villas Landing Page
+
+- **Page:** `/de/villa-kaufen-dubai`
+- **Template:** `views/villa-kaufen-dubai-de.ejs`
+- **Intent:** Transactional (villa-specific Dubai purchase intent)
+- **Status:** Live (initial optimization complete)
+
+| Keyword | Search Volume | SEO Difficulty | Priority |
+|---|---:|---:|---|
+| dubai villa kaufen | 720 | 14 | Primary |
+
 ## German (`de`) - Cyprus Landing Page
 
 - **Page:** `/de/immobilien-zypern-kaufen`

@@ -1,12 +1,19 @@
 <%
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
-  const pageUrl = `${siteBaseUrl}/properties-for-sale-dubai`;
+  const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+  const dubaiPagePaths = { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' };
+  const pagePath = dubaiPagePaths[currentLang] || dubaiPagePaths.en;
+  const pageUrl = `${siteBaseUrl}${pagePath}`;
   const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : 'Find properties for sale in Dubai, UAE. Browse apartments, villas and off-plan. Expert real estate guidance from Sweet Home.';
   const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Properties for Sale in Dubai';
-  const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+  const breadcrumbHome = currentLang === 'de' ? 'Startseite' : (currentLang === 'es' ? 'Inicio' : 'Home');
+  const ogImageAlt = currentLang === 'de'
+    ? 'Immobilien in Dubai kaufen - Sweet Home'
+    : (currentLang === 'es' ? 'Propiedades en venta en Dubai - Sweet Home' : 'Properties for sale in Dubai, UAE - Sweet Home real estate');
   const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
     ? ogLocale
     : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
+  const itemListName = currentLang === 'de' ? 'Immobilien in Dubai kaufen' : (currentLang === 'es' ? 'Propiedades en venta en Dubái' : 'Properties for Sale in Dubai');
 %>
 <meta name="description" content="<%= pageDesc %>">
 <!-- Canonical and hreflang are output by main layout when canonicalUrl is passed -->
@@ -17,7 +24,7 @@
 <meta property="og:description" content="<%= pageDesc %>">
 <meta property="og:url" content="<%= (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl %>">
 <meta property="og:image" content="<%= siteBaseUrl %>/images/dubai-international.jpg">
-<meta property="og:image:alt" content="Properties for sale in Dubai, UAE – Sweet Home real estate">
+<meta property="og:image:alt" content="<%= ogImageAlt %>">
 <meta property="og:site_name" content="Sweet Home">
 <meta property="og:locale" content="<%= pageOgLocale %>">
 
@@ -26,7 +33,7 @@
 <meta name="twitter:title" content="<%= pageTitle %> | Sweet Home">
 <meta name="twitter:description" content="<%= pageDesc %>">
 <meta name="twitter:image" content="<%= siteBaseUrl %>/images/dubai-international.jpg">
-<meta name="twitter:image:alt" content="Properties for sale in Dubai, UAE – Sweet Home real estate">
+<meta name="twitter:image:alt" content="<%= ogImageAlt %>">
 
 <!-- JSON-LD WebPage + BreadcrumbList -->
 <script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
@@ -43,7 +50,7 @@
     {
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: siteBaseUrl + '/' },
+        { '@type': 'ListItem', position: 1, name: breadcrumbHome, item: siteBaseUrl + '/' },
         { '@type': 'ListItem', position: 2, name: pageTitle, item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
       ]
     }
@@ -62,7 +69,7 @@
     {
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: siteBaseUrl + '/' },
+        { '@type': 'ListItem', position: 1, name: breadcrumbHome, item: siteBaseUrl + '/' },
         { '@type': 'ListItem', position: 2, name: pageTitle, item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
       ]
     }
@@ -97,7 +104,7 @@
 <script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'Properties for Sale in Dubai',
+  name: itemListName,
   description: pageDesc,
   itemListElement: recommendedProperties.map((p, idx) => ({
     '@type': 'ListItem',
@@ -116,7 +123,7 @@
 }) : JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'Properties for Sale in Dubai',
+  name: itemListName,
   description: pageDesc,
   itemListElement: recommendedProperties.map((p, idx) => ({
     '@type': 'ListItem',

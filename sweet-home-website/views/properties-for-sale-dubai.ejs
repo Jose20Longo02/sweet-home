@@ -2,6 +2,7 @@
 <% useHomeHeader = true %>
 <link rel="stylesheet" href="/css/home.css" />
 <link rel="stylesheet" href="/css/berlin-landing.min.css" />
+<% const currentLocale = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en'; %>
 
 <div id="locations-data" data-locations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locations) : JSON.stringify(locations)).replace(/'/g, '&#39;') %>' data-neighborhood-counts='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(typeof neighborhoodCounts !== 'undefined' && neighborhoodCounts ? neighborhoodCounts : {}) : JSON.stringify(typeof neighborhoodCounts !== 'undefined' && neighborhoodCounts ? neighborhoodCounts : {})).replace(/'/g, '&#39;') %>' style="display:none"></div>
 
@@ -21,7 +22,7 @@
   <!-- 2) Search bar (UAE / Dubai default) -->
   <section id="dubai-search" class="berlin-search" aria-labelledby="dubai-search-title">
     <h2 id="dubai-search-title" class="berlin-search__title sr-only"><%= t('home.search.cta','Search Properties') %></h2>
-    <form action="/properties" method="get" class="berlin-search__form">
+    <form action="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>" method="get" class="berlin-search__form">
       <div class="berlin-search__row">
         <label class="sr-only" for="country"><%= t('forms.country','Country') %></label>
         <select id="country" name="country" aria-label="<%= t('forms.country','Country') %>">
@@ -70,7 +71,7 @@
           const size = property.size ? `${property.size} m²` : null;
           const beds = (typeof property.rooms !== 'undefined' && property.rooms !== null) ? property.rooms : null;
           const baths = (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) ? property.bathrooms : null;
-          const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString('en-US') : '';
+          const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString(currentLocale === 'de' ? 'de-DE' : 'en-US') : '';
         %>
         <article class="property-card">
           <a href="<%= (typeof localePath === 'function') ? localePath('/properties/' + property.slug) : '/properties/' + property.slug %>" class="property-card-link">
@@ -127,7 +128,7 @@
         <%
           const photoUrl = (project.photos && project.photos[0]) ? project.photos[0] : '/img/project-placeholder.jpg';
           const fromPrice = project.min_price && Number(project.min_price) > 0
-            ? '€' + Number(project.min_price).toLocaleString('en-US')
+            ? '€' + Number(project.min_price).toLocaleString(currentLocale === 'de' ? 'de-DE' : 'en-US')
             : '';
           const completionYear = project.completion_date ? new Date(project.completion_date).getFullYear() : null;
           const cityLabel = (typeof translateLocation === 'function') ? translateLocation('city', project.city) : project.city;
@@ -210,6 +211,18 @@
       <a href="https://www.savills.com/research_articles/255350/323691-0" target="_blank" rel="noopener noreferrer">Savills Dubai Residential Market Q3 2025</a>.
     </p>
   </section>
+
+  <% if (currentLocale === 'de') { %>
+  <section class="berlin-content section berlin-best-areas" aria-labelledby="dubai-villa-link-heading">
+    <div class="berlin-content__inner">
+      <h2 id="dubai-villa-link-heading" class="berlin-content__title">Sie suchen gezielt Villen in Dubai?</h2>
+      <p class="berlin-content__intro">Auf unserer dedizierten Seite finden Sie ausgewählte Angebote für das Keyword-Thema "Dubai Villa kaufen".</p>
+      <p class="section-cta">
+        <a href="/de/villa-kaufen-dubai" class="btn btn-primary">Dubai Villa kaufen entdecken</a>
+      </p>
+    </div>
+  </section>
+  <% } %>
 
   <!-- 4) Why Invest in Dubai Real Estate (content by URL language) -->
   <section class="berlin-content section berlin-why-invest" aria-labelledby="dubai-why-invest-heading">

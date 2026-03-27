@@ -1,0 +1,80 @@
+<%
+  const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
+  const pageUrl = `${siteBaseUrl}/de/villa-kaufen-dubai`;
+  const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription)
+    ? pageMetaDescription
+    : 'Dubai Villa kaufen: Entdecken Sie ausgewählte Villen und Häuser in Dubai. Vergleichen Sie Lagen, Preise und Objektprofile mit Beratung von Sweet Home.';
+  const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Dubai Villa kaufen: Häuser und Villen in Dubai';
+%>
+<meta name="description" content="<%= pageDesc %>">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="<%= pageTitle %> | Sweet Home">
+<meta property="og:description" content="<%= pageDesc %>">
+<meta property="og:url" content="<%= (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl %>">
+<meta property="og:image" content="<%= siteBaseUrl %>/images/dubai-international.jpg">
+<meta property="og:image:alt" content="Dubai Villen kaufen - Sweet Home">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="de_DE">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= pageTitle %> | Sweet Home">
+<meta name="twitter:description" content="<%= pageDesc %>">
+<meta name="twitter:image" content="<%= siteBaseUrl %>/images/dubai-international.jpg">
+<meta name="twitter:image:alt" content="Dubai Villen kaufen - Sweet Home">
+
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': pageUrl + '#webpage',
+      name: pageTitle + ' | Sweet Home',
+      description: pageDesc,
+      url: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl,
+      isPartOf: { '@type': 'WebSite', '@id': siteBaseUrl + '/#website', name: 'Sweet Home' }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Startseite', item: siteBaseUrl + '/' },
+        { '@type': 'ListItem', position: 2, name: 'Immobilien Dubai kaufen', item: siteBaseUrl + '/de/immobilien-dubai-kaufen' },
+        { '@type': 'ListItem', position: 3, name: 'Dubai Villa kaufen', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
+      ]
+    }
+  ]
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: pageTitle + ' | Sweet Home',
+  description: pageDesc,
+  url: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl
+})) %></script>
+
+<% if (typeof recommendedProperties !== 'undefined' && recommendedProperties && recommendedProperties.length > 0) { %>
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Dubai Villa kaufen',
+  description: pageDesc,
+  itemListElement: recommendedProperties.map((p, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'RealEstateListing',
+      name: p.title,
+      url: `${siteBaseUrl}/properties/${p.slug}`,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: p.city || 'Dubai',
+        addressCountry: p.country || 'UAE'
+      }
+    }
+  }))
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Dubai Villa kaufen',
+  description: pageDesc
+})) %></script>
+<% } %>
