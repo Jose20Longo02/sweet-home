@@ -326,8 +326,8 @@ const apiLimiter = rateLimit({
 });
 app.use(['/api', '/auth', '/properties/api', '/projects/api'], apiLimiter);
 
-// Non-prefixed detail URLs: redirect to locale version when user has Spanish/German cookie so language persists.
-// e.g. /properties/slug + cookie=es → redirect to /es/properties/slug
+// Non-prefixed detail URLs: keep property/project details canonical (non-prefixed).
+// Only blog details are locale-prefixed to preserve language context without creating redirect loops.
 app.use((req, res, next) => {
   if (req.method !== 'GET') return next();
   if (req.path.startsWith('/de/') || req.path.startsWith('/es/')) return next();
@@ -335,7 +335,9 @@ app.use((req, res, next) => {
   const isPropertyDetail = /^\/properties\/[^/]+$/.test(req.path) && req.path !== '/properties/new';
   const isProjectDetail = /^\/projects\/[^/]+$/.test(req.path) && req.path !== '/projects/regions';
   const isBlogDetail = /^\/blog\/[^/]+$/.test(req.path);
-  const isDetailPage = isPropertyDetail || isProjectDetail || isBlogDetail;
+  // Property/project details are intentionally canonicalized to non-prefixed URLs in legacy middleware.
+  if (isPropertyDetail || isProjectDetail) return next();
+  const isDetailPage = isBlogDetail;
   if (isDetailPage) {
     const cLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase().slice(0, 2) : '';
     let chosenLang = (cLang === 'de' || cLang === 'es') ? cLang : '';

@@ -1329,7 +1329,7 @@ exports.showProject = async (req, res, next) => {
       }
       // Otherwise, assume it's a filename and prepend the project path
       return `/uploads/projects/${project.id}/${phStr}`;
-    });
+    }).filter((ph) => typeof ph === 'string' && ph.trim() !== '');
     // Detect main variants
     let hasMain = false, mainBase = null;
     if (project.photos.length) {
@@ -1413,7 +1413,7 @@ exports.showProject = async (req, res, next) => {
         }
         // Otherwise, assume it's a filename and prepend the project path
         return `/uploads/projects/${p.id}/${phStr}`;
-      });
+      }).filter((ph) => typeof ph === 'string' && ph.trim() !== '');
       let has=false, base=null;
       const first=photos[0];
       if (first) {

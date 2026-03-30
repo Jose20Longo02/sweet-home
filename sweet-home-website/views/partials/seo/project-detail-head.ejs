@@ -5,8 +5,11 @@
   const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
     ? ogLocale
     : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
-  const projectImage = (project.photos && project.photos[0]) 
-    ? (project.photos[0].startsWith('http') ? project.photos[0] : `${siteBaseUrl}${project.photos[0]}`)
+  const safePhotos = Array.isArray(project.photos)
+    ? project.photos.filter((p) => typeof p === 'string' && p.trim() !== '')
+    : [];
+  const projectImage = (safePhotos && safePhotos[0])
+    ? (safePhotos[0].startsWith('http') ? safePhotos[0] : `${siteBaseUrl}${safePhotos[0]}`)
     : `${siteBaseUrl}/img/property-placeholder.jpg`;
   const projectDescription = (project.description || '').slice(0, 160) || `${project.title} - ${project.city}, ${project.country}`;
 %>
@@ -34,8 +37,8 @@
   '@type': 'ResidentialComplex',
   name: project.title,
   description: project.description || '',
-  image: (project.photos && project.photos.length > 0) 
-    ? project.photos.map(p => p.startsWith('http') ? p : `${siteBaseUrl}${p}`)
+  image: (safePhotos && safePhotos.length > 0) 
+    ? safePhotos.map(p => p.startsWith('http') ? p : `${siteBaseUrl}${p}`)
     : [`${siteBaseUrl}/img/property-placeholder.jpg`],
   url: projectUrl,
   address: {
@@ -61,8 +64,8 @@
   '@type': 'ResidentialComplex',
   name: project.title,
   description: project.description || '',
-  image: (project.photos && project.photos.length > 0) 
-    ? project.photos.map(p => p.startsWith('http') ? p : `${siteBaseUrl}${p}`)
+  image: (safePhotos && safePhotos.length > 0) 
+    ? safePhotos.map(p => p.startsWith('http') ? p : `${siteBaseUrl}${p}`)
     : [`${siteBaseUrl}/img/property-placeholder.jpg`],
   url: projectUrl,
   address: {
