@@ -584,11 +584,13 @@ app.use((req, res, next) => {
   if (/^\/(?:(en|de|es)\/)?(?:category|tag)(?:\/|$)/.test(lowerPath)) return res.redirect(301, localePath('/blog', locale));
   if (/^\/(?:(en|de|es)\/)?comments\/feed\/?$/.test(lowerPath)) return res.redirect(301, localePath('/blog', locale));
 
-  // Locale-prefixed details from old site -> canonical non-prefixed detail URLs.
-  const legacyPropertyDetailMatch = lowerPath.match(/^\/(?:en|de|es)\/properties\/([^/]+)\/?$/);
-  if (legacyPropertyDetailMatch) return res.redirect(301, `/properties/${legacyPropertyDetailMatch[1]}`);
-  const legacyProjectDetailMatch = lowerPath.match(/^\/(?:en|de|es)\/projects\/([^/]+)\/?$/);
-  if (legacyProjectDetailMatch) return res.redirect(301, `/projects/${legacyProjectDetailMatch[1]}`);
+  // Keep /en/* legacy detail URLs redirected to canonical non-prefixed URLs.
+  // IMPORTANT: keep /de/* and /es/* detail URLs reachable so language switching
+  // is URL-based across all public pages.
+  const legacyEnPropertyDetailMatch = lowerPath.match(/^\/en\/properties\/([^/]+)\/?$/);
+  if (legacyEnPropertyDetailMatch) return res.redirect(301, `/properties/${legacyEnPropertyDetailMatch[1]}`);
+  const legacyEnProjectDetailMatch = lowerPath.match(/^\/en\/projects\/([^/]+)\/?$/);
+  if (legacyEnProjectDetailMatch) return res.redirect(301, `/projects/${legacyEnProjectDetailMatch[1]}`);
 
   // Old query-style property feed links.
   const postType = String((req.query && req.query.post_type) || '').toLowerCase();
