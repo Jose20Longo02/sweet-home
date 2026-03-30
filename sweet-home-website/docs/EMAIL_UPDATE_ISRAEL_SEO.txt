@@ -1,0 +1,49 @@
+Subject: Detailed SEO Progress Update: Implemented Actions, New URLs, and Next Phase
+
+Hi Israel,
+
+I hope you are well. I would like to share a full update on the SEO work completed to date, including the objective behind each action and the most important URLs that were added or optimized.
+
+First, we completed a major expansion of the Berlin SEO structure. We optimized both the English and German Berlin hub pages for high-intent search terms and launched a full set of German district landing pages to capture neighborhood-level demand. The purpose of this work is to improve rankings for both broad Berlin terms and specific district terms with stronger buying intent, while also increasing topical authority through a clear hub-and-district architecture.
+
+Main Berlin URLs:
+- https://sweet-home.co.il/properties-for-sale-berlin
+- https://sweet-home.co.il/de/wohnungen-berlin-kaufen
+
+German district URLs:
+- https://sweet-home.co.il/de/wohnung-kaufen-charlottenburg
+- https://sweet-home.co.il/de/wohnung-kaufen-moabit
+- https://sweet-home.co.il/de/wohnung-kaufen-friedrichshain-kreuzberg
+- https://sweet-home.co.il/de/wohnung-kaufen-schoeneberg
+- https://sweet-home.co.il/de/wohnung-kaufen-prenzlauer-berg
+- https://sweet-home.co.il/de/wohnung-kaufen-wedding
+- https://sweet-home.co.il/de/wohnung-kaufen-tempelhof
+- https://sweet-home.co.il/de/wohnung-kaufen-neukoelln
+- https://sweet-home.co.il/de/wohnung-kaufen-reinickendorf
+- https://sweet-home.co.il/de/wohnung-kaufen-kreuzberg
+- https://sweet-home.co.il/de/wohnung-kaufen-spandau
+
+Second, we upgraded the Cyprus SEO setup in both German and English. This included stronger keyword targeting, improved metadata, better section-level copy, and improved FAQ quality. We also added a dedicated English villas page to separate villa intent from general property intent. The goal here is to improve relevance, click-through rate, and conversion quality by matching user intent more precisely.
+
+Cyprus URLs:
+- https://sweet-home.co.il/properties-for-sale-cyprus
+- https://sweet-home.co.il/de/immobilien-zypern-kaufen
+- https://sweet-home.co.il/villas-for-sale-cyprus
+
+Third, we completed a similar upgrade for Dubai in German and English. We improved the hub pages for apartment/flat and investment intent, refined content messaging, and created a dedicated German villas page to target villa-specific searches. The objective is to increase visibility for high-volume Dubai terms while improving intent alignment and lead quality.
+
+Dubai URLs:
+- https://sweet-home.co.il/properties-for-sale-dubai
+- https://sweet-home.co.il/de/immobilien-dubai-kaufen
+- https://sweet-home.co.il/de/villa-kaufen-dubai
+
+On the technical SEO side, we continued URL cleanup and consolidation work, improved redirect and canonical behavior for legacy patterns, expanded key sitemap coverage, and applied fixes aimed at reducing crawl/index inconsistencies and project-page error risk. The goal is to reduce crawl waste, strengthen index quality, and keep Google focused on current high-value pages.
+
+Regarding Google Search Console, the overall direction remains positive: indexed pages are growing and total non-indexed pages have been declining. A significant part of the remaining 404 inventory is still historical legacy debt from the old website, which is expected to resolve gradually as Google recrawls and reprocesses signals.
+
+For the next phase, I recommend an immediate temporary pause on new blog publishing until further notice. We should first plan and implement a blog post suggestion system so that future posts are aligned with our key SEO pages and include strategic contextual links to them. This will allow us to improve internal link authority in a controlled and measurable way before resuming regular content production.
+
+If useful, I can also send a short weekly one-page report covering index trend, keyword movement by page, and completed actions with expected impact.
+
+Best regards,
+Luis
