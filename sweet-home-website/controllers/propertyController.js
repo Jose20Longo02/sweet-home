@@ -2939,13 +2939,13 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       'es-es': berlinUrls.es
     };
     const titles = {
-      en: 'Apartments for Sale in Berlin | Berlin Flats for Sale',
-      de: 'Wohnung in Berlin kaufen: Eigentumswohnungen & Immobilien',
+      en: 'Apartments for Sale in Berlin | Sweet Home',
+      de: 'Wohnungen in Berlin kaufen | Sweet Home',
       es: 'Propiedades en venta en Berlín'
     };
     const metaDescriptions = {
-      en: 'Explore apartments for sale in Berlin, including Berlin flats for sale and investment-ready homes. Compare neighborhoods, pricing, and expert support for buying an apartment in Berlin.',
-      de: 'Wohnung in Berlin kaufen: Entdecken Sie Eigentumswohnungen und Immobilien in Berlin. Aktuelle Angebote, Stadtteile im Überblick und Beratung für Käufer und Investoren.',
+      en: 'Find apartments for sale in Berlin. Compare neighborhoods, prices, and property types to choose the right home with Sweet Home.',
+      de: 'Finden Sie Wohnungen in Berlin in gefragten Stadtteilen. Vergleichen Sie Lage, Preis und Zustand und entdecken Sie passende Angebote mit Sweet Home.',
       es: 'Encuentra propiedades en venta en Berlín, Alemania. Apartamentos, casas y villas. Asesoramiento inmobiliario de Sweet Home para compradores e inversores internacionales.'
     };
     const berlinPagePaths = {
@@ -3327,13 +3327,13 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
       'es-es': dubaiUrls.es
     };
     const titles = {
-      en: 'Flats for Sale Dubai: Apartments and Property Investment',
-      de: 'Dubai Wohnung kaufen: Immobilien, Häuser und Villen',
+      en: 'Apartments and Property Investment in Dubai | Sweet Home',
+      de: 'Dubai Wohnung kaufen | Sweet Home',
       es: 'Propiedades en venta en Dubái'
     };
     const metaDescriptions = {
-      en: 'Explore properties on sale in Dubai, including flats for sale Dubai and apartments in Dubai. Compare areas and opportunities for Dubai property investment with Sweet Home guidance.',
-      de: 'Dubai Immobilien kaufen: Wohnung in Dubai kaufen, Häuser in Dubai kaufen und ausgewählte Villen. Vergleichen Sie Lagen und Angebote mit Beratung von Sweet Home.',
+      en: 'Looking for Dubai property? Compare flats for sale, investment properties listings, and key areas with Sweet Home support.',
+      de: 'Dubai Immobilien kaufen: Wohnungen und Häuser in gefragten Lagen vergleichen und mit Sweet Home die passende Immobilie finden.',
       es: 'Encuentra propiedades en venta en Dubái, EAU. Apartamentos, villas y plan futuro. Asesoramiento de Sweet Home.'
     };
     const dubaiPagePaths = {
@@ -3659,13 +3659,13 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
       'es-es': cyprusUrls.es
     };
     const titles = {
-      en: 'Cyprus Property for Sale: Homes for Sale in Cyprus',
-      de: 'Haus kaufen Zypern: Immobilien & Wohnungen auf Zypern kaufen',
+      en: 'Homes for Sale in Cyprus | Sweet Home',
+      de: 'Haus kaufen Zypern | Sweet Home',
       es: 'Propiedades en venta en Chipre'
     };
     const metaDescriptions = {
-      en: 'Explore Cyprus property for sale and homes for sale in Cyprus across Paphos, Limassol, Larnaca, and Nicosia. Compare listings with local guidance from Sweet Home.',
-      de: 'Haus kaufen Zypern oder Wohnung Zypern kaufen: Entdecken Sie Immobilien auf Zypern in Paphos, Limassol, Larnaka und Nikosia mit professioneller Beratung von Sweet Home.',
+      en: 'Looking for Cyprus property for sale? Compare homes by city, price, and lifestyle with local guidance from Sweet Home.',
+      de: 'Haus kaufen Zypern: Entdecken Sie Immobilien und Wohnungen in Paphos. Vergleichen Sie Angebote mit persönlicher Beratung von Sweet Home.',
       es: 'Encuentra propiedades en venta en Chipre. Apartamentos, villas y viviendas costeras. Asesoramiento de Sweet Home.'
     };
     const cyprusPagePaths = {
@@ -3869,13 +3869,13 @@ exports.villasForSaleCyprusPage = async (req, res, next) => {
     const hreflangAlternates = { 'en-us': canonicalUrl };
 
     res.render('villas-for-sale-cyprus', {
-      title: 'Cyprus Villas for Sale: Villas in Cyprus and Paphos',
+      title: 'Cyprus Villas for Sale | Sweet Home',
       useMainContainer: false,
       useHomeHeader: true,
       headPartial: '../partials/seo/cyprus-villas-head',
       canonicalUrl,
       hreflangAlternates,
-      pageMetaDescription: 'Discover Cyprus villas for sale, including villas in Cyprus Paphos and premium coastal homes. Compare villa sale Cyprus listings with expert guidance from Sweet Home.',
+      pageMetaDescription: 'Discover Cyprus villas for sale in Paphos. Compare prices, locations, and features with local guidance from Sweet Home.',
       recommendedProperties,
       baseUrl
     });
