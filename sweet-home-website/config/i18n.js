@@ -8,12 +8,15 @@ module.exports = function i18nMiddleware(req, res, next) {
     const supported = ['en', 'es', 'de'];
     const labels = { en: 'English', es: 'Español', de: 'Deutsch' };
     const accepts = (typeof req.acceptsLanguages === 'function') ? (req.acceptsLanguages() || []) : [];
-    // Language from URL: /de, /es (or /de/*, /es/*) = that locale.
-    // Non-prefixed public paths should honor the language cookie so users can
-    // switch language from canonical detail URLs that intentionally stay non-prefixed.
+    // URL-first language policy:
+    // - /de, /de/* => German
+    // - /es, /es/* => Spanish
+    // - any other public non-prefixed path => English
+    // Cookie fallback is only used on non-public paths.
     let pathLang = '';
     if (req.path === '/de' || req.path.startsWith('/de/')) pathLang = 'de';
     else if (req.path === '/es' || req.path.startsWith('/es/')) pathLang = 'es';
+    else if (!/^\/(admin|superadmin|auth|api)/.test(req.path)) pathLang = 'en';
     const cLang = (req.cookies && typeof req.cookies.lang === 'string') ? req.cookies.lang.trim() : '';
     const aLang = Array.isArray(accepts) && accepts.length ? String(accepts[0]) : '';
     let lang = pathLang || cLang || aLang || 'en';
