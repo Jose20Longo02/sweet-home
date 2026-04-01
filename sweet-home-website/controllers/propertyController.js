@@ -4011,8 +4011,8 @@ exports.charlottenburgPropertiesPageDe = async (req, res, next) => {
       'de-de': charlottenburgUrls.de,
       'es-es': charlottenburgUrls.es
     };
-    const pageMetaDescription = 'Wohnung kaufen Charlottenburg: Entdecken Sie ausgewählte Eigentumswohnungen in Charlottenburg, inklusive Marktüberblick, Preisen, Lage-Insights und persönlicher Beratung durch Sweet Home.';
-    const pageTitle = 'Wohnung kaufen Charlottenburg: Eigentumswohnungen in Berlin';
+    const pageMetaDescription = 'Wohnung kaufen Charlottenburg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.';
+    const pageTitle = 'Wohnung kaufen Charlottenburg | Sweet Home';
     const districtContent = {
       heroTitle: 'Wohnung kaufen Charlottenburg',
       heroDescription: 'Charlottenburg gehört zu den gefragtesten Wohnlagen Berlins. Hier treffen klassische Altbauten, hochwertige Modernisierungen und starke Mikrolagen auf eine stabile Nachfrage von Eigennutzern und Kapitalanlegern.',
@@ -4173,8 +4173,8 @@ exports.moabitPropertiesPageDe = async (req, res, next) => {
       'de-de': districtUrls.de,
       'es-es': districtUrls.es
     };
-    const pageMetaDescription = 'Wohnung kaufen Moabit: Entdecken Sie ausgewählte Eigentumswohnungen in Moabit mit Lage-Insights, aktuellen Angeboten und persönlicher Beratung von Sweet Home.';
-    const pageTitle = 'Wohnung kaufen Moabit: Eigentumswohnungen in Berlin';
+    const pageMetaDescription = 'Wohnung kaufen Moabit: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.';
+    const pageTitle = 'Wohnung kaufen Moabit | Sweet Home';
     const districtContent = {
       heroTitle: 'Wohnung kaufen Moabit',
       heroDescription: 'Moabit entwickelt sich dynamisch und verbindet zentrale Lage, urbane Vielfalt und attraktive Wohnquartiere. Der Teilmarkt ist besonders interessant für Käufer, die Berlin-Mitte-Nähe mit Preis-Leistungs-Potenzial suchen.',
@@ -4334,8 +4334,8 @@ exports.friedrichshainKreuzbergPropertiesPageDe = async (req, res, next) => {
       'de-de': districtUrls.de,
       'es-es': districtUrls.es
     };
-    const pageMetaDescription = 'Wohnung kaufen Friedrichshain-Kreuzberg: Finden Sie ausgewählte Eigentumswohnungen in einem der gefragtesten Berliner Bezirke – mit Markt-Insights und persönlicher Beratung.';
-    const pageTitle = 'Wohnung kaufen Friedrichshain-Kreuzberg: Eigentumswohnungen in Berlin';
+    const pageMetaDescription = 'Wohnung kaufen Friedrichshain-Kreuzberg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.';
+    const pageTitle = 'Wohnung kaufen Friedrichshain-Kreuzberg | Sweet Home';
     const districtContent = {
       heroTitle: 'Wohnung kaufen Friedrichshain-Kreuzberg',
       heroDescription: 'Friedrichshain-Kreuzberg zählt zu den nachfragestärksten Wohnmärkten Berlins. Der Bezirk verbindet urbanen Lifestyle, kreative Quartiere und starke Mikrostandorte mit hoher Kauf- und Mietdynamik.',
@@ -4508,13 +4508,13 @@ exports.schoenebergPropertiesPageDe = async (req, res, next) => {
     };
 
     res.render('properties-schoeneberg-de', {
-      title: 'Wohnung kaufen Schöneberg: Eigentumswohnungen in Berlin',
+      title: 'Wohnung kaufen Schöneberg | Sweet Home',
       useMainContainer: false,
       useHomeHeader: true,
       headPartial: '../partials/seo/schoeneberg-properties-head',
       canonicalUrl: districtUrls.de,
       hreflangAlternates: { 'en-us': districtUrls.en, 'de-de': districtUrls.de, 'es-es': districtUrls.es },
-      pageMetaDescription: 'Wohnung kaufen Schöneberg: Entdecken Sie ausgewählte Eigentumswohnungen in Schöneberg mit lokalen Markt-Insights und persönlicher Beratung.',
+      pageMetaDescription: 'Wohnung kaufen Schöneberg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
       districtContent,
       locations,
       neighborhoodCounts,
@@ -4636,13 +4636,13 @@ exports.prenzlauerBergPropertiesPageDe = async (req, res, next) => {
     };
 
     res.render('properties-prenzlauer-berg-de', {
-      title: 'Wohnung kaufen Prenzlauer Berg: Eigentumswohnungen in Berlin',
+      title: 'Wohnung kaufen Prenzlauer Berg | Sweet Home',
       useMainContainer: false,
       useHomeHeader: true,
       headPartial: '../partials/seo/prenzlauer-berg-properties-head',
       canonicalUrl: districtUrls.de,
       hreflangAlternates: { 'en-us': districtUrls.en, 'de-de': districtUrls.de, 'es-es': districtUrls.es },
-      pageMetaDescription: 'Wohnung kaufen Prenzlauer Berg: Entdecken Sie ausgewählte Eigentumswohnungen in Prenzlauer Berg mit lokalen Markt-Insights und persönlicher Beratung.',
+      pageMetaDescription: 'Wohnung kaufen Prenzlauer Berg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
       districtContent,
       locations,
       neighborhoodCounts,
@@ -4770,13 +4770,13 @@ exports.weddingPropertiesPageDe = async (req, res, next) => {
     };
 
     res.render('properties-wedding-de', {
-      title: 'Wohnung kaufen Wedding: Eigentumswohnungen in Berlin',
+      title: 'Wohnung kaufen Wedding | Sweet Home',
       useMainContainer: false,
       useHomeHeader: true,
       headPartial: '../partials/seo/wedding-properties-head',
       canonicalUrl: districtUrls.de,
       hreflangAlternates: { 'en-us': districtUrls.en, 'de-de': districtUrls.de, 'es-es': districtUrls.es },
-      pageMetaDescription: 'Wohnung kaufen Wedding: Entdecken Sie ausgewählte Eigentumswohnungen in Wedding mit lokalen Markt-Insights und persönlicher Beratung.',
+      pageMetaDescription: 'Wohnung kaufen Wedding: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
       districtContent,
       locations,
       neighborhoodCounts,
@@ -4897,13 +4897,13 @@ exports.tempelhofPropertiesPageDe = async (req, res, next) => {
     };
 
     res.render('properties-tempelhof-de', {
-      title: 'Wohnung kaufen Tempelhof: Eigentumswohnungen in Berlin',
+      title: 'Wohnung kaufen Tempelhof | Sweet Home',
       useMainContainer: false,
       useHomeHeader: true,
       headPartial: '../partials/seo/tempelhof-properties-head',
       canonicalUrl: districtUrls.de,
       hreflangAlternates: { 'en-us': districtUrls.en, 'de-de': districtUrls.de, 'es-es': districtUrls.es },
-      pageMetaDescription: 'Wohnung kaufen Tempelhof: Entdecken Sie ausgewählte Eigentumswohnungen in Tempelhof mit lokalen Markt-Insights und persönlicher Beratung.',
+      pageMetaDescription: 'Wohnung kaufen Tempelhof: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
       districtContent,
       locations,
       neighborhoodCounts,
@@ -5029,8 +5029,8 @@ exports.neukoellnPropertiesPageDe = async (req, res, next) => renderBerlinDistri
   displayName: 'Neukölln',
   defaultNeighborhood: 'Neukölln',
   heroImage: '/images/Neukölln.jpg',
-  title: 'Wohnung kaufen Neukölln: Eigentumswohnungen in Berlin',
-  metaDescription: 'Wohnung kaufen Neukölln: Entdecken Sie ausgewählte Eigentumswohnungen in Neukölln mit Markt-Insights, Mikrolagen und persönlicher Kaufberatung.',
+  title: 'Wohnung kaufen Neukölln | Sweet Home',
+  metaDescription: 'Wohnung kaufen Neukölln: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
   propertiesWhere: "(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2)",
   propertiesParams: ['%neukölln%', '%neukolln%'],
   projectsWhere: "(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2)",
@@ -5066,8 +5066,8 @@ exports.reinickendorfPropertiesPageDe = async (req, res, next) => renderBerlinDi
   displayName: 'Reinickendorf',
   defaultNeighborhood: 'Reinickendorf',
   heroImage: '/images/reinickendorf.webp',
-  title: 'Wohnung kaufen Reinickendorf: Eigentumswohnungen in Berlin',
-  metaDescription: 'Wohnung kaufen Reinickendorf: Finden Sie Eigentumswohnungen in Reinickendorf mit lokalen Marktinformationen, gefragten Lagen und persönlicher Beratung.',
+  title: 'Wohnung kaufen Reinickendorf | Sweet Home',
+  metaDescription: 'Wohnung kaufen Reinickendorf: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
   propertiesWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
   propertiesParams: ['%reinickendorf%'],
   projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
@@ -5103,8 +5103,8 @@ exports.kreuzbergPropertiesPageDe = async (req, res, next) => renderBerlinDistri
   displayName: 'Kreuzberg',
   defaultNeighborhood: 'Kreuzberg',
   heroImage: '/images/kreuzberg.jpg',
-  title: 'Wohnung kaufen Kreuzberg: Eigentumswohnungen in Berlin',
-  metaDescription: 'Wohnung kaufen Kreuzberg: Entdecken Sie Eigentumswohnungen in Kreuzberg mit Kiez-Insights, Lagevergleich und persönlicher Kaufbegleitung.',
+  title: 'Wohnung kaufen Kreuzberg | Sweet Home',
+  metaDescription: 'Wohnung kaufen Kreuzberg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
   propertiesWhere: "LOWER(COALESCE(p.neighborhood, '')) = $1",
   propertiesParams: ['kreuzberg'],
   projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) = $1",
@@ -5140,8 +5140,8 @@ exports.spandauPropertiesPageDe = async (req, res, next) => renderBerlinDistrict
   displayName: 'Spandau',
   defaultNeighborhood: 'Spandau',
   heroImage: '/images/spandau.jpeg',
-  title: 'Wohnung kaufen Spandau: Eigentumswohnungen in Berlin',
-  metaDescription: 'Wohnung kaufen Spandau: Entdecken Sie Eigentumswohnungen in Spandau mit Marktüberblick, gefragten Mikrolagen und persönlicher Beratung.',
+  title: 'Wohnung kaufen Spandau | Sweet Home',
+  metaDescription: 'Wohnung kaufen Spandau: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
   propertiesWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
   propertiesParams: ['%spandau%'],
   projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
