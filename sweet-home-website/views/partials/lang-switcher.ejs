@@ -1,4 +1,23 @@
-<div class="lang-switcher">
+<%
+  const isObject = (v) => v && typeof v === 'object';
+  const currentPathSafe = (typeof currentPath === 'string' && currentPath) ? currentPath : '/';
+  const isPrivilegedPath = /^\/(admin|superadmin|auth|api)(\/|$)/.test(currentPathSafe);
+  const stripLocalePrefix = (p) => String(p || '/').replace(/^\/(de|es)(?=\/|$)/, '') || '/';
+  const normalizedCurrentPath = stripLocalePrefix(currentPathSafe);
+  const defaultAlternatePaths = {
+    en: normalizedCurrentPath === '/' ? '/' : normalizedCurrentPath,
+    de: normalizedCurrentPath === '/' ? '/de' : `/de${normalizedCurrentPath}`,
+    es: normalizedCurrentPath === '/' ? '/es' : `/es${normalizedCurrentPath}`
+  };
+  const mergedAlternatePaths = (isObject(localeAlternatePaths) ? localeAlternatePaths : defaultAlternatePaths);
+  const encodedAlternatePaths = JSON.stringify(mergedAlternatePaths).replace(/"/g, '&quot;');
+  const resolveHrefForLang = (code) => {
+    if (isPrivilegedPath) return `/lang/${code}`;
+    if (isObject(mergedAlternatePaths) && mergedAlternatePaths[code]) return mergedAlternatePaths[code];
+    return defaultAlternatePaths[code] || (code === 'en' ? '/' : `/${code}`);
+  };
+%>
+<div class="lang-switcher" data-alt-paths="<%- encodedAlternatePaths %>">
   <button type="button" class="lang-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="lang-menu">
     <span class="lang-icon" aria-hidden="true">
       <%= (function(){
@@ -12,7 +31,11 @@
   </button>
   <div id="lang-menu" class="lang-menu" role="menu" aria-hidden="true">
     <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
-      <a role="menuitem" class="lang-option <%= (lang===code ? 'is-active' : '') %>" href="<%= (typeof localeAlternatePaths !== 'undefined' && localeAlternatePaths && localeAlternatePaths[code]) ? localeAlternatePaths[code] : (typeof berlinPagePaths !== 'undefined' && berlinPagePaths && berlinPagePaths[code]) ? berlinPagePaths[code] : (typeof dubaiPagePaths !== 'undefined' && dubaiPagePaths && dubaiPagePaths[code]) ? dubaiPagePaths[code] : (typeof cyprusPagePaths !== 'undefined' && cyprusPagePaths && cyprusPagePaths[code]) ? cyprusPagePaths[code] : (typeof homeLangPaths !== 'undefined' && homeLangPaths) ? (code === 'en' ? '/' : '/' + code) : '/lang/' + code %>">
+      <a
+        role="menuitem"
+        class="lang-option <%= (lang===code ? 'is-active' : '') %>"
+        data-lang-code="<%= code %>"
+        href="<%= resolveHrefForLang(code) %>">
         <%= (languageLabels && languageLabels[code]) || code.toUpperCase() %>
       </a>
     <% }) %>
@@ -41,5 +64,40 @@
   }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 </style>
+
+<script>
+(function () {
+  var switcher = document.querySelector('.lang-switcher');
+  if (!switcher) return;
+  var path = window.location && window.location.pathname ? window.location.pathname : '/';
+  if (/^\/(admin|superadmin|auth|api)(\/|$)/.test(path)) return;
+
+  var search = window.location && window.location.search ? window.location.search : '';
+  var hash = window.location && window.location.hash ? window.location.hash : '';
+
+  var serverAlt = {};
+  try {
+    serverAlt = JSON.parse(switcher.getAttribute('data-alt-paths') || '{}');
+  } catch (_) {
+    serverAlt = {};
+  }
+
+  var normalized = path.replace(/^\/(de|es)(?=\/|$)/, '') || '/';
+  var fallbackAlt = {
+    en: normalized === '/' ? '/' : normalized,
+    de: normalized === '/' ? '/de' : '/de' + normalized,
+    es: normalized === '/' ? '/es' : '/es' + normalized
+  };
+
+  var options = switcher.querySelectorAll('.lang-option[data-lang-code]');
+  options.forEach(function (option) {
+    var code = option.getAttribute('data-lang-code');
+    if (!code) return;
+    var basePath = (serverAlt && serverAlt[code]) ? serverAlt[code] : fallbackAlt[code];
+    if (!basePath) return;
+    option.setAttribute('href', basePath + search + hash);
+  });
+})();
+</script>
 
 
