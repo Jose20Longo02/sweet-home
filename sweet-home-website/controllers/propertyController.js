@@ -3287,7 +3287,7 @@ exports.berlinInvestorStrategyPageEn = async (req, res, next) => {
     res.render('berlin-investment-strategy-en', {
       title: 'Berlin Tenant-Occupied Entry Strategy | Sweet Home',
       useMainContainer: false,
-      useHomeHeader: true,
+      useHomeHeader: false,
       headPartial: '../partials/seo/berlin-investment-strategy-head',
       canonicalUrl,
       hreflangAlternates,
