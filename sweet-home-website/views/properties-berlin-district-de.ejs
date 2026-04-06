@@ -182,20 +182,20 @@
       <h2 id="district-internal-links-heading" class="berlin-content__title">Interne Links: Berlin Immobilien gezielt vergleichen</h2>
       <p class="berlin-content__intro">Nutzen Sie diese direkten Verbindungen zu den wichtigsten Berliner Immobilienseiten, um Lagen, Preise und Angebotstiefe besser zu vergleichen.</p>
       <ul class="berlin-areas__list">
-        <li class="berlin-areas__item"><a href="/de/wohnungen-berlin-kaufen">Zur Berlin-Hauptseite: Wohnungen in Berlin kaufen</a></li>
+        <li class="berlin-areas__item"><a href="/wohnungen-berlin-kaufen">Zur Berlin-Hauptseite: Wohnungen in Berlin kaufen</a></li>
         <li class="berlin-areas__item"><a href="<%= (typeof localePath === 'function') ? localePath('/properties/for-sale/germany/berlin') : '/properties/for-sale/germany/berlin' %>?neighborhood=<%= encodeURIComponent(defaultNeighborhood) %>">Alle Angebote in <%= districtDisplayName %> in der Suchansicht ansehen</a></li>
         <% const berlinDistrictLinks = [
-          { name: 'Charlottenburg', href: '/de/wohnung-kaufen-charlottenburg' },
-          { name: 'Moabit', href: '/de/wohnung-kaufen-moabit' },
-          { name: 'Friedrichshain-Kreuzberg', href: '/de/wohnung-kaufen-friedrichshain-kreuzberg' },
-          { name: 'Schöneberg', href: '/de/wohnung-kaufen-schoeneberg' },
-          { name: 'Prenzlauer Berg', href: '/de/wohnung-kaufen-prenzlauer-berg' },
-          { name: 'Wedding', href: '/de/wohnung-kaufen-wedding' },
-          { name: 'Tempelhof', href: '/de/wohnung-kaufen-tempelhof' },
-          { name: 'Neukölln', href: '/de/wohnung-kaufen-neukoelln' },
-          { name: 'Reinickendorf', href: '/de/wohnung-kaufen-reinickendorf' },
-          { name: 'Kreuzberg', href: '/de/wohnung-kaufen-kreuzberg' },
-          { name: 'Spandau', href: '/de/wohnung-kaufen-spandau' }
+          { name: 'Charlottenburg', href: '/wohnung-kaufen-charlottenburg' },
+          { name: 'Moabit', href: '/wohnung-kaufen-moabit' },
+          { name: 'Friedrichshain-Kreuzberg', href: '/wohnung-kaufen-friedrichshain-kreuzberg' },
+          { name: 'Schöneberg', href: '/wohnung-kaufen-schoeneberg' },
+          { name: 'Prenzlauer Berg', href: '/wohnung-kaufen-prenzlauer-berg' },
+          { name: 'Wedding', href: '/wohnung-kaufen-wedding' },
+          { name: 'Tempelhof', href: '/wohnung-kaufen-tempelhof' },
+          { name: 'Neukölln', href: '/wohnung-kaufen-neukoelln' },
+          { name: 'Reinickendorf', href: '/wohnung-kaufen-reinickendorf' },
+          { name: 'Kreuzberg', href: '/wohnung-kaufen-kreuzberg' },
+          { name: 'Spandau', href: '/wohnung-kaufen-spandau' }
         ]; %>
         <% berlinDistrictLinks.forEach(function(item){ if (item.name !== districtDisplayName) { %>
           <li class="berlin-areas__item"><a href="<%= item.href %>">Wohnung kaufen <%= item.name %></a></li>

@@ -27,7 +27,7 @@
           const priceText = property.price && Number(property.price) > 0 ? '€' + Number(property.price).toLocaleString('de-DE') : '';
         %>
         <article class="property-card">
-          <a href="/de/properties/<%= property.slug %>" class="property-card-link">
+          <a href="/properties/<%= property.slug %>" class="property-card-link">
             <div class="img-wrap" <%= priceText ? `data-price="${priceText}"` : '' %>>
               <img src="<%= photoUrl %>" alt="<%= property.title %>" loading="lazy" decoding="async" onerror="this.src='/img/property-placeholder.jpg'">
             </div>
@@ -56,10 +56,10 @@
       <% }); %>
     </div>
     <% if (!recommendedProperties || recommendedProperties.length === 0) { %>
-      <p class="section-empty">Aktuell keine Villen gefunden. <a href="/de/properties?country=UAE&city=Dubai&type=Villa">Villen in Dubai suchen</a></p>
+      <p class="section-empty">Aktuell keine Villen gefunden. <a href="/properties?country=UAE&city=Dubai&type=Villa">Villen in Dubai suchen</a></p>
     <% } else { %>
       <p class="section-cta">
-        <a href="/de/properties?country=UAE&city=Dubai&type=Villa" class="btn btn-primary">Alle Villen in Dubai anzeigen</a>
+        <a href="/properties?country=UAE&city=Dubai&type=Villa" class="btn btn-primary">Alle Villen in Dubai anzeigen</a>
       </p>
     <% } %>
   </section>
@@ -79,7 +79,7 @@
       <h2 id="dubai-villa-hub-link-heading" class="berlin-content__title">Auch Wohnungen und allgemeine Dubai Immobilien vergleichen?</h2>
       <p class="berlin-content__intro">Zur Hauptseite mit Wohnungen, Häusern und Projekten in Dubai.</p>
       <p class="section-cta">
-        <a href="/de/immobilien-dubai-kaufen" class="btn btn-primary">Zur Dubai Immobilien Hauptseite</a>
+        <a href="/immobilien-dubai-kaufen" class="btn btn-primary">Zur Dubai Immobilien Hauptseite</a>
       </p>
     </div>
   </section>

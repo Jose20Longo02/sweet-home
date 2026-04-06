@@ -2,8 +2,8 @@
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
   const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
   const cyprusPagePaths = {
-    en: '/properties-for-sale-cyprus',
-    de: '/de/immobilien-zypern-kaufen',
+    de: '/immobilien-zypern-kaufen',
+    en: '/en/properties-for-sale-cyprus',
     es: '/es/propiedades-en-venta-chipre'
   };
   const pagePath = cyprusPagePaths[currentLang] || cyprusPagePaths.en;

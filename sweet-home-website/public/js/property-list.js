@@ -35,7 +35,7 @@ function getLocalePrefix() {
   if (fromAttr) return fromAttr;
   const path = (window.location && window.location.pathname) || '';
   if (path.startsWith('/es')) return '/es';
-  if (path.startsWith('/de')) return '/de';
+  if (path.startsWith('/en')) return '/en';
   return '';
 }
 

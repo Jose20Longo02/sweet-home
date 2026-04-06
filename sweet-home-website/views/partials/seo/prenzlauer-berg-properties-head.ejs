@@ -1,6 +1,6 @@
 <%
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
-  const pageUrl = `${siteBaseUrl}/de/wohnung-kaufen-prenzlauer-berg`;
+  const pageUrl = `${siteBaseUrl}/wohnung-kaufen-prenzlauer-berg`;
   const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : 'Wohnung kaufen Prenzlauer Berg: Eigentumswohnungen und Markt-Insights für Käufer in Berlin.';
   const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Wohnung kaufen Prenzlauer Berg';
   const pageFaq = (typeof districtContent !== 'undefined' && districtContent && Array.isArray(districtContent.faq)) ? districtContent.faq : [];
@@ -23,13 +23,13 @@
   '@context': 'https://schema.org',
   '@graph': [
     { '@type': 'WebPage', '@id': pageUrl + '#webpage', name: pageTitle + ' | Sweet Home', description: pageDesc, url: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl, isPartOf: { '@type': 'WebSite', '@id': siteBaseUrl + '/#website', name: 'Sweet Home' } },
-    { '@type': 'BreadcrumbList', itemListElement: [ { '@type': 'ListItem', position: 1, name: 'Startseite', item: siteBaseUrl + '/de' }, { '@type': 'ListItem', position: 2, name: 'Wohnungen in Berlin', item: siteBaseUrl + '/de/wohnungen-berlin-kaufen' }, { '@type': 'ListItem', position: 3, name: 'Wohnung kaufen Prenzlauer Berg', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl } ] }
+    { '@type': 'BreadcrumbList', itemListElement: [ { '@type': 'ListItem', position: 1, name: 'Startseite', item: siteBaseUrl + '/' }, { '@type': 'ListItem', position: 2, name: 'Wohnungen in Berlin', item: siteBaseUrl + '/wohnungen-berlin-kaufen' }, { '@type': 'ListItem', position: 3, name: 'Wohnung kaufen Prenzlauer Berg', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl } ] }
   ]
 }) : JSON.stringify({
   '@context': 'https://schema.org',
   '@graph': [
     { '@type': 'WebPage', '@id': pageUrl + '#webpage', name: pageTitle + ' | Sweet Home', description: pageDesc, url: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl, isPartOf: { '@type': 'WebSite', '@id': siteBaseUrl + '/#website', name: 'Sweet Home' } },
-    { '@type': 'BreadcrumbList', itemListElement: [ { '@type': 'ListItem', position: 1, name: 'Startseite', item: siteBaseUrl + '/de' }, { '@type': 'ListItem', position: 2, name: 'Wohnungen in Berlin', item: siteBaseUrl + '/de/wohnungen-berlin-kaufen' }, { '@type': 'ListItem', position: 3, name: 'Wohnung kaufen Prenzlauer Berg', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl } ] }
+    { '@type': 'BreadcrumbList', itemListElement: [ { '@type': 'ListItem', position: 1, name: 'Startseite', item: siteBaseUrl + '/' }, { '@type': 'ListItem', position: 2, name: 'Wohnungen in Berlin', item: siteBaseUrl + '/wohnungen-berlin-kaufen' }, { '@type': 'ListItem', position: 3, name: 'Wohnung kaufen Prenzlauer Berg', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl } ] }
   ]
 })) %></script>
 <% if (pageFaq.length > 0) { %><script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: pageFaq.map((item) => ({ '@type': 'Question', name: item.q, acceptedAnswer: { '@type': 'Answer', text: item.a } })) }) : JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: pageFaq.map((item) => ({ '@type': 'Question', name: item.q, acceptedAnswer: { '@type': 'Answer', text: item.a } })) })) %></script><% } %>

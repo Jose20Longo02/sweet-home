@@ -1,6 +1,6 @@
 <%
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
-  const pageUrl = `${siteBaseUrl}/villas-for-sale-cyprus`;
+  const pageUrl = `${siteBaseUrl}/en/villas-for-sale-cyprus`;
   const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription)
     ? pageMetaDescription
     : 'Discover Cyprus villas for sale, including villas in Cyprus Paphos and premium coastal homes. Compare villa sale Cyprus listings with expert guidance from Sweet Home.';
@@ -38,7 +38,7 @@
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Home', item: siteBaseUrl + '/' },
-        { '@type': 'ListItem', position: 2, name: 'Cyprus Property for Sale', item: siteBaseUrl + '/properties-for-sale-cyprus' },
+        { '@type': 'ListItem', position: 2, name: 'Cyprus Property for Sale', item: siteBaseUrl + '/en/properties-for-sale-cyprus' },
         { '@type': 'ListItem', position: 3, name: 'Cyprus Villas for Sale', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
       ]
     }

@@ -3,7 +3,7 @@
   const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
   const localePathMap = (typeof berlinPagePaths !== 'undefined' && berlinPagePaths && typeof berlinPagePaths === 'object')
     ? berlinPagePaths
-    : { en: '/properties-for-sale-berlin', de: '/de/wohnungen-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' };
+    : { de: '/wohnungen-berlin-kaufen', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' };
   const pagePath = localePathMap[currentLang] || localePathMap.en;
   const pageUrl = `${siteBaseUrl}${pagePath}`;
   const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : 'Find properties for sale in Berlin, Germany. Browse the most viewed apartments, houses, and villas. Expert real estate guidance from Sweet Home.';

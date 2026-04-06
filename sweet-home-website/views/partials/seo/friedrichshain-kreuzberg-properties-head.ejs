@@ -1,6 +1,6 @@
 <%
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
-  const pageUrl = `${siteBaseUrl}/de/wohnung-kaufen-friedrichshain-kreuzberg`;
+  const pageUrl = `${siteBaseUrl}/wohnung-kaufen-friedrichshain-kreuzberg`;
   const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : 'Wohnung kaufen Friedrichshain-Kreuzberg: Eigentumswohnungen und Markt-Insights für Käufer in Berlin.';
   const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Wohnung kaufen Friedrichshain-Kreuzberg';
   const pageOgLocale = 'de_DE';
@@ -35,8 +35,8 @@
     {
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Startseite', item: siteBaseUrl + '/de' },
-        { '@type': 'ListItem', position: 2, name: 'Wohnungen in Berlin', item: siteBaseUrl + '/de/wohnungen-berlin-kaufen' },
+        { '@type': 'ListItem', position: 1, name: 'Startseite', item: siteBaseUrl + '/' },
+        { '@type': 'ListItem', position: 2, name: 'Wohnungen in Berlin', item: siteBaseUrl + '/wohnungen-berlin-kaufen' },
         { '@type': 'ListItem', position: 3, name: 'Wohnung kaufen Friedrichshain-Kreuzberg', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
       ]
     }
@@ -55,8 +55,8 @@
     {
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Startseite', item: siteBaseUrl + '/de' },
-        { '@type': 'ListItem', position: 2, name: 'Wohnungen in Berlin', item: siteBaseUrl + '/de/wohnungen-berlin-kaufen' },
+        { '@type': 'ListItem', position: 1, name: 'Startseite', item: siteBaseUrl + '/' },
+        { '@type': 'ListItem', position: 2, name: 'Wohnungen in Berlin', item: siteBaseUrl + '/wohnungen-berlin-kaufen' },
         { '@type': 'ListItem', position: 3, name: 'Wohnung kaufen Friedrichshain-Kreuzberg', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
       ]
     }

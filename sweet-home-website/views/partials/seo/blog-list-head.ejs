@@ -11,8 +11,8 @@
     return parts.length ? `?${parts.join('&')}` : '';
   };
   const blogListUrl = `${siteBaseUrl}${blogBasePath}${buildQuery(pageParam)}`;
-  const enUrl = `${siteBaseUrl}/blog${buildQuery(pageParam)}`;
-  const deUrl = `${siteBaseUrl}/de/blog${buildQuery(pageParam)}`;
+  const deUrl = `${siteBaseUrl}/blog${buildQuery(pageParam)}`;
+  const enUrl = `${siteBaseUrl}/en/blog${buildQuery(pageParam)}`;
   const esUrl = `${siteBaseUrl}/es/blog${buildQuery(pageParam)}`;
   const ogLocale = (typeof lang !== 'undefined' && lang === 'de') ? 'de_DE' : (typeof lang !== 'undefined' && lang === 'es') ? 'es_ES' : 'en_US';
   const normalizeText = (value) => String(value || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -35,7 +35,7 @@
 <link rel="alternate" hreflang="en-us" href="<%= enUrl %>">
 <link rel="alternate" hreflang="de-de" href="<%= deUrl %>">
 <link rel="alternate" hreflang="es-es" href="<%= esUrl %>">
-<link rel="alternate" hreflang="x-default" href="<%= enUrl %>">
+<link rel="alternate" hreflang="x-default" href="<%= deUrl %>">
 <% if (typeof page !== 'undefined' && page > 1) { %>
 <link rel="prev" href="<%= `${siteBaseUrl}${blogBasePath}${buildQuery((page - 1) > 1 ? (page - 1) : 0)}` %>">
 <% } %>

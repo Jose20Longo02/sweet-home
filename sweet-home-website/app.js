@@ -159,7 +159,7 @@ app.use(
 );
 app.use(cookieParser());
 // Internationalization: must come immediately after cookies so it can read lang.
-// Language is path-first (/es/*, /de/*, or non-prefixed public routes) and cookie-backed for persistence.
+// Language is path-first (/en/*, /es/*, or non-prefixed public routes) and cookie-backed for persistence.
 app.use(i18nMiddleware);
 // Expose current lang for diagnostics
 app.use((req, res, next) => { try { res.set('X-App-Lang', res.locals.lang || ''); } catch (_) {} next(); });
@@ -326,30 +326,28 @@ const apiLimiter = rateLimit({
 });
 app.use(['/api', '/auth', '/properties/api', '/projects/api'], apiLimiter);
 
-// Non-prefixed detail URLs: keep property/project details canonical (non-prefixed).
-// Only blog details are locale-prefixed to preserve language context without creating redirect loops.
+// German is default on non-prefixed URLs.
+// Redirect details to /en or /es when user language context requires it.
 app.use((req, res, next) => {
   if (req.method !== 'GET') return next();
-  if (req.path.startsWith('/de/') || req.path.startsWith('/es/')) return next();
+  if (req.path.startsWith('/en/') || req.path.startsWith('/es/')) return next();
   if (/^\/(admin|superadmin|auth|api)/.test(req.path)) return next();
   const isPropertyDetail = /^\/properties\/[^/]+$/.test(req.path) && req.path !== '/properties/new';
   const isProjectDetail = /^\/projects\/[^/]+$/.test(req.path) && req.path !== '/projects/regions';
   const isBlogDetail = /^\/blog\/[^/]+$/.test(req.path);
-  // Property/project details are intentionally canonicalized to non-prefixed URLs in legacy middleware.
-  if (isPropertyDetail || isProjectDetail) return next();
-  const isDetailPage = isBlogDetail;
+  const isDetailPage = isPropertyDetail || isProjectDetail || isBlogDetail;
   if (isDetailPage) {
     const cLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase().slice(0, 2) : '';
-    let chosenLang = (cLang === 'de' || cLang === 'es') ? cLang : '';
+    let chosenLang = (cLang === 'en' || cLang === 'es') ? cLang : '';
     if (!chosenLang) {
-      // Fallback to referer locale so opening a detail from /es/* or /de/* keeps language
+      // Fallback to referer locale so opening a detail from /en/* or /es/* keeps language
       const referer = String(req.get('referer') || '');
       const host = req.get('host');
       try {
         const refUrl = referer ? new URL(referer) : null;
         const sameHost = !!(refUrl && host && refUrl.host === host);
         if (sameHost) {
-          if (refUrl.pathname === '/de' || refUrl.pathname.startsWith('/de/')) chosenLang = 'de';
+          if (refUrl.pathname === '/en' || refUrl.pathname.startsWith('/en/')) chosenLang = 'en';
           else if (refUrl.pathname === '/es' || refUrl.pathname.startsWith('/es/')) chosenLang = 'es';
         }
       } catch (_) { /* ignore malformed referer */ }
@@ -368,40 +366,55 @@ app.use((req, res, next) => {
 // Expose current path to views so layout can pick header variant
 app.use((req, res, next) => {
   res.locals.currentPath = req.path;
-  // Flag: use path-based locale links when we have a locale prefix (/, /de, /es or any /de/*, /es/*)
-  res.locals.homeLangPaths = (req.path === '/' || req.path === '/de' || req.path === '/es' || req.path.startsWith('/de/') || req.path.startsWith('/es/'));
-  // Helper: prepend locale prefix to a path. e.g. localePath('/properties') -> '/de/properties' when on /de/* pages
+  // Flag: use path-based locale links when we have a locale prefix (/, /en, /es or any /en/*, /es/*)
+  res.locals.homeLangPaths = (req.path === '/' || req.path === '/en' || req.path === '/es' || req.path.startsWith('/en/') || req.path.startsWith('/es/'));
+  // Helper: prepend locale prefix to a path. e.g. localePath('/properties') -> '/en/properties' when on /en/* pages
   const prefix = res.locals.localePrefix || '';
   res.locals.localePath = (p) => {
     if (!p || p === '/') return prefix || '/';
     const clean = String(p).replace(/^\//, '');
     return prefix + (clean ? '/' + clean : '');
   };
-  // Property landing pages have different URLs per language (not just /de + path)
+  // Property landing pages have different URLs per language (DE default non-prefixed, EN /en, ES /es)
   const PROPERTY_PAGE_ALTERNATES = {
-    '/properties-for-sale-berlin': { en: '/properties-for-sale-berlin', de: '/de/wohnungen-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
-    '/de/wohnungen-berlin-kaufen': { en: '/properties-for-sale-berlin', de: '/de/wohnungen-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
-    '/de/immobilien-berlin-kaufen': { en: '/properties-for-sale-berlin', de: '/de/wohnungen-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
-    '/es/propiedades-en-venta-berlin': { en: '/properties-for-sale-berlin', de: '/de/wohnungen-berlin-kaufen', es: '/es/propiedades-en-venta-berlin' },
-    '/de/wohnung-kaufen-charlottenburg': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-charlottenburg', es: '/es/propiedades-en-venta-berlin' },
-    '/de/wohnung-kaufen-moabit': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-moabit', es: '/es/propiedades-en-venta-berlin' },
-    '/de/wohnung-kaufen-friedrichshain-kreuzberg': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-friedrichshain-kreuzberg', es: '/es/propiedades-en-venta-berlin' },
-    '/de/wohnung-kaufen-schoeneberg': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-schoeneberg', es: '/es/propiedades-en-venta-berlin' },
-    '/de/wohnung-kaufen-prenzlauer-berg': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-prenzlauer-berg', es: '/es/propiedades-en-venta-berlin' },
-    '/de/wohnung-kaufen-wedding': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-wedding', es: '/es/propiedades-en-venta-berlin' },
-    '/de/wohnung-kaufen-tempelhof': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-tempelhof', es: '/es/propiedades-en-venta-berlin' },
-    '/de/wohnung-kaufen-neukoelln': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-neukoelln', es: '/es/propiedades-en-venta-berlin' },
-    '/de/wohnung-kaufen-reinickendorf': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-reinickendorf', es: '/es/propiedades-en-venta-berlin' },
-    '/de/wohnung-kaufen-kreuzberg': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-kreuzberg', es: '/es/propiedades-en-venta-berlin' },
-    '/de/wohnung-kaufen-spandau': { en: '/properties-for-sale-berlin', de: '/de/wohnung-kaufen-spandau', es: '/es/propiedades-en-venta-berlin' },
-    '/properties-for-sale-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
-    '/de/immobilien-dubai-kaufen': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
-    '/es/propiedades-en-venta-dubai': { en: '/properties-for-sale-dubai', de: '/de/immobilien-dubai-kaufen', es: '/es/propiedades-en-venta-dubai' },
-    '/de/villa-kaufen-dubai': { en: '/properties-for-sale-dubai', de: '/de/villa-kaufen-dubai', es: '/es/propiedades-en-venta-dubai' },
-    '/properties-for-sale-cyprus': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' },
-    '/de/immobilien-zypern-kaufen': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' },
-    '/es/propiedades-en-venta-chipre': { en: '/properties-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' },
-    '/villas-for-sale-cyprus': { en: '/villas-for-sale-cyprus', de: '/de/immobilien-zypern-kaufen', es: '/es/propiedades-en-venta-chipre' }
+    '/wohnungen-berlin-kaufen': { de: '/wohnungen-berlin-kaufen', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnungen-berlin-kaufen': { de: '/wohnungen-berlin-kaufen', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/en/properties-for-sale-berlin': { de: '/wohnungen-berlin-kaufen', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/es/propiedades-en-venta-berlin': { de: '/wohnungen-berlin-kaufen', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/wohnung-kaufen-charlottenburg': { de: '/wohnung-kaufen-charlottenburg', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-charlottenburg': { de: '/wohnung-kaufen-charlottenburg', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/wohnung-kaufen-moabit': { de: '/wohnung-kaufen-moabit', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-moabit': { de: '/wohnung-kaufen-moabit', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/wohnung-kaufen-friedrichshain-kreuzberg': { de: '/wohnung-kaufen-friedrichshain-kreuzberg', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-friedrichshain-kreuzberg': { de: '/wohnung-kaufen-friedrichshain-kreuzberg', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/wohnung-kaufen-schoeneberg': { de: '/wohnung-kaufen-schoeneberg', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-schoeneberg': { de: '/wohnung-kaufen-schoeneberg', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/wohnung-kaufen-prenzlauer-berg': { de: '/wohnung-kaufen-prenzlauer-berg', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-prenzlauer-berg': { de: '/wohnung-kaufen-prenzlauer-berg', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/wohnung-kaufen-wedding': { de: '/wohnung-kaufen-wedding', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-wedding': { de: '/wohnung-kaufen-wedding', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/wohnung-kaufen-tempelhof': { de: '/wohnung-kaufen-tempelhof', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-tempelhof': { de: '/wohnung-kaufen-tempelhof', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/wohnung-kaufen-neukoelln': { de: '/wohnung-kaufen-neukoelln', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-neukoelln': { de: '/wohnung-kaufen-neukoelln', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/wohnung-kaufen-reinickendorf': { de: '/wohnung-kaufen-reinickendorf', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-reinickendorf': { de: '/wohnung-kaufen-reinickendorf', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/wohnung-kaufen-kreuzberg': { de: '/wohnung-kaufen-kreuzberg', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-kreuzberg': { de: '/wohnung-kaufen-kreuzberg', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/wohnung-kaufen-spandau': { de: '/wohnung-kaufen-spandau', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/de/wohnung-kaufen-spandau': { de: '/wohnung-kaufen-spandau', en: '/en/properties-for-sale-berlin', es: '/es/propiedades-en-venta-berlin' },
+    '/immobilien-dubai-kaufen': { de: '/immobilien-dubai-kaufen', en: '/en/properties-for-sale-dubai', es: '/es/propiedades-en-venta-dubai' },
+    '/de/immobilien-dubai-kaufen': { de: '/immobilien-dubai-kaufen', en: '/en/properties-for-sale-dubai', es: '/es/propiedades-en-venta-dubai' },
+    '/en/properties-for-sale-dubai': { de: '/immobilien-dubai-kaufen', en: '/en/properties-for-sale-dubai', es: '/es/propiedades-en-venta-dubai' },
+    '/es/propiedades-en-venta-dubai': { de: '/immobilien-dubai-kaufen', en: '/en/properties-for-sale-dubai', es: '/es/propiedades-en-venta-dubai' },
+    '/villa-kaufen-dubai': { de: '/villa-kaufen-dubai', en: '/en/properties-for-sale-dubai', es: '/es/propiedades-en-venta-dubai' },
+    '/de/villa-kaufen-dubai': { de: '/villa-kaufen-dubai', en: '/en/properties-for-sale-dubai', es: '/es/propiedades-en-venta-dubai' },
+    '/immobilien-zypern-kaufen': { de: '/immobilien-zypern-kaufen', en: '/en/properties-for-sale-cyprus', es: '/es/propiedades-en-venta-chipre' },
+    '/de/immobilien-zypern-kaufen': { de: '/immobilien-zypern-kaufen', en: '/en/properties-for-sale-cyprus', es: '/es/propiedades-en-venta-chipre' },
+    '/en/properties-for-sale-cyprus': { de: '/immobilien-zypern-kaufen', en: '/en/properties-for-sale-cyprus', es: '/es/propiedades-en-venta-chipre' },
+    '/es/propiedades-en-venta-chipre': { de: '/immobilien-zypern-kaufen', en: '/en/properties-for-sale-cyprus', es: '/es/propiedades-en-venta-chipre' },
+    '/en/villas-for-sale-cyprus': { de: '/immobilien-zypern-kaufen', en: '/en/villas-for-sale-cyprus', es: '/es/propiedades-en-venta-chipre' },
+    '/villas-for-sale-cyprus': { de: '/immobilien-zypern-kaufen', en: '/en/villas-for-sale-cyprus', es: '/es/propiedades-en-venta-chipre' }
   };
   const propertyAlternates = PROPERTY_PAGE_ALTERNATES[req.path];
 
@@ -411,17 +424,17 @@ app.use((req, res, next) => {
   } else if (prefix) {
     const pathWithoutLocale = req.path.slice(prefix.length) || '/';
     res.locals.localeAlternatePaths = {
-      en: pathWithoutLocale === '/' ? '/' : pathWithoutLocale,
-      de: '/de' + pathWithoutLocale,
+      de: pathWithoutLocale === '/' ? '/' : pathWithoutLocale,
+      en: '/en' + pathWithoutLocale,
       es: '/es' + pathWithoutLocale
     };
   } else {
-    // Non-prefixed URL: still offer /de/... and /es/... so switching lang updates the URL
+    // Non-prefixed URL: DE default + /en and /es alternates
     const isPublic = !/^\/(admin|superadmin|auth|api)/.test(req.path);
     if (isPublic) {
       res.locals.localeAlternatePaths = {
-        en: req.path === '/' ? '/' : req.path,
-        de: req.path === '/' ? '/de' : '/de' + req.path,
+        de: req.path === '/' ? '/' : req.path,
+        en: req.path === '/' ? '/en' : '/en' + req.path,
         es: req.path === '/' ? '/es' : '/es' + req.path
       };
     } else {
@@ -435,8 +448,8 @@ app.use((req, res, next) => {
   if (res.locals.localeAlternatePaths && typeof res.locals.localeAlternatePaths === 'object') {
     const base = res.locals.baseUrl;
     res.locals.localeAlternateUrls = {
-      'en-us': base + (res.locals.localeAlternatePaths.en || '/'),
-      'de-de': base + (res.locals.localeAlternatePaths.de || '/de'),
+      'de-de': base + (res.locals.localeAlternatePaths.de || '/'),
+      'en-us': base + (res.locals.localeAlternatePaths.en || '/en'),
       'es-es': base + (res.locals.localeAlternatePaths.es || '/es')
     };
   } else {
@@ -476,7 +489,7 @@ app.get('/lang/:code', (req, res) => {
     return;
   }
 
-  const currentLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase() : 'en';
+  const currentLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase() : 'de';
   if (currentLang === code) return res.redirect(302, back);
   try { res.cookie('lang', code, { httpOnly: false, sameSite: 'lax', maxAge: 30 * 24 * 60 * 60 * 1000 }); } catch (_) {}
   return res.redirect(302, back);
@@ -488,14 +501,13 @@ app.use((req, res, next) => {
   const lowerPath = requestPath.toLowerCase();
 
   const localeFromPath = () => {
-    if (lowerPath === '/de' || lowerPath.startsWith('/de/')) return 'de';
-    if (lowerPath === '/es' || lowerPath.startsWith('/es/')) return 'es';
     if (lowerPath === '/en' || lowerPath.startsWith('/en/')) return 'en';
-    return 'en';
+    if (lowerPath === '/es' || lowerPath.startsWith('/es/')) return 'es';
+    return 'de';
   };
   const localePath = (basePath, locale) => {
     const normalized = basePath.startsWith('/') ? basePath : `/${basePath}`;
-    if (locale === 'de') return `/de${normalized === '/' ? '' : normalized}`;
+    if (locale === 'en') return `/en${normalized === '/' ? '' : normalized}`;
     if (locale === 'es') return `/es${normalized === '/' ? '' : normalized}`;
     return normalized;
   };
@@ -519,7 +531,7 @@ app.use((req, res, next) => {
       .filter((k) => k !== 'lang')
       .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(String(req.query[k] ?? ''))}`);
     const cleanedPath = lowerPath.startsWith('/en/') ? lowerPath.slice(3) || '/' : lowerPath;
-    const targetPath = cleanedPath === '/de' || cleanedPath.startsWith('/de/') || cleanedPath === '/es' || cleanedPath.startsWith('/es/')
+    const targetPath = cleanedPath === '/en' || cleanedPath.startsWith('/en/') || cleanedPath === '/es' || cleanedPath.startsWith('/es/')
       ? cleanedPath
       : localePath(cleanedPath, langQuery);
     const querySuffix = queryPairs.length ? `?${queryPairs.join('&')}` : '';
@@ -527,33 +539,33 @@ app.use((req, res, next) => {
   }
 
   // Old language setter endpoints in coverage reports.
-  if (lowerPath === '/lang/de') return res.redirect(301, '/de');
+  if (lowerPath === '/lang/de') return res.redirect(301, '/');
   if (lowerPath === '/lang/es') return res.redirect(301, '/es');
-  if (lowerPath === '/lang/en') return res.redirect(301, '/');
+  if (lowerPath === '/lang/en') return res.redirect(301, '/en');
 
-  // Old English prefix routes from previous CMS.
-  if (lowerPath === '/en' || lowerPath === '/en/') return res.redirect(301, '/');
-  if (lowerPath === '/de/uber-uns-2' || lowerPath === '/de/uber-uns-2/') return res.redirect(301, '/de/about');
-  if (lowerPath === '/de/kontakt' || lowerPath === '/de/kontakt/') return res.redirect(301, '/de/contact');
-  if (lowerPath === '/en/about-us-2' || lowerPath === '/en/about-us-2/') return res.redirect(301, '/about');
-  if (lowerPath === '/en/staff' || lowerPath === '/en/staff/') return res.redirect(301, '/about');
+  // Old German prefix routes from previous setup.
+  if (lowerPath === '/de' || lowerPath === '/de/') return res.redirect(301, '/');
+  if (lowerPath === '/de/uber-uns-2' || lowerPath === '/de/uber-uns-2/') return res.redirect(301, '/about');
+  if (lowerPath === '/de/kontakt' || lowerPath === '/de/kontakt/') return res.redirect(301, '/contact');
+  if (lowerPath === '/en/about-us-2' || lowerPath === '/en/about-us-2/') return res.redirect(301, '/en/about');
+  if (lowerPath === '/en/staff' || lowerPath === '/en/staff/') return res.redirect(301, '/en/about');
   if (lowerPath === '/default' || lowerPath === '/default.asp') return res.redirect(301, '/');
   if (lowerPath === '/ru' || lowerPath === '/ru/' || lowerPath === '/he' || lowerPath === '/he/') return res.redirect(301, '/');
 
   const districtRedirects = {
-    '/de/charlottenburg': '/de/wohnung-kaufen-charlottenburg',
-    '/de/moabit': '/de/wohnung-kaufen-moabit',
-    '/de/friedrichshain-kreuzberg': '/de/wohnung-kaufen-friedrichshain-kreuzberg',
-    '/de/schoeneberg': '/de/wohnung-kaufen-schoeneberg',
-    '/de/schoneberg': '/de/wohnung-kaufen-schoeneberg',
-    '/de/prenzlauer-berg': '/de/wohnung-kaufen-prenzlauer-berg',
-    '/de/wedding': '/de/wohnung-kaufen-wedding',
-    '/de/tempelhof': '/de/wohnung-kaufen-tempelhof',
-    '/de/neukoelln': '/de/wohnung-kaufen-neukoelln',
-    '/de/neukolln': '/de/wohnung-kaufen-neukoelln',
-    '/de/reinickendorf': '/de/wohnung-kaufen-reinickendorf',
-    '/de/kreuzberg': '/de/wohnung-kaufen-kreuzberg',
-    '/de/spandau': '/de/wohnung-kaufen-spandau'
+    '/de/charlottenburg': '/wohnung-kaufen-charlottenburg',
+    '/de/moabit': '/wohnung-kaufen-moabit',
+    '/de/friedrichshain-kreuzberg': '/wohnung-kaufen-friedrichshain-kreuzberg',
+    '/de/schoeneberg': '/wohnung-kaufen-schoeneberg',
+    '/de/schoneberg': '/wohnung-kaufen-schoeneberg',
+    '/de/prenzlauer-berg': '/wohnung-kaufen-prenzlauer-berg',
+    '/de/wedding': '/wohnung-kaufen-wedding',
+    '/de/tempelhof': '/wohnung-kaufen-tempelhof',
+    '/de/neukoelln': '/wohnung-kaufen-neukoelln',
+    '/de/neukolln': '/wohnung-kaufen-neukoelln',
+    '/de/reinickendorf': '/wohnung-kaufen-reinickendorf',
+    '/de/kreuzberg': '/wohnung-kaufen-kreuzberg',
+    '/de/spandau': '/wohnung-kaufen-spandau'
   };
   if (districtRedirects[lowerPath]) return res.redirect(301, districtRedirects[lowerPath]);
   const districtAreaMatch = lowerPath.match(/^\/de\/area\/([a-z-]+)-de\/?$/);
@@ -580,17 +592,17 @@ app.use((req, res, next) => {
   if (deImmobilienSlugMatch) {
     return res.redirect(301, `/properties/${deImmobilienSlugMatch[1]}`);
   }
-  if (/^\/de\/immobilien\/.+/.test(lowerPath)) return res.redirect(301, '/de/properties');
+  if (/^\/de\/immobilien\/.+/.test(lowerPath)) return res.redirect(301, '/properties');
   if (/^\/(?:(en|de|es)\/)?(?:category|tag)(?:\/|$)/.test(lowerPath)) return res.redirect(301, localePath('/blog', locale));
   if (/^\/(?:(en|de|es)\/)?comments\/feed\/?$/.test(lowerPath)) return res.redirect(301, localePath('/blog', locale));
 
-  // Keep /en/* legacy detail URLs redirected to canonical non-prefixed URLs.
-  // IMPORTANT: keep /de/* and /es/* detail URLs reachable so language switching
+  // Keep /de/* legacy detail URLs redirected to canonical non-prefixed URLs.
+  // IMPORTANT: keep /en/* and /es/* detail URLs reachable so language switching
   // is URL-based across all public pages.
-  const legacyEnPropertyDetailMatch = lowerPath.match(/^\/en\/properties\/([^/]+)\/?$/);
-  if (legacyEnPropertyDetailMatch) return res.redirect(301, `/properties/${legacyEnPropertyDetailMatch[1]}`);
-  const legacyEnProjectDetailMatch = lowerPath.match(/^\/en\/projects\/([^/]+)\/?$/);
-  if (legacyEnProjectDetailMatch) return res.redirect(301, `/projects/${legacyEnProjectDetailMatch[1]}`);
+  const legacyDePropertyDetailMatch = lowerPath.match(/^\/de\/properties\/([^/]+)\/?$/);
+  if (legacyDePropertyDetailMatch) return res.redirect(301, `/properties/${legacyDePropertyDetailMatch[1]}`);
+  const legacyDeProjectDetailMatch = lowerPath.match(/^\/de\/projects\/([^/]+)\/?$/);
+  if (legacyDeProjectDetailMatch) return res.redirect(301, `/projects/${legacyDeProjectDetailMatch[1]}`);
 
   // Old query-style property feed links.
   const postType = String((req.query && req.query.post_type) || '').toLowerCase();
@@ -682,36 +694,61 @@ app.use('/admin/dashboard/blog', blogAdminRoutes);
 app.use('/superadmin/dashboard/blog', blogSuperAdminRoutes);
 
 // Berlin landing page (before /properties so path is explicit)
-app.get('/properties-for-sale-berlin', propertyController.berlinPropertiesPage);
-app.get('/de/wohnungen-berlin-kaufen', propertyController.berlinPropertiesPage);
+app.get('/wohnungen-berlin-kaufen', propertyController.berlinPropertiesPage);
+app.get('/en/properties-for-sale-berlin', propertyController.berlinPropertiesPage);
 app.get('/de/immobilien-berlin-kaufen', (req, res) => {
   const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
-  return res.redirect(301, `/de/wohnungen-berlin-kaufen${query}`);
+  return res.redirect(301, `/wohnungen-berlin-kaufen${query}`);
 });
-app.get('/de/wohnung-kaufen-charlottenburg', propertyController.charlottenburgPropertiesPageDe);
-app.get('/de/wohnung-kaufen-moabit', propertyController.moabitPropertiesPageDe);
-app.get('/de/wohnung-kaufen-friedrichshain-kreuzberg', propertyController.friedrichshainKreuzbergPropertiesPageDe);
-app.get('/de/wohnung-kaufen-schoeneberg', propertyController.schoenebergPropertiesPageDe);
-app.get('/de/wohnung-kaufen-prenzlauer-berg', propertyController.prenzlauerBergPropertiesPageDe);
-app.get('/de/wohnung-kaufen-wedding', propertyController.weddingPropertiesPageDe);
-app.get('/de/wohnung-kaufen-tempelhof', propertyController.tempelhofPropertiesPageDe);
-app.get('/de/wohnung-kaufen-neukoelln', propertyController.neukoellnPropertiesPageDe);
-app.get('/de/wohnung-kaufen-reinickendorf', propertyController.reinickendorfPropertiesPageDe);
-app.get('/de/wohnung-kaufen-kreuzberg', propertyController.kreuzbergPropertiesPageDe);
-app.get('/de/wohnung-kaufen-spandau', propertyController.spandauPropertiesPageDe);
+app.get('/wohnung-kaufen-charlottenburg', propertyController.charlottenburgPropertiesPageDe);
+app.get('/wohnung-kaufen-moabit', propertyController.moabitPropertiesPageDe);
+app.get('/wohnung-kaufen-friedrichshain-kreuzberg', propertyController.friedrichshainKreuzbergPropertiesPageDe);
+app.get('/wohnung-kaufen-schoeneberg', propertyController.schoenebergPropertiesPageDe);
+app.get('/wohnung-kaufen-prenzlauer-berg', propertyController.prenzlauerBergPropertiesPageDe);
+app.get('/wohnung-kaufen-wedding', propertyController.weddingPropertiesPageDe);
+app.get('/wohnung-kaufen-tempelhof', propertyController.tempelhofPropertiesPageDe);
+app.get('/wohnung-kaufen-neukoelln', propertyController.neukoellnPropertiesPageDe);
+app.get('/wohnung-kaufen-reinickendorf', propertyController.reinickendorfPropertiesPageDe);
+app.get('/wohnung-kaufen-kreuzberg', propertyController.kreuzbergPropertiesPageDe);
+app.get('/wohnung-kaufen-spandau', propertyController.spandauPropertiesPageDe);
 app.get('/es/propiedades-en-venta-berlin', propertyController.berlinPropertiesPage);
+app.get('/properties-for-sale-berlin', (req, res) => {
+  const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
+  return res.redirect(301, `/en/properties-for-sale-berlin${query}`);
+});
+app.get('/de/wohnungen-berlin-kaufen', (req, res) => {
+  const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
+  return res.redirect(301, `/wohnungen-berlin-kaufen${query}`);
+});
+app.get('/de/wohnung-kaufen-charlottenburg', (req, res) => res.redirect(301, '/wohnung-kaufen-charlottenburg'));
+app.get('/de/wohnung-kaufen-moabit', (req, res) => res.redirect(301, '/wohnung-kaufen-moabit'));
+app.get('/de/wohnung-kaufen-friedrichshain-kreuzberg', (req, res) => res.redirect(301, '/wohnung-kaufen-friedrichshain-kreuzberg'));
+app.get('/de/wohnung-kaufen-schoeneberg', (req, res) => res.redirect(301, '/wohnung-kaufen-schoeneberg'));
+app.get('/de/wohnung-kaufen-prenzlauer-berg', (req, res) => res.redirect(301, '/wohnung-kaufen-prenzlauer-berg'));
+app.get('/de/wohnung-kaufen-wedding', (req, res) => res.redirect(301, '/wohnung-kaufen-wedding'));
+app.get('/de/wohnung-kaufen-tempelhof', (req, res) => res.redirect(301, '/wohnung-kaufen-tempelhof'));
+app.get('/de/wohnung-kaufen-neukoelln', (req, res) => res.redirect(301, '/wohnung-kaufen-neukoelln'));
+app.get('/de/wohnung-kaufen-reinickendorf', (req, res) => res.redirect(301, '/wohnung-kaufen-reinickendorf'));
+app.get('/de/wohnung-kaufen-kreuzberg', (req, res) => res.redirect(301, '/wohnung-kaufen-kreuzberg'));
+app.get('/de/wohnung-kaufen-spandau', (req, res) => res.redirect(301, '/wohnung-kaufen-spandau'));
 
 // Dubai landing page
-app.get('/properties-for-sale-dubai', propertyController.dubaiPropertiesPage);
-app.get('/de/immobilien-dubai-kaufen', propertyController.dubaiPropertiesPage);
+app.get('/immobilien-dubai-kaufen', propertyController.dubaiPropertiesPage);
+app.get('/en/properties-for-sale-dubai', propertyController.dubaiPropertiesPage);
 app.get('/es/propiedades-en-venta-dubai', propertyController.dubaiPropertiesPage);
-app.get('/de/villa-kaufen-dubai', propertyController.villaKaufenDubaiPageDe);
+app.get('/villa-kaufen-dubai', propertyController.villaKaufenDubaiPageDe);
+app.get('/properties-for-sale-dubai', (req, res) => res.redirect(301, '/en/properties-for-sale-dubai'));
+app.get('/de/immobilien-dubai-kaufen', (req, res) => res.redirect(301, '/immobilien-dubai-kaufen'));
+app.get('/de/villa-kaufen-dubai', (req, res) => res.redirect(301, '/villa-kaufen-dubai'));
 
 // Cyprus landing page
-app.get('/properties-for-sale-cyprus', propertyController.cyprusPropertiesPage);
-app.get('/de/immobilien-zypern-kaufen', propertyController.cyprusPropertiesPage);
+app.get('/immobilien-zypern-kaufen', propertyController.cyprusPropertiesPage);
+app.get('/en/properties-for-sale-cyprus', propertyController.cyprusPropertiesPage);
 app.get('/es/propiedades-en-venta-chipre', propertyController.cyprusPropertiesPage);
-app.get('/villas-for-sale-cyprus', propertyController.villasForSaleCyprusPage);
+app.get('/en/villas-for-sale-cyprus', propertyController.villasForSaleCyprusPage);
+app.get('/properties-for-sale-cyprus', (req, res) => res.redirect(301, '/en/properties-for-sale-cyprus'));
+app.get('/de/immobilien-zypern-kaufen', (req, res) => res.redirect(301, '/immobilien-zypern-kaufen'));
+app.get('/villas-for-sale-cyprus', (req, res) => res.redirect(301, '/en/villas-for-sale-cyprus'));
 
 // Public & agent routes
 app.use('/properties', propertyRoutes);
@@ -1384,13 +1421,13 @@ async function renderHomePage(req, res, langPath, next) {
   } catch (e) { next(e); }
 }
 
-// Home page: / (English default), /de, /es (i18n reads lang from path)
+// Home page: / (German default), /en, /es (i18n reads lang from path)
 app.get('/', (req, res, next) => renderHomePage(req, res, '/', next));
-app.get('/de', (req, res, next) => renderHomePage(req, res, '/de', next));
+app.get('/en', (req, res, next) => renderHomePage(req, res, '/en', next));
 app.get('/es', (req, res, next) => renderHomePage(req, res, '/es', next));
 
-// Locale-prefixed public routes: /de/* and /es/* (about, contact, projects, properties, blog, etc.)
-app.use('/de', createLocaleRouter(renderHomePage));
+// Locale-prefixed public routes: /en/* and /es/* (about, contact, projects, properties, blog, etc.)
+app.use('/en', createLocaleRouter(renderHomePage));
 app.use('/es', createLocaleRouter(renderHomePage));
 
 // Staff convenience entry — bookmarkable
@@ -1570,23 +1607,27 @@ app.get('/sitemap.xml', async (req, res, next) => {
       changefreq: p === '' ? 'daily' : 'weekly',
       priority: p === '' ? '1.0' : '0.8'
     }));
-    // Locale-prefixed home pages
-    staticUrls.push({ loc: `${base}/de`, lastmod: null, changefreq: 'daily', priority: '1.0' });
+    // Locale-prefixed static pages
+    staticUrls.push({ loc: `${base}/en`, lastmod: null, changefreq: 'daily', priority: '1.0' });
     staticUrls.push({ loc: `${base}/es`, lastmod: null, changefreq: 'daily', priority: '1.0' });
-    staticUrls.push({ loc: `${base}/de/blog`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
-    staticUrls.push({ loc: `${base}/es/blog`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticPaths
+      .filter((p) => p !== '')
+      .forEach((p) => {
+        staticUrls.push({ loc: `${base}/en/${p}`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+        staticUrls.push({ loc: `${base}/es/${p}`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+      });
     // Core city landing pages (all languages)
-    staticUrls.push({ loc: `${base}/properties-for-sale-berlin`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
-    staticUrls.push({ loc: `${base}/de/wohnungen-berlin-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/wohnungen-berlin-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/en/properties-for-sale-berlin`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     staticUrls.push({ loc: `${base}/es/propiedades-en-venta-berlin`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
-    staticUrls.push({ loc: `${base}/properties-for-sale-dubai`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
-    staticUrls.push({ loc: `${base}/de/immobilien-dubai-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/immobilien-dubai-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/en/properties-for-sale-dubai`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     staticUrls.push({ loc: `${base}/es/propiedades-en-venta-dubai`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
-    staticUrls.push({ loc: `${base}/de/villa-kaufen-dubai`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
-    staticUrls.push({ loc: `${base}/properties-for-sale-cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
-    staticUrls.push({ loc: `${base}/de/immobilien-zypern-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/villa-kaufen-dubai`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/immobilien-zypern-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
+    staticUrls.push({ loc: `${base}/en/properties-for-sale-cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     staticUrls.push({ loc: `${base}/es/propiedades-en-venta-chipre`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
-    staticUrls.push({ loc: `${base}/villas-for-sale-cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/en/villas-for-sale-cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     // Clean SEO property search URLs (country + city)
     staticUrls.push({ loc: `${base}/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
@@ -1594,23 +1635,23 @@ app.get('/sitemap.xml', async (req, res, next) => {
     staticUrls.push({ loc: `${base}/properties/for-sale/uae/dubai`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/properties/for-sale/cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/properties/for-sale/cyprus/paphos`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/de/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/de/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/de/properties/for-sale/uae`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/de/properties/for-sale/uae/dubai`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/de/properties/for-sale/cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/de/properties/for-sale/cyprus/paphos`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-charlottenburg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
-    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-moabit`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
-    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-friedrichshain-kreuzberg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
-    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-schoeneberg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
-    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-prenzlauer-berg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
-    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-wedding`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
-    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-tempelhof`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
-    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-neukoelln`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
-    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-reinickendorf`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
-    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-kreuzberg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
-    staticUrls.push({ loc: `${base}/de/wohnung-kaufen-spandau`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/en/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/en/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/en/properties/for-sale/uae`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/en/properties/for-sale/uae/dubai`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/en/properties/for-sale/cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/en/properties/for-sale/cyprus/paphos`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/wohnung-kaufen-charlottenburg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/wohnung-kaufen-moabit`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/wohnung-kaufen-friedrichshain-kreuzberg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/wohnung-kaufen-schoeneberg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/wohnung-kaufen-prenzlauer-berg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/wohnung-kaufen-wedding`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/wohnung-kaufen-tempelhof`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/wohnung-kaufen-neukoelln`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/wohnung-kaufen-reinickendorf`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/wohnung-kaufen-kreuzberg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/wohnung-kaufen-spandau`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/es/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/es/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/es/properties/for-sale/uae`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
@@ -1647,7 +1688,7 @@ app.get('/sitemap.xml', async (req, res, next) => {
     const localizedBlogUrls = (posts.rows || []).flatMap(r => {
       const lastmod = (r.updated_at || r.published_at || r.created_at) ? new Date(r.updated_at || r.published_at || r.created_at).toISOString() : null;
       return ([
-        { loc: `${base}/de/blog/${r.slug}`, lastmod, changefreq: 'monthly', priority: '0.7' },
+        { loc: `${base}/en/blog/${r.slug}`, lastmod, changefreq: 'monthly', priority: '0.7' },
         { loc: `${base}/es/blog/${r.slug}`, lastmod, changefreq: 'monthly', priority: '0.7' }
       ]);
     });

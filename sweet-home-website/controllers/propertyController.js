@@ -2928,8 +2928,8 @@ exports.berlinPropertiesPage = async (req, res, next) => {
 
     const baseUrl = res.locals.baseUrl;
     const berlinUrls = {
-      en: `${baseUrl}/properties-for-sale-berlin`,
-      de: `${baseUrl}/de/wohnungen-berlin-kaufen`,
+      de: `${baseUrl}/wohnungen-berlin-kaufen`,
+      en: `${baseUrl}/en/properties-for-sale-berlin`,
       es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const canonicalUrl = berlinUrls[lang] || berlinUrls.en;
@@ -2949,8 +2949,8 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       es: 'Encuentra propiedades en venta en Berlín, Alemania. Apartamentos, casas y villas. Asesoramiento inmobiliario de Sweet Home para compradores e inversores internacionales.'
     };
     const berlinPagePaths = {
-      en: '/properties-for-sale-berlin',
-      de: '/de/wohnungen-berlin-kaufen',
+      de: '/wohnungen-berlin-kaufen',
+      en: '/en/properties-for-sale-berlin',
       es: '/es/propiedades-en-venta-berlin'
     };
 
@@ -3316,8 +3316,8 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
 
     const baseUrl = res.locals.baseUrl;
     const dubaiUrls = {
-      en: `${baseUrl}/properties-for-sale-dubai`,
-      de: `${baseUrl}/de/immobilien-dubai-kaufen`,
+      de: `${baseUrl}/immobilien-dubai-kaufen`,
+      en: `${baseUrl}/en/properties-for-sale-dubai`,
       es: `${baseUrl}/es/propiedades-en-venta-dubai`
     };
     const canonicalUrl = dubaiUrls[lang] || dubaiUrls.en;
@@ -3337,8 +3337,8 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
       es: 'Encuentra propiedades en venta en Dubái, EAU. Apartamentos, villas y plan futuro. Asesoramiento de Sweet Home.'
     };
     const dubaiPagePaths = {
-      en: '/properties-for-sale-dubai',
-      de: '/de/immobilien-dubai-kaufen',
+      de: '/immobilien-dubai-kaufen',
+      en: '/en/properties-for-sale-dubai',
       es: '/es/propiedades-en-venta-dubai'
     };
 
@@ -3543,9 +3543,9 @@ exports.villaKaufenDubaiPageDe = async (req, res, next) => {
     });
 
     const baseUrl = res.locals.baseUrl;
-    const canonicalUrl = `${baseUrl}/de/villa-kaufen-dubai`;
+    const canonicalUrl = `${baseUrl}/villa-kaufen-dubai`;
     const hreflangAlternates = {
-      'en-us': `${baseUrl}/properties-for-sale-dubai`,
+      'en-us': `${baseUrl}/en/properties-for-sale-dubai`,
       'de-de': canonicalUrl,
       'es-es': `${baseUrl}/es/propiedades-en-venta-dubai`
     };
@@ -3648,8 +3648,8 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
 
     const baseUrl = res.locals.baseUrl;
     const cyprusUrls = {
-      en: `${baseUrl}/properties-for-sale-cyprus`,
-      de: `${baseUrl}/de/immobilien-zypern-kaufen`,
+      de: `${baseUrl}/immobilien-zypern-kaufen`,
+      en: `${baseUrl}/en/properties-for-sale-cyprus`,
       es: `${baseUrl}/es/propiedades-en-venta-chipre`
     };
     const canonicalUrl = cyprusUrls[lang] || cyprusUrls.en;
@@ -3669,8 +3669,8 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
       es: 'Encuentra propiedades en venta en Chipre. Apartamentos, villas y viviendas costeras. Asesoramiento de Sweet Home.'
     };
     const cyprusPagePaths = {
-      en: '/properties-for-sale-cyprus',
-      de: '/de/immobilien-zypern-kaufen',
+      de: '/immobilien-zypern-kaufen',
+      en: '/en/properties-for-sale-cyprus',
       es: '/es/propiedades-en-venta-chipre'
     };
 
@@ -3865,8 +3865,12 @@ exports.villasForSaleCyprusPage = async (req, res, next) => {
     });
 
     const baseUrl = res.locals.baseUrl;
-    const canonicalUrl = `${baseUrl}/villas-for-sale-cyprus`;
-    const hreflangAlternates = { 'en-us': canonicalUrl };
+    const canonicalUrl = `${baseUrl}/en/villas-for-sale-cyprus`;
+    const hreflangAlternates = {
+      'de-de': `${baseUrl}/immobilien-zypern-kaufen`,
+      'en-us': canonicalUrl,
+      'es-es': `${baseUrl}/es/propiedades-en-venta-chipre`
+    };
 
     res.render('villas-for-sale-cyprus', {
       title: 'Cyprus Villas for Sale | Sweet Home',
@@ -4001,8 +4005,8 @@ exports.charlottenburgPropertiesPageDe = async (req, res, next) => {
 
     const baseUrl = res.locals.baseUrl;
     const charlottenburgUrls = {
-      en: `${baseUrl}/properties-for-sale-berlin`,
-      de: `${baseUrl}/de/wohnung-kaufen-charlottenburg`,
+      de: `${baseUrl}/wohnung-kaufen-charlottenburg`,
+      en: `${baseUrl}/en/properties-for-sale-berlin`,
       es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const canonicalUrl = charlottenburgUrls.de;
@@ -4163,8 +4167,8 @@ exports.moabitPropertiesPageDe = async (req, res, next) => {
 
     const baseUrl = res.locals.baseUrl;
     const districtUrls = {
-      en: `${baseUrl}/properties-for-sale-berlin`,
-      de: `${baseUrl}/de/wohnung-kaufen-moabit`,
+      de: `${baseUrl}/wohnung-kaufen-moabit`,
+      en: `${baseUrl}/en/properties-for-sale-berlin`,
       es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const canonicalUrl = districtUrls.de;
@@ -4324,8 +4328,8 @@ exports.friedrichshainKreuzbergPropertiesPageDe = async (req, res, next) => {
 
     const baseUrl = res.locals.baseUrl;
     const districtUrls = {
-      en: `${baseUrl}/properties-for-sale-berlin`,
-      de: `${baseUrl}/de/wohnung-kaufen-friedrichshain-kreuzberg`,
+      de: `${baseUrl}/wohnung-kaufen-friedrichshain-kreuzberg`,
+      en: `${baseUrl}/en/properties-for-sale-berlin`,
       es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const canonicalUrl = districtUrls.de;
@@ -4479,8 +4483,8 @@ exports.schoenebergPropertiesPageDe = async (req, res, next) => {
 
     const baseUrl = res.locals.baseUrl;
     const districtUrls = {
-      en: `${baseUrl}/properties-for-sale-berlin`,
-      de: `${baseUrl}/de/wohnung-kaufen-schoeneberg`,
+      de: `${baseUrl}/wohnung-kaufen-schoeneberg`,
+      en: `${baseUrl}/en/properties-for-sale-berlin`,
       es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const districtContent = {
@@ -4607,8 +4611,8 @@ exports.prenzlauerBergPropertiesPageDe = async (req, res, next) => {
 
     const baseUrl = res.locals.baseUrl;
     const districtUrls = {
-      en: `${baseUrl}/properties-for-sale-berlin`,
-      de: `${baseUrl}/de/wohnung-kaufen-prenzlauer-berg`,
+      de: `${baseUrl}/wohnung-kaufen-prenzlauer-berg`,
+      en: `${baseUrl}/en/properties-for-sale-berlin`,
       es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const districtContent = {
@@ -4741,8 +4745,8 @@ exports.weddingPropertiesPageDe = async (req, res, next) => {
 
     const baseUrl = res.locals.baseUrl;
     const districtUrls = {
-      en: `${baseUrl}/properties-for-sale-berlin`,
-      de: `${baseUrl}/de/wohnung-kaufen-wedding`,
+      de: `${baseUrl}/wohnung-kaufen-wedding`,
+      en: `${baseUrl}/en/properties-for-sale-berlin`,
       es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const districtContent = {
@@ -4868,8 +4872,8 @@ exports.tempelhofPropertiesPageDe = async (req, res, next) => {
 
     const baseUrl = res.locals.baseUrl;
     const districtUrls = {
-      en: `${baseUrl}/properties-for-sale-berlin`,
-      de: `${baseUrl}/de/wohnung-kaufen-tempelhof`,
+      de: `${baseUrl}/wohnung-kaufen-tempelhof`,
+      en: `${baseUrl}/en/properties-for-sale-berlin`,
       es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const districtContent = {
@@ -4995,7 +4999,7 @@ async function renderBerlinDistrictPageDe(req, res, next, config) {
 
     const baseUrl = res.locals.baseUrl;
     const districtUrls = {
-      en: `${baseUrl}/properties-for-sale-berlin`,
+      en: `${baseUrl}/en/properties-for-sale-berlin`,
       de: `${baseUrl}${config.path}`,
       es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
@@ -5025,7 +5029,7 @@ async function renderBerlinDistrictPageDe(req, res, next, config) {
 
 // German district landing page: Neukölln (Berlin)
 exports.neukoellnPropertiesPageDe = async (req, res, next) => renderBerlinDistrictPageDe(req, res, next, {
-  path: '/de/wohnung-kaufen-neukoelln',
+  path: '/wohnung-kaufen-neukoelln',
   displayName: 'Neukölln',
   defaultNeighborhood: 'Neukölln',
   heroImage: '/images/Neukölln.jpg',
@@ -5062,7 +5066,7 @@ exports.neukoellnPropertiesPageDe = async (req, res, next) => renderBerlinDistri
 
 // German district landing page: Reinickendorf (Berlin)
 exports.reinickendorfPropertiesPageDe = async (req, res, next) => renderBerlinDistrictPageDe(req, res, next, {
-  path: '/de/wohnung-kaufen-reinickendorf',
+  path: '/wohnung-kaufen-reinickendorf',
   displayName: 'Reinickendorf',
   defaultNeighborhood: 'Reinickendorf',
   heroImage: '/images/reinickendorf.webp',
@@ -5099,7 +5103,7 @@ exports.reinickendorfPropertiesPageDe = async (req, res, next) => renderBerlinDi
 
 // German district landing page: Kreuzberg (Berlin)
 exports.kreuzbergPropertiesPageDe = async (req, res, next) => renderBerlinDistrictPageDe(req, res, next, {
-  path: '/de/wohnung-kaufen-kreuzberg',
+  path: '/wohnung-kaufen-kreuzberg',
   displayName: 'Kreuzberg',
   defaultNeighborhood: 'Kreuzberg',
   heroImage: '/images/kreuzberg.jpg',
@@ -5136,7 +5140,7 @@ exports.kreuzbergPropertiesPageDe = async (req, res, next) => renderBerlinDistri
 
 // German district landing page: Spandau (Berlin)
 exports.spandauPropertiesPageDe = async (req, res, next) => renderBerlinDistrictPageDe(req, res, next, {
-  path: '/de/wohnung-kaufen-spandau',
+  path: '/wohnung-kaufen-spandau',
   displayName: 'Spandau',
   defaultNeighborhood: 'Spandau',
   heroImage: '/images/spandau.jpeg',

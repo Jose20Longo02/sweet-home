@@ -2,11 +2,11 @@
   const isObject = (v) => v && typeof v === 'object';
   const currentPathSafe = (typeof currentPath === 'string' && currentPath) ? currentPath : '/';
   const isPrivilegedPath = /^\/(admin|superadmin|auth|api)(\/|$)/.test(currentPathSafe);
-  const stripLocalePrefix = (p) => String(p || '/').replace(/^\/(de|es)(?=\/|$)/, '') || '/';
+  const stripLocalePrefix = (p) => String(p || '/').replace(/^\/(en|es)(?=\/|$)/, '') || '/';
   const normalizedCurrentPath = stripLocalePrefix(currentPathSafe);
   const defaultAlternatePaths = {
-    en: normalizedCurrentPath === '/' ? '/' : normalizedCurrentPath,
-    de: normalizedCurrentPath === '/' ? '/de' : `/de${normalizedCurrentPath}`,
+    de: normalizedCurrentPath === '/' ? '/' : normalizedCurrentPath,
+    en: normalizedCurrentPath === '/' ? '/en' : `/en${normalizedCurrentPath}`,
     es: normalizedCurrentPath === '/' ? '/es' : `/es${normalizedCurrentPath}`
   };
   const mergedAlternatePaths = (isObject(localeAlternatePaths) ? localeAlternatePaths : defaultAlternatePaths);
@@ -14,20 +14,20 @@
   const resolveHrefForLang = (code) => {
     if (isPrivilegedPath) return `/lang/${code}`;
     if (isObject(mergedAlternatePaths) && mergedAlternatePaths[code]) return mergedAlternatePaths[code];
-    return defaultAlternatePaths[code] || (code === 'en' ? '/' : `/${code}`);
+    return defaultAlternatePaths[code] || (code === 'de' ? '/' : `/${code}`);
   };
 %>
 <div class="lang-switcher" data-alt-paths="<%- encodedAlternatePaths %>">
   <button type="button" class="lang-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="lang-menu">
     <span class="lang-icon" aria-hidden="true">
       <%= (function(){
-        var code = (lang || 'en').toLowerCase();
+        var code = (lang || 'de').toLowerCase();
         if (code === 'es') return '🇪🇸';
         if (code === 'de') return '🇩🇪';
         return '🇬🇧';
       })() %>
     </span>
-    <span class="lang-current"><%= (languageLabels && languageLabels[lang]) || (lang || 'en').toUpperCase() %></span>
+    <span class="lang-current"><%= (languageLabels && languageLabels[lang]) || (lang || 'de').toUpperCase() %></span>
   </button>
   <div id="lang-menu" class="lang-menu" role="menu" aria-hidden="true">
     <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
@@ -82,10 +82,10 @@
     serverAlt = {};
   }
 
-  var normalized = path.replace(/^\/(de|es)(?=\/|$)/, '') || '/';
+  var normalized = path.replace(/^\/(en|es)(?=\/|$)/, '') || '/';
   var fallbackAlt = {
-    en: normalized === '/' ? '/' : normalized,
-    de: normalized === '/' ? '/de' : '/de' + normalized,
+    de: normalized === '/' ? '/' : normalized,
+    en: normalized === '/' ? '/en' : '/en' + normalized,
     es: normalized === '/' ? '/es' : '/es' + normalized
   };
 
