@@ -1,8 +1,8 @@
 <%
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
-  const pagePath = '/en/berlin-investment-strategy';
+  const pagePath = '/en/berlin-tenant-occupied-entry-strategy';
   const pageUrl = `${siteBaseUrl}${pagePath}`;
-  const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Berlin Investment Strategy: Tenant-Occupied Entry Model';
+  const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Berlin Tenant-Occupied Entry Strategy | Sweet Home';
   const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription)
     ? pageMetaDescription
     : 'Berlin investment strategy for long-term investors: tenant-occupied apartment entry model with immediate income potential and data-backed market context.';
@@ -39,7 +39,7 @@
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Home', item: siteBaseUrl + '/en' },
-        { '@type': 'ListItem', position: 2, name: 'Berlin Investment Strategy', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
+        { '@type': 'ListItem', position: 2, name: 'Berlin Tenant-Occupied Entry Strategy', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
       ]
     }
   ]
@@ -59,7 +59,7 @@
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Home', item: siteBaseUrl + '/en' },
-        { '@type': 'ListItem', position: 2, name: 'Berlin Investment Strategy', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
+        { '@type': 'ListItem', position: 2, name: 'Berlin Tenant-Occupied Entry Strategy', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
       ]
     }
   ]

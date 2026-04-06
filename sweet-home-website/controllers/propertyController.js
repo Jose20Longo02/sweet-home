@@ -3277,7 +3277,7 @@ exports.berlinInvestorStrategyPageEn = async (req, res, next) => {
     });
 
     const baseUrl = res.locals.baseUrl;
-    const canonicalUrl = `${baseUrl}/en/berlin-investment-strategy`;
+    const canonicalUrl = `${baseUrl}/en/berlin-tenant-occupied-entry-strategy`;
     const hreflangAlternates = {
       'de-de': `${baseUrl}/wohnungen-berlin-kaufen`,
       'en-us': canonicalUrl,
@@ -3285,13 +3285,13 @@ exports.berlinInvestorStrategyPageEn = async (req, res, next) => {
     };
 
     res.render('berlin-investment-strategy-en', {
-      title: 'Berlin Investment Strategy: Tenant-Occupied Entry Model | Sweet Home',
+      title: 'Berlin Tenant-Occupied Entry Strategy | Sweet Home',
       useMainContainer: false,
       useHomeHeader: true,
       headPartial: '../partials/seo/berlin-investment-strategy-head',
       canonicalUrl,
       hreflangAlternates,
-      pageMetaDescription: 'Berlin investment strategy for long-term investors: tenant-occupied apartment entry model with income from day one, regulated rent framework, and data-backed market context.',
+      pageMetaDescription: 'Berlin Tenant-Occupied Entry Strategy by Sweet Home: structured access to tenant-occupied apartments with immediate income potential and long-term fundamentals.',
       recommendedProperties,
       baseUrl
     });
