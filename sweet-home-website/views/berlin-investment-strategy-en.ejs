@@ -4,21 +4,31 @@
 <link rel="stylesheet" href="/css/berlin-landing.min.css?v=20260326-3" />
 
 <div class="berlin-landing-page berlin-investor-page">
-  <section class="berlin-hero berlin-investor-hero" aria-labelledby="investor-hero-title">
-    <div class="berlin-hero__bg">
-      <img src="/images/berlin-hero.jpg" alt="Berlin skyline and residential blocks for property investors" fetchpriority="high" decoding="async">
-    </div>
-    <div class="berlin-hero__overlay"></div>
-    <div class="berlin-hero__content">
-      <p class="berlin-hero__kicker">Sweet Home Signature Strategy</p>
-      <h1 id="investor-hero-title" class="berlin-hero__title">Berlin Tenant-Occupied Entry Strategy</h1>
-      <p class="berlin-hero__description">A strategic acquisition model focused on tenant-occupied Berlin apartments designed for immediate rent flow, disciplined downside protection, and long-term value creation.</p>
-      <p class="berlin-investor-trigger">Lower purchase price compared to vacant apartments (45% cheaper than vacant apartment)</p>
-      <p class="berlin-investor-trigger-note">This is the core trigger: you enter below vacant market pricing while the asset remains income-producing.</p>
-      <div class="berlin-investor-hero__cta">
-        <a href="/contact?topic=berlin-investment" class="btn btn-primary">Book a strategy call</a>
-        <a href="/en/properties-for-sale-berlin" class="btn btn-outline-light">Browse Berlin listings</a>
+  <section class="berlin-investor-hero berlin-investor-hero--elegant" aria-labelledby="investor-hero-title">
+    <div class="berlin-investor-hero__inner">
+      <div class="berlin-investor-hero__left">
+        <p class="berlin-hero__kicker">Sweet Home Signature Strategy</p>
+        <h1 id="investor-hero-title" class="berlin-hero__title">Berlin Tenant-Occupied Entry Strategy</h1>
+        <p class="berlin-hero__description">A strategic acquisition model focused on tenant-occupied Berlin apartments designed for immediate rent flow, disciplined downside protection, and long-term value creation.</p>
+        <p class="berlin-investor-trigger">Lower purchase price compared to vacant apartments (45% cheaper than vacant apartment)</p>
+        <p class="berlin-investor-trigger-note">This is the core trigger: you enter below vacant market pricing while the asset remains income-producing.</p>
+        <div class="berlin-investor-hero__cta">
+          <a href="/contact?topic=berlin-investment" class="btn btn-primary">Book a strategy call</a>
+          <a href="/en/properties-for-sale-berlin" class="btn btn-outline-light">Browse Berlin listings</a>
+        </div>
       </div>
+      <aside class="berlin-investor-hero__right" aria-label="Strategy highlights">
+        <div class="berlin-investor-hero__panel">
+          <h2>Strategy Snapshot</h2>
+          <ul class="berlin-investor-hero__list">
+            <li><span>Target Market</span><strong>Berlin residential apartments</strong></li>
+            <li><span>Entry Logic</span><strong>Occupied vs vacant price gap</strong></li>
+            <li><span>Income Profile</span><strong>Potential rent flow from day one</strong></li>
+            <li><span>Holding Horizon</span><strong>Long-term strategic position</strong></li>
+          </ul>
+          <a href="/contact?topic=berlin-investment" class="btn btn-primary berlin-investor-hero__panel-cta">Request your investor brief</a>
+        </div>
+      </aside>
     </div>
   </section>
 
@@ -232,8 +242,65 @@
 </div>
 
 <style>
-  .berlin-investor-hero__cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
-  .berlin-hero__kicker { margin: 0 0 8px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.92; }
+  .berlin-investor-hero--elegant {
+    background: linear-gradient(135deg, #0f172a 0%, #111827 45%, #1e293b 100%);
+    border-radius: 18px;
+    margin: 28px auto 8px;
+    max-width: 1240px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(2, 6, 23, 0.35);
+  }
+  .berlin-investor-hero__inner {
+    padding: 42px;
+    display: grid;
+    grid-template-columns: 1.35fr 0.9fr;
+    gap: 30px;
+    align-items: stretch;
+  }
+  .berlin-investor-hero__left { color: #f8fafc; }
+  .berlin-investor-hero__right { display: flex; }
+  .berlin-investor-hero__panel {
+    width: 100%;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 24px;
+    color: #e2e8f0;
+    backdrop-filter: blur(4px);
+  }
+  .berlin-investor-hero__panel h2 {
+    margin: 0 0 16px;
+    font-size: 1.2rem;
+    color: #ffffff;
+  }
+  .berlin-investor-hero__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+  .berlin-investor-hero__list li {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .berlin-investor-hero__list li:last-child { border-bottom: 0; }
+  .berlin-investor-hero__list span {
+    font-size: 0.8rem;
+    color: #93c5fd;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .berlin-investor-hero__list strong { color: #ffffff; font-size: 0.98rem; }
+  .berlin-investor-hero__panel-cta { margin-top: 18px; width: 100%; text-align: center; }
+  .berlin-investor-hero__cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+  .berlin-hero__kicker { margin: 0 0 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #93c5fd; font-size: 0.78rem; }
+  .berlin-hero__title { margin: 0 0 10px; color: #ffffff; line-height: 1.15; font-size: clamp(2rem, 4.2vw, 3.1rem); }
+  .berlin-hero__description { margin: 0; color: #dbeafe; max-width: 760px; font-size: 1.06rem; line-height: 1.6; }
   .berlin-investor-trigger {
     margin: 14px 0 6px;
     display: inline-flex;
@@ -247,7 +314,7 @@
   }
   .berlin-investor-trigger-note {
     margin: 0;
-    color: rgba(255, 255, 255, 0.95);
+    color: #cbd5e1;
     font-size: 0.92rem;
   }
   .berlin-investor-benefits .berlin-neighborhood-card__panel { display: block; }
@@ -264,8 +331,18 @@
     font-size: 0.8rem;
     font-weight: 600;
   }
+  @media (max-width: 992px) {
+    .berlin-investor-hero__inner {
+      grid-template-columns: 1fr;
+      padding: 28px;
+      gap: 20px;
+    }
+    .berlin-investor-hero__panel { padding: 20px; }
+  }
   @media (max-width: 640px) {
+    .berlin-investor-hero--elegant { border-radius: 0; margin-top: 0; }
     .berlin-investor-hero__cta { width: 100%; }
     .berlin-investor-hero__cta .btn { width: 100%; text-align: center; }
+    .berlin-investor-hero__inner { padding: 22px 16px; }
   }
 </style>
