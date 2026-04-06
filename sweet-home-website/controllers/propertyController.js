@@ -3232,6 +3232,74 @@ exports.berlinPropertiesPage = async (req, res, next) => {
   }
 };
 
+// English campaign landing page: Berlin tenant-occupied investment strategy
+exports.berlinInvestorStrategyPageEn = async (req, res, next) => {
+  try {
+    const propertiesSql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.created_at,
+        p.description,
+        p.occupancy_type,
+        p.rental_status,
+        p.rental_income,
+        p.housegeld,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name,
+        u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND p.status = 'active'
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 9
+    `;
+
+    const { rows: properties } = await query(propertiesSql);
+    const recommendedProperties = (properties || []).map((p) => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: getLocalizedTitle(p, 'en'),
+        description: (p.description_i18n && p.description_i18n.en) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+
+    const baseUrl = res.locals.baseUrl;
+    const canonicalUrl = `${baseUrl}/en/berlin-investment-strategy`;
+    const hreflangAlternates = {
+      'de-de': `${baseUrl}/wohnungen-berlin-kaufen`,
+      'en-us': canonicalUrl,
+      'es-es': `${baseUrl}/es/propiedades-en-venta-berlin`
+    };
+
+    res.render('berlin-investment-strategy-en', {
+      title: 'Berlin Investment Strategy: Tenant-Occupied Entry Model | Sweet Home',
+      useMainContainer: false,
+      useHomeHeader: true,
+      headPartial: '../partials/seo/berlin-investment-strategy-head',
+      canonicalUrl,
+      hreflangAlternates,
+      pageMetaDescription: 'Berlin investment strategy for long-term investors: tenant-occupied apartment entry model with income from day one, regulated rent framework, and data-backed market context.',
+      recommendedProperties,
+      baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // Dubai landing page: Properties for Sale Dubai (9 most-viewed in UAE)
 exports.dubaiPropertiesPage = async (req, res, next) => {
   try {

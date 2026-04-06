@@ -1,0 +1,211 @@
+<% useMainContainer = false %>
+<% useHomeHeader = true %>
+<link rel="stylesheet" href="/css/home.css" />
+<link rel="stylesheet" href="/css/berlin-landing.min.css?v=20260326-3" />
+
+<div class="berlin-landing-page berlin-investor-page">
+  <section class="berlin-hero berlin-investor-hero" aria-labelledby="investor-hero-title">
+    <div class="berlin-hero__bg">
+      <img src="/images/berlin-hero.jpg" alt="Berlin skyline and residential blocks for property investors" fetchpriority="high" decoding="async">
+    </div>
+    <div class="berlin-hero__overlay"></div>
+    <div class="berlin-hero__content">
+      <p class="berlin-hero__kicker">Meta Campaign Landing</p>
+      <h1 id="investor-hero-title" class="berlin-hero__title">Berlin Investment Strategy for International Buyers</h1>
+      <p class="berlin-hero__description">Access a structured entry model in Berlin through tenant-occupied apartments with immediate income and long-term upside potential.</p>
+      <div class="berlin-investor-hero__cta">
+        <a href="/contact?topic=berlin-investment" class="btn btn-primary">Book a strategy call</a>
+        <a href="/en/properties-for-sale-berlin" class="btn btn-outline-light">Browse Berlin listings</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="berlin-content section" aria-labelledby="why-strategy-heading">
+    <div class="berlin-content__inner">
+      <h2 id="why-strategy-heading" class="berlin-content__title">Why this strategy is attracting attention</h2>
+      <p class="berlin-content__intro">
+        The Berlin market combines structural housing demand with a regulated rental framework. This creates a profile many long-term investors look for: stable occupancy, realistic rent levels, and a clear legal environment.
+      </p>
+      <div class="berlin-neighborhoods__grid berlin-investor-benefits">
+        <article class="berlin-neighborhood-card">
+          <div class="berlin-neighborhood-card__panel berlin-neighborhood-card__panel--open">
+            <h3>Income from day one</h3>
+            <p>With tenant-occupied assets, rent cash flow starts immediately after acquisition in many cases.</p>
+          </div>
+        </article>
+        <article class="berlin-neighborhood-card">
+          <div class="berlin-neighborhood-card__panel berlin-neighborhood-card__panel--open">
+            <h3>Entry at a discount</h3>
+            <p>Occupied units can trade below comparable vacant units, supporting stronger long-term positioning.</p>
+          </div>
+        </article>
+        <article class="berlin-neighborhood-card">
+          <div class="berlin-neighborhood-card__panel berlin-neighborhood-card__panel--open">
+            <h3>Data-backed demand</h3>
+            <p>Berlin still faces a meaningful housing gap, while rental demand remains strong across key districts.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section featured berlin-featured berlin-investor-metrics" aria-labelledby="market-metrics-heading">
+    <h2 id="market-metrics-heading" class="berlin-featured__title">Berlin market context at a glance</h2>
+    <div class="berlin-featured__grid">
+      <article class="property-card metric-card">
+        <div class="meta">
+          <div class="title">~222,000</div>
+          <p class="berlin-content__intro">additional apartments needed in Berlin by 2040 under city planning assumptions.</p>
+        </div>
+      </article>
+      <article class="property-card metric-card">
+        <div class="meta">
+          <div class="title">+12%</div>
+          <p class="berlin-content__intro">year-on-year asking rent change in 2024 in Berlin according to market reports.</p>
+        </div>
+      </article>
+      <article class="property-card metric-card">
+        <div class="meta">
+          <div class="title">EUR 5,696/m²</div>
+          <p class="berlin-content__intro">average condominium asking price level in Berlin in 2024 after market correction.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="berlin-content section" aria-labelledby="process-heading">
+    <div class="berlin-content__inner">
+      <h2 id="process-heading" class="berlin-content__title">How Sweet Home supports your investment process</h2>
+      <div class="berlin-content__grid">
+        <article class="berlin-content__card">
+          <h3>1) Investment brief</h3>
+          <p>We align your target budget, preferred district profile, and risk-return expectations.</p>
+        </article>
+        <article class="berlin-content__card">
+          <h3>2) Curated opportunities</h3>
+          <p>You receive focused options with occupancy status, pricing context, and expected rent ranges.</p>
+        </article>
+        <article class="berlin-content__card">
+          <h3>3) Legal and financial checks</h3>
+          <p>Our process includes document review support and transparent acquisition cost guidance.</p>
+        </article>
+        <article class="berlin-content__card">
+          <h3>4) Closing and aftercare</h3>
+          <p>From negotiation to closing, we coordinate with trusted local partners and keep communication clear.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section featured berlin-featured" aria-labelledby="campaign-properties-heading">
+    <h2 id="campaign-properties-heading" class="berlin-featured__title">Selected Berlin opportunities</h2>
+    <div class="berlin-featured__grid" id="investorRecommended">
+      <% (recommendedProperties || []).forEach(property => { %>
+        <%
+          const photoUrl = (property.photos && property.photos[0]) ? property.photos[0] : '/img/property-placeholder.jpg';
+          const size = property.size ? `${property.size} m²` : null;
+          const beds = (typeof property.rooms !== 'undefined' && property.rooms !== null) ? property.rooms : null;
+          const baths = (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) ? property.bathrooms : null;
+          const priceText = property.price && Number(property.price) > 0 ? 'EUR ' + Number(property.price).toLocaleString('en-US') : '';
+          const statusLabel = property.occupancy_type || property.rental_status || null;
+        %>
+        <article class="property-card">
+          <a href="/en/properties/<%= property.slug %>" class="property-card-link">
+            <div class="img-wrap" <%= priceText ? `data-price="${priceText}"` : '' %>>
+              <img src="<%= photoUrl %>" alt="<%= property.title %>" loading="lazy" decoding="async" onerror="this.src='/img/property-placeholder.jpg'">
+            </div>
+            <div class="meta">
+              <div class="title"><%= property.title %></div>
+              <% if (priceText) { %><div class="price"><%= priceText %></div><% } %>
+              <div class="location">
+                <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                <%= property.neighborhood || property.city %>, <%= property.country %>
+              </div>
+              <div class="features-row">
+                <% if (size) { %>
+                  <div class="feature">
+                    <span class="icon icon-16 icon-inline icon-mask icon-size"></span>
+                    <span><%= size %></span>
+                  </div>
+                <% } %>
+                <% if (beds !== null) { %>
+                  <div class="feature">
+                    <span class="icon icon-16 icon-inline icon-mask icon-bed"></span>
+                    <span><%= beds %> bed<%= Number(beds) === 1 ? '' : 's' %></span>
+                  </div>
+                <% } %>
+                <% if (baths !== null) { %>
+                  <div class="feature">
+                    <span class="icon icon-16 icon-inline icon-mask icon-bath"></span>
+                    <span><%= baths %> bath<%= Number(baths) === 1 ? '' : 's' %></span>
+                  </div>
+                <% } %>
+              </div>
+              <% if (statusLabel) { %>
+                <p class="investor-status-badge"><%= statusLabel %></p>
+              <% } %>
+              <span class="learn-more">View details →</span>
+            </div>
+          </a>
+        </article>
+      <% }); %>
+    </div>
+    <% if (!recommendedProperties || recommendedProperties.length === 0) { %>
+      <p class="section-empty">No properties found right now. <a href="/en/properties?country=Germany&city=Berlin">See all Berlin listings</a>.</p>
+    <% } else { %>
+      <p class="section-cta">
+        <a href="/en/properties?country=Germany&city=Berlin" class="btn btn-primary">View all Berlin properties</a>
+      </p>
+    <% } %>
+  </section>
+
+  <section class="berlin-content section" aria-labelledby="faq-heading">
+    <div class="berlin-content__inner">
+      <h2 id="faq-heading" class="berlin-content__title">Investor FAQ</h2>
+      <div class="berlin-content__grid">
+        <article class="berlin-content__card">
+          <h3>Is this page legal advice?</h3>
+          <p>No. This content is informational only and does not replace legal, tax, or investment advice.</p>
+        </article>
+        <article class="berlin-content__card">
+          <h3>Are returns guaranteed?</h3>
+          <p>No. Performance depends on asset quality, financing terms, tenant profile, and market conditions.</p>
+        </article>
+        <article class="berlin-content__card">
+          <h3>Can non-residents buy in Berlin?</h3>
+          <p>In many cases yes, subject to individual legal and financing checks. We coordinate the process with local partners.</p>
+        </article>
+        <article class="berlin-content__card">
+          <h3>Can I get options that match my budget?</h3>
+          <p>Yes. We prepare a shortlist based on your criteria, including district, condition, occupancy, and entry level.</p>
+        </article>
+      </div>
+      <p class="berlin-neighborhoods__source">
+        Sources referenced in this strategy: Berlin Senate Department for Urban Development, IBB Housing Market Report, and the German Civil Code (BGB) framework.
+      </p>
+    </div>
+  </section>
+</div>
+
+<style>
+  .berlin-investor-hero__cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+  .berlin-hero__kicker { margin: 0 0 8px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.92; }
+  .berlin-investor-benefits .berlin-neighborhood-card__panel { display: block; }
+  .berlin-neighborhood-card__panel--open { padding: 22px; }
+  .metric-card .title { font-size: 1.7rem; font-weight: 800; }
+  .metric-card .meta { min-height: 180px; }
+  .investor-status-badge {
+    margin: 10px 0 0;
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #1f3a8a;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  @media (max-width: 640px) {
+    .berlin-investor-hero__cta { width: 100%; }
+    .berlin-investor-hero__cta .btn { width: 100%; text-align: center; }
+  }
+</style>

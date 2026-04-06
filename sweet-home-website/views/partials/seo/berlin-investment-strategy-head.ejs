@@ -1,0 +1,126 @@
+<%
+  const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
+  const pagePath = '/en/berlin-investment-strategy';
+  const pageUrl = `${siteBaseUrl}${pagePath}`;
+  const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Berlin Investment Strategy: Tenant-Occupied Entry Model';
+  const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription)
+    ? pageMetaDescription
+    : 'Berlin investment strategy for long-term investors: tenant-occupied apartment entry model with immediate income potential and data-backed market context.';
+%>
+<meta name="description" content="<%= pageDesc %>">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="<%= pageTitle %>">
+<meta property="og:description" content="<%= pageDesc %>">
+<meta property="og:url" content="<%= (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl %>">
+<meta property="og:image" content="<%= siteBaseUrl %>/images/berlin-hero.jpg">
+<meta property="og:image:alt" content="Berlin investment strategy for international real estate buyers">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="en_US">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= pageTitle %>">
+<meta name="twitter:description" content="<%= pageDesc %>">
+<meta name="twitter:image" content="<%= siteBaseUrl %>/images/berlin-hero.jpg">
+
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': pageUrl + '#webpage',
+      url: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl,
+      name: pageTitle,
+      description: pageDesc,
+      inLanguage: 'en',
+      isPartOf: { '@type': 'WebSite', '@id': siteBaseUrl + '/#website', name: 'Sweet Home' }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: siteBaseUrl + '/en' },
+        { '@type': 'ListItem', position: 2, name: 'Berlin Investment Strategy', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
+      ]
+    }
+  ]
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': pageUrl + '#webpage',
+      url: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl,
+      name: pageTitle,
+      description: pageDesc,
+      inLanguage: 'en',
+      isPartOf: { '@type': 'WebSite', '@id': siteBaseUrl + '/#website', name: 'Sweet Home' }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: siteBaseUrl + '/en' },
+        { '@type': 'ListItem', position: 2, name: 'Berlin Investment Strategy', item: (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : pageUrl }
+      ]
+    }
+  ]
+})) %></script>
+
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Can non-residents invest in Berlin residential property?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'In many cases, yes. Final eligibility depends on legal, tax, and financing checks for your profile.'
+      }
+    },
+    {
+      '@type': 'Question',
+      name: 'Are returns guaranteed with this strategy?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. Returns are never guaranteed and depend on market conditions, tenant profile, financing, and asset quality.'
+      }
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the core concept of the strategy?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The model focuses on tenant-occupied Berlin apartments where investors prioritize immediate rental cash flow, legal clarity, and long-term market fundamentals.'
+      }
+    }
+  ]
+}) : JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Can non-residents invest in Berlin residential property?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'In many cases, yes. Final eligibility depends on legal, tax, and financing checks for your profile.'
+      }
+    },
+    {
+      '@type': 'Question',
+      name: 'Are returns guaranteed with this strategy?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. Returns are never guaranteed and depend on market conditions, tenant profile, financing, and asset quality.'
+      }
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the core concept of the strategy?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The model focuses on tenant-occupied Berlin apartments where investors prioritize immediate rental cash flow, legal clarity, and long-term market fundamentals.'
+      }
+    }
+  ]
+})) %></script>

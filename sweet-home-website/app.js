@@ -414,7 +414,9 @@ app.use((req, res, next) => {
     '/en/properties-for-sale-cyprus': { de: '/immobilien-zypern-kaufen', en: '/en/properties-for-sale-cyprus', es: '/es/propiedades-en-venta-chipre' },
     '/es/propiedades-en-venta-chipre': { de: '/immobilien-zypern-kaufen', en: '/en/properties-for-sale-cyprus', es: '/es/propiedades-en-venta-chipre' },
     '/en/villas-for-sale-cyprus': { de: '/immobilien-zypern-kaufen', en: '/en/villas-for-sale-cyprus', es: '/es/propiedades-en-venta-chipre' },
-    '/villas-for-sale-cyprus': { de: '/immobilien-zypern-kaufen', en: '/en/villas-for-sale-cyprus', es: '/es/propiedades-en-venta-chipre' }
+    '/villas-for-sale-cyprus': { de: '/immobilien-zypern-kaufen', en: '/en/villas-for-sale-cyprus', es: '/es/propiedades-en-venta-chipre' },
+    '/en/berlin-investment-strategy': { de: '/wohnungen-berlin-kaufen', en: '/en/berlin-investment-strategy', es: '/es/propiedades-en-venta-berlin' },
+    '/berlin-investment-strategy': { de: '/wohnungen-berlin-kaufen', en: '/en/berlin-investment-strategy', es: '/es/propiedades-en-venta-berlin' }
   };
   const propertyAlternates = PROPERTY_PAGE_ALTERNATES[req.path];
 
@@ -712,6 +714,11 @@ app.get('/wohnung-kaufen-reinickendorf', propertyController.reinickendorfPropert
 app.get('/wohnung-kaufen-kreuzberg', propertyController.kreuzbergPropertiesPageDe);
 app.get('/wohnung-kaufen-spandau', propertyController.spandauPropertiesPageDe);
 app.get('/es/propiedades-en-venta-berlin', propertyController.berlinPropertiesPage);
+app.get('/en/berlin-investment-strategy', propertyController.berlinInvestorStrategyPageEn);
+app.get('/berlin-investment-strategy', (req, res) => {
+  const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
+  return res.redirect(301, `/en/berlin-investment-strategy${query}`);
+});
 app.get('/properties-for-sale-berlin', (req, res) => {
   const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
   return res.redirect(301, `/en/properties-for-sale-berlin${query}`);
@@ -1628,6 +1635,7 @@ app.get('/sitemap.xml', async (req, res, next) => {
     staticUrls.push({ loc: `${base}/en/properties-for-sale-cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     staticUrls.push({ loc: `${base}/es/propiedades-en-venta-chipre`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     staticUrls.push({ loc: `${base}/en/villas-for-sale-cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/en/berlin-investment-strategy`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     // Clean SEO property search URLs (country + city)
     staticUrls.push({ loc: `${base}/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
