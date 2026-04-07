@@ -2,6 +2,7 @@
 <% useHomeHeader = false %>
 <link rel="stylesheet" href="/css/home.css" />
 <link rel="stylesheet" href="/css/berlin-landing.min.css?v=20260326-3" />
+<link rel="stylesheet" href="/css/contact.css?v=<%= assetVersion %>" />
 <% if (process.env.RECAPTCHA_SITE_KEY) { %>
   <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
 <% } %>
@@ -125,7 +126,7 @@
       </div>
       <form
         id="berlinInvestorStrategyForm"
-        class="investor-campaign-form__form"
+        class="contact-form"
         action="/api/leads/berlin-investor-strategy"
         method="post"
         novalidate
@@ -137,27 +138,29 @@
         <% } %>
         <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
 
-        <div class="investor-campaign-form__row">
-          <div class="investor-campaign-form__field">
+        <div class="row">
+          <div class="field">
             <label for="investorName">Full name*</label>
             <input id="investorName" name="name" type="text" required>
           </div>
-          <div class="investor-campaign-form__field">
+          <div class="field">
             <label for="investorEmail">Email*</label>
             <input id="investorEmail" name="email" type="email" required>
           </div>
         </div>
 
-        <div class="investor-campaign-form__row">
-          <div class="investor-campaign-form__field investor-campaign-form__field--small">
+        <div class="row">
+          <div class="field">
             <label for="investorCountryCode">Country code*</label>
             <input id="investorCountryCode" name="countryCode" type="text" placeholder="+49" required>
           </div>
-          <div class="investor-campaign-form__field">
+          <div class="field">
             <label for="investorPhone">Phone number*</label>
             <input id="investorPhone" name="phone" type="tel" required>
           </div>
-          <div class="investor-campaign-form__field">
+        </div>
+        <div class="row">
+          <div class="field">
             <label for="investorLanguage">Preferred language</label>
             <select id="investorLanguage" name="language">
               <option value="">Select</option>
@@ -168,7 +171,7 @@
           </div>
         </div>
 
-        <div class="investor-campaign-form__field">
+        <div class="field">
           <label for="investorMessage">Message (optional)</label>
           <textarea id="investorMessage" name="message" rows="4" placeholder="Tell us your investment goals, preferred budget range, or timeline."></textarea>
         </div>
@@ -181,12 +184,10 @@
         <input type="hidden" name="referrer" />
         <input type="hidden" name="page_path" />
 
-        <div class="investor-campaign-form__actions">
-          <button type="submit" class="btn btn-primary">Contact us</button>
-          <p class="investor-campaign-form__privacy">By submitting, you agree that Sweet Home may contact you about this strategy.</p>
-        </div>
+        <button type="submit" class="submit">Contact us</button>
+        <p class="investor-campaign-form__privacy">By submitting, you agree that Sweet Home may contact you about this strategy.</p>
       </form>
-      <div id="investorCampaignFormMessage" class="investor-campaign-form__message" aria-live="polite"></div>
+      <div id="investorCampaignFormMessage" aria-live="polite"></div>
     </div>
   </section>
 
@@ -599,70 +600,20 @@
     padding-bottom: 14px;
     border-bottom: 1px solid #d5e5db;
   }
-  .investor-campaign-form__form {
-    border: 1px solid #d2e3d8;
-    border-radius: 14px;
-    background: linear-gradient(180deg, #ffffff 0%, #f4faf6 100%);
+  #berlinInvestorStrategyForm.contact-form {
+    max-width: 100%;
     padding: 20px;
-    box-shadow: 0 8px 22px rgba(18, 40, 27, 0.05);
+    border-color: #d2e3d8;
+    background: linear-gradient(180deg, #ffffff 0%, #f4faf6 100%);
   }
-  .investor-campaign-form__row {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  .investor-campaign-form__field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .investor-campaign-form__field--small {
-    grid-column: span 1;
-    max-width: 180px;
-  }
-  .investor-campaign-form__field label {
-    font-size: 0.83rem;
-    color: #3f4f61;
-    font-weight: 700;
-  }
-  .investor-campaign-form__field input,
-  .investor-campaign-form__field select,
-  .investor-campaign-form__field textarea {
-    width: 100%;
-    border: 1px solid #cfe1d6;
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: 0.95rem;
-    background: #ffffff;
-    color: #1f2937;
-  }
-  .investor-campaign-form__field textarea {
-    resize: vertical;
-    min-height: 90px;
-  }
-  .investor-campaign-form__actions {
-    margin-top: 6px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .investor-campaign-form__actions .btn {
+  #berlinInvestorStrategyForm .submit {
     width: 240px;
-    justify-content: center;
   }
   .investor-campaign-form__privacy {
-    margin: 0;
+    margin: 4px 0 0;
     font-size: 0.82rem;
     color: #5b6778;
   }
-  .investor-campaign-form__message {
-    margin-top: 10px;
-    font-size: 0.92rem;
-    min-height: 20px;
-  }
-  .investor-campaign-form__message.success { color: #1f7a45; }
-  .investor-campaign-form__message.error { color: #b91c1c; }
   @media (max-width: 992px) {
     .berlin-investor-hero__inner {
       grid-template-columns: 1fr;
@@ -678,12 +629,7 @@
     }
     .investor-strategy-explainer__grid { grid-template-columns: 1fr; }
     .investor-fit__item { grid-template-columns: 1fr; gap: 8px; }
-    .investor-campaign-form__row {
-      grid-template-columns: 1fr;
-    }
-    .investor-campaign-form__field--small {
-      max-width: 100%;
-    }
+    #berlinInvestorStrategyForm .row { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
     .berlin-investor-page .section {
@@ -700,9 +646,7 @@
       gap: 8px;
     }
     .berlin-investor-hero__baseline span { text-align: left; }
-    .investor-campaign-form__actions .btn {
-      width: 100%;
-    }
+    #berlinInvestorStrategyForm .submit { width: 100%; }
   }
 </style>
 <script>
@@ -718,7 +662,7 @@
       if (!submitBtn) return;
 
       submitBtn.disabled = true;
-      messageEl.className = 'investor-campaign-form__message';
+      messageEl.className = 'form-message';
       messageEl.textContent = '';
 
       try {
