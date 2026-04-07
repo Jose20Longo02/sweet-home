@@ -66,9 +66,11 @@
       </div>
 
       <div class="investor-strategy-explainer__notes">
-        <p><strong>Low-equity logic:</strong> this model is often structured to optimize equity deployment rather than maximize upfront capital.</p>
-        <p><strong>Financing logic:</strong> mortgage capacity is commonly evaluated against income versus actual expenses and debt service affordability.</p>
-        <p><strong>Tax logic:</strong> annual interest and depreciation deductions may improve net performance, depending on buyer profile and local tax treatment.</p>
+        <ol class="investor-strategy-explainer__notes-list">
+          <li><strong>Low-equity logic:</strong> this model is often structured to optimize equity deployment rather than maximize upfront capital.</li>
+          <li><strong>Financing logic:</strong> mortgage capacity is commonly evaluated against income versus actual expenses and debt service affordability.</li>
+          <li><strong>Tax logic:</strong> annual interest and depreciation deductions may improve net performance, depending on buyer profile and local tax treatment.</li>
+        </ol>
       </div>
     </div>
   </section>
@@ -448,14 +450,15 @@
     border-radius: 14px;
     padding: 15px 17px;
   }
-  .investor-strategy-explainer__notes p {
+  .investor-strategy-explainer__notes-list {
     margin: 0;
+    padding-left: 1.2rem;
     color: #3f4f61;
     font-size: 0.9rem;
-    line-height: 1.55;
+    line-height: 1.6;
   }
-  .investor-strategy-explainer__notes p + p {
-    margin-top: 8px;
+  .investor-strategy-explainer__notes-list li + li {
+    margin-top: 12px;
   }
   .investor-status-badge {
     margin: 10px 0 0;
