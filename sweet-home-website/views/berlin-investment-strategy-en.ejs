@@ -35,6 +35,43 @@
     <div class="berlin-investor-hero-spacer__line"></div>
   </section>
 
+  <section class="berlin-content section investor-strategy-explainer" aria-labelledby="strategy-explainer-heading">
+    <div class="berlin-content__inner">
+      <div class="investor-strategy-explainer__intro">
+        <h2 id="strategy-explainer-heading" class="berlin-content__title">What this strategy represents</h2>
+        <p class="berlin-content__intro">
+          This strategy is built as a practical long-hold model: enter below vacant-market pricing, generate rental cash flow from day one, and improve asset quality over time while preserving upside.
+        </p>
+      </div>
+
+      <div class="investor-strategy-explainer__grid">
+        <article class="investor-strategy-explainer__card">
+          <span class="investor-strategy-explainer__index">01</span>
+          <h3>Income from day one</h3>
+          <p>Because the unit is tenant-occupied, rental income is typically already in place from acquisition, supporting immediate cash-flow visibility.</p>
+        </article>
+
+        <article class="investor-strategy-explainer__card">
+          <span class="investor-strategy-explainer__index">02</span>
+          <h3>Discounted entry + long-term optionality</h3>
+          <p>Entry pricing can be materially lower than comparable vacant units (often around 30-40% in selected cases), while preserving long-term value potential and future self-use optionality subject to legal timelines and conditions.</p>
+        </article>
+
+        <article class="investor-strategy-explainer__card">
+          <span class="investor-strategy-explainer__index">03</span>
+          <h3>Energy-efficiency upgrade support</h3>
+          <p>In eligible cases, public support schemes can help finance energy-efficiency improvements, strengthening the property's quality and long-term operating profile.</p>
+        </article>
+      </div>
+
+      <div class="investor-strategy-explainer__notes">
+        <p><strong>Low-equity logic:</strong> this model is often structured to optimize equity deployment rather than maximize upfront capital.</p>
+        <p><strong>Financing logic:</strong> mortgage capacity is commonly evaluated against income versus actual expenses and debt service affordability.</p>
+        <p><strong>Tax logic:</strong> annual interest and depreciation deductions may improve net performance, depending on buyer profile and local tax treatment.</p>
+      </div>
+    </div>
+  </section>
+
   <section class="berlin-content section investor-why" aria-labelledby="why-strategy-heading">
     <div class="berlin-content__inner">
       <div class="investor-why__intro">
@@ -383,6 +420,67 @@
     font-weight: 600;
   }
   .berlin-investor-btn-secondary:hover { background: #f8faf8; color: #1f2a1f; }
+  .investor-strategy-explainer {
+    padding-top: 42px;
+    padding-bottom: 12px;
+  }
+  .investor-strategy-explainer__intro {
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #d7e6dc;
+  }
+  .investor-strategy-explainer__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .investor-strategy-explainer__card {
+    border: 1px solid #d2e3d8;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #ffffff 0%, #f5faf7 100%);
+    padding: 17px 17px 15px;
+  }
+  .investor-strategy-explainer__index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 26px;
+    border-radius: 999px;
+    border: 1px solid #bdd7c6;
+    color: #2d6a46;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .investor-strategy-explainer__card h3 {
+    margin: 0 0 8px;
+    color: #16212f;
+    font-size: 1rem;
+  }
+  .investor-strategy-explainer__card p {
+    margin: 0;
+    color: #4c5b6e;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  .investor-strategy-explainer__notes {
+    margin-top: 14px;
+    border: 1px solid #cde0d5;
+    background: #f7fbf8;
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .investor-strategy-explainer__notes p {
+    margin: 0;
+    color: #3f4f61;
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+  .investor-strategy-explainer__notes p + p {
+    margin-top: 8px;
+  }
   .investor-why { padding-top: 52px; }
   .investor-why .berlin-content__title {
     font-size: clamp(1.65rem, 2.4vw, 1.95rem);
@@ -455,6 +553,7 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       padding: 8px 24px 20px;
     }
+    .investor-strategy-explainer__grid { grid-template-columns: 1fr; }
     .investor-why__grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
