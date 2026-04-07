@@ -616,7 +616,7 @@
       padding: 46px 24px 26px;
     }
     .berlin-investor-hero__accent {
-      max-width: 360px;
+      max-width: 100%;
     }
     .berlin-investor-hero__baseline {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -633,7 +633,36 @@
     .berlin-investor-hero__cta { width: 100%; }
     .berlin-investor-hero__cta .btn,
     .berlin-investor-btn-secondary { width: 100%; text-align: center; }
-    .berlin-investor-hero__inner { padding: 36px 16px 20px; }
+    .berlin-investor-hero__inner { padding: 30px 16px 18px; gap: 18px; }
+    .berlin-hero__title { font-size: clamp(1.55rem, 7.2vw, 2rem); line-height: 1.18; }
+    .berlin-hero__description { font-size: 0.96rem; line-height: 1.55; }
+    .berlin-investor-stat { padding: 12px 12px 11px; }
+    .berlin-investor-stat__value { font-size: clamp(1.35rem, 6vw, 1.65rem); }
+    .berlin-investor-stat__label { font-size: 0.8rem; line-height: 1.4; }
+    .investor-strategy-explainer .berlin-content__title { font-size: clamp(1.45rem, 6.6vw, 1.85rem); }
+    .investor-fit .berlin-content__title { font-size: clamp(1.4rem, 6vw, 1.75rem); }
+    .section-inline-cta__link {
+      width: 100%;
+      max-width: 360px;
+      justify-content: center;
+    }
+    #selected-berlin-opportunities .berlin-featured__grid {
+      grid-template-columns: 1fr;
+    }
+    #lead-cta.owners-lead {
+      padding: 56px 0 64px;
+    }
+    #lead-cta.owners-lead h2 {
+      margin-bottom: 36px;
+      font-size: clamp(1.5rem, 7vw, 2rem);
+      text-align: center;
+    }
+    #lead-cta .lead-form {
+      padding: 0;
+    }
+    #lead-cta .lead-form .form-group {
+      margin-bottom: 12px;
+    }
     .berlin-investor-hero__baseline {
       grid-template-columns: 1fr;
       padding: 4px 16px 16px;
