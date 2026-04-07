@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="/css/home.css" />
 <link rel="stylesheet" href="/css/berlin-landing.min.css?v=20260326-3" />
 <link rel="stylesheet" href="/css/contact.css?v=<%= assetVersion %>" />
+<link rel="stylesheet" href="/css/owners.css?v=<%= assetVersion %>" />
 <% if (process.env.RECAPTCHA_SITE_KEY) { %>
   <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
 <% } %>
@@ -118,15 +119,12 @@
     </div>
   </section>
 
-  <section class="berlin-content section investor-campaign-form" aria-labelledby="investor-form-heading">
-    <div class="berlin-content__inner">
-      <div class="investor-campaign-form__intro">
-        <h2 id="investor-form-heading" class="berlin-content__title">Request strategy details</h2>
-        <p class="berlin-content__intro">Share your details and our team will contact you with a tailored walkthrough of the Berlin Tenant-Occupied Entry Strategy.</p>
-      </div>
+  <section id="lead-cta" class="owners-lead section">
+    <h2 id="investor-form-heading">Request strategy details</h2>
+    <div class="lead-grid">
       <form
         id="berlinInvestorStrategyForm"
-        class="contact-form"
+        class="lead-form lead-form-centered"
         action="/api/leads/berlin-investor-strategy"
         method="post"
         novalidate
@@ -138,42 +136,36 @@
         <% } %>
         <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
 
-        <div class="row">
-          <div class="field">
-            <label for="investorName">Full name*</label>
-            <input id="investorName" name="name" type="text" required>
+        <div class="form-group">
+          <label for="fullName">Full name*</label>
+          <input id="fullName" name="name" type="text" required aria-required="true" placeholder="Full name*">
+        </div>
+        <div class="row-2">
+          <div class="form-group">
+            <label for="countryCode">Country code*</label>
+            <input id="countryCode" name="countryCode" type="text" required aria-required="true" placeholder="+49">
           </div>
-          <div class="field">
-            <label for="investorEmail">Email*</label>
-            <input id="investorEmail" name="email" type="email" required>
+          <div class="form-group">
+            <label for="phone">Phone number*</label>
+            <input id="phone" name="phone" type="tel" required aria-required="true" placeholder="Phone number*" inputmode="tel">
           </div>
         </div>
-
-        <div class="row">
-          <div class="field">
-            <label for="investorCountryCode">Country code*</label>
-            <input id="investorCountryCode" name="countryCode" type="text" placeholder="+49" required>
-          </div>
-          <div class="field">
-            <label for="investorPhone">Phone number*</label>
-            <input id="investorPhone" name="phone" type="tel" required>
-          </div>
+        <div class="form-group">
+          <label for="email">Email*</label>
+          <input id="email" name="email" type="email" required aria-required="true" placeholder="Email*">
         </div>
-        <div class="row">
-          <div class="field">
-            <label for="investorLanguage">Preferred language</label>
-            <select id="investorLanguage" name="language">
-              <option value="">Select</option>
-              <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
-                <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
-              <% }) %>
-            </select>
-          </div>
+        <div class="form-group">
+          <label for="language">Preferred language</label>
+          <select id="language" name="language">
+            <option value="">Select language</option>
+            <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
+              <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
+            <% }) %>
+          </select>
         </div>
-
-        <div class="field">
-          <label for="investorMessage">Message (optional)</label>
-          <textarea id="investorMessage" name="message" rows="4" placeholder="Tell us your investment goals, preferred budget range, or timeline."></textarea>
+        <div class="form-group">
+          <label for="message">Message (optional)</label>
+          <input id="message" name="message" type="text" placeholder="Tell us your investment goals, budget range, or timeline.">
         </div>
 
         <input type="hidden" name="utm_source" />
@@ -184,10 +176,9 @@
         <input type="hidden" name="referrer" />
         <input type="hidden" name="page_path" />
 
-        <button type="submit" class="submit">Contact us</button>
-        <p class="investor-campaign-form__privacy">By submitting, you agree that Sweet Home may contact you about this strategy.</p>
+        <button type="submit" class="btn-submit">Contact us</button>
+        <p class="form-status" role="status" aria-live="polite" style="display:none"></p>
       </form>
-      <div id="investorCampaignFormMessage" aria-live="polite"></div>
     </div>
   </section>
 
@@ -592,28 +583,6 @@
     font-size: 0.8rem;
     font-weight: 600;
   }
-  .investor-campaign-form {
-    padding-top: 36px;
-  }
-  .investor-campaign-form__intro {
-    margin-bottom: 18px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid #d5e5db;
-  }
-  #berlinInvestorStrategyForm.contact-form {
-    max-width: 100%;
-    padding: 20px;
-    border-color: #d2e3d8;
-    background: linear-gradient(180deg, #ffffff 0%, #f4faf6 100%);
-  }
-  #berlinInvestorStrategyForm .submit {
-    width: 240px;
-  }
-  .investor-campaign-form__privacy {
-    margin: 4px 0 0;
-    font-size: 0.82rem;
-    color: #5b6778;
-  }
   @media (max-width: 992px) {
     .berlin-investor-hero__inner {
       grid-template-columns: 1fr;
@@ -629,7 +598,6 @@
     }
     .investor-strategy-explainer__grid { grid-template-columns: 1fr; }
     .investor-fit__item { grid-template-columns: 1fr; gap: 8px; }
-    #berlinInvestorStrategyForm .row { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
     .berlin-investor-page .section {
@@ -646,13 +614,12 @@
       gap: 8px;
     }
     .berlin-investor-hero__baseline span { text-align: left; }
-    #berlinInvestorStrategyForm .submit { width: 100%; }
   }
 </style>
 <script>
   (function () {
     const form = document.getElementById('berlinInvestorStrategyForm');
-    const messageEl = document.getElementById('investorCampaignFormMessage');
+    const messageEl = form ? form.querySelector('.form-status') : null;
     if (!form || !messageEl) return;
 
     const submitBtn = form.querySelector('button[type="submit"]');
@@ -662,7 +629,8 @@
       if (!submitBtn) return;
 
       submitBtn.disabled = true;
-      messageEl.className = 'form-message';
+      messageEl.style.display = 'block';
+      messageEl.className = 'form-status';
       messageEl.textContent = '';
 
       try {
