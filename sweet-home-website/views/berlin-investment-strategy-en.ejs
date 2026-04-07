@@ -15,12 +15,19 @@
           <a href="/en/properties-for-sale-berlin" class="btn berlin-investor-btn-secondary">Browse Berlin listings</a>
         </div>
       </div>
-      <aside class="berlin-investor-hero__accent" aria-label="Key strategy signal">
-        <p class="berlin-investor-hero__accent-label">Discount signal</p>
-        <p class="berlin-investor-hero__accent-value">45%</p>
-        <p class="berlin-investor-hero__accent-copy">potential entry discount versus selected vacant comparables</p>
-        <p class="berlin-investor-hero__accent-copy">Income from day one through tenant-occupied entry</p>
-        <p class="berlin-investor-hero__accent-copy">~222,000 homes needed by 2040 in Berlin</p>
+      <aside class="berlin-investor-hero__accent" aria-label="Strategy highlights">
+        <div class="berlin-investor-stat">
+          <p class="berlin-investor-stat__value">45%</p>
+          <p class="berlin-investor-stat__label">Potential entry discount vs selected vacant comparables</p>
+        </div>
+        <div class="berlin-investor-stat">
+          <p class="berlin-investor-stat__value">Day 1</p>
+          <p class="berlin-investor-stat__label">Income from day one through tenant-occupied entry</p>
+        </div>
+        <div class="berlin-investor-stat">
+          <p class="berlin-investor-stat__value">~222k</p>
+          <p class="berlin-investor-stat__label">Homes needed by 2040 in Berlin</p>
+        </div>
       </aside>
     </div>
   </section>
@@ -262,31 +269,29 @@
   }
   .berlin-investor-hero__main { max-width: 780px; }
   .berlin-investor-hero__accent {
-    border-left: 1px solid #d8cfbf;
-    padding-left: 28px;
+    display: grid;
+    gap: 12px;
     margin-bottom: 10px;
   }
-  .berlin-investor-hero__accent-label {
-    margin: 0 0 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.72rem;
-    color: #6b7280;
-    font-weight: 700;
+  .berlin-investor-stat {
+    border: 1px solid #ded5c5;
+    background: rgba(255, 255, 255, 0.72);
+    border-radius: 10px;
+    padding: 12px 14px;
   }
-  .berlin-investor-hero__accent-value {
-    margin: 0;
-    font-size: clamp(2.8rem, 7vw, 5rem);
-    line-height: 0.95;
+  .berlin-investor-stat__value {
+    margin: 0 0 4px;
+    font-size: clamp(1.45rem, 2.1vw, 1.9rem);
+    line-height: 1.05;
     color: #111827;
     font-weight: 700;
     font-family: 'Playfair Display', Georgia, serif;
   }
-  .berlin-investor-hero__accent-copy {
-    margin: 10px 0 0;
+  .berlin-investor-stat__label {
+    margin: 0;
     color: #4b5563;
-    font-size: 0.9rem;
-    line-height: 1.55;
+    font-size: 0.84rem;
+    line-height: 1.4;
   }
   .berlin-investor-hero__baseline {
     max-width: 1200px;
@@ -376,10 +381,6 @@
       padding: 46px 24px 26px;
     }
     .berlin-investor-hero__accent {
-      border-left: 0;
-      border-top: 1px solid #d8cfbf;
-      padding-left: 0;
-      padding-top: 16px;
       max-width: 360px;
     }
     .berlin-investor-hero__baseline {
