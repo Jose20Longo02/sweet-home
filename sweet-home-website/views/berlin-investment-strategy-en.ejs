@@ -117,7 +117,7 @@
   <section class="section featured berlin-featured" aria-labelledby="campaign-properties-heading">
     <h2 id="campaign-properties-heading" class="berlin-featured__title">Selected Berlin opportunities</h2>
     <div class="berlin-featured__grid" id="investorRecommended">
-      <% (recommendedProperties || []).forEach(property => { %>
+      <% (recommendedProperties || []).forEach((property, idx) => { %>
         <%
           const photoUrl = (property.photos && property.photos[0]) ? property.photos[0] : '/img/property-placeholder.jpg';
           const size = property.size ? `${property.size} m²` : null;
@@ -125,11 +125,18 @@
           const baths = (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) ? property.bathrooms : null;
           const priceText = property.price && Number(property.price) > 0 ? 'EUR ' + Number(property.price).toLocaleString('en-US') : '';
           const statusLabel = property.occupancy_type || property.rental_status || null;
+          const prioritizeImage = idx < 3;
         %>
         <article class="property-card">
           <a href="/en/properties/<%= property.slug %>" class="property-card-link">
             <div class="img-wrap" <%= priceText ? `data-price="${priceText}"` : '' %>>
-              <img src="<%= photoUrl %>" alt="<%= property.title %>" loading="lazy" decoding="async" onerror="this.src='/img/property-placeholder.jpg'">
+              <img
+                src="<%= photoUrl %>"
+                alt="<%= property.title %>"
+                loading="<%= prioritizeImage ? 'eager' : 'lazy' %>"
+                fetchpriority="<%= prioritizeImage ? 'high' : 'low' %>"
+                decoding="async"
+                onerror="this.src='/img/property-placeholder.jpg'">
             </div>
             <div class="meta">
               <div class="title"><%= property.title %></div>
