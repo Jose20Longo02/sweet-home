@@ -38,9 +38,10 @@
   <section class="berlin-content section investor-strategy-explainer" aria-labelledby="strategy-explainer-heading">
     <div class="berlin-content__inner">
       <div class="investor-strategy-explainer__intro">
+        <div class="investor-strategy-explainer__eyebrow">Strategy Framework</div>
         <h2 id="strategy-explainer-heading" class="berlin-content__title">What makes this strategy so attractive?</h2>
         <p class="berlin-content__intro">
-          This strategy is built as a practical long-hold model: enter below vacant-market pricing, generate rental cash flow from day one, and improve asset quality over time while preserving upside.
+          The model combines discounted entry, immediate rent visibility, and long-term asset improvement. It is designed to be financially disciplined while keeping upside potential in view.
         </p>
       </div>
 
@@ -48,19 +49,19 @@
         <article class="investor-strategy-explainer__card">
           <span class="investor-strategy-explainer__index">01</span>
           <h3>Income from day one</h3>
-          <p>Because the unit is tenant-occupied, rental income is typically already in place from acquisition, supporting immediate cash-flow visibility.</p>
+          <p>Tenant-occupied entry means rent can already be in place at acquisition, supporting immediate cash-flow visibility.</p>
         </article>
 
         <article class="investor-strategy-explainer__card">
           <span class="investor-strategy-explainer__index">02</span>
           <h3>Discounted entry + long-term optionality</h3>
-          <p>Entry pricing can be materially lower than comparable vacant units (often around 30-40% in selected cases), while preserving long-term value potential and future self-use optionality subject to legal timelines and conditions.</p>
+          <p>Entry can be materially below vacant comparables (about 30-40% in selected cases), while preserving long-term value and future self-use optionality within legal timelines.</p>
         </article>
 
         <article class="investor-strategy-explainer__card">
           <span class="investor-strategy-explainer__index">03</span>
           <h3>Energy-efficiency upgrade support</h3>
-          <p>In eligible cases, public support schemes can help finance energy-efficiency improvements, strengthening the property's quality and long-term operating profile.</p>
+          <p>Where eligible, subsidy programs can support energy upgrades, improving quality and long-term operating performance.</p>
         </article>
       </div>
 
@@ -364,24 +365,55 @@
   }
   .berlin-investor-btn-secondary:hover { background: #f8faf8; color: #1f2a1f; }
   .investor-strategy-explainer {
-    padding-top: 42px;
-    padding-bottom: 12px;
+    padding-top: 46px;
+    padding-bottom: 16px;
   }
   .investor-strategy-explainer__intro {
-    margin-bottom: 18px;
-    padding-bottom: 14px;
+    position: relative;
+    margin-bottom: 22px;
+    padding: 0 0 18px;
     border-bottom: 1px solid #d7e6dc;
+  }
+  .investor-strategy-explainer__eyebrow {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #cae0d4;
+    background: #f6fbf8;
+    color: #2d6a46;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .investor-strategy-explainer .berlin-content__title {
+    margin-bottom: 10px;
+    font-size: clamp(1.9rem, 3vw, 2.45rem);
+    line-height: 1.13;
   }
   .investor-strategy-explainer__grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
+    gap: 16px;
   }
   .investor-strategy-explainer__card {
-    border: 1px solid #d2e3d8;
-    border-radius: 12px;
-    background: linear-gradient(180deg, #ffffff 0%, #f5faf7 100%);
-    padding: 17px 17px 15px;
+    position: relative;
+    border: 1px solid #cfe3d7;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff 0%, #f4faf7 100%);
+    padding: 18px 18px 16px;
+    box-shadow: 0 10px 24px rgba(19, 42, 28, 0.05);
+  }
+  .investor-strategy-explainer__card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+    background: linear-gradient(90deg, #2ea862 0%, #75c491 100%);
   }
   .investor-strategy-explainer__index {
     display: inline-flex;
@@ -395,25 +427,26 @@
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.06em;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
   .investor-strategy-explainer__card h3 {
-    margin: 0 0 8px;
-    color: #16212f;
-    font-size: 1rem;
+    margin: 0 0 9px;
+    color: #152233;
+    font-size: 1.04rem;
+    line-height: 1.3;
   }
   .investor-strategy-explainer__card p {
     margin: 0;
-    color: #4c5b6e;
+    color: #4b5b6f;
     font-size: 0.92rem;
     line-height: 1.55;
   }
   .investor-strategy-explainer__notes {
-    margin-top: 14px;
-    border: 1px solid #cde0d5;
-    background: #f7fbf8;
-    border-radius: 12px;
-    padding: 14px 16px;
+    margin-top: 18px;
+    border: 1px solid #cde3d6;
+    background: linear-gradient(180deg, #f8fcf9 0%, #f2f8f4 100%);
+    border-radius: 14px;
+    padding: 15px 17px;
   }
   .investor-strategy-explainer__notes p {
     margin: 0;
