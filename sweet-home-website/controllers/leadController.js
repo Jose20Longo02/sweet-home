@@ -523,6 +523,133 @@ exports.createFromProject = async (req, res, next) => {
 
   } catch (err) { next(err); }
 };
+
+// Public API: create lead from Berlin investor strategy landing page form
+exports.createFromBerlinInvestorStrategy = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, message: 'Invalid input', errors: errors.array() });
+    }
+
+    const { name, email, message, language } = req.body;
+    const phone = `${(req.body.countryCode || '').trim()} ${(req.body.phone || '').trim()}`.trim();
+    if (!name || !email || !phone) {
+      return res.status(400).json({ success: false, message: 'Missing required fields' });
+    }
+
+    // Prevent quick duplicates for same campaign source (same email within 10 minutes)
+    const dupCheck = await query(
+      `SELECT id FROM leads
+        WHERE email = $1
+          AND source = 'berlin_investor_strategy_form'
+          AND created_at >= NOW() - INTERVAL '10 minutes'
+        ORDER BY created_at DESC
+        LIMIT 1`,
+      [email]
+    );
+
+    const lead = dupCheck.rows[0] ? await Lead.findById(dupCheck.rows[0].id) : await Lead.create({
+      property_id: null,
+      project_id: null,
+      agent_id: null,
+      name,
+      email,
+      phone,
+      message: message || null,
+      preferred_language: language || null,
+      source: 'berlin_investor_strategy_form',
+      utm_source: req.body.utm_source || null,
+      utm_medium: req.body.utm_medium || null,
+      utm_campaign: req.body.utm_campaign || null,
+      utm_term: req.body.utm_term || null,
+      utm_content: req.body.utm_content || null,
+      referrer: req.body.referrer || null,
+      page_path: req.body.page_path || null,
+      ip_address: req.ip || null,
+      user_agent: req.get('user-agent') || null
+    });
+
+    res.json({ success: true, lead });
+
+    setImmediate(async () => {
+      // CRM/Zapier flow
+      sendToZapier(lead);
+
+      await recordFormSubmission({
+        entityType: 'campaign',
+        entityId: null,
+        meta: {
+          form: 'berlin_investor_strategy_form',
+          source: 'berlin_investor_strategy_form',
+          page_path: req.body.page_path || '/en/berlin-tenant-occupied-entry-strategy'
+        },
+        req
+      });
+
+      // Thank-you email to user (localized)
+      try {
+        const lang = String(language || '').slice(0, 2).toLowerCase();
+        const L = ['en', 'es', 'de'].includes(lang) ? lang : 'en';
+        const firstName = (name || '').split(' ')[0] || name || '';
+        const subjects = {
+          en: 'Thank you — Sweet Home Real Estate Investments',
+          es: 'Gracias — Sweet Home Real Estate Investments',
+          de: 'Danke — Sweet Home Real Estate Investments'
+        };
+        const htmlBodies = {
+          en: `<p>Hi ${firstName},</p><p>Thank you for your interest in our Berlin Tenant-Occupied Entry Strategy. Our team will contact you shortly.</p><p>Best regards,<br/>Sweet Home Real Estate Investments' team</p>`,
+          es: `<p>Hola ${firstName},</p><p>Gracias por tu interés en nuestra estrategia de entrada con inmuebles alquilados en Berlín. Nuestro equipo se pondrá en contacto contigo en breve.</p><p>Un saludo,<br/>Sweet Home Real Estate Investments</p>`,
+          de: `<p>Hallo ${firstName},</p><p>Vielen Dank für Ihr Interesse an unserer Berliner Strategie für vermietete Bestandswohnungen. Unser Team meldet sich in Kürze bei Ihnen.</p><p>Mit freundlichen Grüßen,<br/>Sweet Home Real Estate Investments</p>`
+        };
+        const textBodies = {
+          en: `Hi ${firstName},\n\nThank you for your interest in our Berlin Tenant-Occupied Entry Strategy. Our team will contact you shortly.\n\nBest regards,\nSweet Home Real Estate Investments' team`,
+          es: `Hola ${firstName},\n\nGracias por tu interés en nuestra estrategia de entrada con inmuebles alquilados en Berlín. Nuestro equipo se pondrá en contacto contigo en breve.\n\nUn saludo,\nSweet Home Real Estate Investments`,
+          de: `Hallo ${firstName},\n\nVielen Dank für Ihr Interesse an unserer Berliner Strategie für vermietete Bestandswohnungen. Unser Team meldet sich in Kürze bei Ihnen.\n\nMit freundlichen Grüßen,\nSweet Home Real Estate Investments`
+        };
+        await sendMail({
+          to: email,
+          subject: subjects[L],
+          html: htmlBodies[L],
+          text: textBodies[L]
+        });
+      } catch (_) {}
+
+      // Notify dedicated admins (plus existing extra recipients logic)
+      try {
+        const campaignNotifyEnv = String(process.env.BERLIN_INVESTOR_STRATEGY_NOTIFY_EMAIL || 'Israel@sweet-home.co.il').trim();
+        const campaignRecipients = campaignNotifyEnv
+          .split(',')
+          .map((item) => item.trim())
+          .filter((item) => item.length > 0);
+        const recipientList = buildRecipientListWithExtras(campaignRecipients);
+        await sendMail({
+          to: recipientList.join(','),
+          subject: 'Sweet Home — New Berlin Strategy Lead',
+          html: `
+            <p>New lead from the <strong>Berlin Tenant-Occupied Entry Strategy</strong> landing page.</p>
+            <ul>
+              <li><strong>Name:</strong> ${name}</li>
+              <li><strong>Email:</strong> ${email}</li>
+              ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
+              ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
+            </ul>
+            ${message ? `<p><strong>Message:</strong><br/>${String(message).replace(/\n/g, '<br/>')}</p>` : ''}
+            <p><strong>Source:</strong> berlin_investor_strategy_form</p>
+            ${req.body.utm_source ? `<p><strong>UTM Source:</strong> ${req.body.utm_source}</p>` : ''}
+            ${req.body.utm_medium ? `<p><strong>UTM Medium:</strong> ${req.body.utm_medium}</p>` : ''}
+            ${req.body.utm_campaign ? `<p><strong>UTM Campaign:</strong> ${req.body.utm_campaign}</p>` : ''}
+            <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
+          `,
+          text: `New lead from Berlin Tenant-Occupied Entry Strategy\n\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${language ? `\nPreferred language: ${language}` : ''}${message ? `\nMessage: ${message}` : ''}\nSource: berlin_investor_strategy_form${req.body.utm_source ? `\nUTM Source: ${req.body.utm_source}` : ''}${req.body.utm_medium ? `\nUTM Medium: ${req.body.utm_medium}` : ''}${req.body.utm_campaign ? `\nUTM Campaign: ${req.body.utm_campaign}` : ''}`
+        });
+      } catch (_) {}
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
 // Admin: list leads for the logged-in agent
 exports.listForAdmin = async (req, res, next) => {
   try {

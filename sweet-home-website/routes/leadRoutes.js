@@ -36,6 +36,19 @@ const leadValidations = [
 // Public API endpoints (rate limited + validated + spam detection)
 router.post('/api/leads', createLeadLimiter, recaptchaRequired(recaptchaMinScore), leadValidations, spamDetection(), leadController.createFromProperty);
 router.post('/api/leads/project', createLeadLimiter, recaptchaRequired(recaptchaMinScore), leadValidations, spamDetection(), leadController.createFromProject);
+router.post(
+  '/api/leads/berlin-investor-strategy',
+  createLeadLimiter,
+  recaptchaRequired(recaptchaMinScore),
+  spamDetection(),
+  [
+    body('name').isString().trim().isLength({ min: 2, max: 100 }),
+    body('email').isString().trim().isEmail().normalizeEmail(),
+    body('phone').isString().trim().isLength({ min: 1, max: 30 }).withMessage('Phone number is required'),
+    body('message').optional({ checkFalsy: true }).isString().trim().isLength({ max: 2000 })
+  ],
+  leadController.createFromBerlinInvestorStrategy
+);
 
 // Public contact form endpoint
 router.post(

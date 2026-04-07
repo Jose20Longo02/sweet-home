@@ -2,6 +2,9 @@
 <% useHomeHeader = false %>
 <link rel="stylesheet" href="/css/home.css" />
 <link rel="stylesheet" href="/css/berlin-landing.min.css?v=20260326-3" />
+<% if (process.env.RECAPTCHA_SITE_KEY) { %>
+  <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+<% } %>
 
 <div class="berlin-landing-page berlin-investor-page">
   <section class="berlin-investor-hero berlin-investor-hero--luxury" aria-labelledby="investor-hero-title">
@@ -111,6 +114,79 @@
           <p>Ideal for those who prefer transparent assumptions, documented tenancy context, and realistic underwriting over aggressive promises.</p>
         </article>
       </div>
+    </div>
+  </section>
+
+  <section class="berlin-content section investor-campaign-form" aria-labelledby="investor-form-heading">
+    <div class="berlin-content__inner">
+      <div class="investor-campaign-form__intro">
+        <h2 id="investor-form-heading" class="berlin-content__title">Request strategy details</h2>
+        <p class="berlin-content__intro">Share your details and our team will contact you with a tailored walkthrough of the Berlin Tenant-Occupied Entry Strategy.</p>
+      </div>
+      <form
+        id="berlinInvestorStrategyForm"
+        class="investor-campaign-form__form"
+        action="/api/leads/berlin-investor-strategy"
+        method="post"
+        novalidate
+        <% if (process.env.RECAPTCHA_SITE_KEY) { %> data-recaptcha-site-key="<%= process.env.RECAPTCHA_SITE_KEY %>" <% } %>
+      >
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <% if (process.env.RECAPTCHA_SITE_KEY) { %>
+          <input type="hidden" name="recaptchaToken" id="recaptchaTokenInvestorStrategy" />
+        <% } %>
+        <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
+
+        <div class="investor-campaign-form__row">
+          <div class="investor-campaign-form__field">
+            <label for="investorName">Full name*</label>
+            <input id="investorName" name="name" type="text" required>
+          </div>
+          <div class="investor-campaign-form__field">
+            <label for="investorEmail">Email*</label>
+            <input id="investorEmail" name="email" type="email" required>
+          </div>
+        </div>
+
+        <div class="investor-campaign-form__row">
+          <div class="investor-campaign-form__field investor-campaign-form__field--small">
+            <label for="investorCountryCode">Country code*</label>
+            <input id="investorCountryCode" name="countryCode" type="text" placeholder="+49" required>
+          </div>
+          <div class="investor-campaign-form__field">
+            <label for="investorPhone">Phone number*</label>
+            <input id="investorPhone" name="phone" type="tel" required>
+          </div>
+          <div class="investor-campaign-form__field">
+            <label for="investorLanguage">Preferred language</label>
+            <select id="investorLanguage" name="language">
+              <option value="">Select</option>
+              <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
+                <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+
+        <div class="investor-campaign-form__field">
+          <label for="investorMessage">Message (optional)</label>
+          <textarea id="investorMessage" name="message" rows="4" placeholder="Tell us your investment goals, preferred budget range, or timeline."></textarea>
+        </div>
+
+        <input type="hidden" name="utm_source" />
+        <input type="hidden" name="utm_medium" />
+        <input type="hidden" name="utm_campaign" />
+        <input type="hidden" name="utm_term" />
+        <input type="hidden" name="utm_content" />
+        <input type="hidden" name="referrer" />
+        <input type="hidden" name="page_path" />
+
+        <div class="investor-campaign-form__actions">
+          <button type="submit" class="btn btn-primary">Contact us</button>
+          <p class="investor-campaign-form__privacy">By submitting, you agree that Sweet Home may contact you about this strategy.</p>
+        </div>
+      </form>
+      <div id="investorCampaignFormMessage" class="investor-campaign-form__message" aria-live="polite"></div>
     </div>
   </section>
 
@@ -515,6 +591,78 @@
     font-size: 0.8rem;
     font-weight: 600;
   }
+  .investor-campaign-form {
+    padding-top: 36px;
+  }
+  .investor-campaign-form__intro {
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #d5e5db;
+  }
+  .investor-campaign-form__form {
+    border: 1px solid #d2e3d8;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff 0%, #f4faf6 100%);
+    padding: 20px;
+    box-shadow: 0 8px 22px rgba(18, 40, 27, 0.05);
+  }
+  .investor-campaign-form__row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .investor-campaign-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .investor-campaign-form__field--small {
+    grid-column: span 1;
+    max-width: 180px;
+  }
+  .investor-campaign-form__field label {
+    font-size: 0.83rem;
+    color: #3f4f61;
+    font-weight: 700;
+  }
+  .investor-campaign-form__field input,
+  .investor-campaign-form__field select,
+  .investor-campaign-form__field textarea {
+    width: 100%;
+    border: 1px solid #cfe1d6;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    background: #ffffff;
+    color: #1f2937;
+  }
+  .investor-campaign-form__field textarea {
+    resize: vertical;
+    min-height: 90px;
+  }
+  .investor-campaign-form__actions {
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .investor-campaign-form__actions .btn {
+    width: 240px;
+    justify-content: center;
+  }
+  .investor-campaign-form__privacy {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #5b6778;
+  }
+  .investor-campaign-form__message {
+    margin-top: 10px;
+    font-size: 0.92rem;
+    min-height: 20px;
+  }
+  .investor-campaign-form__message.success { color: #1f7a45; }
+  .investor-campaign-form__message.error { color: #b91c1c; }
   @media (max-width: 992px) {
     .berlin-investor-hero__inner {
       grid-template-columns: 1fr;
@@ -530,6 +678,12 @@
     }
     .investor-strategy-explainer__grid { grid-template-columns: 1fr; }
     .investor-fit__item { grid-template-columns: 1fr; gap: 8px; }
+    .investor-campaign-form__row {
+      grid-template-columns: 1fr;
+    }
+    .investor-campaign-form__field--small {
+      max-width: 100%;
+    }
   }
   @media (max-width: 640px) {
     .berlin-investor-page .section {
@@ -546,5 +700,79 @@
       gap: 8px;
     }
     .berlin-investor-hero__baseline span { text-align: left; }
+    .investor-campaign-form__actions .btn {
+      width: 100%;
+    }
   }
 </style>
+<script>
+  (function () {
+    const form = document.getElementById('berlinInvestorStrategyForm');
+    const messageEl = document.getElementById('investorCampaignFormMessage');
+    if (!form || !messageEl) return;
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      if (!submitBtn) return;
+
+      submitBtn.disabled = true;
+      messageEl.className = 'investor-campaign-form__message';
+      messageEl.textContent = '';
+
+      try {
+        const body = new FormData(form);
+        const params = new URLSearchParams(window.location.search);
+        const setIf = (key, val) => { if (!body.get(key) && val) body.set(key, val); };
+        setIf('utm_source', params.get('utm_source'));
+        setIf('utm_medium', params.get('utm_medium'));
+        setIf('utm_campaign', params.get('utm_campaign'));
+        setIf('utm_term', params.get('utm_term'));
+        setIf('utm_content', params.get('utm_content'));
+        setIf('referrer', document.referrer);
+        setIf('page_path', window.location.pathname);
+
+        // Ensure recaptcha token exists if site key is configured
+        var siteKey = form.getAttribute('data-recaptcha-site-key');
+        if (siteKey && window.grecaptcha && typeof grecaptcha.execute === 'function') {
+          try {
+            const token = await grecaptcha.execute(siteKey, { action: 'contact' });
+            if (!body.get('recaptchaToken')) body.set('recaptchaToken', token || '');
+          } catch (_) {}
+        }
+
+        const urlBody = new URLSearchParams();
+        for (const [k, v] of body.entries()) urlBody.append(k, v);
+
+        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        const res = await fetch('/api/leads/berlin-investor-strategy', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            ...(csrfMeta ? { 'x-csrf-token': csrfMeta.getAttribute('content') } : {})
+          },
+          body: urlBody.toString()
+        });
+
+        const data = await res.json().catch(() => ({ success: false }));
+        if (!res.ok || !data.success) {
+          throw new Error((data && data.message) || 'Unable to submit. Please try again.');
+        }
+
+        if (window.analytics && window.analytics.trackFormSubmit) {
+          window.analytics.trackFormSubmit('berlin_investor_strategy_form', null, null);
+        }
+
+        messageEl.classList.add('success');
+        messageEl.textContent = 'Thank you. Our team will contact you shortly.';
+        form.reset();
+      } catch (err) {
+        messageEl.classList.add('error');
+        messageEl.textContent = err.message || 'Something went wrong. Please try again later.';
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  })();
+</script>
