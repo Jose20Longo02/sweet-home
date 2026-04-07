@@ -309,18 +309,27 @@
     padding: 70px 34px 40px;
     display: grid;
     grid-template-columns: minmax(0, 1fr) 270px;
+    grid-template-areas:
+      "main accent"
+      "cta accent";
     gap: 44px;
-    align-items: end;
+    align-items: center;
   }
   .berlin-investor-hero__inner,
   .berlin-investor-hero__inner * {
     text-shadow: none !important;
   }
-  .berlin-investor-hero__main { max-width: 780px; }
+  .berlin-investor-hero__main {
+    grid-area: main;
+    max-width: 780px;
+    align-self: center;
+  }
   .berlin-investor-hero__accent {
+    grid-area: accent;
     display: grid;
     gap: 12px;
-    margin-bottom: 10px;
+    margin-bottom: 0;
+    align-self: center;
   }
   .berlin-investor-stat {
     position: relative;
@@ -377,7 +386,13 @@
     margin: 0 auto;
     border-bottom: 1px solid #dce9e1;
   }
-  .berlin-investor-hero__cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+  .berlin-investor-hero__cta {
+    grid-area: cta;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 0;
+  }
   .berlin-investor-hero__cta .btn {
     border-radius: 999px;
     padding: 10px 20px;
@@ -612,8 +627,13 @@
   @media (max-width: 992px) {
     .berlin-investor-hero__inner {
       grid-template-columns: 1fr;
+      grid-template-areas:
+        "main"
+        "accent"
+        "cta";
       gap: 24px;
       padding: 46px 24px 26px;
+      align-items: start;
     }
     .berlin-investor-hero__accent {
       max-width: 100%;
