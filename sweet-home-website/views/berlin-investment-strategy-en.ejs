@@ -119,69 +119,6 @@
     </div>
   </section>
 
-  <section id="lead-cta" class="owners-lead section">
-    <h2 id="investor-form-heading">Request strategy details</h2>
-    <div class="lead-grid">
-      <form
-        id="berlinInvestorStrategyForm"
-        class="lead-form lead-form-centered"
-        action="/api/leads/berlin-investor-strategy"
-        method="post"
-        novalidate
-        <% if (process.env.RECAPTCHA_SITE_KEY) { %> data-recaptcha-site-key="<%= process.env.RECAPTCHA_SITE_KEY %>" <% } %>
-      >
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-        <% if (process.env.RECAPTCHA_SITE_KEY) { %>
-          <input type="hidden" name="recaptchaToken" id="recaptchaTokenInvestorStrategy" />
-        <% } %>
-        <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
-
-        <div class="form-group">
-          <label for="fullName">Full name*</label>
-          <input id="fullName" name="name" type="text" required aria-required="true" placeholder="Full name*">
-        </div>
-        <div class="row-2">
-          <div class="form-group">
-            <label for="countryCode">Country code*</label>
-            <input id="countryCode" name="countryCode" type="text" required aria-required="true" placeholder="+49">
-          </div>
-          <div class="form-group">
-            <label for="phone">Phone number*</label>
-            <input id="phone" name="phone" type="tel" required aria-required="true" placeholder="Phone number*" inputmode="tel">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="email">Email*</label>
-          <input id="email" name="email" type="email" required aria-required="true" placeholder="Email*">
-        </div>
-        <div class="form-group">
-          <label for="language">Preferred language</label>
-          <select id="language" name="language">
-            <option value="">Select language</option>
-            <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
-              <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
-            <% }) %>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="message">Message (optional)</label>
-          <input id="message" name="message" type="text" placeholder="Tell us your investment goals, budget range, or timeline.">
-        </div>
-
-        <input type="hidden" name="utm_source" />
-        <input type="hidden" name="utm_medium" />
-        <input type="hidden" name="utm_campaign" />
-        <input type="hidden" name="utm_term" />
-        <input type="hidden" name="utm_content" />
-        <input type="hidden" name="referrer" />
-        <input type="hidden" name="page_path" />
-
-        <button type="submit" class="btn-submit">Contact us</button>
-        <p class="form-status" role="status" aria-live="polite" style="display:none"></p>
-      </form>
-    </div>
-  </section>
-
   <section class="section featured berlin-featured" aria-labelledby="campaign-properties-heading">
     <h2 id="campaign-properties-heading" class="berlin-featured__title">Selected Berlin opportunities</h2>
     <div class="berlin-featured__grid" id="investorRecommended">
@@ -278,6 +215,69 @@
       <p class="berlin-neighborhoods__source">
         Important note on the "45% cheaper" trigger: it is a campaign benchmark based on selected occupied-vs-vacant comparisons and is not a guaranteed discount for every unit.
       </p>
+    </div>
+  </section>
+
+  <section id="lead-cta" class="owners-lead section">
+    <h2 id="investor-form-heading">Request strategy details</h2>
+    <div class="lead-grid">
+      <form
+        id="berlinInvestorStrategyForm"
+        class="lead-form lead-form-centered"
+        action="/api/leads/berlin-investor-strategy"
+        method="post"
+        novalidate
+        <% if (process.env.RECAPTCHA_SITE_KEY) { %> data-recaptcha-site-key="<%= process.env.RECAPTCHA_SITE_KEY %>" <% } %>
+      >
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <% if (process.env.RECAPTCHA_SITE_KEY) { %>
+          <input type="hidden" name="recaptchaToken" id="recaptchaTokenInvestorStrategy" />
+        <% } %>
+        <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
+
+        <div class="form-group">
+          <label for="fullName">Full name*</label>
+          <input id="fullName" name="name" type="text" required aria-required="true" placeholder="Full name*">
+        </div>
+        <div class="row-2">
+          <div class="form-group">
+            <label for="countryCode">Country code*</label>
+            <input id="countryCode" name="countryCode" type="text" required aria-required="true" placeholder="+49">
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone number*</label>
+            <input id="phone" name="phone" type="tel" required aria-required="true" placeholder="Phone number*" inputmode="tel">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email*</label>
+          <input id="email" name="email" type="email" required aria-required="true" placeholder="Email*">
+        </div>
+        <div class="form-group">
+          <label for="language">Preferred language</label>
+          <select id="language" name="language">
+            <option value="">Select language</option>
+            <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
+              <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Message (optional)</label>
+          <input id="message" name="message" type="text" placeholder="Tell us your investment goals, budget range, or timeline.">
+        </div>
+
+        <input type="hidden" name="utm_source" />
+        <input type="hidden" name="utm_medium" />
+        <input type="hidden" name="utm_campaign" />
+        <input type="hidden" name="utm_term" />
+        <input type="hidden" name="utm_content" />
+        <input type="hidden" name="referrer" />
+        <input type="hidden" name="page_path" />
+
+        <button type="submit" class="btn-submit">Contact us</button>
+        <p class="form-status" role="status" aria-live="polite" style="display:none"></p>
+      </form>
     </div>
   </section>
 </div>
