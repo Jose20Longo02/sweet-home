@@ -78,7 +78,7 @@
         </ol>
       </div>
       <p class="section-inline-cta">
-        <a href="#lead-cta" class="section-inline-cta__link">Get personalized advice on this strategy</a>
+        <a href="#lead-cta" class="btn btn-primary section-inline-cta__link">Get personalized advice on this strategy</a>
       </p>
     </div>
   </section>
@@ -120,7 +120,7 @@
         </article>
       </div>
       <p class="section-inline-cta">
-        <a href="#lead-cta" class="section-inline-cta__link">Find out if this strategy fits your profile</a>
+        <a href="#lead-cta" class="btn btn-primary section-inline-cta__link">Find out if this strategy fits your profile</a>
       </p>
     </div>
   </section>
@@ -193,7 +193,7 @@
       </p>
     <% } %>
     <p class="section-inline-cta">
-      <a href="#lead-cta" class="section-inline-cta__link">Get personalized advice on selected opportunities</a>
+      <a href="#lead-cta" class="btn btn-primary section-inline-cta__link">Get personalized advice on selected opportunities</a>
     </p>
   </section>
 
@@ -225,7 +225,7 @@
         Important note on the "45% cheaper" trigger: it is a campaign benchmark based on selected occupied-vs-vacant comparisons and is not a guaranteed discount for every unit.
       </p>
       <p class="section-inline-cta">
-        <a href="#lead-cta" class="section-inline-cta__link">Still have questions? Speak with an advisor</a>
+        <a href="#lead-cta" class="btn btn-primary section-inline-cta__link">Still have questions? Speak with an advisor</a>
       </p>
     </div>
   </section>
@@ -292,7 +292,7 @@
       </form>
     </div>
     <p class="section-inline-cta section-inline-cta--light">
-      <a href="#selected-berlin-opportunities" class="section-inline-cta__link">Learn more about the strategy through available properties</a>
+      <a href="#selected-berlin-opportunities" class="btn btn-primary section-inline-cta__link">Learn more about the strategy through available properties</a>
     </p>
   </section>
 </div>
@@ -600,28 +600,18 @@
   }
   .section-inline-cta {
     margin: 18px 0 0;
+    text-align: center;
   }
   .section-inline-cta__link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
+    min-height: 42px;
+    padding: 10px 20px;
     border-radius: 999px;
-    border: 1px solid #c6ddce;
-    background: #f5fbf7;
-    color: #22613f;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 0.9rem;
-    line-height: 1.2;
+    color: #ffffff;
   }
-  .section-inline-cta__link:hover {
-    background: #edf7f0;
-    color: #1a4c31;
-  }
-  .section-inline-cta--light .section-inline-cta__link {
-    background: #ffffff;
-    border-color: #d3e2d7;
+  .section-inline-cta__link:hover,
+  .section-inline-cta__link:focus,
+  .section-inline-cta__link:active {
+    color: #ffffff;
   }
   @media (max-width: 992px) {
     .berlin-investor-hero__inner {
