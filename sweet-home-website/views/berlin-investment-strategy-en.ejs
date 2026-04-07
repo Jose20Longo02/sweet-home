@@ -75,23 +75,30 @@
     </div>
   </section>
 
-  <section class="berlin-content section" aria-labelledby="strategy-fit-heading">
+  <section class="berlin-content section investor-fit" aria-labelledby="strategy-fit-heading">
     <div class="berlin-content__inner">
-      <h2 id="strategy-fit-heading" class="berlin-content__title">Who this strategy is for</h2>
-      <div class="berlin-content__grid">
-        <article class="berlin-content__card">
+      <div class="investor-fit__intro">
+        <h2 id="strategy-fit-heading" class="berlin-content__title">Who this strategy is for</h2>
+        <p class="berlin-content__intro">This model is ideal for buyers who prioritize disciplined entry pricing, stable income profile, and long-horizon positioning over short-term speculation.</p>
+      </div>
+      <div class="investor-fit__grid">
+        <article class="investor-fit__card">
+          <span class="investor-fit__tag">Profile 01</span>
           <h3>Long-term investors</h3>
           <p>Best suited for buyers focused on resilient 5-10+ year positioning rather than fast speculative flips.</p>
         </article>
-        <article class="berlin-content__card">
+        <article class="investor-fit__card">
+          <span class="investor-fit__tag">Profile 02</span>
           <h3>Cash-flow oriented profiles</h3>
           <p>Relevant for investors who prioritize immediate rental income and disciplined acquisition pricing at entry.</p>
         </article>
-        <article class="berlin-content__card">
+        <article class="investor-fit__card">
+          <span class="investor-fit__tag">Profile 03</span>
           <h3>Cross-border buyers</h3>
           <p>Designed for international clients needing a guided process with local support across legal, technical, and negotiation stages.</p>
         </article>
-        <article class="berlin-content__card">
+        <article class="investor-fit__card">
+          <span class="investor-fit__tag">Profile 04</span>
           <h3>Risk-aware allocators</h3>
           <p>Ideal for those who prefer transparent assumptions, documented tenancy context, and realistic underwriting over aggressive promises.</p>
         </article>
@@ -427,6 +434,59 @@
   .investor-strategy-explainer__notes-list li + li {
     margin-top: 12px;
   }
+  .investor-fit {
+    padding-top: 30px;
+    padding-bottom: 10px;
+  }
+  .investor-fit__intro {
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #d5e5db;
+  }
+  .investor-fit .berlin-content__title {
+    margin-bottom: 10px;
+    font-size: clamp(1.75rem, 2.6vw, 2.2rem);
+    line-height: 1.15;
+  }
+  .investor-fit__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .investor-fit__card {
+    border: 1px solid #d4e4da;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff 0%, #f4faf6 100%);
+    padding: 18px 18px 16px;
+    box-shadow: 0 10px 24px rgba(18, 40, 27, 0.05);
+  }
+  .investor-fit__tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    min-height: 24px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid #c7dece;
+    background: #f6fbf8;
+    color: #2d6a46;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .investor-fit__card h3 {
+    margin: 0 0 8px;
+    color: #152233;
+    font-size: 1.04rem;
+  }
+  .investor-fit__card p {
+    margin: 0;
+    color: #4b5b6f;
+    font-size: 0.94rem;
+    line-height: 1.55;
+  }
   .investor-status-badge {
     margin: 10px 0 0;
     display: inline-block;
@@ -451,6 +511,7 @@
       padding: 8px 24px 20px;
     }
     .investor-strategy-explainer__grid { grid-template-columns: 1fr; }
+    .investor-fit__grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
     .berlin-investor-hero--luxury { margin-top: 0; }
