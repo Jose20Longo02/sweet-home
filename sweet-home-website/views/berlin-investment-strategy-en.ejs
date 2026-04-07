@@ -274,24 +274,37 @@
     margin-bottom: 10px;
   }
   .berlin-investor-stat {
-    border: 1px solid #ded5c5;
-    background: rgba(255, 255, 255, 0.72);
-    border-radius: 10px;
-    padding: 12px 14px;
+    position: relative;
+    border: 1px solid #ddd2bf;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(250, 247, 240, 0.96) 100%);
+    border-radius: 12px;
+    padding: 14px 15px 13px;
+    box-shadow: 0 8px 18px rgba(27, 35, 24, 0.06);
+    overflow: hidden;
+  }
+  .berlin-investor-stat::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, #2ea862 0%, #7cc796 100%);
   }
   .berlin-investor-stat__value {
-    margin: 0 0 4px;
-    font-size: clamp(1.45rem, 2.1vw, 1.9rem);
-    line-height: 1.05;
-    color: #111827;
+    margin: 0 0 5px;
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
+    line-height: 1;
+    color: #121826;
     font-weight: 700;
     font-family: 'Playfair Display', Georgia, serif;
+    letter-spacing: -0.01em;
   }
   .berlin-investor-stat__label {
     margin: 0;
-    color: #4b5563;
-    font-size: 0.84rem;
-    line-height: 1.4;
+    color: #4a5565;
+    font-size: 0.82rem;
+    line-height: 1.45;
   }
   .berlin-investor-hero__baseline {
     max-width: 1200px;
