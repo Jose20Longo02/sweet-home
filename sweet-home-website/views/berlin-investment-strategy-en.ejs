@@ -35,36 +35,34 @@
     <div class="berlin-investor-hero-spacer__line"></div>
   </section>
 
-  <section class="berlin-content section" aria-labelledby="why-strategy-heading">
+  <section class="berlin-content section investor-why" aria-labelledby="why-strategy-heading">
     <div class="berlin-content__inner">
-      <h2 id="why-strategy-heading" class="berlin-content__title">Why this strategy is attracting investor attention</h2>
-      <p class="berlin-content__intro">
-        Berlin has strong structural demand and a transparent legal framework for residential rentals. The strategy is built on one key idea: buy occupied assets with a discount versus vacant comparables, collect cash flow from day one, and hold through the long cycle.
-      </p>
-      <div class="berlin-neighborhoods__grid berlin-investor-benefits">
-        <article class="berlin-neighborhood-card">
-          <div class="berlin-neighborhood-card__panel berlin-neighborhood-card__panel--open">
-            <h3>Acquisition discount edge</h3>
-            <p>The strategy targets occupied apartments priced materially below vacant equivalents. The campaign benchmark communicates a potential 45% gap depending on tenant profile, building condition, and micro-location.</p>
-          </div>
+      <div class="investor-why__intro">
+        <h2 id="why-strategy-heading" class="berlin-content__title">Why this strategy is attracting investor attention</h2>
+        <p class="berlin-content__intro">
+          Berlin combines structural housing demand, transparent rental regulation, and resilient tenant depth. The strategy focuses on one disciplined thesis: enter through tenant-occupied assets at the right price, capture income from day one, and hold through long cycles.
+        </p>
+      </div>
+      <div class="investor-why__grid">
+        <article class="investor-why__card">
+          <span class="investor-why__badge">01</span>
+          <h3>Acquisition discount edge</h3>
+          <p>Target assets are benchmarked against vacant comparables, aiming for stronger entry pricing and a more defensive cost basis.</p>
         </article>
-        <article class="berlin-neighborhood-card">
-          <div class="berlin-neighborhood-card__panel berlin-neighborhood-card__panel--open">
-            <h3>Immediate cash-flow profile</h3>
-            <p>Unlike vacant-entry strategies, occupancy means rental income is typically already in place, reducing initial vacancy risk and supporting financing comfort from the start.</p>
-          </div>
+        <article class="investor-why__card">
+          <span class="investor-why__badge">02</span>
+          <h3>Immediate cash-flow profile</h3>
+          <p>Tenant-occupied entry typically means rent generation starts immediately, reducing early vacancy pressure after acquisition.</p>
         </article>
-        <article class="berlin-neighborhood-card">
-          <div class="berlin-neighborhood-card__panel berlin-neighborhood-card__panel--open">
-            <h3>Long-term demand support</h3>
-            <p>Berlin's housing shortage and stable renter base support long-term demand. This helps protect the hold strategy while investors optimize asset quality over time.</p>
-          </div>
+        <article class="investor-why__card">
+          <span class="investor-why__badge">03</span>
+          <h3>Long-term demand support</h3>
+          <p>Berlin's housing shortage and persistent renter demand support long-horizon positioning in quality micro-locations.</p>
         </article>
-        <article class="berlin-neighborhood-card">
-          <div class="berlin-neighborhood-card__panel berlin-neighborhood-card__panel--open">
-            <h3>Rules-based execution</h3>
-            <p>The process uses strict filters: occupancy documentation, legal checks, building fundamentals, realistic rent assumptions, and conservative purchase underwriting.</p>
-          </div>
+        <article class="investor-why__card">
+          <span class="investor-why__badge">04</span>
+          <h3>Rules-based execution</h3>
+          <p>Each opportunity follows strict screening: occupancy files, legal checks, building quality, and conservative underwriting.</p>
         </article>
       </div>
     </div>
@@ -385,8 +383,49 @@
     font-weight: 600;
   }
   .berlin-investor-btn-secondary:hover { background: #f8faf8; color: #1f2a1f; }
-  .berlin-investor-benefits .berlin-neighborhood-card__panel { display: block; }
-  .berlin-neighborhood-card__panel--open { padding: 22px; }
+  .investor-why { padding-top: 26px; }
+  .investor-why__intro {
+    margin-bottom: 20px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #e6e0d3;
+  }
+  .investor-why__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .investor-why__card {
+    position: relative;
+    border: 1px solid #e4dccf;
+    background: linear-gradient(180deg, #ffffff 0%, #faf7f1 100%);
+    border-radius: 12px;
+    padding: 18px 18px 16px;
+  }
+  .investor-why__badge {
+    display: inline-flex;
+    min-width: 36px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 1px solid #d5ccb8;
+    color: #455064;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .investor-why__card h3 {
+    margin: 0 0 8px;
+    font-size: 1.02rem;
+    color: #1a202c;
+  }
+  .investor-why__card p {
+    margin: 0;
+    color: #4d5a6b;
+    font-size: 0.94rem;
+    line-height: 1.55;
+  }
   .metric-card .title { font-size: 1.7rem; font-weight: 800; }
   .metric-card .meta { min-height: 180px; }
   .investor-status-badge {
@@ -412,6 +451,7 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       padding: 8px 24px 20px;
     }
+    .investor-why__grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
     .berlin-investor-hero--luxury { margin-top: 0; }
