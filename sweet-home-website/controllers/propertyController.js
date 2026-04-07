@@ -3260,6 +3260,12 @@ exports.berlinInvestorStrategyPageEn = async (req, res, next) => {
       WHERE p.country = 'Germany'
         AND p.city = 'Berlin'
         AND p.status = 'active'
+        AND (
+          p.occupancy_type = 'Long-Term Rented'
+          OR LOWER(COALESCE(p.occupancy_type, '')) LIKE '%long-term rented%'
+          OR LOWER(COALESCE(p.occupancy_type, '')) LIKE '%long term rented%'
+        )
+        AND COALESCE(p.rental_status, 'rented') = 'rented'
       ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
       LIMIT 9
     `;
