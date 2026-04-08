@@ -749,6 +749,8 @@
     transform: translateX(-50%);
     background: linear-gradient(180deg, rgba(96, 141, 219, 0.12) 0%, rgba(125, 166, 236, 0.85) 18%, rgba(125, 166, 236, 0.85) 82%, rgba(96, 141, 219, 0.12) 100%);
     box-shadow: 0 0 18px rgba(88, 131, 205, 0.35);
+    z-index: 2;
+    pointer-events: none;
   }
   .strategy-mechanics__point {
     position: relative;
@@ -775,6 +777,8 @@
     box-shadow: 0 16px 28px rgba(2, 8, 20, 0.48);
     padding: 20px 20px 18px;
     transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    z-index: 1;
   }
   .strategy-mechanics__point:hover .strategy-mechanics__card {
     transform: translateY(-2px);
