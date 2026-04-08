@@ -93,68 +93,78 @@
         </p>
       </div>
 
-      <div class="strategy-calculator__layout">
-        <article class="strategy-calculator__panel">
-          <h3>Your household and cash flow</h3>
-          <div class="strategy-calculator__fields">
-            <div class="strategy-calculator__field">
-              <label for="calcSalary1">Net monthly salary (EUR)</label>
-              <input id="calcSalary1" type="number" min="0" step="50" value="0" inputmode="decimal">
-            </div>
-            <div class="strategy-calculator__field">
-              <label for="calcLoans">Current monthly loan payments (EUR)</label>
-              <input id="calcLoans" type="number" min="0" step="50" value="400" inputmode="decimal">
-            </div>
-            <div class="strategy-calculator__field">
-              <label for="calcInsurance">Private insurance (monthly, EUR)</label>
-              <input id="calcInsurance" type="number" min="0" step="50" value="200" inputmode="decimal">
-            </div>
-            <div class="strategy-calculator__field">
-              <label for="calcAdults">Adults in household</label>
-              <select id="calcAdults">
-                <option value="1">1 adult</option>
-                <option value="2" selected>2 adults</option>
-              </select>
-            </div>
-            <div class="strategy-calculator__field">
-              <label for="calcChildren">Children in household</label>
-              <input id="calcChildren" type="number" min="0" step="1" value="1" inputmode="numeric">
-            </div>
-          </div>
-        </article>
+      <div class="strategy-calculator__wizard" data-current-step="1">
+        <div class="strategy-calculator__progress" role="list" aria-label="Calculator steps">
+          <span class="strategy-calculator__progress-item is-active" data-step-indicator="1" role="listitem">1. Income</span>
+          <span class="strategy-calculator__progress-item" data-step-indicator="2" role="listitem">2. Household</span>
+          <span class="strategy-calculator__progress-item" data-step-indicator="3" role="listitem">3. Property</span>
+        </div>
 
-        <article class="strategy-calculator__panel">
-          <h3>Property and financing assumptions</h3>
-          <div class="strategy-calculator__fields">
-            <div class="strategy-calculator__field">
-              <label for="calcPropertyPrice">Property price (EUR)</label>
-              <input id="calcPropertyPrice" type="number" min="0" step="1000" value="300000" inputmode="decimal">
+        <div class="strategy-calculator__steps">
+          <article class="strategy-calculator__panel strategy-calculator__step is-active" data-step="1">
+            <h3>Step 1: Income and fixed monthly costs</h3>
+            <div class="strategy-calculator__fields">
+              <div class="strategy-calculator__field">
+                <label for="calcSalary1">Net monthly salary (EUR)</label>
+                <input id="calcSalary1" type="number" min="0" step="50" value="0" inputmode="decimal">
+              </div>
+              <div class="strategy-calculator__field">
+                <label for="calcLoans">Current monthly loan payments (EUR)</label>
+                <input id="calcLoans" type="number" min="0" step="50" value="400" inputmode="decimal">
+              </div>
+              <div class="strategy-calculator__field">
+                <label for="calcInsurance">Private insurance (monthly, EUR)</label>
+                <input id="calcInsurance" type="number" min="0" step="50" value="200" inputmode="decimal">
+              </div>
             </div>
-            <div class="strategy-calculator__field">
-              <label for="calcEquityPct">Upfront payment (% of property value, minimum 10%)</label>
-              <input id="calcEquityPct" type="number" min="0" max="100" step="1" value="10" inputmode="decimal">
+          </article>
+
+          <article class="strategy-calculator__panel strategy-calculator__step" data-step="2" hidden>
+            <h3>Step 2: Household expenses profile</h3>
+            <p class="strategy-calculator__step-hint">Living-cost model: 1 adult = EUR 1,200 | 2 adults = EUR 1,600 | each child = +EUR 200.</p>
+            <div class="strategy-calculator__fields">
+              <div class="strategy-calculator__field">
+                <label for="calcAdults">Adults in household</label>
+                <select id="calcAdults">
+                  <option value="1">1 adult</option>
+                  <option value="2" selected>2 adults</option>
+                </select>
+              </div>
+              <div class="strategy-calculator__field">
+                <label for="calcChildren">Children in household</label>
+                <input id="calcChildren" type="number" min="0" step="1" value="1" inputmode="numeric">
+              </div>
             </div>
-            <div class="strategy-calculator__field">
-              <label for="calcDebtServiceRate">Estimated annual debt-service rate (%)</label>
-              <input id="calcDebtServiceRate" type="number" min="0" max="20" step="0.1" value="6" inputmode="decimal">
+          </article>
+
+          <article class="strategy-calculator__panel strategy-calculator__step" data-step="3" hidden>
+            <h3>Step 3: Property and financing assumptions</h3>
+            <div class="strategy-calculator__fields">
+              <div class="strategy-calculator__field">
+                <label for="calcPropertyPrice">Property price (EUR)</label>
+                <input id="calcPropertyPrice" type="number" min="0" step="1000" value="300000" inputmode="decimal">
+              </div>
+              <div class="strategy-calculator__field">
+                <label for="calcEquityPct">Upfront payment (% of property value, minimum 10%)</label>
+                <input id="calcEquityPct" type="number" min="0" max="100" step="1" value="10" inputmode="decimal">
+              </div>
+              <div class="strategy-calculator__field">
+                <label for="calcDebtServiceRate">Estimated annual debt-service rate (%)</label>
+                <input id="calcDebtServiceRate" type="number" min="0" max="20" step="0.1" value="6" inputmode="decimal">
+              </div>
             </div>
-            <div class="strategy-calculator__field strategy-calculator__field--readonly">
-              <label>Purchase extra costs (10% of price)</label>
-              <p id="calcExtraCosts">EUR 0</p>
-            </div>
-            <div class="strategy-calculator__field strategy-calculator__field--readonly">
-              <label>Total equity required (extra costs + own equity)</label>
-              <p id="calcTotalEquity">EUR 0</p>
-            </div>
-            <div class="strategy-calculator__field strategy-calculator__field--readonly">
-              <label>Mortgage amount</label>
-              <p id="calcMortgage">EUR 0</p>
-            </div>
-          </div>
-        </article>
+          </article>
+        </div>
+
+        <div class="strategy-calculator__actions">
+          <button type="button" id="calcPrevBtn" class="strategy-calculator__btn strategy-calculator__btn--ghost">Back</button>
+          <button type="button" id="calcNextBtn" class="strategy-calculator__btn strategy-calculator__btn--primary">Next</button>
+          <button type="button" id="calcRunBtn" class="strategy-calculator__btn strategy-calculator__btn--primary" hidden>Calculate suitability</button>
+        </div>
       </div>
 
-      <div class="strategy-calculator__results" aria-live="polite">
+      <div id="strategyCalculatorResults" class="strategy-calculator__results-wrap" hidden>
+        <div class="strategy-calculator__results" aria-live="polite">
         <div class="strategy-calculator__result">
           <span class="strategy-calculator__result-label">Total monthly income</span>
           <strong id="calcTotalIncome">EUR 0</strong>
@@ -187,10 +197,26 @@
           <span class="strategy-calculator__result-label">Suitability check</span>
           <strong id="calcQualificationStatus">Not qualified yet</strong>
         </div>
+        </div>
+
+        <div class="strategy-calculator__derived">
+          <div class="strategy-calculator__derived-item">
+            <span class="strategy-calculator__result-label">Purchase extra costs (10% of price)</span>
+            <strong id="calcExtraCosts">EUR 0</strong>
+          </div>
+          <div class="strategy-calculator__derived-item">
+            <span class="strategy-calculator__result-label">Total equity required (extra costs + upfront payment)</span>
+            <strong id="calcTotalEquity">EUR 0</strong>
+          </div>
+          <div class="strategy-calculator__derived-item">
+            <span class="strategy-calculator__result-label">Mortgage amount</span>
+            <strong id="calcMortgage">EUR 0</strong>
+          </div>
+        </div>
       </div>
 
       <p id="calcQualificationNote" class="strategy-calculator__note">
-        Qualification rule: you qualify when <strong>Geschätzt</strong> (estimated monthly payment) is lower than your <strong>final balance after expenses</strong>.
+        Complete the 3 steps and click <strong>Calculate suitability</strong> to see your personalized result.
       </p>
       <p class="section-inline-cta">
         <a href="#lead-cta" class="btn btn-primary section-inline-cta__link">Discuss your calculator result with an advisor</a>
@@ -692,23 +718,52 @@
     font-size: clamp(1.8rem, 2.9vw, 2.35rem);
     line-height: 1.15;
   }
-  .strategy-calculator__layout {
+  .strategy-calculator__wizard {
+    border: 1px solid #cde2d5;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #f6fbf8 100%);
+    box-shadow: 0 16px 34px rgba(19, 42, 28, 0.07);
+    padding: 20px;
+  }
+  .strategy-calculator__progress {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .strategy-calculator__progress-item {
+    border: 1px solid #d6e6dc;
+    border-radius: 999px;
+    padding: 7px 10px;
+    text-align: center;
+    color: #4b5b6f;
+    font-size: 0.78rem;
+    font-weight: 600;
+    background: #ffffff;
+  }
+  .strategy-calculator__progress-item.is-active {
+    border-color: #8bc7a2;
+    color: #134e34;
+    background: #eef8f1;
   }
   .strategy-calculator__panel {
     border: 1px solid #cfe3d7;
     border-radius: 14px;
-    background: linear-gradient(180deg, #ffffff 0%, #f4faf7 100%);
+    background: linear-gradient(180deg, #ffffff 0%, #f7fcf9 100%);
     padding: 18px;
-    box-shadow: 0 10px 24px rgba(19, 42, 28, 0.05);
+    box-shadow: 0 10px 24px rgba(19, 42, 28, 0.04);
   }
   .strategy-calculator__panel h3 {
     margin: 0 0 14px;
     color: #152233;
     font-size: 1rem;
     line-height: 1.3;
+  }
+  .strategy-calculator__step-hint {
+    margin: 0 0 14px;
+    color: #4b5b6f;
+    font-size: 0.84rem;
+    line-height: 1.5;
   }
   .strategy-calculator__fields {
     display: grid;
@@ -743,21 +798,71 @@
     border-color: #5ea978;
     box-shadow: 0 0 0 3px rgba(46, 168, 98, 0.15);
   }
-  .strategy-calculator__field--readonly {
-    background: #f8fcf9;
-    border: 1px solid #d7e8de;
-    border-radius: 10px;
-    padding: 8px 10px;
+  .strategy-calculator__actions {
+    margin-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
   }
-  .strategy-calculator__field--readonly p {
+  .strategy-calculator__btn {
+    border-radius: 999px;
+    min-height: 42px;
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .strategy-calculator__btn:hover {
+    transform: translateY(-1px);
+  }
+  .strategy-calculator__btn--primary {
+    background: #2ea862;
+    border-color: #2ea862;
+    color: #ffffff;
+    box-shadow: 0 8px 18px rgba(46, 168, 98, 0.28);
+  }
+  .strategy-calculator__btn--primary:hover,
+  .strategy-calculator__btn--primary:focus {
+    color: #ffffff;
+  }
+  .strategy-calculator__btn--ghost {
+    background: #ffffff;
+    border-color: #cdded3;
+    color: #1f2a1f;
+  }
+  .strategy-calculator__results-wrap {
+    margin-top: 18px;
+    border: 1px solid #cde2d5;
+    border-radius: 16px;
+    background: #ffffff;
+    padding: 14px;
+  }
+  .strategy-calculator__derived {
+    margin-top: 10px;
+    border-top: 1px solid #ddebe3;
+    padding-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .strategy-calculator__derived-item {
+    border: 1px solid #d5e5db;
+    border-radius: 10px;
+    background: #f8fcf9;
+    padding: 10px;
+  }
+  .strategy-calculator__derived-item strong {
     margin: 0;
     color: #152233;
     font-size: 1rem;
     font-weight: 700;
     line-height: 1.2;
+    display: block;
+    margin-top: 4px;
   }
   .strategy-calculator__results {
-    margin-top: 16px;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 10px;
@@ -794,9 +899,11 @@
   }
   .strategy-calculator__note {
     margin: 14px 0 0;
-    color: #4b5b6f;
+    color: #364152;
     font-size: 0.88rem;
     line-height: 1.6;
+    border-left: 3px solid #cfe3d7;
+    padding-left: 12px;
   }
   .investor-fit__intro {
     margin-bottom: 18px;
@@ -891,11 +998,23 @@
       padding: 8px 24px 20px;
     }
     .investor-strategy-explainer__grid { grid-template-columns: 1fr; }
-    .strategy-calculator__layout {
+    .strategy-calculator__wizard {
+      padding: 16px;
+    }
+    .strategy-calculator__progress {
       grid-template-columns: 1fr;
+    }
+    .strategy-calculator__actions {
+      flex-wrap: wrap;
+    }
+    .strategy-calculator__actions .strategy-calculator__btn {
+      flex: 1 1 auto;
     }
     .strategy-calculator__results {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .strategy-calculator__derived {
+      grid-template-columns: 1fr;
     }
     .investor-fit__item { grid-template-columns: 1fr; gap: 8px; }
   }
@@ -915,9 +1034,7 @@
     .berlin-investor-stat__label { font-size: 0.8rem; line-height: 1.4; }
     .investor-strategy-explainer .berlin-content__title { font-size: clamp(1.45rem, 6.6vw, 1.85rem); }
     .strategy-calculator .berlin-content__title { font-size: clamp(1.4rem, 6.2vw, 1.8rem); }
-    .strategy-calculator__panel {
-      padding: 14px;
-    }
+    .strategy-calculator__panel { padding: 14px; }
     .strategy-calculator__fields {
       grid-template-columns: 1fr;
     }
@@ -927,6 +1044,9 @@
     }
     .strategy-calculator__result {
       min-height: 74px;
+    }
+    .strategy-calculator__actions .strategy-calculator__btn {
+      width: 100%;
     }
     .investor-fit .berlin-content__title { font-size: clamp(1.4rem, 6vw, 1.75rem); }
     .section-inline-cta__link {
@@ -975,6 +1095,14 @@
 
     var calcRoot = document.getElementById('strategy-calculator');
     if (calcRoot) {
+      var wizard = calcRoot.querySelector('.strategy-calculator__wizard');
+      var steps = Array.prototype.slice.call(calcRoot.querySelectorAll('.strategy-calculator__step'));
+      var stepIndicators = Array.prototype.slice.call(calcRoot.querySelectorAll('[data-step-indicator]'));
+      var prevBtn = document.getElementById('calcPrevBtn');
+      var nextBtn = document.getElementById('calcNextBtn');
+      var runBtn = document.getElementById('calcRunBtn');
+      var resultsWrap = document.getElementById('strategyCalculatorResults');
+
       var salaryInput = document.getElementById('calcSalary1');
       var loansInput = document.getElementById('calcLoans');
       var insuranceInput = document.getElementById('calcInsurance');
@@ -999,10 +1127,31 @@
         qualificationNote: document.getElementById('calcQualificationNote'),
         qualificationCard: document.getElementById('calcQualificationStatus') ? document.getElementById('calcQualificationStatus').closest('.strategy-calculator__result--status') : null
       };
+      var currentStep = 1;
 
       function getLivingExpenses(adults, children) {
         var base = adults >= 2 ? 1600 : 1200;
         return base + (Math.max(children, 0) * 200);
+      }
+
+      function showStep(stepNumber) {
+        currentStep = Math.max(1, Math.min(steps.length, stepNumber));
+        if (wizard) wizard.setAttribute('data-current-step', String(currentStep));
+
+        steps.forEach(function (stepEl, idx) {
+          var active = (idx + 1) === currentStep;
+          stepEl.classList.toggle('is-active', active);
+          stepEl.hidden = !active;
+        });
+
+        stepIndicators.forEach(function (indicator) {
+          var step = parseInt(indicator.getAttribute('data-step-indicator') || '0', 10);
+          indicator.classList.toggle('is-active', step === currentStep);
+        });
+
+        if (prevBtn) prevBtn.hidden = currentStep === 1;
+        if (nextBtn) nextBtn.hidden = currentStep === steps.length;
+        if (runBtn) runBtn.hidden = currentStep !== steps.length;
       }
 
       function runCalculator() {
@@ -1046,13 +1195,45 @@
           output.qualificationCard.classList.toggle('is-qualified', qualifies);
         }
         if (output.qualificationNote) {
-          output.qualificationNote.innerHTML = qualifies
-            ? 'Result: <strong>Geschätzt is lower than your final balance after expenses</strong>, so this strategy can be suitable under the current assumptions.'
-            : 'Result: <strong>Geschätzt is higher than your final balance after expenses</strong>. Adjust equity, price, or debt-service assumptions to improve suitability.';
+          if (qualifies) {
+            output.qualificationNote.innerHTML = 'Result: <strong>Suitable under current assumptions.</strong> Geschätzt is lower than your final balance after expenses, which means your monthly capacity can cover the modeled payment.';
+          } else {
+            var shortfall = estimatedPayment - finalBalance;
+            var reasons = [];
+            if (finalBalance <= 0) {
+              reasons.push('your current monthly expenses are consuming most (or all) available income');
+            }
+            if (estimatedPayment > finalBalance) {
+              reasons.push('the estimated monthly payment is about <strong>' + formatEur(shortfall) + '</strong> above your available final balance');
+            }
+            if (equityPct < 10) {
+              reasons.push('upfront payment is below 10%, which can reduce financing strength');
+            }
+            output.qualificationNote.innerHTML = 'Result: <strong>Not suitable yet under current assumptions.</strong> Main reason(s): ' + reasons.join('; ') + '. You can improve this by increasing upfront payment, reducing property price, lowering other monthly obligations, or targeting better financing terms.';
+          }
         }
+
+        if (resultsWrap) resultsWrap.hidden = false;
       }
 
-      var allInputs = [
+      if (prevBtn) {
+        prevBtn.addEventListener('click', function () {
+          showStep(currentStep - 1);
+        });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function () {
+          showStep(currentStep + 1);
+        });
+      }
+      if (runBtn) {
+        runBtn.addEventListener('click', function () {
+          runCalculator();
+        });
+      }
+
+      // If users edit values after calculating, keep results hidden until they recalculate.
+      [
         salaryInput,
         loansInput,
         insuranceInput,
@@ -1061,14 +1242,16 @@
         propertyPriceInput,
         equityPctInput,
         debtServiceRateInput
-      ].filter(Boolean);
-
-      allInputs.forEach(function (input) {
-        input.addEventListener('input', runCalculator);
-        input.addEventListener('change', runCalculator);
+      ].filter(Boolean).forEach(function (input) {
+        input.addEventListener('input', function () {
+          if (resultsWrap) resultsWrap.hidden = true;
+          if (output.qualificationNote) {
+            output.qualificationNote.innerHTML = 'Inputs updated. Click <strong>Calculate suitability</strong> to refresh your result.';
+          }
+        });
       });
 
-      runCalculator();
+      showStep(1);
     }
 
     const form = document.getElementById('berlinInvestorStrategyForm');
