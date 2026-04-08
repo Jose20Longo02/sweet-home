@@ -13,8 +13,8 @@
     <div class="berlin-investor-hero__inner">
       <div class="berlin-investor-hero__main">
         <p class="berlin-hero__kicker">Sweet Home | Private Investor Series</p>
-        <h1 id="investor-hero-title" class="berlin-hero__title">Berlin Tenant-Occupied Entry Strategy</h1>
-        <p class="berlin-hero__description">A premium long-hold strategy to enter Berlin through tenant-occupied assets with immediate rental cash-flow potential and a disciplined value-focused approach.</p>
+        <h1 id="investor-hero-title" class="berlin-hero__title">Berlin Tenant-Occupied Strategy for Young Professionals (EUR 4,000+ net)</h1>
+        <p class="berlin-hero__description">If you are young and earning around EUR 4,000+ net per month, this strategy is designed to help you enter the market through tenant-occupied assets with discounted entry potential, day-one rent visibility, and long-term upside.</p>
       </div>
       <aside class="berlin-investor-hero__accent" aria-label="Strategy highlights">
         <div class="berlin-investor-stat">
@@ -105,7 +105,7 @@
             <div class="strategy-calculator__fields">
               <div class="strategy-calculator__field">
                 <label for="calcSalary1">Net monthly salary (EUR)</label>
-                <input id="calcSalary1" type="number" min="0" step="50" value="0" inputmode="decimal">
+                <input id="calcSalary1" type="number" min="0" step="50" value="4000" inputmode="decimal">
               </div>
               <div class="strategy-calculator__field">
                 <label for="calcLoans">Current monthly loan payments (EUR)</label>
@@ -227,7 +227,7 @@
     <div class="berlin-content__inner">
       <div class="investor-fit__intro">
         <h2 id="strategy-fit-heading" class="berlin-content__title">Who this strategy is for</h2>
-        <p class="berlin-content__intro">This model is ideal for buyers who prioritize discounted entry, stable income, tax efficiency, and long-term positioning over short-term speculation.</p>
+        <p class="berlin-content__intro">This model is built especially for young professionals around EUR 4,000+ net monthly income who want discounted entry, stable rent logic, and long-term positioning over short-term speculation.</p>
       </div>
       <div class="investor-fit__list">
         <article class="investor-fit__item">
@@ -240,9 +240,9 @@
         <article class="investor-fit__item">
           <div class="investor-fit__item-head">
             <span class="investor-fit__tag">02</span>
-            <h3>Young professionals with stable income</h3>
+            <h3>Young professionals earning around EUR 4,000+ net/month</h3>
           </div>
-          <p>Relevant for buyers who can afford to wait up to 10 years for self-use rights while benefiting from a lower entry price and potential tax advantages.</p>
+          <p>Relevant for buyers who can wait up to 10 years for potential self-use rights while benefiting from lower entry prices, financing optionality, and potential tax advantages.</p>
         </article>
         <article class="investor-fit__item">
           <div class="investor-fit__item-head">
@@ -267,6 +267,7 @@
 
   <section id="selected-berlin-opportunities" class="section featured berlin-featured" aria-labelledby="campaign-properties-heading">
     <h2 id="campaign-properties-heading" class="berlin-featured__title">Selected Berlin opportunities</h2>
+    <p class="berlin-featured__subtitle">We are currently focusing campaign traffic on selected tenant-occupied opportunities, including two priority project-style entries where lower entry pricing and long-term fundamentals can align.</p>
     <div class="berlin-featured__grid" id="investorRecommended">
       <% (recommendedProperties || []).forEach((property, idx) => { %>
         <%
@@ -962,6 +963,14 @@
     color: #1f3a8a;
     font-size: 0.8rem;
     font-weight: 600;
+  }
+  .berlin-featured__subtitle {
+    margin: 8px auto 18px;
+    max-width: 920px;
+    text-align: center;
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.6;
   }
   .section-inline-cta {
     margin: 30px 0 0;
