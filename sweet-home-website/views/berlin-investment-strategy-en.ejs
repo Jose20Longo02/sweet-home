@@ -148,19 +148,21 @@
         </div>
 
         <aside class="strategy-mechanics__map-panel" data-active-step="1" aria-label="Interactive strategy map">
-          <div class="strategy-mechanics__map-canvas" aria-hidden="true">
+          <div class="strategy-mechanics__map-canvas">
             <div class="strategy-mechanics__map-grid"></div>
             <div class="strategy-mechanics__map-line"></div>
             <div class="strategy-mechanics__map-pin is-active" data-pin-step="1"><span></span><small>Entry</small></div>
             <div class="strategy-mechanics__map-pin" data-pin-step="2"><span></span><small>Rent</small></div>
             <div class="strategy-mechanics__map-pin" data-pin-step="3"><span></span><small>Tax</small></div>
             <div class="strategy-mechanics__map-pin" data-pin-step="4"><span></span><small>Energy</small></div>
-          </div>
-          <div class="strategy-mechanics__map-content">
-            <p class="strategy-mechanics__map-kicker">Interactive strategy map</p>
-            <h3 id="strategyMechanicsMapTitle">Discounted Entry Zone</h3>
-            <p id="strategyMechanicsMapCopy">Tenant-occupied units can trade below vacant comparables because immediate self-use is limited and demand is narrower.</p>
-            <p id="strategyMechanicsMapChip" class="strategy-mechanics__map-chip">Typical signal: 30-40% entry discount in selected cases</p>
+            <div class="strategy-mechanics__map-overlay">
+              <div class="strategy-mechanics__map-content">
+                <p class="strategy-mechanics__map-kicker">Interactive strategy map</p>
+                <h3 id="strategyMechanicsMapTitle">Discounted Entry Zone</h3>
+                <p id="strategyMechanicsMapCopy">Tenant-occupied units can trade below vacant comparables because immediate self-use is limited and demand is narrower.</p>
+                <p id="strategyMechanicsMapChip" class="strategy-mechanics__map-chip">Typical signal: 30-40% entry discount in selected cases</p>
+              </div>
+            </div>
           </div>
         </aside>
       </div>
@@ -752,7 +754,7 @@
   }
   .strategy-mechanics__experience {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 440px;
+    grid-template-columns: minmax(0, 1fr) 540px;
     gap: 18px;
     align-items: start;
   }
@@ -811,7 +813,7 @@
   }
   .strategy-mechanics__map-canvas {
     position: relative;
-    height: 260px;
+    min-height: 520px;
     background:
       radial-gradient(circle at 18% 22%, rgba(45, 106, 70, 0.22), transparent 32%),
       radial-gradient(circle at 82% 78%, rgba(46, 168, 98, 0.18), transparent 34%),
@@ -857,10 +859,17 @@
     letter-spacing: 0.02em;
     font-weight: 600;
   }
-  .strategy-mechanics__map-pin[data-pin-step="1"] { top: 30px; left: 54%; }
-  .strategy-mechanics__map-pin[data-pin-step="2"] { top: 90px; left: 31%; }
-  .strategy-mechanics__map-pin[data-pin-step="3"] { top: 150px; left: 58%; }
-  .strategy-mechanics__map-pin[data-pin-step="4"] { top: 208px; left: 28%; }
+  .strategy-mechanics__map-pin[data-pin-step="1"] { top: 56px; left: 58%; }
+  .strategy-mechanics__map-pin[data-pin-step="2"] { top: 148px; left: 30%; }
+  .strategy-mechanics__map-pin[data-pin-step="3"] { top: 262px; left: 62%; }
+  .strategy-mechanics__map-pin[data-pin-step="4"] { top: 360px; left: 26%; }
+  .strategy-mechanics__map-overlay {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    z-index: 2;
+  }
   .strategy-mechanics__map-pin.is-active {
     opacity: 1;
     transform: scale(1.03);
@@ -872,6 +881,10 @@
   }
   .strategy-mechanics__map-content {
     padding: 14px 14px 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(124, 153, 194, 0.36);
+    background: linear-gradient(180deg, rgba(14, 26, 44, 0.88) 0%, rgba(10, 20, 36, 0.93) 100%);
+    backdrop-filter: blur(4px);
   }
   .strategy-mechanics__map-kicker {
     margin: 0 0 8px;
@@ -1235,6 +1248,9 @@
     .strategy-mechanics__map-panel {
       position: static;
     }
+    .strategy-mechanics__map-canvas {
+      min-height: 500px;
+    }
     .strategy-calculator__wizard {
       padding: 16px;
     }
@@ -1272,7 +1288,12 @@
     .investor-strategy-explainer .berlin-content__title { font-size: clamp(1.45rem, 6.6vw, 1.85rem); }
     .strategy-mechanics .berlin-content__title { font-size: clamp(1.4rem, 6.2vw, 1.8rem); }
     .strategy-mechanics__map-canvas {
-      height: 220px;
+      min-height: 420px;
+    }
+    .strategy-mechanics__map-overlay {
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
     }
     .strategy-calculator .berlin-content__title { font-size: clamp(1.4rem, 6.2vw, 1.8rem); }
     .strategy-calculator__panel { padding: 14px; }
