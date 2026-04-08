@@ -337,12 +337,29 @@ app.use((req, res, next) => {
   const isBlogDetail = /^\/blog\/[^/]+$/.test(req.path);
   const isDetailPage = isPropertyDetail || isProjectDetail || isBlogDetail;
   if (isDetailPage) {
+    const referer = String(req.get('referer') || '');
+    const host = req.get('host');
+    let explicitSwitchToDe = false;
+    let refererLang = '';
+    try {
+      const refUrl = referer ? new URL(referer) : null;
+      const sameHost = !!(refUrl && host && refUrl.host === host);
+      if (sameHost) {
+        const refPath = String(refUrl.pathname || '/');
+        if (refPath === '/en' || refPath.startsWith('/en/')) refererLang = 'en';
+        else if (refPath === '/es' || refPath.startsWith('/es/')) refererLang = 'es';
+        const refPathWithoutLocale = refPath.replace(/^\/(en|es)(?=\/|$)/, '') || '/';
+        // If the referer is the same page with only /en or /es prefix removed,
+        // this is an explicit language switch to DE and must not be redirected back.
+        if (refererLang && refPathWithoutLocale === req.path) explicitSwitchToDe = true;
+      }
+    } catch (_) { /* ignore malformed referer */ }
+    if (explicitSwitchToDe) return next();
+
     const cLang = (req.cookies && req.cookies.lang) ? String(req.cookies.lang).toLowerCase().slice(0, 2) : '';
     let chosenLang = (cLang === 'en' || cLang === 'es') ? cLang : '';
     if (!chosenLang) {
       // Fallback to referer locale so opening a detail from /en/* or /es/* keeps language
-      const referer = String(req.get('referer') || '');
-      const host = req.get('host');
       try {
         const refUrl = referer ? new URL(referer) : null;
         const sameHost = !!(refUrl && host && refUrl.host === host);
