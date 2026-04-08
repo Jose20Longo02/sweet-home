@@ -83,6 +83,66 @@
     </div>
   </section>
 
+  <section class="berlin-content section strategy-mechanics" aria-labelledby="strategy-mechanics-heading">
+    <div class="berlin-content__inner">
+      <div class="strategy-mechanics__intro">
+        <h2 id="strategy-mechanics-heading" class="berlin-content__title">What this strategy actually is, and why it works</h2>
+        <p class="berlin-content__intro">
+          This strategy combines tenant-occupied entry, immediate rent visibility, and tax/energy-efficiency logic. The advantage is not one single element, but how these elements work together over time.
+        </p>
+      </div>
+
+      <div class="strategy-mechanics__grid">
+        <article class="strategy-mechanics__card">
+          <span class="strategy-mechanics__index">01</span>
+          <h3>Why a 30-40% discount can happen</h3>
+          <p>Tenant-occupied units can trade below comparable vacant units because immediate self-use is limited and buyer demand is narrower. Lower competition can translate into lower entry pricing.</p>
+        </article>
+        <article class="strategy-mechanics__card">
+          <span class="strategy-mechanics__index">02</span>
+          <h3>Why income can start from day one</h3>
+          <p>A tenant is already in place, so rent can already be flowing when you acquire the property. That can provide immediate monthly cash-flow visibility.</p>
+        </article>
+        <article class="strategy-mechanics__card">
+          <span class="strategy-mechanics__index">03</span>
+          <h3>Where tax benefits come from</h3>
+          <p>For many landlord profiles in Germany, interest and depreciation can be deductible. Depending on income and structure, this can improve net after-tax performance.</p>
+        </article>
+        <article class="strategy-mechanics__card">
+          <span class="strategy-mechanics__index">04</span>
+          <h3>Where energy and financing benefits come from</h3>
+          <p>Eligible properties and upgrade paths can support better financing conditions and stronger long-term quality through energy-efficiency programs and lower running risks.</p>
+        </article>
+      </div>
+
+      <div class="strategy-mechanics__timeline" aria-label="Strategy flow">
+        <div class="strategy-mechanics__step">
+          <strong>Discounted entry</strong>
+          <span>Tenant-occupied price vs vacant comparables</span>
+        </div>
+        <div class="strategy-mechanics__step">
+          <strong>Immediate rent logic</strong>
+          <span>Existing tenancy supports day-one rental income</span>
+        </div>
+        <div class="strategy-mechanics__step">
+          <strong>Tax + financing structure</strong>
+          <span>Debt service and deductions shape net outcome</span>
+        </div>
+        <div class="strategy-mechanics__step">
+          <strong>Long-term optionality</strong>
+          <span>Hold for value, efficiency, and potential self-use rights</span>
+        </div>
+      </div>
+
+      <p class="strategy-mechanics__disclaimer">
+        Important: discount ranges, tax impact, and financing outcomes depend on each property and buyer profile. This page is informational and not legal or tax advice.
+      </p>
+      <p class="section-inline-cta">
+        <a href="#strategy-calculator" class="btn btn-primary section-inline-cta__link">Check if this strategy fits your profile</a>
+      </p>
+    </div>
+  </section>
+
   <section id="strategy-calculator" class="berlin-content section strategy-calculator" aria-labelledby="strategy-calculator-heading">
     <div class="berlin-content__inner">
       <div class="strategy-calculator__intro">
@@ -645,6 +705,91 @@
   .investor-strategy-explainer__notes-list li + li {
     margin-top: 12px;
   }
+  .strategy-mechanics {
+    padding-top: 24px;
+    padding-bottom: 8px;
+  }
+  .strategy-mechanics__intro {
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #d7e6dc;
+  }
+  .strategy-mechanics .berlin-content__title {
+    margin-bottom: 10px;
+    font-size: clamp(1.8rem, 2.8vw, 2.25rem);
+    line-height: 1.15;
+  }
+  .strategy-mechanics__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .strategy-mechanics__card {
+    border: 1px solid #d2e3d8;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #ffffff 0%, #f6fbf8 100%);
+    padding: 16px;
+  }
+  .strategy-mechanics__index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    border: 1px solid #c1dacb;
+    color: #2d6a46;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .strategy-mechanics__card h3 {
+    margin: 0 0 8px;
+    color: #152233;
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+  .strategy-mechanics__card p {
+    margin: 0;
+    color: #4b5b6f;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  .strategy-mechanics__timeline {
+    margin-top: 14px;
+    border: 1px solid #d2e3d8;
+    border-radius: 12px;
+    background: #ffffff;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .strategy-mechanics__step {
+    border-radius: 10px;
+    background: #f7fcf9;
+    border: 1px solid #d9e8df;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .strategy-mechanics__step strong {
+    color: #163027;
+    font-size: 0.84rem;
+    line-height: 1.35;
+  }
+  .strategy-mechanics__step span {
+    color: #4f5f73;
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+  .strategy-mechanics__disclaimer {
+    margin: 12px 0 0;
+    color: #5b6473;
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
   .investor-fit {
     padding-top: 30px;
     padding-bottom: 10px;
@@ -964,6 +1109,12 @@
       padding: 8px 24px 20px;
     }
     .investor-strategy-explainer__grid { grid-template-columns: 1fr; }
+    .strategy-mechanics__grid {
+      grid-template-columns: 1fr;
+    }
+    .strategy-mechanics__timeline {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
     .strategy-calculator__wizard {
       padding: 16px;
     }
@@ -999,6 +1150,10 @@
     .berlin-investor-stat__value { font-size: clamp(1.35rem, 6vw, 1.65rem); }
     .berlin-investor-stat__label { font-size: 0.8rem; line-height: 1.4; }
     .investor-strategy-explainer .berlin-content__title { font-size: clamp(1.45rem, 6.6vw, 1.85rem); }
+    .strategy-mechanics .berlin-content__title { font-size: clamp(1.4rem, 6.2vw, 1.8rem); }
+    .strategy-mechanics__timeline {
+      grid-template-columns: 1fr;
+    }
     .strategy-calculator .berlin-content__title { font-size: clamp(1.4rem, 6.2vw, 1.8rem); }
     .strategy-calculator__panel { padding: 14px; }
     .strategy-calculator__fields {
