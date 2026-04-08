@@ -3259,6 +3259,7 @@ exports.berlinInvestorStrategyPageEn = async (req, res, next) => {
       LEFT JOIN property_stats ps ON ps.property_id = p.id
       WHERE p.country = 'Germany'
         AND p.city = 'Berlin'
+        AND LOWER(COALESCE(p.neighborhood, '')) LIKE '%moabit%'
         AND p.status = 'active'
         AND (
           p.occupancy_type = 'Long-Term Rented'
