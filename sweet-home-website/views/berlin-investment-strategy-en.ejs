@@ -92,79 +92,44 @@
         </p>
       </div>
 
-      <div class="strategy-mechanics__experience">
-        <div class="strategy-mechanics__journey" aria-label="Strategy journey steps">
-          <article
-            class="strategy-mechanics__point is-active"
-            data-mechanics-step="1"
-            data-map-title="Discounted Entry Zone"
-            data-map-copy="Tenant-occupied units can trade below vacant comparables because immediate self-use is limited and demand is narrower."
-            data-map-chip="Typical signal: 30-40% entry discount in selected cases"
-            tabindex="0"
-          >
+      <div class="strategy-mechanics__process" aria-label="Interactive strategy process map">
+        <div class="strategy-mechanics__process-line" aria-hidden="true"></div>
+
+        <article class="strategy-mechanics__point strategy-mechanics__point--right is-active" data-mechanics-step="1" tabindex="0">
+          <span class="strategy-mechanics__marker"><span></span><small>01</small></span>
+          <div class="strategy-mechanics__card">
             <span class="strategy-mechanics__index">01</span>
             <h3>Why a 30-40% discount can happen</h3>
             <p>Tenant-occupied units can trade below comparable vacant units because immediate self-use is limited and buyer demand is narrower. Lower competition can translate into lower entry pricing.</p>
-          </article>
+          </div>
+        </article>
 
-          <article
-            class="strategy-mechanics__point"
-            data-mechanics-step="2"
-            data-map-title="Day-One Rent Visibility"
-            data-map-copy="Because a tenant is already in place, rental inflow can start immediately after acquisition, supporting early cash-flow visibility."
-            data-map-chip="Core signal: existing tenancy supports immediate income logic"
-            tabindex="0"
-          >
+        <article class="strategy-mechanics__point strategy-mechanics__point--left" data-mechanics-step="2" tabindex="0">
+          <span class="strategy-mechanics__marker"><span></span><small>02</small></span>
+          <div class="strategy-mechanics__card">
             <span class="strategy-mechanics__index">02</span>
             <h3>Why income can start from day one</h3>
             <p>A tenant is already in place, so rent can already be flowing when you acquire the property. That can provide immediate monthly cash-flow visibility.</p>
-          </article>
+          </div>
+        </article>
 
-          <article
-            class="strategy-mechanics__point"
-            data-mechanics-step="3"
-            data-map-title="Tax Optimization Layer"
-            data-map-copy="For many landlord profiles in Germany, interest and depreciation can be deductible, improving net economics depending on structure."
-            data-map-chip="Potential driver: interest + depreciation deductions"
-            tabindex="0"
-          >
+        <article class="strategy-mechanics__point strategy-mechanics__point--right" data-mechanics-step="3" tabindex="0">
+          <span class="strategy-mechanics__marker"><span></span><small>03</small></span>
+          <div class="strategy-mechanics__card">
             <span class="strategy-mechanics__index">03</span>
             <h3>Where tax benefits come from</h3>
             <p>For many landlord profiles in Germany, interest and depreciation can be deductible. Depending on income and structure, this can improve net after-tax performance.</p>
-          </article>
+          </div>
+        </article>
 
-          <article
-            class="strategy-mechanics__point"
-            data-mechanics-step="4"
-            data-map-title="Energy and Financing Quality"
-            data-map-copy="Energy-efficiency standards and eligible programs can support stronger financing setups and lower long-run operational risk."
-            data-map-chip="Quality driver: energy standards + financing support"
-            tabindex="0"
-          >
+        <article class="strategy-mechanics__point strategy-mechanics__point--left" data-mechanics-step="4" tabindex="0">
+          <span class="strategy-mechanics__marker"><span></span><small>04</small></span>
+          <div class="strategy-mechanics__card">
             <span class="strategy-mechanics__index">04</span>
             <h3>Where energy and financing benefits come from</h3>
             <p>Eligible properties and upgrade paths can support better financing conditions and stronger long-term quality through energy-efficiency programs and lower running risks.</p>
-          </article>
-        </div>
-
-        <aside class="strategy-mechanics__map-panel" data-active-step="1" aria-label="Interactive strategy map">
-          <div class="strategy-mechanics__map-canvas">
-            <div class="strategy-mechanics__map-grid"></div>
-            <div class="strategy-mechanics__map-line"></div>
-            <div class="strategy-mechanics__map-pin is-active" data-pin-step="1"><span></span><small>Entry</small></div>
-            <div class="strategy-mechanics__map-pin" data-pin-step="2"><span></span><small>Rent</small></div>
-            <div class="strategy-mechanics__map-pin" data-pin-step="3"><span></span><small>Tax</small></div>
-            <div class="strategy-mechanics__map-pin" data-pin-step="4"><span></span><small>Energy</small></div>
-            <div class="strategy-mechanics__map-overlay">
-              <div class="strategy-mechanics__map-content">
-                <p class="strategy-mechanics__map-kicker">Interactive strategy map</p>
-                <h3 id="strategyMechanicsMapTitle">Discounted Entry Zone</h3>
-                <p id="strategyMechanicsMapCopy">Tenant-occupied units can trade below vacant comparables because immediate self-use is limited and demand is narrower.</p>
-                <p id="strategyMechanicsMapChip" class="strategy-mechanics__map-chip">Typical signal: 30-40% entry discount in selected cases</p>
-              </div>
-            </div>
           </div>
-        </aside>
+        </article>
       </div>
 
       <p class="strategy-mechanics__disclaimer">
@@ -739,189 +704,151 @@
     margin-top: 12px;
   }
   .strategy-mechanics {
-    padding-top: 24px;
-    padding-bottom: 8px;
+    position: relative;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding: 72px 0 44px;
+    background:
+      radial-gradient(circle at 16% 18%, rgba(46, 168, 98, 0.16), transparent 33%),
+      radial-gradient(circle at 86% 78%, rgba(46, 168, 98, 0.12), transparent 35%),
+      linear-gradient(180deg, #091122 0%, #0a1220 100%);
+    border-top: 1px solid #13243a;
+    border-bottom: 1px solid #13243a;
+    overflow: hidden;
+  }
+  .strategy-mechanics .berlin-content__inner {
+    max-width: 1220px;
+    padding: 0 26px;
   }
   .strategy-mechanics__intro {
-    margin-bottom: 18px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #d7e6dc;
+    max-width: 760px;
+    margin: 0 auto 34px;
+    text-align: center;
   }
   .strategy-mechanics .berlin-content__title {
-    margin-bottom: 10px;
-    font-size: clamp(1.8rem, 2.8vw, 2.25rem);
-    line-height: 1.15;
+    margin-bottom: 12px;
+    color: #f5f9ff;
+    font-size: clamp(2rem, 3.8vw, 3rem);
+    line-height: 1.12;
   }
-  .strategy-mechanics__experience {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 540px;
-    gap: 18px;
-    align-items: start;
+  .strategy-mechanics .berlin-content__intro {
+    color: #b5c7de;
+    font-size: 1rem;
+    line-height: 1.65;
   }
-  .strategy-mechanics__journey {
-    display: grid;
-    gap: 12px;
+  .strategy-mechanics__process {
+    position: relative;
+    padding: 10px 0 8px;
+  }
+  .strategy-mechanics__process-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, rgba(96, 141, 219, 0.12) 0%, rgba(125, 166, 236, 0.85) 18%, rgba(125, 166, 236, 0.85) 82%, rgba(96, 141, 219, 0.12) 100%);
+    box-shadow: 0 0 18px rgba(88, 131, 205, 0.35);
   }
   .strategy-mechanics__point {
-    border: 1px solid #d2e3d8;
-    border-radius: 12px;
-    background: linear-gradient(180deg, #ffffff 0%, #f6fbf8 100%);
-    padding: 16px;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 220px;
+    margin: 16px 0;
     cursor: pointer;
+    outline: none;
   }
-  .strategy-mechanics__point:hover {
-    transform: translateY(-1px);
+  .strategy-mechanics__point--right {
+    justify-content: flex-end;
+    padding-right: calc(50% - 36px);
   }
-  .strategy-mechanics__point.is-active {
-    border-color: #9fcfb3;
-    box-shadow: 0 12px 24px rgba(18, 53, 33, 0.10);
+  .strategy-mechanics__point--left {
+    justify-content: flex-start;
+    padding-left: calc(50% - 36px);
+  }
+  .strategy-mechanics__card {
+    width: min(450px, 100%);
+    border-radius: 16px;
+    border: 1px solid #1f3354;
+    background: linear-gradient(180deg, rgba(10, 19, 34, 0.94) 0%, rgba(9, 18, 33, 0.96) 100%);
+    box-shadow: 0 16px 28px rgba(2, 8, 20, 0.48);
+    padding: 20px 20px 18px;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .strategy-mechanics__point:hover .strategy-mechanics__card {
+    transform: translateY(-2px);
+  }
+  .strategy-mechanics__point.is-active .strategy-mechanics__card {
+    border-color: #3b5e8f;
+    box-shadow: 0 18px 34px rgba(7, 20, 40, 0.58), 0 0 0 1px rgba(54, 102, 161, 0.25);
   }
   .strategy-mechanics__index {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    min-width: 34px;
+    height: 26px;
     border-radius: 999px;
-    border: 1px solid #c1dacb;
-    color: #2d6a46;
-    font-size: 0.75rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-  }
-  .strategy-mechanics__point h3 {
-    margin: 0 0 8px;
-    color: #152233;
-    font-size: 1rem;
-    line-height: 1.35;
-  }
-  .strategy-mechanics__point p {
-    margin: 0;
-    color: #4b5b6f;
-    font-size: 0.92rem;
-    line-height: 1.55;
-  }
-  .strategy-mechanics__map-panel {
-    position: sticky;
-    top: 104px;
-    border-radius: 14px;
-    overflow: hidden;
-    background: linear-gradient(180deg, #13233a 0%, #0f1a2b 100%);
-    border: 1px solid #2a3d5b;
-    box-shadow: 0 20px 34px rgba(7, 15, 30, 0.35);
-  }
-  .strategy-mechanics__map-canvas {
-    position: relative;
-    min-height: 520px;
-    background:
-      radial-gradient(circle at 18% 22%, rgba(45, 106, 70, 0.22), transparent 32%),
-      radial-gradient(circle at 82% 78%, rgba(46, 168, 98, 0.18), transparent 34%),
-      linear-gradient(180deg, rgba(11, 23, 40, 0.9), rgba(12, 22, 35, 0.95));
-  }
-  .strategy-mechanics__map-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(133, 165, 204, 0.08) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(133, 165, 204, 0.08) 1px, transparent 1px);
-    background-size: 34px 34px;
-  }
-  .strategy-mechanics__map-line {
-    position: absolute;
-    top: 26px;
-    bottom: 26px;
-    left: 50%;
-    width: 2px;
-    background: linear-gradient(180deg, rgba(142, 185, 255, 0.8) 0%, rgba(87, 132, 205, 0.3) 100%);
-    transform: translateX(-50%);
-  }
-  .strategy-mechanics__map-pin {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: #c2d6f0;
-    font-size: 0.76rem;
-    opacity: 0.56;
-    transition: opacity 0.22s ease, transform 0.22s ease, color 0.22s ease;
-  }
-  .strategy-mechanics__map-pin span {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 999px;
-    background: #9ab3d8;
-    box-shadow: 0 0 0 6px rgba(154, 179, 216, 0.16);
-  }
-  .strategy-mechanics__map-pin small {
-    font-size: 0.76rem;
-    letter-spacing: 0.02em;
-    font-weight: 600;
-  }
-  .strategy-mechanics__map-pin[data-pin-step="1"] { top: 56px; left: 58%; }
-  .strategy-mechanics__map-pin[data-pin-step="2"] { top: 148px; left: 30%; }
-  .strategy-mechanics__map-pin[data-pin-step="3"] { top: 262px; left: 62%; }
-  .strategy-mechanics__map-pin[data-pin-step="4"] { top: 360px; left: 26%; }
-  .strategy-mechanics__map-overlay {
-    position: absolute;
-    left: 14px;
-    right: 14px;
-    bottom: 14px;
-    z-index: 2;
-  }
-  .strategy-mechanics__map-pin.is-active {
-    opacity: 1;
-    transform: scale(1.03);
-    color: #f0f7ff;
-  }
-  .strategy-mechanics__map-pin.is-active span {
-    background: #2ea862;
-    box-shadow: 0 0 0 7px rgba(46, 168, 98, 0.27);
-  }
-  .strategy-mechanics__map-content {
-    padding: 14px 14px 15px;
-    border-radius: 12px;
-    border: 1px solid rgba(124, 153, 194, 0.36);
-    background: linear-gradient(180deg, rgba(14, 26, 44, 0.88) 0%, rgba(10, 20, 36, 0.93) 100%);
-    backdrop-filter: blur(4px);
-  }
-  .strategy-mechanics__map-kicker {
-    margin: 0 0 8px;
-    color: #8cb0d8;
+    border: 1px solid #2f4f7b;
+    color: #8fb2e4;
     font-size: 0.72rem;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
     font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
   }
-  .strategy-mechanics__map-content h3 {
-    margin: 0 0 8px;
+  .strategy-mechanics__card h3 {
+    margin: 0 0 9px;
     color: #f4f8ff;
-    font-size: 1.08rem;
-    line-height: 1.3;
+    font-size: 1.7rem;
+    line-height: 1.2;
   }
-  .strategy-mechanics__map-content p {
+  .strategy-mechanics__card p {
     margin: 0;
-    color: #c4d3e7;
-    font-size: 0.88rem;
-    line-height: 1.55;
+    color: #b7c9e0;
+    font-size: 0.98rem;
+    line-height: 1.62;
   }
-  .strategy-mechanics__map-chip {
-    margin-top: 10px !important;
-    display: inline-block;
-    padding: 6px 10px;
+  .strategy-mechanics__marker {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 3;
+  }
+  .strategy-mechanics__marker span {
+    width: 16px;
+    height: 16px;
     border-radius: 999px;
-    background: rgba(46, 168, 98, 0.15);
-    border: 1px solid rgba(93, 189, 129, 0.44);
-    color: #d4f5e1 !important;
-    font-size: 0.78rem !important;
-    line-height: 1.35 !important;
+    background: #6a8ab8;
+    box-shadow: 0 0 0 8px rgba(93, 128, 182, 0.24);
+    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  }
+  .strategy-mechanics__marker small {
+    color: #90aed6;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .strategy-mechanics__point.is-active .strategy-mechanics__marker span {
+    background: #2ea862;
+    box-shadow: 0 0 0 10px rgba(46, 168, 98, 0.28);
+    transform: scale(1.05);
+  }
+  .strategy-mechanics__point.is-active .strategy-mechanics__marker small {
+    color: #d2f2df;
   }
   .strategy-mechanics__disclaimer {
-    margin: 12px 0 0;
-    color: #5b6473;
+    max-width: 980px;
+    margin: 18px auto 0;
+    color: #9eb3cd;
     font-size: 0.84rem;
-    line-height: 1.55;
+    line-height: 1.6;
+    text-align: center;
   }
   .investor-fit {
     padding-top: 30px;
@@ -1242,14 +1169,29 @@
       padding: 8px 24px 20px;
     }
     .investor-strategy-explainer__grid { grid-template-columns: 1fr; }
-    .strategy-mechanics__experience {
-      grid-template-columns: 1fr;
+    .strategy-mechanics {
+      padding: 56px 0 34px;
     }
-    .strategy-mechanics__map-panel {
-      position: static;
+    .strategy-mechanics .berlin-content__inner {
+      padding: 0 20px;
     }
-    .strategy-mechanics__map-canvas {
-      min-height: 500px;
+    .strategy-mechanics__point {
+      min-height: 190px;
+      justify-content: flex-start;
+      padding-left: 56px;
+      padding-right: 0;
+    }
+    .strategy-mechanics__process-line {
+      left: 24px;
+      transform: none;
+    }
+    .strategy-mechanics__marker {
+      left: 24px;
+      transform: translate(-50%, -50%);
+    }
+    .strategy-mechanics__card {
+      width: 100%;
+      max-width: none;
     }
     .strategy-calculator__wizard {
       padding: 16px;
@@ -1286,14 +1228,34 @@
     .berlin-investor-stat__value { font-size: clamp(1.35rem, 6vw, 1.65rem); }
     .berlin-investor-stat__label { font-size: 0.8rem; line-height: 1.4; }
     .investor-strategy-explainer .berlin-content__title { font-size: clamp(1.45rem, 6.6vw, 1.85rem); }
+    .strategy-mechanics { padding: 46px 0 28px; }
     .strategy-mechanics .berlin-content__title { font-size: clamp(1.4rem, 6.2vw, 1.8rem); }
-    .strategy-mechanics__map-canvas {
-      min-height: 420px;
+    .strategy-mechanics .berlin-content__inner {
+      padding: 0 14px;
     }
-    .strategy-mechanics__map-overlay {
-      left: 10px;
-      right: 10px;
-      bottom: 10px;
+    .strategy-mechanics__intro {
+      margin-bottom: 22px;
+    }
+    .strategy-mechanics__point {
+      min-height: 160px;
+      margin: 10px 0;
+      padding-left: 44px;
+    }
+    .strategy-mechanics__process-line {
+      left: 16px;
+    }
+    .strategy-mechanics__marker {
+      left: 16px;
+    }
+    .strategy-mechanics__card {
+      padding: 14px 14px 13px;
+      border-radius: 12px;
+    }
+    .strategy-mechanics__card h3 {
+      font-size: 1.2rem;
+    }
+    .strategy-mechanics__card p {
+      font-size: 0.9rem;
     }
     .strategy-calculator .berlin-content__title { font-size: clamp(1.4rem, 6.2vw, 1.8rem); }
     .strategy-calculator__panel { padding: 14px; }
@@ -1516,36 +1478,20 @@
       showStep(1);
     }
 
-    var mechanicsRoot = document.querySelector('.strategy-mechanics__experience');
+    var mechanicsRoot = document.querySelector('.strategy-mechanics__process');
     if (mechanicsRoot) {
       var mechanicPoints = Array.prototype.slice.call(mechanicsRoot.querySelectorAll('[data-mechanics-step]'));
-      var mechanicPins = Array.prototype.slice.call(mechanicsRoot.querySelectorAll('[data-pin-step]'));
-      var mapTitleEl = document.getElementById('strategyMechanicsMapTitle');
-      var mapCopyEl = document.getElementById('strategyMechanicsMapCopy');
-      var mapChipEl = document.getElementById('strategyMechanicsMapChip');
       var activeMechanicStep = 1;
 
       function setMechanicStep(step) {
         var nextStep = Math.max(1, Math.min(mechanicPoints.length, Number(step) || 1));
-        if (nextStep === activeMechanicStep && mapTitleEl && mapTitleEl.textContent) return;
+        if (nextStep === activeMechanicStep) return;
         activeMechanicStep = nextStep;
 
         mechanicPoints.forEach(function (point) {
           var isActive = Number(point.getAttribute('data-mechanics-step')) === activeMechanicStep;
           point.classList.toggle('is-active', isActive);
         });
-        mechanicPins.forEach(function (pin) {
-          var isActive = Number(pin.getAttribute('data-pin-step')) === activeMechanicStep;
-          pin.classList.toggle('is-active', isActive);
-        });
-
-        var activePoint = mechanicPoints.find(function (point) {
-          return Number(point.getAttribute('data-mechanics-step')) === activeMechanicStep;
-        });
-        if (!activePoint) return;
-        if (mapTitleEl) mapTitleEl.textContent = activePoint.getAttribute('data-map-title') || '';
-        if (mapCopyEl) mapCopyEl.textContent = activePoint.getAttribute('data-map-copy') || '';
-        if (mapChipEl) mapChipEl.textContent = activePoint.getAttribute('data-map-chip') || '';
       }
 
       mechanicPoints.forEach(function (point) {
