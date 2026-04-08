@@ -98,20 +98,8 @@
           <h3>Your household and cash flow</h3>
           <div class="strategy-calculator__fields">
             <div class="strategy-calculator__field">
-              <label for="calcSalary1">Salary 1 (net monthly, EUR)</label>
+              <label for="calcSalary1">Net monthly salary (EUR)</label>
               <input id="calcSalary1" type="number" min="0" step="50" value="0" inputmode="decimal">
-            </div>
-            <div class="strategy-calculator__field">
-              <label for="calcSalary2">Salary 2 (net monthly, EUR)</label>
-              <input id="calcSalary2" type="number" min="0" step="50" value="0" inputmode="decimal">
-            </div>
-            <div class="strategy-calculator__field">
-              <label for="calcSalary3">Salary 3 (optional, EUR)</label>
-              <input id="calcSalary3" type="number" min="0" step="50" value="0" inputmode="decimal">
-            </div>
-            <div class="strategy-calculator__field">
-              <label for="calcSalary4">Salary 4 (optional, EUR)</label>
-              <input id="calcSalary4" type="number" min="0" step="50" value="0" inputmode="decimal">
             </div>
             <div class="strategy-calculator__field">
               <label for="calcLoans">Current monthly loan payments (EUR)</label>
@@ -143,7 +131,7 @@
               <input id="calcPropertyPrice" type="number" min="0" step="1000" value="300000" inputmode="decimal">
             </div>
             <div class="strategy-calculator__field">
-              <label for="calcEquityPct">Own equity on property value (%)</label>
+              <label for="calcEquityPct">Upfront payment (% of property value, minimum 10%)</label>
               <input id="calcEquityPct" type="number" min="0" max="100" step="1" value="10" inputmode="decimal">
             </div>
             <div class="strategy-calculator__field">
@@ -987,12 +975,7 @@
 
     var calcRoot = document.getElementById('strategy-calculator');
     if (calcRoot) {
-      var salaryInputs = [
-        document.getElementById('calcSalary1'),
-        document.getElementById('calcSalary2'),
-        document.getElementById('calcSalary3'),
-        document.getElementById('calcSalary4')
-      ];
+      var salaryInput = document.getElementById('calcSalary1');
       var loansInput = document.getElementById('calcLoans');
       var insuranceInput = document.getElementById('calcInsurance');
       var adultsInput = document.getElementById('calcAdults');
@@ -1023,9 +1006,7 @@
       }
 
       function runCalculator() {
-        var totalIncome = salaryInputs.reduce(function (sum, input) {
-          return sum + parseNumber(input ? input.value : 0);
-        }, 0);
+        var totalIncome = parseNumber(salaryInput ? salaryInput.value : 0);
         var loans = parseNumber(loansInput ? loansInput.value : 0);
         var insurance = parseNumber(insuranceInput ? insuranceInput.value : 0);
         var adults = Math.max(1, Math.min(2, Math.round(parseNumber(adultsInput ? adultsInput.value : 1))));
@@ -1071,7 +1052,8 @@
         }
       }
 
-      var allInputs = salaryInputs.concat([
+      var allInputs = [
+        salaryInput,
         loansInput,
         insuranceInput,
         adultsInput,
@@ -1079,7 +1061,7 @@
         propertyPriceInput,
         equityPctInput,
         debtServiceRateInput
-      ]).filter(Boolean);
+      ].filter(Boolean);
 
       allInputs.forEach(function (input) {
         input.addEventListener('input', runCalculator);
