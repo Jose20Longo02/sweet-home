@@ -39,8 +39,8 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['charlottenburg', 'west berlin'],
     urls: {
       de: '/wohnung-kaufen-charlottenburg',
-      en: '/en/properties-for-sale-berlin',
-      es: '/es/propiedades-en-venta-berlin'
+      en: '/wohnung-kaufen-charlottenburg',
+      es: '/wohnung-kaufen-charlottenburg'
     }
   },
   berlin_moabit: {
@@ -50,8 +50,8 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['moabit', 'mitte'],
     urls: {
       de: '/wohnung-kaufen-moabit',
-      en: '/en/properties-for-sale-berlin',
-      es: '/es/propiedades-en-venta-berlin'
+      en: '/wohnung-kaufen-moabit',
+      es: '/wohnung-kaufen-moabit'
     }
   },
   berlin_friedrichshain_kreuzberg: {
@@ -61,8 +61,8 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['friedrichshain', 'kreuzberg', 'fhain'],
     urls: {
       de: '/wohnung-kaufen-friedrichshain-kreuzberg',
-      en: '/en/properties-for-sale-berlin',
-      es: '/es/propiedades-en-venta-berlin'
+      en: '/wohnung-kaufen-friedrichshain-kreuzberg',
+      es: '/wohnung-kaufen-friedrichshain-kreuzberg'
     }
   },
   berlin_schoeneberg: {
@@ -72,8 +72,8 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['schoeneberg', 'schoneberg'],
     urls: {
       de: '/wohnung-kaufen-schoeneberg',
-      en: '/en/properties-for-sale-berlin',
-      es: '/es/propiedades-en-venta-berlin'
+      en: '/wohnung-kaufen-schoeneberg',
+      es: '/wohnung-kaufen-schoeneberg'
     }
   },
   berlin_prenzlauer_berg: {
@@ -83,8 +83,8 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['prenzlauer berg', 'pberg', 'prenzlauer'],
     urls: {
       de: '/wohnung-kaufen-prenzlauer-berg',
-      en: '/en/properties-for-sale-berlin',
-      es: '/es/propiedades-en-venta-berlin'
+      en: '/wohnung-kaufen-prenzlauer-berg',
+      es: '/wohnung-kaufen-prenzlauer-berg'
     }
   },
   berlin_wedding: {
@@ -94,8 +94,8 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['wedding', 'gesundbrunnen'],
     urls: {
       de: '/wohnung-kaufen-wedding',
-      en: '/en/properties-for-sale-berlin',
-      es: '/es/propiedades-en-venta-berlin'
+      en: '/wohnung-kaufen-wedding',
+      es: '/wohnung-kaufen-wedding'
     }
   },
   berlin_tempelhof: {
@@ -105,8 +105,8 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['tempelhof', 'tempelhofer'],
     urls: {
       de: '/wohnung-kaufen-tempelhof',
-      en: '/en/properties-for-sale-berlin',
-      es: '/es/propiedades-en-venta-berlin'
+      en: '/wohnung-kaufen-tempelhof',
+      es: '/wohnung-kaufen-tempelhof'
     }
   },
   berlin_neukoelln: {
@@ -116,8 +116,8 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['neukoelln', 'neukölln', 'neukolln'],
     urls: {
       de: '/wohnung-kaufen-neukoelln',
-      en: '/en/properties-for-sale-berlin',
-      es: '/es/propiedades-en-venta-berlin'
+      en: '/wohnung-kaufen-neukoelln',
+      es: '/wohnung-kaufen-neukoelln'
     }
   },
   berlin_reinickendorf: {
@@ -127,8 +127,8 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['reinickendorf'],
     urls: {
       de: '/wohnung-kaufen-reinickendorf',
-      en: '/en/properties-for-sale-berlin',
-      es: '/es/propiedades-en-venta-berlin'
+      en: '/wohnung-kaufen-reinickendorf',
+      es: '/wohnung-kaufen-reinickendorf'
     }
   },
   berlin_kreuzberg: {
@@ -138,8 +138,8 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['kreuzberg', 'bergmannkiez'],
     urls: {
       de: '/wohnung-kaufen-kreuzberg',
-      en: '/en/properties-for-sale-berlin',
-      es: '/es/propiedades-en-venta-berlin'
+      en: '/wohnung-kaufen-kreuzberg',
+      es: '/wohnung-kaufen-kreuzberg'
     }
   },
   berlin_spandau: {
@@ -149,8 +149,8 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['spandau'],
     urls: {
       de: '/wohnung-kaufen-spandau',
-      en: '/en/properties-for-sale-berlin',
-      es: '/es/propiedades-en-venta-berlin'
+      en: '/wohnung-kaufen-spandau',
+      es: '/wohnung-kaufen-spandau'
     }
   }
 };

@@ -109,9 +109,13 @@ const INTERNAL_LINK_TOKEN_REGEX = /\[\[(landing|landung):([a-z0-9_-]+)\|([^\]|]+
 const INTERNAL_LINK_KEY_ALIASES = {
   berlin_haupt: 'berlin_main',
   zypern_haupt: 'cyprus_main',
-  dubai_haupt: 'dubai_main'
+  dubai_haupt: 'dubai_main',
+  zypern_main: 'cyprus_main',
+  chipre_main: 'cyprus_main'
 };
 const INTERNAL_LINK_MARKUP_REGEX = /<span\b([^>]*)>([\s\S]*?)<\/span>/gi;
+const INTERNAL_LINK_OPEN_PREFIX = '@@SHL_OPEN_';
+const INTERNAL_LINK_CLOSE_PREFIX = '@@SHL_CLOSE_';
 
 function normalizeInternalLinkKey(rawKey) {
   const key = String(rawKey || '').trim().toLowerCase();
@@ -120,20 +124,35 @@ function normalizeInternalLinkKey(rawKey) {
 
 function protectInternalLandingTokens(content) {
   const source = String(content || '');
+  const tokens = [];
   const protectedContent = source.replace(INTERNAL_LINK_TOKEN_REGEX, (full, tokenType, key, label, style) => {
     const normalizedKey = normalizeInternalLinkKey(key);
     const normalizedStyle = String(style || 'inline').toLowerCase() === 'button' ? 'button' : 'inline';
-    const safeKey = escapeHtml(normalizedKey);
-    const safeStyle = escapeHtml(normalizedStyle);
-    const safeLabel = escapeHtml(String(label || '').trim());
-    // Keep key/style locked while allowing translators to translate label text.
-    return `<span data-sh-link-key="${safeKey}" data-sh-link-style="${safeStyle}">${safeLabel}</span>`;
+    const fallbackLabel = String(label || '').trim();
+    const idx = tokens.length;
+    tokens.push({ key: normalizedKey, style: normalizedStyle, fallbackLabel });
+    // Keep key/style outside translator changes while label remains translatable.
+    return `${INTERNAL_LINK_OPEN_PREFIX}${idx}@@${fallbackLabel}${INTERNAL_LINK_CLOSE_PREFIX}${idx}@@`;
   });
-  return { protectedContent };
+  return { protectedContent, tokens };
 }
 
-function finalizeInternalLandingI18n(contentI18n, sourceLang, sourceOriginalContent) {
+function finalizeInternalLandingI18n(contentI18n, tokens, sourceLang, sourceOriginalContent) {
   const out = { ...(contentI18n || {}) };
+  Object.keys(out).forEach((lang) => {
+    let content = String(out[lang] || '');
+    (tokens || []).forEach((token, idx) => {
+      const open = `${INTERNAL_LINK_OPEN_PREFIX}${idx}@@`;
+      const close = `${INTERNAL_LINK_CLOSE_PREFIX}${idx}@@`;
+      const start = content.indexOf(open);
+      const end = content.indexOf(close, start + open.length);
+      if (start === -1 || end === -1) return;
+      const translatedLabel = stripHtmlTags(content.slice(start + open.length, end)) || token.fallbackLabel;
+      const canonicalToken = `[[landing:${token.key}|${translatedLabel}|${token.style}]]`;
+      content = content.slice(0, start) + canonicalToken + content.slice(end + close.length);
+    });
+    out[lang] = content;
+  });
   // Preserve original tokenized source exactly as authored in the editor.
   if (sourceLang) out[sourceLang] = String(sourceOriginalContent || '');
   return out;
@@ -526,7 +545,12 @@ exports.create = async (req, res, next) => {
         targetLangs,
         htmlFields: ['content']
       });
-      const contentI18n = finalizeInternalLandingI18n(i18n.content_i18n, sourceLang, safeContent || '');
+      const contentI18n = finalizeInternalLandingI18n(
+        i18n.content_i18n,
+        protectedTokens.tokens,
+        sourceLang,
+        safeContent || ''
+      );
       await query(
         `UPDATE blog_posts SET title_i18n = $1, excerpt_i18n = $2, content_i18n = $3 WHERE id = $4`,
         [i18n.title_i18n || { en: title || '' }, i18n.excerpt_i18n || { en: excerpt || '' }, contentI18n || { en: safeContent || '' }, post.id]
@@ -694,7 +718,12 @@ exports.update = async (req, res, next) => {
         targetLangs,
         htmlFields: ['content']
       });
-      const contentI18n = finalizeInternalLandingI18n(i18n.content_i18n, sourceLang, currentContent || '');
+      const contentI18n = finalizeInternalLandingI18n(
+        i18n.content_i18n,
+        protectedTokens.tokens,
+        sourceLang,
+        currentContent || ''
+      );
       await query(
         `UPDATE blog_posts SET title_i18n = $1, excerpt_i18n = $2, content_i18n = $3, updated_at = NOW() WHERE id = $4`,
         [i18n.title_i18n, i18n.excerpt_i18n, contentI18n, id]
