@@ -105,17 +105,62 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
+const INTERNAL_LINK_TOKEN_REGEX = /\[\[(landing|landung):([a-z0-9_-]+)\|([^\]|]+)(?:\|([^\]|]+))?\]\]/gi;
+const INTERNAL_LINK_KEY_ALIASES = {
+  berlin_haupt: 'berlin_main',
+  zypern_haupt: 'cyprus_main',
+  dubai_haupt: 'dubai_main'
+};
+
+function normalizeInternalLinkKey(rawKey) {
+  const key = String(rawKey || '').trim().toLowerCase();
+  return INTERNAL_LINK_KEY_ALIASES[key] || key;
+}
+
+function protectInternalLandingTokens(content) {
+  const source = String(content || '');
+  const tokens = [];
+  const protectedContent = source.replace(INTERNAL_LINK_TOKEN_REGEX, (full, tokenType, key, label, style) => {
+    const normalizedKey = normalizeInternalLinkKey(key);
+    const normalizedStyle = String(style || 'inline').toLowerCase() === 'button' ? 'button' : 'inline';
+    const canonical = `[[landing:${normalizedKey}|${String(label || '').trim()}|${normalizedStyle}]]`;
+    const placeholder = `%%SH_INTERNAL_LINK_${tokens.length}%%`;
+    tokens.push(canonical);
+    return placeholder;
+  });
+  return { protectedContent, tokens };
+}
+
+function restoreInternalLandingTokens(content, tokens) {
+  let restored = String(content || '');
+  (tokens || []).forEach((token, idx) => {
+    const placeholder = `%%SH_INTERNAL_LINK_${idx}%%`;
+    restored = restored.split(placeholder).join(token);
+  });
+  return restored;
+}
+
+function restoreInternalLandingTokensI18n(contentI18n, tokens, sourceLang, sourceOriginalContent) {
+  const out = { ...(contentI18n || {}) };
+  Object.keys(out).forEach((lang) => {
+    out[lang] = restoreInternalLandingTokens(out[lang], tokens);
+  });
+  if (sourceLang) out[sourceLang] = String(sourceOriginalContent || '');
+  return out;
+}
+
 // Token format:
 // [[landing:berlin_main|See Berlin opportunities|inline]]
 // [[landing:berlin_main|See Berlin opportunities|button]]
 function renderInternalLandingTokens(htmlContent, lang) {
   if (!htmlContent || typeof htmlContent !== 'string') return htmlContent;
-  return htmlContent.replace(/\[\[landing:([a-z0-9_-]+)\|([^\]|]+)(?:\|(inline|button))?\]\]/gi, (full, key, label, style) => {
-    const href = resolveInternalLandingUrl(String(key || '').trim(), lang);
+  return htmlContent.replace(INTERNAL_LINK_TOKEN_REGEX, (full, tokenType, key, label, style) => {
+    const normalizedKey = normalizeInternalLinkKey(key);
+    const href = resolveInternalLandingUrl(normalizedKey, lang);
     if (!href) return full;
     const safeHref = escapeHtml(href);
     const safeLabel = escapeHtml(label);
-    const safeKey = escapeHtml(key);
+    const safeKey = escapeHtml(normalizedKey);
     const variant = String(style || 'inline').toLowerCase() === 'button' ? 'button' : 'inline';
     return `<a href="${safeHref}" class="internal-landing-link internal-landing-link--${variant}" data-landing-key="${safeKey}">${safeLabel}</a>`;
   });
@@ -387,6 +432,7 @@ exports.create = async (req, res, next) => {
     const cover_image = req.file ? (req.file.url || '/uploads/blog/' + req.file.filename) : null;
     const published_at = status === 'published' ? new Date() : null;
     const safeContent = (typeof content === 'string') ? content : '';
+    const protectedTokens = protectInternalLandingTokens(safeContent);
     const post = await BlogPost.create({
       title, excerpt, content: safeContent, cover_image, status, author_id: req.session.user.id, published_at
     });
@@ -463,15 +509,21 @@ exports.create = async (req, res, next) => {
       const sourceLang = detectLanguageFromFields({ title, excerpt, content: safeContent }) || 'en';
       const targetLangs = getTargetLanguages(sourceLang);
       const i18n = await ensureLocalizedFields({
-        fields: { title: title || '', excerpt: excerpt || '', content: safeContent || '' },
+        fields: { title: title || '', excerpt: excerpt || '', content: protectedTokens.protectedContent || '' },
         existing: {},
         sourceLang,
         targetLangs,
         htmlFields: ['content']
       });
+      const contentI18n = restoreInternalLandingTokensI18n(
+        i18n.content_i18n,
+        protectedTokens.tokens,
+        sourceLang,
+        safeContent || ''
+      );
       await query(
         `UPDATE blog_posts SET title_i18n = $1, excerpt_i18n = $2, content_i18n = $3 WHERE id = $4`,
-        [i18n.title_i18n || { en: title || '' }, i18n.excerpt_i18n || { en: excerpt || '' }, i18n.content_i18n || { en: safeContent || '' }, post.id]
+        [i18n.title_i18n || { en: title || '' }, i18n.excerpt_i18n || { en: excerpt || '' }, contentI18n || { en: safeContent || '' }, post.id]
       );
     } catch (_) { /* non-fatal */ }
     // Redirect based on user role
@@ -554,6 +606,7 @@ exports.update = async (req, res, next) => {
     const published_at = status === 'published' && !existing.published_at ? new Date() : existing.published_at;
 
     const safeContent = (typeof content === 'string') ? content : existing.content || '';
+    const protectedTokens = protectInternalLandingTokens(safeContent);
 
     const updated = await BlogPost.update(id, { title, excerpt, content: safeContent, cover_image, status, published_at });
     // If Spaces and cover uploaded under a different provisional slug, reconcile to final slug
@@ -625,19 +678,25 @@ exports.update = async (req, res, next) => {
       }) || 'en';
       const targetLangs = getTargetLanguages(sourceLang);
       const i18n = await ensureLocalizedFields({
-        fields: { title: currentTitle, excerpt: currentExcerpt, content: currentContent },
+        fields: { title: currentTitle, excerpt: currentExcerpt, content: protectedTokens.protectedContent || '' },
         // Force refresh target translations on edit by keeping only source language.
         existing: buildSourceOnlyI18n(
-          { title: currentTitle, excerpt: currentExcerpt, content: currentContent },
+          { title: currentTitle, excerpt: currentExcerpt, content: protectedTokens.protectedContent || '' },
           sourceLang
         ),
         sourceLang,
         targetLangs,
         htmlFields: ['content']
       });
+      const contentI18n = restoreInternalLandingTokensI18n(
+        i18n.content_i18n,
+        protectedTokens.tokens,
+        sourceLang,
+        currentContent || ''
+      );
       await query(
         `UPDATE blog_posts SET title_i18n = $1, excerpt_i18n = $2, content_i18n = $3, updated_at = NOW() WHERE id = $4`,
-        [i18n.title_i18n, i18n.excerpt_i18n, i18n.content_i18n, id]
+        [i18n.title_i18n, i18n.excerpt_i18n, contentI18n, id]
       );
     } catch (_) { /* non-fatal */ }
     // Redirect based on user role
