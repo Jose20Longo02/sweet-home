@@ -2,7 +2,7 @@
 const BlogPost = require('../models/BlogPost');
 const { query } = require('../config/db');
 const { ensureLocalizedFields } = require('../config/translator');
-const { getInternalLandingPresetOptions, resolveInternalLandingUrl } = require('../config/internalLandingPresets');
+const { getInternalLandingPresetOptions, getInternalLandingPresetEntries, resolveInternalLandingUrl } = require('../config/internalLandingPresets');
 
 const BLOG_TOPIC_DEFS = {
   berlin: ['berlin', 'mitte', 'kreuzberg', 'charlottenburg', 'pankow', 'schoneberg', 'spandau'],
@@ -120,6 +120,71 @@ function renderInternalLandingTokens(htmlContent, lang) {
   });
 }
 
+function detectPrimaryMarketFromText(sourceText) {
+  const source = String(sourceText || '').toLowerCase();
+  if (!source) return '';
+  const candidates = ['berlin', 'cyprus', 'dubai'];
+  let bestMarket = '';
+  let bestScore = 0;
+  candidates.forEach((market) => {
+    const terms = BLOG_TOPIC_DEFS[market] || [];
+    const score = terms.reduce((sum, term) => sum + (source.includes(term) ? 1 : 0), 0);
+    if (score > bestScore) {
+      bestScore = score;
+      bestMarket = market;
+    }
+  });
+  return bestMarket;
+}
+
+function buildRelatedLandingLinks({ title, excerpt, content, lang }) {
+  const sourceTitle = String(title || '').toLowerCase();
+  const sourceBody = `${title || ''} ${excerpt || ''} ${content || ''}`.toLowerCase();
+  const market = detectPrimaryMarketFromText(sourceBody);
+  if (!market) return { market: '', links: [] };
+
+  const presets = getInternalLandingPresetEntries().filter((preset) => preset.market === market);
+  if (!presets.length) return { market, links: [] };
+
+  const scored = presets.map((preset) => {
+    const keywords = Array.isArray(preset.keywords) ? preset.keywords : [];
+    let score = preset.type === 'main' ? 100 : 0;
+    keywords.forEach((keyword) => {
+      const term = String(keyword || '').toLowerCase();
+      if (!term) return;
+      if (sourceBody.includes(term)) score += 4;
+      if (sourceTitle.includes(term)) score += 6;
+    });
+    return { ...preset, score };
+  }).sort((a, b) => b.score - a.score);
+
+  const maxByMarket = { berlin: 6, cyprus: 4, dubai: 4 };
+  const maxLinks = maxByMarket[market] || 4;
+  const selected = scored.slice(0, maxLinks);
+  const hasMain = selected.some((item) => item.type === 'main');
+  if (!hasMain) {
+    const main = scored.find((item) => item.type === 'main');
+    if (main) selected.unshift(main);
+  }
+
+  const deduped = [];
+  const seenKeys = new Set();
+  selected.forEach((item) => {
+    if (seenKeys.has(item.key)) return;
+    const href = resolveInternalLandingUrl(item.key, lang);
+    if (!href) return;
+    deduped.push({
+      key: item.key,
+      href,
+      label: item.label,
+      type: item.type
+    });
+    seenKeys.add(item.key);
+  });
+
+  return { market, links: deduped.slice(0, maxLinks) };
+}
+
 // Public
 exports.listPublic = async (req, res, next) => {
   try {
@@ -206,6 +271,12 @@ exports.showPublic = async (req, res, next) => {
       excerpt: (post.excerpt_i18n && post.excerpt_i18n[lang]) || post.excerpt,
       content: processedContent
     };
+    const relatedLandingSet = buildRelatedLandingLinks({
+      title: localizedPost.title,
+      excerpt: localizedPost.excerpt,
+      content: (post.content_i18n && post.content_i18n[lang]) || post.content,
+      lang
+    });
     // Ensure unique <title> for SEO when slug ends with -2, -3, etc. (avoids duplicate title tags)
     let pageTitle = localizedPost.title;
     const slug = (localizedPost.slug || '').trim();
@@ -259,6 +330,8 @@ exports.showPublic = async (req, res, next) => {
       title: pageTitle,
       post: localizedPost,
       recommendedPosts: recommendedPosts || [],
+      relatedLandingLinks: relatedLandingSet.links || [],
+      relatedLandingMarket: relatedLandingSet.market || '',
       postTopicIds: inferredTopicIds,
       stickyFooter: true,
       baseUrl: res.locals.baseUrl
