@@ -3,6 +3,7 @@ const BlogPost = require('../models/BlogPost');
 const { query } = require('../config/db');
 const { ensureLocalizedFields } = require('../config/translator');
 const { getInternalLandingPresetOptions, getInternalLandingPresetEntries, resolveInternalLandingUrl } = require('../config/internalLandingPresets');
+const { detectLanguageFromFields, getTargetLanguages } = require('../utils/languageDetection');
 
 const BLOG_TOPIC_DEFS = {
   berlin: ['berlin', 'mitte', 'kreuzberg', 'charlottenburg', 'pankow', 'schoneberg', 'spandau'],
@@ -183,6 +184,14 @@ function buildRelatedLandingLinks({ title, excerpt, content, lang }) {
   });
 
   return { market, links: deduped.slice(0, maxLinks) };
+}
+
+function buildSourceOnlyI18n(fields, sourceLang) {
+  return {
+    title_i18n: { [sourceLang]: fields.title || '' },
+    excerpt_i18n: { [sourceLang]: fields.excerpt || '' },
+    content_i18n: { [sourceLang]: fields.content || '' }
+  };
 }
 
 // Public
@@ -451,11 +460,13 @@ exports.create = async (req, res, next) => {
       }
     } catch (_) { /* non-fatal */ }
     try {
+      const sourceLang = detectLanguageFromFields({ title, excerpt, content: safeContent }) || 'en';
+      const targetLangs = getTargetLanguages(sourceLang);
       const i18n = await ensureLocalizedFields({
         fields: { title: title || '', excerpt: excerpt || '', content: safeContent || '' },
         existing: {},
-        sourceLang: 'en',
-        targetLangs: ['es','de'],
+        sourceLang,
+        targetLangs,
         htmlFields: ['content']
       });
       await query(
@@ -607,11 +618,21 @@ exports.update = async (req, res, next) => {
       const currentTitle = updated.title || title || existing.title || '';
       const currentExcerpt = (excerpt !== undefined ? excerpt : updated.excerpt || existing.excerpt || '') || '';
       const currentContent = updated.content || safeContent || existing.content || '';
+      const sourceLang = detectLanguageFromFields({
+        title: currentTitle,
+        excerpt: currentExcerpt,
+        content: currentContent
+      }) || 'en';
+      const targetLangs = getTargetLanguages(sourceLang);
       const i18n = await ensureLocalizedFields({
         fields: { title: currentTitle, excerpt: currentExcerpt, content: currentContent },
-        existing: { title_i18n: updated.title_i18n, excerpt_i18n: updated.excerpt_i18n, content_i18n: updated.content_i18n },
-        sourceLang: 'en',
-        targetLangs: ['es','de'],
+        // Force refresh target translations on edit by keeping only source language.
+        existing: buildSourceOnlyI18n(
+          { title: currentTitle, excerpt: currentExcerpt, content: currentContent },
+          sourceLang
+        ),
+        sourceLang,
+        targetLangs,
         htmlFields: ['content']
       });
       await query(
