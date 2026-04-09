@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+  var openInternalLinkModalRef = null;
   var input = document.getElementById('cover');
   var preview = document.getElementById('coverPreview');
   var placeholder = document.getElementById('coverPlaceholder');
@@ -166,88 +167,93 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function openInternalLinkModal() {
-      var presets = Array.isArray(window.__BLOG_INTERNAL_LINK_PRESETS__) ? window.__BLOG_INTERNAL_LINK_PRESETS__ : [];
-      if (!presets.length) {
-        alert('No internal link presets found. Please contact admin.');
-        return;
-      }
-      ensureInternalLinkStyles();
-      function escHtml(value) {
-        return String(value || '')
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#39;');
-      }
-
-      var range = quill.getSelection(true) || { index: quill.getLength(), length: 0 };
-      var selectedText = (range.length > 0 ? quill.getText(range.index, range.length) : '').trim();
-
-      var overlay = document.createElement('div');
-      overlay.className = 'internal-link-modal';
-      overlay.innerHTML = `
-        <div class="internal-link-modal__panel" role="dialog" aria-modal="true" aria-label="Insert internal link preset">
-          <h3>Insert Internal Link</h3>
-          <div class="internal-link-modal__grid">
-            <div>
-              <label for="internalLinkPreset">Landing page preset</label>
-              <select id="internalLinkPreset">
-                ${presets.map(function (p) {
-                  return '<option value="' + escHtml(String(p.key || '')) + '">' + escHtml(String(p.label || p.key || '')) + '</option>';
-                }).join('')}
-              </select>
-            </div>
-            <div>
-              <label for="internalLinkLabel">Display text</label>
-              <input id="internalLinkLabel" type="text" value="${escHtml(selectedText || '')}" placeholder="e.g. Explore Berlin opportunities">
-            </div>
-            <div>
-              <label for="internalLinkStyle">Display style</label>
-              <select id="internalLinkStyle">
-                <option value="inline">Inline link</option>
-                <option value="button">Button</option>
-              </select>
-            </div>
-          </div>
-          <div class="internal-link-modal__actions">
-            <button type="button" class="internal-link-modal__btn" data-action="cancel">Cancel</button>
-            <button type="button" class="internal-link-modal__btn internal-link-modal__btn--primary" data-action="insert">Insert link</button>
-          </div>
-        </div>
-      `;
-
-      function close() {
-        if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
-      }
-
-      overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) close();
-      });
-
-      overlay.querySelector('[data-action="cancel"]').addEventListener('click', close);
-      overlay.querySelector('[data-action="insert"]').addEventListener('click', function () {
-        var keyEl = overlay.querySelector('#internalLinkPreset');
-        var labelEl = overlay.querySelector('#internalLinkLabel');
-        var styleEl = overlay.querySelector('#internalLinkStyle');
-        var key = (keyEl && keyEl.value) ? String(keyEl.value).trim() : '';
-        var label = (labelEl && labelEl.value) ? String(labelEl.value).trim() : '';
-        var style = (styleEl && styleEl.value) ? String(styleEl.value).trim() : 'inline';
-        if (!key) return;
-        if (!label) {
-          alert('Please add display text for the link.');
-          if (labelEl) labelEl.focus();
+      try {
+        var presets = Array.isArray(window.__BLOG_INTERNAL_LINK_PRESETS__) ? window.__BLOG_INTERNAL_LINK_PRESETS__ : [];
+        if (!presets.length) {
+          alert('No internal link presets found. Please contact admin.');
           return;
         }
-        var token = '[[landing:' + key + '|' + label + '|' + (style === 'button' ? 'button' : 'inline') + ']]';
-        quill.insertText(range.index, token, 'user');
-        quill.setSelection(range.index + token.length, 0, 'silent');
-        close();
-      });
+        ensureInternalLinkStyles();
+        function escHtml(value) {
+          return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+        }
 
-      document.body.appendChild(overlay);
-      var labelInput = overlay.querySelector('#internalLinkLabel');
-      if (labelInput) labelInput.focus();
+        var range = quill.getSelection(true) || { index: quill.getLength(), length: 0 };
+        var selectedText = (range.length > 0 ? quill.getText(range.index, range.length) : '').trim();
+
+        var overlay = document.createElement('div');
+        overlay.className = 'internal-link-modal';
+        overlay.innerHTML = `
+          <div class="internal-link-modal__panel" role="dialog" aria-modal="true" aria-label="Insert internal link preset">
+            <h3>Insert Internal Link</h3>
+            <div class="internal-link-modal__grid">
+              <div>
+                <label for="internalLinkPreset">Landing page preset</label>
+                <select id="internalLinkPreset">
+                  ${presets.map(function (p) {
+                    return '<option value="' + escHtml(String(p.key || '')) + '">' + escHtml(String(p.label || p.key || '')) + '</option>';
+                  }).join('')}
+                </select>
+              </div>
+              <div>
+                <label for="internalLinkLabel">Display text</label>
+                <input id="internalLinkLabel" type="text" value="${escHtml(selectedText || '')}" placeholder="e.g. Explore Berlin opportunities">
+              </div>
+              <div>
+                <label for="internalLinkStyle">Display style</label>
+                <select id="internalLinkStyle">
+                  <option value="inline">Inline link</option>
+                  <option value="button">Button</option>
+                </select>
+              </div>
+            </div>
+            <div class="internal-link-modal__actions">
+              <button type="button" class="internal-link-modal__btn" data-action="cancel">Cancel</button>
+              <button type="button" class="internal-link-modal__btn internal-link-modal__btn--primary" data-action="insert">Insert link</button>
+            </div>
+          </div>
+        `;
+
+        function close() {
+          if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        }
+
+        overlay.addEventListener('click', function (e) {
+          if (e.target === overlay) close();
+        });
+
+        overlay.querySelector('[data-action="cancel"]').addEventListener('click', close);
+        overlay.querySelector('[data-action="insert"]').addEventListener('click', function () {
+          var keyEl = overlay.querySelector('#internalLinkPreset');
+          var labelEl = overlay.querySelector('#internalLinkLabel');
+          var styleEl = overlay.querySelector('#internalLinkStyle');
+          var key = (keyEl && keyEl.value) ? String(keyEl.value).trim() : '';
+          var label = (labelEl && labelEl.value) ? String(labelEl.value).trim() : '';
+          var style = (styleEl && styleEl.value) ? String(styleEl.value).trim() : 'inline';
+          if (!key) return;
+          if (!label) {
+            alert('Please add display text for the link.');
+            if (labelEl) labelEl.focus();
+            return;
+          }
+          var token = '[[landing:' + key + '|' + label + '|' + (style === 'button' ? 'button' : 'inline') + ']]';
+          quill.insertText(range.index, token, 'user');
+          quill.setSelection(range.index + token.length, 0, 'silent');
+          close();
+        });
+
+        document.body.appendChild(overlay);
+        var labelInput = overlay.querySelector('#internalLinkLabel');
+        if (labelInput) labelInput.focus();
+      } catch (err) {
+        console.error('Internal link modal failed:', err);
+        alert('Could not open Internal Link modal. Please refresh and try again.');
+      }
     }
 
     function mountInternalLinkButton() {
@@ -261,6 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
       toolbarEl.appendChild(btn);
     }
     mountInternalLinkButton();
+    openInternalLinkModalRef = openInternalLinkModal;
 
     var explicitBtn = document.getElementById('insertInternalLinkBtn');
     if (explicitBtn) {
@@ -316,6 +323,18 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
   }
+
+  // Fail-safe binding for explicit button (works even if editor init order changes)
+  document.addEventListener('click', function (e) {
+    var trigger = e.target && e.target.closest ? e.target.closest('#insertInternalLinkBtn') : null;
+    if (!trigger) return;
+    if (typeof openInternalLinkModalRef === 'function') {
+      e.preventDefault();
+      openInternalLinkModalRef();
+      return;
+    }
+    alert('Editor is still loading. Please wait one second and try again.');
+  });
 
   // Prevent double submit and show uploading overlay for forms
   (function lockWhileUploading(){
