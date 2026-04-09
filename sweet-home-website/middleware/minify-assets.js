@@ -9,6 +9,11 @@ const path = require('path');
 
 module.exports = function minifyAssetsMiddleware(req, res, next) {
   const url = req.url.split('?')[0]; // Remove query string
+
+  // Always serve the latest unminified blog editor script.
+  // This avoids stale toolbar/editor behavior when .min.js is older logically
+  // but still appears newer by filesystem mtime.
+  if (url === '/js/admin-blog.js') return next();
   
   // Check if it's a JS or CSS file request (not already minified)
   if (url.match(/\.(js|css)$/) && !url.includes('.min.')) {
