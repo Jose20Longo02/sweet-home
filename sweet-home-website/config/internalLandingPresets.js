@@ -1,22 +1,14 @@
 const INTERNAL_LANDING_PRESETS = {
   berlin_main: {
-    label: 'Berlin LP - Main',
+    label: 'Berlin Landing Page - Main',
     urls: {
       de: '/wohnungen-berlin-kaufen',
       en: '/en/properties-for-sale-berlin',
       es: '/es/propiedades-en-venta-berlin'
     }
   },
-  berlin_tenant_strategy: {
-    label: 'Berlin LP - Tenant-Occupied Strategy',
-    urls: {
-      de: '/wohnungen-berlin-kaufen',
-      en: '/en/berlin-tenant-occupied-entry-strategy',
-      es: '/es/propiedades-en-venta-berlin'
-    }
-  },
   cyprus_main: {
-    label: 'Cyprus LP - Main',
+    label: 'Cyprus Landing Page - Main',
     urls: {
       de: '/immobilien-zypern-kaufen',
       en: '/en/properties-for-sale-cyprus',
@@ -24,7 +16,7 @@ const INTERNAL_LANDING_PRESETS = {
     }
   },
   dubai_main: {
-    label: 'Dubai LP - Main',
+    label: 'Dubai Landing Page - Main',
     urls: {
       de: '/immobilien-dubai-kaufen',
       en: '/en/properties-for-sale-dubai',
@@ -32,7 +24,7 @@ const INTERNAL_LANDING_PRESETS = {
     }
   },
   berlin_charlottenburg: {
-    label: 'Berlin Neighborhood LP - Charlottenburg',
+    label: 'Berlin Neighborhood Landing Page - Charlottenburg',
     urls: {
       de: '/wohnung-kaufen-charlottenburg',
       en: '/en/properties-for-sale-berlin',
@@ -40,7 +32,7 @@ const INTERNAL_LANDING_PRESETS = {
     }
   },
   berlin_moabit: {
-    label: 'Berlin Neighborhood LP - Moabit',
+    label: 'Berlin Neighborhood Landing Page - Moabit',
     urls: {
       de: '/wohnung-kaufen-moabit',
       en: '/en/properties-for-sale-berlin',
@@ -48,7 +40,7 @@ const INTERNAL_LANDING_PRESETS = {
     }
   },
   berlin_friedrichshain_kreuzberg: {
-    label: 'Berlin Neighborhood LP - Friedrichshain-Kreuzberg',
+    label: 'Berlin Neighborhood Landing Page - Friedrichshain-Kreuzberg',
     urls: {
       de: '/wohnung-kaufen-friedrichshain-kreuzberg',
       en: '/en/properties-for-sale-berlin',
@@ -56,7 +48,7 @@ const INTERNAL_LANDING_PRESETS = {
     }
   },
   berlin_schoeneberg: {
-    label: 'Berlin Neighborhood LP - Schoeneberg',
+    label: 'Berlin Neighborhood Landing Page - Schoeneberg',
     urls: {
       de: '/wohnung-kaufen-schoeneberg',
       en: '/en/properties-for-sale-berlin',
@@ -64,7 +56,7 @@ const INTERNAL_LANDING_PRESETS = {
     }
   },
   berlin_prenzlauer_berg: {
-    label: 'Berlin Neighborhood LP - Prenzlauer Berg',
+    label: 'Berlin Neighborhood Landing Page - Prenzlauer Berg',
     urls: {
       de: '/wohnung-kaufen-prenzlauer-berg',
       en: '/en/properties-for-sale-berlin',
@@ -72,7 +64,7 @@ const INTERNAL_LANDING_PRESETS = {
     }
   },
   berlin_wedding: {
-    label: 'Berlin Neighborhood LP - Wedding',
+    label: 'Berlin Neighborhood Landing Page - Wedding',
     urls: {
       de: '/wohnung-kaufen-wedding',
       en: '/en/properties-for-sale-berlin',
@@ -80,7 +72,7 @@ const INTERNAL_LANDING_PRESETS = {
     }
   },
   berlin_tempelhof: {
-    label: 'Berlin Neighborhood LP - Tempelhof',
+    label: 'Berlin Neighborhood Landing Page - Tempelhof',
     urls: {
       de: '/wohnung-kaufen-tempelhof',
       en: '/en/properties-for-sale-berlin',
@@ -88,7 +80,7 @@ const INTERNAL_LANDING_PRESETS = {
     }
   },
   berlin_neukoelln: {
-    label: 'Berlin Neighborhood LP - Neukoelln',
+    label: 'Berlin Neighborhood Landing Page - Neukoelln',
     urls: {
       de: '/wohnung-kaufen-neukoelln',
       en: '/en/properties-for-sale-berlin',
@@ -96,7 +88,7 @@ const INTERNAL_LANDING_PRESETS = {
     }
   },
   berlin_reinickendorf: {
-    label: 'Berlin Neighborhood LP - Reinickendorf',
+    label: 'Berlin Neighborhood Landing Page - Reinickendorf',
     urls: {
       de: '/wohnung-kaufen-reinickendorf',
       en: '/en/properties-for-sale-berlin',
@@ -104,7 +96,7 @@ const INTERNAL_LANDING_PRESETS = {
     }
   },
   berlin_kreuzberg: {
-    label: 'Berlin Neighborhood LP - Kreuzberg',
+    label: 'Berlin Neighborhood Landing Page - Kreuzberg',
     urls: {
       de: '/wohnung-kaufen-kreuzberg',
       en: '/en/properties-for-sale-berlin',
@@ -112,7 +104,7 @@ const INTERNAL_LANDING_PRESETS = {
     }
   },
   berlin_spandau: {
-    label: 'Berlin Neighborhood LP - Spandau',
+    label: 'Berlin Neighborhood Landing Page - Spandau',
     urls: {
       de: '/wohnung-kaufen-spandau',
       en: '/en/properties-for-sale-berlin',
