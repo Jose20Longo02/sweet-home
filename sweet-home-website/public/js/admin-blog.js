@@ -262,6 +262,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     mountInternalLinkButton();
 
+    var explicitBtn = document.getElementById('insertInternalLinkBtn');
+    if (explicitBtn) {
+      explicitBtn.addEventListener('click', openInternalLinkModal);
+    }
+
     // Show editor, hide textarea
     try { qRoot.style.display = ''; } catch (e) {}
     if (qInput && qInput.value) { quill.clipboard.dangerouslyPasteHTML(qInput.value); }
