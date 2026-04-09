@@ -256,17 +256,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    function mountInternalLinkButton() {
-      var toolbarEl = qRoot.parentNode.querySelector('.ql-toolbar');
-      if (!toolbarEl || toolbarEl.querySelector('.ql-internal-link-btn')) return;
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'ql-internal-link-btn';
-      btn.textContent = 'Internal Link';
-      btn.addEventListener('click', openInternalLinkModal);
-      toolbarEl.appendChild(btn);
-    }
-    mountInternalLinkButton();
+    // Keep only the explicit top button to avoid toolbar crowding/conflicts.
     openInternalLinkModalRef = openInternalLinkModal;
 
     var explicitBtn = document.getElementById('insertInternalLinkBtn');
