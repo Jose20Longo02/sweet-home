@@ -225,23 +225,47 @@ function buildRelatedLandingLinks({ title, excerpt, content, lang }) {
   const scored = presets.map((preset) => {
     const keywords = Array.isArray(preset.keywords) ? preset.keywords : [];
     let score = preset.type === 'main' ? 100 : 0;
+    let hits = 0;
+    let titleHits = 0;
     keywords.forEach((keyword) => {
       const term = String(keyword || '').toLowerCase();
       if (!term) return;
-      if (sourceBody.includes(term)) score += 4;
-      if (sourceTitle.includes(term)) score += 6;
+      const bodyMatched = sourceBody.includes(term);
+      const titleMatched = sourceTitle.includes(term);
+      if (bodyMatched) {
+        score += 4;
+        hits += 1;
+      }
+      if (titleMatched) {
+        score += 6;
+        titleHits += 1;
+      }
     });
-    return { ...preset, score };
+    return { ...preset, score, hits, titleHits };
   }).sort((a, b) => b.score - a.score);
 
-  const maxByMarket = { berlin: 6, cyprus: 4, dubai: 4 };
+  const maxByMarket = { berlin: 5, cyprus: 4, dubai: 4 };
   const maxLinks = maxByMarket[market] || 4;
-  const selected = scored.slice(0, maxLinks);
-  const hasMain = selected.some((item) => item.type === 'main');
-  if (!hasMain) {
-    const main = scored.find((item) => item.type === 'main');
-    if (main) selected.unshift(main);
+  const minScoreByMarket = { berlin: 4, cyprus: 4, dubai: 4 };
+  const minScore = minScoreByMarket[market] || 4;
+
+  const main = scored.find((item) => item.type === 'main');
+  let selected = scored.filter((item) => {
+    if (item.type === 'main') return false;
+    // Only keep pages explicitly relevant to the article body/title.
+    if (item.hits <= 0 && item.titleHits <= 0) return false;
+    return item.score >= minScore;
+  });
+
+  // Avoid broad overlap: if only "Kreuzberg" is mentioned, prefer the specific Kreuzberg page
+  // and skip "Friedrichshain-Kreuzberg" unless Friedrichshain is also present.
+  const mentionsFriedrichshain = sourceBody.includes('friedrichshain') || sourceTitle.includes('friedrichshain') || sourceBody.includes('fhain');
+  if (!mentionsFriedrichshain) {
+    selected = selected.filter((item) => item.key !== 'berlin_friedrichshain_kreuzberg');
   }
+
+  selected = selected.slice(0, Math.max(0, maxLinks - 1));
+  if (main) selected.unshift(main);
 
   const deduped = [];
   const seenKeys = new Set();
