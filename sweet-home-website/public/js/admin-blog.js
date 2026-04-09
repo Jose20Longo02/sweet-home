@@ -80,6 +80,188 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
 
+    function ensureInternalLinkStyles() {
+      if (document.getElementById('internal-link-modal-styles')) return;
+      var style = document.createElement('style');
+      style.id = 'internal-link-modal-styles';
+      style.textContent = `
+        .ql-internal-link-btn {
+          margin-left: 6px;
+          border: 1px solid #d1d5db;
+          border-radius: 6px;
+          height: 24px;
+          padding: 0 8px;
+          font-size: 12px;
+          line-height: 22px;
+          background: #f8fafc;
+          color: #111827;
+          cursor: pointer;
+        }
+        .internal-link-modal {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.45);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 12000;
+        }
+        .internal-link-modal__panel {
+          width: min(560px, calc(100vw - 24px));
+          background: #fff;
+          border-radius: 12px;
+          border: 1px solid #e5e7eb;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+          padding: 16px;
+        }
+        .internal-link-modal__panel h3 {
+          margin: 0 0 10px;
+          font-size: 18px;
+          color: #111827;
+        }
+        .internal-link-modal__grid {
+          display: grid;
+          gap: 10px;
+        }
+        .internal-link-modal__grid label {
+          display: block;
+          font-size: 13px;
+          font-weight: 600;
+          color: #374151;
+          margin-bottom: 4px;
+        }
+        .internal-link-modal__grid input,
+        .internal-link-modal__grid select {
+          width: 100%;
+          border: 1px solid #d1d5db;
+          border-radius: 8px;
+          min-height: 38px;
+          padding: 8px 10px;
+          font-size: 14px;
+          color: #111827;
+        }
+        .internal-link-modal__actions {
+          margin-top: 14px;
+          display: flex;
+          justify-content: flex-end;
+          gap: 8px;
+        }
+        .internal-link-modal__btn {
+          min-height: 36px;
+          border-radius: 8px;
+          border: 1px solid #d1d5db;
+          background: #fff;
+          color: #111827;
+          padding: 0 12px;
+          font-size: 13px;
+          cursor: pointer;
+        }
+        .internal-link-modal__btn--primary {
+          background: #1f7a45;
+          border-color: #1f7a45;
+          color: #fff;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    function openInternalLinkModal() {
+      var presets = Array.isArray(window.__BLOG_INTERNAL_LINK_PRESETS__) ? window.__BLOG_INTERNAL_LINK_PRESETS__ : [];
+      if (!presets.length) {
+        alert('No internal link presets found. Please contact admin.');
+        return;
+      }
+      ensureInternalLinkStyles();
+      function escHtml(value) {
+        return String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      var range = quill.getSelection(true) || { index: quill.getLength(), length: 0 };
+      var selectedText = (range.length > 0 ? quill.getText(range.index, range.length) : '').trim();
+
+      var overlay = document.createElement('div');
+      overlay.className = 'internal-link-modal';
+      overlay.innerHTML = `
+        <div class="internal-link-modal__panel" role="dialog" aria-modal="true" aria-label="Insert internal link preset">
+          <h3>Insert Internal Link</h3>
+          <div class="internal-link-modal__grid">
+            <div>
+              <label for="internalLinkPreset">Landing page preset</label>
+              <select id="internalLinkPreset">
+                ${presets.map(function (p) {
+                  return '<option value="' + escHtml(String(p.key || '')) + '">' + escHtml(String(p.label || p.key || '')) + '</option>';
+                }).join('')}
+              </select>
+            </div>
+            <div>
+              <label for="internalLinkLabel">Display text</label>
+              <input id="internalLinkLabel" type="text" value="${escHtml(selectedText || '')}" placeholder="e.g. Explore Berlin opportunities">
+            </div>
+            <div>
+              <label for="internalLinkStyle">Display style</label>
+              <select id="internalLinkStyle">
+                <option value="inline">Inline link</option>
+                <option value="button">Button</option>
+              </select>
+            </div>
+          </div>
+          <div class="internal-link-modal__actions">
+            <button type="button" class="internal-link-modal__btn" data-action="cancel">Cancel</button>
+            <button type="button" class="internal-link-modal__btn internal-link-modal__btn--primary" data-action="insert">Insert link</button>
+          </div>
+        </div>
+      `;
+
+      function close() {
+        if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      }
+
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) close();
+      });
+
+      overlay.querySelector('[data-action="cancel"]').addEventListener('click', close);
+      overlay.querySelector('[data-action="insert"]').addEventListener('click', function () {
+        var keyEl = overlay.querySelector('#internalLinkPreset');
+        var labelEl = overlay.querySelector('#internalLinkLabel');
+        var styleEl = overlay.querySelector('#internalLinkStyle');
+        var key = (keyEl && keyEl.value) ? String(keyEl.value).trim() : '';
+        var label = (labelEl && labelEl.value) ? String(labelEl.value).trim() : '';
+        var style = (styleEl && styleEl.value) ? String(styleEl.value).trim() : 'inline';
+        if (!key) return;
+        if (!label) {
+          alert('Please add display text for the link.');
+          if (labelEl) labelEl.focus();
+          return;
+        }
+        var token = '[[landing:' + key + '|' + label + '|' + (style === 'button' ? 'button' : 'inline') + ']]';
+        quill.insertText(range.index, token, 'user');
+        quill.setSelection(range.index + token.length, 0, 'silent');
+        close();
+      });
+
+      document.body.appendChild(overlay);
+      var labelInput = overlay.querySelector('#internalLinkLabel');
+      if (labelInput) labelInput.focus();
+    }
+
+    function mountInternalLinkButton() {
+      var toolbarEl = qRoot.parentNode.querySelector('.ql-toolbar');
+      if (!toolbarEl || toolbarEl.querySelector('.ql-internal-link-btn')) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'ql-internal-link-btn';
+      btn.textContent = 'Internal Link';
+      btn.addEventListener('click', openInternalLinkModal);
+      toolbarEl.appendChild(btn);
+    }
+    mountInternalLinkButton();
+
     // Show editor, hide textarea
     try { qRoot.style.display = ''; } catch (e) {}
     if (qInput && qInput.value) { quill.clipboard.dangerouslyPasteHTML(qInput.value); }

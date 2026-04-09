@@ -72,6 +72,9 @@
         <button type="submit" class="btn btn-danger">Delete</button>
       </form>
       <script src="https://unpkg.com/quill@1.3.7/dist/quill.min.js"></script>
+      <script>
+        window.__BLOG_INTERNAL_LINK_PRESETS__ = <%- JSON.stringify(internalLinkPresets || []) %>;
+      </script>
       <script src="/js/admin-blog.js"></script>
     </main>
   </div>

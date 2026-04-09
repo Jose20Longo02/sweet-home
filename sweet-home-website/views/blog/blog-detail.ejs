@@ -1,5 +1,33 @@
 <% if (typeof title === 'undefined' || !title) { title = post.title; } headPartial = '../partials/seo/blog-detail-head'; %>
 <link rel="stylesheet" href="/css/blog.css" />
+<style>
+  .blog-detail .content .internal-landing-link {
+    color: #1f7a45;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 600;
+  }
+  .blog-detail .content .internal-landing-link--button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 8px 14px;
+    margin: 6px 4px 6px 0;
+    background: #1f7a45;
+    color: #ffffff;
+    border: 1px solid #1f7a45;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .blog-detail .content .internal-landing-link--button:hover,
+  .blog-detail .content .internal-landing-link--button:focus {
+    color: #ffffff;
+    background: #18673b;
+    border-color: #18673b;
+  }
+</style>
 <article class="container main blog-detail">
   <div class="blog-detail-grid">
     <aside class="blog-recommended">

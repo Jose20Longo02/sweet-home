@@ -2,6 +2,7 @@
 const BlogPost = require('../models/BlogPost');
 const { query } = require('../config/db');
 const { ensureLocalizedFields } = require('../config/translator');
+const { getInternalLandingPresetOptions, resolveInternalLandingUrl } = require('../config/internalLandingPresets');
 
 const BLOG_TOPIC_DEFS = {
   berlin: ['berlin', 'mitte', 'kreuzberg', 'charlottenburg', 'pankow', 'schoneberg', 'spandau'],
@@ -94,6 +95,31 @@ function convertH1ToH2(htmlContent) {
     .replace(/<\/h1>/gi, '</h2>');        // Closing tags
 }
 
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Token format:
+// [[landing:berlin_main|See Berlin opportunities|inline]]
+// [[landing:berlin_main|See Berlin opportunities|button]]
+function renderInternalLandingTokens(htmlContent, lang) {
+  if (!htmlContent || typeof htmlContent !== 'string') return htmlContent;
+  return htmlContent.replace(/\[\[landing:([a-z0-9_-]+)\|([^\]|]+)(?:\|(inline|button))?\]\]/gi, (full, key, label, style) => {
+    const href = resolveInternalLandingUrl(String(key || '').trim(), lang);
+    if (!href) return full;
+    const safeHref = escapeHtml(href);
+    const safeLabel = escapeHtml(label);
+    const safeKey = escapeHtml(key);
+    const variant = String(style || 'inline').toLowerCase() === 'button' ? 'button' : 'inline';
+    return `<a href="${safeHref}" class="internal-landing-link internal-landing-link--${variant}" data-landing-key="${safeKey}">${safeLabel}</a>`;
+  });
+}
+
 // Public
 exports.listPublic = async (req, res, next) => {
   try {
@@ -169,8 +195,9 @@ exports.showPublic = async (req, res, next) => {
     const lang = res.locals.lang || 'en';
     const postTitle = (post.title_i18n && post.title_i18n[lang]) || post.title;
     const postContent = (post.content_i18n && post.content_i18n[lang]) || post.content;
+    const localizedLinksContent = renderInternalLandingTokens(postContent, lang);
     // Process content: add ALT attributes and convert H1 tags to H2 to avoid multiple H1s
-    let processedContent = addAltToImages(postContent, `Image from ${postTitle}`);
+    let processedContent = addAltToImages(localizedLinksContent, `Image from ${postTitle}`);
     processedContent = convertH1ToH2(processedContent);
     
     const localizedPost = {
@@ -251,7 +278,8 @@ exports.newForm = (req, res) => {
   res.render('admin/blog/new', { 
     error: null, 
     currentUser: req.session.user,
-    formData: {}
+    formData: {},
+    internalLinkPresets: getInternalLandingPresetOptions()
   });
 };
 
@@ -269,7 +297,8 @@ exports.create = async (req, res, next) => {
           excerpt: req.body.excerpt || '',
           content: req.body.content || '',
           status: req.body.status || 'draft'
-        }
+        },
+        internalLinkPresets: getInternalLandingPresetOptions()
       });
     }
     
@@ -402,7 +431,8 @@ exports.create = async (req, res, next) => {
         excerpt: req.body.excerpt || '',
         content: req.body.content || '',
         status: req.body.status || 'draft'
-      }
+      },
+      internalLinkPresets: getInternalLandingPresetOptions()
     });
   }
 };
@@ -416,7 +446,12 @@ exports.editForm = async (req, res, next) => {
     if (req.session.user.role !== 'SuperAdmin' && post.author_id !== req.session.user.id) {
       return res.status(403).send('Forbidden');
     }
-    res.render('admin/blog/edit', { post, error: null, currentUser: req.session.user });
+    res.render('admin/blog/edit', {
+      post,
+      error: null,
+      currentUser: req.session.user,
+      internalLinkPresets: getInternalLandingPresetOptions()
+    });
   } catch (err) { next(err); }
 };
 
@@ -542,7 +577,8 @@ exports.update = async (req, res, next) => {
         return res.render('admin/blog/edit', {
           post,
           error: errorMessage,
-          currentUser: req.session.user
+          currentUser: req.session.user,
+          internalLinkPresets: getInternalLandingPresetOptions()
         });
       }
     } catch (_) {}
