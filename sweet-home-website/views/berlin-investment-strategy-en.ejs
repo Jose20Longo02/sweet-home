@@ -243,10 +243,6 @@
           <strong id="calcEstimatedPayment">EUR 0</strong>
         </div>
         <div class="strategy-calculator__result">
-          <span class="strategy-calculator__result-label">Buffered payment (+10%)</span>
-          <strong id="calcBufferedPayment">EUR 0</strong>
-        </div>
-        <div class="strategy-calculator__result">
           <span class="strategy-calculator__result-label">Required net salary</span>
           <strong id="calcRequiredSalary">EUR 0</strong>
         </div>
@@ -262,7 +258,7 @@
             <strong id="calcExtraCosts">EUR 0</strong>
           </div>
           <div class="strategy-calculator__derived-item">
-            <span class="strategy-calculator__result-label">Total equity required (extra costs + upfront payment)</span>
+            <span class="strategy-calculator__result-label">Total equity required</span>
             <strong id="calcTotalEquity">EUR 0</strong>
           </div>
           <div class="strategy-calculator__derived-item">
@@ -1349,7 +1345,6 @@
         totalExpenses: document.getElementById('calcTotalExpenses'),
         finalBalance: document.getElementById('calcFinalBalance'),
         estimatedPayment: document.getElementById('calcEstimatedPayment'),
-        bufferedPayment: document.getElementById('calcBufferedPayment'),
         requiredSalary: document.getElementById('calcRequiredSalary'),
         qualificationStatus: document.getElementById('calcQualificationStatus'),
         qualificationNote: document.getElementById('calcQualificationNote'),
@@ -1413,7 +1408,6 @@
         if (output.totalExpenses) output.totalExpenses.textContent = formatEur(totalExpenses);
         if (output.finalBalance) output.finalBalance.textContent = formatEur(finalBalance);
         if (output.estimatedPayment) output.estimatedPayment.textContent = formatEur(estimatedPayment);
-        if (output.bufferedPayment) output.bufferedPayment.textContent = formatEur(bufferedPayment);
         if (output.requiredSalary) output.requiredSalary.textContent = formatEur(requiredSalary);
 
         if (output.qualificationStatus) {
