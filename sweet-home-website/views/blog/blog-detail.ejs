@@ -110,15 +110,6 @@
       <section class="content">
         <%- post.content %>
       </section>
-      <section class="blog-author-expertise" aria-label="<%= t('blog.detail.authorBoxLabel','Author expertise') %>">
-        <h2><%= t('blog.detail.authorExpertiseTitle','Author expertise') %></h2>
-        <p>
-          <%= t('blog.detail.authorExpertiseBody', 'This article is reviewed by our real estate team for local market accuracy and practical buyer guidance.') %>
-        </p>
-        <% if (post.author_name) { %>
-          <p class="author-name"><%= t('blog.detail.authorNamePrefix','Reviewed by') %> <strong><%= post.author_name %></strong></p>
-        <% } %>
-      </section>
       <% if ((relatedLandingLinks || []).length > 0) { %>
         <section class="blog-related-landings" aria-label="<%= t('blog.detail.relatedLandingTitle', 'Related apartments for sale') %>">
           <h2><%= t('blog.detail.relatedLandingTitle', 'Related apartments for sale') %></h2>
