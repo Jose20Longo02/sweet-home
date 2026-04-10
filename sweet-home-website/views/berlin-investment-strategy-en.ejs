@@ -202,8 +202,8 @@
                 <input id="calcPropertyPrice" type="number" min="0" step="1000" value="300000" inputmode="decimal">
               </div>
               <div class="strategy-calculator__field">
-                <label for="calcEquityPct">Upfront payment (% of property value, minimum 10%)</label>
-                <input id="calcEquityPct" type="number" min="0" max="100" step="1" value="10" inputmode="decimal">
+                <label for="calcEquityPct">Upfront payment (% of property value, minimum 12%)</label>
+                <input id="calcEquityPct" type="number" min="12" max="100" step="1" value="12" inputmode="decimal">
               </div>
               <div class="strategy-calculator__field">
                 <label for="calcDebtServiceRate">Estimated annual debt-service rate (%)</label>
@@ -254,7 +254,7 @@
 
         <div class="strategy-calculator__derived">
           <div class="strategy-calculator__derived-item">
-            <span class="strategy-calculator__result-label">Purchase extra costs (10% of price)</span>
+            <span class="strategy-calculator__result-label">Purchase extra costs (12% of price)</span>
             <strong id="calcExtraCosts">EUR 0</strong>
           </div>
           <div class="strategy-calculator__derived-item">
@@ -1391,14 +1391,15 @@
         var equityPct = Math.max(0, Math.min(100, parseNumber(equityPctInput ? equityPctInput.value : 0)));
         var annualDebtServiceRate = Math.max(0, parseNumber(debtServiceRateInput ? debtServiceRateInput.value : 0));
 
-        var extraCosts = propertyPrice * 0.10;
+        var extraCosts = propertyPrice * 0.12;
         var ownEquity = propertyPrice * (equityPct / 100);
         var totalEquityRequired = extraCosts + ownEquity;
         var mortgage = Math.max(0, propertyPrice + extraCosts - totalEquityRequired);
         var estimatedPayment = (mortgage * annualDebtServiceRate) / 1200;
         var bufferedPayment = estimatedPayment * 1.1;
         var requiredSalary = bufferedPayment + totalExpenses;
-        var qualifies = estimatedPayment <= finalBalance;
+        var meetsUpfrontMinimum = equityPct >= 12;
+        var qualifies = estimatedPayment <= finalBalance && meetsUpfrontMinimum;
 
         if (output.extraCosts) output.extraCosts.textContent = formatEur(extraCosts);
         if (output.totalEquity) output.totalEquity.textContent = formatEur(totalEquityRequired);
@@ -1428,8 +1429,8 @@
             if (estimatedPayment > finalBalance) {
               reasons.push('the estimated monthly payment is about <strong>' + formatEur(shortfall) + '</strong> above your available final balance');
             }
-            if (equityPct < 10) {
-              reasons.push('upfront payment is below 10%, which can reduce financing strength');
+            if (equityPct < 12) {
+              reasons.push('upfront payment is below 12%, which can reduce financing strength');
             }
             output.qualificationNote.innerHTML = 'Result: <strong>Not suitable yet under current assumptions.</strong> Main reason(s): ' + reasons.join('; ') + '. You can improve this by increasing upfront payment, reducing property price, lowering other monthly obligations, or targeting better financing terms.';
           }
