@@ -1066,6 +1066,7 @@
     background: linear-gradient(180deg, #f6fbf8 0%, #eff7f2 100%);
     border-color: #cbe1d4;
     gap: 6px;
+    grid-column: span 2;
   }
   .strategy-calculator__result--status strong {
     color: #9f1239;
@@ -1338,6 +1339,9 @@
     }
     .strategy-calculator__result {
       min-height: 74px;
+    }
+    .strategy-calculator__result--status {
+      grid-column: auto;
     }
     .strategy-calculator__status-metrics {
       grid-template-columns: 1fr;
