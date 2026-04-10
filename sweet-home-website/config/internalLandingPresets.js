@@ -166,6 +166,51 @@ function getInternalLandingPresetEntries() {
   return Object.entries(INTERNAL_LANDING_PRESETS).map(([key, def]) => ({ key, ...def }));
 }
 
+function formatNameFromKey(key, market) {
+  const raw = String(key || '');
+  if (!raw) return '';
+  const prefix = `${market}_`;
+  const base = raw.startsWith(prefix) ? raw.slice(prefix.length) : raw;
+  if (base === 'main') {
+    if (market === 'berlin') return 'Berlin';
+    if (market === 'cyprus') return 'Cyprus';
+    if (market === 'dubai') return 'Dubai';
+  }
+  return base
+    .split('_')
+    .map((part) => part ? part.charAt(0).toUpperCase() + part.slice(1) : part)
+    .join(' ')
+    .replace(/\bNeukoelln\b/g, 'Neukoelln')
+    .replace(/\bSchoeneberg\b/g, 'Schoeneberg');
+}
+
+function getInternalLandingPresetLabel(key, lang) {
+  const preset = INTERNAL_LANDING_PRESETS[key];
+  if (!preset) return '';
+  const lcLang = String(lang || 'de').toLowerCase().slice(0, 2);
+  const location = formatNameFromKey(key, preset.market);
+  const isMain = preset.type === 'main';
+
+  if (lcLang === 'de') {
+    if (isMain && preset.market === 'berlin') return 'Wohnungen in Berlin kaufen';
+    if (isMain && preset.market === 'cyprus') return 'Immobilien in Zypern kaufen';
+    if (isMain && preset.market === 'dubai') return 'Immobilien in Dubai kaufen';
+    return `Wohnungen in ${location} kaufen`;
+  }
+
+  if (lcLang === 'es') {
+    if (isMain && preset.market === 'berlin') return 'Apartamentos en venta en Berlin';
+    if (isMain && preset.market === 'cyprus') return 'Apartamentos en venta en Chipre';
+    if (isMain && preset.market === 'dubai') return 'Apartamentos en venta en Dubai';
+    return `Apartamentos en venta en ${location}`;
+  }
+
+  if (isMain && preset.market === 'berlin') return 'Apartments for sale in Berlin';
+  if (isMain && preset.market === 'cyprus') return 'Apartments for sale in Cyprus';
+  if (isMain && preset.market === 'dubai') return 'Apartments for sale in Dubai';
+  return `Apartments for sale in ${location}`;
+}
+
 function resolveInternalLandingUrl(key, lang) {
   const preset = INTERNAL_LANDING_PRESETS[key];
   if (!preset || !preset.urls) return null;
@@ -177,5 +222,6 @@ module.exports = {
   INTERNAL_LANDING_PRESETS,
   getInternalLandingPresetOptions,
   getInternalLandingPresetEntries,
-  resolveInternalLandingUrl
+  resolveInternalLandingUrl,
+  getInternalLandingPresetLabel
 };

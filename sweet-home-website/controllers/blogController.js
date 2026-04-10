@@ -2,7 +2,12 @@
 const BlogPost = require('../models/BlogPost');
 const { query } = require('../config/db');
 const { ensureLocalizedFields } = require('../config/translator');
-const { getInternalLandingPresetOptions, getInternalLandingPresetEntries, resolveInternalLandingUrl } = require('../config/internalLandingPresets');
+const {
+  getInternalLandingPresetOptions,
+  getInternalLandingPresetEntries,
+  resolveInternalLandingUrl,
+  getInternalLandingPresetLabel
+} = require('../config/internalLandingPresets');
 const { detectLanguageFromFields, getTargetLanguages } = require('../utils/languageDetection');
 
 const BLOG_TOPIC_DEFS = {
@@ -276,7 +281,7 @@ function buildRelatedLandingLinks({ title, excerpt, content, lang }) {
     deduped.push({
       key: item.key,
       href,
-      label: item.label,
+      label: getInternalLandingPresetLabel(item.key, lang),
       type: item.type
     });
     seenKeys.add(item.key);

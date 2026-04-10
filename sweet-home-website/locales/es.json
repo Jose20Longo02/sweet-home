@@ -392,6 +392,8 @@
       "authorExpertiseTitle": "Experiencia del autor",
       "authorExpertiseBody": "Este artículo es revisado por nuestro equipo inmobiliario para asegurar precisión local del mercado y orientación práctica para compradores.",
       "authorNamePrefix": "Revisado por",
+      "relatedLandingTitle": "Apartamentos en venta relacionados",
+      "relatedLandingIntro": "Explora estas páginas relevantes para comparar apartamentos en venta por ciudad y barrio.",
       "faq": {
         "berlin": {
           "q1": "Que barrios de Berlin suelen tener mejor valor a largo plazo?",

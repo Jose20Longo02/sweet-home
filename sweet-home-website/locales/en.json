@@ -419,6 +419,8 @@
       "authorExpertiseTitle": "Author expertise",
       "authorExpertiseBody": "This article is reviewed by our real estate team for local market accuracy and practical buyer guidance.",
       "authorNamePrefix": "Reviewed by",
+      "relatedLandingTitle": "Related apartments for sale",
+      "relatedLandingIntro": "Explore these relevant pages to compare apartments for sale by city and neighborhood.",
       "faq": {
         "berlin": {
           "q1": "Which Berlin neighborhoods are best for long-term value?",

@@ -401,6 +401,8 @@
       "authorExpertiseTitle": "Autor-Expertise",
       "authorExpertiseBody": "Dieser Artikel wird von unserem Immobilien-Team auf lokale Marktgenauigkeit und praxisnahe Käuferhinweise geprüft.",
       "authorNamePrefix": "Gepruft von",
+      "relatedLandingTitle": "Relevante Wohnungsangebote",
+      "relatedLandingIntro": "Entdecken Sie passende Seiten, um Wohnungen zum Kauf nach Stadt und Stadtteil zu vergleichen.",
       "faq": {
         "berlin": {
           "q1": "Welche Berliner Stadtteile sind fur langfristigen Wert besonders geeignet?",
