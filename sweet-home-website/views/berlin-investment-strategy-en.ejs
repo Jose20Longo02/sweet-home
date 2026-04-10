@@ -249,18 +249,6 @@
         <div class="strategy-calculator__result strategy-calculator__result--status">
           <span class="strategy-calculator__result-label">Suitability check</span>
           <strong id="calcQualificationStatus">Not qualified yet</strong>
-          <span id="calcStatusPill" class="strategy-calculator__status-pill">Waiting for calculation</span>
-          <div class="strategy-calculator__status-metrics">
-            <div class="strategy-calculator__status-metric">
-              <span>Capacity gap</span>
-              <strong id="calcCapacityGap">EUR 0</strong>
-            </div>
-            <div class="strategy-calculator__status-metric">
-              <span>Coverage ratio</span>
-              <strong id="calcCoverageRatio">0%</strong>
-            </div>
-          </div>
-          <ul id="calcImprovementList" class="strategy-calculator__improvement-list" hidden></ul>
         </div>
         </div>
 
@@ -1065,71 +1053,12 @@
   .strategy-calculator__result--status {
     background: linear-gradient(180deg, #f6fbf8 0%, #eff7f2 100%);
     border-color: #cbe1d4;
-    gap: 6px;
-    grid-column: span 2;
   }
   .strategy-calculator__result--status strong {
     color: #9f1239;
   }
   .strategy-calculator__result--status.is-qualified strong {
     color: #166534;
-  }
-  .strategy-calculator__result--status.is-not-qualified {
-    background: linear-gradient(180deg, #fff7f7 0%, #fff1f2 100%);
-    border-color: #f5cdd6;
-  }
-  .strategy-calculator__status-pill {
-    align-self: flex-start;
-    border-radius: 999px;
-    border: 1px solid #d6e6dc;
-    background: #f3faf6;
-    color: #166534;
-    font-size: 0.72rem;
-    font-weight: 700;
-    line-height: 1;
-    padding: 6px 9px;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-  }
-  .strategy-calculator__result--status.is-not-qualified .strategy-calculator__status-pill {
-    border-color: #f2c5cf;
-    background: #fff2f5;
-    color: #9f1239;
-  }
-  .strategy-calculator__status-metrics {
-    margin-top: 2px;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
-  }
-  .strategy-calculator__status-metric {
-    border: 1px solid #d5e5db;
-    border-radius: 8px;
-    background: #ffffff;
-    padding: 7px 8px;
-  }
-  .strategy-calculator__result--status.is-not-qualified .strategy-calculator__status-metric {
-    border-color: #f2d2d9;
-  }
-  .strategy-calculator__status-metric span {
-    display: block;
-    color: #5b6676;
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-  }
-  .strategy-calculator__status-metric strong {
-    margin-top: 3px;
-    display: block;
-    font-size: 0.88rem;
-    color: #152233;
-  }
-  .strategy-calculator__improvement-list {
-    margin: 2px 0 0;
-    padding-left: 1.1rem;
-    color: #5d2130;
-    font-size: 0.78rem;
-    line-height: 1.45;
   }
   .strategy-calculator__note {
     margin: 14px 0 0;
@@ -1340,12 +1269,6 @@
     .strategy-calculator__result {
       min-height: 74px;
     }
-    .strategy-calculator__result--status {
-      grid-column: auto;
-    }
-    .strategy-calculator__status-metrics {
-      grid-template-columns: 1fr;
-    }
     .strategy-calculator__actions .strategy-calculator__btn {
       width: 100%;
     }
@@ -1424,10 +1347,6 @@
         estimatedPayment: document.getElementById('calcEstimatedPayment'),
         requiredSalary: document.getElementById('calcRequiredSalary'),
         qualificationStatus: document.getElementById('calcQualificationStatus'),
-        statusPill: document.getElementById('calcStatusPill'),
-        capacityGap: document.getElementById('calcCapacityGap'),
-        coverageRatio: document.getElementById('calcCoverageRatio'),
-        improvementList: document.getElementById('calcImprovementList'),
         qualificationNote: document.getElementById('calcQualificationNote'),
         qualificationCard: document.getElementById('calcQualificationStatus') ? document.getElementById('calcQualificationStatus').closest('.strategy-calculator__result--status') : null
       };
@@ -1481,24 +1400,6 @@
         var requiredSalary = bufferedPayment + totalExpenses;
         var meetsUpfrontMinimum = equityPct >= 12;
         var qualifies = estimatedPayment <= finalBalance && meetsUpfrontMinimum;
-        var capacityGap = finalBalance - estimatedPayment;
-        var coverageRatio = estimatedPayment > 0 ? (finalBalance / estimatedPayment) * 100 : 0;
-        var reasons = [];
-
-        if (finalBalance <= 0) {
-          reasons.push('Current monthly expenses consume most (or all) available income');
-        }
-        if (estimatedPayment > finalBalance) {
-          reasons.push('Estimated monthly payment is above available final balance');
-        }
-        if (equityPct < 12) {
-          reasons.push('Upfront payment is below 12%');
-        }
-
-        function formatSignedEur(value) {
-          if (value >= 0) return '+ ' + formatEur(value);
-          return '- ' + formatEur(Math.abs(value));
-        }
 
         if (output.extraCosts) output.extraCosts.textContent = formatEur(extraCosts);
         if (output.totalEquity) output.totalEquity.textContent = formatEur(totalEquityRequired);
@@ -1509,36 +1410,29 @@
         if (output.finalBalance) output.finalBalance.textContent = formatEur(finalBalance);
         if (output.estimatedPayment) output.estimatedPayment.textContent = formatEur(estimatedPayment);
         if (output.requiredSalary) output.requiredSalary.textContent = formatEur(requiredSalary);
-        if (output.capacityGap) output.capacityGap.textContent = formatSignedEur(capacityGap);
-        if (output.coverageRatio) output.coverageRatio.textContent = (isFinite(coverageRatio) ? coverageRatio : 0).toFixed(0) + '%';
 
         if (output.qualificationStatus) {
           output.qualificationStatus.textContent = qualifies ? 'Qualified under current assumptions' : 'Not qualified under current assumptions';
         }
         if (output.qualificationCard) {
           output.qualificationCard.classList.toggle('is-qualified', qualifies);
-          output.qualificationCard.classList.toggle('is-not-qualified', !qualifies);
-        }
-        if (output.statusPill) {
-          output.statusPill.textContent = qualifies ? 'Eligible now' : 'Action needed';
-        }
-        if (output.improvementList) {
-          if (qualifies || !reasons.length) {
-            output.improvementList.hidden = true;
-            output.improvementList.innerHTML = '';
-          } else {
-            output.improvementList.hidden = false;
-            output.improvementList.innerHTML = reasons.map(function (reason) {
-              return '<li>' + reason + '</li>';
-            }).join('');
-          }
         }
         if (output.qualificationNote) {
           if (qualifies) {
-            output.qualificationNote.innerHTML = 'Result: <strong>Suitable under current assumptions.</strong> Your monthly capacity is currently above the modeled payment, and your upfront-payment input meets the minimum threshold.';
+            output.qualificationNote.innerHTML = 'Result: <strong>Suitable under current assumptions.</strong> Geschätzt is lower than your final balance after expenses, which means your monthly capacity can cover the modeled payment.';
           } else {
             var shortfall = estimatedPayment - finalBalance;
-            output.qualificationNote.innerHTML = 'Result: <strong>Not suitable yet under current assumptions.</strong> Estimated payment is about <strong>' + formatEur(Math.max(shortfall, 0)) + '</strong> above available monthly capacity. You can improve this by increasing upfront payment, reducing property price, lowering other monthly obligations, or targeting better financing terms.';
+            var reasons = [];
+            if (finalBalance <= 0) {
+              reasons.push('your current monthly expenses are consuming most (or all) available income');
+            }
+            if (estimatedPayment > finalBalance) {
+              reasons.push('the estimated monthly payment is about <strong>' + formatEur(shortfall) + '</strong> above your available final balance');
+            }
+            if (equityPct < 12) {
+              reasons.push('upfront payment is below 12%, which can reduce financing strength');
+            }
+            output.qualificationNote.innerHTML = 'Result: <strong>Not suitable yet under current assumptions.</strong> Main reason(s): ' + reasons.join('; ') + '. You can improve this by increasing upfront payment, reducing property price, lowering other monthly obligations, or targeting better financing terms.';
           }
         }
 
@@ -1591,15 +1485,6 @@
       ].filter(Boolean).forEach(function (input) {
         input.addEventListener('input', function () {
           if (resultsWrap) resultsWrap.hidden = true;
-          if (output.statusPill) output.statusPill.textContent = 'Waiting for calculation';
-          if (output.improvementList) {
-            output.improvementList.hidden = true;
-            output.improvementList.innerHTML = '';
-          }
-          if (output.qualificationCard) {
-            output.qualificationCard.classList.remove('is-qualified');
-            output.qualificationCard.classList.remove('is-not-qualified');
-          }
           if (output.qualificationNote) {
             output.qualificationNote.innerHTML = 'Inputs updated. Click <strong>Calculate suitability</strong> to refresh your result.';
           }
