@@ -1,7 +1,11 @@
 {
   "owners": {
     "recentlySold": "Recientemente vendido",
-    "hero": { "title": "¿Listo para vender/alquilar tu propiedad?", "cta": "¡Contáctanos!", "learnMore": "Saber más" },
+    "hero": {
+      "title": "¿Listo para vender/alquilar tu propiedad?",
+      "cta": "¡Contáctanos!",
+      "learnMore": "Saber más"
+    },
     "why": {
       "title": "¿Por qué trabajar con nosotros?",
       "items": {
@@ -13,9 +17,41 @@
       },
       "altBerlin": "Horizonte de Berlín"
     },
-    "form": { "submit": "Enviar", "selectLanguage": "Selecciona un idioma", "fixErrors": "Corrige los errores arriba.", "sending": "Enviando...", "successShort": "¡Gracias! Nos pondremos en contacto pronto.", "submitted": "Envío recibido.", "successToast": "¡Gracias! Tu mensaje se envió correctamente.", "errorStatus": "Hubo un problema. Inténtalo de nuevo.", "errorToast": "Algo salió mal. Inténtalo de nuevo más tarde.", "neighborhood": "Barrio", "neighborhoodPlaceholder": "Introduce el barrio", "size": "Tamaño (m²)", "sizePlaceholder": "ej. 75,5", "rooms": "Número de habitaciones", "roomsPlaceholder": "ej. 2,5", "occupancy": "Estado de ocupación", "selectOccupancy": "Selecciona el estado", "empty": "Vacío", "tenanted": "Alquilado" },
-    "validation": { "fullName": "Introduce tu nombre completo", "countryCode": "Introduce un código de país", "phone": "Introduce un número de teléfono", "email": "Introduce un correo válido", "language": "Selecciona un idioma" },
-    "aria": { "hero": "Sección para vendedores", "primaryActions": "Acciones principales", "heroNote": "La imagen de fondo tiene una superposición oscura para mejorar el contraste", "reasons": "Lista de razones", "recentlySoldCarousel": "Carrusel de recientemente vendidos" }
+    "form": {
+      "submit": "Enviar",
+      "selectLanguage": "Selecciona un idioma",
+      "fixErrors": "Corrige los errores arriba.",
+      "sending": "Enviando...",
+      "successShort": "¡Gracias! Nos pondremos en contacto pronto.",
+      "submitted": "Envío recibido.",
+      "successToast": "¡Gracias! Tu mensaje se envió correctamente.",
+      "errorStatus": "Hubo un problema. Inténtalo de nuevo.",
+      "errorToast": "Algo salió mal. Inténtalo de nuevo más tarde.",
+      "neighborhood": "Barrio",
+      "neighborhoodPlaceholder": "Introduce el barrio",
+      "size": "Tamaño (m²)",
+      "sizePlaceholder": "ej. 75,5",
+      "rooms": "Número de habitaciones",
+      "roomsPlaceholder": "ej. 2,5",
+      "occupancy": "Estado de ocupación",
+      "selectOccupancy": "Selecciona el estado",
+      "empty": "Vacío",
+      "tenanted": "Alquilado"
+    },
+    "validation": {
+      "fullName": "Introduce tu nombre completo",
+      "countryCode": "Introduce un código de país",
+      "phone": "Introduce un número de teléfono",
+      "email": "Introduce un correo válido",
+      "language": "Selecciona un idioma"
+    },
+    "aria": {
+      "hero": "Sección para vendedores",
+      "primaryActions": "Acciones principales",
+      "heroNote": "La imagen de fondo tiene una superposición oscura para mejorar el contraste",
+      "reasons": "Lista de razones",
+      "recentlySoldCarousel": "Carrusel de recientemente vendidos"
+    }
   },
   "berlin": {
     "heroTitle": "Propiedades en venta en Berlín",
@@ -101,7 +137,13 @@
     "clearAll": "Limpiar todo",
     "close": "Cerrar",
     "sortBy": "Ordenar por:",
-    "sort": { "relevance": "Relevancia", "priceLow": "Precio: menor a mayor", "priceHigh": "Precio: mayor a menor", "newest": "Más nuevos", "oldest": "Más antiguos" },
+    "sort": {
+      "relevance": "Relevancia",
+      "priceLow": "Precio: menor a mayor",
+      "priceHigh": "Precio: mayor a menor",
+      "newest": "Más nuevos",
+      "oldest": "Más antiguos"
+    },
     "previous": "Anterior",
     "next": "Siguiente",
     "downloadExpose": "Descargar Exposé",
@@ -128,7 +170,6 @@
       "sizeRange": "Rango de Tamaño",
       "bedroomsBathrooms": "Habitaciones / Baños",
       "bedrooms": "Habitaciones",
-      "bathrooms": "Baños",
       "fromPrice": "Desde",
       "upToPrice": "Hasta",
       "fromSize": "Desde",
@@ -142,8 +183,19 @@
     }
   },
   "properties": {
-    "status": { "new": "Nuevo", "reduced": "Reducido", "exclusive": "Exclusivo" },
-    "features": { "garden": "Jardín", "balcony": "Balcón", "parking": "Aparcamiento", "elevator": "Ascensor", "air_conditioning": "Aire acondicionado", "separate_kitchen": "Cocina separada" },
+    "status": {
+      "new": "Nuevo",
+      "reduced": "Reducido",
+      "exclusive": "Exclusivo"
+    },
+    "features": {
+      "garden": "Jardín",
+      "balcony": "Balcón",
+      "parking": "Aparcamiento",
+      "elevator": "Ascensor",
+      "air_conditioning": "Aire acondicionado",
+      "separate_kitchen": "Cocina separada"
+    },
     "detail": {
       "id": "ID:",
       "listed": "Publicado:",
@@ -188,15 +240,28 @@
       "readMore": "Leer más"
     },
     "list": {
-      "filters": { "title": "Filtros" },
+      "filters": {
+        "title": "Filtros"
+      },
       "location": "Ubicación",
       "propertyType": "Tipo de propiedad",
       "moreFilters": "Más filtros",
-      "priceRange": { "title": "Rango de precios", "min": "Precio mínimo (€)", "max": "Precio máximo (€)" },
-      "sizeRange": { "title": "Rango de tamaño (m²)", "min": "Tamaño mínimo", "max": "Tamaño máximo" },
+      "priceRange": {
+        "title": "Rango de precios",
+        "min": "Precio mínimo (€)",
+        "max": "Precio máximo (€)"
+      },
+      "sizeRange": {
+        "title": "Rango de tamaño (m²)",
+        "min": "Tamaño mínimo",
+        "max": "Tamaño máximo"
+      },
       "rooms": "Habitaciones",
       "bathrooms": "Baños",
-      "year": { "from": "Desde el año", "to": "Hasta el año" },
+      "year": {
+        "from": "Desde el año",
+        "to": "Hasta el año"
+      },
       "featuresStatus": "Características y estado",
       "features": "Características",
       "featured": "Propiedades destacadas",
@@ -231,10 +296,22 @@
       "contactForPrice": "Consultar precio",
       "viewDetails": "Ver detalles",
       "rentalIncome": "Ingreso por alquiler",
-      "map": { "title": "Vista en mapa", "hint": "Haz clic en los marcadores para ver detalles", "error": "No se puede cargar el mapa. Intenta actualizar la página." },
-      "noResults": { "title": "No se encontraron propiedades", "hint": "Ajusta los criterios de búsqueda o explora todas las propiedades disponibles." },
+      "map": {
+        "title": "Vista en mapa",
+        "hint": "Haz clic en los marcadores para ver detalles",
+        "error": "No se puede cargar el mapa. Intenta actualizar la página."
+      },
+      "noResults": {
+        "title": "No se encontraron propiedades",
+        "hint": "Ajusta los criterios de búsqueda o explora todas las propiedades disponibles."
+      },
       "clearFilters": "Limpiar filtros",
-      "meta": { "sqm": "m²", "beds": "hab", "baths": "baños", "rooms": "hab" },
+      "meta": {
+        "sqm": "m²",
+        "beds": "hab",
+        "baths": "baños",
+        "rooms": "hab"
+      },
       "h1": {
         "default": "Propiedades en venta - Encuentra la casa de tus sueños",
         "country": "Propiedades en venta en {country}",
@@ -274,13 +351,18 @@
       "title": "Encuentra la casa de tus sueños",
       "subtitle": "Descubre la propiedad perfecta en las ubicaciones más deseadas"
     },
-    "search": { "cta": "Buscar propiedades" },
+    "search": {
+      "cta": "Buscar propiedades"
+    },
     "featured": {
       "title": "Propiedades destacadas",
       "subtitle": "Descubre nuestra selección de propiedades premium",
       "viewAll": "Ver todas las propiedades"
     },
-    "international": { "title": "Inmobiliaria internacional", "see": "Ver propiedades" },
+    "international": {
+      "title": "Inmobiliaria internacional",
+      "see": "Ver propiedades"
+    },
     "newDevelopment": {
       "title": "Nuevos desarrollos",
       "completion": "Entrega",
@@ -313,8 +395,15 @@
       "sizeRange": "Rango de tamaño",
       "viewProject": "Ver proyecto"
     },
-    "about": { "title": "Sobre Sweet Home", "copy": "En Sweet Home convertimos tus objetivos inmobiliarios en llaves reales. Desde tu primera conversación hasta el día de la firma, nuestros expertos te guían con consejos claros, opciones seleccionadas y un acompañamiento sin estrés. ¿Listo para dar el siguiente paso con confianza? Encontraremos el lugar que de verdad se sienta como tu hogar.", "cta": "Saber más sobre Sweet Home" },
-    "services": { "title": "Nuestros servicios", "brief": "Desde asesoría personalizada hasta gestión integral y orientación financiera, te ayudamos a comprar, vender y gestionar tu propiedad con confianza." },
+    "about": {
+      "title": "Sobre Sweet Home",
+      "copy": "En Sweet Home convertimos tus objetivos inmobiliarios en llaves reales. Desde tu primera conversación hasta el día de la firma, nuestros expertos te guían con consejos claros, opciones seleccionadas y un acompañamiento sin estrés. ¿Listo para dar el siguiente paso con confianza? Encontraremos el lugar que de verdad se sienta como tu hogar.",
+      "cta": "Saber más sobre Sweet Home"
+    },
+    "services": {
+      "title": "Nuestros servicios",
+      "brief": "Desde asesoría personalizada hasta gestión integral y orientación financiera, te ayudamos a comprar, vender y gestionar tu propiedad con confianza."
+    },
     "calc": {
       "title": "Calculadora hipotecaria",
       "subtitle": "Calcula tus pagos mensuales y entiende tus opciones de financiación",
@@ -323,8 +412,15 @@
       "term": "Plazo del préstamo (años)",
       "rate": "Tipo de interés (%)",
       "cta": "Calcular pago",
-      "placeholders": { "price": "ej. €350.000", "down": "ej. €70.000", "rate": "ej. 4,50" },
-      "errors": { "invalid": "Introduce valores válidos en todos los campos.", "downTooHigh": "La entrada no puede ser mayor o igual que el precio de la propiedad." },
+      "placeholders": {
+        "price": "ej. €350.000",
+        "down": "ej. €70.000",
+        "rate": "ej. 4,50"
+      },
+      "errors": {
+        "invalid": "Introduce valores válidos en todos los campos.",
+        "downTooHigh": "La entrada no puede ser mayor o igual que el precio de la propiedad."
+      },
       "result": {
         "title": "Tu pago mensual",
         "pi": "Capital e intereses:",
@@ -337,10 +433,14 @@
         "cost": "Costo total:"
       }
     },
-    "testimonials": { "title": "Lo que nuestros clientes dicen de nosotros" }
+    "testimonials": {
+      "title": "Lo que nuestros clientes dicen de nosotros"
+    }
   },
   "services": {
-    "hero": { "aria": "Héroe de servicios" },
+    "hero": {
+      "aria": "Héroe de servicios"
+    },
     "tabs": {
       "aria": "Pestañas de servicio",
       "consulting": "Consultoría inmobiliaria",
@@ -362,15 +462,28 @@
       },
       "cta": "¡Contáctanos!"
     },
-    "contact": { "title": "Contáctanos" }
+    "contact": {
+      "title": "Contáctanos"
+    }
   },
   "about": {
-    "intro": { "title": "Sobre Sweet Home", "copy": "En Sweet Home convertimos tus objetivos inmobiliarios en llaves reales. Desde tu primera conversación hasta el día de la firma, nuestros expertos te guían con consejos claros, opciones seleccionadas y un acompañamiento sin estrés. ¿Listo para dar el siguiente paso con confianza? Encontraremos el lugar que de verdad se sienta como tu hogar." },
-    "team": { "title": "Conoce a nuestro equipo", "member": "Miembro del equipo" }
+    "intro": {
+      "title": "Sobre Sweet Home",
+      "copy": "En Sweet Home convertimos tus objetivos inmobiliarios en llaves reales. Desde tu primera conversación hasta el día de la firma, nuestros expertos te guían con consejos claros, opciones seleccionadas y un acompañamiento sin estrés. ¿Listo para dar el siguiente paso con confianza? Encontraremos el lugar que de verdad se sienta como tu hogar."
+    },
+    "team": {
+      "title": "Conoce a nuestro equipo",
+      "member": "Miembro del equipo"
+    }
   },
   "contact": {
     "title": "Contáctanos",
-    "office": { "aria": "Imagen de la oficina de Berlín", "name": "Oficina de Berlín", "address": "Hohenzollerndamm 196, 10717 Berlin", "phone": "+49-030-65852933" },
+    "office": {
+      "aria": "Imagen de la oficina de Berlín",
+      "name": "Oficina de Berlín",
+      "address": "Hohenzollerndamm 196, 10717 Berlin",
+      "phone": "+49-030-65852933"
+    },
     "submit": "Enviar"
   },
   "blog": {
@@ -392,7 +505,7 @@
       "authorExpertiseTitle": "Experiencia del autor",
       "authorExpertiseBody": "Este artículo es revisado por nuestro equipo inmobiliario para asegurar precisión local del mercado y orientación práctica para compradores.",
       "authorNamePrefix": "Revisado por",
-      "relatedLandingTitle": "Apartamentos en venta relacionados",
+      "relatedLandingTitle": "Paginas relevantes",
       "relatedLandingIntro": "Explora estas páginas relevantes para comparar apartamentos en venta por ciudad y barrio.",
       "faq": {
         "berlin": {
@@ -475,9 +588,19 @@
     }
   },
   "errors": {
-    "common": { "home": "Volver al inicio", "back": "Volver" },
-    "404": { "title": "Página no encontrada", "hint": "La página que buscas no existe o pudo haberse movido." },
-    "500": { "title": "Algo salió mal", "heading": "Ocurrió un error inesperado", "hint": "Inténtalo de nuevo. Si el problema persiste, contacta soporte." }
+    "common": {
+      "home": "Volver al inicio",
+      "back": "Volver"
+    },
+    "404": {
+      "title": "Página no encontrada",
+      "hint": "La página que buscas no existe o pudo haberse movido."
+    },
+    "500": {
+      "title": "Algo salió mal",
+      "heading": "Ocurrió un error inesperado",
+      "hint": "Inténtalo de nuevo. Si el problema persiste, contacta soporte."
+    }
   },
   "projects": {
     "amenityTerms": {
@@ -503,7 +626,11 @@
     },
     "regions": {
       "title": "Proyectos por región",
-      "aria": { "page": "Proyectos por región", "cyprus": "Ver todos los proyectos en Chipre", "dubai": "Ver todos los proyectos en Dubái" },
+      "aria": {
+        "page": "Proyectos por región",
+        "cyprus": "Ver todos los proyectos en Chipre",
+        "dubai": "Ver todos los proyectos en Dubái"
+      },
       "cyprusTitle": "Proyectos en Chipre",
       "dubaiTitle": "Proyectos en Dubái",
       "cta": "Ver todos los proyectos"
@@ -536,23 +663,53 @@
       "related": "Proyectos relacionados"
     },
     "list": {
-      "filters": { "title": "Filtros" },
+      "filters": {
+        "title": "Filtros"
+      },
       "typeOfUnits": "Tipo de unidades",
-      "units": { "villas": "Villas", "apartments": "Apartamentos", "houses": "Casas", "offices": "Oficinas" },
-      "pricePerUnit": { "title": "Precio por unidad", "min": "Precio mínimo", "max": "Precio máximo" },
+      "units": {
+        "villas": "Villas",
+        "apartments": "Apartamentos",
+        "houses": "Casas",
+        "offices": "Oficinas"
+      },
+      "pricePerUnit": {
+        "title": "Precio por unidad",
+        "min": "Precio mínimo",
+        "max": "Precio máximo"
+      },
       "apply": "Aplicar filtros",
       "found": "Proyectos encontrados",
       "browseAll": "Explora todos los proyectos disponibles",
       "activeFilters": "Filtros activos:",
-      "sort": { "nameAsc": "Nombre: A-Z", "nameDesc": "Nombre: Z-A", "completion": "Fecha de finalización" },
+      "sort": {
+        "nameAsc": "Nombre: A-Z",
+        "nameDesc": "Nombre: Z-A",
+        "completion": "Fecha de finalización"
+      },
       "completion": "Finalización",
-      "noResults": { "title": "No se encontraron proyectos", "hint": "Ajusta tus criterios de búsqueda o explora todos los proyectos disponibles." },
+      "noResults": {
+        "title": "No se encontraron proyectos",
+        "hint": "Ajusta tus criterios de búsqueda o explora todos los proyectos disponibles."
+      },
       "clearFilters": "Limpiar filtros"
     }
   },
   "locations": {
-    "countries": { "Germany": "Alemania", "UAE": "EAU", "Cyprus": "Chipre", "North Cyprus": "Chipre del Norte" },
-    "cities": { "Berlin": "Berlín", "Dubai": "Dubái", "Paphos": "Pafos", "Limassol": "Limassol", "Nicosia": "Nicosia", "Larnaca": "Lárnaca" }
+    "countries": {
+      "Germany": "Alemania",
+      "UAE": "EAU",
+      "Cyprus": "Chipre",
+      "North Cyprus": "Chipre del Norte"
+    },
+    "cities": {
+      "Berlin": "Berlín",
+      "Dubai": "Dubái",
+      "Paphos": "Pafos",
+      "Limassol": "Limassol",
+      "Nicosia": "Nicosia",
+      "Larnaca": "Lárnaca"
+    }
   },
   "forms": {
     "country": "País",
@@ -565,8 +722,16 @@
     "anyType": "Cualquier tipo",
     "operation": "Operación",
     "anyOperation": "Cualquier operación",
-    "operations": { "buy": "Comprar", "rent": "Alquilar" },
-    "types": { "apartment": "Apartamento", "house": "Casa", "villa": "Villa", "land": "Terreno" },
+    "operations": {
+      "buy": "Comprar",
+      "rent": "Alquilar"
+    },
+    "types": {
+      "apartment": "Apartamento",
+      "house": "Casa",
+      "villa": "Villa",
+      "land": "Terreno"
+    },
     "firstName": "Nombre",
     "lastName": "Apellido",
     "fullName": "Nombre completo",
@@ -576,8 +741,7 @@
     "preferredLanguage": "Idioma preferido",
     "message": "Mensaje",
     "submit": "Enviar"
-  }
-  ,
+  },
   "footer": {
     "tagline": "El mejor equipo que jamás necesitarás.",
     "help": "Ayuda",
@@ -595,14 +759,19 @@
     "subscribe": "Suscribirse",
     "rights": "Todos los derechos reservados.",
     "social": "Redes sociales"
-  }
-  ,
+  },
   "legal": {
     "cookies": {
       "title": "Política de Cookies",
       "intro": "Usamos cookies necesarias para que el sitio funcione y cookies de analítica para mejorarlo. Puedes controlar las cookies desde tu navegador.",
-      "types": { "title": "Tipos de cookies", "body": "Esenciales (para el funcionamiento básico), analíticas (para entender el uso) y de marketing (para personalizar ofertas)." },
-      "manage": { "title": "Gestionar cookies", "body": "La mayoría de navegadores permiten bloquear o eliminar cookies. Deshabilitar algunas puede afectar el funcionamiento del sitio." }
+      "types": {
+        "title": "Tipos de cookies",
+        "body": "Esenciales (para el funcionamiento básico), analíticas (para entender el uso) y de marketing (para personalizar ofertas)."
+      },
+      "manage": {
+        "title": "Gestionar cookies",
+        "body": "La mayoría de navegadores permiten bloquear o eliminar cookies. Deshabilitar algunas puede afectar el funcionamiento del sitio."
+      }
     },
     "privacy": {
       "title": "Política de Privacidad",
@@ -688,4 +857,3 @@
     }
   }
 }
-

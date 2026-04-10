@@ -1,7 +1,11 @@
 {
   "owners": {
     "recentlySold": "Kürzlich verkauft",
-    "hero": { "title": "Bereit, Ihre Immobilie zu verkaufen/zu vermieten?", "cta": "Kontaktieren Sie uns!", "learnMore": "Mehr erfahren" },
+    "hero": {
+      "title": "Bereit, Ihre Immobilie zu verkaufen/zu vermieten?",
+      "cta": "Kontaktieren Sie uns!",
+      "learnMore": "Mehr erfahren"
+    },
     "why": {
       "title": "Warum mit uns arbeiten?",
       "items": {
@@ -13,9 +17,41 @@
       },
       "altBerlin": "Berliner Skyline"
     },
-    "form": { "submit": "Senden", "selectLanguage": "Sprache auswählen", "fixErrors": "Bitte korrigieren Sie die Fehler oben.", "sending": "Wird gesendet...", "successShort": "Danke! Wir melden uns in Kürze.", "submitted": "Eingang bestätigt.", "successToast": "Danke! Ihre Nachricht wurde erfolgreich gesendet.", "errorStatus": "Es gab ein Problem. Bitte erneut versuchen.", "errorToast": "Etwas ist schiefgelaufen. Bitte später erneut versuchen.", "neighborhood": "Stadtteil", "neighborhoodPlaceholder": "Stadtteil eingeben", "size": "Größe (m²)", "sizePlaceholder": "z.B. 75,5", "rooms": "Anzahl der Zimmer", "roomsPlaceholder": "z.B. 2,5", "occupancy": "Belegungsstatus", "selectOccupancy": "Status auswählen", "empty": "Leer", "tenanted": "Vermietet" },
-    "validation": { "fullName": "Bitte geben Sie Ihren vollständigen Namen ein", "countryCode": "Bitte eine Ländervorwahl eingeben", "phone": "Bitte eine Telefonnummer eingeben", "email": "Geben Sie eine gültige E-Mail-Adresse ein", "language": "Bitte eine Sprache auswählen" },
-    "aria": { "hero": "Bereich für Verkäufer", "primaryActions": "Hauptaktionen", "heroNote": "Hintergrundbild mit dunkler Überlagerung zur besseren Lesbarkeit", "reasons": "Gründe-Liste", "recentlySoldCarousel": "Karussell: Kürzlich verkauft" }
+    "form": {
+      "submit": "Senden",
+      "selectLanguage": "Sprache auswählen",
+      "fixErrors": "Bitte korrigieren Sie die Fehler oben.",
+      "sending": "Wird gesendet...",
+      "successShort": "Danke! Wir melden uns in Kürze.",
+      "submitted": "Eingang bestätigt.",
+      "successToast": "Danke! Ihre Nachricht wurde erfolgreich gesendet.",
+      "errorStatus": "Es gab ein Problem. Bitte erneut versuchen.",
+      "errorToast": "Etwas ist schiefgelaufen. Bitte später erneut versuchen.",
+      "neighborhood": "Stadtteil",
+      "neighborhoodPlaceholder": "Stadtteil eingeben",
+      "size": "Größe (m²)",
+      "sizePlaceholder": "z.B. 75,5",
+      "rooms": "Anzahl der Zimmer",
+      "roomsPlaceholder": "z.B. 2,5",
+      "occupancy": "Belegungsstatus",
+      "selectOccupancy": "Status auswählen",
+      "empty": "Leer",
+      "tenanted": "Vermietet"
+    },
+    "validation": {
+      "fullName": "Bitte geben Sie Ihren vollständigen Namen ein",
+      "countryCode": "Bitte eine Ländervorwahl eingeben",
+      "phone": "Bitte eine Telefonnummer eingeben",
+      "email": "Geben Sie eine gültige E-Mail-Adresse ein",
+      "language": "Bitte eine Sprache auswählen"
+    },
+    "aria": {
+      "hero": "Bereich für Verkäufer",
+      "primaryActions": "Hauptaktionen",
+      "heroNote": "Hintergrundbild mit dunkler Überlagerung zur besseren Lesbarkeit",
+      "reasons": "Gründe-Liste",
+      "recentlySoldCarousel": "Karussell: Kürzlich verkauft"
+    }
   },
   "berlin": {
     "heroTitle": "Wohnungen in Berlin kaufen",
@@ -83,10 +119,94 @@
   "projects": {
     "regions": {
       "title": "Projekte nach Region",
-      "aria": { "page": "Projekte nach Region", "cyprus": "Alle Projekte in Zypern ansehen", "dubai": "Alle Projekte in Dubai ansehen" },
+      "aria": {
+        "page": "Projekte nach Region",
+        "cyprus": "Alle Projekte in Zypern ansehen",
+        "dubai": "Alle Projekte in Dubai ansehen"
+      },
       "cyprusTitle": "Projekte in Zypern",
       "dubaiTitle": "Projekte in Dubai",
       "cta": "Alle Projekte ansehen"
+    },
+    "amenityTerms": {
+      "Swimming Pool": "Schwimmbad",
+      "Pool": "Pool",
+      "Private Pool": "Privater Pool",
+      "Gym": "Fitnessstudio",
+      "Fitness Center": "Fitnesscenter",
+      "Beach Access": "Strandzugang",
+      "Garden": "Garten",
+      "Parking": "Parkplatz",
+      "Security": "Sicherheit",
+      "Concierge": "Concierge",
+      "Spa": "Spa",
+      "Tennis Court": "Tennisplatz",
+      "Golf": "Golf",
+      "Playground": "Spielplatz",
+      "BBQ": "Grillplatz",
+      "Rooftop": "Dachterrasse",
+      "Elevator": "Aufzug",
+      "Air Conditioning": "Klimaanlage",
+      "Landscaped Gardens": "Gepflegte Gärten"
+    },
+    "viewDetails": "Projektdetails ansehen",
+    "amenitiesTitle": "Ausstattung des Projekts",
+    "detail": {
+      "properties": "Immobilien in diesem Projekt",
+      "property": "Immobilie",
+      "propertiesCount": "Immobilien",
+      "available": "verfügbar",
+      "viewAllProperties": "Alle Immobilien anzeigen",
+      "defaultType": "Projektentwicklung",
+      "noImages": "Keine Bilder verfügbar",
+      "overview": "Projektübersicht",
+      "keyFeatures": "Wesentliche Merkmale",
+      "amenities": "Ausstattung",
+      "specifications": "Spezifikationen",
+      "locationDetails": "Standortdetails",
+      "interested": "Interessiert an diesem Projekt?",
+      "getInTouch": "Kontaktieren Sie unser Team für weitere Informationen",
+      "messagePlaceholder": "Beschreiben Sie Ihr Interesse an diesem Projekt...",
+      "details": "Projektdetails",
+      "typeLabel": "Typ:",
+      "totalUnits": "Gesamtanzahl Einheiten:",
+      "priceRange": "Preisspanne:",
+      "status": "Status:",
+      "units": "Einheiten",
+      "image": "Bild",
+      "related": "Verwandte Projekte"
+    },
+    "list": {
+      "filters": {
+        "title": "Filter"
+      },
+      "typeOfUnits": "Einheitstypen",
+      "units": {
+        "villas": "Villen",
+        "apartments": "Apartments",
+        "houses": "Häuser",
+        "offices": "Büros"
+      },
+      "pricePerUnit": {
+        "title": "Preis pro Einheit",
+        "min": "Mindestpreis",
+        "max": "Höchstpreis"
+      },
+      "apply": "Filter anwenden",
+      "found": "Projekte gefunden",
+      "browseAll": "Alle verfügbaren Projekte anzeigen",
+      "activeFilters": "Aktive Filter:",
+      "sort": {
+        "nameAsc": "Name: A–Z",
+        "nameDesc": "Name: Z–A",
+        "completion": "Fertigstellungstermin"
+      },
+      "completion": "Fertigstellung",
+      "noResults": {
+        "title": "Keine Projekte gefunden",
+        "hint": "Passen Sie Ihre Suche an oder zeigen Sie alle verfügbaren Projekte an."
+      },
+      "clearFilters": "Filter löschen"
     }
   },
   "brand": "ImmobilienPlattform",
@@ -110,7 +230,13 @@
     "clearAll": "Alle löschen",
     "close": "Schließen",
     "sortBy": "Sortieren nach:",
-    "sort": { "relevance": "Relevanz", "priceLow": "Preis: aufsteigend", "priceHigh": "Preis: absteigend", "newest": "Neueste zuerst", "oldest": "Älteste zuerst" },
+    "sort": {
+      "relevance": "Relevanz",
+      "priceLow": "Preis: aufsteigend",
+      "priceHigh": "Preis: absteigend",
+      "newest": "Neueste zuerst",
+      "oldest": "Älteste zuerst"
+    },
     "previous": "Zurück",
     "next": "Weiter",
     "downloadExpose": "Exposé herunterladen",
@@ -137,7 +263,6 @@
       "sizeRange": "Größenspanne",
       "bedroomsBathrooms": "Schlafzimmer / Badezimmer",
       "bedrooms": "Schlafzimmer",
-      "bathrooms": "Badezimmer",
       "fromPrice": "Ab",
       "upToPrice": "Bis zu",
       "fromSize": "Ab",
@@ -151,8 +276,19 @@
     }
   },
   "properties": {
-    "status": { "new": "Neu", "reduced": "Reduziert", "exclusive": "Exklusiv" },
-    "features": { "garden": "Garten", "balcony": "Balkon", "parking": "Parkplatz", "elevator": "Aufzug", "air_conditioning": "Klimaanlage", "separate_kitchen": "Separate Küche" },
+    "status": {
+      "new": "Neu",
+      "reduced": "Reduziert",
+      "exclusive": "Exklusiv"
+    },
+    "features": {
+      "garden": "Garten",
+      "balcony": "Balkon",
+      "parking": "Parkplatz",
+      "elevator": "Aufzug",
+      "air_conditioning": "Klimaanlage",
+      "separate_kitchen": "Separate Küche"
+    },
     "detail": {
       "id": "ID:",
       "listed": "Eingestellt:",
@@ -197,15 +333,28 @@
       "readMore": "Mehr lesen"
     },
     "list": {
-      "filters": { "title": "Filter" },
+      "filters": {
+        "title": "Filter"
+      },
       "location": "Lage",
       "propertyType": "Immobilientyp",
       "moreFilters": "Weitere Filter",
-      "priceRange": { "title": "Preisspanne", "min": "Mindestpreis (€)", "max": "Höchstpreis (€)" },
-      "sizeRange": { "title": "Flächenbereich (m²)", "min": "Mindestfläche", "max": "Maximalfläche" },
+      "priceRange": {
+        "title": "Preisspanne",
+        "min": "Mindestpreis (€)",
+        "max": "Höchstpreis (€)"
+      },
+      "sizeRange": {
+        "title": "Flächenbereich (m²)",
+        "min": "Mindestfläche",
+        "max": "Maximalfläche"
+      },
       "rooms": "Zimmer",
       "bathrooms": "Badezimmer",
-      "year": { "from": "Ab Jahr", "to": "Bis Jahr" },
+      "year": {
+        "from": "Ab Jahr",
+        "to": "Bis Jahr"
+      },
       "featuresStatus": "Ausstattung & Status",
       "features": "Ausstattung",
       "featured": "Hervorgehobene Immobilien",
@@ -240,10 +389,22 @@
       "contactForPrice": "Preis auf Anfrage",
       "viewDetails": "Details ansehen",
       "rentalIncome": "Mieteinnahmen",
-      "map": { "title": "Kartenansicht", "hint": "Klicken Sie auf die Marker, um Details zu sehen", "error": "Karte konnte nicht geladen werden. Bitte Seite neu laden." },
-      "noResults": { "title": "Keine Immobilien gefunden", "hint": "Passen Sie die Suche an oder zeigen Sie alle verfügbaren Immobilien an." },
+      "map": {
+        "title": "Kartenansicht",
+        "hint": "Klicken Sie auf die Marker, um Details zu sehen",
+        "error": "Karte konnte nicht geladen werden. Bitte Seite neu laden."
+      },
+      "noResults": {
+        "title": "Keine Immobilien gefunden",
+        "hint": "Passen Sie die Suche an oder zeigen Sie alle verfügbaren Immobilien an."
+      },
       "clearFilters": "Filter löschen",
-      "meta": { "sqm": "m²", "beds": "SZ", "baths": "Bad", "rooms": "Zimmer" },
+      "meta": {
+        "sqm": "m²",
+        "beds": "SZ",
+        "baths": "Bad",
+        "rooms": "Zimmer"
+      },
       "h1": {
         "default": "Immobilien zum Verkauf - Finden Sie Ihr Traumhaus",
         "country": "Immobilien zum Verkauf in {country}",
@@ -283,13 +444,18 @@
       "title": "Finden Sie Ihr Traumhaus",
       "subtitle": "Entdecken Sie die perfekte Immobilie an den begehrtesten Standorten"
     },
-    "search": { "cta": "Immobilien suchen" },
+    "search": {
+      "cta": "Immobilien suchen"
+    },
     "featured": {
       "title": "Ausgewählte Immobilien",
       "subtitle": "Entdecken Sie unsere handverlesene Auswahl an Premium-Immobilien",
       "viewAll": "Alle Immobilien anzeigen"
     },
-    "international": { "title": "Internationales Immobilienangebot", "see": "Immobilien ansehen" },
+    "international": {
+      "title": "Internationales Immobilienangebot",
+      "see": "Immobilien ansehen"
+    },
     "newDevelopment": {
       "title": "Neue Projekte",
       "completion": "Fertigstellung",
@@ -322,8 +488,15 @@
       "sizeRange": "Größenbereich",
       "viewProject": "Projekt ansehen"
     },
-    "about": { "title": "Über Sweet Home", "copy": "Bei Sweet Home machen wir aus Immobilienzielen echte Schlüssel. Vom ersten Gespräch bis zum Notartermin begleiten unsere freundlichen Experten Sie mit klarer Beratung, kuratierten Optionen und stressfreier Unterstützung. Bereit, den nächsten Schritt mit Vertrauen zu gehen? Finden wir den Ort, der sich wirklich wie Zuhause anfühlt.", "cta": "Mehr über Sweet Home erfahren" },
-    "services": { "title": "Unsere Leistungen", "brief": "Von maßgeschneiderter Beratung über praxisnahe Verwaltung bis hin zu Finanzierungsberatung – wir helfen Ihnen, Immobilien sicher zu kaufen, zu verkaufen und zu verwalten." },
+    "about": {
+      "title": "Über Sweet Home",
+      "copy": "Bei Sweet Home machen wir aus Immobilienzielen echte Schlüssel. Vom ersten Gespräch bis zum Notartermin begleiten unsere freundlichen Experten Sie mit klarer Beratung, kuratierten Optionen und stressfreier Unterstützung. Bereit, den nächsten Schritt mit Vertrauen zu gehen? Finden wir den Ort, der sich wirklich wie Zuhause anfühlt.",
+      "cta": "Mehr über Sweet Home erfahren"
+    },
+    "services": {
+      "title": "Unsere Leistungen",
+      "brief": "Von maßgeschneiderter Beratung über praxisnahe Verwaltung bis hin zu Finanzierungsberatung – wir helfen Ihnen, Immobilien sicher zu kaufen, zu verkaufen und zu verwalten."
+    },
     "calc": {
       "title": "Hypothekenrechner",
       "subtitle": "Berechnen Sie Ihre monatliche Rate und verstehen Sie Ihre Finanzierung",
@@ -332,8 +505,15 @@
       "term": "Laufzeit (Jahre)",
       "rate": "Zinssatz (%)",
       "cta": "Rate berechnen",
-      "placeholders": { "price": "z. B. €350.000", "down": "z. B. €70.000", "rate": "z. B. 4,50" },
-      "errors": { "invalid": "Bitte geben Sie gültige Werte in allen Feldern ein.", "downTooHigh": "Die Anzahlung darf nicht größer oder gleich dem Kaufpreis sein." },
+      "placeholders": {
+        "price": "z. B. €350.000",
+        "down": "z. B. €70.000",
+        "rate": "z. B. 4,50"
+      },
+      "errors": {
+        "invalid": "Bitte geben Sie gültige Werte in allen Feldern ein.",
+        "downTooHigh": "Die Anzahlung darf nicht größer oder gleich dem Kaufpreis sein."
+      },
       "result": {
         "title": "Ihre monatliche Rate",
         "pi": "Tilgung & Zinsen:",
@@ -346,10 +526,14 @@
         "cost": "Gesamtkosten:"
       }
     },
-    "testimonials": { "title": "Was unsere Kunden über uns sagen" }
+    "testimonials": {
+      "title": "Was unsere Kunden über uns sagen"
+    }
   },
   "services": {
-    "hero": { "aria": "Leistungsbereich" },
+    "hero": {
+      "aria": "Leistungsbereich"
+    },
     "tabs": {
       "aria": "Leistungs-Tabs",
       "consulting": "Immobilienberatung",
@@ -371,15 +555,28 @@
       },
       "cta": "Kontaktieren Sie uns!"
     },
-    "contact": { "title": "Kontakt" }
+    "contact": {
+      "title": "Kontakt"
+    }
   },
   "about": {
-    "intro": { "title": "Über Sweet Home", "copy": "Bei Sweet Home machen wir aus Immobilienzielen echte Schlüssel. Vom ersten Gespräch bis zum Notartermin begleiten unsere freundlichen Experten Sie mit klarer Beratung, kuratierten Optionen und stressfreier Unterstützung. Bereit, den nächsten Schritt mit Vertrauen zu gehen? Finden wir den Ort, der sich wirklich wie Zuhause anfühlt." },
-    "team": { "title": "Unser Team", "member": "Teammitglied" }
+    "intro": {
+      "title": "Über Sweet Home",
+      "copy": "Bei Sweet Home machen wir aus Immobilienzielen echte Schlüssel. Vom ersten Gespräch bis zum Notartermin begleiten unsere freundlichen Experten Sie mit klarer Beratung, kuratierten Optionen und stressfreier Unterstützung. Bereit, den nächsten Schritt mit Vertrauen zu gehen? Finden wir den Ort, der sich wirklich wie Zuhause anfühlt."
+    },
+    "team": {
+      "title": "Unser Team",
+      "member": "Teammitglied"
+    }
   },
   "contact": {
     "title": "Kontakt",
-    "office": { "aria": "Bild des Berliner Büros", "name": "Büro Berlin", "address": "Hohenzollerndamm 196, 10717 Berlin", "phone": "+49-030-65852933" },
+    "office": {
+      "aria": "Bild des Berliner Büros",
+      "name": "Büro Berlin",
+      "address": "Hohenzollerndamm 196, 10717 Berlin",
+      "phone": "+49-030-65852933"
+    },
     "submit": "Senden"
   },
   "blog": {
@@ -401,7 +598,7 @@
       "authorExpertiseTitle": "Autor-Expertise",
       "authorExpertiseBody": "Dieser Artikel wird von unserem Immobilien-Team auf lokale Marktgenauigkeit und praxisnahe Käuferhinweise geprüft.",
       "authorNamePrefix": "Gepruft von",
-      "relatedLandingTitle": "Relevante Wohnungsangebote",
+      "relatedLandingTitle": "Relevante Seiten",
       "relatedLandingIntro": "Entdecken Sie passende Seiten, um Wohnungen zum Kauf nach Stadt und Stadtteil zu vergleichen.",
       "faq": {
         "berlin": {
@@ -484,16 +681,32 @@
     }
   },
   "errors": {
-    "common": { "home": "Zur Startseite", "back": "Zurück" },
-    "404": { "title": "Seite nicht gefunden", "hint": "Die gesuchte Seite existiert nicht oder wurde verschoben." },
-    "500": { "title": "Etwas ist schiefgelaufen", "heading": "Ein unerwarteter Fehler ist aufgetreten", "hint": "Bitte erneut versuchen. Wenn das Problem bleibt, kontaktieren Sie den Support." }
+    "common": {
+      "home": "Zur Startseite",
+      "back": "Zurück"
+    },
+    "404": {
+      "title": "Seite nicht gefunden",
+      "hint": "Die gesuchte Seite existiert nicht oder wurde verschoben."
+    },
+    "500": {
+      "title": "Etwas ist schiefgelaufen",
+      "heading": "Ein unerwarteter Fehler ist aufgetreten",
+      "hint": "Bitte erneut versuchen. Wenn das Problem bleibt, kontaktieren Sie den Support."
+    }
   },
   "legal": {
     "cookies": {
       "title": "Cookie-Richtlinie",
       "intro": "Wir verwenden notwendige Cookies für die Funktion der Website und Analyse-Cookies zur Verbesserung. Sie können Cookies in den Browser-Einstellungen steuern.",
-      "types": { "title": "Arten von Cookies", "body": "Notwendige (für die Kernfunktionen), Analyse (zur Nutzungsanalyse) und Marketing (zur Personalisierung von Angeboten)." },
-      "manage": { "title": "Cookies verwalten", "body": "Die meisten Browser erlauben das Blockieren oder Löschen von Cookies. Das Deaktivieren mancher Cookies kann die Funktion beeinträchtigen." }
+      "types": {
+        "title": "Arten von Cookies",
+        "body": "Notwendige (für die Kernfunktionen), Analyse (zur Nutzungsanalyse) und Marketing (zur Personalisierung von Angeboten)."
+      },
+      "manage": {
+        "title": "Cookies verwalten",
+        "body": "Die meisten Browser erlauben das Blockieren oder Löschen von Cookies. Das Deaktivieren mancher Cookies kann die Funktion beeinträchtigen."
+      }
     },
     "privacy": {
       "title": "Datenschutzerklärung",
@@ -578,80 +791,21 @@
       }
     }
   },
-  "projects": {
-    "regions": {
-      "title": "Projekte nach Region",
-      "aria": { "page": "Projekte nach Region", "cyprus": "Alle Projekte in Zypern ansehen", "dubai": "Alle Projekte in Dubai ansehen" },
-      "cyprusTitle": "Projekte in Zypern",
-      "dubaiTitle": "Projekte in Dubai",
-      "cta": "Alle Projekte ansehen"
-    },
-    "amenityTerms": {
-      "Swimming Pool": "Schwimmbad",
-      "Pool": "Pool",
-      "Private Pool": "Privater Pool",
-      "Gym": "Fitnessstudio",
-      "Fitness Center": "Fitnesscenter",
-      "Beach Access": "Strandzugang",
-      "Garden": "Garten",
-      "Parking": "Parkplatz",
-      "Security": "Sicherheit",
-      "Concierge": "Concierge",
-      "Spa": "Spa",
-      "Tennis Court": "Tennisplatz",
-      "Golf": "Golf",
-      "Playground": "Spielplatz",
-      "BBQ": "Grillplatz",
-      "Rooftop": "Dachterrasse",
-      "Elevator": "Aufzug",
-      "Air Conditioning": "Klimaanlage",
-      "Landscaped Gardens": "Gepflegte Gärten"
-    },
-    "viewDetails": "Projektdetails ansehen",
-    "amenitiesTitle": "Ausstattung des Projekts",
-    "detail": {
-      "properties": "Immobilien in diesem Projekt",
-      "property": "Immobilie",
-      "propertiesCount": "Immobilien",
-      "available": "verfügbar",
-      "viewAllProperties": "Alle Immobilien anzeigen",
-      "defaultType": "Projektentwicklung",
-      "noImages": "Keine Bilder verfügbar",
-      "overview": "Projektübersicht",
-      "keyFeatures": "Wesentliche Merkmale",
-      "amenities": "Ausstattung",
-      "specifications": "Spezifikationen",
-      "locationDetails": "Standortdetails",
-      "interested": "Interessiert an diesem Projekt?",
-      "getInTouch": "Kontaktieren Sie unser Team für weitere Informationen",
-      "messagePlaceholder": "Beschreiben Sie Ihr Interesse an diesem Projekt...",
-      "details": "Projektdetails",
-      "typeLabel": "Typ:",
-      "totalUnits": "Gesamtanzahl Einheiten:",
-      "priceRange": "Preisspanne:",
-      "status": "Status:",
-      "units": "Einheiten",
-      "image": "Bild",
-      "related": "Verwandte Projekte"
-    },
-    "list": {
-      "filters": { "title": "Filter" },
-      "typeOfUnits": "Einheitstypen",
-      "units": { "villas": "Villen", "apartments": "Apartments", "houses": "Häuser", "offices": "Büros" },
-      "pricePerUnit": { "title": "Preis pro Einheit", "min": "Mindestpreis", "max": "Höchstpreis" },
-      "apply": "Filter anwenden",
-      "found": "Projekte gefunden",
-      "browseAll": "Alle verfügbaren Projekte anzeigen",
-      "activeFilters": "Aktive Filter:",
-      "sort": { "nameAsc": "Name: A–Z", "nameDesc": "Name: Z–A", "completion": "Fertigstellungstermin" },
-      "completion": "Fertigstellung",
-      "noResults": { "title": "Keine Projekte gefunden", "hint": "Passen Sie Ihre Suche an oder zeigen Sie alle verfügbaren Projekte an." },
-      "clearFilters": "Filter löschen"
-    }
-  },
   "locations": {
-    "countries": { "Germany": "Deutschland", "UAE": "VAE", "Cyprus": "Zypern", "North Cyprus": "Nordzypern" },
-    "cities": { "Berlin": "Berlin", "Dubai": "Dubai", "Paphos": "Paphos", "Limassol": "Limassol", "Nicosia": "Nikosia", "Larnaca": "Larnaka" }
+    "countries": {
+      "Germany": "Deutschland",
+      "UAE": "VAE",
+      "Cyprus": "Zypern",
+      "North Cyprus": "Nordzypern"
+    },
+    "cities": {
+      "Berlin": "Berlin",
+      "Dubai": "Dubai",
+      "Paphos": "Paphos",
+      "Limassol": "Limassol",
+      "Nicosia": "Nikosia",
+      "Larnaca": "Larnaka"
+    }
   },
   "forms": {
     "country": "Land",
@@ -664,8 +818,16 @@
     "anyType": "Beliebiger Typ",
     "operation": "Vorgang",
     "anyOperation": "Beliebiger Vorgang",
-    "operations": { "buy": "Kaufen", "rent": "Mieten" },
-    "types": { "apartment": "Wohnung", "house": "Haus", "villa": "Villa", "land": "Grundstück" },
+    "operations": {
+      "buy": "Kaufen",
+      "rent": "Mieten"
+    },
+    "types": {
+      "apartment": "Wohnung",
+      "house": "Haus",
+      "villa": "Villa",
+      "land": "Grundstück"
+    },
     "firstName": "Vorname",
     "lastName": "Nachname",
     "fullName": "Vollständiger Name",
@@ -675,8 +837,7 @@
     "preferredLanguage": "Bevorzugte Sprache",
     "message": "Nachricht",
     "submit": "Senden"
-  }
-  ,
+  },
   "footer": {
     "tagline": "Das beste Team, das Sie je brauchen werden.",
     "help": "Hilfe",
@@ -696,4 +857,3 @@
     "social": "Soziale Medien"
   }
 }
-
