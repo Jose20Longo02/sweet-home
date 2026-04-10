@@ -136,8 +136,9 @@ function protectInternalLandingTokens(content) {
     const fallbackLabel = String(label || '').trim();
     const idx = tokens.length;
     tokens.push({ key: normalizedKey, style: normalizedStyle, fallbackLabel });
-    // Keep key/style outside translator changes while label remains translatable.
-    return `${INTERNAL_LINK_OPEN_PREFIX}${idx}@@${fallbackLabel}${INTERNAL_LINK_CLOSE_PREFIX}${idx}@@`;
+    // Keep key/style indexed while label remains plain translatable HTML text.
+    const safeLabel = escapeHtml(fallbackLabel);
+    return `<span data-sh-link-id="${idx}">${safeLabel}</span>`;
   });
   return { protectedContent, tokens };
 }
@@ -146,6 +147,19 @@ function finalizeInternalLandingI18n(contentI18n, tokens, sourceLang, sourceOrig
   const out = { ...(contentI18n || {}) };
   Object.keys(out).forEach((lang) => {
     let content = String(out[lang] || '');
+
+    // Current strategy: HTML wrapper with token id (preferred, keeps label translatable).
+    content = content.replace(INTERNAL_LINK_MARKUP_REGEX, (full, attrs, innerLabel) => {
+      const rawId = getDataAttrValue(attrs, 'data-sh-link-id');
+      if (!rawId) return full;
+      const idx = parseInt(rawId, 10);
+      if (Number.isNaN(idx) || !tokens || !tokens[idx]) return full;
+      const token = tokens[idx];
+      const translatedLabel = stripHtmlTags(innerLabel) || token.fallbackLabel;
+      return `[[landing:${token.key}|${translatedLabel}|${token.style}]]`;
+    });
+
+    // Backward compatibility: marker wrapper used in previous iteration.
     (tokens || []).forEach((token, idx) => {
       const open = `${INTERNAL_LINK_OPEN_PREFIX}${idx}@@`;
       const close = `${INTERNAL_LINK_CLOSE_PREFIX}${idx}@@`;
