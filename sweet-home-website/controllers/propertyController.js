@@ -2602,32 +2602,46 @@ exports.exportPropertiesAdmin = async (req, res, next) => {
       fullAddressSearch
     });
 
+    const { rows: propertyColumnRows } = await query(
+      `SELECT column_name
+         FROM information_schema.columns
+        WHERE table_schema = 'public'
+          AND table_name = 'properties'`
+    );
+    const propertyColumns = new Set((propertyColumnRows || []).map((row) => row.column_name));
+    const hasPropertyColumn = (columnName) => propertyColumns.has(columnName);
+    const selectPropertyExpr = (candidates, alias, fallbackSql = 'NULL') => {
+      const selected = candidates.find((columnName) => hasPropertyColumn(columnName));
+      if (selected) return `p.${selected} AS ${alias}`;
+      return `${fallbackSql} AS ${alias}`;
+    };
+
     const exportQuery = `
       SELECT
-        p.id,
-        p.title,
-        p.slug,
-        p.country,
-        p.city,
-        p.neighborhood,
-        p.full_address,
-        p.type,
+        ${selectPropertyExpr(['id'], 'id', 'NULL::bigint')},
+        ${selectPropertyExpr(['title'], 'title', "''::text")},
+        ${selectPropertyExpr(['slug'], 'slug', "''::text")},
+        ${selectPropertyExpr(['country'], 'country', "''::text")},
+        ${selectPropertyExpr(['city'], 'city', "''::text")},
+        ${selectPropertyExpr(['neighborhood'], 'neighborhood', "''::text")},
+        ${selectPropertyExpr(['full_address', 'address'], 'full_address', "''::text")},
+        ${selectPropertyExpr(['type', 'property_type'], 'type', "''::text")},
         ''::text AS operation,
-        p.price,
-        p.size,
-        p.rooms,
-        p.bathrooms,
-        p.housegeld AS maintenance_costs,
-        p.occupancy_type,
-        p.rental_status,
-        p.year_built,
-        p.status,
-        p.status_tags,
-        p.sold,
-        p.sold_at,
-        p.agent_id,
-        p.created_at,
-        p.updated_at,
+        ${selectPropertyExpr(['price'], 'price', 'NULL::numeric')},
+        ${selectPropertyExpr(['size', 'living_space', 'square_meters', 'sqm'], 'size', 'NULL::numeric')},
+        ${selectPropertyExpr(['rooms', 'bedrooms', 'room_count'], 'rooms', 'NULL::numeric')},
+        ${selectPropertyExpr(['bathrooms', 'bathroom_count'], 'bathrooms', 'NULL::numeric')},
+        ${selectPropertyExpr(['housegeld', 'maintenance_costs'], 'maintenance_costs', 'NULL::numeric')},
+        ${selectPropertyExpr(['occupancy_type', 'occupancy'], 'occupancy_type', "''::text")},
+        ${selectPropertyExpr(['rental_status'], 'rental_status', "''::text")},
+        ${selectPropertyExpr(['year_built', 'year'], 'year_built', 'NULL::int')},
+        ${selectPropertyExpr(['status', 'listing_status'], 'status', "''::text")},
+        ${selectPropertyExpr(['status_tags'], 'status_tags', 'NULL::text[]')},
+        ${selectPropertyExpr(['sold'], 'sold', 'NULL::boolean')},
+        ${selectPropertyExpr(['sold_at'], 'sold_at', 'NULL::timestamptz')},
+        ${selectPropertyExpr(['agent_id'], 'agent_id', 'NULL::bigint')},
+        ${selectPropertyExpr(['created_at'], 'created_at', 'NULL::timestamptz')},
+        ${selectPropertyExpr(['updated_at'], 'updated_at', 'NULL::timestamptz')},
         u.name AS agent_name,
         u.email AS agent_email
       FROM properties p
@@ -2670,6 +2684,11 @@ exports.exportPropertiesAdmin = async (req, res, next) => {
 
     const baseUrl = `${req.protocol}://${req.get('host')}`;
     const csvRows = [headers.join(',')];
+    const toIsoOrEmpty = (value) => {
+      if (!value) return '';
+      const dateObj = new Date(value);
+      return Number.isNaN(dateObj.getTime()) ? '' : dateObj.toISOString();
+    };
 
     rows.forEach((prop) => {
       const publicLink = prop.slug ? `${baseUrl}/properties/${prop.slug}` : '';
@@ -2699,12 +2718,12 @@ exports.exportPropertiesAdmin = async (req, res, next) => {
         prop.status,
         statusTags,
         prop.sold,
-        prop.sold_at ? new Date(prop.sold_at).toISOString() : '',
+        toIsoOrEmpty(prop.sold_at),
         prop.agent_id,
         prop.agent_name,
         prop.agent_email,
-        prop.created_at ? new Date(prop.created_at).toISOString() : '',
-        prop.updated_at ? new Date(prop.updated_at).toISOString() : ''
+        toIsoOrEmpty(prop.created_at),
+        toIsoOrEmpty(prop.updated_at)
       ];
 
       csvRows.push(row.map(escapeCsvCell).join(','));
