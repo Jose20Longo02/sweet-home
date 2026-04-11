@@ -15,6 +15,7 @@ const {
   updateProperty,
   deleteProperty,
   listPropertiesAdmin,
+  exportPropertiesAdmin,
   deletePropertyAdmin,
   reassignProperty,
   getFeaturedProperties
@@ -82,6 +83,7 @@ const adminRouter = express.Router();
 
 // List & delete
 adminRouter.get('/',              ensureAuthenticated, ensureSuperAdmin, listPropertiesAdmin);
+adminRouter.get('/export',        ensureAuthenticated, ensureSuperAdmin, exportPropertiesAdmin);
 adminRouter.post('/:id/delete',   ensureAuthenticated, ensureSuperAdmin, deletePropertyAdmin);
 
 // Reassign handler

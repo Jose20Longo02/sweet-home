@@ -2522,6 +2522,203 @@ exports.listPropertiesAdmin = async (req, res, next) => {
     next(err);
   }
 };
+
+function escapeCsvCell(value) {
+  if (value === null || value === undefined) return '';
+  const str = String(value);
+  if (/[",\n]/.test(str)) return `"${str.replace(/"/g, '""')}"`;
+  return str;
+}
+
+function normalizeAdminBooleanParam(value) {
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  return null;
+}
+
+function buildAdminPropertyFilterSql(filters) {
+  const {
+    country,
+    city,
+    type,
+    minPrice,
+    maxPrice,
+    status,
+    sold,
+    agent,
+    fullAddressSearch
+  } = filters || {};
+
+  const conditions = [];
+  const values = [];
+  let idx = 1;
+
+  if (fullAddressSearch) {
+    conditions.push(`(p.full_address IS NOT NULL AND p.full_address ILIKE $${idx})`);
+    values.push(`%${fullAddressSearch}%`);
+    idx += 1;
+  }
+  if (country) { conditions.push(`p.country = $${idx}`); values.push(country); idx += 1; }
+  if (city) { conditions.push(`p.city = $${idx}`); values.push(city); idx += 1; }
+  if (type) { conditions.push(`p.type = $${idx}`); values.push(type); idx += 1; }
+  if (minPrice) { conditions.push(`p.price >= $${idx}`); values.push(minPrice); idx += 1; }
+  if (maxPrice) { conditions.push(`p.price <= $${idx}`); values.push(maxPrice); idx += 1; }
+  if (status) { conditions.push(`p.status_tags @> $${idx}`); values.push([status]); idx += 1; }
+  if (sold !== null) { conditions.push(`p.sold = $${idx}`); values.push(sold); idx += 1; }
+
+  if (agent) {
+    if (agent === 'unassigned') {
+      conditions.push(`p.agent_id IS NULL`);
+    } else {
+      const parsedAgent = parseInt(agent, 10);
+      if (Number.isFinite(parsedAgent)) {
+        conditions.push(`p.agent_id = $${idx}`);
+        values.push(parsedAgent);
+        idx += 1;
+      }
+    }
+  }
+
+  return {
+    where: conditions.length ? `WHERE ${conditions.join(' AND ')}` : '',
+    values
+  };
+}
+
+exports.exportPropertiesAdmin = async (req, res, next) => {
+  try {
+    const { country, city, type, minPrice, maxPrice, status, sold, agent, full_address: fullAddressParam } = req.query;
+    const fullAddressSearch = (fullAddressParam && String(fullAddressParam).trim()) || '';
+    const soldBool = normalizeAdminBooleanParam(sold);
+    const { where, values } = buildAdminPropertyFilterSql({
+      country,
+      city,
+      type,
+      minPrice,
+      maxPrice,
+      status,
+      sold: soldBool,
+      agent,
+      fullAddressSearch
+    });
+
+    const exportQuery = `
+      SELECT
+        p.id,
+        p.title,
+        p.slug,
+        p.country,
+        p.city,
+        p.neighborhood,
+        p.full_address,
+        p.type,
+        p.operation,
+        p.price,
+        p.size,
+        p.rooms,
+        p.bathrooms,
+        p.maintenance_costs,
+        p.occupancy_type,
+        p.rental_status,
+        p.year_built,
+        p.status,
+        p.status_tags,
+        p.sold,
+        p.sold_at,
+        p.agent_id,
+        p.created_at,
+        p.updated_at,
+        u.name AS agent_name,
+        u.email AS agent_email
+      FROM properties p
+      LEFT JOIN users u ON u.id = p.agent_id
+      ${where}
+      ORDER BY p.created_at DESC
+    `;
+
+    const { rows } = await query(exportQuery, values);
+
+    const headers = [
+      'ID',
+      'Title',
+      'Public Link',
+      'Slug',
+      'Country',
+      'City',
+      'Neighborhood',
+      'Full Address',
+      'Type',
+      'Operation',
+      'Price',
+      'Size (sqm)',
+      'Rooms',
+      'Bathrooms',
+      'Maintenance Costs',
+      'Occupancy Type',
+      'Rental Status',
+      'Year Built',
+      'Status',
+      'Status Tags',
+      'Sold',
+      'Sold At',
+      'Agent ID',
+      'Agent Name',
+      'Agent Email',
+      'Created At',
+      'Updated At'
+    ];
+
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const csvRows = [headers.join(',')];
+
+    rows.forEach((prop) => {
+      const publicLink = prop.slug ? `${baseUrl}/properties/${prop.slug}` : '';
+      const statusTags = Array.isArray(prop.status_tags)
+        ? prop.status_tags.join(' | ')
+        : (prop.status_tags || '');
+
+      const row = [
+        prop.id,
+        prop.title,
+        publicLink,
+        prop.slug,
+        prop.country,
+        prop.city,
+        prop.neighborhood,
+        prop.full_address,
+        prop.type,
+        prop.operation,
+        prop.price,
+        prop.size,
+        prop.rooms,
+        prop.bathrooms,
+        prop.maintenance_costs,
+        prop.occupancy_type,
+        prop.rental_status,
+        prop.year_built,
+        prop.status,
+        statusTags,
+        prop.sold,
+        prop.sold_at ? new Date(prop.sold_at).toISOString() : '',
+        prop.agent_id,
+        prop.agent_name,
+        prop.agent_email,
+        prop.created_at ? new Date(prop.created_at).toISOString() : '',
+        prop.updated_at ? new Date(prop.updated_at).toISOString() : ''
+      ];
+
+      csvRows.push(row.map(escapeCsvCell).join(','));
+    });
+
+    const datePart = new Date().toISOString().slice(0, 10);
+    const filename = `properties_export_${datePart}.csv`;
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send('\ufeff' + csvRows.join('\n'));
+  } catch (err) {
+    next(err);
+  }
+};
 // controllers/propertyController.js
 
 exports.reassignProperty = async (req, res, next) => {

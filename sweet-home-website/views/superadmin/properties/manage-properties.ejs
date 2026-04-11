@@ -26,7 +26,21 @@
               All Properties
             <% } %>
           </h1>
+          <%
+            const exportParams = [];
+            if (filters.agent) exportParams.push('agent=' + encodeURIComponent(filters.agent));
+            if (filters.country) exportParams.push('country=' + encodeURIComponent(filters.country));
+            if (filters.city) exportParams.push('city=' + encodeURIComponent(filters.city));
+            if (filters.full_address) exportParams.push('full_address=' + encodeURIComponent(filters.full_address));
+            if (filters.type) exportParams.push('type=' + encodeURIComponent(filters.type));
+            if (filters.status) exportParams.push('status=' + encodeURIComponent(filters.status));
+            if (filters.sold) exportParams.push('sold=' + encodeURIComponent(filters.sold));
+            if (filters.minPrice) exportParams.push('minPrice=' + encodeURIComponent(filters.minPrice));
+            if (filters.maxPrice) exportParams.push('maxPrice=' + encodeURIComponent(filters.maxPrice));
+            const exportUrl = '/superadmin/dashboard/properties/export' + (exportParams.length ? '?' + exportParams.join('&') : '');
+          %>
           <div>
+            <a href="<%= exportUrl %>" class="btn btn-secondary">Download Property List</a>
             <a href="/admin/properties/new" class="btn btn-primary">New Property</a>
           </div>
         </div>
