@@ -107,6 +107,10 @@
   width: 260px;
   justify-content: center;
 }
+.berlin-investor-page--de .berlin-investor-hero__cta .btn {
+  width: 320px;
+  white-space: nowrap;
+}
 .berlin-investor-hero__cta .btn.btn-primary:hover,
 .berlin-investor-hero__cta .btn.btn-primary:focus,
 .berlin-investor-hero__cta .btn.btn-primary:active {
