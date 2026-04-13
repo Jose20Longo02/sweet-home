@@ -3502,7 +3502,7 @@ exports.berlinInvestorStrategyPageEn = async (req, res, next) => {
     const baseUrl = res.locals.baseUrl;
     const canonicalUrl = `${baseUrl}/en/berlin-tenant-occupied-entry-strategy`;
     const hreflangAlternates = {
-      'de-de': `${baseUrl}/wohnungen-berlin-kaufen`,
+      'de-de': `${baseUrl}/berlin-mieter-belegte-einstiegsstrategie`,
       'en-us': canonicalUrl,
       'es-es': `${baseUrl}/es/propiedades-en-venta-berlin`
     };
@@ -3515,6 +3515,81 @@ exports.berlinInvestorStrategyPageEn = async (req, res, next) => {
       canonicalUrl,
       hreflangAlternates,
       pageMetaDescription: 'Berlin Tenant-Occupied Entry Strategy by Sweet Home: structured access to tenant-occupied apartments with immediate income potential and long-term fundamentals.',
+      recommendedProperties,
+      baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// German campaign landing page: Berliner Einstiegsstrategie mit vermieteten Wohnungen
+exports.berlinInvestorStrategyPageDe = async (req, res, next) => {
+  try {
+    const propertiesSql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.created_at,
+        p.description,
+        p.occupancy_type,
+        p.rental_status,
+        p.rental_income,
+        p.housegeld,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name,
+        u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND LOWER(COALESCE(p.neighborhood, '')) LIKE '%moabit%'
+        AND p.status = 'active'
+        AND (
+          p.occupancy_type = 'Long-Term Rented'
+          OR LOWER(COALESCE(p.occupancy_type, '')) LIKE '%long-term rented%'
+          OR LOWER(COALESCE(p.occupancy_type, '')) LIKE '%long term rented%'
+        )
+        AND COALESCE(p.rental_status, 'rented') = 'rented'
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 9
+    `;
+
+    const { rows: properties } = await query(propertiesSql);
+    const recommendedProperties = (properties || []).map((p) => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: getLocalizedTitle(p, 'de'),
+        description: (p.description_i18n && p.description_i18n.de) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+
+    const baseUrl = res.locals.baseUrl;
+    const canonicalUrl = `${baseUrl}/berlin-mieter-belegte-einstiegsstrategie`;
+    const hreflangAlternates = {
+      'de-de': canonicalUrl,
+      'en-us': `${baseUrl}/en/berlin-tenant-occupied-entry-strategy`,
+      'es-es': `${baseUrl}/es/propiedades-en-venta-berlin`
+    };
+
+    res.render('berlin-investment-strategy-de', {
+      title: 'Berliner Einstiegsstrategie mit vermieteten Wohnungen | Sweet Home',
+      useMainContainer: false,
+      useHomeHeader: false,
+      headPartial: '../partials/seo/berlin-investment-strategy-head-de',
+      canonicalUrl,
+      hreflangAlternates,
+      pageMetaDescription: 'Berliner Einstiegsstrategie mit vermieteten Wohnungen von Sweet Home: strukturierter Zugang mit sofortiger Miettransparenz und langfristigem Potenzial.',
       recommendedProperties,
       baseUrl
     });

@@ -1,0 +1,413 @@
+<% useMainContainer = false %>
+<% useHomeHeader = false %>
+<link rel="stylesheet" href="/css/home.css" />
+<link rel="stylesheet" href="/css/berlin-landing.min.css?v=20260326-3" />
+<link rel="stylesheet" href="/css/contact.css?v=<%= assetVersion %>" />
+<link rel="stylesheet" href="/css/owners.css?v=<%= assetVersion %>" />
+<link rel="stylesheet" href="/css/berlin-investment-strategy-en.css?v=<%= assetVersion %>" />
+<% if (process.env.RECAPTCHA_SITE_KEY) { %>
+  <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+<% } %>
+
+<div class="berlin-landing-page berlin-investor-page">
+  <section class="berlin-investor-hero berlin-investor-hero--luxury" aria-labelledby="investor-hero-title">
+    <div class="berlin-investor-hero__inner">
+      <div class="berlin-investor-hero__main">
+        <p class="berlin-hero__kicker">Sweet Home | Private Investor Series</p>
+        <h1 id="investor-hero-title" class="berlin-hero__title">Die Berliner Immobilienstrategie fuer junge Berufstaetige mit EUR 2.700+/Monat, ueber die kaum jemand spricht</h1>
+        <p class="berlin-hero__description">Wenn Sie jung sind und rund EUR 2.700+ netto pro Monat verdienen, kann diese Strategie Ihnen den Markteinstieg ueber vermietete Wohnungen mit guenstigerem Einstieg, sofortiger Miettransparenz und langfristigem Potenzial ermoeglichen.</p>
+      </div>
+      <aside class="berlin-investor-hero__accent" aria-label="Strategie-Highlights">
+        <div class="berlin-investor-stat">
+          <p class="berlin-investor-stat__value">30-40%</p>
+          <p class="berlin-investor-stat__label">Moeglicher Einstiegs-<strong>rabatt</strong> gegenueber ausgewaehlten leerstehenden Vergleichsobjekten</p>
+        </div>
+        <div class="berlin-investor-stat">
+          <p class="berlin-investor-stat__value">Tag 1</p>
+          <p class="berlin-investor-stat__label"><strong>Einnahmen</strong> ab dem ersten Tag durch vermieteten Einstieg</p>
+        </div>
+        <div class="berlin-investor-stat">
+          <p class="berlin-investor-stat__value">~222k</p>
+          <p class="berlin-investor-stat__label">Wohnungen bis 2040 in Berlin <strong>noetig</strong></p>
+        </div>
+      </aside>
+      <div class="berlin-investor-hero__cta">
+        <a href="#lead-cta" class="btn btn-primary">Persoenliche Beratung erhalten</a>
+        <a href="#selected-berlin-opportunities" class="btn berlin-investor-btn-secondary">Ausgewaehlte Objekte entdecken</a>
+      </div>
+    </div>
+  </section>
+  <section class="berlin-investor-hero-spacer" aria-hidden="true">
+    <div class="berlin-investor-hero-spacer__line"></div>
+  </section>
+
+  <section class="berlin-content section investor-strategy-explainer" aria-labelledby="strategy-explainer-heading">
+    <div class="berlin-content__inner">
+      <div class="investor-strategy-explainer__intro">
+        <div class="investor-strategy-explainer__eyebrow">Strategie-Framework</div>
+        <h2 id="strategy-explainer-heading" class="berlin-content__title">Was macht diese Strategie so attraktiv?</h2>
+        <p class="berlin-content__intro">
+          Das Modell kombiniert guenstigeren Einstieg, sofortige Miettransparenz und langfristige Aufwertung. Es ist auf finanzielle Disziplin ausgelegt und behaelt gleichzeitig Potenzial nach oben.
+        </p>
+      </div>
+
+      <div class="investor-strategy-explainer__grid">
+        <article class="investor-strategy-explainer__card">
+          <span class="investor-strategy-explainer__index">01</span>
+          <h3>Einnahmen ab Tag eins</h3>
+          <p>Beim Einstieg in vermietete Wohnungen kann die Miete bereits bei Kauf bestehen und schafft damit sofortige Cashflow-Transparenz.</p>
+        </article>
+
+        <article class="investor-strategy-explainer__card">
+          <span class="investor-strategy-explainer__index">02</span>
+          <h3>Guenstiger Einstieg + langfristige Optionalitaet</h3>
+          <p>Der Einstieg kann deutlich unter leerstehenden Vergleichsobjekten liegen (in ausgewaehlten Faellen etwa 30-40%), waehrend langfristiger Wert und spaetere Eigennutzung im rechtlichen Rahmen erhalten bleiben.</p>
+        </article>
+
+        <article class="investor-strategy-explainer__card">
+          <span class="investor-strategy-explainer__index">03</span>
+          <h3>Unterstuetzung bei Energieeffizienz</h3>
+          <p>Je nach Objekt koennen Foerderprogramme energetische Verbesserungen unterstuetzen und langfristig Qualitaet sowie Betriebsergebnis staerken.</p>
+        </article>
+      </div>
+
+      <div class="investor-strategy-explainer__notes">
+        <ol class="investor-strategy-explainer__notes-list">
+          <li><strong>Eigenkapital-Logik:</strong> Das Modell wird oft so strukturiert, dass Eigenkapital effizient eingesetzt wird statt maximaler Vorabbindung.</li>
+          <li><strong>Finanzierungs-Logik:</strong> Die Tragfaehigkeit wird meist ueber Einkommen minus laufende Ausgaben und Schuldendienst geprueft.</li>
+          <li><strong>Steuer-Logik:</strong> Zinsen und Abschreibung koennen je nach Profil die Netto-Performance verbessern.</li>
+        </ol>
+      </div>
+      <p class="section-inline-cta">
+        <a href="#lead-cta" class="btn btn-primary section-inline-cta__link">Persoenliche Beratung zu dieser Strategie erhalten</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="berlin-content section strategy-mechanics" aria-labelledby="strategy-mechanics-heading">
+    <div class="berlin-content__inner">
+      <div class="strategy-mechanics__intro">
+        <h2 id="strategy-mechanics-heading" class="berlin-content__title">Was diese Strategie konkret ist - und warum sie funktioniert</h2>
+        <p class="berlin-content__intro">
+          Diese Strategie verbindet den Einstieg ueber vermietete Wohnungen mit sofortiger Miettransparenz sowie Steuer- und Energieeffizienz-Logik. Der Vorteil entsteht durch das Zusammenspiel aller Bausteine.
+        </p>
+      </div>
+
+      <div class="strategy-mechanics__process" aria-label="Interaktive Strategie-Map">
+        <div class="strategy-mechanics__process-line" aria-hidden="true"></div>
+
+        <article class="strategy-mechanics__point strategy-mechanics__point--right is-active" data-mechanics-step="1" tabindex="0">
+          <span class="strategy-mechanics__marker"><span></span><small>01</small></span>
+          <div class="strategy-mechanics__card">
+            <span class="strategy-mechanics__index">01</span>
+            <h3>Warum ein 30-40% Rabatt moeglich sein kann</h3>
+            <p>Vermietete Einheiten handeln oft unter leerstehenden Vergleichsobjekten, weil die sofortige Eigennutzung eingeschraenkt ist und die Kaeferschicht kleiner ausfaellt.</p>
+          </div>
+        </article>
+
+        <article class="strategy-mechanics__point strategy-mechanics__point--left" data-mechanics-step="2" tabindex="0">
+          <span class="strategy-mechanics__marker"><span></span><small>02</small></span>
+          <div class="strategy-mechanics__card">
+            <span class="strategy-mechanics__index">02</span>
+            <h3>Warum Einnahmen ab Tag eins starten koennen</h3>
+            <p>Der Mietvertrag besteht bereits, daher kann der Cashflow direkt nach Erwerb sichtbar und planbar sein.</p>
+          </div>
+        </article>
+
+        <article class="strategy-mechanics__point strategy-mechanics__point--right" data-mechanics-step="3" tabindex="0">
+          <span class="strategy-mechanics__marker"><span></span><small>03</small></span>
+          <div class="strategy-mechanics__card">
+            <span class="strategy-mechanics__index">03</span>
+            <h3>Wo steuerliche Vorteile entstehen koennen</h3>
+            <p>Bei vielen Vermieterprofilen in Deutschland sind Zinsen und Abschreibung steuerlich relevant - das kann die Netto-Rendite verbessern.</p>
+          </div>
+        </article>
+
+        <article class="strategy-mechanics__point strategy-mechanics__point--left" data-mechanics-step="4" tabindex="0">
+          <span class="strategy-mechanics__marker"><span></span><small>04</small></span>
+          <div class="strategy-mechanics__card">
+            <span class="strategy-mechanics__index">04</span>
+            <h3>Wo Energie- und Finanzierungsvorteile entstehen</h3>
+            <p>Je nach Objekt koennen energetische Upgrades und Foerderpfade bessere Finanzierungsbedingungen und langfristig stabilere Qualitaet unterstuetzen.</p>
+          </div>
+        </article>
+      </div>
+
+      <p class="strategy-mechanics__disclaimer">
+        Wichtig: Rabattbandbreiten, steuerliche Effekte und Finanzierungsergebnisse haengen immer vom Objekt und vom Kaeuferprofil ab. Diese Seite ersetzt keine Rechts- oder Steuerberatung.
+      </p>
+      <p class="section-inline-cta">
+        <a href="#strategy-calculator" class="btn btn-primary section-inline-cta__link">Pruefen, ob diese Strategie zu Ihrem Profil passt</a>
+      </p>
+    </div>
+  </section>
+
+  <section id="strategy-calculator" class="berlin-content section strategy-calculator" aria-labelledby="strategy-calculator-heading">
+    <div class="berlin-content__inner">
+      <div class="strategy-calculator__intro">
+        <h2 id="strategy-calculator-heading" class="berlin-content__title">Passt diese Strategie zu Ihnen? Finden Sie es heraus!</h2>
+        <p class="berlin-content__intro">
+          Schaetzen Sie ein, ob diese Strategie zu Ihrem Profil passt. Das Modell beruecksichtigt Haushaltskosten, fixe Ausgaben, Kaufnebenkosten, Eigenkapital und den Finanzierungs-Check.
+        </p>
+      </div>
+
+      <div class="strategy-calculator__wizard" data-current-step="1">
+        <div class="strategy-calculator__progress" role="list" aria-label="Rechner-Schritte">
+          <span class="strategy-calculator__progress-item is-active" data-step-indicator="1" role="listitem">1. Einkommen</span>
+          <span class="strategy-calculator__progress-item" data-step-indicator="2" role="listitem">2. Haushalt</span>
+          <span class="strategy-calculator__progress-item" data-step-indicator="3" role="listitem">3. Objekt</span>
+        </div>
+
+        <div class="strategy-calculator__steps">
+          <article class="strategy-calculator__panel strategy-calculator__step is-active" data-step="1">
+            <h3>Schritt 1: Einkommen und fixe Monatskosten</h3>
+            <div class="strategy-calculator__fields">
+              <div class="strategy-calculator__field">
+                <label for="calcSalary1">Netto-Monatsgehalt (EUR)</label>
+                <input id="calcSalary1" type="number" min="0" step="50" value="2700" inputmode="decimal">
+              </div>
+              <div class="strategy-calculator__field">
+                <label for="calcLoans">Aktuelle monatliche Kreditraten (EUR)</label>
+                <input id="calcLoans" type="number" min="0" step="50" value="400" inputmode="decimal">
+              </div>
+              <div class="strategy-calculator__field">
+                <label for="calcInsurance">Private Versicherung (monatlich, EUR)</label>
+                <input id="calcInsurance" type="number" min="0" step="50" value="200" inputmode="decimal">
+              </div>
+            </div>
+          </article>
+
+          <article class="strategy-calculator__panel strategy-calculator__step" data-step="2" hidden>
+            <h3>Schritt 2: Haushaltskosten-Profil</h3>
+            <p class="strategy-calculator__step-hint">Lebenshaltungsmodell: 1 Erwachsener = EUR 1.200 | 2 Erwachsene = EUR 1.600 | pro Kind = +EUR 200.</p>
+            <div class="strategy-calculator__fields">
+              <div class="strategy-calculator__field">
+                <label for="calcAdults">Erwachsene im Haushalt</label>
+                <select id="calcAdults">
+                  <option value="1">1 Erwachsener</option>
+                  <option value="2" selected>2 Erwachsene</option>
+                </select>
+              </div>
+              <div class="strategy-calculator__field">
+                <label for="calcChildren">Kinder im Haushalt</label>
+                <input id="calcChildren" type="number" min="0" step="1" value="1" inputmode="numeric">
+              </div>
+            </div>
+          </article>
+
+          <article class="strategy-calculator__panel strategy-calculator__step" data-step="3" hidden>
+            <h3>Schritt 3: Objekt- und Finanzierungsannahmen</h3>
+            <div class="strategy-calculator__fields">
+              <div class="strategy-calculator__field">
+                <label for="calcPropertyPrice">Objektpreis (EUR)</label>
+                <input id="calcPropertyPrice" type="number" min="0" step="1000" value="300000" inputmode="decimal">
+              </div>
+              <div class="strategy-calculator__field">
+                <label for="calcEquityPct">Eigenanteil (% vom Kaufpreis, Minimum 12%)</label>
+                <input id="calcEquityPct" type="number" min="12" max="100" step="1" value="12" inputmode="decimal">
+              </div>
+              <div class="strategy-calculator__field">
+                <label for="calcDebtServiceRate">Geschaetzte jaehrliche Schuldendienst-Rate (%)</label>
+                <input id="calcDebtServiceRate" type="number" min="0" max="20" step="0.1" value="6" inputmode="decimal">
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="strategy-calculator__actions">
+          <button type="button" id="calcPrevBtn" class="strategy-calculator__btn strategy-calculator__btn--ghost">Zurueck</button>
+          <button type="button" id="calcNextBtn" class="strategy-calculator__btn strategy-calculator__btn--primary">Weiter</button>
+          <button type="button" id="calcRunBtn" class="strategy-calculator__btn strategy-calculator__btn--primary" hidden>Eignung berechnen</button>
+        </div>
+      </div>
+
+      <div id="strategyCalculatorResults" class="strategy-calculator__results-wrap" hidden>
+        <div class="strategy-calculator__results" aria-live="polite">
+        <div class="strategy-calculator__result">
+          <span class="strategy-calculator__result-label">Gesamtes Monatseinkommen</span>
+          <strong id="calcTotalIncome">EUR 0</strong>
+        </div>
+        <div class="strategy-calculator__result">
+          <span class="strategy-calculator__result-label">Haushalts-Lebenshaltungskosten</span>
+          <strong id="calcLivingExpenses">EUR 0</strong>
+        </div>
+        <div class="strategy-calculator__result">
+          <span class="strategy-calculator__result-label">Gesamte monatliche Ausgaben</span>
+          <strong id="calcTotalExpenses">EUR 0</strong>
+        </div>
+        <div class="strategy-calculator__result">
+          <span class="strategy-calculator__result-label">Verfuegbarer Rest nach Ausgaben</span>
+          <strong id="calcFinalBalance">EUR 0</strong>
+        </div>
+        <div class="strategy-calculator__result">
+          <span class="strategy-calculator__result-label">Geschaetzte Monatsrate (Geschaetzt)</span>
+          <strong id="calcEstimatedPayment">EUR 0</strong>
+        </div>
+        <div class="strategy-calculator__result">
+          <span class="strategy-calculator__result-label">Erforderliches Netto-Gehalt</span>
+          <strong id="calcRequiredSalary">EUR 0</strong>
+        </div>
+        <div class="strategy-calculator__result strategy-calculator__result--status">
+          <span class="strategy-calculator__result-label">Eignungs-Check</span>
+          <strong id="calcQualificationStatus">Noch nicht qualifiziert</strong>
+        </div>
+        </div>
+
+        <div class="strategy-calculator__derived">
+          <div class="strategy-calculator__derived-item">
+            <span class="strategy-calculator__result-label">Kaufnebenkosten (12% vom Preis)</span>
+            <strong id="calcExtraCosts">EUR 0</strong>
+          </div>
+          <div class="strategy-calculator__derived-item">
+            <span class="strategy-calculator__result-label">Gesamt erforderliches Eigenkapital</span>
+            <strong id="calcTotalEquity">EUR 0</strong>
+          </div>
+          <div class="strategy-calculator__derived-item">
+            <span class="strategy-calculator__result-label">Finanzierungsbetrag</span>
+            <strong id="calcMortgage">EUR 0</strong>
+          </div>
+        </div>
+      </div>
+
+      <p id="calcQualificationNote" class="strategy-calculator__note">
+        Fuellen Sie die 3 Schritte aus und klicken Sie auf <strong>Eignung berechnen</strong>, um Ihr Ergebnis zu sehen.
+      </p>
+      <p class="section-inline-cta">
+        <a href="#lead-cta" class="btn btn-primary section-inline-cta__link">Rechner-Ergebnis mit einem Berater besprechen</a>
+      </p>
+    </div>
+  </section>
+
+  <section id="selected-berlin-opportunities" class="section featured berlin-featured" aria-labelledby="campaign-properties-heading">
+    <h2 id="campaign-properties-heading" class="berlin-featured__title">Ausgewaehlte Berliner Objekte</h2>
+    <p class="berlin-featured__subtitle">Wir fokussieren den Kampagnen-Traffic aktuell auf ausgewaehlte vermietete Objekte, darunter zwei priorisierte Projekt-Einstiege mit attraktivem Einstiegspreis und langfristigen Fundamentaldaten.</p>
+    <div class="berlin-featured__grid" id="investorRecommended">
+      <% (recommendedProperties || []).forEach((property, idx) => { %>
+        <%
+          const photoUrl = (property.photos && property.photos[0]) ? property.photos[0] : '/img/property-placeholder.jpg';
+          const size = property.size ? `${property.size} m²` : null;
+          const beds = (typeof property.rooms !== 'undefined' && property.rooms !== null) ? property.rooms : null;
+          const baths = (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) ? property.bathrooms : null;
+          const priceText = property.price && Number(property.price) > 0 ? 'EUR ' + Number(property.price).toLocaleString('de-DE') : '';
+          const statusLabel = property.occupancy_type || property.rental_status || null;
+          const prioritizeImage = idx < 3;
+        %>
+        <article class="property-card">
+          <a href="/properties/<%= property.slug %>" class="property-card-link">
+            <div class="img-wrap" <%= priceText ? `data-price="${priceText}"` : '' %>>
+              <img
+                src="<%= photoUrl %>"
+                alt="<%= property.title %>"
+                loading="<%= prioritizeImage ? 'eager' : 'lazy' %>"
+                fetchpriority="<%= prioritizeImage ? 'high' : 'low' %>"
+                decoding="async"
+                onerror="this.src='/img/property-placeholder.jpg'">
+            </div>
+            <div class="meta">
+              <div class="title"><%= property.title %></div>
+              <% if (priceText) { %><div class="price"><%= priceText %></div><% } %>
+              <div class="location">
+                <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                <%= property.neighborhood || property.city %>, <%= property.country %>
+              </div>
+              <div class="features-row">
+                <% if (size) { %>
+                  <div class="feature">
+                    <span class="icon icon-16 icon-inline icon-mask icon-size"></span>
+                    <span><%= size %></span>
+                  </div>
+                <% } %>
+                <% if (beds !== null) { %>
+                  <div class="feature">
+                    <span class="icon icon-16 icon-inline icon-mask icon-bed"></span>
+                    <span><%= beds %> Zimmer</span>
+                  </div>
+                <% } %>
+                <% if (baths !== null) { %>
+                  <div class="feature">
+                    <span class="icon icon-16 icon-inline icon-mask icon-bath"></span>
+                    <span><%= baths %> Bad<%= Number(baths) === 1 ? '' : 'er' %></span>
+                  </div>
+                <% } %>
+              </div>
+              <% if (statusLabel) { %>
+                <p class="investor-status-badge"><%= statusLabel %></p>
+              <% } %>
+              <span class="learn-more">Details ansehen →</span>
+            </div>
+          </a>
+        </article>
+      <% }); %>
+    </div>
+    <% if (!recommendedProperties || recommendedProperties.length === 0) { %>
+      <p class="section-empty">Aktuell wurden keine Objekte gefunden. <a href="/properties?country=Germany&city=Berlin">Alle Berliner Angebote ansehen</a>.</p>
+    <% } %>
+    <p class="section-inline-cta">
+      <a href="#lead-cta" class="btn btn-primary section-inline-cta__link">Persoenliche Beratung zu passenden Objekten erhalten</a>
+    </p>
+  </section>
+
+  <section id="lead-cta" class="owners-lead section">
+    <h2 id="investor-form-heading">Strategie-Details anfragen</h2>
+    <div class="lead-grid">
+      <form
+        id="berlinInvestorStrategyForm"
+        class="lead-form lead-form-centered"
+        action="/api/leads/berlin-investor-strategy"
+        method="post"
+        novalidate
+        <% if (process.env.RECAPTCHA_SITE_KEY) { %> data-recaptcha-site-key="<%= process.env.RECAPTCHA_SITE_KEY %>" <% } %>
+      >
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <% if (process.env.RECAPTCHA_SITE_KEY) { %>
+          <input type="hidden" name="recaptchaToken" id="recaptchaTokenInvestorStrategy" />
+        <% } %>
+        <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
+
+        <div class="form-group">
+          <label for="fullName">Vollstaendiger Name*</label>
+          <input id="fullName" name="name" type="text" required aria-required="true" placeholder="Vollstaendiger Name*">
+        </div>
+        <div class="row-2">
+          <div class="form-group">
+            <label for="countryCode">Laendervorwahl*</label>
+            <input id="countryCode" name="countryCode" type="text" required aria-required="true" placeholder="+49">
+          </div>
+          <div class="form-group">
+            <label for="phone">Telefonnummer*</label>
+            <input id="phone" name="phone" type="tel" required aria-required="true" placeholder="Telefonnummer*" inputmode="tel">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">E-Mail*</label>
+          <input id="email" name="email" type="email" required aria-required="true" placeholder="E-Mail*">
+        </div>
+        <div class="form-group">
+          <label for="language">Bevorzugte Sprache</label>
+          <select id="language" name="language">
+            <option value="">Sprache waehlen</option>
+            <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
+              <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Nachricht (optional)</label>
+          <input id="message" name="message" type="text" placeholder="Ziele, Budgetrahmen oder Zeitplan kurz beschreiben.">
+        </div>
+
+        <input type="hidden" name="utm_source" />
+        <input type="hidden" name="utm_medium" />
+        <input type="hidden" name="utm_campaign" />
+        <input type="hidden" name="utm_term" />
+        <input type="hidden" name="utm_content" />
+        <input type="hidden" name="referrer" />
+        <input type="hidden" name="page_path" />
+
+        <button type="submit" class="btn-submit">Kontakt aufnehmen</button>
+        <p class="form-status" role="status" aria-live="polite" style="display:none"></p>
+      </form>
+    </div>
+  </section>
+</div>
+<script src="/js/berlin-investment-strategy-de.js?v=<%= assetVersion %>" defer></script>
