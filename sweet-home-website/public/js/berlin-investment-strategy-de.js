@@ -278,6 +278,9 @@
       if (window.analytics && window.analytics.trackFormSubmit) {
         window.analytics.trackFormSubmit('berlin_investor_strategy_form', null, null);
       }
+      if (window.fbq && typeof window.fbq === 'function') {
+        window.fbq('trackSingle', '1659758728554816', 'CompleteRegistration');
+      }
 
       messageEl.classList.add('success');
       messageEl.textContent = 'Vielen Dank. Unser Team meldet sich zeitnah bei Ihnen.';
