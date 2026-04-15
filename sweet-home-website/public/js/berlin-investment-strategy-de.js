@@ -1,4 +1,14 @@
 (function () {
+  function getCookie(name) {
+    var escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    var match = document.cookie.match(new RegExp('(?:^|; )' + escaped + '=([^;]*)'));
+    return match ? decodeURIComponent(match[1]) : '';
+  }
+
+  function generateMetaEventId() {
+    return 'de_strategy_lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
+  }
+
   function parseNumber(value) {
     if (value === null || value === undefined || value === '') return 0;
     var normalized = String(value).replace(',', '.').replace(/[^0-9.-]/g, '');
@@ -239,6 +249,7 @@
 
     try {
       var body = new FormData(form);
+      var metaEventId = generateMetaEventId();
       var params = new URLSearchParams(window.location.search);
       var setIf = function (key, val) { if (!body.get(key) && val) body.set(key, val); };
       setIf('utm_source', params.get('utm_source'));
@@ -248,6 +259,9 @@
       setIf('utm_content', params.get('utm_content'));
       setIf('referrer', document.referrer);
       setIf('page_path', window.location.pathname);
+      body.set('meta_event_id', metaEventId);
+      setIf('meta_fbp', getCookie('_fbp'));
+      setIf('meta_fbc', getCookie('_fbc'));
 
       var siteKey = form.getAttribute('data-recaptcha-site-key');
       if (siteKey && window.grecaptcha && typeof grecaptcha.execute === 'function') {
@@ -279,7 +293,7 @@
         window.analytics.trackFormSubmit('berlin_investor_strategy_form', null, null);
       }
       if (window.fbq && typeof window.fbq === 'function') {
-        window.fbq('trackSingle', '1659758728554816', 'CompleteRegistration');
+        window.fbq('trackSingle', '1659758728554816', 'Lead', {}, { eventID: metaEventId });
       }
 
       messageEl.classList.add('success');

@@ -5,6 +5,7 @@ const sendMail = require('../config/mailer');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const { logEvent } = require('../utils/analytics');
 const XLSX = require('xlsx');
+const crypto = require('crypto');
 
 const { validationResult } = require('express-validator');
 
@@ -21,6 +22,10 @@ function getExtraLeadNotifyEmails() {
 const EXTRA_LEAD_NOTIFY_EMAILS = getExtraLeadNotifyEmails();
 const JOSE_EMAIL = 'JoseLongo@Medialy.Agency';
 const DEFAULT_SITE_ORIGIN = 'https://sweet-home.co.il';
+const META_PIXEL_ID_INVESTOR_STRATEGY_DE = String(process.env.META_PIXEL_ID_INVESTOR_STRATEGY_DE || '1659758728554816').trim();
+const META_CAPI_TOKEN = String(process.env.META_CAPI_ACCESS_TOKEN || '').trim();
+const META_CAPI_API_VERSION = String(process.env.META_CAPI_API_VERSION || 'v22.0').trim();
+const META_CAPI_TEST_EVENT_CODE = String(process.env.META_CAPI_TEST_EVENT_CODE || '').trim();
 
 // Helper: case-insensitive email comparison
 function equalsIgnoreCase(a, b) {
@@ -94,6 +99,109 @@ function resolveOriginBase() {
     return raw.replace(/\/$/, '');
   }
   return DEFAULT_SITE_ORIGIN;
+}
+
+function sha256(value) {
+  return crypto.createHash('sha256').update(String(value)).digest('hex');
+}
+
+function normalizeEmail(value) {
+  const email = String(value || '').trim().toLowerCase();
+  return email || null;
+}
+
+function normalizePhone(value) {
+  const digits = String(value || '').replace(/[^\d]/g, '');
+  return digits || null;
+}
+
+function normalizeExternalId(value) {
+  const normalized = String(value || '').trim();
+  return normalized || null;
+}
+
+function getCookieValue(req, key) {
+  if (!req || !key) return null;
+  if (req.cookies && req.cookies[key]) return String(req.cookies[key]);
+  const rawCookie = String((req.headers && req.headers.cookie) || '');
+  if (!rawCookie) return null;
+  const parts = rawCookie.split(';').map((part) => part.trim());
+  for (const part of parts) {
+    if (!part.startsWith(`${key}=`)) continue;
+    return decodeURIComponent(part.slice(key.length + 1));
+  }
+  return null;
+}
+
+function buildAbsoluteEventSourceUrl(pathOrUrl) {
+  const raw = String(pathOrUrl || '').trim();
+  const base = resolveOriginBase();
+  if (!raw) return `${base}/berlin-mieter-belegte-einstiegsstrategie`;
+  if (/^https?:\/\//i.test(raw)) return raw;
+  const path = raw.startsWith('/') ? raw : `/${raw}`;
+  return `${base}${path}`;
+}
+
+function isGermanInvestorStrategyPath(pathOrUrl) {
+  const raw = String(pathOrUrl || '').trim().toLowerCase();
+  return raw.includes('/berlin-mieter-belegte-einstiegsstrategie');
+}
+
+async function sendMetaLeadCapiEvent({ req, lead, eventId, eventSourcePath }) {
+  if (!META_CAPI_TOKEN || !META_PIXEL_ID_INVESTOR_STRATEGY_DE) return;
+  const sourcePath = eventSourcePath || (lead && lead.page_path) || '';
+  if (!isGermanInvestorStrategyPath(sourcePath)) return;
+
+  try {
+    const endpoint = `https://graph.facebook.com/${META_CAPI_API_VERSION}/${META_PIXEL_ID_INVESTOR_STRATEGY_DE}/events?access_token=${encodeURIComponent(META_CAPI_TOKEN)}`;
+
+    const normalizedEmail = normalizeEmail(lead && lead.email);
+    const normalizedPhone = normalizePhone(lead && lead.phone);
+    const externalId = normalizeExternalId(lead && lead.id);
+    const fbp = String((req && req.body && req.body.meta_fbp) || getCookieValue(req, '_fbp') || '').trim() || null;
+    const fbc = String((req && req.body && req.body.meta_fbc) || getCookieValue(req, '_fbc') || '').trim() || null;
+
+    const user_data = {
+      client_ip_address: req.ip || undefined,
+      client_user_agent: req.get('user-agent') || undefined
+    };
+
+    if (normalizedEmail) user_data.em = sha256(normalizedEmail);
+    if (normalizedPhone) user_data.ph = sha256(normalizedPhone);
+    if (externalId) user_data.external_id = sha256(externalId);
+    if (fbp) user_data.fbp = fbp;
+    if (fbc) user_data.fbc = fbc;
+
+    const payload = {
+      data: [
+        {
+          event_name: 'Lead',
+          event_time: Math.floor(Date.now() / 1000),
+          action_source: 'website',
+          event_source_url: buildAbsoluteEventSourceUrl(sourcePath),
+          event_id: eventId || undefined,
+          user_data
+        }
+      ]
+    };
+
+    if (META_CAPI_TEST_EVENT_CODE) {
+      payload.test_event_code = META_CAPI_TEST_EVENT_CODE;
+    }
+
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const errText = await response.text().catch(() => '');
+      console.error('Meta CAPI lead event failed:', response.status, errText || response.statusText);
+    }
+  } catch (error) {
+    console.error('Meta CAPI lead event error:', error.message);
+  }
 }
 
 function equalsIgnoreCase(a, b) {
@@ -533,6 +641,8 @@ exports.createFromBerlinInvestorStrategy = async (req, res, next) => {
     }
 
     const { name, email, message, language } = req.body;
+    const metaEventId = String(req.body.meta_event_id || '').trim() || null;
+    const pagePath = req.body.page_path || null;
     const phone = `${(req.body.countryCode || '').trim()} ${(req.body.phone || '').trim()}`.trim();
     if (!name || !email || !phone) {
       return res.status(400).json({ success: false, message: 'Missing required fields' });
@@ -549,7 +659,8 @@ exports.createFromBerlinInvestorStrategy = async (req, res, next) => {
       [email]
     );
 
-    const lead = dupCheck.rows[0] ? await Lead.findById(dupCheck.rows[0].id) : await Lead.create({
+    const isDuplicate = Boolean(dupCheck.rows[0]);
+    const lead = isDuplicate ? await Lead.findById(dupCheck.rows[0].id) : await Lead.create({
       property_id: null,
       project_id: null,
       agent_id: null,
@@ -565,7 +676,7 @@ exports.createFromBerlinInvestorStrategy = async (req, res, next) => {
       utm_term: req.body.utm_term || null,
       utm_content: req.body.utm_content || null,
       referrer: req.body.referrer || null,
-      page_path: req.body.page_path || null,
+      page_path: pagePath,
       ip_address: req.ip || null,
       user_agent: req.get('user-agent') || null
     });
@@ -573,6 +684,15 @@ exports.createFromBerlinInvestorStrategy = async (req, res, next) => {
     res.json({ success: true, lead });
 
     setImmediate(async () => {
+      if (!isDuplicate) {
+        await sendMetaLeadCapiEvent({
+          req,
+          lead,
+          eventId: metaEventId,
+          eventSourcePath: pagePath
+        });
+      }
+
       // CRM/Zapier flow
       sendToZapier(lead);
 
