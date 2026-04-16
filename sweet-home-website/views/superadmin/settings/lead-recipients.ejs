@@ -32,6 +32,7 @@
 
       <form method="POST" action="/superadmin/dashboard/settings/lead-recipients" style="display: grid; gap: 1rem; max-width: 980px;">
         <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+        <% const zapierAgents = (teamMembers || []).filter(function (member) { return member && member.bmby_id; }); %>
 
         <%
           function renderRecipientPicker(fieldName, selectedEmails, requiredAtLeastOne) {
@@ -109,6 +110,18 @@
           </p>
           <label style="display: block; margin: 0 0 0.4rem; color: #374151; font-weight: 600;">Recipients</label>
           <% renderRecipientPicker('contact_recipient_emails', settings.contact_form && settings.contact_form.recipientEmails, true); %>
+          <label style="display: block; margin: 0.8rem 0 0.35rem; color: #374151; font-weight: 600;">Zapier BMBy Agent</label>
+          <select
+            name="contact_zapier_agent_id"
+            style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.55rem; font: inherit;"
+          >
+            <option value="">Fallback default (Israel)</option>
+            <% zapierAgents.forEach(function(agent) { %>
+              <option value="<%= agent.id %>" <%= Number(settings.contact_form && settings.contact_form.zapierDefaultAgentId) === Number(agent.id) ? 'selected' : '' %>>
+                <%= agent.name %> - BMBy: <%= agent.bmby_id %>
+              </option>
+            <% }); %>
+          </select>
         </section>
 
         <section style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem 1.1rem;">
@@ -118,6 +131,18 @@
           </p>
           <label style="display: block; margin: 0 0 0.4rem; color: #374151; font-weight: 600;">Recipients</label>
           <% renderRecipientPicker('seller_recipient_emails', settings.seller_form && settings.seller_form.recipientEmails, true); %>
+          <label style="display: block; margin: 0.8rem 0 0.35rem; color: #374151; font-weight: 600;">Zapier BMBy Agent</label>
+          <select
+            name="seller_zapier_agent_id"
+            style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.55rem; font: inherit;"
+          >
+            <option value="">Fallback default (Israel)</option>
+            <% zapierAgents.forEach(function(agent) { %>
+              <option value="<%= agent.id %>" <%= Number(settings.seller_form && settings.seller_form.zapierDefaultAgentId) === Number(agent.id) ? 'selected' : '' %>>
+                <%= agent.name %> - BMBy: <%= agent.bmby_id %>
+              </option>
+            <% }); %>
+          </select>
         </section>
 
         <section style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem 1.1rem;">
@@ -127,6 +152,18 @@
           </p>
           <label style="display: block; margin: 0 0 0.4rem; color: #374151; font-weight: 600;">Recipients</label>
           <% renderRecipientPicker('berlin_strategy_recipient_emails', settings.berlin_investor_strategy_form && settings.berlin_investor_strategy_form.recipientEmails, true); %>
+          <label style="display: block; margin: 0.8rem 0 0.35rem; color: #374151; font-weight: 600;">Zapier BMBy Agent</label>
+          <select
+            name="berlin_strategy_zapier_agent_id"
+            style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.55rem; font: inherit;"
+          >
+            <option value="">Fallback default (Israel)</option>
+            <% zapierAgents.forEach(function(agent) { %>
+              <option value="<%= agent.id %>" <%= Number(settings.berlin_investor_strategy_form && settings.berlin_investor_strategy_form.zapierDefaultAgentId) === Number(agent.id) ? 'selected' : '' %>>
+                <%= agent.name %> - BMBy: <%= agent.bmby_id %>
+              </option>
+            <% }); %>
+          </select>
         </section>
 
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 0.2rem;">

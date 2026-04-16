@@ -10,6 +10,7 @@ const {
   DEFAULT_LEAD_NOTIFICATION_SETTINGS,
   getLeadNotificationSetting,
   getLeadNotificationSettings,
+  getZapierDefaultAgentForSource,
   normalizeEmailList,
   updateLeadNotificationSettings
 } = require('../utils/leadNotificationSettings');
@@ -43,7 +44,7 @@ function mergeUniqueEmails(primaryList = [], extraList = []) {
 
 async function getLeadRecipientTeamMembers() {
   const { rows } = await query(
-    `SELECT id, name, email
+    `SELECT id, name, email, bmby_id
        FROM users
       WHERE approved = true
         AND role IN ('Admin', 'SuperAdmin')
@@ -54,7 +55,8 @@ async function getLeadRecipientTeamMembers() {
   return rows.map((member) => ({
     id: member.id,
     name: member.name || member.email,
-    email: String(member.email || '').trim()
+    email: String(member.email || '').trim(),
+    bmby_id: member.bmby_id ? String(member.bmby_id).trim() : null
   }));
 }
 
@@ -224,9 +226,18 @@ const sendToZapier = async (leadData) => {
           agent_email = rows[0].email || null;
         }
       } else if (!leadData.property_id && !leadData.project_id) {
-        // General contact form (not property or project specific) - assign default agent
-        agent_name = 'israel zeevi';
-        agent_bmby_id = 'israel zeevi';
+        // For non-property/project leads, allow superadmin-selected BMBy assignment per source.
+        const selectedZapierAgent = await getZapierDefaultAgentForSource(leadData.source);
+        if (selectedZapierAgent) {
+          agent_bmby_id = selectedZapierAgent.bmby_id ? String(selectedZapierAgent.bmby_id).trim() : null;
+          const rawName = selectedZapierAgent.name || agent_bmby_id || selectedZapierAgent.email;
+          agent_name = rawName ? String(rawName).toLowerCase() : null;
+          agent_email = selectedZapierAgent.email || null;
+        } else {
+          // Backward-compatible fallback
+          agent_name = 'israel zeevi';
+          agent_bmby_id = 'israel zeevi';
+        }
       }
     } catch (_) {}
 
@@ -767,6 +778,9 @@ exports.updateLeadRecipientSettings = async (req, res, next) => {
         recipientEmails: req.body.berlin_strategy_recipient_emails || []
       }
     };
+    updates.contact_form.zapierDefaultAgentId = req.body.contact_zapier_agent_id || null;
+    updates.seller_form.zapierDefaultAgentId = req.body.seller_zapier_agent_id || null;
+    updates.berlin_investor_strategy_form.zapierDefaultAgentId = req.body.berlin_strategy_zapier_agent_id || null;
 
     await updateLeadNotificationSettings(updates, req.session.user && req.session.user.id);
     return res.redirect('/superadmin/dashboard/settings/lead-recipients?saved=1');

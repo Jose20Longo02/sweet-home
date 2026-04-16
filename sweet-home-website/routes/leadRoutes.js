@@ -10,7 +10,7 @@ const { body } = require('express-validator');
 const { recaptchaRequired } = require('../middleware/recaptcha');
 const { spamDetection } = require('../middleware/spamDetection');
 const { logEvent } = require('../utils/analytics');
-const { getLeadNotificationSetting, normalizeEmailList } = require('../utils/leadNotificationSettings');
+const { getLeadNotificationSetting, getZapierDefaultAgentForSource, normalizeEmailList } = require('../utils/leadNotificationSettings');
 const recaptchaMinScore = (() => {
   const v = parseFloat(process.env.RECAPTCHA_MIN_SCORE || '0.5');
   return Number.isFinite(v) ? v : 0.5;
@@ -147,9 +147,17 @@ router.post(
                 agent_email = rows[0].email || null;
               }
             } else if (!lead.property_id && !lead.project_id) {
-              // General contact form (not property or project specific) - assign default agent
-              agent_name = 'israel zeevi';
-              agent_bmby_id = 'israel zeevi';
+              const selectedZapierAgent = await getZapierDefaultAgentForSource(lead.source);
+              if (selectedZapierAgent) {
+                agent_bmby_id = selectedZapierAgent.bmby_id ? String(selectedZapierAgent.bmby_id).trim() : null;
+                const rawName = selectedZapierAgent.name || agent_bmby_id || selectedZapierAgent.email;
+                agent_name = rawName ? String(rawName).toLowerCase() : null;
+                agent_email = selectedZapierAgent.email || null;
+              } else {
+                // Backward-compatible fallback
+                agent_name = 'israel zeevi';
+                agent_bmby_id = 'israel zeevi';
+              }
             }
           } catch (_) {}
           
