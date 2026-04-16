@@ -33,6 +33,49 @@
       <form method="POST" action="/superadmin/dashboard/settings/lead-recipients" style="display: grid; gap: 1rem; max-width: 980px;">
         <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
 
+        <%
+          function renderRecipientPicker(fieldName, selectedEmails, requiredAtLeastOne) {
+            const values = (Array.isArray(selectedEmails) && selectedEmails.length)
+              ? selectedEmails
+              : [''];
+        %>
+          <div
+            class="recipient-picker"
+            data-picker
+            data-field-name="<%= fieldName %>"
+            data-required="<%= requiredAtLeastOne ? 'true' : 'false' %>"
+            style="display: grid; gap: 0.55rem;"
+          >
+            <% values.forEach(function(emailValue, idx) { %>
+              <div class="recipient-row" data-recipient-row style="display: flex; gap: 0.55rem; align-items: center;">
+                <select
+                  name="<%= fieldName %>"
+                  style="flex: 1; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.55rem; font: inherit;"
+                  <%= (requiredAtLeastOne && idx === 0) ? 'required' : '' %>
+                >
+                  <option value="">Select team member</option>
+                  <% (teamMembers || []).forEach(function(member) { %>
+                    <option value="<%= member.email %>" <%= String(member.email).toLowerCase() === String(emailValue || '').toLowerCase() ? 'selected' : '' %>>
+                      <%= member.name %> (<%= member.email %>)
+                    </option>
+                  <% }); %>
+                </select>
+                <button
+                  type="button"
+                  data-remove-recipient
+                  style="border: 1px solid #d1d5db; background: #fff; color: #374151; border-radius: 8px; padding: 0.5rem 0.65rem; cursor: pointer;"
+                  aria-label="Remove recipient"
+                >Remove</button>
+              </div>
+            <% }); %>
+            <button
+              type="button"
+              data-add-recipient
+              style="justify-self: start; border: 1px solid #10b981; color: #047857; background: #ecfdf5; border-radius: 8px; padding: 0.45rem 0.75rem; cursor: pointer; font-weight: 600;"
+            >+ Add recipient</button>
+          </div>
+        <% } %>
+
         <section style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem 1.1rem;">
           <h3 style="margin: 0 0 0.35rem; color: #111827;">Property page forms</h3>
           <p style="margin: 0 0 0.9rem; color: #4b5563; font-size: 0.92rem;">
@@ -43,13 +86,7 @@
             Notify assigned property agent
           </label>
           <label style="display: block; margin: 0 0 0.4rem; color: #374151; font-weight: 600;">Additional recipients (optional)</label>
-          <textarea
-            name="property_recipient_emails"
-            rows="3"
-            placeholder="one@email.com, another@email.com"
-            style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.65rem; font: inherit; resize: vertical;"
-          ><%= (settings.property_form && settings.property_form.recipientEmails ? settings.property_form.recipientEmails.join(', ') : '') %></textarea>
-          <p style="margin: 0.5rem 0 0; color: #6b7280; font-size: 0.85rem;">Tip: separate emails by comma or new line.</p>
+          <% renderRecipientPicker('property_recipient_emails', settings.property_form && settings.property_form.recipientEmails, false); %>
         </section>
 
         <section style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem 1.1rem;">
@@ -62,13 +99,7 @@
             Notify assigned project agent
           </label>
           <label style="display: block; margin: 0 0 0.4rem; color: #374151; font-weight: 600;">Additional recipients (optional)</label>
-          <textarea
-            name="project_recipient_emails"
-            rows="3"
-            placeholder="one@email.com, another@email.com"
-            style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.65rem; font: inherit; resize: vertical;"
-          ><%= (settings.project_form && settings.project_form.recipientEmails ? settings.project_form.recipientEmails.join(', ') : '') %></textarea>
-          <p style="margin: 0.5rem 0 0; color: #6b7280; font-size: 0.85rem;">Tip: separate emails by comma or new line.</p>
+          <% renderRecipientPicker('project_recipient_emails', settings.project_form && settings.project_form.recipientEmails, false); %>
         </section>
 
         <section style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem 1.1rem;">
@@ -77,14 +108,7 @@
             Default recipients: <strong><%= (defaults.contact_form.recipientEmails || []).join(', ') %></strong>.
           </p>
           <label style="display: block; margin: 0 0 0.4rem; color: #374151; font-weight: 600;">Recipients</label>
-          <textarea
-            name="contact_recipient_emails"
-            rows="3"
-            placeholder="israel@sweet-home.co.il, irem@sweet-home.co.il"
-            style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.65rem; font: inherit; resize: vertical;"
-            required
-          ><%= (settings.contact_form && settings.contact_form.recipientEmails ? settings.contact_form.recipientEmails.join(', ') : '') %></textarea>
-          <p style="margin: 0.5rem 0 0; color: #6b7280; font-size: 0.85rem;">Tip: separate emails by comma or new line.</p>
+          <% renderRecipientPicker('contact_recipient_emails', settings.contact_form && settings.contact_form.recipientEmails, true); %>
         </section>
 
         <section style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem 1.1rem;">
@@ -93,14 +117,7 @@
             Default recipients: <strong><%= (defaults.seller_form.recipientEmails || []).join(', ') %></strong>.
           </p>
           <label style="display: block; margin: 0 0 0.4rem; color: #374151; font-weight: 600;">Recipients</label>
-          <textarea
-            name="seller_recipient_emails"
-            rows="3"
-            placeholder="israel@sweet-home.co.il, irem@sweet-home.co.il"
-            style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.65rem; font: inherit; resize: vertical;"
-            required
-          ><%= (settings.seller_form && settings.seller_form.recipientEmails ? settings.seller_form.recipientEmails.join(', ') : '') %></textarea>
-          <p style="margin: 0.5rem 0 0; color: #6b7280; font-size: 0.85rem;">Tip: separate emails by comma or new line.</p>
+          <% renderRecipientPicker('seller_recipient_emails', settings.seller_form && settings.seller_form.recipientEmails, true); %>
         </section>
 
         <section style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem 1.1rem;">
@@ -109,14 +126,7 @@
             Default recipients: <strong><%= (defaults.berlin_investor_strategy_form.recipientEmails || []).join(', ') %></strong>.
           </p>
           <label style="display: block; margin: 0 0 0.4rem; color: #374151; font-weight: 600;">Recipients</label>
-          <textarea
-            name="berlin_strategy_recipient_emails"
-            rows="3"
-            placeholder="israel@sweet-home.co.il, irem@sweet-home.co.il"
-            style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.65rem; font: inherit; resize: vertical;"
-            required
-          ><%= (settings.berlin_investor_strategy_form && settings.berlin_investor_strategy_form.recipientEmails ? settings.berlin_investor_strategy_form.recipientEmails.join(', ') : '') %></textarea>
-          <p style="margin: 0.5rem 0 0; color: #6b7280; font-size: 0.85rem;">Tip: separate emails by comma or new line.</p>
+          <% renderRecipientPicker('berlin_strategy_recipient_emails', settings.berlin_investor_strategy_form && settings.berlin_investor_strategy_form.recipientEmails, true); %>
         </section>
 
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 0.2rem;">
@@ -129,3 +139,57 @@
     </main>
   </div>
 </div>
+
+<script>
+  (function () {
+    var pickers = document.querySelectorAll('[data-picker]');
+    if (!pickers.length) return;
+
+    function updateRemoveButtons(picker) {
+      var rows = picker.querySelectorAll('[data-recipient-row]');
+      var requiresOne = picker.getAttribute('data-required') === 'true';
+      rows.forEach(function (row) {
+        var removeBtn = row.querySelector('[data-remove-recipient]');
+        if (!removeBtn) return;
+        removeBtn.disabled = rows.length <= 1;
+        removeBtn.style.opacity = rows.length <= 1 ? '0.45' : '1';
+      });
+      rows.forEach(function (row, idx) {
+        var select = row.querySelector('select');
+        if (!select) return;
+        select.required = requiresOne && idx === 0;
+      });
+    }
+
+    pickers.forEach(function (picker) {
+      var addBtn = picker.querySelector('[data-add-recipient]');
+      if (!addBtn) return;
+
+      addBtn.addEventListener('click', function () {
+        var firstRow = picker.querySelector('[data-recipient-row]');
+        if (!firstRow) return;
+        var clone = firstRow.cloneNode(true);
+        var select = clone.querySelector('select');
+        if (select) {
+          select.value = '';
+          select.required = false;
+        }
+        picker.insertBefore(clone, addBtn);
+        updateRemoveButtons(picker);
+      });
+
+      picker.addEventListener('click', function (event) {
+        var removeBtn = event.target.closest('[data-remove-recipient]');
+        if (!removeBtn) return;
+        var row = removeBtn.closest('[data-recipient-row]');
+        if (!row) return;
+        var rows = picker.querySelectorAll('[data-recipient-row]');
+        if (rows.length <= 1) return;
+        row.remove();
+        updateRemoveButtons(picker);
+      });
+
+      updateRemoveButtons(picker);
+    });
+  })();
+</script>

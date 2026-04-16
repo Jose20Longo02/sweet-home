@@ -41,6 +41,23 @@ function mergeUniqueEmails(primaryList = [], extraList = []) {
   return merged;
 }
 
+async function getLeadRecipientTeamMembers() {
+  const { rows } = await query(
+    `SELECT id, name, email
+       FROM users
+      WHERE approved = true
+        AND role IN ('Admin', 'SuperAdmin')
+        AND email IS NOT NULL
+        AND TRIM(email) <> ''
+      ORDER BY name ASC`
+  );
+  return rows.map((member) => ({
+    id: member.id,
+    name: member.name || member.email,
+    email: String(member.email || '').trim()
+  }));
+}
+
 function buildEventMeta(data = {}) {
   return Object.fromEntries(
     Object.entries(data || {}).filter(([, value]) => value !== undefined && value !== null && value !== '')
@@ -705,6 +722,7 @@ exports.createFromBerlinInvestorStrategy = async (req, res, next) => {
 exports.renderLeadRecipientSettings = async (req, res, next) => {
   try {
     const settings = await getLeadNotificationSettings();
+    const teamMembers = await getLeadRecipientTeamMembers();
     const pendingCountRes = await query(
       "SELECT COUNT(*) AS count FROM users WHERE approved = false AND role IN ('Admin','SuperAdmin')"
     );
@@ -716,6 +734,7 @@ exports.renderLeadRecipientSettings = async (req, res, next) => {
       pendingCount,
       settings,
       defaults: DEFAULT_LEAD_NOTIFICATION_SETTINGS,
+      teamMembers,
       message: req.query.saved ? 'Lead recipient settings updated successfully.' : null,
       error: null
     });
@@ -729,23 +748,23 @@ exports.updateLeadRecipientSettings = async (req, res, next) => {
     const updates = {
       property_form: {
         notifyAssignedAgent: Boolean(req.body.property_notify_assigned_agent),
-        recipientEmailsText: req.body.property_recipient_emails || ''
+        recipientEmails: req.body.property_recipient_emails || []
       },
       project_form: {
         notifyAssignedAgent: Boolean(req.body.project_notify_assigned_agent),
-        recipientEmailsText: req.body.project_recipient_emails || ''
+        recipientEmails: req.body.project_recipient_emails || []
       },
       contact_form: {
         notifyAssignedAgent: false,
-        recipientEmailsText: req.body.contact_recipient_emails || ''
+        recipientEmails: req.body.contact_recipient_emails || []
       },
       seller_form: {
         notifyAssignedAgent: false,
-        recipientEmailsText: req.body.seller_recipient_emails || ''
+        recipientEmails: req.body.seller_recipient_emails || []
       },
       berlin_investor_strategy_form: {
         notifyAssignedAgent: false,
-        recipientEmailsText: req.body.berlin_strategy_recipient_emails || ''
+        recipientEmails: req.body.berlin_strategy_recipient_emails || []
       }
     };
 
@@ -754,6 +773,7 @@ exports.updateLeadRecipientSettings = async (req, res, next) => {
   } catch (err) {
     try {
       const settings = await getLeadNotificationSettings();
+      const teamMembers = await getLeadRecipientTeamMembers();
       const pendingCountRes = await query(
         "SELECT COUNT(*) AS count FROM users WHERE approved = false AND role IN ('Admin','SuperAdmin')"
       );
@@ -765,6 +785,7 @@ exports.updateLeadRecipientSettings = async (req, res, next) => {
         pendingCount,
         settings,
         defaults: DEFAULT_LEAD_NOTIFICATION_SETTINGS,
+        teamMembers,
         message: null,
         error: 'Could not save settings. Please try again.'
       });
