@@ -72,20 +72,51 @@
         </section>
 
         <section style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem 1.1rem;">
-          <h3 style="margin: 0 0 0.35rem; color: #111827;">All other forms</h3>
+          <h3 style="margin: 0 0 0.35rem; color: #111827;">Contact form</h3>
           <p style="margin: 0 0 0.9rem; color: #4b5563; font-size: 0.92rem;">
-            Includes contact forms, seller forms, campaign forms, and any lead source without assigned agent.
-            Default recipients: <strong><%= (defaults.general_forms.recipientEmails || []).join(', ') %></strong>.
+            Default recipients: <strong><%= (defaults.contact_form.recipientEmails || []).join(', ') %></strong>.
           </p>
           <label style="display: block; margin: 0 0 0.4rem; color: #374151; font-weight: 600;">Recipients</label>
           <textarea
-            name="general_recipient_emails"
-            rows="4"
+            name="contact_recipient_emails"
+            rows="3"
             placeholder="israel@sweet-home.co.il, irem@sweet-home.co.il"
             style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.65rem; font: inherit; resize: vertical;"
             required
-          ><%= (settings.general_forms && settings.general_forms.recipientEmails ? settings.general_forms.recipientEmails.join(', ') : '') %></textarea>
-          <p style="margin: 0.5rem 0 0; color: #6b7280; font-size: 0.85rem;">At least one email is recommended so no lead is missed.</p>
+          ><%= (settings.contact_form && settings.contact_form.recipientEmails ? settings.contact_form.recipientEmails.join(', ') : '') %></textarea>
+          <p style="margin: 0.5rem 0 0; color: #6b7280; font-size: 0.85rem;">Tip: separate emails by comma or new line.</p>
+        </section>
+
+        <section style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem 1.1rem;">
+          <h3 style="margin: 0 0 0.35rem; color: #111827;">Seller form</h3>
+          <p style="margin: 0 0 0.9rem; color: #4b5563; font-size: 0.92rem;">
+            Default recipients: <strong><%= (defaults.seller_form.recipientEmails || []).join(', ') %></strong>.
+          </p>
+          <label style="display: block; margin: 0 0 0.4rem; color: #374151; font-weight: 600;">Recipients</label>
+          <textarea
+            name="seller_recipient_emails"
+            rows="3"
+            placeholder="israel@sweet-home.co.il, irem@sweet-home.co.il"
+            style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.65rem; font: inherit; resize: vertical;"
+            required
+          ><%= (settings.seller_form && settings.seller_form.recipientEmails ? settings.seller_form.recipientEmails.join(', ') : '') %></textarea>
+          <p style="margin: 0.5rem 0 0; color: #6b7280; font-size: 0.85rem;">Tip: separate emails by comma or new line.</p>
+        </section>
+
+        <section style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem 1.1rem;">
+          <h3 style="margin: 0 0 0.35rem; color: #111827;">Berlin investor strategy form</h3>
+          <p style="margin: 0 0 0.9rem; color: #4b5563; font-size: 0.92rem;">
+            Default recipients: <strong><%= (defaults.berlin_investor_strategy_form.recipientEmails || []).join(', ') %></strong>.
+          </p>
+          <label style="display: block; margin: 0 0 0.4rem; color: #374151; font-weight: 600;">Recipients</label>
+          <textarea
+            name="berlin_strategy_recipient_emails"
+            rows="3"
+            placeholder="israel@sweet-home.co.il, irem@sweet-home.co.il"
+            style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.65rem; font: inherit; resize: vertical;"
+            required
+          ><%= (settings.berlin_investor_strategy_form && settings.berlin_investor_strategy_form.recipientEmails ? settings.berlin_investor_strategy_form.recipientEmails.join(', ') : '') %></textarea>
+          <p style="margin: 0.5rem 0 0; color: #6b7280; font-size: 0.85rem;">Tip: separate emails by comma or new line.</p>
         </section>
 
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 0.2rem;">

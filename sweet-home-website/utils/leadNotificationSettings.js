@@ -9,7 +9,15 @@ const DEFAULT_LEAD_NOTIFICATION_SETTINGS = {
     notifyAssignedAgent: true,
     recipientEmails: []
   },
-  general_forms: {
+  contact_form: {
+    notifyAssignedAgent: false,
+    recipientEmails: ['Israel@sweet-home.co.il', 'irem@sweet-home.co.il']
+  },
+  seller_form: {
+    notifyAssignedAgent: false,
+    recipientEmails: ['Israel@sweet-home.co.il', 'irem@sweet-home.co.il']
+  },
+  berlin_investor_strategy_form: {
     notifyAssignedAgent: false,
     recipientEmails: ['Israel@sweet-home.co.il', 'irem@sweet-home.co.il']
   }
@@ -72,13 +80,34 @@ async function ensureLeadNotificationSettingsTable() {
     )
   `);
 
+  // Backward compatibility migration:
+  // if legacy "general_forms" exists, use it to seed the separated categories.
+  let legacyGeneral = null;
+  try {
+    const { rows } = await query(
+      `SELECT notify_assigned_agent, recipient_emails
+         FROM lead_notification_settings
+        WHERE category = 'general_forms'
+        LIMIT 1`
+    );
+    if (rows && rows[0]) {
+      legacyGeneral = {
+        notifyAssignedAgent: Boolean(rows[0].notify_assigned_agent),
+        recipientEmails: normalizeEmailList(Array.isArray(rows[0].recipient_emails) ? rows[0].recipient_emails : [])
+      };
+    }
+  } catch (_) {}
+
   for (const category of SUPPORTED_CATEGORIES) {
     const defaults = DEFAULT_LEAD_NOTIFICATION_SETTINGS[category];
+    const seed = (legacyGeneral && ['contact_form', 'seller_form', 'berlin_investor_strategy_form'].includes(category))
+      ? legacyGeneral
+      : defaults;
     await query(
       `INSERT INTO lead_notification_settings (category, notify_assigned_agent, recipient_emails)
        VALUES ($1, $2, $3::jsonb)
        ON CONFLICT (category) DO NOTHING`,
-      [category, defaults.notifyAssignedAgent, JSON.stringify(defaults.recipientEmails)]
+      [category, seed.notifyAssignedAgent, JSON.stringify(seed.recipientEmails)]
     );
   }
 }

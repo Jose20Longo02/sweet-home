@@ -194,15 +194,14 @@ router.post(
         }
       });
 
-      // Notify recipients configured for all non-property/project forms
-      let generalRecipients = [];
-      try {
-        const generalSettings = await getLeadNotificationSetting('general_forms');
-        generalRecipients = normalizeEmailList(generalSettings.recipientEmails || []);
-      } catch (_) {}
       if (lead_type === 'seller') {
         try {
-          const toLine = generalRecipients.join(',');
+          let sellerRecipients = [];
+          try {
+            const sellerSettings = await getLeadNotificationSetting('seller_form');
+            sellerRecipients = normalizeEmailList(sellerSettings.recipientEmails || []);
+          } catch (_) {}
+          const toLine = sellerRecipients.join(',');
           if (toLine) {
             await sendMail({
               to: toLine,
@@ -261,7 +260,12 @@ router.post(
         } catch(_) {}
       } else {
         try {
-          const toLine = generalRecipients.join(',');
+          let contactRecipients = [];
+          try {
+            const contactSettings = await getLeadNotificationSetting('contact_form');
+            contactRecipients = normalizeEmailList(contactSettings.recipientEmails || []);
+          } catch (_) {}
+          const toLine = contactRecipients.join(',');
           if (toLine) {
             await sendMail({
               to: toLine,

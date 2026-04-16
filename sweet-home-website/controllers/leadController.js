@@ -669,10 +669,10 @@ exports.createFromBerlinInvestorStrategy = async (req, res, next) => {
         });
       } catch (_) {}
 
-      // Notify recipients configured for general forms
+      // Notify recipients configured for Berlin strategy campaign form
       try {
-        const generalNotificationSettings = await getLeadNotificationSetting('general_forms');
-        const recipientList = mergeUniqueEmails(normalizeEmailList(generalNotificationSettings.recipientEmails || []));
+        const strategyNotificationSettings = await getLeadNotificationSetting('berlin_investor_strategy_form');
+        const recipientList = mergeUniqueEmails(normalizeEmailList(strategyNotificationSettings.recipientEmails || []));
         if (!recipientList.length) return;
         await sendMail({
           to: recipientList.join(','),
@@ -735,9 +735,17 @@ exports.updateLeadRecipientSettings = async (req, res, next) => {
         notifyAssignedAgent: Boolean(req.body.project_notify_assigned_agent),
         recipientEmailsText: req.body.project_recipient_emails || ''
       },
-      general_forms: {
+      contact_form: {
         notifyAssignedAgent: false,
-        recipientEmailsText: req.body.general_recipient_emails || ''
+        recipientEmailsText: req.body.contact_recipient_emails || ''
+      },
+      seller_form: {
+        notifyAssignedAgent: false,
+        recipientEmailsText: req.body.seller_recipient_emails || ''
+      },
+      berlin_investor_strategy_form: {
+        notifyAssignedAgent: false,
+        recipientEmailsText: req.body.berlin_strategy_recipient_emails || ''
       }
     };
 
