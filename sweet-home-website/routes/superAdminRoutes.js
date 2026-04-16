@@ -6,6 +6,7 @@ const { ensureAuthenticated, ensureSuperAdmin } = require('../middleware/authori
 const sendMail           = require('../config/mailer');
 const adminController    = require('../controllers/adminController');
 const analyticsController = require('../controllers/analyticsController');
+const leadController = require('../controllers/leadController');
 const areaRoles          = require('../config/roles');
 const path               = require('path');
 const fs                 = require('fs');
@@ -267,6 +268,20 @@ router.post(
       });
     }
   }
+);
+
+router.get(
+  '/settings/lead-recipients',
+  ensureAuthenticated,
+  ensureSuperAdmin,
+  leadController.renderLeadRecipientSettings
+);
+
+router.post(
+  '/settings/lead-recipients',
+  ensureAuthenticated,
+  ensureSuperAdmin,
+  leadController.updateLeadRecipientSettings
 );
 
 module.exports = router;

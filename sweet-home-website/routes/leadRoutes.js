@@ -10,6 +10,7 @@ const { body } = require('express-validator');
 const { recaptchaRequired } = require('../middleware/recaptcha');
 const { spamDetection } = require('../middleware/spamDetection');
 const { logEvent } = require('../utils/analytics');
+const { getLeadNotificationSetting, normalizeEmailList } = require('../utils/leadNotificationSettings');
 const recaptchaMinScore = (() => {
   const v = parseFloat(process.env.RECAPTCHA_MIN_SCORE || '0.5');
   return Number.isFinite(v) ? v : 0.5;
@@ -193,17 +194,20 @@ router.post(
         }
       });
 
-      // Notify all SuperAdmins and the user depending on lead type
-      const EXTRA_LEAD_NOTIFY_EMAIL = String(process.env.LEAD_EXTRA_NOTIFY_EMAIL || 'Israel@sweet-home.co.il').trim();
-      const equalsIgnoreCase = (a, b) => String(a || '').toLowerCase() === String(b || '').toLowerCase();
+      // Notify recipients configured for all non-property/project forms
+      let generalRecipients = [];
+      try {
+        const generalSettings = await getLeadNotificationSetting('general_forms');
+        generalRecipients = normalizeEmailList(generalSettings.recipientEmails || []);
+      } catch (_) {}
       if (lead_type === 'seller') {
-        // Send seller form submissions only to Israel@sweet-home.co.il
         try {
-          const israelEmail = 'Israel@sweet-home.co.il';
-          await sendMail({
-            to: israelEmail,
-            subject: 'Sweet Home Real Estate Investments – New SELLER lead',
-            html: `
+          const toLine = generalRecipients.join(',');
+          if (toLine) {
+            await sendMail({
+              to: toLine,
+              subject: 'Sweet Home Real Estate Investments – New SELLER lead',
+              html: `
               <p>New SELLER lead submitted on the For Sellers page.</p>
               <ul>
                 <li><strong>Name:</strong> ${name}</li>
@@ -224,8 +228,9 @@ router.post(
               <p>Please review this lead from your SuperAdmin dashboard.</p>
               <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
             `,
-            text: `New SELLER lead\n\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${language?`\nPreferred Language: ${language}`:''}${(seller_neighborhood || seller_size || seller_rooms || seller_occupancy_status) ? `\n\nProperty Information:\n${seller_neighborhood?`Neighborhood: ${seller_neighborhood}\n`:''}${seller_size?`Size: ${seller_size} sqm\n`:''}${seller_rooms?`Rooms: ${seller_rooms}\n`:''}${seller_occupancy_status?`Occupancy Status: ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}\n`:''}`:''}${message?`\n\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
-          });
+              text: `New SELLER lead\n\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${language?`\nPreferred Language: ${language}`:''}${(seller_neighborhood || seller_size || seller_rooms || seller_occupancy_status) ? `\n\nProperty Information:\n${seller_neighborhood?`Neighborhood: ${seller_neighborhood}\n`:''}${seller_size?`Size: ${seller_size} sqm\n`:''}${seller_rooms?`Rooms: ${seller_rooms}\n`:''}${seller_occupancy_status?`Occupancy Status: ${seller_occupancy_status === 'empty' ? 'Empty' : 'Tenanted'}\n`:''}`:''}${message?`\n\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
+            });
+          }
         } catch (_) {}
         // Thank-you to user (seller lead)
         try {
@@ -255,14 +260,13 @@ router.post(
           });
         } catch(_) {}
       } else {
-        // General (unknown/buyer) — Contact page/general inquiry
-        // Send only to Israel@sweet-home.co.il
         try {
-          const israelEmail = 'Israel@sweet-home.co.il';
-          await sendMail({
-            to: israelEmail,
-            subject: 'Sweet Home — New Contact form submission',
-            html: `
+          const toLine = generalRecipients.join(',');
+          if (toLine) {
+            await sendMail({
+              to: toLine,
+              subject: 'Sweet Home — New Contact form submission',
+              html: `
               <p>You have a new inquiry from the <strong>Contact</strong> page.</p>
               <ul>
                 <li><strong>Name:</strong> ${name}</li>
@@ -274,8 +278,9 @@ router.post(
               <p>Please review this lead from your SuperAdmin dashboard.</p>
               <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
             `,
-            text: `New Contact form submission\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${language?`\nPreferred language: ${language}`:''}${message?`\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
-          });
+              text: `New Contact form submission\nName: ${name}\nEmail: ${email}${phone?`\nPhone: ${phone}`:''}${language?`\nPreferred language: ${language}`:''}${message?`\nMessage: ${message}`:''}\n\nBest regards,\nSweet Home Real Estate Investments' team`
+            });
+          }
         } catch(_) {}
         // Thank-you to user — localized
         try {

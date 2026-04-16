@@ -6,21 +6,16 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const { logEvent } = require('../utils/analytics');
 const XLSX = require('xlsx');
 const crypto = require('crypto');
+const {
+  DEFAULT_LEAD_NOTIFICATION_SETTINGS,
+  getLeadNotificationSetting,
+  getLeadNotificationSettings,
+  normalizeEmailList,
+  updateLeadNotificationSettings
+} = require('../utils/leadNotificationSettings');
 
 const { validationResult } = require('express-validator');
 
-// Parse extra notification emails from environment variable (comma-separated)
-// Supports both single email and multiple emails: "email1@example.com,email2@example.com"
-function getExtraLeadNotifyEmails() {
-  const envValue = String(process.env.LEAD_EXTRA_NOTIFY_EMAIL || 'Israel@sweet-home.co.il').trim();
-  if (!envValue) return [];
-  return envValue.split(',')
-    .map(email => email.trim())
-    .filter(email => email.length > 0);
-}
-
-const EXTRA_LEAD_NOTIFY_EMAILS = getExtraLeadNotifyEmails();
-const JOSE_EMAIL = 'JoseLongo@Medialy.Agency';
 const DEFAULT_SITE_ORIGIN = 'https://sweet-home.co.il';
 const META_PIXEL_ID_INVESTOR_STRATEGY_DE = String(process.env.META_PIXEL_ID_INVESTOR_STRATEGY_DE || '1659758728554816').trim();
 const META_CAPI_TOKEN = String(process.env.META_CAPI_ACCESS_TOKEN || '').trim();
@@ -32,47 +27,18 @@ function equalsIgnoreCase(a, b) {
   return String(a || '').toLowerCase() === String(b || '').toLowerCase();
 }
 
-// Helper: check if email is in array (case-insensitive)
-function emailInArray(email, emailArray) {
-  if (!email || !emailArray || emailArray.length === 0) return false;
-  return emailArray.some(e => equalsIgnoreCase(e, email));
-}
-
-// Helper: add extra notification emails to BCC list, avoiding duplicates with existing recipients
-function addExtraNotifyEmailsToBcc(bccList, excludeEmails = []) {
-  const excludeLower = excludeEmails.map(e => String(e || '').toLowerCase());
-  EXTRA_LEAD_NOTIFY_EMAILS.forEach(email => {
-    const emailLower = String(email).toLowerCase();
-    if (!excludeLower.includes(emailLower) && !bccList.some(e => equalsIgnoreCase(e, email))) {
-      bccList.push(email);
-    }
+function mergeUniqueEmails(primaryList = [], extraList = []) {
+  const merged = [];
+  const seen = new Set();
+  [...primaryList, ...extraList].forEach((email) => {
+    const normalized = String(email || '').trim();
+    if (!normalized) return;
+    const key = normalized.toLowerCase();
+    if (seen.has(key)) return;
+    seen.add(key);
+    merged.push(normalized);
   });
-  // Also add Jose email if not already excluded
-  if (JOSE_EMAIL && !excludeLower.includes(JOSE_EMAIL.toLowerCase()) && !bccList.some(e => equalsIgnoreCase(e, JOSE_EMAIL))) {
-    bccList.push(JOSE_EMAIL);
-  }
-  return bccList;
-}
-
-// Helper: build recipient list with extra notification emails, avoiding duplicates
-function buildRecipientListWithExtras(baseEmails = []) {
-  const recipientList = [...baseEmails];
-  const existingLower = recipientList.map(e => String(e || '').toLowerCase());
-  
-  EXTRA_LEAD_NOTIFY_EMAILS.forEach(email => {
-    const emailLower = String(email).toLowerCase();
-    if (!existingLower.includes(emailLower)) {
-      recipientList.push(email);
-      existingLower.push(emailLower);
-    }
-  });
-  
-  // Also add Jose email if not already in list
-  if (JOSE_EMAIL && !existingLower.includes(JOSE_EMAIL.toLowerCase())) {
-    recipientList.push(JOSE_EMAIL);
-  }
-  
-  return recipientList;
+  return merged;
 }
 
 function buildEventMeta(data = {}) {
@@ -202,10 +168,6 @@ async function sendMetaLeadCapiEvent({ req, lead, eventId, eventSourcePath }) {
   } catch (error) {
     console.error('Meta CAPI lead event error:', error.message);
   }
-}
-
-function equalsIgnoreCase(a, b) {
-  return String(a || '').toLowerCase() === String(b || '').toLowerCase();
 }
 
 // Webhook utility function
@@ -404,15 +366,24 @@ exports.createFromProperty = async (req, res, next) => {
         }
       } catch (_) {}
 
-      // Email to agent (notification) with extra BCC when appropriate; fallback to direct send to extra if no agent
-      if (property.agent_email) {
-        try {
-          // Build BCC list with extra recipients
-          const bccList = [];
-          addExtraNotifyEmailsToBcc(bccList, [property.agent_email]);
+      // Email notifications routed by superadmin-configurable lead recipients
+      try {
+        const notificationSettings = await getLeadNotificationSetting('property_form');
+        const additionalRecipients = normalizeEmailList(notificationSettings.recipientEmails || []);
+        const shouldNotifyAgent = Boolean(notificationSettings.notifyAssignedAgent);
+        const shouldSendToAssignedAgent = shouldNotifyAgent && property.agent_email;
+
+        const toRecipients = shouldSendToAssignedAgent ? [property.agent_email] : additionalRecipients;
+        const bccRecipients = shouldSendToAssignedAgent
+          ? additionalRecipients.filter((emailItem) => !equalsIgnoreCase(emailItem, property.agent_email))
+          : [];
+
+        const toLine = mergeUniqueEmails(toRecipients).join(',');
+        const bccLine = mergeUniqueEmails(bccRecipients).join(',');
+        if (toLine) {
           const info = await sendMail({
-            to: property.agent_email,
-            ...(bccList.length > 0 ? { bcc: bccList.join(',') } : {}),
+            to: toLine,
+            ...(bccLine ? { bcc: bccLine } : {}),
             subject: `New lead for ${property.title}`,
             html: `
               <p>You have a new lead for <strong>${property.title}</strong>.</p>
@@ -432,31 +403,8 @@ exports.createFromProperty = async (req, res, next) => {
           if (process.env.SMTP_DEBUG === 'true') {
             console.log('Lead notification email dispatched:', info && info.messageId);
           }
-        } catch (_) {}
-      } else if (EXTRA_LEAD_NOTIFY_EMAILS.length > 0) {
-        try {
-          // Build recipient list with all extra notification emails
-          const recipientList = buildRecipientListWithExtras();
-          await sendMail({
-            to: recipientList.join(','),
-            subject: `New lead for ${property.title}`,
-            html: `
-              <p>New lead received.</p>
-              <ul>
-                <li><strong>Property:</strong> ${property.title}</li>
-                ${propertyUrl ? `<li><strong>Property Link:</strong> <a href="${propertyUrl}">${propertyUrl}</a></li>` : ''}
-                <li><strong>Name:</strong> ${name}</li>
-                <li><strong>Email:</strong> ${email}</li>
-                ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
-                ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
-              </ul>
-              ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g, '<br/>')}</p>` : ''}
-              <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
-            `,
-            text: `New lead\nProperty: ${property.title}${propertyUrl ? `\nProperty Link: ${propertyUrl}` : ''}\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${language ? `\nPreferred language: ${language}` : ''}${message ? `\nMessage: ${message}` : ''}`
-          });
-        } catch (_) {}
-      }
+        }
+      } catch (_) {}
     });
 
     return; // response already sent
@@ -575,14 +523,23 @@ exports.createFromProject = async (req, res, next) => {
         }
       } catch (_) {}
 
-      if (project.agent_email) {
-        try {
-          // Build BCC list with extra recipients
-          const bccList = [];
-          addExtraNotifyEmailsToBcc(bccList, [project.agent_email]);
+      try {
+        const notificationSettings = await getLeadNotificationSetting('project_form');
+        const additionalRecipients = normalizeEmailList(notificationSettings.recipientEmails || []);
+        const shouldNotifyAgent = Boolean(notificationSettings.notifyAssignedAgent);
+        const shouldSendToAssignedAgent = shouldNotifyAgent && project.agent_email;
+
+        const toRecipients = shouldSendToAssignedAgent ? [project.agent_email] : additionalRecipients;
+        const bccRecipients = shouldSendToAssignedAgent
+          ? additionalRecipients.filter((emailItem) => !equalsIgnoreCase(emailItem, project.agent_email))
+          : [];
+
+        const toLine = mergeUniqueEmails(toRecipients).join(',');
+        const bccLine = mergeUniqueEmails(bccRecipients).join(',');
+        if (toLine) {
           const info = await sendMail({
-            to: project.agent_email,
-            ...(bccList.length > 0 ? { bcc: bccList.join(',') } : {}),
+            to: toLine,
+            ...(bccLine ? { bcc: bccLine } : {}),
             subject: `New lead for project: ${project.title}`,
             html: `
               <p>You have a new project lead for <strong>${project.title}</strong>.</p>
@@ -602,31 +559,8 @@ exports.createFromProject = async (req, res, next) => {
           if (process.env.SMTP_DEBUG === 'true') {
             console.log('Project lead notification email dispatched:', info && info.messageId);
           }
-        } catch (_) {}
-      } else if (EXTRA_LEAD_NOTIFY_EMAILS.length > 0) {
-        try {
-          // Build recipient list with all extra notification emails
-          const recipientList = buildRecipientListWithExtras();
-          await sendMail({
-            to: recipientList.join(','),
-            subject: `New lead for project: ${project.title}`,
-            html: `
-              <p>New project lead received.</p>
-              <ul>
-                <li><strong>Project:</strong> ${project.title}</li>
-                ${projectUrl ? `<li><strong>Project Link:</strong> <a href="${projectUrl}">${projectUrl}</a></li>` : ''}
-                <li><strong>Name:</strong> ${name}</li>
-                <li><strong>Email:</strong> ${email}</li>
-                ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
-                ${language ? `<li><strong>Preferred language:</strong> ${language}</li>` : ''}
-              </ul>
-              ${message ? `<p><strong>Message:</strong><br/>${message.replace(/\n/g, '<br/>')}</p>` : ''}
-              <p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>
-            `,
-            text: `New project lead\nProject: ${project.title}${projectUrl ? `\nProject Link: ${projectUrl}` : ''}\nName: ${name}\nEmail: ${email}${phone ? `\nPhone: ${phone}` : ''}${language ? `\nPreferred language: ${language}` : ''}${message ? `\nMessage: ${message}` : ''}`
-          });
-        } catch (_) {}
-      }
+        }
+      } catch (_) {}
     });
 
   } catch (err) { next(err); }
@@ -735,14 +669,11 @@ exports.createFromBerlinInvestorStrategy = async (req, res, next) => {
         });
       } catch (_) {}
 
-      // Notify dedicated admins (plus existing extra recipients logic)
+      // Notify recipients configured for general forms
       try {
-        const campaignNotifyEnv = String(process.env.BERLIN_INVESTOR_STRATEGY_NOTIFY_EMAIL || 'Israel@sweet-home.co.il').trim();
-        const campaignRecipients = campaignNotifyEnv
-          .split(',')
-          .map((item) => item.trim())
-          .filter((item) => item.length > 0);
-        const recipientList = buildRecipientListWithExtras(campaignRecipients);
+        const generalNotificationSettings = await getLeadNotificationSetting('general_forms');
+        const recipientList = mergeUniqueEmails(normalizeEmailList(generalNotificationSettings.recipientEmails || []));
+        if (!recipientList.length) return;
         await sendMail({
           to: recipientList.join(','),
           subject: 'Sweet Home — New Berlin Strategy Lead',
@@ -768,6 +699,70 @@ exports.createFromBerlinInvestorStrategy = async (req, res, next) => {
 
   } catch (err) {
     next(err);
+  }
+};
+
+exports.renderLeadRecipientSettings = async (req, res, next) => {
+  try {
+    const settings = await getLeadNotificationSettings();
+    const pendingCountRes = await query(
+      "SELECT COUNT(*) AS count FROM users WHERE approved = false AND role IN ('Admin','SuperAdmin')"
+    );
+    const pendingCount = parseInt(pendingCountRes.rows[0].count, 10) || 0;
+    res.render('superadmin/settings/lead-recipients', {
+      title: 'Lead Recipient Settings',
+      activePage: 'settings-leads',
+      currentUser: req.session.user,
+      pendingCount,
+      settings,
+      defaults: DEFAULT_LEAD_NOTIFICATION_SETTINGS,
+      message: req.query.saved ? 'Lead recipient settings updated successfully.' : null,
+      error: null
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateLeadRecipientSettings = async (req, res, next) => {
+  try {
+    const updates = {
+      property_form: {
+        notifyAssignedAgent: Boolean(req.body.property_notify_assigned_agent),
+        recipientEmailsText: req.body.property_recipient_emails || ''
+      },
+      project_form: {
+        notifyAssignedAgent: Boolean(req.body.project_notify_assigned_agent),
+        recipientEmailsText: req.body.project_recipient_emails || ''
+      },
+      general_forms: {
+        notifyAssignedAgent: false,
+        recipientEmailsText: req.body.general_recipient_emails || ''
+      }
+    };
+
+    await updateLeadNotificationSettings(updates, req.session.user && req.session.user.id);
+    return res.redirect('/superadmin/dashboard/settings/lead-recipients?saved=1');
+  } catch (err) {
+    try {
+      const settings = await getLeadNotificationSettings();
+      const pendingCountRes = await query(
+        "SELECT COUNT(*) AS count FROM users WHERE approved = false AND role IN ('Admin','SuperAdmin')"
+      );
+      const pendingCount = parseInt(pendingCountRes.rows[0].count, 10) || 0;
+      return res.status(500).render('superadmin/settings/lead-recipients', {
+        title: 'Lead Recipient Settings',
+        activePage: 'settings-leads',
+        currentUser: req.session.user,
+        pendingCount,
+        settings,
+        defaults: DEFAULT_LEAD_NOTIFICATION_SETTINGS,
+        message: null,
+        error: 'Could not save settings. Please try again.'
+      });
+    } catch (_) {
+      return next(err);
+    }
   }
 };
 // Admin: list leads for the logged-in agent

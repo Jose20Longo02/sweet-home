@@ -1,0 +1,100 @@
+<% title = 'Lead Recipient Settings' %>
+<% activePage = 'settings-leads' %>
+
+<link rel="stylesheet" href="/css/superadmin/super-admin-dashboard.css" />
+
+<div class="admin-panel">
+  <div class="admin-body">
+    <%- include('../../partials/superadmin-sidebar', {
+      activePage: 'settings-leads',
+      pendingCount: typeof pendingCount !== 'undefined' ? pendingCount : 0
+    }) %>
+
+    <main class="admin-content">
+      <header class="dashboard-header">
+        <div>
+          <h1>Lead Recipient Settings</h1>
+          <p class="subtitle">Control exactly who gets lead notification emails for each lead source.</p>
+        </div>
+      </header>
+
+      <% if (message) { %>
+        <div class="alert alert-success" style="margin: 1rem 0; padding: 0.9rem 1rem; background: #d1fae5; border: 1px solid #10b981; border-radius: 8px; color: #065f46;">
+          <strong>Saved:</strong> <%= message %>
+        </div>
+      <% } %>
+
+      <% if (error) { %>
+        <div class="alert alert-error" style="margin: 1rem 0; padding: 0.9rem 1rem; background: #fee2e2; border: 1px solid #ef4444; border-radius: 8px; color: #991b1b;">
+          <strong>Error:</strong> <%= error %>
+        </div>
+      <% } %>
+
+      <form method="POST" action="/superadmin/dashboard/settings/lead-recipients" style="display: grid; gap: 1rem; max-width: 980px;">
+        <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+
+        <section style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem 1.1rem;">
+          <h3 style="margin: 0 0 0.35rem; color: #111827;">Property page forms</h3>
+          <p style="margin: 0 0 0.9rem; color: #4b5563; font-size: 0.92rem;">
+            Default: send to the <strong>agent in charge</strong>. You can also add backup recipients.
+          </p>
+          <label style="display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; color: #111827;">
+            <input type="checkbox" name="property_notify_assigned_agent" <%= settings.property_form && settings.property_form.notifyAssignedAgent ? 'checked' : '' %> />
+            Notify assigned property agent
+          </label>
+          <label style="display: block; margin: 0 0 0.4rem; color: #374151; font-weight: 600;">Additional recipients (optional)</label>
+          <textarea
+            name="property_recipient_emails"
+            rows="3"
+            placeholder="one@email.com, another@email.com"
+            style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.65rem; font: inherit; resize: vertical;"
+          ><%= (settings.property_form && settings.property_form.recipientEmails ? settings.property_form.recipientEmails.join(', ') : '') %></textarea>
+          <p style="margin: 0.5rem 0 0; color: #6b7280; font-size: 0.85rem;">Tip: separate emails by comma or new line.</p>
+        </section>
+
+        <section style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem 1.1rem;">
+          <h3 style="margin: 0 0 0.35rem; color: #111827;">Project page forms</h3>
+          <p style="margin: 0 0 0.9rem; color: #4b5563; font-size: 0.92rem;">
+            Default: send to the <strong>agent in charge</strong>. You can also add backup recipients.
+          </p>
+          <label style="display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; color: #111827;">
+            <input type="checkbox" name="project_notify_assigned_agent" <%= settings.project_form && settings.project_form.notifyAssignedAgent ? 'checked' : '' %> />
+            Notify assigned project agent
+          </label>
+          <label style="display: block; margin: 0 0 0.4rem; color: #374151; font-weight: 600;">Additional recipients (optional)</label>
+          <textarea
+            name="project_recipient_emails"
+            rows="3"
+            placeholder="one@email.com, another@email.com"
+            style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.65rem; font: inherit; resize: vertical;"
+          ><%= (settings.project_form && settings.project_form.recipientEmails ? settings.project_form.recipientEmails.join(', ') : '') %></textarea>
+          <p style="margin: 0.5rem 0 0; color: #6b7280; font-size: 0.85rem;">Tip: separate emails by comma or new line.</p>
+        </section>
+
+        <section style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem 1.1rem;">
+          <h3 style="margin: 0 0 0.35rem; color: #111827;">All other forms</h3>
+          <p style="margin: 0 0 0.9rem; color: #4b5563; font-size: 0.92rem;">
+            Includes contact forms, seller forms, campaign forms, and any lead source without assigned agent.
+            Default recipients: <strong><%= (defaults.general_forms.recipientEmails || []).join(', ') %></strong>.
+          </p>
+          <label style="display: block; margin: 0 0 0.4rem; color: #374151; font-weight: 600;">Recipients</label>
+          <textarea
+            name="general_recipient_emails"
+            rows="4"
+            placeholder="israel@sweet-home.co.il, irem@sweet-home.co.il"
+            style="width: 100%; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.65rem; font: inherit; resize: vertical;"
+            required
+          ><%= (settings.general_forms && settings.general_forms.recipientEmails ? settings.general_forms.recipientEmails.join(', ') : '') %></textarea>
+          <p style="margin: 0.5rem 0 0; color: #6b7280; font-size: 0.85rem;">At least one email is recommended so no lead is missed.</p>
+        </section>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 0.2rem;">
+          <p style="margin: 0; color: #6b7280; font-size: 0.86rem;">
+            Changes apply immediately to new lead notifications.
+          </p>
+          <button type="submit" class="btn btn-primary" style="min-width: 220px;">Save lead recipient settings</button>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>
