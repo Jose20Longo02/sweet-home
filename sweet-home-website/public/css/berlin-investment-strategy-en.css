@@ -850,6 +850,16 @@
   #lead-cta .lead-form {
     padding: 0;
   }
+  #lead-cta .lead-form .row-2 {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  #lead-cta .lead-form input,
+  #lead-cta .lead-form select {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
   #lead-cta .lead-form .form-group {
     margin-bottom: 12px;
   }
