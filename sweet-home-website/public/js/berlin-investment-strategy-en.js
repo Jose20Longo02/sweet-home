@@ -1,4 +1,51 @@
 (function () {
+  function ensureMessageStyles() {
+    if (document.getElementById('strategyMessageStyles')) return;
+    var messageStyles = document.createElement('style');
+    messageStyles.id = 'strategyMessageStyles';
+    messageStyles.textContent = `
+      .message {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        z-index: 1001;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        max-width: 300px;
+      }
+
+      .message.show {
+        transform: translateX(0);
+      }
+
+      .message-success { background-color: #16a34a; }
+      .message-error { background-color: #dc2626; }
+      .message-info { background-color: #2563eb; }
+    `;
+    document.head.appendChild(messageStyles);
+  }
+
+  function showMessage(message, type) {
+    ensureMessageStyles();
+    var messageDiv = document.createElement('div');
+    messageDiv.className = 'message message-' + type;
+    messageDiv.textContent = message;
+    document.body.appendChild(messageDiv);
+    setTimeout(function () { messageDiv.classList.add('show'); }, 100);
+    setTimeout(function () {
+      messageDiv.classList.remove('show');
+      setTimeout(function () { messageDiv.remove(); }, 300);
+    }, 3000);
+  }
+
+  function showSuccessMessage(message) {
+    showMessage(message, 'success');
+  }
+
   function parseNumber(value) {
     if (value === null || value === undefined || value === '') return 0;
     var normalized = String(value).replace(',', '.').replace(/[^0-9.-]/g, '');
@@ -235,7 +282,7 @@
 
   const form = document.getElementById('berlinInvestorStrategyForm');
   const messageEl = form ? form.querySelector('.form-status') : null;
-  if (!form || !messageEl) return;
+  if (!form) return;
 
   const submitBtn = form.querySelector('button[type="submit"]');
 
@@ -244,9 +291,11 @@
     if (!submitBtn) return;
 
     submitBtn.disabled = true;
-    messageEl.style.display = 'block';
-    messageEl.className = 'form-status';
-    messageEl.textContent = '';
+    if (messageEl) {
+      messageEl.style.display = 'none';
+      messageEl.className = 'form-status';
+      messageEl.textContent = '';
+    }
 
     try {
       const body = new FormData(form);
@@ -291,12 +340,10 @@
         window.analytics.trackFormSubmit('berlin_investor_strategy_form', null, null);
       }
 
-      messageEl.classList.add('success');
-      messageEl.textContent = 'Thank you. Our team will contact you shortly.';
+      showSuccessMessage('Thank you! Your form was submitted successfully. A team member will contact you shortly.');
       form.reset();
     } catch (err) {
-      messageEl.classList.add('error');
-      messageEl.textContent = err.message || 'Something went wrong. Please try again later.';
+      showMessage(err.message || 'Something went wrong. Please try again later.', 'error');
     } finally {
       submitBtn.disabled = false;
     }
