@@ -22,6 +22,7 @@ const META_PIXEL_ID_INVESTOR_STRATEGY_DE = String(process.env.META_PIXEL_ID_INVE
 const META_CAPI_TOKEN = String(process.env.META_CAPI_ACCESS_TOKEN || '').trim();
 const META_CAPI_API_VERSION = String(process.env.META_CAPI_API_VERSION || 'v22.0').trim();
 const META_CAPI_TEST_EVENT_CODE = String(process.env.META_CAPI_TEST_EVENT_CODE || '').trim();
+const BERLIN_STRATEGY_COMPLEMENTARY_ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/1268907/ujdoa57/';
 
 // Helper: case-insensitive email comparison
 function equalsIgnoreCase(a, b) {
@@ -192,8 +193,8 @@ async function sendMetaLeadCapiEvent({ req, lead, eventId, eventSourcePath }) {
 // Webhook utility function
 const sendToZapier = async (leadData) => {
   try {
-    const webhookUrl = process.env.ZAPIER_WEBHOOK_URL;
-    if (!webhookUrl) {
+    const primaryWebhookUrl = process.env.ZAPIER_WEBHOOK_URL;
+    if (!primaryWebhookUrl) {
       console.log('Zapier webhook URL not configured');
       return;
     }
@@ -265,18 +266,29 @@ const sendToZapier = async (leadData) => {
       timestamp: new Date().toISOString()
     };
 
-    const response = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload)
-    });
+    const webhookTargets = [primaryWebhookUrl];
+    if (String(leadData && leadData.source || '') === 'berlin_investor_strategy_form') {
+      webhookTargets.push(BERLIN_STRATEGY_COMPLEMENTARY_ZAPIER_WEBHOOK);
+    }
 
-    if (response.ok) {
-      console.log('Lead sent to Zapier successfully');
-    } else {
-      console.error('Failed to send lead to Zapier:', response.status, response.statusText);
+    for (const webhookUrl of webhookTargets) {
+      try {
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          console.log(`Lead sent to Zapier successfully (${webhookUrl})`);
+        } else {
+          console.error(`Failed to send lead to Zapier (${webhookUrl}):`, response.status, response.statusText);
+        }
+      } catch (targetErr) {
+        console.error(`Error sending lead to Zapier (${webhookUrl}):`, targetErr.message);
+      }
     }
   } catch (error) {
     console.error('Error sending lead to Zapier:', error.message);
