@@ -708,6 +708,54 @@
 .section-inline-cta__link:active {
   color: #ffffff;
 }
+.investor-lead-intro {
+  margin: -10px auto 22px;
+  max-width: 760px;
+  text-align: center;
+  color: #475569;
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+.lead-form-details {
+  margin-bottom: 14px;
+  border: 1px solid #d5e5db;
+  border-radius: 12px;
+  background: #f8fcf9;
+  padding: 10px 12px 2px;
+}
+.lead-form-details summary {
+  cursor: pointer;
+  color: #2d6a46;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+.lead-form-trust-points {
+  margin: 10px 0 16px;
+  padding-left: 1rem;
+  color: #475569;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+.lead-form-trust-points li + li {
+  margin-top: 6px;
+}
+#lead-cta .form-status {
+  margin-top: 12px;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+}
+#lead-cta .form-status.form-status--success {
+  border: 1px solid #a7f3d0;
+  background: #ecfdf5;
+  color: #065f46;
+}
+#lead-cta .form-status.form-status--error {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+}
 @media (max-width: 992px) {
   .berlin-investor-hero__inner {
     grid-template-columns: 1fr;
@@ -862,6 +910,9 @@
   }
   #lead-cta .lead-form .form-group {
     margin-bottom: 12px;
+  }
+  .lead-form-trust-points {
+    font-size: 0.82rem;
   }
   .berlin-investor-hero__baseline {
     grid-template-columns: 1fr;

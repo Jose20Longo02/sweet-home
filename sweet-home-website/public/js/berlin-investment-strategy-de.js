@@ -285,11 +285,14 @@
   if (!form) return;
 
   var submitBtn = form.querySelector('button[type="submit"]');
+  var defaultSubmitText = submitBtn ? submitBtn.textContent : '';
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
     if (!submitBtn) return;
+    if (typeof form.reportValidity === 'function' && !form.reportValidity()) return;
 
     submitBtn.disabled = true;
+    submitBtn.textContent = 'Wird gesendet...';
     if (messageEl) {
       messageEl.style.display = 'none';
       messageEl.className = 'form-status';
@@ -346,11 +349,26 @@
       }
 
       showSuccessMessage('Danke! Ihr Formular wurde erfolgreich gesendet. Unser Team meldet sich in Kuerze bei Ihnen.');
+      if (messageEl) {
+        messageEl.style.display = 'block';
+        messageEl.className = 'form-status form-status--success';
+        messageEl.textContent = 'Danke! Ihre Anfrage wurde erfolgreich gesendet. Unser Team meldet sich in Kuerze.';
+      }
       form.reset();
     } catch (err) {
-      showMessage(err.message || 'Es ist ein Fehler aufgetreten. Bitte spaeter erneut versuchen.', 'error');
+      var errText = err && err.message ? err.message : 'Es ist ein Fehler aufgetreten. Bitte spaeter erneut versuchen.';
+      if (errText === 'reCAPTCHA verification failed') {
+        errText = 'Sicherheitspruefung fehlgeschlagen. Bitte laden Sie die Seite neu und versuchen Sie es erneut.';
+      }
+      showMessage(errText, 'error');
+      if (messageEl) {
+        messageEl.style.display = 'block';
+        messageEl.className = 'form-status form-status--error';
+        messageEl.textContent = errText;
+      }
     } finally {
       submitBtn.disabled = false;
+      submitBtn.textContent = defaultSubmitText;
     }
   });
 })();
