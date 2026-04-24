@@ -338,7 +338,7 @@
 
       var data = await res.json().catch(function () { return { success: false }; });
       if (!res.ok || !data.success) {
-        throw new Error((data && data.message) || 'Senden derzeit nicht moeglich. Bitte erneut versuchen.');
+        throw new Error((data && data.message) || 'Senden derzeit nicht möglich. Bitte erneut versuchen.');
       }
 
       if (window.analytics && window.analytics.trackFormSubmit) {
@@ -348,17 +348,17 @@
         window.fbq('trackSingle', '1659758728554816', 'Lead', {}, { eventID: metaEventId });
       }
 
-      showSuccessMessage('Danke! Ihr Formular wurde erfolgreich gesendet. Unser Team meldet sich in Kuerze bei Ihnen.');
+      showSuccessMessage('Danke! Ihr Formular wurde erfolgreich gesendet. Unser Team meldet sich in Kürze bei Ihnen.');
       if (messageEl) {
         messageEl.style.display = 'block';
         messageEl.className = 'form-status form-status--success';
-        messageEl.textContent = 'Danke! Ihre Anfrage wurde erfolgreich gesendet. Unser Team meldet sich in Kuerze.';
+        messageEl.textContent = 'Danke! Ihre Anfrage wurde erfolgreich gesendet. Unser Team meldet sich in Kürze.';
       }
       form.reset();
     } catch (err) {
-      var errText = err && err.message ? err.message : 'Es ist ein Fehler aufgetreten. Bitte spaeter erneut versuchen.';
+      var errText = err && err.message ? err.message : 'Es ist ein Fehler aufgetreten. Bitte später erneut versuchen.';
       if (errText === 'reCAPTCHA verification failed') {
-        errText = 'Sicherheitspruefung fehlgeschlagen. Bitte laden Sie die Seite neu und versuchen Sie es erneut.';
+        errText = 'Sicherheitsprüfung fehlgeschlagen. Bitte laden Sie die Seite neu und versuchen Sie es erneut.';
       }
       showMessage(errText, 'error');
       if (messageEl) {
