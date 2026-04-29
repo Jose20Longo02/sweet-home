@@ -567,8 +567,15 @@ app.use((req, res, next) => {
 
   // Old German prefix routes from previous setup.
   if (lowerPath === '/de' || lowerPath === '/de/') return res.redirect(301, '/');
+  // Collapse legacy /de/* top-level pages to default-language canonical paths.
+  const legacyDeTopLevelMatch = lowerPath.match(/^\/de\/(projects|properties|blog|about|contact|services|owners|terms|privacy|cookies)\/?$/);
+  if (legacyDeTopLevelMatch) {
+    const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
+    return res.redirect(301, `/${legacyDeTopLevelMatch[1]}${query}`);
+  }
   if (lowerPath === '/de/uber-uns-2' || lowerPath === '/de/uber-uns-2/') return res.redirect(301, '/about');
   if (lowerPath === '/de/kontakt' || lowerPath === '/de/kontakt/') return res.redirect(301, '/contact');
+  if (lowerPath === '/de/personal' || lowerPath === '/de/personal/') return res.redirect(301, '/about');
   if (lowerPath === '/en/about-us-2' || lowerPath === '/en/about-us-2/') return res.redirect(301, '/en/about');
   if (lowerPath === '/en/staff' || lowerPath === '/en/staff/') return res.redirect(301, '/en/about');
   if (lowerPath === '/default' || lowerPath === '/default.asp') return res.redirect(301, '/');
@@ -625,6 +632,32 @@ app.use((req, res, next) => {
   if (legacyDePropertyDetailMatch) return res.redirect(301, `/properties/${legacyDePropertyDetailMatch[1]}`);
   const legacyDeProjectDetailMatch = lowerPath.match(/^\/de\/projects\/([^/]+)\/?$/);
   if (legacyDeProjectDetailMatch) return res.redirect(301, `/projects/${legacyDeProjectDetailMatch[1]}`);
+  const legacyDeBlogDetailMatch = lowerPath.match(/^\/de\/blog\/([^/]+)\/?$/);
+  if (legacyDeBlogDetailMatch) return res.redirect(301, `/blog/${legacyDeBlogDetailMatch[1]}`);
+  const legacyDeNestedSectionsMatch = lowerPath.match(/^\/de\/(properties|projects|blog)\/(.+)$/);
+  if (legacyDeNestedSectionsMatch) {
+    const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
+    return res.redirect(301, `/${legacyDeNestedSectionsMatch[1]}/${legacyDeNestedSectionsMatch[2]}${query}`);
+  }
+
+  // High-value legacy slug redirects observed in GSC exports.
+  const normalizedPath = lowerPath.replace(/\/+$/, '') || '/';
+  const highValueLegacyRedirects = {
+    '/en/properties/3-room-apartment-by-dandh-eckert-carre': '/en/properties/3-room-apartment-eckert-carre-by-dandh',
+    '/en/properties/4-room-apartment-by-dandh-the-franz': '/en/properties/4-room-apartment-the-franz-by-dandh',
+    '/en/properties/3-room-apartment-by-dandh-the-franz': '/en/properties/3-room-apartment-the-franz-by-dandh',
+    '/en/properties/2-bedroon-apartment-grigio-court-by-aristo-developers': '/en/properties/2-bedroom-apartment-grigio-court-by-aristo-developers',
+    '/en/properties/1-bedroon-apartment-grigio-court-by-aristo-developers': '/en/properties/1-bedroom-apartment-grigio-court-by-aristo-developers',
+    '/en/properties/3-bedrooom-apartment-onero-residences-by-aristos': '/en/properties/3-bedroom-apartment-onero-residences-by-aristos',
+    '/en/properties/3-bedroon-villa-premier-residences-by-aristo-developers': '/en/properties/3-bedroom-villa-premier-residences-by-aristo-developers',
+    '/en/properties/wilmersdorf-hubertusallee-6-8': '/properties/wilmersdorf-hubertusallee-6-8',
+    '/en/properties/steglitz-steglitzer-damm-24-8': '/properties/steglitz-steglitzer-damm-24-8',
+    '/en/properties/moabit-stephanstr-52-3': '/properties/moabit-stephanstr-52-3'
+  };
+  if (highValueLegacyRedirects[normalizedPath]) {
+    const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
+    return res.redirect(301, `${highValueLegacyRedirects[normalizedPath]}${query}`);
+  }
 
   // Old query-style property feed links.
   const postType = String((req.query && req.query.post_type) || '').toLowerCase();
@@ -734,6 +767,10 @@ app.get('/wohnung-kaufen-reinickendorf', propertyController.reinickendorfPropert
 app.get('/wohnung-kaufen-kreuzberg', propertyController.kreuzbergPropertiesPageDe);
 app.get('/wohnung-kaufen-spandau', propertyController.spandauPropertiesPageDe);
 app.get('/es/propiedades-en-venta-berlin', propertyController.berlinPropertiesPage);
+app.get('/es/properties-for-sale-berlin', (req, res) => {
+  const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
+  return res.redirect(301, `/es/propiedades-en-venta-berlin${query}`);
+});
 app.get('/en/berlin-tenant-occupied-entry-strategy', propertyController.berlinInvestorStrategyPageEn);
 app.get('/berlin-mieter-belegte-einstiegsstrategie', propertyController.berlinInvestorStrategyPageDe);
 app.get('/berlin-tenant-occupied-entry-strategy', (req, res) => {
@@ -1350,8 +1387,8 @@ async function renderHomePage(req, res, langPath, next) {
     const baseUrl = res.locals.baseUrl;
     const canonicalUrl = `${baseUrl}${langPath}`;
     const hreflangAlternates = {
-      'en-us': `${baseUrl}/`,
-      'de-de': `${baseUrl}/de`,
+      'en-us': `${baseUrl}/en`,
+      'de-de': `${baseUrl}/`,
       'es-es': `${baseUrl}/es`
     };
     const homeTitles = {
@@ -1577,9 +1614,20 @@ app.get('/robots.txt', (req, res) => {
   res.type('text/plain');
   const baseUrl = res.locals.baseUrl;
   const allowAll = process.env.ROBOTS_ALLOW !== 'false';
-  const robotsContent = allowAll 
-    ? `User-agent: *\nAllow: /\n\nSitemap: ${baseUrl}/sitemap.xml` 
-    : `User-agent: *\nDisallow: /\n\nSitemap: ${baseUrl}/sitemap.xml`;
+  const robotsContent = allowAll
+    ? `User-agent: *
+Disallow: /admin
+Disallow: /superadmin
+Disallow: /auth
+Disallow: /api
+Disallow: /lang
+Allow: /
+
+Sitemap: ${baseUrl}/sitemap.xml`
+    : `User-agent: *
+Disallow: /
+
+Sitemap: ${baseUrl}/sitemap.xml`;
   res.send(robotsContent);
 });
 

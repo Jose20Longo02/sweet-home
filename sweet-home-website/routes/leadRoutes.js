@@ -35,6 +35,11 @@ const leadValidations = [
 ];
 
 // Public API endpoints (rate limited + validated + spam detection)
+// Legacy crawler hits this POST-only endpoint with GET; return 410 to deindex quickly.
+router.get('/api/leads/berlin-investor-strategy', (req, res) => {
+  return res.status(410).type('text/plain').send('Gone');
+});
+
 router.post('/api/leads', createLeadLimiter, recaptchaRequired(recaptchaMinScore), leadValidations, spamDetection(), leadController.createFromProperty);
 router.post('/api/leads/project', createLeadLimiter, recaptchaRequired(recaptchaMinScore), leadValidations, spamDetection(), leadController.createFromProject);
 router.post(

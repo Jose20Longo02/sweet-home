@@ -674,7 +674,7 @@ exports.showProperty = async (req, res, next) => {
       LIMIT 1
     `;
     const { rows } = await query(sql, [req.params.slug]);
-    if (!rows.length) return res.status(404).render('errors/404');
+    if (!rows.length) return res.status(410).render('errors/404');
 
     const p = rows[0];
     const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);

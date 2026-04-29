@@ -1055,6 +1055,16 @@ exports.deleteProject = async (req, res, next) => {
  */
 exports.listProjectsPublic = async (req, res, next) => {
   try {
+    // 301 normalize pagination duplicates: any URL with page=1 should redirect without page.
+    if (String(req.query.page || '') === '1') {
+      const queryEntries = Object.entries(req.query || {}).filter(([key]) => key !== 'page');
+      const queryString = queryEntries.length
+        ? `?${queryEntries.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value ?? ''))}`).join('&')}`
+        : '';
+      const basePath = req.baseUrl || '/projects';
+      return res.redirect(301, `${basePath}${queryString}`);
+    }
+
     const {
       q = '', // search query
       country = '',
@@ -1066,12 +1076,6 @@ exports.listProjectsPublic = async (req, res, next) => {
       sort = 'date_new',
       page = 1
     } = req.query;
-
-    // 301 redirect /projects?page=1 to /projects to eliminate duplicate URL/title/content
-    const keys = Object.keys(req.query);
-    if (keys.length === 1 && (req.query.page === '1' || req.query.page === 1)) {
-      return res.redirect(301, '/projects');
-    }
 
     // Build WHERE clause for filtering
     const whereConditions = [];
@@ -1301,10 +1305,7 @@ exports.showProject = async (req, res, next) => {
     `, [slug]);
 
     if (projects.length === 0) {
-      return res.status(404).render('error', {
-        message: 'Project not found',
-        error: { status: 404 }
-      });
+      return res.status(410).render('errors/404');
     }
 
     const project = projects[0];

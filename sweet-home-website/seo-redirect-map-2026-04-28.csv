@@ -1,0 +1,22 @@
+old_url,new_url,status,type,notes
+https://sweet-home.co.il/en/properties/3-room-apartment-by-dandh-eckert-carre,https://sweet-home.co.il/en/properties/3-room-apartment-eckert-carre-by-dandh,301,exact_replacement,Slug order normalized
+https://sweet-home.co.il/en/properties/4-room-apartment-by-dandh-the-franz,https://sweet-home.co.il/en/properties/4-room-apartment-the-franz-by-dandh,301,exact_replacement,Slug order normalized
+https://sweet-home.co.il/en/properties/3-room-apartment-by-dandh-the-franz,https://sweet-home.co.il/en/properties/3-room-apartment-the-franz-by-dandh,301,exact_replacement,Slug order normalized
+https://sweet-home.co.il/en/properties/2-bedroon-apartment-grigio-court-by-aristo-developers,https://sweet-home.co.il/en/properties/2-bedroom-apartment-grigio-court-by-aristo-developers,301,exact_replacement,Typo fix
+https://sweet-home.co.il/en/properties/1-bedroon-apartment-grigio-court-by-aristo-developers,https://sweet-home.co.il/en/properties/1-bedroom-apartment-grigio-court-by-aristo-developers,301,exact_replacement,Typo fix
+https://sweet-home.co.il/en/properties/3-bedrooom-apartment-onero-residences-by-aristos,https://sweet-home.co.il/en/properties/3-bedroom-apartment-onero-residences-by-aristos,301,exact_replacement,Typo fix
+https://sweet-home.co.il/en/properties/3-bedroon-villa-premier-residences-by-aristo-developers,https://sweet-home.co.il/en/properties/3-bedroom-villa-premier-residences-by-aristo-developers,301,exact_replacement,Typo fix
+https://sweet-home.co.il/en/properties/wilmersdorf-hubertusallee-6-8,https://sweet-home.co.il/properties/wilmersdorf-hubertusallee-6-8,301,canonical_consolidation,Old prefixed path
+https://sweet-home.co.il/en/properties/steglitz-steglitzer-damm-24-8,https://sweet-home.co.il/properties/steglitz-steglitzer-damm-24-8,301,canonical_consolidation,Old prefixed path
+https://sweet-home.co.il/en/properties/moabit-stephanstr-52-3,https://sweet-home.co.il/properties/moabit-stephanstr-52-3,301,canonical_consolidation,Old prefixed path
+https://sweet-home.co.il/es/properties-for-sale-berlin,https://sweet-home.co.il/es/propiedades-en-venta-berlin,301,locale_slug_fix,Spanish canonical slug
+https://sweet-home.co.il/de/personal,https://sweet-home.co.il/about,301,legacy_page_mapping,Legacy German staff page
+https://sweet-home.co.il/de/uber-uns-2,https://sweet-home.co.il/about,301,legacy_page_mapping,Legacy German about page
+https://sweet-home.co.il/de/kontakt,https://sweet-home.co.il/contact,301,legacy_page_mapping,Legacy German contact page
+https://sweet-home.co.il/de/blog,https://sweet-home.co.il/blog,301,legacy_prefix_cleanup,Old German prefix removed
+https://sweet-home.co.il/de/properties,https://sweet-home.co.il/properties,301,legacy_prefix_cleanup,Old German prefix removed
+https://sweet-home.co.il/de/projects,https://sweet-home.co.il/projects,301,legacy_prefix_cleanup,Old German prefix removed
+https://sweet-home.co.il/api/leads/berlin-investor-strategy,,410,removed_endpoint,GET requests to POST-only endpoint
+https://sweet-home.co.il/content-hub/index.php*,,410,spam_legacy_endpoint,Legacy spam crawl pattern
+https://sweet-home.co.il/item/*.html,,410,spam_legacy_endpoint,Legacy spam crawl pattern
+https://sweet-home.co.il/*.htm,,410,legacy_junk_paths,Legacy junk numeric paths

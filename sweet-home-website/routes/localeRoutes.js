@@ -41,13 +41,14 @@ function createLocaleRouter(renderHomePage) {
         title: 'About',
         team: filtered,
         useMainContainer: false,
-        areaOrder
+        areaOrder,
+        canonicalUrl: `${res.locals.baseUrl}${req.baseUrl}/about`
       });
     } catch (err) { next(err); }
   });
 
   router.get('/contact', (req, res) => {
-    res.render('contact', { title: 'Contact' });
+    res.render('contact', { title: 'Contact', canonicalUrl: `${res.locals.baseUrl}${req.baseUrl}/contact` });
   });
 
   router.get('/terms', (req, res) => {
@@ -68,7 +69,7 @@ function createLocaleRouter(renderHomePage) {
     });
   });
 
-  router.get('/cookies', (req, res) => res.render('cookies', { title: 'Cookies Policy' }));
+  router.get('/cookies', (req, res) => res.render('cookies', { title: 'Cookies Policy', canonicalUrl: `${res.locals.baseUrl}${req.baseUrl}/cookies` }));
 
   router.get('/services', (req, res) => {
     const baseUrl = res.locals.baseUrl;

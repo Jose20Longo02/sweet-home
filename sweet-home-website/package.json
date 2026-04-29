@@ -8,6 +8,7 @@
     "backfill:i18n": "node scripts/backfill_i18n.js",
     "minify": "node scripts/minify-assets.js",
     "seo:check": "node scripts/seo-smoke-check.js",
+    "seo:validate-redirects": "node scripts/validate-redirect-map.js seo-redirect-map-2026-04-28.csv",
     "build": "npm run minify && npx puppeteer browsers install chrome || true",
     "postinstall": "npx puppeteer browsers install chrome || true",
     "test": "echo \"Error: no test specified\" && exit 1"

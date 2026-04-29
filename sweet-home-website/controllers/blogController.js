@@ -315,10 +315,13 @@ function buildSourceOnlyI18n(fields, sourceLang) {
 // Public
 exports.listPublic = async (req, res, next) => {
   try {
-    // 301 redirect /blog?page=1 to /blog to eliminate duplicate URL/title
-    const keys = Object.keys(req.query);
-    if (keys.length === 1 && (req.query.page === '1' || req.query.page === 1)) {
-      return res.redirect(301, req.baseUrl || '/blog');
+    // 301 normalize pagination duplicates: any URL with page=1 should redirect without page.
+    if (String(req.query.page || '') === '1') {
+      const queryEntries = Object.entries(req.query || {}).filter(([key]) => key !== 'page');
+      const queryString = queryEntries.length
+        ? `?${queryEntries.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value ?? ''))}`).join('&')}`
+        : '';
+      return res.redirect(301, `${req.baseUrl || '/blog'}${queryString}`);
     }
 
     const page = Math.max(parseInt(req.query.page || '1', 10), 1);
@@ -383,7 +386,7 @@ exports.listPublic = async (req, res, next) => {
 exports.showPublic = async (req, res, next) => {
   try {
     const post = await BlogPost.findBySlug(req.params.slug);
-    if (!post || post.status !== 'published') return res.status(404).render('errors/404');
+    if (!post || post.status !== 'published') return res.status(410).render('errors/404');
     const lang = res.locals.lang || 'en';
     const postTitle = (post.title_i18n && post.title_i18n[lang]) || post.title;
     const postContent = (post.content_i18n && post.content_i18n[lang]) || post.content;
