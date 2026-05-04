@@ -164,8 +164,14 @@
 }
 .berlin-investor-btn-secondary:hover { background: #f8faf8; color: #1f2a1f; }
 .strategy-properties-marquee {
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
   padding-top: 8px;
   padding-bottom: 8px;
+}
+.strategy-properties-marquee .berlin-content__inner {
+  max-width: 1200px;
+  padding: 0 24px;
 }
 .strategy-properties-marquee__intro {
   margin-bottom: 16px;
@@ -197,7 +203,7 @@
 .strategy-properties-marquee__track {
   display: flex;
   width: max-content;
-  animation: strategy-properties-marquee 42s linear infinite;
+  animation: strategy-properties-marquee 26s linear infinite;
   will-change: transform;
 }
 .strategy-properties-marquee__set {
@@ -218,8 +224,8 @@
   }
 }
 .strategy-property-card {
-  width: 330px;
-  flex: 0 0 330px;
+  width: 372px;
+  flex: 0 0 372px;
   border: 1px solid #cfe3d7;
   border-radius: 14px;
   overflow: hidden;
@@ -970,12 +976,15 @@
   .berlin-investor-page .section {
     margin-top: 36px;
   }
+  .strategy-properties-marquee .berlin-content__inner {
+    padding: 0 16px;
+  }
   .strategy-properties-marquee__viewport::before,
   .strategy-properties-marquee__viewport::after {
     width: 34px;
   }
   .strategy-properties-marquee__track {
-    animation-duration: 46s;
+    animation-duration: 30s;
   }
   .strategy-property-card {
     width: min(84vw, 286px);
