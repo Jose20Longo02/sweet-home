@@ -88,6 +88,17 @@
     <div class="blog-article">
       <header>
         <h1><%= post.title %></h1>
+        <% 
+          const lastUpdatedRaw = post.updated_at || post.published_at || post.created_at;
+          const currentLang = (typeof lang !== 'undefined' && lang) ? lang : 'en';
+          const localeMap = { de: 'de-DE', es: 'es-ES', en: 'en-US' };
+        %>
+        <% if (lastUpdatedRaw) { %>
+          <p class="meta">
+            <%= t('blog.lastUpdated', 'Last updated') %>:
+            <%= new Date(lastUpdatedRaw).toLocaleDateString(localeMap[currentLang] || 'en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+          </p>
+        <% } %>
         <% if (post.author_name) { %>
           <p class="meta"><%= t('blog.by','By') %> <%= post.author_name %></p>
         <% } %>
