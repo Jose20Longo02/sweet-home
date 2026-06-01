@@ -64,6 +64,107 @@
     display: block;
     margin-top: 12px;
   }
+  .blog-detail .blog-author-badge {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    margin: 16px 0 20px !important;
+    padding: 16px 18px !important;
+    border: 1px solid #d7e7dc !important;
+    border-radius: 14px !important;
+    background: linear-gradient(180deg, #ffffff 0%, #f6fbf8 100%) !important;
+    box-shadow: 0 4px 18px rgba(21, 34, 51, 0.06) !important;
+    max-width: 100% !important;
+  }
+  .blog-detail .blog-author-badge__avatar {
+    flex: 0 0 72px !important;
+    width: 72px !important;
+    height: 72px !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    border: 2px solid #d7e7dc !important;
+    box-shadow: 0 2px 8px rgba(21, 34, 51, 0.08) !important;
+  }
+  .blog-detail .blog-author-badge__avatar img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 50% !important;
+  }
+  .blog-detail .blog-author-badge__body {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+  .blog-detail .blog-author-badge__identity {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: baseline !important;
+    gap: 6px !important;
+    margin: 0 0 2px !important;
+  }
+  .blog-detail .blog-author-badge__label {
+    margin: 0 !important;
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    color: #1f7a45 !important;
+    line-height: 1.2 !important;
+  }
+  .blog-detail .blog-author-badge__name {
+    margin: 0 !important;
+    font-size: 1.08rem !important;
+    font-weight: 700 !important;
+    color: #152233 !important;
+    line-height: 1.25 !important;
+  }
+  .blog-detail .blog-author-badge__position {
+    margin: 0 0 8px !important;
+    font-size: 0.92rem !important;
+    color: #4b5b6f !important;
+    line-height: 1.35 !important;
+  }
+  .blog-detail .blog-author-badge__contacts {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  .blog-detail .blog-author-badge__contact {
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 5px 10px !important;
+    border: 1px solid #d7e7dc !important;
+    border-radius: 999px !important;
+    background: #ffffff !important;
+    font-size: 0.84rem !important;
+    color: #334155 !important;
+    text-decoration: none !important;
+    line-height: 1.2 !important;
+    word-break: break-word !important;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease !important;
+  }
+  .blog-detail .blog-author-badge__contact:hover,
+  .blog-detail .blog-author-badge__contact:focus {
+    color: #1f7a45 !important;
+    border-color: #1f7a45 !important;
+    background: #f6fbf8 !important;
+  }
+  @media (max-width: 640px) {
+    .blog-detail .blog-author-badge {
+      align-items: flex-start !important;
+      padding: 14px !important;
+    }
+    .blog-detail .blog-author-badge__avatar {
+      flex-basis: 64px !important;
+      width: 64px !important;
+      height: 64px !important;
+    }
+    .blog-detail .blog-author-badge__contacts {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+    }
+  }
 </style>
 <article class="container main blog-detail">
   <div class="blog-detail-grid">
@@ -130,8 +231,10 @@
               />
             </div>
             <div class="blog-author-badge__body">
-              <p class="blog-author-badge__label"><%= t('blog.by', 'By') %></p>
-              <p class="blog-author-badge__name"><%= post.author_name %></p>
+              <div class="blog-author-badge__identity">
+                <span class="blog-author-badge__label"><%= t('blog.by', 'By') %></span>
+                <span class="blog-author-badge__name"><%= post.author_name %></span>
+              </div>
               <% if (post.author_position) { %>
                 <p class="blog-author-badge__position"><%= post.author_position %></p>
               <% } %>
