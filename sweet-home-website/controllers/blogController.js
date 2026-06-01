@@ -312,6 +312,24 @@ function buildSourceOnlyI18n(fields, sourceLang) {
   };
 }
 
+async function getBlogAuthorOptions() {
+  const { rows } = await query(`
+    SELECT id, name, email
+    FROM users
+    WHERE approved = true
+      AND role IN ('Admin', 'SuperAdmin')
+    ORDER BY name ASC, email ASC
+  `);
+  return rows || [];
+}
+
+function resolveSelectedAuthorId(rawAuthorId, authorOptions, fallbackAuthorId) {
+  const parsed = parseInt(rawAuthorId, 10);
+  if (!Number.isFinite(parsed)) return fallbackAuthorId;
+  const exists = (authorOptions || []).some((member) => Number(member.id) === parsed);
+  return exists ? parsed : fallbackAuthorId;
+}
+
 // Public
 exports.listPublic = async (req, res, next) => {
   try {
@@ -477,18 +495,27 @@ exports.listMine = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
-exports.newForm = (req, res) => {
-  res.render('admin/blog/new', { 
-    error: null, 
-    currentUser: req.session.user,
-    formData: {},
-    internalLinkPresets: getInternalLandingPresetOptions()
-  });
+exports.newForm = async (req, res, next) => {
+  try {
+    const authorOptions = await getBlogAuthorOptions();
+    res.render('admin/blog/new', {
+      error: null,
+      currentUser: req.session.user,
+      formData: { author_id: req.session.user?.id || '' },
+      authorOptions,
+      internalLinkPresets: getInternalLandingPresetOptions()
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 exports.create = async (req, res, next) => {
+  let authorOptions = [];
   try {
     const { title, excerpt, content, status } = req.body;
+    authorOptions = await getBlogAuthorOptions();
+    const selectedAuthorId = resolveSelectedAuthorId(req.body.author_id, authorOptions, req.session.user.id);
     
     // Validate required fields
     if (!title || !title.trim()) {
@@ -499,8 +526,10 @@ exports.create = async (req, res, next) => {
           title: req.body.title || '',
           excerpt: req.body.excerpt || '',
           content: req.body.content || '',
-          status: req.body.status || 'draft'
+          status: req.body.status || 'draft',
+          author_id: String(selectedAuthorId)
         },
+        authorOptions,
         internalLinkPresets: getInternalLandingPresetOptions()
       });
     }
@@ -510,7 +539,7 @@ exports.create = async (req, res, next) => {
     const safeContent = (typeof content === 'string') ? content : '';
     const protectedTokens = protectInternalLandingTokens(safeContent);
     const post = await BlogPost.create({
-      title, excerpt, content: safeContent, cover_image, status, author_id: req.session.user.id, published_at
+      title, excerpt, content: safeContent, cover_image, status, author_id: selectedAuthorId, published_at
     });
     // If using Spaces and we uploaded under a provisional slug, reconcile to final slug
     try {
@@ -642,8 +671,10 @@ exports.create = async (req, res, next) => {
         title: req.body.title || '',
         excerpt: req.body.excerpt || '',
         content: req.body.content || '',
-        status: req.body.status || 'draft'
+        status: req.body.status || 'draft',
+        author_id: req.body.author_id || req.session.user?.id || ''
       },
+      authorOptions,
       internalLinkPresets: getInternalLandingPresetOptions()
     });
   }
@@ -658,16 +689,19 @@ exports.editForm = async (req, res, next) => {
     if (req.session.user.role !== 'SuperAdmin' && post.author_id !== req.session.user.id) {
       return res.status(403).send('Forbidden');
     }
+    const authorOptions = await getBlogAuthorOptions();
     res.render('admin/blog/edit', {
       post,
       error: null,
       currentUser: req.session.user,
+      authorOptions,
       internalLinkPresets: getInternalLandingPresetOptions()
     });
   } catch (err) { next(err); }
 };
 
 exports.update = async (req, res, next) => {
+  let authorOptions = [];
   try {
     const id = parseInt(req.params.id, 10);
     const rows = await query('SELECT * FROM blog_posts WHERE id = $1', [id]);
@@ -676,6 +710,8 @@ exports.update = async (req, res, next) => {
     if (req.session.user.role !== 'SuperAdmin' && existing.author_id !== req.session.user.id) {
       return res.status(403).send('Forbidden');
     }
+    authorOptions = await getBlogAuthorOptions();
+    const selectedAuthorId = resolveSelectedAuthorId(req.body.author_id, authorOptions, existing.author_id);
 
     let cover_image = req.file ? (req.file.url || '/uploads/blog/' + req.file.filename) : existing.cover_image;
     const { title, excerpt, content, status } = req.body;
@@ -684,7 +720,15 @@ exports.update = async (req, res, next) => {
     const safeContent = (typeof content === 'string') ? content : existing.content || '';
     const protectedTokens = protectInternalLandingTokens(safeContent);
 
-    const updated = await BlogPost.update(id, { title, excerpt, content: safeContent, cover_image, status, published_at });
+    const updated = await BlogPost.update(id, {
+      title,
+      excerpt,
+      content: safeContent,
+      cover_image,
+      status,
+      published_at,
+      author_id: selectedAuthorId
+    });
     // If Spaces and cover uploaded under a different provisional slug, reconcile to final slug
     try {
       if (process.env.DO_SPACES_BUCKET && req.file && req.file.key) {
@@ -807,6 +851,7 @@ exports.update = async (req, res, next) => {
           post,
           error: errorMessage,
           currentUser: req.session.user,
+          authorOptions,
           internalLinkPresets: getInternalLandingPresetOptions()
         });
       }

@@ -32,6 +32,15 @@
         <label>Excerpt</label>
         <textarea name="excerpt" rows="3"><%- post.excerpt || '' %></textarea>
 
+        <label for="author_id">Author</label>
+        <select id="author_id" name="author_id" required>
+          <% (authorOptions || []).forEach(function(member){ %>
+            <option value="<%= member.id %>" <%= String(post.author_id || '') === String(member.id) ? 'selected' : '' %>>
+              <%= member.name || member.email %>
+            </option>
+          <% }) %>
+        </select>
+
         <label>Content</label>
         <small class="hint" style="display:block; margin-bottom:8px;">Note: Use H2-H6 for headings within your content. H1 is automatically used for the post title. Any H1 tags in content will be converted to H2 when published.</small>
         <div style="margin-bottom:8px;">

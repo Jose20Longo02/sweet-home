@@ -93,6 +93,7 @@ class BlogPost {
     if (data.cover_image !== undefined) push('cover_image = $idx', data.cover_image);
     if (data.status) push('status = $idx', data.status);
     if (data.published_at !== undefined) push('published_at = $idx', data.published_at);
+    if (data.author_id !== undefined && data.author_id !== null) push('author_id = $idx', data.author_id);
 
     if (data.title && data.slug === 'regenerate') {
       // Optional: regenerate slug from title

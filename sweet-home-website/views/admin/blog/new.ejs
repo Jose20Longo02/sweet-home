@@ -37,6 +37,16 @@
         <textarea id="excerpt" name="excerpt" rows="3" maxlength="500" placeholder="1–3 sentence summary for listings and previews"><%= (formData && formData.excerpt) ? formData.excerpt : '' %></textarea>
         <small class="hint">Optional. Shown in lists and previews.</small>
 
+        <label for="author_id" style="margin-top:10px;">Author</label>
+        <select id="author_id" name="author_id" required>
+          <% (authorOptions || []).forEach(function(member){ %>
+            <option value="<%= member.id %>" <%= String((formData && formData.author_id) || (currentUser && currentUser.id) || '') === String(member.id) ? 'selected' : '' %>>
+              <%= member.name || member.email %>
+            </option>
+          <% }) %>
+        </select>
+        <small class="hint">Default is the current user, but you can assign the post to another team member.</small>
+
         <label for="content" style="margin-top:10px;">Content</label>
         <small class="hint" style="display:block; margin-bottom:8px;">Note: Use H2-H6 for headings within your content. H1 is automatically used for the post title. Any H1 tags in content will be converted to H2 when published.</small>
         <div style="margin-bottom:8px;">
