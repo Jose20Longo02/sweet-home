@@ -34,7 +34,22 @@
 .blog-article .content { line-height: 1.75; }
 .blog-article .content h2 { margin-top: var(--spacing-6); }
 
-@media (max-width: 900px) { .blog-detail .blog-detail-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) {
+  .blog-detail .blog-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-detail .blog-article {
+    order: 1;
+  }
+
+  .blog-detail .blog-recommended {
+    order: 2;
+    margin-top: var(--spacing-8);
+    padding-top: var(--spacing-6);
+    border-top: 1px solid var(--gray-200);
+  }
+}
 
 /* Force max 3 columns for blog list */
 .blog-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-6); }
