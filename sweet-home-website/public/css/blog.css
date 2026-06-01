@@ -124,7 +124,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: var(--spacing-3);
+  margin: var(--spacing-3) 0 var(--spacing-6);
 }
 
 .blog-author-expertise {
