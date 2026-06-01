@@ -132,6 +132,111 @@
   margin-top: var(--spacing-4) !important;
 }
 
+.blog-author-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  margin: var(--spacing-4) 0 var(--spacing-5);
+  padding: var(--spacing-4) var(--spacing-5);
+  border: 1px solid #d7e7dc;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffffff 0%, #f6fbf8 100%);
+}
+
+.blog-author-badge__avatar {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #d7e7dc;
+  box-shadow: 0 2px 8px rgba(21, 34, 51, 0.08);
+}
+
+.blog-author-badge__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.blog-author-badge__body {
+  min-width: 0;
+}
+
+.blog-author-badge__label {
+  margin: 0 0 2px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--primary-color);
+}
+
+.blog-author-badge__name {
+  margin: 0 0 2px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #152233;
+  line-height: 1.3;
+}
+
+.blog-author-badge__position {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  color: #4b5b6f;
+  line-height: 1.4;
+}
+
+.blog-author-badge__contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.blog-author-badge__contact {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--font-size-sm);
+  color: var(--gray-700);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  word-break: break-word;
+}
+
+.blog-author-badge__contact + .blog-author-badge__contact::before {
+  content: '·';
+  margin-right: 16px;
+  color: var(--gray-400);
+  pointer-events: none;
+}
+
+.blog-author-badge__contact:hover,
+.blog-author-badge__contact:focus {
+  color: var(--primary-color);
+}
+
+@media (max-width: 640px) {
+  .blog-author-badge {
+    align-items: flex-start;
+    padding: var(--spacing-4);
+  }
+
+  .blog-author-badge__avatar {
+    width: 64px;
+    height: 64px;
+  }
+
+  .blog-author-badge__contacts {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .blog-author-badge__contact + .blog-author-badge__contact::before {
+    display: none;
+  }
+}
+
 .blog-author-expertise {
   margin-top: var(--spacing-7);
   border: 1px solid var(--gray-200);

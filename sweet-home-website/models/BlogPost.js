@@ -50,7 +50,12 @@ class BlogPost {
 
   static async findBySlug(slug) {
     const res = await query(
-      `SELECT bp.*, u.name AS author_name
+      `SELECT bp.*,
+              u.name AS author_name,
+              u.email AS author_email,
+              u.phone AS author_phone,
+              u.position AS author_position,
+              u.profile_picture AS author_profile_picture
          FROM blog_posts bp
          LEFT JOIN users u ON u.id = bp.author_id
         WHERE bp.slug = $1

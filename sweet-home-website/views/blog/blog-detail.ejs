@@ -107,7 +107,50 @@
           </p>
         <% } %>
         <% if (post.author_name) { %>
-          <p class="meta"><%= t('blog.by','By') %> <%= post.author_name %></p>
+          <% 
+            const authorPicRaw = post.author_profile_picture || '';
+            const authorPic = authorPicRaw
+              ? (/^https?:\/\//.test(authorPicRaw)
+                ? authorPicRaw
+                : (authorPicRaw.startsWith('/') ? authorPicRaw : '/' + authorPicRaw))
+              : '/img/default-avatar.png';
+            const authorPhoneHref = post.author_phone
+              ? String(post.author_phone).replace(/[^\d+]/g, '')
+              : '';
+          %>
+          <aside class="blog-author-badge" aria-label="<%= t('blog.authorBadgeLabel', 'Article author') %>">
+            <div class="blog-author-badge__avatar">
+              <img
+                src="<%= authorPic %>"
+                alt="<%= post.author_name %>"
+                width="72"
+                height="72"
+                loading="lazy"
+                onerror="this.onerror=null;this.src='/img/default-avatar.png';"
+              />
+            </div>
+            <div class="blog-author-badge__body">
+              <p class="blog-author-badge__label"><%= t('blog.by', 'By') %></p>
+              <p class="blog-author-badge__name"><%= post.author_name %></p>
+              <% if (post.author_position) { %>
+                <p class="blog-author-badge__position"><%= post.author_position %></p>
+              <% } %>
+              <% if (post.author_phone || post.author_email) { %>
+                <div class="blog-author-badge__contacts">
+                  <% if (post.author_phone) { %>
+                    <a class="blog-author-badge__contact" href="tel:<%= authorPhoneHref %>">
+                      <%= post.author_phone %>
+                    </a>
+                  <% } %>
+                  <% if (post.author_email) { %>
+                    <a class="blog-author-badge__contact" href="mailto:<%= post.author_email %>">
+                      <%= post.author_email %>
+                    </a>
+                  <% } %>
+                </div>
+              <% } %>
+            </div>
+          </aside>
         <% } %>
         <% if ((postTopicIds || []).length > 0) { %>
           <div class="post-topics">
