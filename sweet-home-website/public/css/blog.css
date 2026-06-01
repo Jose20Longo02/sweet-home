@@ -127,6 +127,11 @@
   margin: var(--spacing-3) 0 var(--spacing-6);
 }
 
+/* Keep clear visual separation between topic badges and cover image */
+.blog-article header .post-topics + .cover {
+  margin-top: var(--spacing-4) !important;
+}
+
 .blog-author-expertise {
   margin-top: var(--spacing-7);
   border: 1px solid var(--gray-200);
