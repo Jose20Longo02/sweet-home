@@ -1101,7 +1101,7 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   color: inherit;
 }
 
-.home-berlin-neighborhood-card__cta {
+.home-berlin-neighborhood-card .home-berlin-neighborhood-card__cta {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1111,11 +1111,38 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   font-weight: 700;
   border-radius: 999px;
   background: #fff;
-  color: var(--primary-dark, #1f7a45);
+  color: var(--primary-color, #2ea862);
+  border: 1px solid rgba(46, 168, 98, 0.28);
+  text-decoration: none;
+  width: auto;
+  max-width: max-content;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.home-berlin-neighborhood-card__cta:hover {
-  background: #f8fff9;
+.home-berlin-neighborhood-card .home-berlin-neighborhood-card__cta:hover,
+.home-berlin-neighborhood-card .home-berlin-neighborhood-card__cta:focus-visible {
+  background: #f0faf4;
+  color: var(--primary-dark, #23804b);
+  border-color: var(--primary-color, #2ea862);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(46, 168, 98, 0.18);
+}
+
+.home-berlin-neighborhood-card.is-open .home-berlin-neighborhood-card__cta,
+.home-berlin-neighborhood-card:hover .home-berlin-neighborhood-card__cta {
+  background: #fff;
+  color: var(--primary-color, #2ea862);
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.home-berlin-neighborhood-card.is-open .home-berlin-neighborhood-card__cta:hover,
+.home-berlin-neighborhood-card.is-open .home-berlin-neighborhood-card__cta:focus-visible {
+  background: #f0faf4;
+  color: var(--primary-dark, #23804b);
+  border-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
 }
 
 @media (max-width: 1100px) {
