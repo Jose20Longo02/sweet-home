@@ -165,34 +165,34 @@
       align-items: flex-start !important;
     }
   }
+  .blog-detail .blog-detail-grid {
+    display: grid !important;
+    grid-template-columns: 280px 1fr !important;
+    grid-template-areas: "sidebar main" !important;
+    gap: 32px !important;
+  }
+  .blog-detail .blog-recommended {
+    grid-area: sidebar !important;
+  }
+  .blog-detail .blog-article {
+    grid-area: main !important;
+  }
+  @media (max-width: 900px) {
+    .blog-detail .blog-detail-grid {
+      grid-template-columns: 1fr !important;
+      grid-template-areas:
+        "main"
+        "sidebar" !important;
+    }
+    .blog-detail .blog-recommended {
+      margin-top: 32px !important;
+      padding-top: 24px !important;
+      border-top: 1px solid #e2e8f0 !important;
+    }
+  }
 </style>
 <article class="container main blog-detail">
   <div class="blog-detail-grid">
-    <aside class="blog-recommended">
-      <h3><%= t((postTopicIds && postTopicIds.length) ? 'blog.detail.related' : 'blog.detail.recent', (postTopicIds && postTopicIds.length) ? 'Related articles' : 'Recent articles') %></h3>
-      <% if ((recommendedPosts || []).length === 0) { %>
-        <p class="empty"><%= t('blog.detail.noRecent','No recent posts.') %></p>
-      <% } else { %>
-        <ul class="rec-list">
-          <% recommendedPosts.forEach(r => { %>
-            <li>
-              <a class="rec-item" href="<%= (typeof localePath === 'function') ? localePath('/blog/' + r.slug) : '/blog/' + r.slug %>">
-                <% if (r.cover_image) { %>
-                  <img src="<%= r.cover_image %>" alt="<%= r.title %>" />
-                <% } %>
-                <div class="rec-info">
-                  <span class="rec-title"><%= r.title %></span>
-                  <% if (r.author_name) { %>
-                    <span class="rec-meta"><%= t('blog.publishedBy','Published by') %> <%= r.author_name %></span>
-                  <% } %>
-                  <span class="rec-cta"><%= t('blog.read','Read article') %> →</span>
-                </div>
-              </a>
-            </li>
-          <% }) %>
-        </ul>
-      <% } %>
-    </aside>
     <div class="blog-article">
       <header>
         <h1><%= post.title %></h1>
@@ -293,6 +293,31 @@
         </section>
       <% } %>
     </div>
+    <aside class="blog-recommended">
+      <h3><%= t((postTopicIds && postTopicIds.length) ? 'blog.detail.related' : 'blog.detail.recent', (postTopicIds && postTopicIds.length) ? 'Related articles' : 'Recent articles') %></h3>
+      <% if ((recommendedPosts || []).length === 0) { %>
+        <p class="empty"><%= t('blog.detail.noRecent','No recent posts.') %></p>
+      <% } else { %>
+        <ul class="rec-list">
+          <% recommendedPosts.forEach(r => { %>
+            <li>
+              <a class="rec-item" href="<%= (typeof localePath === 'function') ? localePath('/blog/' + r.slug) : '/blog/' + r.slug %>">
+                <% if (r.cover_image) { %>
+                  <img src="<%= r.cover_image %>" alt="<%= r.title %>" />
+                <% } %>
+                <div class="rec-info">
+                  <span class="rec-title"><%= r.title %></span>
+                  <% if (r.author_name) { %>
+                    <span class="rec-meta"><%= t('blog.publishedBy','Published by') %> <%= r.author_name %></span>
+                  <% } %>
+                  <span class="rec-cta"><%= t('blog.read','Read article') %> →</span>
+                </div>
+              </a>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </aside>
   </div>
 </article>
 
