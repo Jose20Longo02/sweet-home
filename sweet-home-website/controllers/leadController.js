@@ -936,7 +936,7 @@ exports.exportAll = async (req, res, next) => {
 
     const exportSql = `
       SELECT l.*, 
-             p.title AS property_title, p.slug AS property_slug, p.neighborhood AS property_neighborhood, p.city AS property_city, p.country AS property_country,
+             p.title AS property_title, p.slug AS property_slug, p.neighborhood AS property_neighborhood, p.city AS property_city, p.country AS property_country, p.full_address AS property_address,
              pr.title AS project_title, pr.slug AS project_slug, pr.neighborhood AS project_neighborhood, pr.city AS project_city, pr.country AS project_country,
              u.name AS agent_name
         FROM leads l
@@ -992,6 +992,7 @@ exports.exportAll = async (req, res, next) => {
         'Property ID': lead.property_id || '',
         'Property Title': lead.property_title || '',
         'Property Location': propertyLocation,
+        'Property Address': lead.property_address || '',
         'Project ID': lead.project_id || '',
         'Project Title': lead.project_title || '',
         'Project Location': projectLocation,
@@ -1065,6 +1066,7 @@ exports.exportAll = async (req, res, next) => {
         { wch: 12 }, // Property ID
         { wch: 30 }, // Property Title
         { wch: 30 }, // Property Location
+        { wch: 40 }, // Property Address
         { wch: 12 }, // Project ID
         { wch: 30 }, // Project Title
         { wch: 30 }, // Project Location
