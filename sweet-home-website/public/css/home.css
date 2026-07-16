@@ -1293,7 +1293,7 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 /* Responsive for new sections */
 @media (max-width: 900px) {
   .hero-panels {
-    height: max(64vh, 560px);
+    height: max(78vh, 680px);
     margin-top: 0;
   }
   /* Keep the form clear of the header while the hero image remains behind its fade. */
@@ -1332,7 +1332,7 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   .hero-panels {
     position: relative;
     grid-template-columns: 1fr;
-    height: max(calc(100vh - 138px), 560px);
+    height: max(95vh, 680px);
   }
   /* show a single full-bleed panel; others hidden via opacity */
   .hero-panels .panel { position: absolute; inset: 0; opacity: 0; }
