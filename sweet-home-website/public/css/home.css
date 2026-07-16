@@ -1293,8 +1293,13 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 /* Responsive for new sections */
 @media (max-width: 900px) {
   .hero-panels {
-    height: 64vh;
-    margin-top: 138px;
+    height: max(64vh, 560px);
+    margin-top: 0;
+  }
+  /* Keep the form clear of the header while the hero image remains behind its fade. */
+  .hero-search {
+    top: 154px;
+    transform: translateX(-50%);
   }
   /* allow two rows at medium widths */
   .hero-search .search-row { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -1334,11 +1339,9 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   .hero-panels .panel.is-active { opacity: 1; }
   /* Berlin (and any single-panel) hero: keep the one panel visible on mobile */
   .hero-panels--single .panel { position: relative; opacity: 1; }
-  /* Hero now begins after the header; leave a visible image gap above the card. */
+  /* Keep comfortable side gutters on narrow phones. */
   .hero-search {
-    top: 16px;
     width: calc(100% - 28px);
-    transform: translateX(-50%);
   }
   /* stack only at very small widths */
   .hero-search .search-row { display: grid; grid-template-columns: 1fr; }
