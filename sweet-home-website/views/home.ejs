@@ -107,6 +107,7 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
 <!-- 3) Featured Properties – card carousel (3-up) -->
 <section class="section featured">
   <h2 class="section-title"><%= t('berlin.featuredTitle','Apartments in Berlin') %></h2>
+  <p class="section-intro berlin-properties-intro"><%= t('home.berlinProperties.intro','Explore selected Berlin apartments for owner-occupation and investment, with local guidance from the first comparison through the purchase process.') %></p>
   <div class="cards-carousel" id="featuredCarousel" aria-label="Featured properties">
     <button class="carousel-nav prev" data-target="#featuredCarousel" aria-label="<%= t('common.previous','Previous') %>">&#8249;</button>
     <div class="cards-track" id="featuredProperties">
@@ -155,65 +156,8 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
     </div>
     <button class="carousel-nav next" data-target="#featuredCarousel" aria-label="<%= t('common.next','Next') %>">&#8250;</button>
   </div>
-</section>
-
-<!-- New Development -->
-<section class="section new-development" aria-label="<%= t('home.newDevelopment.title','New development') %>">
-  <div class="container">
-    <h2 class="section-title"><%= t('home.newDevelopment.title','New development') %></h2>
-    <% const devRows = (typeof newDevelopmentRows !== 'undefined' && Array.isArray(newDevelopmentRows)) ? newDevelopmentRows : []; %>
-    <% if (devRows.length > 0) { %>
-      <% devRows.forEach(function(row){ %>
-        <div class="dev-row">
-          <h3 class="dev-row-title"><%= t('home.newDevelopment.rows.' + row.key, row.key) %></h3>
-          <div class="dev-grid">
-            <% (row.cards || []).slice(0,3).forEach(function(card){ %>
-              <article class="dev-card">
-                <a class="dev-media" href="<%= (typeof localePath === 'function') ? localePath('/projects/' + card.slug) : '/projects/' + card.slug %>">
-                  <img src="<%= card.photo %>" alt="<%= card.title %>" loading="lazy" onerror="this.src='/img/property-placeholder.jpg'">
-                </a>
-                <div class="dev-meta">
-                  <a class="dev-title" href="<%= (typeof localePath === 'function') ? localePath('/projects/' + card.slug) : '/projects/' + card.slug %>"><%= card.title %></a>
-                  <p class="dev-location">
-                    <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
-                    <%= card.locationDisplay %>
-                  </p>
-                  <div class="dev-info">
-                    <% if (card.unit_types && card.unit_types.length) { %>
-                      <span class="dev-chip"><%= card.unit_types.slice(0, 2).join(', ') %></span>
-                    <% } %>
-                    <% if (card.min_unit_size || card.max_unit_size) { %>
-                      <span class="dev-chip"><%= t('home.newDevelopment.size','Size') %>: <%= card.min_unit_size ? Math.round(card.min_unit_size) : '?' %><% if (card.max_unit_size && card.max_unit_size !== card.min_unit_size) { %>-<%= Math.round(card.max_unit_size) %><% } %> m²</span>
-                    <% } %>
-                    <% if (card.total_units) { %>
-                      <span class="dev-chip"><%= card.total_units %> <%= t('home.newDevelopment.units','units') %></span>
-                    <% } %>
-                  </div>
-                  <div class="dev-bottom">
-                    <span class="dev-price">
-                      <span class="dev-price-label"><%= t('home.newDevelopment.fromPrice','From') %></span>
-                      <% if (card.min_price) { %>
-                        <span class="dev-price-value">€<%= Number(card.min_price).toLocaleString('en-US') %></span>
-                      <% } else { %>
-                        <span class="dev-price-request"><%= t('home.newDevelopment.uponRequest','Upon request') %></span>
-                      <% } %>
-                    </span>
-                    <% if (card.completion_date) { %>
-                      <span class="dev-completion"><%= t('home.newDevelopment.completion','Completion') %>: <%= card.completionDisplay || card.completion_date %></span>
-                    <% } %>
-                  </div>
-                </div>
-              </article>
-            <% }) %>
-          </div>
-        </div>
-      <% }) %>
-    <% } else { %>
-      <p class="section-empty"><%= t('home.newDevelopment.empty','No developments available right now.') %></p>
-    <% } %>
-    <div class="dev-cta-wrap">
-      <a class="btn btn-green dev-cta" href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>"><%= t('home.newDevelopment.viewMore','View more developments') %></a>
-    </div>
+  <div class="section-primary-cta">
+    <a class="btn btn-green" href="<%= berlinLandingPath %>"><%= t('home.berlinProperties.viewAll','View all apartments in Berlin') %></a>
   </div>
 </section>
 
@@ -270,9 +214,10 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
                 <div class="home-berlin-neighborhood-card__panel" id="<%= panelId %>" role="region" aria-labelledby="<%= triggerId %>" hidden>
                   <p><%= item.summary %></p>
                   <p><strong><%= t('home.berlinNeighborhoods.realEstate','Real estate') %>:</strong> <%= item.realEstate %></p>
+                  <% const neighborhoodHref = item.href || ((typeof localePath === 'function') ? localePath('/properties') : '/properties') + '?country=' + encodeURIComponent(guide.country) + '&city=' + encodeURIComponent(guide.city) + '&neighborhood=' + encodeURIComponent(item.name); %>
                   <a
                     class="home-berlin-neighborhood-card__cta"
-                    href="<%= ((typeof localePath === 'function') ? localePath('/properties') : '/properties') + '?country=' + encodeURIComponent(guide.country) + '&city=' + encodeURIComponent(guide.city) + '&neighborhood=' + encodeURIComponent(item.name) %>"
+                    href="<%= neighborhoodHref %>"
                   >
                     <%= t('home.berlinNeighborhoods.exploreCta','Explore apartments') %>
                   </a>
@@ -288,21 +233,81 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
   </div>
 </section>
 
-<!-- 4) International Real Estate – stretch/collapse carousel -->
+<!-- Berlin-first development projects, followed by secondary international rows -->
+<section class="section new-development" aria-label="<%= t('home.newDevelopment.title','New development') %>">
+  <div class="container">
+    <h2 class="section-title"><%= t('home.newDevelopment.title','New development') %></h2>
+    <% const devRows = (typeof newDevelopmentRows !== 'undefined' && Array.isArray(newDevelopmentRows)) ? newDevelopmentRows : []; %>
+    <% if (devRows.length > 0) { %>
+      <% devRows.forEach(function(row, rowIndex){ %>
+        <div class="dev-row <%= row.key === 'germany' ? 'dev-row--berlin' : 'dev-row--international' %>">
+          <% if (rowIndex === 1) { %>
+            <h3 class="dev-secondary-title"><%= t('home.newDevelopment.internationalTitle','Other international projects') %></h3>
+          <% } %>
+          <div class="dev-row-heading">
+            <h3 class="dev-row-title"><%= row.key === 'germany' ? t('home.newDevelopment.berlinTitle','New developments in Berlin') : t('home.newDevelopment.rows.' + row.key, row.key) %></h3>
+            <% if (row.key === 'germany') { %>
+              <a class="dev-row-link" href="<%= ((typeof localePath === 'function') ? localePath('/projects') : '/projects') + '?country=Germany&city=Berlin' %>"><%= t('home.newDevelopment.viewBerlin','View Berlin projects') %> →</a>
+            <% } %>
+          </div>
+          <div class="dev-grid">
+            <% (row.cards || []).slice(0,3).forEach(function(card){ %>
+              <article class="dev-card">
+                <a class="dev-media" href="<%= (typeof localePath === 'function') ? localePath('/projects/' + card.slug) : '/projects/' + card.slug %>">
+                  <img src="<%= card.photo %>" alt="<%= card.title %>" loading="lazy" onerror="this.src='/img/property-placeholder.jpg'">
+                </a>
+                <div class="dev-meta">
+                  <a class="dev-title" href="<%= (typeof localePath === 'function') ? localePath('/projects/' + card.slug) : '/projects/' + card.slug %>"><%= card.title %></a>
+                  <p class="dev-location">
+                    <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                    <%= card.locationDisplay %>
+                  </p>
+                  <div class="dev-info">
+                    <% if (card.unit_types && card.unit_types.length) { %>
+                      <span class="dev-chip"><%= card.unit_types.slice(0, 2).join(', ') %></span>
+                    <% } %>
+                    <% if (card.min_unit_size || card.max_unit_size) { %>
+                      <span class="dev-chip"><%= t('home.newDevelopment.size','Size') %>: <%= card.min_unit_size ? Math.round(card.min_unit_size) : '?' %><% if (card.max_unit_size && card.max_unit_size !== card.min_unit_size) { %>-<%= Math.round(card.max_unit_size) %><% } %> m²</span>
+                    <% } %>
+                    <% if (card.total_units) { %>
+                      <span class="dev-chip"><%= card.total_units %> <%= t('home.newDevelopment.units','units') %></span>
+                    <% } %>
+                  </div>
+                  <div class="dev-bottom">
+                    <span class="dev-price">
+                      <span class="dev-price-label"><%= t('home.newDevelopment.fromPrice','From') %></span>
+                      <% if (card.min_price) { %>
+                        <span class="dev-price-value">€<%= Number(card.min_price).toLocaleString('en-US') %></span>
+                      <% } else { %>
+                        <span class="dev-price-request"><%= t('home.newDevelopment.uponRequest','Upon request') %></span>
+                      <% } %>
+                    </span>
+                    <% if (card.completion_date) { %>
+                      <span class="dev-completion"><%= t('home.newDevelopment.completion','Completion') %>: <%= card.completionDisplay || card.completion_date %></span>
+                    <% } %>
+                  </div>
+                </div>
+              </article>
+            <% }) %>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p class="section-empty"><%= t('home.newDevelopment.empty','No developments available right now.') %></p>
+    <% } %>
+    <div class="dev-cta-wrap">
+      <a class="btn btn-green dev-cta" href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>"><%= t('home.newDevelopment.viewMore','View more developments') %></a>
+    </div>
+  </div>
+</section>
+
+<!-- Other international markets – interactive stretch/collapse carousel -->
 <section class="section international">
-  <h2 class="section-title"><%= t('home.international.title','International Real Estate') %></h2>
+  <h2 class="section-title"><%= t('home.international.title','Other international property markets') %></h2>
   <div class="stretch-carousel" id="intlCarousel">
     <button class="carousel-nav prev" data-target="#intlCarousel" aria-label="<%= t('common.previous','Previous') %>">&#8249;</button>
     <div class="stretch-track">
-      <article class="stretch-card is-collapsed" data-title="<%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %>">
-        <img src="/images/cyprus-international.jpg" alt="" loading="lazy">
-        <span class="vertical-title"><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></span>
-        <div class="expanded-info">
-          <h3><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></h3>
-          <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Cyprus" class="see-link"><%= t('home.international.see','See properties') %></a>
-        </div>
-      </article>
-      <article class="stretch-card is-collapsed" data-title="<%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %>">
+      <article class="stretch-card is-focused" data-title="<%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %>">
         <img src="/images/dubai-international.jpg" alt="" loading="lazy">
         <span class="vertical-title"><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %></span>
         <div class="expanded-info">
@@ -310,12 +315,12 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
           <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=UAE&city=Dubai" class="see-link"><%= t('home.international.see','See properties') %></a>
         </div>
       </article>
-      <article class="stretch-card is-focused" data-title="<%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Berlin') : 'Berlin') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'Germany') : 'Germany') %>">
-        <img src="/images/berlin-international.jpg" alt="" loading="lazy">
-        <span class="vertical-title"><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Berlin') : 'Berlin') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'Germany') : 'Germany') %></span>
+      <article class="stretch-card is-collapsed" data-title="<%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %>">
+        <img src="/images/cyprus-international.jpg" alt="" loading="lazy">
+        <span class="vertical-title"><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></span>
         <div class="expanded-info">
-          <h3><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Berlin') : 'Berlin') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'Germany') : 'Germany') %></h3>
-          <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Germany&city=Berlin" class="see-link"><%= t('home.international.see','See properties') %></a>
+          <h3><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></h3>
+          <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Cyprus" class="see-link"><%= t('home.international.see','See properties') %></a>
         </div>
       </article>
     </div>

@@ -1021,6 +1021,20 @@ const HOME_BERLIN_NEIGHBORHOOD_CONTENT = {
   }
 };
 
+const BERLIN_DISTRICT_LANDING_PATHS = {
+  charlottenburgwilmersdorf: '/wohnung-kaufen-charlottenburg',
+  moabit: '/wohnung-kaufen-moabit',
+  friedrichshainkreuzberg: '/wohnung-kaufen-friedrichshain-kreuzberg',
+  schoneberg: '/wohnung-kaufen-schoeneberg',
+  prenzlauerberg: '/wohnung-kaufen-prenzlauer-berg',
+  weddinggesundbrunnen: '/wohnung-kaufen-wedding',
+  tempelhof: '/wohnung-kaufen-tempelhof',
+  neukolln: '/wohnung-kaufen-neukoelln',
+  reinickendorf: '/wohnung-kaufen-reinickendorf',
+  kreuzberg: '/wohnung-kaufen-kreuzberg',
+  spandau: '/wohnung-kaufen-spandau'
+};
+
 const HOME_DUBAI_NEIGHBORHOOD_CONTENT = {
   en: {
     'Dubai Marina': {
@@ -1276,15 +1290,17 @@ async function renderHomePage(req, res, langPath, next) {
       newDevelopmentRows = cached.newDevelopmentRows;
     } else {
       const regionDefs = [
-        { key: 'dubai', country: 'UAE' },
-        { key: 'cyprus', country: 'Cyprus' },
-        { key: 'germany', country: 'Germany' }
+        { key: 'germany', country: 'Germany', city: 'Berlin' },
+        { key: 'dubai', country: 'UAE', city: 'Dubai' },
+        { key: 'cyprus', country: 'Cyprus', city: null }
       ];
       const regionQueries = regionDefs.map(r => query(`
         SELECT id, title, title_i18n, slug, country, city, neighborhood, photos,
                min_price, min_unit_size, max_unit_size, total_units, unit_types, completion_date
           FROM projects
-         WHERE status = 'active' AND country = $1
+         WHERE status = 'active'
+           AND country = $1
+           AND ($2::text IS NULL OR city = $2)
          ORDER BY (
            SELECT COUNT(*)
              FROM analytics_events ae
@@ -1294,7 +1310,7 @@ async function renderHomePage(req, res, langPath, next) {
          ) DESC,
          created_at DESC, id DESC
          LIMIT 3
-      `, [r.country]));
+      `, [r.country, r.city]));
       const regionResults = await Promise.all(regionQueries);
       const translateLocation = res.locals.translateLocation;
       newDevelopmentRows = regionDefs.map((region, idx) => {
@@ -1445,6 +1461,9 @@ async function renderHomePage(req, res, langPath, next) {
         acc[normalizeNeighborhoodKey(key)] = val;
         return acc;
       }, {});
+      const berlinHubPath = lang === 'de'
+        ? '/wohnungen-berlin-kaufen'
+        : (lang === 'es' ? '/es/propiedades-en-venta-berlin' : '/en/properties-for-sale-berlin');
       return filteredNames.map((name) => {
         const normalized = normalizeNeighborhoodKey(name);
         const item = selected[name]
@@ -1455,7 +1474,10 @@ async function renderHomePage(req, res, langPath, next) {
         return {
           name,
           summary: item.summary || defaultSummary,
-          realEstate: item.realEstate || defaultRealEstate
+          realEstate: item.realEstate || defaultRealEstate,
+          href: country === 'Germany' && city === 'Berlin'
+            ? ((lang === 'de' && BERLIN_DISTRICT_LANDING_PATHS[normalized]) || berlinHubPath)
+            : null
         };
       });
     };
@@ -1495,6 +1517,9 @@ async function renderHomePage(req, res, langPath, next) {
       homeNeighborhoodGuides,
       featuredProperties,
       learnMoreText,
+      berlinLandingPath: lang === 'de'
+        ? '/wohnungen-berlin-kaufen'
+        : (lang === 'es' ? '/es/propiedades-en-venta-berlin' : '/en/properties-for-sale-berlin'),
       canonicalUrl,
       hreflangAlternates,
       headPartial: '../partials/seo/home-head',

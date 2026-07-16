@@ -240,13 +240,18 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 - [x] Add `Organization` JSON-LD on homepage
 - [x] Add `WebSite` JSON-LD with a working property `SearchAction`
 - [x] Validate with Schema.org Validator — 0 errors, 0 warnings (2026-07-16)
-- [ ] **Business decision:** Reorder homepage to lead with Berlin content (coordinate with Israel/Irem)
+- [x] Reorder homepage content sections to lead with Berlin properties, districts, and projects
+- [x] Add clean internal links from the DE homepage to the Berlin hub and 11 district landing pages
+- [x] Move Dubai/Cyprus into clearly secondary international sections
+- [ ] **Pending discussion:** Berlin-focused hero treatment and copy
 
 **Done when:** Rich Results Test passes; Berlin content prioritized per business approval.  
 **Owner:** Dev (+ business for content order)  
 **Files likely involved:** `views/partials/seo/home-head.ejs`, `views/home.ejs`
 
-**Technical schema status:** ✅ DONE in code. `Organization` and `WebSite` are linked with stable `@id` values in one `@graph`; organization address, phone, logo, and verified social profiles are included. Google does not currently provide a dedicated rich-result enhancement for these entity types, so Schema.org Validator is the applicable syntax/semantic check.
+**Technical schema status:** ✅ DONE and live validated 2026-07-16. DE/EN/ES homepages expose the linked `Organization` + `WebSite` graph; live Schema.org validation returned 0 errors and 0 warnings. Google does not currently provide a dedicated rich-result enhancement for these entity types, so Schema.org Validator is the applicable syntax/semantic check.
+
+**Berlin content status:** Section updates completed in code 2026-07-16. The interactive property carousel, neighborhood tabs/cards, development cards, and international carousel were retained; desktop/mobile browser checks passed with no horizontal overflow. Hero changes were intentionally deferred.
 
 ---
 
@@ -719,5 +724,6 @@ For **each** URL below, verify columns A–F.
 | 2026-07-15 | **Fix #10 DONE** — doubled-brand titles fixed + live validated (21/21 PASS) | Dev |
 | 2026-07-15 | **Fix #11 DONE** — language-correct titles/H1 on DE/EN/ES static pages + projects/services | Dev |
 | 2026-07-15 | **Fix #12 DONE** — meta descriptions restored + localized; live validated (home/projects/about/contact/cookies DE/EN/ES) | Dev |
-| 2026-07-16 | **Fix #13 schema DONE (code)** — Organization + WebSite graph validated with 0 errors/warnings; Berlin-first business decision remains | Dev |
+| 2026-07-16 | **Fix #13 schema DONE** — Organization + WebSite graph live validated on DE/EN/ES with 0 errors/warnings | Dev |
+| 2026-07-16 | **Fix #13 Berlin sections DONE (code)** — Berlin properties/districts/projects prioritized; clean district links added; international markets moved below; hero deferred | Dev |
 | | **Next:** Approve Berlin-first homepage positioning, or proceed to #14/#15/#5–7 | |

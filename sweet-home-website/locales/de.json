@@ -465,12 +465,19 @@
       "subtitle": "Entdecken Sie unsere handverlesene Auswahl an Premium-Immobilien",
       "viewAll": "Alle Immobilien anzeigen"
     },
+    "berlinProperties": {
+      "intro": "Entdecken Sie ausgewählte Berliner Wohnungen für Eigennutzung und Investment – mit lokaler Begleitung vom ersten Vergleich bis zum Kauf.",
+      "viewAll": "Alle Wohnungen in Berlin ansehen"
+    },
     "international": {
-      "title": "Internationales Immobilienangebot",
+      "title": "Weitere internationale Immobilienmärkte",
       "see": "Immobilien ansehen"
     },
     "newDevelopment": {
       "title": "Neue Projekte",
+      "berlinTitle": "Neubauprojekte in Berlin",
+      "viewBerlin": "Berliner Projekte ansehen",
+      "internationalTitle": "Weitere internationale Projekte",
       "completion": "Fertigstellung",
       "fromPrice": "Ab",
       "uponRequest": "Auf Anfrage",

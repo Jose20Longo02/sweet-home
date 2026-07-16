@@ -360,12 +360,19 @@
       "subtitle": "Descubre nuestra selección de propiedades premium",
       "viewAll": "Ver todas las propiedades"
     },
+    "berlinProperties": {
+      "intro": "Explora apartamentos seleccionados en Berlín para vivienda o inversión, con asesoramiento local desde la primera comparación hasta la compra.",
+      "viewAll": "Ver todos los apartamentos en Berlín"
+    },
     "international": {
-      "title": "Inmobiliaria internacional",
+      "title": "Otros mercados inmobiliarios internacionales",
       "see": "Ver propiedades"
     },
     "newDevelopment": {
       "title": "Nuevos desarrollos",
+      "berlinTitle": "Nuevos proyectos en Berlín",
+      "viewBerlin": "Ver proyectos en Berlín",
+      "internationalTitle": "Otros proyectos internacionales",
       "completion": "Entrega",
       "fromPrice": "Desde",
       "uponRequest": "A consultar",

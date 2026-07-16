@@ -44,6 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize city dropdown functionality
   // Lightweight init first
   initializeCityDropdown();
+  // Attach carousel controls immediately; images remain lazy-loaded.
+  initStretchCarousel('#intlCarousel');
   // Header shrink on scroll (transparent to solid)
   const header = document.querySelector('.site-header');
   function updateHeader() {
@@ -62,19 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize simple carousels
     initCardsCarousel('#featuredCarousel');
     initCardsCarousel('#testimonialsCarousel');
-    // Lazy-init International carousel when visible
-    const intl = document.getElementById('intlCarousel');
-    if (intl && 'IntersectionObserver' in window) {
-      const io = new IntersectionObserver((entries) => {
-        if (entries.some(e => e.isIntersecting)) {
-          initStretchCarousel('#intlCarousel');
-          io.disconnect();
-        }
-      }, { rootMargin: '0px 0px -20% 0px' });
-      io.observe(intl);
-    } else {
-      initStretchCarousel('#intlCarousel');
-    }
     // Mobile hero slideshow (single panel rotates every 5s)
     initMobileHeroSlideshow();
     // Initialize search form
@@ -87,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
         calculateMortgage();
       });
     }
-  });
+  }, { timeout: 1500 });
 });
 
 // Ensure top on back/forward cache restore as well

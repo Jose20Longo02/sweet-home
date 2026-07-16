@@ -477,12 +477,19 @@
       "subtitle": "Discover our handpicked selection of premium properties",
       "viewAll": "View All Properties"
     },
+    "berlinProperties": {
+      "intro": "Explore selected Berlin apartments for owner-occupation and investment, with local guidance from the first comparison through the purchase process.",
+      "viewAll": "View all apartments in Berlin"
+    },
     "international": {
-      "title": "International Real Estate",
+      "title": "Other international property markets",
       "see": "See properties"
     },
     "newDevelopment": {
       "title": "New development",
+      "berlinTitle": "New developments in Berlin",
+      "viewBerlin": "View Berlin projects",
+      "internationalTitle": "Other international projects",
       "completion": "Completion",
       "fromPrice": "From",
       "uponRequest": "Upon request",
