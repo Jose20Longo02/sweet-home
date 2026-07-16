@@ -3155,8 +3155,8 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       'es-es': berlinUrls.es
     };
     const titles = {
-      en: 'Apartments for Sale in Berlin | Sweet Home',
-      de: 'Wohnungen in Berlin kaufen | Sweet Home',
+      en: 'Apartments for Sale in Berlin',
+      de: 'Wohnungen in Berlin kaufen',
       es: 'Propiedades en venta en Berlín'
     };
     const metaDescriptions = {
@@ -3508,7 +3508,7 @@ exports.berlinInvestorStrategyPageEn = async (req, res, next) => {
     };
 
     res.render('berlin-investment-strategy-en', {
-      title: 'Berlin Tenant-Occupied Entry Strategy | Sweet Home',
+      title: 'Berlin Tenant-Occupied Entry Strategy',
       useMainContainer: false,
       useHomeHeader: false,
       headPartial: '../partials/seo/berlin-investment-strategy-head',
@@ -3583,7 +3583,7 @@ exports.berlinInvestorStrategyPageDe = async (req, res, next) => {
     };
 
     res.render('berlin-investment-strategy-de', {
-      title: 'Berliner Einstiegsstrategie mit vermieteten Wohnungen | Sweet Home',
+      title: 'Berliner Einstiegsstrategie mit vermieteten Wohnungen',
       useMainContainer: false,
       useHomeHeader: false,
       headPartial: '../partials/seo/berlin-investment-strategy-head-de',
@@ -3693,8 +3693,8 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
       'es-es': dubaiUrls.es
     };
     const titles = {
-      en: 'Apartments and Property Investment in Dubai | Sweet Home',
-      de: 'Dubai Wohnung kaufen | Sweet Home',
+      en: 'Apartments and Property Investment in Dubai',
+      de: 'Dubai Wohnung kaufen',
       es: 'Propiedades en venta en Dubái'
     };
     const metaDescriptions = {
@@ -4025,8 +4025,8 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
       'es-es': cyprusUrls.es
     };
     const titles = {
-      en: 'Homes for Sale in Cyprus | Sweet Home',
-      de: 'Haus kaufen Zypern | Sweet Home',
+      en: 'Homes for Sale in Cyprus',
+      de: 'Haus kaufen Zypern',
       es: 'Propiedades en venta en Chipre'
     };
     const metaDescriptions = {
@@ -4239,7 +4239,7 @@ exports.villasForSaleCyprusPage = async (req, res, next) => {
     };
 
     res.render('villas-for-sale-cyprus', {
-      title: 'Cyprus Villas for Sale | Sweet Home',
+      title: 'Cyprus Villas for Sale',
       useMainContainer: false,
       useHomeHeader: true,
       headPartial: '../partials/seo/cyprus-villas-head',
@@ -4382,7 +4382,7 @@ exports.charlottenburgPropertiesPageDe = async (req, res, next) => {
       'es-es': charlottenburgUrls.es
     };
     const pageMetaDescription = 'Wohnung kaufen Charlottenburg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.';
-    const pageTitle = 'Wohnung kaufen Charlottenburg | Sweet Home';
+    const pageTitle = 'Wohnung kaufen Charlottenburg';
     const districtContent = {
       heroTitle: 'Wohnung kaufen Charlottenburg',
       heroDescription: 'Charlottenburg gehört zu den gefragtesten Wohnlagen Berlins. Hier treffen klassische Altbauten, hochwertige Modernisierungen und starke Mikrolagen auf eine stabile Nachfrage von Eigennutzern und Kapitalanlegern.',
@@ -4544,7 +4544,7 @@ exports.moabitPropertiesPageDe = async (req, res, next) => {
       'es-es': districtUrls.es
     };
     const pageMetaDescription = 'Wohnung kaufen Moabit: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.';
-    const pageTitle = 'Wohnung kaufen Moabit | Sweet Home';
+    const pageTitle = 'Wohnung kaufen Moabit';
     const districtContent = {
       heroTitle: 'Wohnung kaufen Moabit',
       heroDescription: 'Moabit entwickelt sich dynamisch und verbindet zentrale Lage, urbane Vielfalt und attraktive Wohnquartiere. Der Teilmarkt ist besonders interessant für Käufer, die Berlin-Mitte-Nähe mit Preis-Leistungs-Potenzial suchen.',
@@ -4705,7 +4705,7 @@ exports.friedrichshainKreuzbergPropertiesPageDe = async (req, res, next) => {
       'es-es': districtUrls.es
     };
     const pageMetaDescription = 'Wohnung kaufen Friedrichshain-Kreuzberg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.';
-    const pageTitle = 'Wohnung kaufen Friedrichshain-Kreuzberg | Sweet Home';
+    const pageTitle = 'Wohnung kaufen Friedrichshain-Kreuzberg';
     const districtContent = {
       heroTitle: 'Wohnung kaufen Friedrichshain-Kreuzberg',
       heroDescription: 'Friedrichshain-Kreuzberg zählt zu den nachfragestärksten Wohnmärkten Berlins. Der Bezirk verbindet urbanen Lifestyle, kreative Quartiere und starke Mikrostandorte mit hoher Kauf- und Mietdynamik.',
@@ -4878,7 +4878,7 @@ exports.schoenebergPropertiesPageDe = async (req, res, next) => {
     };
 
     res.render('properties-schoeneberg-de', {
-      title: 'Wohnung kaufen Schöneberg | Sweet Home',
+      title: 'Wohnung kaufen Schöneberg',
       useMainContainer: false,
       useHomeHeader: true,
       headPartial: '../partials/seo/schoeneberg-properties-head',
@@ -5006,7 +5006,7 @@ exports.prenzlauerBergPropertiesPageDe = async (req, res, next) => {
     };
 
     res.render('properties-prenzlauer-berg-de', {
-      title: 'Wohnung kaufen Prenzlauer Berg | Sweet Home',
+      title: 'Wohnung kaufen Prenzlauer Berg',
       useMainContainer: false,
       useHomeHeader: true,
       headPartial: '../partials/seo/prenzlauer-berg-properties-head',
@@ -5140,7 +5140,7 @@ exports.weddingPropertiesPageDe = async (req, res, next) => {
     };
 
     res.render('properties-wedding-de', {
-      title: 'Wohnung kaufen Wedding | Sweet Home',
+      title: 'Wohnung kaufen Wedding',
       useMainContainer: false,
       useHomeHeader: true,
       headPartial: '../partials/seo/wedding-properties-head',
@@ -5267,7 +5267,7 @@ exports.tempelhofPropertiesPageDe = async (req, res, next) => {
     };
 
     res.render('properties-tempelhof-de', {
-      title: 'Wohnung kaufen Tempelhof | Sweet Home',
+      title: 'Wohnung kaufen Tempelhof',
       useMainContainer: false,
       useHomeHeader: true,
       headPartial: '../partials/seo/tempelhof-properties-head',
@@ -5399,7 +5399,7 @@ exports.neukoellnPropertiesPageDe = async (req, res, next) => renderBerlinDistri
   displayName: 'Neukölln',
   defaultNeighborhood: 'Neukölln',
   heroImage: '/images/Neukölln.jpg',
-  title: 'Wohnung kaufen Neukölln | Sweet Home',
+  title: 'Wohnung kaufen Neukölln',
   metaDescription: 'Wohnung kaufen Neukölln: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
   propertiesWhere: "(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2)",
   propertiesParams: ['%neukölln%', '%neukolln%'],
@@ -5436,7 +5436,7 @@ exports.reinickendorfPropertiesPageDe = async (req, res, next) => renderBerlinDi
   displayName: 'Reinickendorf',
   defaultNeighborhood: 'Reinickendorf',
   heroImage: '/images/reinickendorf.webp',
-  title: 'Wohnung kaufen Reinickendorf | Sweet Home',
+  title: 'Wohnung kaufen Reinickendorf',
   metaDescription: 'Wohnung kaufen Reinickendorf: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
   propertiesWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
   propertiesParams: ['%reinickendorf%'],
@@ -5473,7 +5473,7 @@ exports.kreuzbergPropertiesPageDe = async (req, res, next) => renderBerlinDistri
   displayName: 'Kreuzberg',
   defaultNeighborhood: 'Kreuzberg',
   heroImage: '/images/kreuzberg.jpg',
-  title: 'Wohnung kaufen Kreuzberg | Sweet Home',
+  title: 'Wohnung kaufen Kreuzberg',
   metaDescription: 'Wohnung kaufen Kreuzberg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
   propertiesWhere: "LOWER(COALESCE(p.neighborhood, '')) = $1",
   propertiesParams: ['kreuzberg'],
@@ -5510,7 +5510,7 @@ exports.spandauPropertiesPageDe = async (req, res, next) => renderBerlinDistrict
   displayName: 'Spandau',
   defaultNeighborhood: 'Spandau',
   heroImage: '/images/spandau.jpeg',
-  title: 'Wohnung kaufen Spandau | Sweet Home',
+  title: 'Wohnung kaufen Spandau',
   metaDescription: 'Wohnung kaufen Spandau: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
   propertiesWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
   propertiesParams: ['%spandau%'],

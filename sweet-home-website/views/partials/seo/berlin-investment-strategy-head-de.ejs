@@ -2,7 +2,8 @@
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
   const pagePath = '/berlin-mieter-belegte-einstiegsstrategie';
   const pageUrl = `${siteBaseUrl}${pagePath}`;
-  const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Berliner Einstiegsstrategie mit vermieteten Wohnungen | Sweet Home';
+  const pageTitleRaw = (typeof title !== 'undefined' && title) ? String(title).trim() : 'Berliner Einstiegsstrategie mit vermieteten Wohnungen';
+  const pageTitle = /\| Sweet Home$/i.test(pageTitleRaw) ? pageTitleRaw : (pageTitleRaw + ' | Sweet Home');
   const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription)
     ? pageMetaDescription
     : 'Berliner Einstiegsstrategie mit vermieteten Wohnungen von Sweet Home: strukturierter Zugang mit sofortiger Miettransparenz und langfristigem Potenzial.';

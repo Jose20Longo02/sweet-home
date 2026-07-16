@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= title %> | Sweet Home</title>
+  <%
+    const __rawTitle = (typeof title !== 'undefined' && title) ? String(title).trim() : '';
+    const __pageTitle = __rawTitle
+      ? (/\| Sweet Home$/i.test(__rawTitle) ? __rawTitle : (__rawTitle + ' | Sweet Home'))
+      : 'Sweet Home';
+  %>
+  <title><%= __pageTitle %></title>
   <% if (typeof currentPath !== 'undefined' && currentPath === '/') { %>
   <meta name="description" content="<%= (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : 'Find your dream property in Cyprus, Dubai, and Berlin. Browse luxury apartments, villas, and real estate investments. Expert guidance for buyers and sellers.' %>">
   <% } %>
