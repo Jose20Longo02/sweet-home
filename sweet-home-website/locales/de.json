@@ -195,6 +195,12 @@
       "apply": "Filter anwenden",
       "found": "Projekte gefunden",
       "browseAll": "Alle verfügbaren Projekte anzeigen",
+      "h1": {
+        "default": "Neubau- und Entwicklungsprojekte – Luxusimmobilien",
+        "country": "Entwicklungsprojekte in {country}",
+        "city": "Entwicklungsprojekte in {city}, {country}",
+        "page": " – Seite {page}"
+      },
       "activeFilters": "Aktive Filter:",
       "sort": {
         "nameAsc": "Name: A–Z",
@@ -534,6 +540,7 @@
     "hero": {
       "aria": "Leistungsbereich"
     },
+    "h1": "Immobilienleistungen – Beratung, Verwaltung & Finanzierung",
     "tabs": {
       "aria": "Leistungs-Tabs",
       "consulting": "Immobilienberatung",

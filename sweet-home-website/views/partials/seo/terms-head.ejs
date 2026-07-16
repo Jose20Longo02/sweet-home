@@ -14,7 +14,7 @@
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Terms of Service | Sweet Home">
+<meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Terms of Service' %> | Sweet Home">
 <meta property="og:description" content="<%= metaDescription %>">
 <meta property="og:url" content="<%= termsUrl %>">
 <meta property="og:site_name" content="Sweet Home">
@@ -22,6 +22,6 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Terms of Service | Sweet Home">
+<meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'Terms of Service' %> | Sweet Home">
 <meta name="twitter:description" content="<%= metaDescription %>">
 

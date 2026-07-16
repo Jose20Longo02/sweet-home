@@ -441,6 +441,7 @@
     "hero": {
       "aria": "Héroe de servicios"
     },
+    "h1": "Servicios inmobiliarios – consultoría, gestión y financiación",
     "tabs": {
       "aria": "Pestañas de servicio",
       "consulting": "Consultoría inmobiliaria",
@@ -681,6 +682,12 @@
       "apply": "Aplicar filtros",
       "found": "Proyectos encontrados",
       "browseAll": "Explora todos los proyectos disponibles",
+      "h1": {
+        "default": "Proyectos de desarrollo – inmobiliaria de lujo",
+        "country": "Proyectos de desarrollo en {country}",
+        "city": "Proyectos de desarrollo en {city}, {country}",
+        "page": " – Página {page}"
+      },
       "activeFilters": "Filtros activos:",
       "sort": {
         "nameAsc": "Nombre: A-Z",

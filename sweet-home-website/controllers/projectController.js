@@ -1258,14 +1258,15 @@ exports.listProjectsPublic = async (req, res, next) => {
     });
 
     // Unique page title for SEO (avoids duplicate title tags on paginated/filtered pages)
-    let pageTitle = 'Development Projects';
+    const t = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t.bind(res.locals) : ((k, fb) => fb);
+    let pageTitle = t('projects.list.h1.default', 'Development Projects - Luxury Real Estate');
     if (country && city) {
-      pageTitle = `Development Projects in ${city}, ${country}`;
+      pageTitle = t('projects.list.h1.city', 'Development Projects in {city}, {country}', { city, country });
     } else if (country) {
-      pageTitle = `Development Projects in ${country}`;
+      pageTitle = t('projects.list.h1.country', 'Development Projects in {country}', { country });
     }
     if (parseInt(page, 10) > 1) {
-      pageTitle += ` - Page ${page}`;
+      pageTitle += t('projects.list.h1.page', ' - Page {page}', { page });
     }
 
     res.render('projects/project-list', { 

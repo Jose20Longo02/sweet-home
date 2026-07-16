@@ -14,7 +14,7 @@
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Privacy Policy | Sweet Home">
+<meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Privacy Policy' %> | Sweet Home">
 <meta property="og:description" content="<%= metaDescription %>">
 <meta property="og:url" content="<%= privacyUrl %>">
 <meta property="og:site_name" content="Sweet Home">
@@ -22,7 +22,7 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Privacy Policy | Sweet Home">
+<meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'Privacy Policy' %> | Sweet Home">
 <meta name="twitter:description" content="<%= metaDescription %>">
 
 <!-- No ItemList schema needed for privacy page as it doesn't have a carousel -->

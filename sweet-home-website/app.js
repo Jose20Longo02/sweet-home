@@ -713,7 +713,7 @@ app.get('/about', async (req, res, next) => {
       areaOrder = Object.keys(require('./config/roles')) || [];
     } catch (_) { areaOrder = []; }
     res.render('about', {
-      title: 'About',
+      title: (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('nav.about', 'About') : 'About',
       team: filtered,
       useMainContainer: false,
       areaOrder
@@ -721,25 +721,31 @@ app.get('/about', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 app.get('/contact', (req, res) => {
-  res.render('contact', { title: 'Contact' });
+  const title = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('nav.contact', 'Contact') : 'Contact';
+  res.render('contact', { title });
 });
 app.get('/terms', (req, res) => {
   const baseUrl = res.locals.baseUrl;
+  const title = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('legal.terms.title', 'Terms & Conditions') : 'Terms & Conditions';
   res.render('terms', { 
-    title: 'Terms & Conditions',
+    title,
     headPartial: '../partials/seo/terms-head',
     canonicalUrl: `${baseUrl}/terms`
   });
 });
 app.get('/privacy', (req, res) => {
   const baseUrl = res.locals.baseUrl;
+  const title = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('legal.privacy.title', 'Privacy Policy') : 'Privacy Policy';
   res.render('privacy', { 
-    title: 'Privacy Policy', 
+    title, 
     headPartial: '../partials/seo/privacy-head',
     canonicalUrl: `${baseUrl}/privacy`
   });
 });
-app.get('/cookies', (req, res) => res.render('cookies', { title: 'Cookies Policy' }));
+app.get('/cookies', (req, res) => {
+  const title = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('legal.cookies.title', 'Cookies Policy') : 'Cookies Policy';
+  res.render('cookies', { title });
+});
 app.use('/admin/dashboard', adminUserRoutes);
 app.use('/superadmin/dashboard', superAdminRoutes); // SuperAdmin landing
 app.use('/', leadRoutes); // mount lead routes (public API + pages)
@@ -1539,7 +1545,7 @@ app.get('/owners', async (req, res, next) => {
     }));
     const baseUrl = res.locals.baseUrl;
     res.render('owners', {
-      title: 'For Sellers',
+      title: (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('nav.owners', 'For Sellers') : 'For Sellers',
       useMainContainer: false,
       soldProperties: properties,
       canonicalUrl: `${baseUrl}/owners`

@@ -263,6 +263,12 @@
       "apply": "Apply Filters",
       "found": "Projects Found",
       "browseAll": "Browse all available development projects",
+      "h1": {
+        "default": "Development Projects - Luxury Real Estate",
+        "country": "Development Projects in {country}",
+        "city": "Development Projects in {city}, {country}",
+        "page": " - Page {page}"
+      },
       "activeFilters": "Active filters:",
       "sort": {
         "nameAsc": "Name: A-Z",
@@ -546,6 +552,7 @@
     "hero": {
       "aria": "Services hero"
     },
+    "h1": "Real Estate Services - Property Consulting, Management & Financial Services",
     "tabs": {
       "aria": "Service tabs",
       "consulting": "Property Consulting",

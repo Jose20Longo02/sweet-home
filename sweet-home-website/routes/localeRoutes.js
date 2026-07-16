@@ -38,7 +38,7 @@ function createLocaleRouter(renderHomePage) {
       let areaOrder = [];
       try { areaOrder = Object.keys(require('../config/roles')) || []; } catch (_) {}
       res.render('about', {
-        title: 'About',
+        title: (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('nav.about', 'About') : 'About',
         team: filtered,
         useMainContainer: false,
         areaOrder,
@@ -48,13 +48,15 @@ function createLocaleRouter(renderHomePage) {
   });
 
   router.get('/contact', (req, res) => {
-    res.render('contact', { title: 'Contact', canonicalUrl: `${res.locals.baseUrl}${req.baseUrl}/contact` });
+    const title = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('nav.contact', 'Contact') : 'Contact';
+    res.render('contact', { title, canonicalUrl: `${res.locals.baseUrl}${req.baseUrl}/contact` });
   });
 
   router.get('/terms', (req, res) => {
     const baseUrl = res.locals.baseUrl;
+    const title = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('legal.terms.title', 'Terms & Conditions') : 'Terms & Conditions';
     res.render('terms', {
-      title: 'Terms & Conditions',
+      title,
       headPartial: '../partials/seo/terms-head',
       canonicalUrl: `${baseUrl}${req.baseUrl}/terms`
     });
@@ -62,14 +64,18 @@ function createLocaleRouter(renderHomePage) {
 
   router.get('/privacy', (req, res) => {
     const baseUrl = res.locals.baseUrl;
+    const title = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('legal.privacy.title', 'Privacy Policy') : 'Privacy Policy';
     res.render('privacy', {
-      title: 'Privacy Policy',
+      title,
       headPartial: '../partials/seo/privacy-head',
       canonicalUrl: `${baseUrl}${req.baseUrl}/privacy`
     });
   });
 
-  router.get('/cookies', (req, res) => res.render('cookies', { title: 'Cookies Policy', canonicalUrl: `${res.locals.baseUrl}${req.baseUrl}/cookies` }));
+  router.get('/cookies', (req, res) => {
+    const title = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('legal.cookies.title', 'Cookies Policy') : 'Cookies Policy';
+    res.render('cookies', { title, canonicalUrl: `${res.locals.baseUrl}${req.baseUrl}/cookies` });
+  });
 
   router.get('/services', (req, res) => {
     const baseUrl = res.locals.baseUrl;
@@ -96,7 +102,7 @@ function createLocaleRouter(renderHomePage) {
       }));
       const baseUrl = res.locals.baseUrl;
       res.render('owners', {
-        title: 'For Sellers',
+        title: (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('nav.owners', 'For Sellers') : 'For Sellers',
         useMainContainer: false,
         soldProperties: properties,
         canonicalUrl: `${baseUrl}${req.baseUrl}/owners`
