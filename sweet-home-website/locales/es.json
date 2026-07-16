@@ -346,6 +346,7 @@
   },
   "home": {
     "title": "Agencia internacional de inversión inmobiliaria",
+    "metaDescription": "Encuentra propiedades de inversión seleccionadas en Berlín, Dubái y Chipre. Sweet Home acompaña a compradores internacionales de la búsqueda a la adquisición.",
     "heroDescription": "Sweet Home es una empresa internacional de inversión inmobiliaria que ofrece propiedades cuidadosamente seleccionadas en Berlín, Dubái y Chipre. Apoyamos a inversores internacionales y expatriados con un enfoque de servicio integral, desde la búsqueda de propiedades y la diligencia debida hasta la adquisición y el apoyo a la inversión a largo plazo.",
     "hero": {
       "title": "Encuentra la casa de tus sueños",
@@ -468,6 +469,7 @@
     }
   },
   "about": {
+    "metaDescription": "Conoce Sweet Home — tu socio inmobiliario de confianza en Berlín, Dubái y Chipre. Descubre nuestro equipo experto dedicado a ayudarte a encontrar la propiedad ideal.",
     "intro": {
       "title": "Sobre Sweet Home",
       "copy": "En Sweet Home convertimos tus objetivos inmobiliarios en llaves reales. Desde tu primera conversación hasta el día de la firma, nuestros expertos te guían con consejos claros, opciones seleccionadas y un acompañamiento sin estrés. ¿Listo para dar el siguiente paso con confianza? Encontraremos el lugar que de verdad se sienta como tu hogar."
@@ -479,6 +481,7 @@
   },
   "contact": {
     "title": "Contáctanos",
+    "metaDescription": "Contacta con Sweet Home para servicios inmobiliarios expertos en Berlín, Dubái y Chipre. Escríbenos para consultas de propiedades y oportunidades de inversión.",
     "office": {
       "aria": "Imagen de la oficina de Berlín",
       "name": "Oficina de Berlín",
@@ -688,6 +691,12 @@
         "city": "Proyectos de desarrollo en {city}, {country}",
         "page": " – Página {page}"
       },
+      "metaDescription": {
+        "default": "Explora proyectos de desarrollo de lujo en Chipre, Dubái y Berlín. Encuentra tu oportunidad ideal de inversión inmobiliaria.",
+        "country": "Explora proyectos de desarrollo de lujo en {country}. Encuentra tu oportunidad ideal de inversión inmobiliaria.",
+        "city": "Explora proyectos de desarrollo de lujo en {city}, {country}. Encuentra tu oportunidad ideal de inversión inmobiliaria.",
+        "page": " Página {page}."
+      },
       "activeFilters": "Filtros activos:",
       "sort": {
         "nameAsc": "Nombre: A-Z",
@@ -770,6 +779,7 @@
   "legal": {
     "cookies": {
       "title": "Política de Cookies",
+      "metaDescription": "Descubre cómo Sweet Home utiliza cookies esenciales, de analítica y de marketing, y cómo puedes gestionar tus preferencias en el navegador.",
       "intro": "Usamos cookies necesarias para que el sitio funcione y cookies de analítica para mejorarlo. Puedes controlar las cookies desde tu navegador.",
       "types": {
         "title": "Tipos de cookies",

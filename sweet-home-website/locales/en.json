@@ -269,6 +269,12 @@
         "city": "Development Projects in {city}, {country}",
         "page": " - Page {page}"
       },
+      "metaDescription": {
+        "default": "Browse luxury development projects in Cyprus, Dubai, and Berlin. Find your perfect real estate investment opportunity.",
+        "country": "Browse luxury development projects in {country}. Find your perfect real estate investment opportunity.",
+        "city": "Browse luxury development projects in {city}, {country}. Find your perfect real estate investment opportunity.",
+        "page": " Page {page}."
+      },
       "activeFilters": "Active filters:",
       "sort": {
         "nameAsc": "Name: A-Z",
@@ -457,6 +463,7 @@
   },
   "home": {
     "title": "International Real Estate Investment Company",
+    "metaDescription": "Find carefully selected investment properties in Berlin, Dubai, and Cyprus. Sweet Home guides international buyers from sourcing to acquisition.",
     "heroDescription": "Sweet Home is an international real estate investment company providing carefully selected investment properties in Berlin, Dubai, and Cyprus. We support international investors and expats with a full-service approach, from property sourcing and due diligence to acquisition and long-term investment support.",
     "hero": {
       "title": "Find Your Dream Home",
@@ -579,6 +586,7 @@
     }
   },
   "about": {
+    "metaDescription": "Learn about Sweet Home — your trusted real estate partner in Berlin, Dubai, and Cyprus. Meet our expert team dedicated to helping you find the right property.",
     "intro": {
       "title": "About Sweet Home",
       "copy": "At Sweet Home, we turn property goals into real-life keys. From your first chat to closing day, our friendly experts guide you with clear advice, curated options, and stress-free support. Ready to move forward with confidence? Let's find the place that truly feels like home."
@@ -590,6 +598,7 @@
   },
   "contact": {
     "title": "Contact Us",
+    "metaDescription": "Contact Sweet Home for expert real estate services in Berlin, Dubai, and Cyprus. Get in touch for property inquiries and investment opportunities.",
     "office": {
       "aria": "Berlin Office image",
       "name": "Berlin Office",
@@ -717,6 +726,7 @@
   "legal": {
     "cookies": {
       "title": "Cookies Policy",
+      "metaDescription": "Learn how Sweet Home uses essential, analytics, and marketing cookies, and how you can manage cookie preferences in your browser.",
       "intro": "We use necessary cookies to make our site work and analytics cookies to improve it. You can control cookies in your browser settings.",
       "types": {
         "title": "Types of Cookies",

@@ -743,8 +743,11 @@ app.get('/privacy', (req, res) => {
   });
 });
 app.get('/cookies', (req, res) => {
-  const title = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('legal.cookies.title', 'Cookies Policy') : 'Cookies Policy';
-  res.render('cookies', { title });
+  const t = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t.bind(res.locals) : ((k, fb) => fb);
+  res.render('cookies', {
+    title: t('legal.cookies.title', 'Cookies Policy'),
+    pageMetaDescription: t('legal.cookies.metaDescription', 'Learn how Sweet Home uses essential, analytics, and marketing cookies, and how you can manage cookie preferences in your browser.')
+  });
 });
 app.use('/admin/dashboard', adminUserRoutes);
 app.use('/superadmin/dashboard', superAdminRoutes); // SuperAdmin landing
@@ -1495,7 +1498,9 @@ async function renderHomePage(req, res, langPath, next) {
       canonicalUrl,
       hreflangAlternates,
       headPartial: '../partials/seo/home-head',
-      pageMetaDescription: 'Find your dream property in Cyprus, Dubai, and Berlin. Browse luxury apartments, villas, and real estate investments. Expert guidance for buyers and sellers.'
+      pageMetaDescription: (t && typeof t === 'function')
+        ? t('home.metaDescription', 'Find carefully selected investment properties in Berlin, Dubai, and Cyprus. Sweet Home guides international buyers from sourcing to acquisition.')
+        : 'Find carefully selected investment properties in Berlin, Dubai, and Cyprus. Sweet Home guides international buyers from sourcing to acquisition.'
     });
   } catch (e) { next(e); }
 }

@@ -1,84 +1,92 @@
 <%
-  const baseUrl = (typeof canonicalUrl !== 'undefined' && canonicalUrl) 
-    ? canonicalUrl.replace(/\/$/, '') 
-    : ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
+  const resolvedBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl)
+    ? String(baseUrl)
+    : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
   const siteName = 'Sweet Home';
-  const defaultDescription = 'Find your dream property in Cyprus, Dubai, and Berlin. Browse luxury apartments, villas, and real estate investments. Expert guidance for buyers and sellers.';
-  const pageMetaDescription = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : defaultDescription;
   const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
+  const tFn = (typeof t === 'function') ? t : ((k, fb) => fb);
+  const defaultDescriptions = {
+    de: 'Finden Sie ausgewählte Anlageimmobilien in Berlin, Dubai und Zypern. Sweet Home begleitet internationale Käufer von der Suche bis zum Erwerb.',
+    en: 'Find carefully selected investment properties in Berlin, Dubai, and Cyprus. Sweet Home guides international buyers from sourcing to acquisition.',
+    es: 'Encuentra propiedades de inversión seleccionadas en Berlín, Dubái y Chipre. Sweet Home acompaña a compradores internacionales de la búsqueda a la adquisición.'
+  };
+  const resolvedMetaDescription = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription)
+    ? pageMetaDescription
+    : tFn('home.metaDescription', defaultDescriptions[currentLang] || defaultDescriptions.en);
   const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
     ? ogLocale
     : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
+  const rawHomeTitle = (typeof title !== 'undefined' && title) ? String(title).trim() : '';
+  const homeOgTitle = rawHomeTitle
+    ? (/\| Sweet Home$/i.test(rawHomeTitle) ? rawHomeTitle : (rawHomeTitle + ' | Sweet Home'))
+    : 'International Real Estate Investment Company | Sweet Home';
+  const homeOgUrl = (typeof canonicalUrl !== 'undefined' && canonicalUrl)
+    ? canonicalUrl
+    : (resolvedBaseUrl + (currentLang === 'en' ? '/en' : (currentLang === 'es' ? '/es' : '/')));
 %>
-<meta name="description" content="<%= pageMetaDescription %>">
+<meta name="description" content="<%= resolvedMetaDescription %>">
 <!-- Canonical URL is handled by main layout to avoid conflicts with hreflang -->
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="<%= (typeof title !== 'undefined' && title) ? title + ' | Sweet Home' : 'International Real Estate Investment Company | Sweet Home' %>">
-<meta property="og:description" content="<%= pageMetaDescription %>">
-<meta property="og:url" content="<%= (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : baseUrl + '/' %>">
-<meta property="og:image" content="<%= baseUrl %>/images/dubai-hero.jpg">
+<meta property="og:title" content="<%= homeOgTitle %>">
+<meta property="og:description" content="<%= resolvedMetaDescription %>">
+<meta property="og:url" content="<%= homeOgUrl %>">
+<meta property="og:image" content="<%= resolvedBaseUrl %>/images/dubai-hero.jpg">
 <meta property="og:site_name" content="<%= siteName %>">
 <meta property="og:locale" content="<%= pageOgLocale %>">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<%= (typeof title !== 'undefined' && title) ? title + ' | Sweet Home' : 'International Real Estate Investment Company | Sweet Home' %>">
-<meta name="twitter:description" content="<%= pageMetaDescription %>">
-<meta name="twitter:image" content="<%= baseUrl %>/images/dubai-hero.jpg">
+<meta name="twitter:title" content="<%= homeOgTitle %>">
+<meta name="twitter:description" content="<%= resolvedMetaDescription %>">
+<meta name="twitter:image" content="<%= resolvedBaseUrl %>/images/dubai-hero.jpg">
 
 <!-- JSON-LD Structured Data -->
 <script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: siteName,
-  url: baseUrl,
-  logo: `${baseUrl}/images/Sweet Home Logo.png`,
+  url: resolvedBaseUrl,
+  logo: `${resolvedBaseUrl}/images/Sweet Home Logo.png`,
   sameAs: [],
   contactPoint: {
     '@type': 'ContactPoint',
-    contactType: 'Customer Service',
-    availableLanguage: ['English', 'Spanish', 'German']
+    contactType: 'customer service',
+    availableLanguage: ['English', 'German', 'Spanish']
   }
 }) : JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: siteName,
-  url: baseUrl,
-  logo: `${baseUrl}/images/Sweet Home Logo.png`,
+  url: resolvedBaseUrl,
+  logo: `${resolvedBaseUrl}/images/Sweet Home Logo.png`,
   sameAs: [],
   contactPoint: {
     '@type': 'ContactPoint',
-    contactType: 'Customer Service',
-    availableLanguage: ['English', 'Spanish', 'German']
+    contactType: 'customer service',
+    availableLanguage: ['English', 'German', 'Spanish']
   }
 })) %></script>
+
 <script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: siteName,
-  url: baseUrl,
+  url: resolvedBaseUrl,
   potentialAction: {
     '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: `${baseUrl}/properties?q={search_term_string}`
-    },
+    target: `${resolvedBaseUrl}/properties?q={search_term_string}`,
     'query-input': 'required name=search_term_string'
   }
 }) : JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: siteName,
-  url: baseUrl,
+  url: resolvedBaseUrl,
   potentialAction: {
     '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: `${baseUrl}/properties?q={search_term_string}`
-    },
+    target: `${resolvedBaseUrl}/properties?q={search_term_string}`,
     'query-input': 'required name=search_term_string'
   }
 })) %></script>
-

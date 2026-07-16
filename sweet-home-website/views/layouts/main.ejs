@@ -10,8 +10,13 @@
       : 'Sweet Home';
   %>
   <title><%= __pageTitle %></title>
-  <% if (typeof currentPath !== 'undefined' && currentPath === '/') { %>
-  <meta name="description" content="<%= (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : 'Find your dream property in Cyprus, Dubai, and Berlin. Browse luxury apartments, villas, and real estate investments. Expert guidance for buyers and sellers.' %>">
+  <%
+    // Fallback when a page has no SEO head partial (e.g. cookies). Pages with headPartial own their description.
+    const __hasHeadPartial = (typeof headPartial !== 'undefined' && headPartial);
+    const __fallbackMetaDescription = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : '';
+  %>
+  <% if (!__hasHeadPartial && __fallbackMetaDescription) { %>
+  <meta name="description" content="<%= __fallbackMetaDescription %>">
   <% } %>
   <link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
   <link rel="icon" type="image/png" href="/images/favicon.png" sizes="16x16">

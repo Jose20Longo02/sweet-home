@@ -12,19 +12,30 @@
   const projectListUrl = `${siteBaseUrl}/projects${queryString}`;
   const country = f.country || '';
   const city = f.city || '';
-  const currentPage = typeof currentPage !== 'undefined' ? currentPage : 1;
+  const resolvedPage = (typeof currentPage !== 'undefined' && currentPage) ? Number(currentPage) : 1;
   const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
   const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
     ? ogLocale
     : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
-  let listDesc = 'Browse luxury development projects in Cyprus, Dubai, and Berlin. Find your perfect real estate investment opportunity.';
-  if (country && city) {
-    listDesc = `Browse luxury development projects in ${city}, ${country}. Find your perfect real estate investment opportunity.`;
-  } else if (country) {
-    listDesc = `Browse luxury development projects in ${country}. Find your perfect real estate investment opportunity.`;
-  }
-  if (currentPage > 1) {
-    listDesc = listDesc.replace('. Find', ` - Page ${currentPage}. Find`);
+  const tFn = (typeof t === 'function') ? t : ((k, fb, vars) => {
+    let out = fb || k;
+    if (vars && typeof vars === 'object') {
+      Object.keys(vars).forEach((key) => { out = out.replace(new RegExp('\\{' + key + '\\}', 'g'), String(vars[key])); });
+    }
+    return out;
+  });
+  let listDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription)
+    ? pageMetaDescription
+    : tFn('projects.list.metaDescription.default', 'Browse luxury development projects in Cyprus, Dubai, and Berlin. Find your perfect real estate investment opportunity.');
+  if (!(typeof pageMetaDescription !== 'undefined' && pageMetaDescription)) {
+    if (country && city) {
+      listDesc = tFn('projects.list.metaDescription.city', 'Browse luxury development projects in {city}, {country}. Find your perfect real estate investment opportunity.', { city, country });
+    } else if (country) {
+      listDesc = tFn('projects.list.metaDescription.country', 'Browse luxury development projects in {country}. Find your perfect real estate investment opportunity.', { country });
+    }
+    if (resolvedPage > 1) {
+      listDesc += tFn('projects.list.metaDescription.page', ' Page {page}.', { page: resolvedPage });
+    }
   }
 %>
 <meta name="description" content="<%= listDesc %>">
@@ -73,4 +84,3 @@
   }))
 })) %></script>
 <% } %>
-

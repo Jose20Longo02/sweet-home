@@ -73,8 +73,12 @@ function createLocaleRouter(renderHomePage) {
   });
 
   router.get('/cookies', (req, res) => {
-    const title = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('legal.cookies.title', 'Cookies Policy') : 'Cookies Policy';
-    res.render('cookies', { title, canonicalUrl: `${res.locals.baseUrl}${req.baseUrl}/cookies` });
+    const t = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t.bind(res.locals) : ((k, fb) => fb);
+    res.render('cookies', {
+      title: t('legal.cookies.title', 'Cookies Policy'),
+      pageMetaDescription: t('legal.cookies.metaDescription', 'Learn how Sweet Home uses essential, analytics, and marketing cookies, and how you can manage cookie preferences in your browser.'),
+      canonicalUrl: `${res.locals.baseUrl}${req.baseUrl}/cookies`
+    });
   });
 
   router.get('/services', (req, res) => {

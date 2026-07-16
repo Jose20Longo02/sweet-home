@@ -19,9 +19,10 @@
 
 | Role | Name | Notes |
 |------|------|-------|
-| Dev | | Code, deploy, redirects |
+| Dev | Luis / Medialy | Code, deploy, redirects |
 | SEO consultant | | GSC, crawl, disavow, Change of Address |
 | Business (Israel / Irem) | | Spanish removal, homepage positioning, go-live date |
+| DNS / Cloudflare | Ronli | Confirmed he will flip `.de` DNS on go-live ("I can do it") |
 
 ### Key dates
 
@@ -61,8 +62,8 @@ https://sweethome-immobilien.de/properties/foo?country=Germany
 
 ## 0.1 Access & ownership checklist
 
-- [ ] DNS access: `sweethome-immobilien.de`
-- [ ] DNS access: `sweet-home.co.il` (keep active)
+- [x] DNS access: `sweethome-immobilien.de` — Ronli will handle (confirmed 2026-07-15)
+- [x] DNS access: `sweet-home.co.il` (keep active) — Ronli will handle
 - [ ] Hosting/server access (Render or current provider)
 - [ ] SSL can be issued for `.de` domain
 - [ ] Google Search Console — `sweet-home.co.il` property
@@ -186,39 +187,51 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 
 ## 1.2 SEO consultant “Other technical fixes” (16-item checklist)
 
-### Fix 10 — Doubled-brand titles (18 pages)
+### Fix 10 — Doubled-brand titles (18 pages) ✅ DONE (2026-07-15)
 
-- [ ] Identify all 18 affected URLs (request list from SEO consultant)
-- [ ] Fix title template so brand is appended only once (not `Sweet Home | Sweet Home`)
-- [ ] Check SEO head partials and layout title logic
-- [ ] Re-crawl / verify no duplicate brand in `<title>`
+- [x] Identify all 18 affected URLs (found via codebase + live curl)
+- [x] Fix title template so brand is appended only once (not `Sweet Home | Sweet Home`)
+- [x] Check SEO head partials and layout title logic
+- [x] Re-crawl / verify no duplicate brand in `<title>` — **21/21 PASS live**
 
 **Done when:** No title contains doubled brand name.  
 **Owner:** Dev  
-**Files likely involved:** `views/partials/seo/*-head.ejs`, layout files
+**Files changed:** `views/layouts/main.ejs`, `controllers/propertyController.js`, investment strategy SEO heads  
+**Notes:** Root cause was layout always appending `| Sweet Home` while landing pages already included the brand in `title`.
 
 ---
 
-### Fix 11 — Language-correct titles and H1
+### Fix 11 — Language-correct titles and H1 ✅ DONE (2026-07-15)
 
-- [ ] German static pages show German `<title>` and H1 (e.g. `/about`, `/contact`, `/cookies`)
-- [ ] Fix any English meta titles on German-default pages
-- [ ] Spanish pages: N/A if dropping `/es`
+- [x] German static pages show German `<title>` and H1 (e.g. `/about`, `/contact`, `/cookies`)
+- [x] Fix any English meta titles on German-default pages (routes now use `t()`)
+- [x] Spanish pages also localized (`/es/about`, `/es/contact` verified)
+- [x] Services H1 + projects list title/H1 localized
+- [x] Live validation PASS (DE/EN/ES)
 
 **Done when:** DE pages show German title and H1.  
 **Owner:** Dev  
-**Files likely involved:** `routes/localeRoutes.js`, `locales/de.json`, SEO head partials
+**Files changed:** `app.js`, `routes/localeRoutes.js`, `locales/{en,de,es}.json`, `controllers/projectController.js`, terms/privacy SEO heads, `views/owners.ejs`, `views/projects/project-list.ejs`  
+**Notes:** Layout renders `<title>` before the page body, so titles must be set in route handlers via `t()`, not only inside EJS.
 
 ---
 
-### Fix 12 — Missing meta descriptions
+### Fix 12 — Missing meta descriptions ✅ DONE (code, 2026-07-15)
 
-- [ ] Audit indexable pages missing `meta description`
-- [ ] Add unique descriptions for: EN home, `/projects`, others flagged in crawl
-- [ ] German homepage description in German
+- [x] Audit indexable pages missing `meta description`
+- [x] Add unique descriptions for: EN home, `/projects`, others flagged in crawl
+- [x] German homepage description in German
+
+**Root cause:** SEO head partials crashed silently (TDZ from redeclaring `pageMetaDescription` / `currentPage`), so `/en`, `/es`, and `/projects` never emitted descriptions. DE home only worked via a layout special-case that always used English copy.
+
+**Fix:**
+- Repaired `home-head.ejs` and `project-list-head.ejs` (no variable shadowing)
+- Localized home / projects / about / contact / cookies meta via `t()` + locale keys
+- Layout fallback description only when no `headPartial` (e.g. cookies)
 
 **Done when:** No indexable page missing a description.  
-**Owner:** Dev + SEO (copy)
+**Owner:** Dev + SEO (copy)  
+**Status:** DONE (code) — validate live after deploy
 
 ---
 
@@ -699,6 +712,9 @@ For **each** URL below, verify columns A–F.
 
 | Date | Change | By |
 |------|--------|-----|
-| July 2026 | Initial playbook created from SEO consultant docs + codebase audit | |
-| | | |
-| | | |
+| July 2026 | Initial playbook created from SEO consultant docs + codebase audit | Dev |
+| 2026-07-15 | Ronli confirmed he will flip `.de` DNS on go-live (do not ask him until go-live) | Dev |
+| 2026-07-15 | **Fix #10 DONE** — doubled-brand titles fixed + live validated (21/21 PASS) | Dev |
+| 2026-07-15 | **Fix #11 DONE** — language-correct titles/H1 on DE/EN/ES static pages + projects/services | Dev |
+| 2026-07-15 | **Fix #12 DONE (code)** — meta descriptions restored + localized (home/projects/about/contact/cookies); live-validate after deploy | Dev |
+| | **Next:** Fix #13 — Organization/WebSite schema + Berlin homepage focus (or #14/#15/#5–7) | |

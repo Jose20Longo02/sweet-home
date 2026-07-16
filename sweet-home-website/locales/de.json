@@ -201,6 +201,12 @@
         "city": "Entwicklungsprojekte in {city}, {country}",
         "page": " – Seite {page}"
       },
+      "metaDescription": {
+        "default": "Entdecken Sie Luxus-Entwicklungsprojekte in Zypern, Dubai und Berlin. Finden Sie Ihre passende Immobilieninvestment-Chance.",
+        "country": "Entdecken Sie Luxus-Entwicklungsprojekte in {country}. Finden Sie Ihre passende Immobilieninvestment-Chance.",
+        "city": "Entdecken Sie Luxus-Entwicklungsprojekte in {city}, {country}. Finden Sie Ihre passende Immobilieninvestment-Chance.",
+        "page": " Seite {page}."
+      },
       "activeFilters": "Aktive Filter:",
       "sort": {
         "nameAsc": "Name: A–Z",
@@ -445,6 +451,7 @@
   },
   "home": {
     "title": "Internationales Immobilien Investment Unternehmen",
+    "metaDescription": "Finden Sie ausgewählte Anlageimmobilien in Berlin, Dubai und Zypern. Sweet Home begleitet internationale Käufer von der Suche bis zum Erwerb.",
     "heroDescription": "Sweet Home ist ein internationales Immobilieninvestmentunternehmen, das sorgfältig ausgewählte Anlageobjekte in Berlin, Dubai und Zypern anbietet. Wir unterstützen internationale Investoren und Expats mit einem Full-Service-Ansatz, der von der Immobiliensuche und Due Diligence bis hin zum Erwerb und der langfristigen Investitionsbetreuung reicht.",
     "hero": {
       "title": "Finden Sie Ihr Traumhaus",
@@ -567,6 +574,7 @@
     }
   },
   "about": {
+    "metaDescription": "Erfahren Sie mehr über Sweet Home — Ihr Immobilienpartner in Berlin, Dubai und Zypern. Lernen Sie unser Expertenteam kennen, das Ihnen hilft, die passende Immobilie zu finden.",
     "intro": {
       "title": "Über Sweet Home",
       "copy": "Bei Sweet Home machen wir aus Immobilienzielen echte Schlüssel. Vom ersten Gespräch bis zum Notartermin begleiten unsere freundlichen Experten Sie mit klarer Beratung, kuratierten Optionen und stressfreier Unterstützung. Bereit, den nächsten Schritt mit Vertrauen zu gehen? Finden wir den Ort, der sich wirklich wie Zuhause anfühlt."
@@ -578,6 +586,7 @@
   },
   "contact": {
     "title": "Kontakt",
+    "metaDescription": "Kontaktieren Sie Sweet Home für Immobilienberatung in Berlin, Dubai und Zypern. Schreiben Sie uns bei Objektanfragen und Investmentmöglichkeiten.",
     "office": {
       "aria": "Bild des Berliner Büros",
       "name": "Büro Berlin",
@@ -705,6 +714,7 @@
   "legal": {
     "cookies": {
       "title": "Cookie-Richtlinie",
+      "metaDescription": "Erfahren Sie, wie Sweet Home notwendige, Analyse- und Marketing-Cookies einsetzt und wie Sie Cookie-Einstellungen in Ihrem Browser verwalten.",
       "intro": "Wir verwenden notwendige Cookies für die Funktion der Website und Analyse-Cookies zur Verbesserung. Sie können Cookies in den Browser-Einstellungen steuern.",
       "types": {
         "title": "Arten von Cookies",
