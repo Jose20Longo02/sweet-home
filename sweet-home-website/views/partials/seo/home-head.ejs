@@ -42,51 +42,62 @@
 <meta name="twitter:description" content="<%= resolvedMetaDescription %>">
 <meta name="twitter:image" content="<%= resolvedBaseUrl %>/images/dubai-hero.jpg">
 
-<!-- JSON-LD Structured Data -->
-<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
+<!-- Organization and WebSite entities share stable IDs across all language versions. -->
+<%
+  const homeSchema = {
   '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: siteName,
-  url: resolvedBaseUrl,
-  logo: `${resolvedBaseUrl}/images/Sweet Home Logo.png`,
-  sameAs: [],
-  contactPoint: {
-    '@type': 'ContactPoint',
-    contactType: 'customer service',
-    availableLanguage: ['English', 'German', 'Spanish']
-  }
-}) : JSON.stringify({
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: siteName,
-  url: resolvedBaseUrl,
-  logo: `${resolvedBaseUrl}/images/Sweet Home Logo.png`,
-  sameAs: [],
-  contactPoint: {
-    '@type': 'ContactPoint',
-    contactType: 'customer service',
-    availableLanguage: ['English', 'German', 'Spanish']
-  }
-})) %></script>
-
-<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON({
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: siteName,
-  url: resolvedBaseUrl,
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: `${resolvedBaseUrl}/properties?q={search_term_string}`,
-    'query-input': 'required name=search_term_string'
-  }
-}) : JSON.stringify({
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: siteName,
-  url: resolvedBaseUrl,
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: `${resolvedBaseUrl}/properties?q={search_term_string}`,
-    'query-input': 'required name=search_term_string'
-  }
-})) %></script>
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${resolvedBaseUrl}/#organization`,
+      name: siteName,
+      legalName: 'Sweet Home Real Estate Investments',
+      url: resolvedBaseUrl,
+      logo: {
+        '@type': 'ImageObject',
+        '@id': `${resolvedBaseUrl}/#logo`,
+        url: `${resolvedBaseUrl}/images/Sweet%20Home%20Logo.png`,
+        contentUrl: `${resolvedBaseUrl}/images/Sweet%20Home%20Logo.png`,
+        caption: siteName
+      },
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Hohenzollerndamm 196',
+        postalCode: '10717',
+        addressLocality: 'Berlin',
+        addressCountry: 'DE'
+      },
+      contactPoint: {
+        '@type': 'ContactPoint',
+        telephone: '+49-30-65852933',
+        contactType: 'customer service',
+        availableLanguage: ['de', 'en', 'es']
+      },
+      sameAs: [
+        'https://www.facebook.com/profile.php?id=100093168151239',
+        'https://www.instagram.com/sweet.home.investments/',
+        'https://www.linkedin.com/company/sweet-home/'
+      ]
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${resolvedBaseUrl}/#website`,
+      name: siteName,
+      url: resolvedBaseUrl,
+      publisher: {
+        '@id': `${resolvedBaseUrl}/#organization`
+      },
+      inLanguage: ['de-DE', 'en-US', 'es-ES'],
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: `${resolvedBaseUrl}/properties?q={search_term_string}`
+        },
+        'query-input': 'required name=search_term_string'
+      }
+    }
+  ]
+  };
+%>
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON(homeSchema) : JSON.stringify(homeSchema)) %></script>

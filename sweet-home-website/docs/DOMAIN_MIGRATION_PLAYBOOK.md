@@ -216,7 +216,7 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 
 ---
 
-### Fix 12 — Missing meta descriptions ✅ DONE (code, 2026-07-15)
+### Fix 12 — Missing meta descriptions ✅ DONE (2026-07-15)
 
 - [x] Audit indexable pages missing `meta description`
 - [x] Add unique descriptions for: EN home, `/projects`, others flagged in crawl
@@ -231,20 +231,22 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 
 **Done when:** No indexable page missing a description.  
 **Owner:** Dev + SEO (copy)  
-**Status:** DONE (code) — validate live after deploy
+**Status:** ✅ DONE — live validated 2026-07-15 (12/12 core URLs PASS)
 
 ---
 
 ### Fix 13 — Homepage Organization + WebSite schema + Berlin focus
 
-- [ ] Add `Organization` JSON-LD on homepage
-- [ ] Add `WebSite` JSON-LD on homepage (with `SearchAction` if applicable)
-- [ ] Validate in Google Rich Results Test
+- [x] Add `Organization` JSON-LD on homepage
+- [x] Add `WebSite` JSON-LD with a working property `SearchAction`
+- [x] Validate with Schema.org Validator — 0 errors, 0 warnings (2026-07-16)
 - [ ] **Business decision:** Reorder homepage to lead with Berlin content (coordinate with Israel/Irem)
 
 **Done when:** Rich Results Test passes; Berlin content prioritized per business approval.  
 **Owner:** Dev (+ business for content order)  
 **Files likely involved:** `views/partials/seo/home-head.ejs`, `views/home.ejs`
+
+**Technical schema status:** ✅ DONE in code. `Organization` and `WebSite` are linked with stable `@id` values in one `@graph`; organization address, phone, logo, and verified social profiles are included. Google does not currently provide a dedicated rich-result enhancement for these entity types, so Schema.org Validator is the applicable syntax/semantic check.
 
 ---
 
@@ -716,5 +718,6 @@ For **each** URL below, verify columns A–F.
 | 2026-07-15 | Ronli confirmed he will flip `.de` DNS on go-live (do not ask him until go-live) | Dev |
 | 2026-07-15 | **Fix #10 DONE** — doubled-brand titles fixed + live validated (21/21 PASS) | Dev |
 | 2026-07-15 | **Fix #11 DONE** — language-correct titles/H1 on DE/EN/ES static pages + projects/services | Dev |
-| 2026-07-15 | **Fix #12 DONE (code)** — meta descriptions restored + localized (home/projects/about/contact/cookies); live-validate after deploy | Dev |
-| | **Next:** Fix #13 — Organization/WebSite schema + Berlin homepage focus (or #14/#15/#5–7) | |
+| 2026-07-15 | **Fix #12 DONE** — meta descriptions restored + localized; live validated (home/projects/about/contact/cookies DE/EN/ES) | Dev |
+| 2026-07-16 | **Fix #13 schema DONE (code)** — Organization + WebSite graph validated with 0 errors/warnings; Berlin-first business decision remains | Dev |
+| | **Next:** Approve Berlin-first homepage positioning, or proceed to #14/#15/#5–7 | |

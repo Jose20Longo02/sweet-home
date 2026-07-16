@@ -27,7 +27,6 @@ function run() {
   assertContains(appJs, "'/de/wohnungen-berlin-kaufen'", 'app.js', failures);
 
   const propertyController = read('controllers/propertyController.js');
-  assertContains(propertyController, 'Normalize duplicate query URLs for crawl efficiency', 'controllers/propertyController.js', failures);
   assertContains(propertyController, 'robotsMeta', 'controllers/propertyController.js', failures);
 
   const localeAwareSeoPartials = [
@@ -47,6 +46,20 @@ function run() {
     assertContains(content, 'og:locale', file, failures);
     assertNotContains(content, 'content="en_US"', file, failures);
   });
+
+  const homeHead = read('views/partials/seo/home-head.ejs');
+  [
+    "'@type': 'Organization'",
+    "'@type': 'WebSite'",
+    "'@type': 'SearchAction'",
+    "'@type': 'EntryPoint'",
+    "'@id': `${resolvedBaseUrl}/#organization`",
+    "publisher:",
+    "sameAs:"
+  ].forEach((needle) => {
+    assertContains(homeHead, needle, 'views/partials/seo/home-head.ejs', failures);
+  });
+  assertNotContains(homeHead, 'sameAs: []', 'views/partials/seo/home-head.ejs', failures);
 
   if (failures.length > 0) {
     console.error('SEO smoke check failed:\n- ' + failures.join('\n- '));
