@@ -1489,22 +1489,6 @@ async function renderHomePage(req, res, langPath, next) {
         cityLabel: locationLabel('city', 'Berlin'),
         countryLabel: locationLabel('country', 'Germany'),
         neighborhoods: mapGuideNeighborhoods('Germany', 'Berlin', HOME_BERLIN_NEIGHBORHOOD_CONTENT)
-      },
-      {
-        id: 'dubai',
-        country: 'UAE',
-        city: 'Dubai',
-        cityLabel: locationLabel('city', 'Dubai'),
-        countryLabel: locationLabel('country', 'UAE'),
-        neighborhoods: mapGuideNeighborhoods('UAE', 'Dubai', HOME_DUBAI_NEIGHBORHOOD_CONTENT)
-      },
-      {
-        id: 'paphos',
-        country: 'Cyprus',
-        city: 'Paphos',
-        cityLabel: locationLabel('city', 'Paphos'),
-        countryLabel: locationLabel('country', 'Cyprus'),
-        neighborhoods: mapGuideNeighborhoods('Cyprus', 'Paphos', HOME_PAPHOS_NEIGHBORHOOD_CONTENT)
       }
     ].filter((guide) => Array.isArray(guide.neighborhoods) && guide.neighborhoods.length > 0);
 

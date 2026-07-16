@@ -393,9 +393,9 @@
       "exploreCta": "Explorar apartamentos"
     },
     "neighborhoodGuides": {
-      "title": "Guías de Barrios",
-      "hint": "Elige una ciudad y haz clic en un barrio para ver contexto local y su perfil inmobiliario.",
-      "switcherLabel": "Guías por ciudad"
+      "title": "Guía de barrios de Berlín",
+      "hint": "Selecciona un barrio de Berlín para conocer su contexto local y perfil inmobiliario.",
+      "switcherLabel": "Barrios de Berlín"
     },
     "recommendedProject": {
       "title": "Proyecto recomendado",

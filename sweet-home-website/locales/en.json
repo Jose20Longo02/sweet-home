@@ -510,9 +510,9 @@
       "exploreCta": "Explore apartments"
     },
     "neighborhoodGuides": {
-      "title": "Neighborhoods Guides",
-      "hint": "Choose a city and click a neighborhood to expand local context and real-estate profile.",
-      "switcherLabel": "City guides"
+      "title": "Berlin Neighborhood Guides",
+      "hint": "Select a Berlin neighborhood to explore its local context and real-estate profile.",
+      "switcherLabel": "Berlin neighborhoods"
     },
     "recommendedProject": {
       "title": "Recommended Project",

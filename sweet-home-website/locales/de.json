@@ -498,9 +498,9 @@
       "exploreCta": "Wohnungen entdecken"
     },
     "neighborhoodGuides": {
-      "title": "Stadtteile Guides",
-      "hint": "Waehlen Sie eine Stadt und klicken Sie auf einen Stadtteil, um lokalen Kontext und Immobilienprofil zu sehen.",
-      "switcherLabel": "Stadt Guides"
+      "title": "Berlin: Stadtteile im Überblick",
+      "hint": "Klicken Sie auf einen Berliner Stadtteil, um lokale Einordnung und Immobilienprofil zu sehen.",
+      "switcherLabel": "Berlin Stadtteile"
     },
     "recommendedProject": {
       "title": "Empfohlenes Projekt",
