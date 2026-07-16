@@ -1292,6 +1292,12 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 
 /* Responsive for new sections */
 @media (max-width: 900px) {
+  /* Mobile/tablet header: use a solid surface for predictable contrast. */
+  .site-header.gradient,
+  .site-header.gradient.shrink {
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  }
   .hero-panels { height: 64vh; }
   /* allow two rows at medium widths */
   .hero-search .search-row { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -1321,13 +1327,18 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   .btn-dark { font-size: 16px; padding: 6px 12px; width: auto !important; display: inline-flex; justify-content: center; }
 }
 @media (max-width: 560px) {
-  .hero-panels { position: relative; grid-template-columns: 1fr; height: 90vh; }
+  .hero-panels { position: relative; grid-template-columns: 1fr; height: max(90vh, 560px); }
   /* show a single full-bleed panel; others hidden via opacity */
   .hero-panels .panel { position: absolute; inset: 0; opacity: 0; }
   .hero-panels .panel.is-active { opacity: 1; }
   /* Berlin (and any single-panel) hero: keep the one panel visible on mobile */
   .hero-panels--single .panel { position: relative; opacity: 1; }
-  .hero-search { top: 52%; width: calc(100% - 28px); }
+  /* Keep the complete search card below the 138px fixed mobile header. */
+  .hero-search {
+    top: 154px;
+    width: calc(100% - 28px);
+    transform: translateX(-50%);
+  }
   /* stack only at very small widths */
   .hero-search .search-row { display: grid; grid-template-columns: 1fr; }
   .cards-track > .property-card, .cards-track > .testimonial-card { flex-basis: 92%; }
