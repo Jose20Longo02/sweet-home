@@ -1263,7 +1263,12 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 .services-brief .copy { display: grid; gap: 16px; }
 .services-brief .copy p { max-width: 450px; }
 .services-brief .image img { width: 100%; border-radius: 12px; box-shadow: 0 10px 24px rgba(0,0,0,.12); }
-.btn-green { display: inline-flex; align-items: center; justify-content: center; background: var(--primary-color, #2ea862); color: #fff; padding: 12px 30px; border-radius: 6px; text-decoration: none; width: auto !important; max-width: max-content; white-space: nowrap; text-align: center; }
+.btn-green { display: inline-flex; align-items: center; justify-content: center; background: var(--primary-color, #2ea862); color: #fff; padding: 12px 30px; border-radius: 6px; text-decoration: none; width: auto !important; max-width: max-content; white-space: nowrap; text-align: center; transition: background-color .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease; }
+.btn-green:hover,
+.btn-green:focus-visible {
+  background: var(--primary-dark, #23804b);
+  color: #fff;
+}
 
 /* Services section button: match About width and add subtle hover scale */
 .services-brief .btn-green { min-width: 200px; transition: transform .2s ease; }
