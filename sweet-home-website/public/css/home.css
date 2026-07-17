@@ -2577,35 +2577,36 @@ body[data-icon-theme="christmas"] .social-link img {
   position: relative !important;
   inset: auto !important;
   width: 100%;
-  margin: 17px 0 0;
-  padding: 10px;
+  margin: 20px 0 0;
+  padding: 16px;
   transform: none !important;
-  border-top-width: 6px;
-  border-radius: 14px;
-  box-shadow: 0 16px 38px rgba(0,0,0,.2);
+  border-top-width: 7px;
+  border-radius: 16px;
+  box-shadow: 0 18px 42px rgba(0,0,0,.22);
 }
 .home-hero-experience .hero-search .search-row {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
-  gap: 6px;
+  gap: 9px;
 }
 .home-hero-experience .hero-search .search-row > select,
 .home-hero-experience .hero-search .search-row > button {
   width: 100%;
   min-width: 0;
-  min-height: 36px;
+  min-height: 48px;
   margin: 0;
 }
 .home-hero-experience .hero-search select {
-  padding: 8px 30px 8px 10px;
+  padding: 12px 32px 12px 13px;
   border: 1px solid #e5e7eb;
-  border-radius: 7px;
-  font-size: 11px;
+  border-radius: 9px;
+  font-size: 13px;
 }
 .home-hero-experience .hero-search button {
-  padding: 8px 14px;
-  border-radius: 7px;
-  font-size: 11px;
+  padding: 12px 18px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
 }
 .home-hero-experience .hero-interface > .market-explorer {
   position: relative;
@@ -2711,15 +2712,19 @@ body[data-icon-theme="christmas"] .social-link img {
   }
   .home-hero-experience .hero-search {
     margin-top: 14px;
-    padding: 9px;
+    padding: 13px;
   }
   .home-hero-experience .hero-search .search-row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
+    gap: 8px;
   }
   .home-hero-experience .hero-search .search-row > select,
   .home-hero-experience .hero-search .search-row > button {
-    min-height: 38px;
+    min-height: 44px;
+  }
+  .home-hero-experience .hero-search select,
+  .home-hero-experience .hero-search button {
+    font-size: 13px;
   }
   .home-hero-experience .hero-interface > .market-explorer {
     height: 220px;
@@ -2736,13 +2741,14 @@ body[data-icon-theme="christmas"] .social-link img {
 
 @media (min-width: 901px) and (max-height: 650px) {
   .home-hero-experience {
-    padding-top: 204px;
+    padding-top: 198px;
     justify-content: flex-start;
   }
   .home-hero-experience .hero-copy p { display: none; }
+  .home-hero-experience .hero-search { margin-top: 14px; }
   .home-hero-experience .hero-interface > .market-explorer {
-    height: 135px;
-    min-height: 135px;
+    height: 118px;
+    min-height: 118px;
   }
 }
 
