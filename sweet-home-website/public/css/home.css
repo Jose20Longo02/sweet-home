@@ -2643,6 +2643,7 @@ body[data-icon-theme="christmas"] .social-link img {
   border: 0;
   border-bottom: 1px solid rgba(255,255,255,.16);
   border-radius: 0;
+  background: var(--primary-color, #2ea862) !important;
   box-shadow: none;
 }
 .home-hero-experience .market-explorer__eyebrow,
