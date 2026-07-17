@@ -689,12 +689,15 @@ function initStretchCarousel(rootSelector) {
   let idx = cards.findIndex(c => c.classList.contains('is-focused'));
   if (idx < 0) idx = 1;
 
-  function setFocused(i) {
+  function setFocused(i, shouldScroll = true) {
     cards.forEach((c, j) => c.classList.toggle('is-focused', j === i));
     // Ensure focused card scrolls into view on narrow screens
-    cards[i]?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    if (shouldScroll) {
+      cards[i]?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
   }
-  setFocused(idx);
+  // Set the initial state without moving the page away from the hero.
+  setFocused(idx, false);
   prev?.addEventListener('click', () => { idx = (idx - 1 + cards.length) % cards.length; setFocused(idx); });
   next?.addEventListener('click', () => { idx = (idx + 1) % cards.length; setFocused(idx); });
   cards.forEach((c, j) => c.addEventListener('click', () => { idx = j; setFocused(idx); }));
