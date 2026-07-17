@@ -68,7 +68,8 @@
   locations: (typeof locationsTranslations !== 'undefined' && locationsTranslations) ? locationsTranslations : { countries: {}, cities: {} }
 })).replace(/'/g, '&#39;') %>' style="display:none"></div>
 
-<!-- 1) Berlin-focused hero with centered copy and property search -->
+<!-- 1) Unified Berlin hero and interactive market explorer -->
+<div class="home-hero-experience">
 <section class="hero-panels hero-panels--single hero-panels--berlin">
   <div class="panel">
     <img src="/images/berlin-hero.jpg" alt="<%= t('berlin.heroImgAlt','Berlin skyline – property for sale in Berlin, Germany') %>" fetchpriority="high" decoding="async">
@@ -114,9 +115,6 @@
     </div>
   </form>
 
-  <a class="hero-scroll-cue" href="#berlin-properties" aria-label="<%= t('home.hero.exploreBerlin','Explore Berlin properties') %>">
-    <span aria-hidden="true"></span>
-  </a>
 </section>
 
 <!-- Interactive market map synchronized with the hero property search -->
@@ -140,6 +138,7 @@
     </div>
   </div>
 </section>
+</div>
 
 <!-- Featured section translations: single source for locale (avoids data-attr/parse issues) -->
 <script>
