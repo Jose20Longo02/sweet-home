@@ -1322,7 +1322,7 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   /* The compact header is already active at this breakpoint, and the search
      can stack to one column before phone widths. Keep the full form in-hero. */
   .hero-panels.hero-panels--berlin {
-    height: max(100vh, 980px);
+    height: max(95vh, 940px);
   }
   .hero-copy {
     top: 170px;
@@ -1366,7 +1366,7 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   .hero-panels {
     position: relative;
     grid-template-columns: 1fr;
-    height: max(100vh, 980px);
+    height: max(95vh, 940px);
   }
   /* show a single full-bleed panel; others hidden via opacity */
   .hero-panels .panel { position: absolute; inset: 0; opacity: 0; }
