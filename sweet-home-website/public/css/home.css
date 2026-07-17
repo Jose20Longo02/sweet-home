@@ -638,9 +638,34 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 /* hover text only, slightly lower than center */
 .hero-panels .panel::after { content: attr(data-country); position: absolute; left: 50%; top: 75%; transform: translate(-50%, -50%); color: #fff; font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; font-size: 30px; font-weight: 300; letter-spacing: .6px; opacity: 0; transition: opacity .25s ease; z-index: 3; }
 .hero-panels .panel:hover::after { opacity: 1; }
+.hero-copy {
+  position: absolute;
+  top: 29%;
+  left: 50%;
+  z-index: 4;
+  width: min(860px, calc(100% - 40px));
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 2px 18px rgba(0,0,0,.55);
+}
+.hero-copy h1 {
+  margin: 0 0 14px;
+  color: inherit;
+  font-size: clamp(38px, 4.5vw, 64px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -.02em;
+}
+.hero-copy p {
+  max-width: 720px;
+  margin: 0 auto;
+  font-size: clamp(17px, 1.6vw, 22px);
+  line-height: 1.5;
+}
 
 /* Search bar overlapping bottom of hero */
-.hero-search { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: #fff; border-radius: 14px; box-shadow: 0 18px 38px rgba(0,0,0,.15); padding: 16px; border-top: 10px solid var(--primary-color, #2ea862); z-index: 2; }
+.hero-search { position: absolute; left: 50%; top: 56%; transform: translate(-50%, -50%); background: #fff; border-radius: 14px; box-shadow: 0 18px 38px rgba(0,0,0,.15); padding: 16px; border-top: 10px solid var(--primary-color, #2ea862); z-index: 4; }
 .hero-search .search-row { display: flex; align-items: center; gap: 0; flex-wrap: nowrap; }
 .hero-search .search-row > select { flex: 1 1 160px; min-width: 140px; }
 .hero-search .search-row > button { flex: 0 0 auto; white-space: nowrap; margin-left: 12px; }
@@ -1287,9 +1312,15 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
     height: max(78vh, 680px);
     margin-top: 0;
   }
+  .hero-copy {
+    top: 126px;
+    transform: translateX(-50%);
+  }
+  .hero-copy h1 { font-size: clamp(32px, 6vw, 46px); }
+  .hero-copy p { font-size: 17px; }
   /* Keep the form clear of the header while the hero image remains behind its fade. */
   .hero-search {
-    top: 154px;
+    top: 300px;
     transform: translateX(-50%);
   }
   /* allow two rows at medium widths */
@@ -1323,7 +1354,7 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   .hero-panels {
     position: relative;
     grid-template-columns: 1fr;
-    height: max(95vh, 680px);
+    height: max(100vh, 760px);
   }
   /* show a single full-bleed panel; others hidden via opacity */
   .hero-panels .panel { position: absolute; inset: 0; opacity: 0; }
@@ -1331,7 +1362,20 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   /* Berlin (and any single-panel) hero: keep the one panel visible on mobile */
   .hero-panels--single .panel { position: relative; opacity: 1; }
   /* Keep comfortable side gutters on narrow phones. */
+  .hero-copy {
+    top: 118px;
+    width: calc(100% - 32px);
+  }
+  .hero-copy h1 {
+    margin-bottom: 10px;
+    font-size: clamp(30px, 9vw, 40px);
+  }
+  .hero-copy p {
+    font-size: 16px;
+    line-height: 1.4;
+  }
   .hero-search {
+    top: 320px;
     width: calc(100% - 28px);
   }
   /* stack only at very small widths */

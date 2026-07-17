@@ -243,7 +243,7 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 - [x] Reorder homepage content sections to lead with Berlin properties, districts, and projects
 - [x] Add clean internal links from the DE homepage to the Berlin hub and 11 district landing pages
 - [x] Keep homepage district and project sections Berlin-only; retain Dubai/Cyprus only in the secondary international-markets carousel
-- [ ] **Pending discussion:** Berlin-focused hero treatment and copy
+- [x] Replace the multi-market hero with a full-width Berlin image, localized H1, and short introduction
 
 **Done when:** Rich Results Test passes; Berlin content prioritized per business approval.  
 **Owner:** Dev (+ business for content order)  
@@ -251,7 +251,7 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 
 **Technical schema status:** ✅ DONE and live validated 2026-07-16. DE/EN/ES homepages expose the linked `Organization` + `WebSite` graph; live Schema.org validation returned 0 errors and 0 warnings. Google does not currently provide a dedicated rich-result enhancement for these entity types, so Schema.org Validator is the applicable syntax/semantic check.
 
-**Berlin content status:** Section updates completed in code 2026-07-16 and narrowed further on 2026-07-17. The district and development-project sections are Berlin-only; Dubai and Cyprus remain only in the secondary international-markets carousel. Interactive cards/carousels and responsive behavior were retained.
+**Berlin content status:** ✅ DONE in code 2026-07-17. The hero and primary content sections now lead with Berlin; district and development-project sections are Berlin-only; Dubai and Cyprus remain only in the secondary international-markets carousel. Interactive cards/carousels and responsive behavior were retained.
 
 ---
 
@@ -725,5 +725,5 @@ For **each** URL below, verify columns A–F.
 | 2026-07-15 | **Fix #11 DONE** — language-correct titles/H1 on DE/EN/ES static pages + projects/services | Dev |
 | 2026-07-15 | **Fix #12 DONE** — meta descriptions restored + localized; live validated (home/projects/about/contact/cookies DE/EN/ES) | Dev |
 | 2026-07-16 | **Fix #13 schema DONE** — Organization + WebSite graph live validated on DE/EN/ES with 0 errors/warnings | Dev |
-| 2026-07-16 | **Fix #13 Berlin sections DONE (code)** — Berlin properties/districts/projects prioritized; clean district links added; international markets moved below; hero deferred | Dev |
-| | **Next:** Approve Berlin-first homepage positioning, or proceed to #14/#15/#5–7 | |
+| 2026-07-17 | **Fix #13 Berlin focus DONE (code)** — Full-width localized Berlin hero plus Berlin-first properties, districts, projects, and clean internal links; international markets moved below | Dev |
+| | **Next:** Proceed to #14/#15/#5–7 | |

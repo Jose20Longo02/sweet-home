@@ -8,8 +8,8 @@
   <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
 <% } %>
 
-<!-- Preload the primary hero image for faster first paint -->
-<link rel="preload" as="image" href="/images/dubai-hero.jpg" imagesrcset="/images/dubai-hero.jpg" />
+<!-- Preload the primary Berlin hero image for faster first paint -->
+<link rel="preload" as="image" href="/images/berlin-hero.jpg" imagesrcset="/images/berlin-hero.jpg" />
 
 <div id="locations-data" data-locations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locations) : JSON.stringify(locations)).replace(/'/g, '&#39;') %>' data-neighborhood-counts='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(typeof neighborhoodCounts !== 'undefined' && neighborhoodCounts ? neighborhoodCounts : {}) : JSON.stringify(typeof neighborhoodCounts !== 'undefined' && neighborhoodCounts ? neighborhoodCounts : {})).replace(/'/g, '&#39;') %>' data-locale-prefix="<%= (typeof localePrefix !== 'undefined' && localePrefix) ? localePrefix : '' %>" data-locations-translations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(typeof locationsTranslations !== 'undefined' && locationsTranslations ? locationsTranslations : { countries: {}, cities: {} }) : JSON.stringify(typeof locationsTranslations !== 'undefined' && locationsTranslations ? locationsTranslations : { countries: {}, cities: {} })).replace(/'/g, '&#39;') %>' data-learn-more="<%= (typeof t === 'function' ? t('common.learnMore', 'Learn more') : 'Learn more').replace(/"/g, '&quot;') %>" style="display:none"></div>
 <!-- i18n strings for Home JS -->
@@ -53,13 +53,16 @@
   locations: (typeof locationsTranslations !== 'undefined' && locationsTranslations) ? locationsTranslations : { countries: {}, cities: {} }
 })).replace(/'/g, '&#39;') %>' style="display:none"></div>
 
-<!-- 1) Header overlayed hero with 3 vertical panels and centered search -->
-<section class="hero-panels">
-  <h1 class="sr-only"><%= t('home.title','International Real Estate Investment Company') %></h1>
-  <p class="sr-only"><%= t('home.heroDescription','Sweet Home is an international real estate investment company providing carefully selected investment properties in Berlin, Dubai, and Cyprus. We support international investors and expats with a full-service approach, from property sourcing and due diligence to acquisition and long-term investment support.') %></p>
-  <div class="panel" data-country="Berlin"><img src="/images/berlin-hero.jpg" alt="Luxury properties in Berlin, Germany" loading="lazy" decoding="async"></div>
-  <div class="panel" data-country="Dubai"><img src="/images/dubai-hero.jpg" alt="Luxury properties in Dubai, UAE" fetchpriority="high" decoding="async"></div>
-  <div class="panel" data-country="Cyprus"><img src="/images/cyprus-hero.jpg" alt="Luxury properties in Cyprus" loading="lazy" decoding="async"></div>
+<!-- 1) Berlin-focused hero with centered copy and property search -->
+<section class="hero-panels hero-panels--single hero-panels--berlin">
+  <div class="panel">
+    <img src="/images/berlin-hero.jpg" alt="<%= t('berlin.heroImgAlt','Berlin skyline – property for sale in Berlin, Germany') %>" fetchpriority="high" decoding="async">
+  </div>
+
+  <div class="hero-copy">
+    <h1><%= t('home.hero.berlinTitle','Your Real Estate Partner in Berlin') %></h1>
+    <p><%= t('home.hero.berlinIntro','Discover selected Berlin properties and new developments, with personal guidance for owner-occupiers and international investors.') %></p>
+  </div>
 
   <form class="hero-search" action="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>" method="get">
     <div class="search-row">

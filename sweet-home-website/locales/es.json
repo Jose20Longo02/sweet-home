@@ -350,7 +350,9 @@
     "heroDescription": "Sweet Home es una empresa internacional de inversión inmobiliaria que ofrece propiedades cuidadosamente seleccionadas en Berlín, Dubái y Chipre. Apoyamos a inversores internacionales y expatriados con un enfoque de servicio integral, desde la búsqueda de propiedades y la diligencia debida hasta la adquisición y el apoyo a la inversión a largo plazo.",
     "hero": {
       "title": "Encuentra la casa de tus sueños",
-      "subtitle": "Descubre la propiedad perfecta en las ubicaciones más deseadas"
+      "subtitle": "Descubre la propiedad perfecta en las ubicaciones más deseadas",
+      "berlinTitle": "Tu socio inmobiliario en Berlín",
+      "berlinIntro": "Descubre propiedades y proyectos de obra nueva seleccionados en Berlín, con asesoramiento personal para compradores e inversores internacionales."
     },
     "search": {
       "cta": "Buscar propiedades"

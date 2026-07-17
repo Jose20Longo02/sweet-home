@@ -455,7 +455,9 @@
     "heroDescription": "Sweet Home ist ein internationales Immobilieninvestmentunternehmen, das sorgfältig ausgewählte Anlageobjekte in Berlin, Dubai und Zypern anbietet. Wir unterstützen internationale Investoren und Expats mit einem Full-Service-Ansatz, der von der Immobiliensuche und Due Diligence bis hin zum Erwerb und der langfristigen Investitionsbetreuung reicht.",
     "hero": {
       "title": "Finden Sie Ihr Traumhaus",
-      "subtitle": "Entdecken Sie die perfekte Immobilie an den begehrtesten Standorten"
+      "subtitle": "Entdecken Sie die perfekte Immobilie an den begehrtesten Standorten",
+      "berlinTitle": "Ihr Immobilienpartner in Berlin",
+      "berlinIntro": "Entdecken Sie ausgewählte Berliner Immobilien und Neubauprojekte – mit persönlicher Beratung für Eigennutzer und internationale Investoren."
     },
     "search": {
       "cta": "Immobilien suchen"
