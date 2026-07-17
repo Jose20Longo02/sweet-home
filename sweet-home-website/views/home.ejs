@@ -235,22 +235,18 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
   </div>
 </section>
 
-<!-- Berlin-first development projects, followed by secondary international rows -->
-<section class="section new-development" aria-label="<%= t('home.newDevelopment.title','New development') %>">
+<!-- Berlin development projects -->
+<section class="section new-development" aria-label="<%= t('home.newDevelopment.berlinTitle','New developments in Berlin') %>">
   <div class="container">
-    <h2 class="section-title"><%= t('home.newDevelopment.title','New development') %></h2>
-    <% const devRows = (typeof newDevelopmentRows !== 'undefined' && Array.isArray(newDevelopmentRows)) ? newDevelopmentRows : []; %>
+    <h2 class="section-title"><%= t('home.newDevelopment.berlinTitle','New developments in Berlin') %></h2>
+    <p class="section-intro new-development-intro"><%= t('home.newDevelopment.berlinIntro','Explore selected new-build and development projects in Berlin, with clear information on location, prices, unit sizes, and completion.') %></p>
+    <% const devRows = (typeof newDevelopmentRows !== 'undefined' && Array.isArray(newDevelopmentRows)) ? newDevelopmentRows.filter(function(row){ return row.key === 'germany'; }) : []; %>
     <% if (devRows.length > 0) { %>
-      <% devRows.forEach(function(row, rowIndex){ %>
-        <div class="dev-row <%= row.key === 'germany' ? 'dev-row--berlin' : 'dev-row--international' %>">
-          <% if (rowIndex === 1) { %>
-            <h3 class="dev-secondary-title"><%= t('home.newDevelopment.internationalTitle','Other international projects') %></h3>
-          <% } %>
+      <% devRows.forEach(function(row){ %>
+        <div class="dev-row dev-row--berlin">
           <div class="dev-row-heading">
-            <h3 class="dev-row-title"><%= row.key === 'germany' ? t('home.newDevelopment.berlinTitle','New developments in Berlin') : t('home.newDevelopment.rows.' + row.key, row.key) %></h3>
-            <% if (row.key === 'germany') { %>
-              <a class="dev-row-link" href="<%= ((typeof localePath === 'function') ? localePath('/projects') : '/projects') + '?country=Germany&city=Berlin' %>"><%= t('home.newDevelopment.viewBerlin','View Berlin projects') %> →</a>
-            <% } %>
+            <h3 class="dev-row-title"><%= t('home.newDevelopment.berlinFeaturedTitle','Selected Berlin projects') %></h3>
+            <a class="dev-row-link" href="<%= ((typeof localePath === 'function') ? localePath('/projects') : '/projects') + '?country=Germany&city=Berlin' %>"><%= t('home.newDevelopment.viewBerlin','View Berlin projects') %> →</a>
           </div>
           <div class="dev-grid">
             <% (row.cards || []).slice(0,3).forEach(function(card){ %>
@@ -295,10 +291,10 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
         </div>
       <% }) %>
     <% } else { %>
-      <p class="section-empty"><%= t('home.newDevelopment.empty','No developments available right now.') %></p>
+      <p class="section-empty"><%= t('home.newDevelopment.berlinEmpty','No Berlin developments are available right now.') %></p>
     <% } %>
     <div class="dev-cta-wrap">
-      <a class="btn btn-green dev-cta" href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>"><%= t('home.newDevelopment.viewMore','View more developments') %></a>
+      <a class="btn btn-green dev-cta" href="<%= ((typeof localePath === 'function') ? localePath('/projects') : '/projects') + '?country=Germany&city=Berlin' %>"><%= t('home.newDevelopment.viewBerlin','View Berlin projects') %></a>
     </div>
   </div>
 </section>

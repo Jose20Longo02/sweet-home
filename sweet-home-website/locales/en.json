@@ -488,6 +488,9 @@
     "newDevelopment": {
       "title": "New development",
       "berlinTitle": "New developments in Berlin",
+      "berlinIntro": "Explore selected new-build and development projects in Berlin, with clear information on location, prices, unit sizes, and completion.",
+      "berlinFeaturedTitle": "Selected Berlin projects",
+      "berlinEmpty": "No Berlin developments are available right now.",
       "viewBerlin": "View Berlin projects",
       "internationalTitle": "Other international projects",
       "completion": "Completion",

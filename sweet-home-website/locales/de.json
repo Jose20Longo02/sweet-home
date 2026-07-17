@@ -476,6 +476,9 @@
     "newDevelopment": {
       "title": "Neue Projekte",
       "berlinTitle": "Neubauprojekte in Berlin",
+      "berlinIntro": "Entdecken Sie ausgewählte Neubau- und Entwicklungsprojekte in Berlin – mit klaren Informationen zu Lage, Preisen, Wohnflächen und Fertigstellung.",
+      "berlinFeaturedTitle": "Ausgewählte Berliner Projekte",
+      "berlinEmpty": "Aktuell sind keine Berliner Projekte verfügbar.",
       "viewBerlin": "Berliner Projekte ansehen",
       "internationalTitle": "Weitere internationale Projekte",
       "completion": "Fertigstellung",

@@ -1290,9 +1290,7 @@ async function renderHomePage(req, res, langPath, next) {
       newDevelopmentRows = cached.newDevelopmentRows;
     } else {
       const regionDefs = [
-        { key: 'germany', country: 'Germany', city: 'Berlin' },
-        { key: 'dubai', country: 'UAE', city: 'Dubai' },
-        { key: 'cyprus', country: 'Cyprus', city: null }
+        { key: 'germany', country: 'Germany', city: 'Berlin' }
       ];
       const regionQueries = regionDefs.map(r => query(`
         SELECT id, title, title_i18n, slug, country, city, neighborhood, photos,

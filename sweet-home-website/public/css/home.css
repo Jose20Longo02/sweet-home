@@ -853,7 +853,8 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 /* New Development */
 .section.new-development { padding: 0px 0 24px; background: #fff; }
 .section.new-development .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
-.new-development .section-title { margin-bottom: 42px; }
+.new-development .section-title { margin-bottom: 18px; }
+.new-development .new-development-intro { margin-bottom: 34px; }
 .new-development .dev-row { margin-bottom: 30px; }
 .new-development .dev-row--berlin {
   padding: 24px;
@@ -886,15 +887,6 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 .new-development .dev-row-link:focus-visible {
   color: var(--primary-color, #2ea862);
   text-decoration: underline;
-}
-.new-development .dev-secondary-title {
-  margin: 52px 0 22px;
-  padding-top: 38px;
-  border-top: 1px solid var(--gray-200, #e2e8f0);
-  color: var(--gray-800, #1f2937);
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  text-align: center;
 }
 .new-development .dev-grid {
   display: grid;
@@ -1013,7 +1005,6 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
     gap: 8px;
   }
   .new-development .dev-row-link { white-space: normal; }
-  .new-development .dev-secondary-title { margin-top: 38px; padding-top: 30px; }
   .new-development .dev-grid { grid-template-columns: 1fr; }
   .new-development .dev-price-value { font-size: 21px; }
   .new-development .dev-price-request { font-size: 16px; }

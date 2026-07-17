@@ -371,6 +371,9 @@
     "newDevelopment": {
       "title": "Nuevos desarrollos",
       "berlinTitle": "Nuevos proyectos en Berlín",
+      "berlinIntro": "Explora proyectos de obra nueva y desarrollo seleccionados en Berlín, con información clara sobre ubicación, precios, superficies y entrega.",
+      "berlinFeaturedTitle": "Proyectos seleccionados en Berlín",
+      "berlinEmpty": "Actualmente no hay proyectos disponibles en Berlín.",
       "viewBerlin": "Ver proyectos en Berlín",
       "internationalTitle": "Otros proyectos internacionales",
       "completion": "Entrega",

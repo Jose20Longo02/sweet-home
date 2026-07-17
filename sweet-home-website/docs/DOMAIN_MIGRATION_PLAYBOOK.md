@@ -242,7 +242,7 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 - [x] Validate with Schema.org Validator — 0 errors, 0 warnings (2026-07-16)
 - [x] Reorder homepage content sections to lead with Berlin properties, districts, and projects
 - [x] Add clean internal links from the DE homepage to the Berlin hub and 11 district landing pages
-- [x] Move Dubai/Cyprus into clearly secondary international sections
+- [x] Keep homepage district and project sections Berlin-only; retain Dubai/Cyprus only in the secondary international-markets carousel
 - [ ] **Pending discussion:** Berlin-focused hero treatment and copy
 
 **Done when:** Rich Results Test passes; Berlin content prioritized per business approval.  
@@ -251,7 +251,7 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 
 **Technical schema status:** ✅ DONE and live validated 2026-07-16. DE/EN/ES homepages expose the linked `Organization` + `WebSite` graph; live Schema.org validation returned 0 errors and 0 warnings. Google does not currently provide a dedicated rich-result enhancement for these entity types, so Schema.org Validator is the applicable syntax/semantic check.
 
-**Berlin content status:** Section updates completed in code 2026-07-16. The interactive property carousel, neighborhood tabs/cards, development cards, and international carousel were retained; desktop/mobile browser checks passed with no horizontal overflow. Hero changes were intentionally deferred.
+**Berlin content status:** Section updates completed in code 2026-07-16 and narrowed further on 2026-07-17. The district and development-project sections are Berlin-only; Dubai and Cyprus remain only in the secondary international-markets carousel. Interactive cards/carousels and responsive behavior were retained.
 
 ---
 
