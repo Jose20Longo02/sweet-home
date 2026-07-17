@@ -646,18 +646,14 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 .hero-panels .panel:hover img { transform: scale(1.03); }
 .hero-panels--berlin .panel::before,
 .hero-panels--berlin .panel:hover::before {
-  background: linear-gradient(180deg, rgba(7,18,31,.42) 0%, rgba(7,18,31,.68) 42%, rgba(7,18,31,.52) 100%);
+  background: linear-gradient(180deg, rgba(7,18,31,.3) 0%, rgba(7,18,31,.6) 43%, rgba(7,18,31,.42) 100%);
 }
 .hero-panels--berlin .panel img,
 .hero-panels--berlin .panel:hover img {
   object-position: var(--hero-object-x, 50%) var(--hero-object-y, 50%);
-  animation: heroBerlinDrift 12s ease-in-out infinite alternate;
+  transform: none;
   transition: object-position .4s cubic-bezier(.2,.7,.2,1);
-  will-change: transform, object-position;
-}
-@keyframes heroBerlinDrift {
-  from { transform: scale(1.03); }
-  to { transform: scale(1.12); }
+  will-change: object-position;
 }
 /* hover text only, slightly lower than center */
 .hero-panels .panel::after { content: attr(data-country); position: absolute; left: 50%; top: 75%; transform: translate(-50%, -50%); color: #fff; font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; font-size: 30px; font-weight: 300; letter-spacing: .6px; opacity: 0; transition: opacity .25s ease; z-index: 3; }
@@ -832,7 +828,7 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   .hero-scroll-cue span {
     animation: none;
   }
-  .hero-panels--berlin .panel img { transition: none; transform: scale(1.03); }
+  .hero-panels--berlin .panel img { transition: none; transform: none; }
 }
 
 /* Interactive property-market map */
@@ -2030,7 +2026,7 @@ body[data-icon-theme="christmas"] .social-link img {
   opacity: 1;
 }
 .home-hero-experience > .hero-panels .panel::before {
-  background: linear-gradient(180deg, rgba(5,18,26,.55) 0%, rgba(5,18,26,.62) 38%, rgba(5,18,26,.48) 72%, rgba(5,18,26,.58) 100%);
+  background: linear-gradient(90deg, rgba(5,18,26,.72) 0%, rgba(5,18,26,.58) 42%, rgba(5,18,26,.34) 68%, rgba(5,18,26,.5) 100%);
 }
 .home-hero-experience .hero-interface {
   position: relative;

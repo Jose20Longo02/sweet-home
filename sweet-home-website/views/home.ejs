@@ -2,7 +2,7 @@
 <% useMainContainer = false %>
 <% hideFooter = false %>
 <% headPartial = '../partials/seo/home-head' %>
-<link rel="stylesheet" href="/css/home.css?v=<%= assetVersion %>-hero-altbau-20260717" />
+<link rel="stylesheet" href="/css/home.css?v=<%= assetVersion %>-hero-skyline-20260717" />
 <link rel="stylesheet" href="/css/contact.css?v=<%= assetVersion %>" />
 <link rel="stylesheet" href="/css/libs/leaflet.min.css" />
 <% if (process.env.RECAPTCHA_SITE_KEY) { %>
@@ -10,7 +10,7 @@
 <% } %>
 
 <!-- Preload the primary Berlin hero image for faster first paint -->
-<link rel="preload" as="image" href="/images/berlin-hero.webp?v=altbau-20260717" type="image/webp" imagesrcset="/images/berlin-hero.webp?v=altbau-20260717" />
+<link rel="preload" as="image" href="/images/berlin-hero.webp?v=skyline-20260717" type="image/webp" imagesrcset="/images/berlin-hero.webp?v=skyline-20260717" />
 
 <div id="locations-data" data-locations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(locations) : JSON.stringify(locations)).replace(/'/g, '&#39;') %>' data-neighborhood-counts='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(typeof neighborhoodCounts !== 'undefined' && neighborhoodCounts ? neighborhoodCounts : {}) : JSON.stringify(typeof neighborhoodCounts !== 'undefined' && neighborhoodCounts ? neighborhoodCounts : {})).replace(/'/g, '&#39;') %>' data-locale-prefix="<%= (typeof localePrefix !== 'undefined' && localePrefix) ? localePrefix : '' %>" data-locations-translations='<%- (typeof minifyJSON !== 'undefined' ? minifyJSON(typeof locationsTranslations !== 'undefined' && locationsTranslations ? locationsTranslations : { countries: {}, cities: {} }) : JSON.stringify(typeof locationsTranslations !== 'undefined' && locationsTranslations ? locationsTranslations : { countries: {}, cities: {} })).replace(/'/g, '&#39;') %>' data-learn-more="<%= (typeof t === 'function' ? t('common.learnMore', 'Learn more') : 'Learn more').replace(/"/g, '&quot;') %>" style="display:none"></div>
 <!-- i18n strings for Home JS -->
@@ -73,8 +73,8 @@
 <section class="hero-panels hero-panels--single hero-panels--berlin">
   <div class="panel">
     <picture>
-      <source srcset="/images/berlin-hero.webp?v=altbau-20260717" type="image/webp" />
-      <img src="/images/berlin-hero.jpg?v=altbau-20260717" alt="<%= t('berlin.heroImgAlt','Berlin skyline – property for sale in Berlin, Germany') %>" fetchpriority="high" decoding="async">
+      <source srcset="/images/berlin-hero.webp?v=skyline-20260717" type="image/webp" />
+      <img src="/images/berlin-hero.jpg?v=skyline-20260717" alt="<%= t('berlin.heroImgAlt','Berlin skyline – property for sale in Berlin, Germany') %>" fetchpriority="high" decoding="async">
     </picture>
   </div>
 </section>
