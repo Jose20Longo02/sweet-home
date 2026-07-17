@@ -653,21 +653,33 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   text-align: center;
   text-shadow: 0 2px 18px rgba(0,0,0,.55);
 }
+.hero-copy::before {
+  content: "";
+  display: block;
+  width: 52px;
+  height: 3px;
+  margin: 0 auto 20px;
+  border-radius: 999px;
+  background: var(--primary-color, #2ea862);
+  box-shadow: 0 2px 10px rgba(46,168,98,.35);
+}
 .hero-copy h1 {
   margin: 0 0 16px;
   color: #fff;
-  font-size: clamp(38px, 4.4vw, 58px);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -.02em;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(40px, 4.5vw, 62px);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -.015em;
 }
 .hero-copy p {
   max-width: 720px;
   margin: 0 auto;
   color: rgba(255,255,255,.94);
   font-size: clamp(17px, 1.5vw, 20px);
-  font-weight: 400;
-  line-height: 1.5;
+  font-weight: 300;
+  line-height: 1.55;
+  letter-spacing: .01em;
   text-shadow: 0 2px 14px rgba(0,0,0,.7);
 }
 
@@ -719,6 +731,10 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 .hero-search button:active { transform: translateY(0); box-shadow: 0 6px 18px rgba(46,168,98,.22); }
 .hero-search button:focus-visible { outline: 2px solid var(--primary-light, #58c27d); outline-offset: 2px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+@media (min-width: 901px) and (max-height: 650px) {
+  .hero-copy { top: 46%; }
+  .hero-search { top: 80%; }
+}
 
 /* 3) Featured properties – cards carousel */
 .section.featured { padding: 72px 16px 48px; background: #fff; content-visibility: auto; contain-intrinsic-size: 600px; }
@@ -1328,11 +1344,12 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
     top: 170px;
     transform: translateX(-50%);
   }
-  .hero-copy h1 { font-size: clamp(32px, 6vw, 46px); }
+  .hero-copy::before { margin-bottom: 16px; }
+  .hero-copy h1 { font-size: clamp(34px, 6vw, 48px); }
   .hero-copy p { font-size: 17px; }
   /* Keep the form clear of the header while the hero image remains behind its fade. */
   .hero-search {
-    top: 360px;
+    top: 400px;
     transform: translateX(-50%);
   }
   /* allow two rows at medium widths */
@@ -1379,8 +1396,9 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
     width: calc(100% - 32px);
   }
   .hero-copy h1 {
-    margin-bottom: 10px;
-    font-size: clamp(30px, 9vw, 40px);
+    margin-bottom: 12px;
+    font-size: clamp(34px, 9vw, 42px);
+    line-height: 1.15;
   }
   .hero-copy p {
     font-size: 16px;
