@@ -2291,3 +2291,130 @@ body[data-icon-theme="christmas"] .social-link img {
     transition: none;
   }
 }
+
+@media (min-width: 901px) {
+  .home-hero-experience {
+    grid-template-areas: "search map";
+    grid-template-columns: minmax(350px, .8fr) minmax(450px, 1.2fr);
+    padding-top: clamp(108px, 14vh, 132px);
+  }
+  .home-hero-experience .hero-interface {
+    grid-area: search;
+    align-self: stretch;
+    padding: clamp(16px, 2vw, 26px);
+    overflow: auto;
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 22px;
+    background: linear-gradient(145deg, rgba(8,29,34,.7), rgba(12,45,38,.54));
+    box-shadow: 0 26px 64px rgba(0,0,0,.28);
+    backdrop-filter: blur(10px);
+  }
+  .home-hero-experience > .market-explorer {
+    grid-area: map;
+  }
+  .home-hero-experience .hero-copy h1 {
+    font-size: clamp(24px, 2.4vw, 38px);
+    white-space: normal;
+  }
+  .home-hero-experience .hero-copy p {
+    max-width: none;
+    font-size: clamp(13px, 1.2vw, 16px);
+  }
+  .home-hero-experience .hero-search {
+    margin-top: clamp(13px, 2vh, 22px);
+    padding: 10px;
+  }
+  .home-hero-experience .hero-search .search-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+  .home-hero-experience .hero-search .search-row > select,
+  .home-hero-experience .hero-search .search-row > button {
+    min-height: 36px;
+  }
+  .home-hero-experience .hero-search select {
+    padding-block: 8px;
+  }
+  .home-hero-experience .hero-search button {
+    padding-block: 8px;
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 901px) and (max-height: 650px) {
+  .home-hero-experience {
+    padding-top: 104px;
+    padding-bottom: 14px;
+  }
+  .home-hero-experience .hero-interface { padding: 15px; }
+  .home-hero-experience .hero-copy::before { margin-bottom: 9px; }
+  .home-hero-experience .hero-copy h1 {
+    margin-bottom: 7px;
+    font-size: clamp(23px, 2.35vw, 31px);
+  }
+  .home-hero-experience .hero-copy p { display: none; }
+  .home-hero-experience .hero-search { margin-top: 10px; }
+  .home-hero-experience .market-explorer__summary {
+    padding: 15px;
+  }
+  .home-hero-experience .market-explorer__summary h2 {
+    font-size: 24px;
+  }
+}
+
+/* Keep map information in a dedicated header so markers remain unobstructed. */
+.home-hero-experience .market-explorer__shell {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+.home-hero-experience .market-explorer__summary {
+  position: relative !important;
+  inset: auto !important;
+  grid-column: 1;
+  grid-row: 1;
+  width: auto;
+  border: 0;
+  border-bottom: 1px solid rgba(255,255,255,.16);
+  border-radius: 0;
+  box-shadow: none;
+}
+.home-hero-experience .market-explorer__map-wrap {
+  position: relative !important;
+  inset: auto !important;
+  grid-column: 1;
+  grid-row: 2;
+  min-height: 0;
+}
+
+@media (min-width: 901px) {
+  .home-hero-experience .market-explorer__summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 12px;
+    padding: 13px 16px;
+    align-items: center;
+  }
+  .home-hero-experience .market-explorer__eyebrow { display: none; }
+  .home-hero-experience .market-explorer__summary h2 {
+    margin: 0;
+    font-size: clamp(18px, 1.6vw, 24px);
+  }
+  .home-hero-experience .market-explorer__status {
+    min-width: 135px;
+    margin: 0;
+    padding: 8px 10px;
+  }
+  .home-hero-experience .market-explorer__cta {
+    margin: 0;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 900px) {
+  .home-hero-experience .market-explorer__summary {
+    position: relative;
+    inset: auto;
+    width: auto;
+  }
+}
