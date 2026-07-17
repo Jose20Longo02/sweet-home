@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
   window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   // Minimal logging in production
   loadHomeI18n();
+  requestAnimationFrame(initBerlinHeroParallax);
   
   // Get locations data from the page
   window.locations = {};
@@ -709,6 +710,10 @@ function initMobileHeroSlideshow() {
   if (!hero) return;
   const panels = [...hero.querySelectorAll('.panel')];
   if (!panels.length) return;
+  if (panels.length === 1) {
+    panels[0].classList.add('is-active');
+    return;
+  }
 
   let timer = null;
   let idx = 0;
@@ -731,6 +736,39 @@ function initMobileHeroSlideshow() {
 
   mq.addEventListener ? mq.addEventListener('change', start) : mq.addListener(start);
   start();
+}
+
+function initBerlinHeroParallax() {
+  const hero = document.querySelector('.hero-panels--berlin');
+  const image = hero?.querySelector('.panel img');
+  if (!hero || !image) return;
+  if (hero.dataset.parallaxReady === 'true') return;
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  hero.dataset.parallaxReady = 'true';
+
+  let frame = null;
+  let nextX = 50;
+  let nextY = 50;
+
+  function render() {
+    frame = null;
+    image.style.setProperty('--hero-object-x', `${nextX}%`);
+    image.style.setProperty('--hero-object-y', `${nextY}%`);
+  }
+
+  hero.addEventListener('mousemove', function(event) {
+    const rect = hero.getBoundingClientRect();
+    nextX = 50 + ((event.clientX - rect.left) / rect.width - 0.5) * 3;
+    nextY = 50 + ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+    if (!frame) frame = requestAnimationFrame(render);
+  }, { passive: true });
+
+  hero.addEventListener('mouseleave', function() {
+    nextX = 50;
+    nextY = 50;
+    if (!frame) frame = requestAnimationFrame(render);
+  }, { passive: true });
 }
 
 // Add input validation for calculator

@@ -98,6 +98,10 @@
       <button type="submit"><%= t('home.search.cta','Search Properties') %></button>
     </div>
   </form>
+
+  <a class="hero-scroll-cue" href="#berlin-properties" aria-label="<%= t('home.hero.exploreBerlin','Explore Berlin properties') %>">
+    <span aria-hidden="true"></span>
+  </a>
 </section>
 
 <!-- Featured section translations: single source for locale (avoids data-attr/parse issues) -->
@@ -108,7 +112,7 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
 };
 </script>
 <!-- 3) Featured Properties – card carousel (3-up) -->
-<section class="section featured">
+<section class="section featured" id="berlin-properties">
   <h2 class="section-title"><%= t('berlin.featuredTitle','Apartments in Berlin') %></h2>
   <p class="section-intro berlin-properties-intro"><%= t('home.berlinProperties.intro','Explore selected Berlin apartments for owner-occupation and investment, with local guidance from the first comparison through the purchase process.') %></p>
   <div class="cards-carousel" id="featuredCarousel" aria-label="Featured properties">
