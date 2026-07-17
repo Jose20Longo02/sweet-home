@@ -330,10 +330,20 @@ function initializeMarketExplorer() {
     updateCta();
   }
 
-  function fitLocation(location, fallbackZoom) {
+  function fitLocation(location, fallbackZoom, zoomBoost = 0) {
     const bounds = toBounds(location?.bounds);
     if (bounds) {
-      map.flyToBounds(bounds, { padding: [42, 42], maxZoom: fallbackZoom, duration: 1.05 });
+      if (zoomBoost > 0) {
+        const leafletBounds = Leaflet.latLngBounds(bounds);
+        const fittedZoom = map.getBoundsZoom(leafletBounds, false, Leaflet.point(42, 42));
+        map.flyTo(
+          leafletBounds.getCenter(),
+          Math.min(fallbackZoom, fittedZoom + zoomBoost),
+          { duration: 1.05 }
+        );
+      } else {
+        map.flyToBounds(bounds, { padding: [42, 42], maxZoom: fallbackZoom, duration: 1.05 });
+      }
     } else if (location && Number.isFinite(location.lat) && Number.isFinite(location.lng)) {
       map.flyTo([location.lat, location.lng], fallbackZoom, { duration: 1.05 });
     }
@@ -398,13 +408,13 @@ function initializeMarketExplorer() {
 
     if (selectedNeighborhood) {
       const neighborhoodLocation = cityLocation.neighborhoods?.[selectedNeighborhood] || cityLocation;
-      fitLocation(neighborhoodLocation, 13);
+      fitLocation(neighborhoodLocation, 14, 2);
       updateSummary(
         `${selectedNeighborhood}, ${translatedCity(selectedCity)}`,
         getNeighborhoodCount(selectedCountry, selectedCity, selectedNeighborhood)
       );
     } else {
-      fitLocation(cityLocation, 11);
+      fitLocation(cityLocation, 12, 2);
       updateSummary(
         `${translatedCity(selectedCity)}, ${translatedCountry(selectedCountry)}`,
         getCityCount(selectedCountry, selectedCity)
