@@ -412,6 +412,16 @@ function initializeMarketExplorer() {
     }
   }
 
+  // Keep the Berlin-first homepage story coherent by opening the synchronized
+  // search and map on the primary market. Visitors can still select any market.
+  if (
+    !countrySelect.value &&
+    mapLocations.Germany?.cities?.Berlin &&
+    window.locations?.Germany?.Berlin
+  ) {
+    setFilters('Germany', 'Berlin');
+  }
+
   [countrySelect, citySelect, neighborhoodSelect].forEach(select => {
     select?.addEventListener('change', renderMap);
   });
