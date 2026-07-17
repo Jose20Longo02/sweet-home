@@ -1361,7 +1361,7 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   .hero-panels {
     position: relative;
     grid-template-columns: 1fr;
-    height: max(100vh, 800px);
+    height: max(115vh, 1040px);
   }
   /* show a single full-bleed panel; others hidden via opacity */
   .hero-panels .panel { position: absolute; inset: 0; opacity: 0; }
