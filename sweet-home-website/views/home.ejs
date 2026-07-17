@@ -344,6 +344,15 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
 </section>
 
 <!-- Other international markets – interactive stretch/collapse carousel -->
+<%
+  var internationalMarketLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'de';
+  var dubaiLandingPath = internationalMarketLang === 'de'
+    ? '/immobilien-dubai-kaufen'
+    : (internationalMarketLang === 'es' ? '/es/propiedades-en-venta-dubai' : '/en/properties-for-sale-dubai');
+  var cyprusLandingPath = internationalMarketLang === 'de'
+    ? '/immobilien-zypern-kaufen'
+    : (internationalMarketLang === 'es' ? '/es/propiedades-en-venta-chipre' : '/en/properties-for-sale-cyprus');
+%>
 <section class="section international">
   <h2 class="section-title"><%= t('home.international.title','Other international property markets') %></h2>
   <div class="stretch-carousel" id="intlCarousel">
@@ -354,7 +363,7 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
         <span class="vertical-title"><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %></span>
         <div class="expanded-info">
           <h3><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %></h3>
-          <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=UAE&city=Dubai" class="see-link"><%= t('home.international.see','See properties') %></a>
+          <a href="<%= dubaiLandingPath %>" class="see-link"><%= t('home.international.see','See properties') %></a>
         </div>
       </article>
       <article class="stretch-card is-collapsed" data-title="<%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %>">
@@ -362,7 +371,7 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
         <span class="vertical-title"><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></span>
         <div class="expanded-info">
           <h3><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></h3>
-          <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Cyprus" class="see-link"><%= t('home.international.see','See properties') %></a>
+          <a href="<%= cyprusLandingPath %>" class="see-link"><%= t('home.international.see','See properties') %></a>
         </div>
       </article>
     </div>
