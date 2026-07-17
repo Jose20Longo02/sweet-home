@@ -863,8 +863,8 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
   overflow: hidden;
   color: #fff;
   background:
-    radial-gradient(circle at 12% 10%, rgba(86,197,130,.26), transparent 36%),
-    linear-gradient(145deg, #102d24 0%, #174b38 52%, #1d6647 100%);
+    radial-gradient(circle at 12% 10%, rgba(255,255,255,.18), transparent 36%),
+    linear-gradient(135deg, #39b96f 0%, var(--primary-color, #2ea862) 58%, #279a59 100%);
 }
 .market-explorer__summary::after {
   content: "";
