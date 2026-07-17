@@ -759,8 +759,8 @@ function initBerlinHeroParallax() {
 
   hero.addEventListener('mousemove', function(event) {
     const rect = hero.getBoundingClientRect();
-    nextX = 50 + ((event.clientX - rect.left) / rect.width - 0.5) * 3;
-    nextY = 50 + ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+    nextX = 50 + ((event.clientX - rect.left) / rect.width - 0.5) * 7;
+    nextY = 50 + ((event.clientY - rect.top) / rect.height - 0.5) * 4;
     if (!frame) frame = requestAnimationFrame(render);
   }, { passive: true });
 
