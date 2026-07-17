@@ -475,6 +475,17 @@
     "search": {
       "cta": "Search Properties"
     },
+    "marketMap": {
+      "eyebrow": "Live property explorer",
+      "title": "Explore our property markets",
+      "intro": "Select a country, city, or neighborhood above—or use the map directly—to explore available properties.",
+      "allMarkets": "Our markets",
+      "properties": "properties",
+      "property": "property",
+      "view": "View properties",
+      "mapLabel": "Interactive map of our property markets",
+      "hint": "Map and search filters stay synchronized."
+    },
     "featured": {
       "title": "Featured Properties",
       "subtitle": "Discover our handpicked selection of premium properties",

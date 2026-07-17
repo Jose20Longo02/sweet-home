@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize city dropdown functionality
   // Lightweight init first
   initializeCityDropdown();
+  initializeMarketExplorer();
   // Attach carousel controls immediately; images remain lazy-loaded.
   initStretchCarousel('#intlCarousel');
   // Header shrink on scroll (transparent to solid)
@@ -183,6 +184,245 @@ function initializeCityDropdown() {
   
   console.log('✅ Dropdown initialization complete');
   console.log('🎯 Event listeners attached to country and city dropdowns');
+}
+
+function initializeMarketExplorer() {
+  const mapElement = document.getElementById('marketExplorerMap');
+  const mapLocations = window.MARKET_MAP_LOCATIONS;
+  const Leaflet = window.L;
+  if (!mapElement || !mapLocations || !Leaflet) return;
+
+  const countrySelect = document.getElementById('country');
+  const citySelect = document.getElementById('city');
+  const neighborhoodSelect = document.getElementById('neighborhood');
+  const operationSelect = document.getElementById('operation');
+  const typeSelect = document.getElementById('type');
+  const locationElement = document.getElementById('marketExplorerLocation');
+  const countElement = document.getElementById('marketExplorerCount');
+  const countLabelElement = document.getElementById('marketExplorerCountLabel');
+  const ctaElement = document.getElementById('marketExplorerCta');
+  if (!countrySelect || !citySelect || !neighborhoodSelect) return;
+
+  const locationTranslations = HOME_I18N.locations || {};
+  const mapStrings = HOME_I18N.marketMap || {};
+  const localePrefix = document.getElementById('locations-data')?.getAttribute('data-locale-prefix') || '';
+  const propertiesPath = `${localePrefix}/properties`.replace(/^\/\//, '/');
+  const markers = Leaflet.layerGroup();
+  const map = Leaflet.map(mapElement, {
+    zoomControl: true,
+    scrollWheelZoom: false,
+    minZoom: 2,
+    maxZoom: 15,
+    worldCopyJump: true
+  }).setView([35, 33], 3);
+
+  const primaryTiles = Leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    subdomains: 'abcd',
+    maxZoom: 20
+  });
+  primaryTiles.addTo(map);
+  markers.addTo(map);
+
+  function escapeHtml(value) {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function translatedCountry(country) {
+    return (locationTranslations.countries && locationTranslations.countries[country]) || country;
+  }
+
+  function translatedCity(city) {
+    return (locationTranslations.cities && locationTranslations.cities[city]) || city;
+  }
+
+  function getCountryCount(country) {
+    const source = window.neighborhoodCounts?.[country];
+    if (Number.isFinite(Number(source?.__total))) return Number(source.__total);
+    return Object.entries(source || {}).reduce((sum, [key, city]) => {
+      if (key === '__total' || !city || typeof city !== 'object') return sum;
+      return sum + Object.entries(city).reduce((citySum, [cityKey, value]) => (
+        cityKey === '__total' ? citySum : citySum + (Number(value) || 0)
+      ), 0);
+    }, 0);
+  }
+
+  function getCityCount(country, city) {
+    const source = window.neighborhoodCounts?.[country]?.[city];
+    if (Number.isFinite(Number(source?.__total))) return Number(source.__total);
+    return Object.entries(source || {}).reduce((sum, [key, value]) => (
+      key === '__total' ? sum : sum + (Number(value) || 0)
+    ), 0);
+  }
+
+  function getNeighborhoodCount(country, city, neighborhood) {
+    return Number(window.neighborhoodCounts?.[country]?.[city]?.[neighborhood]) || 0;
+  }
+
+  function toBounds(bounds) {
+    if (!Array.isArray(bounds) || bounds.length !== 4 || !bounds.every(Number.isFinite)) return null;
+    return [[bounds[0], bounds[2]], [bounds[1], bounds[3]]];
+  }
+
+  function makeMarkerIcon(label, count, level, selected) {
+    const safeLabel = escapeHtml(label);
+    const safeCount = Number(count) || 0;
+    return Leaflet.divIcon({
+      className: 'market-map-icon',
+      html: `<div class="market-map-marker market-map-marker--${level}${safeCount === 0 ? ' market-map-marker--empty' : ''}${selected ? ' market-map-marker--selected' : ''}"><strong>${safeCount}</strong><span>${safeLabel}</span></div>`,
+      iconSize: level === 'country' ? [86, 58] : (level === 'neighborhood' ? [44, 44] : [64, 54]),
+      iconAnchor: level === 'country' ? [43, 29] : (level === 'neighborhood' ? [22, 22] : [32, 27])
+    });
+  }
+
+  function setFilters(country, city, neighborhood) {
+    countrySelect.value = country || '';
+    countrySelect.dispatchEvent(new Event('change', { bubbles: true }));
+    if (city) {
+      citySelect.value = city;
+      citySelect.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    if (neighborhood) {
+      neighborhoodSelect.value = neighborhood;
+      neighborhoodSelect.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+
+  function addMarker(location, label, count, level, selected, onClick) {
+    if (!location || !Number.isFinite(location.lat) || !Number.isFinite(location.lng)) return null;
+    const marker = Leaflet.marker([location.lat, location.lng], {
+      icon: makeMarkerIcon(label, count, level, selected),
+      keyboard: true,
+      title: `${label}: ${count}`
+    });
+    marker.on('click', onClick);
+    marker.addTo(markers);
+    return marker;
+  }
+
+  function updateCta() {
+    const params = new URLSearchParams();
+    [
+      ['country', countrySelect],
+      ['city', citySelect],
+      ['neighborhood', neighborhoodSelect],
+      ['operation', operationSelect],
+      ['type', typeSelect]
+    ].forEach(([name, select]) => {
+      if (select?.value) params.set(name, select.value);
+    });
+    ctaElement.href = `${propertiesPath}${params.toString() ? `?${params}` : ''}`;
+  }
+
+  function updateSummary(label, count) {
+    if (locationElement) locationElement.textContent = label;
+    if (countElement) countElement.textContent = String(Number(count) || 0);
+    if (countLabelElement) {
+      countLabelElement.textContent = Number(count) === 1
+        ? (mapStrings.property || 'property')
+        : (mapStrings.properties || 'properties');
+    }
+    updateCta();
+  }
+
+  function fitLocation(location, fallbackZoom) {
+    const bounds = toBounds(location?.bounds);
+    if (bounds) {
+      map.flyToBounds(bounds, { padding: [42, 42], maxZoom: fallbackZoom, duration: 1.05 });
+    } else if (location && Number.isFinite(location.lat) && Number.isFinite(location.lng)) {
+      map.flyTo([location.lat, location.lng], fallbackZoom, { duration: 1.05 });
+    }
+  }
+
+  function renderMap() {
+    const selectedCountry = countrySelect.value;
+    const selectedCity = citySelect.value;
+    const selectedNeighborhood = neighborhoodSelect.value;
+    markers.clearLayers();
+
+    if (!selectedCountry || !mapLocations[selectedCountry]) {
+      const marketMarkers = [];
+      Object.entries(mapLocations).forEach(([country, location]) => {
+        const marker = addMarker(
+          location,
+          translatedCountry(country),
+          getCountryCount(country),
+          'country',
+          false,
+          () => setFilters(country)
+        );
+        if (marker) marketMarkers.push(marker);
+      });
+      if (marketMarkers.length) {
+        const group = Leaflet.featureGroup(marketMarkers);
+        map.flyToBounds(group.getBounds(), { padding: [70, 70], maxZoom: 4, duration: 1.05 });
+      }
+      const total = Object.keys(mapLocations).reduce((sum, country) => sum + getCountryCount(country), 0);
+      updateSummary(mapStrings.allMarkets || 'Our markets', total);
+      return;
+    }
+
+    const countryLocation = mapLocations[selectedCountry];
+    if (!selectedCity || !countryLocation.cities?.[selectedCity]) {
+      Object.entries(countryLocation.cities || {}).forEach(([city, location]) => {
+        addMarker(
+          location,
+          translatedCity(city),
+          getCityCount(selectedCountry, city),
+          'city',
+          false,
+          () => setFilters(selectedCountry, city)
+        );
+      });
+      fitLocation(countryLocation, 6);
+      updateSummary(translatedCountry(selectedCountry), getCountryCount(selectedCountry));
+      return;
+    }
+
+    const cityLocation = countryLocation.cities[selectedCity];
+    Object.entries(cityLocation.neighborhoods || {}).forEach(([neighborhood, location]) => {
+      addMarker(
+        location || cityLocation,
+        neighborhood,
+        getNeighborhoodCount(selectedCountry, selectedCity, neighborhood),
+        'neighborhood',
+        neighborhood === selectedNeighborhood,
+        () => setFilters(selectedCountry, selectedCity, neighborhood)
+      );
+    });
+
+    if (selectedNeighborhood) {
+      const neighborhoodLocation = cityLocation.neighborhoods?.[selectedNeighborhood] || cityLocation;
+      fitLocation(neighborhoodLocation, 13);
+      updateSummary(
+        `${selectedNeighborhood}, ${translatedCity(selectedCity)}`,
+        getNeighborhoodCount(selectedCountry, selectedCity, selectedNeighborhood)
+      );
+    } else {
+      fitLocation(cityLocation, 11);
+      updateSummary(
+        `${translatedCity(selectedCity)}, ${translatedCountry(selectedCountry)}`,
+        getCityCount(selectedCountry, selectedCity)
+      );
+    }
+  }
+
+  [countrySelect, citySelect, neighborhoodSelect].forEach(select => {
+    select?.addEventListener('change', renderMap);
+  });
+  [operationSelect, typeSelect].forEach(select => {
+    select?.addEventListener('change', updateCta);
+  });
+
+  map.whenReady(() => {
+    renderMap();
+    setTimeout(() => map.invalidateSize(), 0);
+  });
 }
 
 // Load featured properties (only when not server-rendered)

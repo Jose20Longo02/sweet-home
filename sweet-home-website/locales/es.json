@@ -358,6 +358,17 @@
     "search": {
       "cta": "Buscar propiedades"
     },
+    "marketMap": {
+      "eyebrow": "Explorador inmobiliario en vivo",
+      "title": "Explora nuestros mercados inmobiliarios",
+      "intro": "Selecciona un país, una ciudad o una zona arriba —o utiliza directamente el mapa— para descubrir las propiedades disponibles.",
+      "allMarkets": "Nuestros mercados",
+      "properties": "propiedades",
+      "property": "propiedad",
+      "view": "Ver propiedades",
+      "mapLabel": "Mapa interactivo de nuestros mercados inmobiliarios",
+      "hint": "El mapa y los filtros de búsqueda permanecen sincronizados."
+    },
     "featured": {
       "title": "Propiedades destacadas",
       "subtitle": "Descubre nuestra selección de propiedades premium",

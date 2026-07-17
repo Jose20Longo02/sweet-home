@@ -463,6 +463,17 @@
     "search": {
       "cta": "Immobilien suchen"
     },
+    "marketMap": {
+      "eyebrow": "Live-Immobilienfinder",
+      "title": "Entdecken Sie unsere Immobilienmärkte",
+      "intro": "Wählen Sie oben ein Land, eine Stadt oder einen Stadtteil aus – oder nutzen Sie direkt die Karte –, um verfügbare Immobilien zu entdecken.",
+      "allMarkets": "Unsere Märkte",
+      "properties": "Immobilien",
+      "property": "Immobilie",
+      "view": "Immobilien ansehen",
+      "mapLabel": "Interaktive Karte unserer Immobilienmärkte",
+      "hint": "Karte und Suchfilter bleiben synchronisiert."
+    },
     "featured": {
       "title": "Ausgewählte Immobilien",
       "subtitle": "Entdecken Sie unsere handverlesene Auswahl an Premium-Immobilien",
