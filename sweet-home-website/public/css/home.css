@@ -2366,7 +2366,7 @@ body[data-icon-theme="christmas"] .social-link img {
 .home-hero-experience .market-explorer__shell {
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) !important;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
 }
 .home-hero-experience .market-explorer__summary {
   position: relative !important;
@@ -2383,7 +2383,7 @@ body[data-icon-theme="christmas"] .social-link img {
   position: relative !important;
   inset: auto !important;
   grid-column: 1;
-  grid-row: 2;
+  grid-row: 1;
   min-height: 0;
 }
 

@@ -316,7 +316,9 @@ function initializeMarketExplorer() {
     ].forEach(([name, select]) => {
       if (select?.value) params.set(name, select.value);
     });
-    ctaElement.href = `${propertiesPath}${params.toString() ? `?${params}` : ''}`;
+    if (ctaElement) {
+      ctaElement.href = `${propertiesPath}${params.toString() ? `?${params}` : ''}`;
+    }
   }
 
   function updateSummary(label, count) {
