@@ -2418,3 +2418,102 @@ body[data-icon-theme="christmas"] .social-link img {
     width: auto;
   }
 }
+
+@media (min-width: 901px) {
+  .home-hero-experience {
+    gap: clamp(18px, 2vw, 26px);
+    padding:
+      clamp(108px, 15vh, 138px)
+      max(48px, calc((100vw - 1240px) / 2))
+      24px;
+    align-items: start;
+  }
+  .home-hero-experience .hero-interface,
+  .home-hero-experience > .market-explorer {
+    height: min(60vh, 500px);
+    min-height: 300px;
+  }
+  .home-hero-experience .hero-interface {
+    padding: 15px;
+    justify-content: center;
+    border-radius: 18px;
+    background: linear-gradient(145deg, rgba(8,29,34,.64), rgba(12,45,38,.48));
+    box-shadow: 0 20px 48px rgba(0,0,0,.24);
+  }
+  .home-hero-experience .hero-copy::before {
+    width: 36px;
+    height: 2px;
+    margin-bottom: 10px;
+  }
+  .home-hero-experience .hero-copy h1 {
+    margin-bottom: 0;
+    font-size: clamp(20px, 2vw, 30px);
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+  .home-hero-experience .hero-copy p { display: none; }
+  .home-hero-experience .hero-search {
+    margin-top: 12px;
+    padding: 8px;
+    border-top-width: 4px;
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(0,0,0,.13);
+  }
+  .home-hero-experience .hero-search .search-row { gap: 5px; }
+  .home-hero-experience .hero-search .search-row > select,
+  .home-hero-experience .hero-search .search-row > button {
+    min-height: 29px;
+  }
+  .home-hero-experience .hero-search select {
+    padding: 6px 30px 6px 9px;
+    border-radius: 7px;
+    font-size: 11px;
+  }
+  .home-hero-experience .hero-search button {
+    padding: 6px 9px;
+    border-radius: 7px;
+    font-size: 11px;
+  }
+  .home-hero-experience .market-explorer__shell {
+    border-radius: 18px;
+    box-shadow: 0 22px 54px rgba(0,0,0,.3);
+  }
+  .home-hero-experience .market-explorer__summary {
+    gap: 10px;
+    padding: 9px 12px;
+  }
+  .home-hero-experience .market-explorer__summary h2 {
+    font-size: clamp(17px, 1.45vw, 21px);
+    line-height: 1.05;
+  }
+  .home-hero-experience .market-explorer__status {
+    min-width: 122px;
+    padding: 6px 9px;
+  }
+  .home-hero-experience .market-explorer__status strong { font-size: 17px; }
+  .home-hero-experience .market-explorer__cta {
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+  .home-hero-experience .market-map-marker--country {
+    min-width: 68px;
+    min-height: 46px;
+    padding: 6px 8px;
+    border-width: 2px;
+    border-radius: 16px;
+  }
+  .home-hero-experience .market-map-marker strong { font-size: 14px; }
+  .home-hero-experience .market-map-marker span { font-size: 8px; }
+  .home-hero-experience .market-explorer__hint {
+    padding: 6px 9px;
+    font-size: 10px;
+  }
+}
+
+@media (min-width: 901px) and (min-height: 700px) {
+  .home-hero-experience .hero-copy h1 { margin-bottom: 8px; }
+  .home-hero-experience .hero-copy p {
+    display: block;
+    font-size: 13px;
+  }
+}
