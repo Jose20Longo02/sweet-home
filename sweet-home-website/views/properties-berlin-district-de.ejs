@@ -177,33 +177,7 @@
     </div>
   </section>
 
-  <section class="berlin-content section berlin-best-areas" aria-labelledby="district-internal-links-heading">
-    <div class="berlin-content__inner">
-      <h2 id="district-internal-links-heading" class="berlin-content__title">Interne Links: Berlin Immobilien gezielt vergleichen</h2>
-      <p class="berlin-content__intro">Nutzen Sie diese direkten Verbindungen zu den wichtigsten Berliner Immobilienseiten, um Lagen, Preise und Angebotstiefe besser zu vergleichen.</p>
-      <ul class="berlin-areas__list">
-        <li class="berlin-areas__item"><a href="/wohnungen-berlin-kaufen">Zur Berlin-Hauptseite: Wohnungen in Berlin kaufen</a></li>
-        <li class="berlin-areas__item"><a href="<%= (typeof localePath === 'function') ? localePath('/properties/for-sale/germany/berlin') : '/properties/for-sale/germany/berlin' %>?neighborhood=<%= encodeURIComponent(defaultNeighborhood) %>">Alle Angebote in <%= districtDisplayName %> in der Suchansicht ansehen</a></li>
-        <% const berlinDistrictLinks = [
-          { name: 'Charlottenburg', href: '/wohnung-kaufen-charlottenburg' },
-          { name: 'Moabit', href: '/wohnung-kaufen-moabit' },
-          { name: 'Friedrichshain-Kreuzberg', href: '/wohnung-kaufen-friedrichshain-kreuzberg' },
-          { name: 'Schöneberg', href: '/wohnung-kaufen-schoeneberg' },
-          { name: 'Prenzlauer Berg', href: '/wohnung-kaufen-prenzlauer-berg' },
-          { name: 'Wedding', href: '/wohnung-kaufen-wedding' },
-          { name: 'Tempelhof', href: '/wohnung-kaufen-tempelhof' },
-          { name: 'Neukölln', href: '/wohnung-kaufen-neukoelln' },
-          { name: 'Reinickendorf', href: '/wohnung-kaufen-reinickendorf' },
-          { name: 'Kreuzberg', href: '/wohnung-kaufen-kreuzberg' },
-          { name: 'Spandau', href: '/wohnung-kaufen-spandau' }
-        ]; %>
-        <% berlinDistrictLinks.forEach(function(item){ if (item.name !== districtDisplayName) { %>
-          <li class="berlin-areas__item"><a href="<%= item.href %>">Wohnung kaufen <%= item.name %></a></li>
-        <% } }); %>
-      </ul>
-      <p class="berlin-content__outro">Diese interne Verlinkungsstruktur stärkt die thematische Verbindung der Berlin-Seiten und erleichtert die Indexierung aller relevanten Bezirks-Landingpages.</p>
-    </div>
-  </section>
+  <%- include('partials/berlin-district-related-links') %>
 </div>
 
 <script>

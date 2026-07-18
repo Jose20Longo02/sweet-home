@@ -1,0 +1,52 @@
+<%
+  const berlinRelatedDistricts = {
+    'Charlottenburg': ['Moabit', 'Schöneberg', 'Prenzlauer Berg'],
+    'Moabit': ['Charlottenburg', 'Wedding', 'Kreuzberg'],
+    'Friedrichshain-Kreuzberg': ['Kreuzberg', 'Prenzlauer Berg', 'Neukölln'],
+    'Schöneberg': ['Charlottenburg', 'Tempelhof', 'Kreuzberg'],
+    'Prenzlauer Berg': ['Wedding', 'Friedrichshain-Kreuzberg', 'Charlottenburg'],
+    'Wedding': ['Moabit', 'Prenzlauer Berg', 'Reinickendorf'],
+    'Tempelhof': ['Schöneberg', 'Neukölln', 'Kreuzberg'],
+    'Neukölln': ['Kreuzberg', 'Tempelhof', 'Friedrichshain-Kreuzberg'],
+    'Reinickendorf': ['Wedding', 'Spandau', 'Moabit'],
+    'Kreuzberg': ['Neukölln', 'Friedrichshain-Kreuzberg', 'Schöneberg'],
+    'Spandau': ['Charlottenburg', 'Reinickendorf', 'Moabit']
+  };
+  const berlinDistrictHrefs = {
+    'Charlottenburg': '/wohnung-kaufen-charlottenburg',
+    'Moabit': '/wohnung-kaufen-moabit',
+    'Friedrichshain-Kreuzberg': '/wohnung-kaufen-friedrichshain-kreuzberg',
+    'Schöneberg': '/wohnung-kaufen-schoeneberg',
+    'Prenzlauer Berg': '/wohnung-kaufen-prenzlauer-berg',
+    'Wedding': '/wohnung-kaufen-wedding',
+    'Tempelhof': '/wohnung-kaufen-tempelhof',
+    'Neukölln': '/wohnung-kaufen-neukoelln',
+    'Reinickendorf': '/wohnung-kaufen-reinickendorf',
+    'Kreuzberg': '/wohnung-kaufen-kreuzberg',
+    'Spandau': '/wohnung-kaufen-spandau'
+  };
+  const currentDistrictName = (typeof districtDisplayName !== 'undefined' && districtDisplayName)
+    ? String(districtDisplayName)
+    : '';
+  const currentNeighborhood = (typeof defaultNeighborhood !== 'undefined' && defaultNeighborhood)
+    ? String(defaultNeighborhood)
+    : currentDistrictName;
+  const relatedNames = (berlinRelatedDistricts[currentDistrictName] || ['Charlottenburg', 'Prenzlauer Berg', 'Kreuzberg'])
+    .filter(function(name){ return name !== currentDistrictName && berlinDistrictHrefs[name]; })
+    .slice(0, 3);
+  const berlinSearchHref = ((typeof localePath === 'function') ? localePath('/properties/for-sale/germany/berlin') : '/properties/for-sale/germany/berlin')
+    + '?neighborhood=' + encodeURIComponent(currentNeighborhood);
+%>
+<section class="berlin-content section berlin-best-areas" aria-labelledby="district-internal-links-heading">
+  <div class="berlin-content__inner">
+    <h2 id="district-internal-links-heading" class="berlin-content__title">Weitere Berliner Bezirke entdecken</h2>
+    <p class="berlin-content__intro">Vergleichen Sie <%= currentDistrictName %> mit nahegelegenen Lagen oder kehren Sie zur Berlin-Übersicht zurück.</p>
+    <ul class="berlin-areas__list">
+      <li class="berlin-areas__item"><a href="/wohnungen-berlin-kaufen">Wohnungen in Berlin kaufen</a></li>
+      <li class="berlin-areas__item"><a href="<%= berlinSearchHref %>">Aktuelle Angebote in <%= currentDistrictName %></a></li>
+      <% relatedNames.forEach(function(name){ %>
+        <li class="berlin-areas__item"><a href="<%= berlinDistrictHrefs[name] %>">Wohnung kaufen <%= name %></a></li>
+      <% }); %>
+    </ul>
+  </div>
+</section>

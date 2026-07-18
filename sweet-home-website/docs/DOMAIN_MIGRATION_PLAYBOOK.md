@@ -85,7 +85,7 @@ https://sweethome-immobilien.de/properties/foo?country=Germany
 - [ ] **Drop Spanish (`/es`)?** — SEO plan says yes; confirm no Spanish ad spend / leads dependency
 - [ ] **Retire `/de` URL prefix?** — German at root `/`, English at `/en` only (aligns with existing `DE_DEFAULT_EN_PREFIX` migration — see `docs/DE_DEFAULT_EN_PREFIX_MIGRATION_IMPLEMENTATION.md`)
 - [ ] **Homepage “lead with Berlin”** — confirm with business (affects Cyprus/Dubai positioning)
-- [ ] **Remove district page over-optimised link blocks** — confirm trimming to 3–5 links is acceptable
+- [x] **Remove district page over-optimised link blocks** — trimmed to 3–5 useful links (#14 DONE 2026-07-17)
 - [ ] Rollback owner identified (who can revert deploy within 48h if needed)
 
 **Decisions log:**
@@ -94,7 +94,8 @@ https://sweethome-immobilien.de/properties/foo?country=Germany
 |----------|-------------|------|-------|
 | Drop `/es` | | | |
 | Go-live date | | | |
-| Homepage Berlin-first | | | |
+| Homepage Berlin-first | Business | 2026-07-17 | Approved and shipped on homepage (#13) |
+| Trim district over-optimised links | Dev / SEO | 2026-07-17 | 3–5 useful links; Indexierung copy removed (#14) |
 
 ---
 
@@ -237,6 +238,8 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 
 ### Fix 13 — Homepage Organization + WebSite schema + Berlin focus
 
+**Status:** ✅ DONE — schema live validated 2026-07-16; Berlin-first homepage completed 2026-07-17
+
 - [x] Add `Organization` JSON-LD on homepage
 - [x] Add `WebSite` JSON-LD with a working property `SearchAction`
 - [x] Validate with Schema.org Validator — 0 errors, 0 warnings (2026-07-16)
@@ -244,14 +247,16 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 - [x] Add clean internal links from the DE homepage to the Berlin hub and 11 district landing pages
 - [x] Keep homepage district and project sections Berlin-only; retain Dubai/Cyprus only in the secondary international-markets carousel
 - [x] Replace the multi-market hero with a full-width Berlin image, localized H1, and short introduction
+- [x] Add compact interactive Berlin market map as visual feedback under the search bar (defaults to Germany → Berlin)
+- [x] Point international-market carousel CTAs to Dubai/Cyprus landing pages (not filtered search results)
 
 **Done when:** Rich Results Test passes; Berlin content prioritized per business approval.  
 **Owner:** Dev (+ business for content order)  
-**Files likely involved:** `views/partials/seo/home-head.ejs`, `views/home.ejs`
+**Files likely involved:** `views/partials/seo/home-head.ejs`, `views/home.ejs`, `public/css/home.css`, `public/js/home.js`
 
 **Technical schema status:** ✅ DONE and live validated 2026-07-16. DE/EN/ES homepages expose the linked `Organization` + `WebSite` graph; live Schema.org validation returned 0 errors and 0 warnings. Google does not currently provide a dedicated rich-result enhancement for these entity types, so Schema.org Validator is the applicable syntax/semantic check.
 
-**Berlin content status:** ✅ DONE in code 2026-07-17. The hero and primary content sections now lead with Berlin; district and development-project sections are Berlin-only; Dubai and Cyprus remain only in the secondary international-markets carousel. Interactive cards/carousels and responsive behavior were retained.
+**Berlin content status:** ✅ DONE 2026-07-17. The hero and primary content sections lead with Berlin; district and development-project sections are Berlin-only; Dubai and Cyprus remain only in the secondary international-markets carousel with links to their localized landing pages. Search defaults to Berlin and stays synchronized with a compact live map preview. Interactive cards/carousels and responsive behavior were retained.
 
 ---
 
@@ -296,14 +301,18 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 
 ### Fix 14 — Remove over-optimised link block on district pages
 
-- [ ] Identify district pages with long `berlin-areas` internal link lists
-- [ ] Remove link list + “Indexierung” style sentence
-- [ ] Keep 3–5 genuinely useful internal links per page
-- [ ] Re-test page quality / internal link equity
+**Status:** ✅ DONE (2026-07-17)
+
+- [x] Identify district pages with long `berlin-areas` internal link lists
+- [x] Remove link list + “Indexierung” style sentence
+- [x] Keep 3–5 genuinely useful internal links per page
+- [x] Re-test page quality / internal link equity
 
 **Done when:** Block and sentence removed; 3–5 useful links remain.  
 **Owner:** Dev  
-**Files likely involved:** `views/properties-for-sale-berlin.ejs`, `views/properties-berlin-district-de.ejs`, district landing templates
+**Files likely involved:** `views/properties-for-sale-berlin.ejs`, `views/properties-berlin-district-de.ejs`, district landing templates, `views/partials/berlin-district-related-links.ejs`
+
+**Implementation notes:** Replaced the full cross-district dump + SEO/Indexierung outros with a shared partial of 5 useful links (Berlin hub + district search + 3 nearby districts). Berlin hub now shows 5 curated district landings only. Verified on Charlottenburg, Moabit, Neukölln, Spandau, and the DE Berlin hub.
 
 ---
 
@@ -726,4 +735,6 @@ For **each** URL below, verify columns A–F.
 | 2026-07-15 | **Fix #12 DONE** — meta descriptions restored + localized; live validated (home/projects/about/contact/cookies DE/EN/ES) | Dev |
 | 2026-07-16 | **Fix #13 schema DONE** — Organization + WebSite graph live validated on DE/EN/ES with 0 errors/warnings | Dev |
 | 2026-07-17 | **Fix #13 Berlin focus DONE (code)** — Full-width localized Berlin hero plus Berlin-first properties, districts, projects, and clean internal links; international markets moved below | Dev |
-| | **Next:** Proceed to #14/#15/#5–7 | |
+| 2026-07-17 | **Fix #13 CLOSED** — Interactive Berlin map under search, Dubai/Cyprus landing-page CTAs, and final hero polish approved; Berlin-first homepage decision logged | Dev |
+| 2026-07-17 | **Fix #14 DONE** — Over-optimised district/hub link dumps trimmed to 3–5 useful links; Indexierung copy removed | Dev |
+| | **Next:** Proceed to #15, then #5–7 | |
