@@ -316,16 +316,24 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 
 ---
 
-### Fix 15 — Contact form tracking (`contact_form_submit`)
+### Fix 15 — Contact form tracking (`contact_form_submit`) ✅ CODE VERIFIED (2026-07-18)
 
-- [ ] Test in GA4 DebugView: submit real contact form on staging/production
-- [ ] Confirm event fires **once** only on successful submission (not on page load / failed submit)
-- [ ] Fix double-fire or false-positive if present
-- [ ] Document event in GA4 for consultant verification
+- [x] Confirm event fires **once** only on successful submission (not on page load / failed submit) — automated check `scripts/ga4-contact-event-check.js` (mocks the lead endpoint, counts real `dataLayer` pushes): 0 events on load, 1 event per success, 0 on server error, double-click while in flight sends only 1 POST/event
+- [x] Fix double-fire or false-positive if present — **found & fixed a page_view double-fire**: `public/js/analytics.js` auto-sent a second `gtag('config', …, { page_path })` on load on top of the config in the layout head, double-counting every page view in GA4. Auto page-view removed; `analytics.min.js` regenerated
+- [x] Document event in GA4 for consultant verification (see below)
+- [ ] Final confirmation in GA4 DebugView: submit one real contact form on production and see a single `contact_form_submit` (manual step, needs GA4 UI access)
 
-**Done when:** GA4 DebugView shows one event after a real successful submit.  
-**Owner:** Dev  
-**Files likely involved:** `controllers/leadController.js`, `routes/leadRoutes.js`, contact form JS on `views/home.ejs` / contact pages
+**Event documentation for the consultant:**
+
+- **Event name:** `contact_form_submit` (GA4 property `G-6PL29347V3`, sent via gtag)
+- **Params:** `form_type` (`contact_form`, `seller_form`, `property_contact`, `project_contact`, `berlin_investor_strategy_form`), `property_id`, `project_id`, plus seller fields (`neighborhood`, `size`, `rooms`) on the seller form
+- **Fires from:** success handlers only, in `public/js/contact.js` (contact page + home), `owners.js`, `property-detail.js`, `project-detail.js`, `berlin-investment-strategy-{de,en}.js` — all gated on the server responding `success: true`; all forms disable the submit button while the request is in flight
+- **Recommended:** mark `contact_form_submit` as a key event (conversion) in GA4 Admin → Events
+- Note: the server also logs a `contact_form_submit` row to the internal `analytics_events` table (admin dashboard); that is separate from GA4 and unchanged.
+
+**Done when:** GA4 DebugView shows one event after a real successful submit (only the manual DebugView pass remains).  
+**Owner:** Dev (code done) + SEO (DebugView confirmation)  
+**Files changed:** `public/js/analytics.js`, `public/js/analytics.min.js`, new `scripts/ga4-contact-event-check.js`
 
 ---
 
@@ -737,4 +745,5 @@ For **each** URL below, verify columns A–F.
 | 2026-07-17 | **Fix #13 Berlin focus DONE (code)** — Full-width localized Berlin hero plus Berlin-first properties, districts, projects, and clean internal links; international markets moved below | Dev |
 | 2026-07-17 | **Fix #13 CLOSED** — Interactive Berlin map under search, Dubai/Cyprus landing-page CTAs, and final hero polish approved; Berlin-first homepage decision logged | Dev |
 | 2026-07-17 | **Fix #14 DONE** — Over-optimised district/hub link dumps trimmed to 3–5 useful links; Indexierung copy removed | Dev |
-| | **Next:** Proceed to #15, then #5–7 | |
+| 2026-07-18 | **Fix #15 code DONE** — GA4 page_view double-fire fixed in `analytics.js`; `contact_form_submit` verified (once per success, never on load/failure) via `scripts/ga4-contact-event-check.js`; manual GA4 DebugView pass on production still pending | Dev |
+| | **Next:** #15 DebugView confirmation after deploy, then #5–7 | |

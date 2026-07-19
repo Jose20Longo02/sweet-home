@@ -228,14 +228,10 @@
     trackVirtualPageView: trackVirtualPageView
   };
 
-  // Auto-track page views on load
-  if (hasGA && document.readyState === 'complete') {
-    trackPageView(window.location.pathname, document.title);
-  } else if (hasGA) {
-    window.addEventListener('load', function() {
-      trackPageView(window.location.pathname, document.title);
-    });
-  }
+  // NOTE: Do not auto-track page views here. The gtag('config', ...) call in the
+  // layout head already sends the initial page_view; sending another config with
+  // page_path on load double-counted every page view in GA4.
+  // trackPageView/trackVirtualPageView remain available for SPA-style navigation.
 
 })();
 
