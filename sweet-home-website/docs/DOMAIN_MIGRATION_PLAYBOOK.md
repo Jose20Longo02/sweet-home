@@ -260,29 +260,33 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 
 ---
 
-### Fix 5 — Filter and pagination duplicates (~729 URLs)
+### Fix 5 — Filter and pagination duplicates (~729 URLs) ✅ DONE (2026-07-20)
 
-- [ ] `?country=`, `?city=`, `?neighborhood=` filter URLs → canonical to clean landing page OR noindex
-- [ ] `?page=` pagination → canonical rules (page 1 strips param; page 2+ canonical self or noindex per strategy)
-- [ ] `?topic=` on blog → canonical or noindex
-- [ ] Confirm only “clean” URLs are indexable in GSC after fixes
+- [x] `?country=`, `?city=`, `?neighborhood=` filter URLs → canonical to clean landing page OR noindex
+  - Properties: already redirected country/city query → clean `/properties/for-sale/...` paths; non-clean filters (neighborhood, search, etc.) → `noindex,follow`
+  - Projects: filtered/search URLs now `noindex,follow` with canonical pointing at clean locale `/projects` (or `/en/projects`, `/es/projects`)
+- [x] `?page=` pagination → page=1 strips param (301) on properties, projects, and blog; page≥2 self-canonical only when the list is otherwise indexable
+- [x] `?topic=` on blog → `noindex,follow` + canonical to clean `/blog` (locale-aware); hreflang also points at clean list
+- [x] Local verification PASS (2026-07-20): filtered projects/blog noindex; clean lists indexable; property page=1 301; neighborhood filters noindex
 
-**Done when:** GSC shows only clean pages as indexable candidates.  
+**Done when:** Filter/topic URLs are noindex or canonicalize to clean pages; page=1 never indexable as a duplicate.  
 **Owner:** Dev  
-**Files likely involved:** `propertyController.js`, `blogController.js`, Berlin/Dubai/Cyprus landing controllers
+**Status:** ✅ DONE — code verified locally 2026-07-20 (re-check in GSC after deploy/recrawl)  
+**Files changed:** `controllers/propertyController.js`, `controllers/projectController.js`, `views/partials/seo/project-list-head.ejs`, `views/partials/seo/blog-list-head.ejs`
 
 ---
 
-### Fix 6 — Broken language URLs (`/de/en`, `/es/en` — ~100 URLs)
+### Fix 6 — Broken language URLs (`/de/en`, `/es/en` — ~100 URLs) ✅ DONE (2026-07-20)
 
-- [ ] Stop generating `/de/en` and `/es/en` URLs in language switcher / routing
-- [ ] 301 existing `/de/en/*` → correct `/en/*` or `/`
-- [ ] 301 existing `/es/en/*` → correct URL
-- [ ] Verify no `/de/en` or `/es/en` return HTTP 200
+- [x] Stop generating `/de/en` and `/es/en` URLs in hreflang (property list was emitting `/de` + `/en/...`)
+- [x] 301 existing `/de/en/*` → `/en/*` (and `/de/en` → `/en`)
+- [x] 301 existing `/es/en/*` → `/en/*`
+- [x] Verify no `/de/en` or `/es/en` return HTTP 200 — local checks return 301; EN property hreflang now uses unprefixed DE + `/en` + `/es` (0 broken combos)
 
 **Done when:** No broken language combo URLs resolve 200.  
 **Owner:** Dev  
-**Files likely involved:** `app.js`, i18n middleware, language switcher partials
+**Status:** ✅ DONE — local verified 2026-07-20  
+**Files changed:** `controllers/propertyController.js` (hreflang builder), `app.js` (catch-all 301s)
 
 ---
 
@@ -316,23 +320,24 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 
 ---
 
-### Fix 15 — Contact form tracking (`contact_form_submit`) ✅ CODE VERIFIED (2026-07-18)
+### Fix 15 — Contact form tracking (`contact_form_submit`) ✅ DONE (2026-07-20)
 
 - [x] Confirm event fires **once** only on successful submission (not on page load / failed submit) — automated check `scripts/ga4-contact-event-check.js` (mocks the lead endpoint, counts real `dataLayer` pushes): 0 events on load, 1 event per success, 0 on server error, double-click while in flight sends only 1 POST/event
 - [x] Fix double-fire or false-positive if present — **found & fixed a page_view double-fire**: `public/js/analytics.js` auto-sent a second `gtag('config', …, { page_path })` on load on top of the config in the layout head, double-counting every page view in GA4. Auto page-view removed; `analytics.min.js` regenerated
 - [x] Document event in GA4 for consultant verification (see below)
-- [ ] Final confirmation in GA4 DebugView: submit one real contact form on production and see a single `contact_form_submit` (manual step, needs GA4 UI access)
+- [x] Live production confirmation (2026-07-20) on `/contact`: page load → `contact_form_submit` count **0**, `gtag config` count **1**; after one successful submit → exactly **1** `contact_form_submit` with `{ form_type: 'contact_form', property_id: null, project_id: null }` (DevTools `dataLayer` + `ANALYTICS_DEBUG`)
 
 **Event documentation for the consultant:**
 
 - **Event name:** `contact_form_submit` (GA4 property `G-6PL29347V3`, sent via gtag)
 - **Params:** `form_type` (`contact_form`, `seller_form`, `property_contact`, `project_contact`, `berlin_investor_strategy_form`), `property_id`, `project_id`, plus seller fields (`neighborhood`, `size`, `rooms`) on the seller form
 - **Fires from:** success handlers only, in `public/js/contact.js` (contact page + home), `owners.js`, `property-detail.js`, `project-detail.js`, `berlin-investment-strategy-{de,en}.js` — all gated on the server responding `success: true`; all forms disable the submit button while the request is in flight
-- **Recommended:** mark `contact_form_submit` as a key event (conversion) in GA4 Admin → Events
-- Note: the server also logs a `contact_form_submit` row to the internal `analytics_events` table (admin dashboard); that is separate from GA4 and unchanged.
+- **Recommended:** mark `contact_form_submit` as a key event (conversion) in GA4 Admin → Events; optional spot-check in GA4 Realtime/DebugView
+- Note: the server also logs a `contact_form_submit` row to the internal `analytics_events` table (admin dashboard); that is separate from GA4 and unchanged. After this fix, reported page views may drop vs pre-fix baselines — that is the double-count removal, not lost traffic.
 
-**Done when:** GA4 DebugView shows one event after a real successful submit (only the manual DebugView pass remains).  
-**Owner:** Dev (code done) + SEO (DebugView confirmation)  
+**Done when:** One `contact_form_submit` after a real successful submit on production; zero on page load.  
+**Owner:** Dev  
+**Status:** ✅ DONE — live validated 2026-07-20  
 **Files changed:** `public/js/analytics.js`, `public/js/analytics.min.js`, new `scripts/ga4-contact-event-check.js`
 
 ---
@@ -745,5 +750,8 @@ For **each** URL below, verify columns A–F.
 | 2026-07-17 | **Fix #13 Berlin focus DONE (code)** — Full-width localized Berlin hero plus Berlin-first properties, districts, projects, and clean internal links; international markets moved below | Dev |
 | 2026-07-17 | **Fix #13 CLOSED** — Interactive Berlin map under search, Dubai/Cyprus landing-page CTAs, and final hero polish approved; Berlin-first homepage decision logged | Dev |
 | 2026-07-17 | **Fix #14 DONE** — Over-optimised district/hub link dumps trimmed to 3–5 useful links; Indexierung copy removed | Dev |
-| 2026-07-18 | **Fix #15 code DONE** — GA4 page_view double-fire fixed in `analytics.js`; `contact_form_submit` verified (once per success, never on load/failure) via `scripts/ga4-contact-event-check.js`; manual GA4 DebugView pass on production still pending | Dev |
-| | **Next:** #15 DebugView confirmation after deploy, then #5–7 | |
+| 2026-07-18 | **Fix #15 code DONE** — GA4 page_view double-fire fixed in `analytics.js`; `contact_form_submit` verified via `scripts/ga4-contact-event-check.js` | Dev |
+| 2026-07-20 | **Fix #15 CLOSED** — Live production validated on `/contact`: 0 events on load, 1 config (no double page_view), 1 `contact_form_submit` after successful submit | Dev |
+| 2026-07-20 | **Fix #6 DONE** — Stopped `/de/en` & `/es/en` hreflang generation; catch-all 301s to `/en/*` | Dev |
+| 2026-07-20 | **Fix #5 DONE** — Projects/blog filter+topic noindex with clean canonicals; properties `page=1` 301; local verification PASS | Dev |
+| | **Next:** #7 (legacy dead URLs — needs Adi’s list / GSC export), then migration items #1–4, #8–9 at go-live | |

@@ -4,16 +4,22 @@
   const blogBasePath = `${localePrefixSafe}/blog` || '/blog';
   const topicParam = (typeof activeTopic !== 'undefined' && activeTopic) ? String(activeTopic) : '';
   const pageParam = (typeof page !== 'undefined' && page > 1) ? Number(page) : 0;
-  const buildQuery = (pageValue) => {
+  // Topic filters are noindex; canonical always points at the clean blog list (page>1 only when no topic).
+  const hasTopic = !!topicParam;
+  const robotsContent = hasTopic ? 'noindex,follow' : 'index,follow';
+  const buildQuery = (pageValue, includeTopic) => {
     const parts = [];
-    if (topicParam) parts.push(`topic=${encodeURIComponent(topicParam)}`);
+    if (includeTopic && topicParam) parts.push(`topic=${encodeURIComponent(topicParam)}`);
     if (pageValue && pageValue > 1) parts.push(`page=${pageValue}`);
     return parts.length ? `?${parts.join('&')}` : '';
   };
-  const blogListUrl = `${siteBaseUrl}${blogBasePath}${buildQuery(pageParam)}`;
-  const deUrl = `${siteBaseUrl}/blog${buildQuery(pageParam)}`;
-  const enUrl = `${siteBaseUrl}/en/blog${buildQuery(pageParam)}`;
-  const esUrl = `${siteBaseUrl}/es/blog${buildQuery(pageParam)}`;
+  const canonicalPage = (!hasTopic && pageParam) ? pageParam : 0;
+  const blogListUrl = `${siteBaseUrl}${blogBasePath}${buildQuery(canonicalPage, false)}`;
+  const deUrl = `${siteBaseUrl}/blog${buildQuery(canonicalPage, false)}`;
+  const enUrl = `${siteBaseUrl}/en/blog${buildQuery(canonicalPage, false)}`;
+  const esUrl = `${siteBaseUrl}/es/blog${buildQuery(canonicalPage, false)}`;
+  // prev/next keep topic for UX when browsing a topic filter (still noindex)
+  const navQuery = (pageValue) => buildQuery(pageValue, true);
   const ogLocale = (typeof lang !== 'undefined' && lang === 'de') ? 'de_DE' : (typeof lang !== 'undefined' && lang === 'es') ? 'es_ES' : 'en_US';
   const normalizeText = (value) => String(value || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
   const clampText = (value, max) => {
@@ -31,16 +37,17 @@
   const socialTitle = clampText(rawTitle, 65);
 %>
 <meta name="description" content="<%= listDesc %>">
+<meta name="robots" content="<%= robotsContent %>">
 <link rel="canonical" href="<%= blogListUrl %>">
 <link rel="alternate" hreflang="en-us" href="<%= enUrl %>">
 <link rel="alternate" hreflang="de-de" href="<%= deUrl %>">
 <link rel="alternate" hreflang="es-es" href="<%= esUrl %>">
 <link rel="alternate" hreflang="x-default" href="<%= deUrl %>">
 <% if (typeof page !== 'undefined' && page > 1) { %>
-<link rel="prev" href="<%= `${siteBaseUrl}${blogBasePath}${buildQuery((page - 1) > 1 ? (page - 1) : 0)}` %>">
+<link rel="prev" href="<%= `${siteBaseUrl}${blogBasePath}${navQuery((page - 1) > 1 ? (page - 1) : 0)}` %>">
 <% } %>
 <% if (typeof page !== 'undefined' && typeof totalPages !== 'undefined' && page < totalPages) { %>
-<link rel="next" href="<%= `${siteBaseUrl}${blogBasePath}${buildQuery(page + 1)}` %>">
+<link rel="next" href="<%= `${siteBaseUrl}${blogBasePath}${navQuery(page + 1)}` %>">
 <% } %>
 
 <!-- Open Graph -->
@@ -86,4 +93,3 @@
   }))
 })) %></script>
 <% } %>
-

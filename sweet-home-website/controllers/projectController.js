@@ -1259,15 +1259,34 @@ exports.listProjectsPublic = async (req, res, next) => {
 
     // Unique page title for SEO (avoids duplicate title tags on paginated/filtered pages)
     const t = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t.bind(res.locals) : ((k, fb) => fb);
+    const currentPageNum = parseInt(page, 10) || 1;
     let pageTitle = t('projects.list.h1.default', 'Development Projects - Luxury Real Estate');
     if (country && city) {
       pageTitle = t('projects.list.h1.city', 'Development Projects in {city}, {country}', { city, country });
     } else if (country) {
       pageTitle = t('projects.list.h1.country', 'Development Projects in {country}', { country });
     }
-    if (parseInt(page, 10) > 1) {
-      pageTitle += t('projects.list.h1.page', ' - Page {page}', { page });
+    if (currentPageNum > 1) {
+      pageTitle += t('projects.list.h1.page', ' - Page {page}', { page: currentPageNum });
     }
+
+    // SEO: only the clean projects list is indexable. Filters/search → noindex; canonical → clean list.
+    const unitTypeArr = Array.isArray(unit_type) ? unit_type.filter(Boolean) : (unit_type ? [unit_type] : []);
+    const hasSeoFilters = !!(
+      (q && String(q).trim())
+      || country
+      || city
+      || neighborhood
+      || unitTypeArr.length
+      || min_price
+      || max_price
+      || (sort && sort !== 'date_new')
+    );
+    const projectsBasePath = req.baseUrl || '/projects';
+    const baseUrl = res.locals.baseUrl || '';
+    const robotsMeta = hasSeoFilters ? 'noindex,follow' : 'index,follow';
+    const canonicalQuery = (!hasSeoFilters && currentPageNum > 1) ? `?page=${currentPageNum}` : '';
+    const canonicalUrl = `${baseUrl}${projectsBasePath}${canonicalQuery}`;
 
     res.render('projects/project-list', { 
       title: pageTitle,
@@ -1276,11 +1295,13 @@ exports.listProjectsPublic = async (req, res, next) => {
       filters,
       query: q,
       sort,
-      currentPage: parseInt(page),
+      currentPage: currentPageNum,
       totalPages,
       totalProjects,
       queryParams: req.query,
-      baseUrl: res.locals.baseUrl
+      baseUrl,
+      robotsMeta,
+      canonicalUrl
     });
   } catch (err) {
     next(err);

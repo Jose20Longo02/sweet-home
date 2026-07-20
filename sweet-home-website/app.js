@@ -567,6 +567,17 @@ app.use((req, res, next) => {
 
   // Old German prefix routes from previous setup.
   if (lowerPath === '/de' || lowerPath === '/de/') return res.redirect(301, '/');
+
+  // Broken language combo URLs (old hreflang emitted /de/en/... and /es/en/...).
+  // Always 301 to the correct English (or root) path — never return 200.
+  const brokenLangComboMatch = lowerPath.match(/^\/(de|es)\/en(\/.*)?$/);
+  if (brokenLangComboMatch) {
+    const rest = brokenLangComboMatch[2] || '';
+    const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
+    const target = rest ? `/en${rest}` : '/en';
+    return res.redirect(301, `${target}${query}`);
+  }
+
   // Collapse legacy /de/* top-level pages to default-language canonical paths.
   const legacyDeTopLevelMatch = lowerPath.match(/^\/de\/(projects|properties|blog|about|contact|services|owners|terms|privacy|cookies)\/?$/);
   if (legacyDeTopLevelMatch) {

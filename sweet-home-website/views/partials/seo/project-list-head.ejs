@@ -1,15 +1,11 @@
 <%
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
-  // Canonical URL: consolidate duplicates - strip page=1, expand UAE to UAE+Dubai when UAE has only one city
-  let canonicalParams = Object.assign({}, (typeof queryParams !== 'undefined' && queryParams) ? queryParams : {});
-  if (canonicalParams.page === '1' || canonicalParams.page === 1) delete canonicalParams.page;
+  // Prefer controller-built canonical (strips filters); fall back to clean locale projects path.
+  const projectListUrl = (typeof canonicalUrl !== 'undefined' && canonicalUrl)
+    ? canonicalUrl
+    : `${siteBaseUrl}${(typeof localePrefix !== 'undefined' && localePrefix) ? localePrefix : ''}/projects`;
+  const robotsContent = (typeof robotsMeta !== 'undefined' && robotsMeta) ? robotsMeta : 'index,follow';
   const f = (typeof filters !== 'undefined' && filters) ? filters : {};
-  const locs = (typeof locations !== 'undefined' && locations) ? locations : {};
-  if (f.country === 'UAE' && !f.city && locs.UAE && Object.keys(locs.UAE).length === 1) {
-    canonicalParams.city = Object.keys(locs.UAE)[0];
-  }
-  const queryString = Object.keys(canonicalParams).length ? '?' + new URLSearchParams(canonicalParams).toString() : '';
-  const projectListUrl = `${siteBaseUrl}/projects${queryString}`;
   const country = f.country || '';
   const city = f.city || '';
   const resolvedPage = (typeof currentPage !== 'undefined' && currentPage) ? Number(currentPage) : 1;
@@ -39,7 +35,8 @@
   }
 %>
 <meta name="description" content="<%= listDesc %>">
-<link rel="canonical" href="<%= projectListUrl %>">
+<meta name="robots" content="<%= robotsContent %>">
+<!-- Canonical is output by main layout when canonicalUrl is passed -->
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">

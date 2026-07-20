@@ -39,6 +39,20 @@ function getPropertiesBasePath(req) {
   return base || '/properties';
 }
 
+/** Strip /en or /es prefix so DE stays unprefixed (never emit /de/en or /es/en). */
+function stripLocalePrefixFromPath(pathname) {
+  const path = String(pathname || '/');
+  const stripped = path.replace(/^\/(en|es)(?=\/|$)/, '');
+  return stripped || '/';
+}
+
+function toLocalePrefixedPath(pathname, locale) {
+  const neutral = stripLocalePrefixFromPath(pathname);
+  if (locale === 'en') return neutral === '/' ? '/en' : `/en${neutral}`;
+  if (locale === 'es') return neutral === '/' ? '/es' : `/es${neutral}`;
+  return neutral; // de = unprefixed root paths
+}
+
 function getCurrentListPath(req) {
   const base = getPropertiesBasePath(req);
   const subPath = String((req && req.path) || '/');
@@ -121,6 +135,15 @@ function getLocalizedTitle(row, lang) {
 // List properties for public/agent views
 exports.listPropertiesPublic = async (req, res, next) => {
   try {
+    // 301 normalize pagination duplicates: page=1 should redirect without the param.
+    if (String(req.query.page || '') === '1') {
+      const queryEntries = Object.entries(req.query || {}).filter(([key]) => key !== 'page');
+      const queryString = queryEntries.length
+        ? `?${queryEntries.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value ?? ''))}`).join('&')}`
+        : '';
+      return res.redirect(301, `${getCurrentListPath(req)}${queryString}`);
+    }
+
     const {
       q = '', // search query
       operation = '',
@@ -527,14 +550,12 @@ exports.listPropertiesPublic = async (req, res, next) => {
       ? `${baseUrl}${canonicalPath}?${canonicalQuery.toString()}`
       : `${baseUrl}${canonicalPath}`;
 
-    const neutralPath = canonicalPath.replace(/^\/(de|es)(?=\/)/, '');
-    const enPath = neutralPath;
-    const dePath = `/de${neutralPath}`;
-    const esPath = `/es${neutralPath}`;
+    const qs = canonicalQuery.toString();
+    const withQuery = (path) => (qs ? `${baseUrl}${path}?${qs}` : `${baseUrl}${path}`);
     const hreflangAlternates = {
-      'en-us': canonicalQuery.toString() ? `${baseUrl}${enPath}?${canonicalQuery.toString()}` : `${baseUrl}${enPath}`,
-      'de-de': canonicalQuery.toString() ? `${baseUrl}${dePath}?${canonicalQuery.toString()}` : `${baseUrl}${dePath}`,
-      'es-es': canonicalQuery.toString() ? `${baseUrl}${esPath}?${canonicalQuery.toString()}` : `${baseUrl}${esPath}`
+      'en-us': withQuery(toLocalePrefixedPath(canonicalPath, 'en')),
+      'de-de': withQuery(toLocalePrefixedPath(canonicalPath, 'de')),
+      'es-es': withQuery(toLocalePrefixedPath(canonicalPath, 'es'))
     };
 
     const resultsNoun = res.locals.t('properties.list.results', 'results');
