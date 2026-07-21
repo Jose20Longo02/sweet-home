@@ -4,8 +4,7 @@
   const blogUrl = `${siteBaseUrl}${localePrefixSafe}/blog/${post.slug}`;
   const deUrl = `${siteBaseUrl}/blog/${post.slug}`;
   const enUrl = `${siteBaseUrl}/en/blog/${post.slug}`;
-  const esUrl = `${siteBaseUrl}/es/blog/${post.slug}`;
-  const ogLocale = (typeof lang !== 'undefined' && lang === 'de') ? 'de_DE' : (typeof lang !== 'undefined' && lang === 'es') ? 'es_ES' : 'en_US';
+  const ogLocale = (typeof lang !== 'undefined' && lang === 'de') ? 'de_DE' : 'en_US';
   const blogImage = post.cover_image 
     ? (post.cover_image.startsWith('http') ? post.cover_image : `${siteBaseUrl}${post.cover_image}`)
     : `${siteBaseUrl}/img/property-placeholder.jpg`;
@@ -35,9 +34,8 @@
 %>
 <meta name="description" content="<%= blogDescription %>">
 <link rel="canonical" href="<%= blogUrl %>">
-<link rel="alternate" hreflang="en-us" href="<%= enUrl %>">
-<link rel="alternate" hreflang="de-de" href="<%= deUrl %>">
-<link rel="alternate" hreflang="es-es" href="<%= esUrl %>">
+<link rel="alternate" hreflang="en" href="<%= enUrl %>">
+<link rel="alternate" hreflang="de" href="<%= deUrl %>">
 <link rel="alternate" hreflang="x-default" href="<%= deUrl %>">
 
 <!-- Open Graph -->

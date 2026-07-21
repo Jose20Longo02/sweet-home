@@ -5,22 +5,21 @@ const path = require('path');
 module.exports = function i18nMiddleware(req, res, next) {
   try {
     const localesDir = path.join(__dirname, '..', 'locales');
-    const supported = ['en', 'es', 'de'];
-    const labels = { en: 'English', es: 'Español', de: 'Deutsch' };
+    const supported = ['en', 'de'];
+    const labels = { en: 'English', de: 'Deutsch' };
     const accepts = (typeof req.acceptsLanguages === 'function') ? (req.acceptsLanguages() || []) : [];
     // URL-first language policy:
     // - /en, /en/* => English
-    // - /es, /es/* => Spanish
     // - any other public non-prefixed path => German (default)
-    // Cookie fallback is only used on non-public paths.
+    // Spanish (/es) removed — requests are 301'd to DE equivalents in middleware.
     let pathLang = '';
     if (req.path === '/en' || req.path.startsWith('/en/')) pathLang = 'en';
-    else if (req.path === '/es' || req.path.startsWith('/es/')) pathLang = 'es';
     else if (!/^\/(admin|superadmin|auth|api)/.test(req.path)) pathLang = 'de';
     const cLang = (req.cookies && typeof req.cookies.lang === 'string') ? req.cookies.lang.trim() : '';
     const aLang = Array.isArray(accepts) && accepts.length ? String(accepts[0]) : '';
     let lang = pathLang || cLang || aLang || 'de';
     lang = String(lang).slice(0, 2).toLowerCase();
+    if (lang === 'es') lang = 'de'; // legacy cookie
     if (!supported.includes(lang)) lang = 'de';
 
     // Persist choice in cookie for subsequent requests
@@ -75,8 +74,8 @@ module.exports = function i18nMiddleware(req, res, next) {
     res.locals.supportedLanguages = supported;
     res.locals.languageLabels = labels;
     res.locals.locationsTranslations = (messages.locations && typeof messages.locations === 'object') ? messages.locations : { countries: {}, cities: {} };
-    // Locale prefix for URL-based i18n: '' for de (default), '/en', '/es'
-    res.locals.localePrefix = (req.path === '/en' || req.path.startsWith('/en/')) ? '/en' : (req.path === '/es' || req.path.startsWith('/es/')) ? '/es' : '';
+    // Locale prefix for URL-based i18n: '' for de (default), '/en'
+    res.locals.localePrefix = (req.path === '/en' || req.path.startsWith('/en/')) ? '/en' : '';
     // Diagnostics header: confirm a known key resolves
     try {
       const probe = (typeof res.locals.t === 'function') ? res.locals.t('nav.projects', '') : '';
@@ -90,8 +89,8 @@ module.exports = function i18nMiddleware(req, res, next) {
     // Always provide a safe fallback t() to prevent template errors
     res.locals.t = function (key, fallback) { return fallback || ''; };
     res.locals.lang = 'de';
-    res.locals.supportedLanguages = ['en','es','de'];
-    res.locals.languageLabels = { en:'English', es:'Español', de:'Deutsch' };
+    res.locals.supportedLanguages = ['en','de'];
+    res.locals.languageLabels = { en:'English', de:'Deutsch' };
     res.locals.localePrefix = '';
     res.locals.locationsTranslations = { countries: {}, cities: {} };
   }

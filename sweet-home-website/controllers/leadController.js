@@ -367,7 +367,7 @@ exports.createFromProperty = async (req, res, next) => {
       // Email to lead (thank you) — localized by preferred language
       try {
         const lang = String(language || '').slice(0,2).toLowerCase();
-        const L = ['en','es','de'].includes(lang) ? lang : 'en';
+        const L = ['en','de'].includes(lang) ? lang : 'en';
         const subjects = {
           en: `Thank you for your interest in ${property.title}`,
           es: `Gracias por tu interés en ${property.title}`,
@@ -524,7 +524,7 @@ exports.createFromProject = async (req, res, next) => {
       });
       try {
         const lang = String(language || '').slice(0,2).toLowerCase();
-        const L = ['en','es','de'].includes(lang) ? lang : 'en';
+        const L = ['en','de'].includes(lang) ? lang : 'en';
         const subjects = {
           en: `Thank you for your interest in ${project.title}`,
           es: `Gracias por tu interés en ${project.title}`,
@@ -684,7 +684,7 @@ exports.createFromBerlinInvestorStrategy = async (req, res, next) => {
       // Thank-you email to user (localized)
       try {
         const lang = String(language || '').slice(0, 2).toLowerCase();
-        const L = ['en', 'es', 'de'].includes(lang) ? lang : 'en';
+        const L = ['en', 'de'].includes(lang) ? lang : 'en';
         const firstName = (name || '').split(' ')[0] || name || '';
         const subjects = {
           en: 'Thank you — Sweet Home Real Estate Investments',

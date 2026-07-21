@@ -12,7 +12,7 @@
   const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
   const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
     ? ogLocale
-    : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
+    : (currentLang === 'de' ? 'de_DE' : 'en_US');
   const tFn = (typeof t === 'function') ? t : ((k, fb, vars) => {
     let out = fb || k;
     if (vars && typeof vars === 'object') {

@@ -8,9 +8,7 @@
     ? canonicalUrl
     : `${siteBaseUrl}/properties`;
   const robotsContent = (typeof robotsMeta !== 'undefined' && robotsMeta) ? robotsMeta : 'index,follow';
-  const ogLocale = (typeof lang !== 'undefined' && lang === 'de')
-    ? 'de_DE'
-    : ((typeof lang !== 'undefined' && lang === 'es') ? 'es_ES' : 'en_US');
+  const ogLocale = (typeof lang !== 'undefined' && lang === 'de') ? 'de_DE' : 'en_US';
 %>
 <meta name="description" content="<%= pageDesc %>">
 <meta name="robots" content="<%= robotsContent %>">

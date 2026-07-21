@@ -1,5 +1,5 @@
 // routes/localeRoutes.js
-// Public routes mounted at /en and /es - same structure as root, with locale prefix in path
+// Public routes mounted at /en — same structure as root, with locale prefix in path
 const express = require('express');
 const { query } = require('../config/db');
 const propertyController = require('../controllers/propertyController');

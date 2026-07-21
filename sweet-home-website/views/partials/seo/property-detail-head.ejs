@@ -4,7 +4,7 @@
   const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
   const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
     ? ogLocale
-    : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
+    : (currentLang === 'de' ? 'de_DE' : 'en_US');
   const propertyImage = (property.photos && property.photos[0]) 
     ? (property.photos[0].startsWith('http') ? property.photos[0] : `${siteBaseUrl}${property.photos[0]}`)
     : `${siteBaseUrl}/img/property-placeholder.jpg`;

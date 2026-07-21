@@ -3,20 +3,19 @@
   const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
   const cyprusPagePaths = {
     de: '/immobilien-zypern-kaufen',
-    en: '/en/properties-for-sale-cyprus',
-    es: '/es/propiedades-en-venta-chipre'
+    en: '/en/properties-for-sale-cyprus'
   };
   const pagePath = cyprusPagePaths[currentLang] || cyprusPagePaths.en;
   const pageUrl = `${siteBaseUrl}${pagePath}`;
   const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : 'Find properties for sale in Cyprus. Browse apartments, villas and coastal homes. Expert real estate guidance from Sweet Home.';
   const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Properties for Sale in Cyprus';
-  const breadcrumbHome = currentLang === 'de' ? 'Startseite' : (currentLang === 'es' ? 'Inicio' : 'Home');
+  const breadcrumbHome = currentLang === 'de' ? 'Startseite' : 'Home';
   const ogImageAlt = currentLang === 'de'
     ? 'Immobilien in Zypern kaufen - Sweet Home'
     : (currentLang === 'es' ? 'Propiedades en venta en Chipre - Sweet Home' : 'Properties for sale in Cyprus - Sweet Home');
   const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
     ? ogLocale
-    : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
+    : (currentLang === 'de' ? 'de_DE' : 'en_US');
 
   const faqByLang = {
     en: [

@@ -15,14 +15,14 @@
     : tFn('home.metaDescription', defaultDescriptions[currentLang] || defaultDescriptions.en);
   const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
     ? ogLocale
-    : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
+    : (currentLang === 'de' ? 'de_DE' : 'en_US');
   const rawHomeTitle = (typeof title !== 'undefined' && title) ? String(title).trim() : '';
   const homeOgTitle = rawHomeTitle
     ? (/\| Sweet Home$/i.test(rawHomeTitle) ? rawHomeTitle : (rawHomeTitle + ' | Sweet Home'))
     : 'International Real Estate Investment Company | Sweet Home';
   const homeOgUrl = (typeof canonicalUrl !== 'undefined' && canonicalUrl)
     ? canonicalUrl
-    : (resolvedBaseUrl + (currentLang === 'en' ? '/en' : (currentLang === 'es' ? '/es' : '/')));
+    : (resolvedBaseUrl + (currentLang === 'en' ? '/en' : '/'));
 %>
 <meta name="description" content="<%= resolvedMetaDescription %>">
 <!-- Canonical URL is handled by main layout to avoid conflicts with hreflang -->
@@ -71,7 +71,7 @@
         '@type': 'ContactPoint',
         telephone: '+49-30-65852933',
         contactType: 'customer service',
-        availableLanguage: ['de', 'en', 'es']
+        availableLanguage: ['de', 'en']
       },
       sameAs: [
         'https://www.facebook.com/profile.php?id=100093168151239',

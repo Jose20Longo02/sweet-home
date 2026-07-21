@@ -339,10 +339,10 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
   var internationalMarketLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'de';
   var dubaiLandingPath = internationalMarketLang === 'de'
     ? '/immobilien-dubai-kaufen'
-    : (internationalMarketLang === 'es' ? '/es/propiedades-en-venta-dubai' : '/en/properties-for-sale-dubai');
+    : '/en/properties-for-sale-dubai';
   var cyprusLandingPath = internationalMarketLang === 'de'
     ? '/immobilien-zypern-kaufen'
-    : (internationalMarketLang === 'es' ? '/es/propiedades-en-venta-chipre' : '/en/properties-for-sale-cyprus');
+    : '/en/properties-for-sale-cyprus';
 %>
 <section class="section international">
   <h2 class="section-title"><%= t('home.international.title','Other international property markets') %></h2>
@@ -506,7 +506,7 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
           <label for="language"><%= t('forms.preferredLanguage','Preferred language') %><span aria-hidden="true">*</span></label>
           <select id="language" name="language" required>
             <option value="" selected disabled><%= t('forms.preferredLanguage','Preferred language') %>*</option>
-            <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
+            <% (supportedLanguages || ['en','de']).forEach(function(code){ %>
               <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
             <% }) %>
           </select>

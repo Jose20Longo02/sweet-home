@@ -39,17 +39,16 @@ function getPropertiesBasePath(req) {
   return base || '/properties';
 }
 
-/** Strip /en or /es prefix so DE stays unprefixed (never emit /de/en or /es/en). */
+/** Strip /en prefix so DE stays unprefixed (never emit /de/en). Spanish removed. */
 function stripLocalePrefixFromPath(pathname) {
   const path = String(pathname || '/');
-  const stripped = path.replace(/^\/(en|es)(?=\/|$)/, '');
+  const stripped = path.replace(/^\/en(?=\/|$)/, '');
   return stripped || '/';
 }
 
 function toLocalePrefixedPath(pathname, locale) {
   const neutral = stripLocalePrefixFromPath(pathname);
   if (locale === 'en') return neutral === '/' ? '/en' : `/en${neutral}`;
-  if (locale === 'es') return neutral === '/' ? '/es' : `/es${neutral}`;
   return neutral; // de = unprefixed root paths
 }
 
@@ -553,9 +552,8 @@ exports.listPropertiesPublic = async (req, res, next) => {
     const qs = canonicalQuery.toString();
     const withQuery = (path) => (qs ? `${baseUrl}${path}?${qs}` : `${baseUrl}${path}`);
     const hreflangAlternates = {
-      'en-us': withQuery(toLocalePrefixedPath(canonicalPath, 'en')),
-      'de-de': withQuery(toLocalePrefixedPath(canonicalPath, 'de')),
-      'es-es': withQuery(toLocalePrefixedPath(canonicalPath, 'es'))
+      'en': withQuery(toLocalePrefixedPath(canonicalPath, 'en')),
+      'de': withQuery(toLocalePrefixedPath(canonicalPath, 'de'))
     };
 
     const resultsNoun = res.locals.t('properties.list.results', 'results');
@@ -3167,13 +3165,11 @@ exports.berlinPropertiesPage = async (req, res, next) => {
     const berlinUrls = {
       de: `${baseUrl}/wohnungen-berlin-kaufen`,
       en: `${baseUrl}/en/properties-for-sale-berlin`,
-      es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const canonicalUrl = berlinUrls[lang] || berlinUrls.en;
     const hreflangAlternates = {
-      'en-us': berlinUrls.en,
-      'de-de': berlinUrls.de,
-      'es-es': berlinUrls.es
+      'en': berlinUrls.en,
+      'de': berlinUrls.de,
     };
     const titles = {
       en: 'Apartments for Sale in Berlin',
@@ -3187,8 +3183,7 @@ exports.berlinPropertiesPage = async (req, res, next) => {
     };
     const berlinPagePaths = {
       de: '/wohnungen-berlin-kaufen',
-      en: '/en/properties-for-sale-berlin',
-      es: '/es/propiedades-en-venta-berlin'
+      en: '/en/properties-for-sale-berlin'
     };
 
     // Berlin page uses URL-per-language (no i18n); content by route language
@@ -3523,9 +3518,8 @@ exports.berlinInvestorStrategyPageEn = async (req, res, next) => {
     const baseUrl = res.locals.baseUrl;
     const canonicalUrl = `${baseUrl}/en/berlin-tenant-occupied-entry-strategy`;
     const hreflangAlternates = {
-      'de-de': `${baseUrl}/berlin-mieter-belegte-einstiegsstrategie`,
-      'en-us': canonicalUrl,
-      'es-es': `${baseUrl}/es/propiedades-en-venta-berlin`
+      'de': `${baseUrl}/berlin-mieter-belegte-einstiegsstrategie`,
+      'en': canonicalUrl,
     };
 
     res.render('berlin-investment-strategy-en', {
@@ -3598,9 +3592,8 @@ exports.berlinInvestorStrategyPageDe = async (req, res, next) => {
     const baseUrl = res.locals.baseUrl;
     const canonicalUrl = `${baseUrl}/berlin-mieter-belegte-einstiegsstrategie`;
     const hreflangAlternates = {
-      'de-de': canonicalUrl,
-      'en-us': `${baseUrl}/en/berlin-tenant-occupied-entry-strategy`,
-      'es-es': `${baseUrl}/es/propiedades-en-venta-berlin`
+      'de': canonicalUrl,
+      'en': `${baseUrl}/en/berlin-tenant-occupied-entry-strategy`,
     };
 
     res.render('berlin-investment-strategy-de', {
@@ -3705,13 +3698,11 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
     const dubaiUrls = {
       de: `${baseUrl}/immobilien-dubai-kaufen`,
       en: `${baseUrl}/en/properties-for-sale-dubai`,
-      es: `${baseUrl}/es/propiedades-en-venta-dubai`
     };
     const canonicalUrl = dubaiUrls[lang] || dubaiUrls.en;
     const hreflangAlternates = {
-      'en-us': dubaiUrls.en,
-      'de-de': dubaiUrls.de,
-      'es-es': dubaiUrls.es
+      'en': dubaiUrls.en,
+      'de': dubaiUrls.de,
     };
     const titles = {
       en: 'Apartments and Property Investment in Dubai',
@@ -3725,8 +3716,7 @@ exports.dubaiPropertiesPage = async (req, res, next) => {
     };
     const dubaiPagePaths = {
       de: '/immobilien-dubai-kaufen',
-      en: '/en/properties-for-sale-dubai',
-      es: '/es/propiedades-en-venta-dubai'
+      en: '/en/properties-for-sale-dubai'
     };
 
     // Dubai page uses URL-per-language; content by route language
@@ -3932,9 +3922,8 @@ exports.villaKaufenDubaiPageDe = async (req, res, next) => {
     const baseUrl = res.locals.baseUrl;
     const canonicalUrl = `${baseUrl}/villa-kaufen-dubai`;
     const hreflangAlternates = {
-      'en-us': `${baseUrl}/en/properties-for-sale-dubai`,
-      'de-de': canonicalUrl,
-      'es-es': `${baseUrl}/es/propiedades-en-venta-dubai`
+      'en': `${baseUrl}/en/properties-for-sale-dubai`,
+      'de': canonicalUrl,
     };
 
     res.render('villa-kaufen-dubai-de', {
@@ -4037,13 +4026,11 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
     const cyprusUrls = {
       de: `${baseUrl}/immobilien-zypern-kaufen`,
       en: `${baseUrl}/en/properties-for-sale-cyprus`,
-      es: `${baseUrl}/es/propiedades-en-venta-chipre`
     };
     const canonicalUrl = cyprusUrls[lang] || cyprusUrls.en;
     const hreflangAlternates = {
-      'en-us': cyprusUrls.en,
-      'de-de': cyprusUrls.de,
-      'es-es': cyprusUrls.es
+      'en': cyprusUrls.en,
+      'de': cyprusUrls.de,
     };
     const titles = {
       en: 'Homes for Sale in Cyprus',
@@ -4057,8 +4044,7 @@ exports.cyprusPropertiesPage = async (req, res, next) => {
     };
     const cyprusPagePaths = {
       de: '/immobilien-zypern-kaufen',
-      en: '/en/properties-for-sale-cyprus',
-      es: '/es/propiedades-en-venta-chipre'
+      en: '/en/properties-for-sale-cyprus'
     };
 
     // Cyprus page uses URL-per-language; content by route language
@@ -4254,9 +4240,8 @@ exports.villasForSaleCyprusPage = async (req, res, next) => {
     const baseUrl = res.locals.baseUrl;
     const canonicalUrl = `${baseUrl}/en/villas-for-sale-cyprus`;
     const hreflangAlternates = {
-      'de-de': `${baseUrl}/immobilien-zypern-kaufen`,
-      'en-us': canonicalUrl,
-      'es-es': `${baseUrl}/es/propiedades-en-venta-chipre`
+      'de': `${baseUrl}/immobilien-zypern-kaufen`,
+      'en': canonicalUrl,
     };
 
     res.render('villas-for-sale-cyprus', {
@@ -4394,13 +4379,11 @@ exports.charlottenburgPropertiesPageDe = async (req, res, next) => {
     const charlottenburgUrls = {
       de: `${baseUrl}/wohnung-kaufen-charlottenburg`,
       en: `${baseUrl}/en/properties-for-sale-berlin`,
-      es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const canonicalUrl = charlottenburgUrls.de;
     const hreflangAlternates = {
-      'en-us': charlottenburgUrls.en,
-      'de-de': charlottenburgUrls.de,
-      'es-es': charlottenburgUrls.es
+      'en': charlottenburgUrls.en,
+      'de': charlottenburgUrls.de,
     };
     const pageMetaDescription = 'Wohnung kaufen Charlottenburg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.';
     const pageTitle = 'Wohnung kaufen Charlottenburg';
@@ -4556,13 +4539,11 @@ exports.moabitPropertiesPageDe = async (req, res, next) => {
     const districtUrls = {
       de: `${baseUrl}/wohnung-kaufen-moabit`,
       en: `${baseUrl}/en/properties-for-sale-berlin`,
-      es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const canonicalUrl = districtUrls.de;
     const hreflangAlternates = {
-      'en-us': districtUrls.en,
-      'de-de': districtUrls.de,
-      'es-es': districtUrls.es
+      'en': districtUrls.en,
+      'de': districtUrls.de,
     };
     const pageMetaDescription = 'Wohnung kaufen Moabit: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.';
     const pageTitle = 'Wohnung kaufen Moabit';
@@ -4717,13 +4698,11 @@ exports.friedrichshainKreuzbergPropertiesPageDe = async (req, res, next) => {
     const districtUrls = {
       de: `${baseUrl}/wohnung-kaufen-friedrichshain-kreuzberg`,
       en: `${baseUrl}/en/properties-for-sale-berlin`,
-      es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const canonicalUrl = districtUrls.de;
     const hreflangAlternates = {
-      'en-us': districtUrls.en,
-      'de-de': districtUrls.de,
-      'es-es': districtUrls.es
+      'en': districtUrls.en,
+      'de': districtUrls.de,
     };
     const pageMetaDescription = 'Wohnung kaufen Friedrichshain-Kreuzberg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.';
     const pageTitle = 'Wohnung kaufen Friedrichshain-Kreuzberg';
@@ -4872,7 +4851,6 @@ exports.schoenebergPropertiesPageDe = async (req, res, next) => {
     const districtUrls = {
       de: `${baseUrl}/wohnung-kaufen-schoeneberg`,
       en: `${baseUrl}/en/properties-for-sale-berlin`,
-      es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const districtContent = {
       heroTitle: 'Wohnung kaufen Schöneberg',
@@ -4904,7 +4882,7 @@ exports.schoenebergPropertiesPageDe = async (req, res, next) => {
       useHomeHeader: true,
       headPartial: '../partials/seo/schoeneberg-properties-head',
       canonicalUrl: districtUrls.de,
-      hreflangAlternates: { 'en-us': districtUrls.en, 'de-de': districtUrls.de, 'es-es': districtUrls.es },
+      hreflangAlternates: { 'en': districtUrls.en, 'de': districtUrls.de },
       pageMetaDescription: 'Wohnung kaufen Schöneberg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
       districtContent,
       locations,
@@ -5000,7 +4978,6 @@ exports.prenzlauerBergPropertiesPageDe = async (req, res, next) => {
     const districtUrls = {
       de: `${baseUrl}/wohnung-kaufen-prenzlauer-berg`,
       en: `${baseUrl}/en/properties-for-sale-berlin`,
-      es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const districtContent = {
       heroTitle: 'Wohnung kaufen Prenzlauer Berg',
@@ -5032,7 +5009,7 @@ exports.prenzlauerBergPropertiesPageDe = async (req, res, next) => {
       useHomeHeader: true,
       headPartial: '../partials/seo/prenzlauer-berg-properties-head',
       canonicalUrl: districtUrls.de,
-      hreflangAlternates: { 'en-us': districtUrls.en, 'de-de': districtUrls.de, 'es-es': districtUrls.es },
+      hreflangAlternates: { 'en': districtUrls.en, 'de': districtUrls.de },
       pageMetaDescription: 'Wohnung kaufen Prenzlauer Berg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
       districtContent,
       locations,
@@ -5134,7 +5111,6 @@ exports.weddingPropertiesPageDe = async (req, res, next) => {
     const districtUrls = {
       de: `${baseUrl}/wohnung-kaufen-wedding`,
       en: `${baseUrl}/en/properties-for-sale-berlin`,
-      es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const districtContent = {
       heroTitle: 'Wohnung kaufen Wedding',
@@ -5166,7 +5142,7 @@ exports.weddingPropertiesPageDe = async (req, res, next) => {
       useHomeHeader: true,
       headPartial: '../partials/seo/wedding-properties-head',
       canonicalUrl: districtUrls.de,
-      hreflangAlternates: { 'en-us': districtUrls.en, 'de-de': districtUrls.de, 'es-es': districtUrls.es },
+      hreflangAlternates: { 'en': districtUrls.en, 'de': districtUrls.de },
       pageMetaDescription: 'Wohnung kaufen Wedding: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
       districtContent,
       locations,
@@ -5261,7 +5237,6 @@ exports.tempelhofPropertiesPageDe = async (req, res, next) => {
     const districtUrls = {
       de: `${baseUrl}/wohnung-kaufen-tempelhof`,
       en: `${baseUrl}/en/properties-for-sale-berlin`,
-      es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
     const districtContent = {
       heroTitle: 'Wohnung kaufen Tempelhof',
@@ -5293,7 +5268,7 @@ exports.tempelhofPropertiesPageDe = async (req, res, next) => {
       useHomeHeader: true,
       headPartial: '../partials/seo/tempelhof-properties-head',
       canonicalUrl: districtUrls.de,
-      hreflangAlternates: { 'en-us': districtUrls.en, 'de-de': districtUrls.de, 'es-es': districtUrls.es },
+      hreflangAlternates: { 'en': districtUrls.en, 'de': districtUrls.de },
       pageMetaDescription: 'Wohnung kaufen Tempelhof: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
       districtContent,
       locations,
@@ -5388,7 +5363,6 @@ async function renderBerlinDistrictPageDe(req, res, next, config) {
     const districtUrls = {
       en: `${baseUrl}/en/properties-for-sale-berlin`,
       de: `${baseUrl}${config.path}`,
-      es: `${baseUrl}/es/propiedades-en-venta-berlin`
     };
 
     res.render('properties-berlin-district-de', {
@@ -5397,7 +5371,7 @@ async function renderBerlinDistrictPageDe(req, res, next, config) {
       useHomeHeader: true,
       headPartial: '../partials/seo/berlin-district-properties-head',
       canonicalUrl: districtUrls.de,
-      hreflangAlternates: { 'en-us': districtUrls.en, 'de-de': districtUrls.de, 'es-es': districtUrls.es },
+      hreflangAlternates: { 'en': districtUrls.en, 'de': districtUrls.de },
       pageMetaDescription: config.metaDescription,
       districtContent: config.content,
       districtDisplayName: config.displayName,

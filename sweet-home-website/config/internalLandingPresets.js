@@ -6,8 +6,7 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['berlin', 'germany', 'capital', 'invest'],
     urls: {
       de: '/wohnungen-berlin-kaufen',
-      en: '/en/properties-for-sale-berlin',
-      es: '/es/propiedades-en-venta-berlin'
+      en: '/en/properties-for-sale-berlin'
     }
   },
   cyprus_main: {
@@ -17,8 +16,7 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['cyprus', 'paphos', 'limassol', 'larnaca', 'nicosia', 'mediterranean'],
     urls: {
       de: '/immobilien-zypern-kaufen',
-      en: '/en/properties-for-sale-cyprus',
-      es: '/es/propiedades-en-venta-chipre'
+      en: '/en/properties-for-sale-cyprus'
     }
   },
   dubai_main: {
@@ -28,8 +26,7 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['dubai', 'uae', 'emirates', 'marina', 'downtown', 'business bay'],
     urls: {
       de: '/immobilien-dubai-kaufen',
-      en: '/en/properties-for-sale-dubai',
-      es: '/es/propiedades-en-venta-dubai'
+      en: '/en/properties-for-sale-dubai'
     }
   },
   berlin_charlottenburg: {
@@ -39,8 +36,7 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['charlottenburg', 'west berlin'],
     urls: {
       de: '/wohnung-kaufen-charlottenburg',
-      en: '/wohnung-kaufen-charlottenburg',
-      es: '/wohnung-kaufen-charlottenburg'
+      en: '/wohnung-kaufen-charlottenburg'
     }
   },
   berlin_moabit: {
@@ -50,8 +46,7 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['moabit', 'mitte'],
     urls: {
       de: '/wohnung-kaufen-moabit',
-      en: '/wohnung-kaufen-moabit',
-      es: '/wohnung-kaufen-moabit'
+      en: '/wohnung-kaufen-moabit'
     }
   },
   berlin_friedrichshain_kreuzberg: {
@@ -61,8 +56,7 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['friedrichshain', 'kreuzberg', 'fhain'],
     urls: {
       de: '/wohnung-kaufen-friedrichshain-kreuzberg',
-      en: '/wohnung-kaufen-friedrichshain-kreuzberg',
-      es: '/wohnung-kaufen-friedrichshain-kreuzberg'
+      en: '/wohnung-kaufen-friedrichshain-kreuzberg'
     }
   },
   berlin_schoeneberg: {
@@ -72,8 +66,7 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['schoeneberg', 'schoneberg'],
     urls: {
       de: '/wohnung-kaufen-schoeneberg',
-      en: '/wohnung-kaufen-schoeneberg',
-      es: '/wohnung-kaufen-schoeneberg'
+      en: '/wohnung-kaufen-schoeneberg'
     }
   },
   berlin_prenzlauer_berg: {
@@ -83,8 +76,7 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['prenzlauer berg', 'pberg', 'prenzlauer'],
     urls: {
       de: '/wohnung-kaufen-prenzlauer-berg',
-      en: '/wohnung-kaufen-prenzlauer-berg',
-      es: '/wohnung-kaufen-prenzlauer-berg'
+      en: '/wohnung-kaufen-prenzlauer-berg'
     }
   },
   berlin_wedding: {
@@ -94,8 +86,7 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['wedding', 'gesundbrunnen'],
     urls: {
       de: '/wohnung-kaufen-wedding',
-      en: '/wohnung-kaufen-wedding',
-      es: '/wohnung-kaufen-wedding'
+      en: '/wohnung-kaufen-wedding'
     }
   },
   berlin_tempelhof: {
@@ -105,8 +96,7 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['tempelhof', 'tempelhofer'],
     urls: {
       de: '/wohnung-kaufen-tempelhof',
-      en: '/wohnung-kaufen-tempelhof',
-      es: '/wohnung-kaufen-tempelhof'
+      en: '/wohnung-kaufen-tempelhof'
     }
   },
   berlin_neukoelln: {
@@ -116,8 +106,7 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['neukoelln', 'neukölln', 'neukolln'],
     urls: {
       de: '/wohnung-kaufen-neukoelln',
-      en: '/wohnung-kaufen-neukoelln',
-      es: '/wohnung-kaufen-neukoelln'
+      en: '/wohnung-kaufen-neukoelln'
     }
   },
   berlin_reinickendorf: {
@@ -127,8 +116,7 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['reinickendorf'],
     urls: {
       de: '/wohnung-kaufen-reinickendorf',
-      en: '/wohnung-kaufen-reinickendorf',
-      es: '/wohnung-kaufen-reinickendorf'
+      en: '/wohnung-kaufen-reinickendorf'
     }
   },
   berlin_kreuzberg: {
@@ -138,8 +126,7 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['kreuzberg', 'bergmannkiez'],
     urls: {
       de: '/wohnung-kaufen-kreuzberg',
-      en: '/wohnung-kaufen-kreuzberg',
-      es: '/wohnung-kaufen-kreuzberg'
+      en: '/wohnung-kaufen-kreuzberg'
     }
   },
   berlin_spandau: {
@@ -149,8 +136,7 @@ const INTERNAL_LANDING_PRESETS = {
     keywords: ['spandau'],
     urls: {
       de: '/wohnung-kaufen-spandau',
-      en: '/wohnung-kaufen-spandau',
-      es: '/wohnung-kaufen-spandau'
+      en: '/wohnung-kaufen-spandau'
     }
   }
 };

@@ -2,12 +2,11 @@
   const isObject = (v) => v && typeof v === 'object';
   const currentPathSafe = (typeof currentPath === 'string' && currentPath) ? currentPath : '/';
   const isPrivilegedPath = /^\/(admin|superadmin|auth|api)(\/|$)/.test(currentPathSafe);
-  const stripLocalePrefix = (p) => String(p || '/').replace(/^\/(en|es)(?=\/|$)/, '') || '/';
+  const stripLocalePrefix = (p) => String(p || '/').replace(/^\/en(?=\/|$)/, '') || '/';
   const normalizedCurrentPath = stripLocalePrefix(currentPathSafe);
   const defaultAlternatePaths = {
     de: normalizedCurrentPath === '/' ? '/' : normalizedCurrentPath,
-    en: normalizedCurrentPath === '/' ? '/en' : `/en${normalizedCurrentPath}`,
-    es: normalizedCurrentPath === '/' ? '/es' : `/es${normalizedCurrentPath}`
+    en: normalizedCurrentPath === '/' ? '/en' : `/en${normalizedCurrentPath}`
   };
   const mergedAlternatePaths = (isObject(localeAlternatePaths) ? localeAlternatePaths : defaultAlternatePaths);
   const encodedAlternatePaths = JSON.stringify(mergedAlternatePaths).replace(/"/g, '&quot;');
@@ -22,7 +21,6 @@
     <span class="lang-icon" aria-hidden="true">
       <%= (function(){
         var code = (lang || 'de').toLowerCase();
-        if (code === 'es') return '🇪🇸';
         if (code === 'de') return '🇩🇪';
         return '🇬🇧';
       })() %>
@@ -30,7 +28,7 @@
     <span class="lang-current"><%= (languageLabels && languageLabels[lang]) || (lang || 'de').toUpperCase() %></span>
   </button>
   <div id="lang-menu" class="lang-menu" role="menu" aria-hidden="true">
-    <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
+    <% (supportedLanguages || ['en','de']).forEach(function(code){ %>
       <a
         role="menuitem"
         class="lang-option <%= (lang===code ? 'is-active' : '') %>"
@@ -82,11 +80,10 @@
     serverAlt = {};
   }
 
-  var normalized = path.replace(/^\/(en|es)(?=\/|$)/, '') || '/';
+  var normalized = path.replace(/^\/en(?=\/|$)/, '') || '/';
   var fallbackAlt = {
     de: normalized === '/' ? '/' : normalized,
-    en: normalized === '/' ? '/en' : '/en' + normalized,
-    es: normalized === '/' ? '/es' : '/es' + normalized
+    en: normalized === '/' ? '/en' : '/en' + normalized
   };
 
   var options = switcher.querySelectorAll('.lang-option[data-lang-code]');
@@ -99,5 +96,3 @@
   });
 })();
 </script>
-
-

@@ -178,7 +178,7 @@
         <label for="language"><%= t('forms.preferredLanguage','Preferred language') %>*</label>
         <select id="language" name="language" required aria-required="true">
           <option value=""><%= t('owners.form.selectLanguage','Select language') %></option>
-          <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
+          <% (supportedLanguages || ['en','de']).forEach(function(code){ %>
             <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
           <% }) %>
         </select>

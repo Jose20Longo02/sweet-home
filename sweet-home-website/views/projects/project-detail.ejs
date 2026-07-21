@@ -365,7 +365,7 @@
                 <label for="contact-language"><%= t('forms.preferredLanguage','Preferred language') %></label>
                 <select id="contact-language" name="language" class="form-input">
                   <option value=""><%= t('forms.preferredLanguage','Preferred language') %></option>
-                  <% (supportedLanguages || ['en','es','de']).forEach(function(code){ %>
+                  <% (supportedLanguages || ['en','de']).forEach(function(code){ %>
                     <option value="<%= code %>" <%= (lang===code ? 'selected' : '') %>><%= (languageLabels && languageLabels[code]) || code.toUpperCase() %></option>
                   <% }) %>
                 </select>

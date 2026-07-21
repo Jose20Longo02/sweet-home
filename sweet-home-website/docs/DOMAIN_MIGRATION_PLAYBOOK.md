@@ -290,26 +290,40 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 
 ---
 
-### Fix 7 — Old dead URLs (~530 legacy 404 / soft-404) ✅ DONE for non-Spanish batch (2026-07-21)
+### Fix 7 — Old dead URLs (~530 legacy 404 / soft-404) ✅ DONE (2026-07-21)
 
 - [x] Merge consultant URL list with GSC “Not found” export — Adi sent `Sweet_Home_404_Classification.xlsx` (469 rows)
-- [x] Apply 301 for true equivalents, 410 for permanently removed content (non-Spanish rows)
-  - **261** exact-path **301**s: removed blog posts → `/blog`; sold/legacy listings → `/properties/for-sale/germany/berlin`
+- [x] Apply 301 for true equivalents, 410 for permanently removed content
+  - **261** exact-path **301**s (non-Spanish): removed blog posts → `/blog`; sold/legacy listings → `/properties/for-sale/germany/berlin`
   - **71** exact-path **410**s: Hebrew/legacy junk, dead CMS paths
-  - **112** Spanish `/es` rows **deferred** to Spanish-removal / go-live (per Adi)
+  - **117** Spanish `/es` exact-path **301**s merged at Spanish removal (GSC deferred rows + landing maps)
 - [x] Avoid mass-redirecting everything to homepage
 - [x] Runtime rules in `config/seo-404-gsc-2026-07-21.json` + `middleware/seo404Classification.js` (wired in `app.js` before generic `/de/*` collapses)
+- [x] Catch-all: any remaining `/es` or `/es/*` → German-equivalent path (strip `/es`, with landing overrides)
 - [x] Review overrides: did **not** 410 `/en`, `/de/properties`, `/de/projects`, `/en/staff` (would break live pages / already have better 301s)
-- [x] Local sample validation PASS (301/410/controls)
+- [x] Local sample validation PASS (301/410/controls + Spanish catch-all)
 - [ ] Re-verify a sample on production after deploy
-- [ ] Spanish `/es` 404 rows when Spanish is removed
 
 **Artifacts:** `docs/seo-404-classification-2026-07-21.csv`, `seo-redirect-map-2026-07-21-gsc404.csv`, `config/seo-404-gsc-2026-07-21.json`  
 **Done when:** Sample of legacy URLs return 410 or 301, not soft-404.  
 **Owner:** Dev + SEO  
-**Status:** ✅ Non-Spanish batch DONE (code) 2026-07-21 — Spanish rows + live spot-check remaining
+**Status:** ✅ DONE (code) 2026-07-21 — live spot-check remaining after deploy
 
 ---
+
+### Spanish removal ✅ DONE (code) (2026-07-21)
+
+- [x] Unmount `/es` locale router / home; `/lang/es` → `/`
+- [x] Language switcher DE/EN only (`config/i18n.js` supported `['en','de']`)
+- [x] Remove Spanish from hreflang / sitemap / nav landing URLs
+- [x] Normalize hreflang keys to `en` + `de` (drop `en-us` / `de-de` / `es-es` on touched surfaces)
+- [x] Merge deferred GSC `/es` 404 rows into #7 redirect map + catch-all strip
+- [ ] Production deploy + live spot-check (`/es`, landings, blog, sold props)
+- [ ] Confirm Meta/ad landing pages no longer point at `/es` (business)
+
+**Done when:** No `/es` returns 200; switcher/sitemap/hreflang are DE+EN only.  
+**Owner:** Dev  
+**Status:** ✅ Code DONE 2026-07-21 — deploy remaining
 
 ### Fix 14 — Remove over-optimised link block on district pages
 
@@ -510,14 +524,15 @@ IF request.host == 'sweet-home.co.il' OR 'www.sweet-home.co.il':
 
 ---
 
-## 3.6 Spanish removal (if approved in Phase 0)
+## 3.6 Spanish removal ✅ DONE (code) (2026-07-21)
 
-- [ ] `/es/*` routes return 301 to German equivalent OR 410
-- [ ] Remove `/es` from language switcher UI
-- [ ] Remove `es-es` from hreflang
-- [ ] Remove Spanish URLs from sitemap
-- [ ] Keep `locales/es.json` in repo if needed for legacy content references
-- [ ] Update any Spanish Meta ad landing pages before go-live
+- [x] `/es/*` routes return 301 to German equivalent (exact GSC map + catch-all strip)
+- [x] Remove `/es` from language switcher UI
+- [x] Remove `es-es` from hreflang (use `en` + `de`)
+- [x] Remove Spanish URLs from sitemap
+- [x] Keep `locales/es.json` in repo for legacy content references
+- [ ] Update any Spanish Meta ad landing pages before go-live (business)
+- [ ] Production deploy + live spot-check
 
 ---
 
@@ -763,4 +778,5 @@ For **each** URL below, verify columns A–F.
 | 2026-07-20 | **Fix #6 DONE** — Stopped `/de/en` & `/es/en` hreflang generation; catch-all 301s to `/en/*` | Dev |
 | 2026-07-20 | **Fix #5 DONE** — Projects/blog filter+topic noindex with clean canonicals; properties `page=1` 301; local verification PASS | Dev |
 | 2026-07-21 | **Fix #7 non-Spanish DONE** — Loaded Adi’s GSC 404 classification: 261×301 + 71×410 via `seo404Classification` middleware; 112 `/es` rows deferred to Spanish removal | Dev |
-| | **Next:** Deploy + live spot-check #7; then Spanish removal (+ deferred `/es` 404s); then go-live checklist with SEO | |
+| 2026-07-21 | **Spanish removal DONE (code)** — Dropped `/es` router/switcher/hreflang/sitemap; merged 117 `/es` GSC 301s + catch-all strip to DE; hreflang `en`+`de` | Dev |
+| | **Next:** Deploy + live spot-check Spanish + #7; then go-live checklist with SEO | |

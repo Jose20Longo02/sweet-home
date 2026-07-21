@@ -17,10 +17,9 @@
   const blogListUrl = `${siteBaseUrl}${blogBasePath}${buildQuery(canonicalPage, false)}`;
   const deUrl = `${siteBaseUrl}/blog${buildQuery(canonicalPage, false)}`;
   const enUrl = `${siteBaseUrl}/en/blog${buildQuery(canonicalPage, false)}`;
-  const esUrl = `${siteBaseUrl}/es/blog${buildQuery(canonicalPage, false)}`;
-  // prev/next keep topic for UX when browsing a topic filter (still noindex)
+    // prev/next keep topic for UX when browsing a topic filter (still noindex)
   const navQuery = (pageValue) => buildQuery(pageValue, true);
-  const ogLocale = (typeof lang !== 'undefined' && lang === 'de') ? 'de_DE' : (typeof lang !== 'undefined' && lang === 'es') ? 'es_ES' : 'en_US';
+  const ogLocale = (typeof lang !== 'undefined' && lang === 'de') ? 'de_DE' : 'en_US';
   const normalizeText = (value) => String(value || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
   const clampText = (value, max) => {
     const clean = normalizeText(value);
@@ -39,9 +38,8 @@
 <meta name="description" content="<%= listDesc %>">
 <meta name="robots" content="<%= robotsContent %>">
 <link rel="canonical" href="<%= blogListUrl %>">
-<link rel="alternate" hreflang="en-us" href="<%= enUrl %>">
-<link rel="alternate" hreflang="de-de" href="<%= deUrl %>">
-<link rel="alternate" hreflang="es-es" href="<%= esUrl %>">
+<link rel="alternate" hreflang="en" href="<%= enUrl %>">
+<link rel="alternate" hreflang="de" href="<%= deUrl %>">
 <link rel="alternate" hreflang="x-default" href="<%= deUrl %>">
 <% if (typeof page !== 'undefined' && page > 1) { %>
 <link rel="prev" href="<%= `${siteBaseUrl}${blogBasePath}${navQuery((page - 1) > 1 ? (page - 1) : 0)}` %>">

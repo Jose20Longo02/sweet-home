@@ -247,7 +247,7 @@ router.post(
         // Thank-you to user (seller lead)
         try {
           const lang = String(language || '').slice(0,2).toLowerCase();
-          const L = ['en','es','de'].includes(lang) ? lang : 'en';
+          const L = ['en','de'].includes(lang) ? lang : 'en';
           const subjects = {
             en: 'Thank you — Sweet Home Real Estate Investments',
             es: 'Gracias — Sweet Home Real Estate Investments',
@@ -302,7 +302,7 @@ router.post(
         // Thank-you to user — localized
         try {
           const lang = String(language || '').slice(0,2).toLowerCase();
-          const L = ['en','es','de'].includes(lang) ? lang : 'en';
+          const L = ['en','de'].includes(lang) ? lang : 'en';
           const subjects = {
             en: 'Thank you — Sweet Home Real Estate Investments',
             es: 'Gracias — Sweet Home Real Estate Investments',

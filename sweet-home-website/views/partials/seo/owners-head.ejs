@@ -5,7 +5,7 @@
   const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
   const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
     ? ogLocale
-    : (currentLang === 'de' ? 'de_DE' : (currentLang === 'es' ? 'es_ES' : 'en_US'));
+    : (currentLang === 'de' ? 'de_DE' : 'en_US');
 %>
 <meta name="description" content="<%= pageDesc %>">
 <!-- Canonical URL is handled by main layout to avoid conflicts with hreflang -->

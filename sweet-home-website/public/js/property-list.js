@@ -28,13 +28,12 @@ let LOCATIONS = {};
 let LOCATION_COLORS = {};
 let NEIGHBORHOOD_COUNTS = {};
 
-// Get locale prefix for links (preserves Spanish/German when navigating)
+// Get locale prefix for links (EN uses /en, DE is unprefixed)
 function getLocalePrefix() {
   const loc = document.getElementById('locations-data');
   const fromAttr = loc && loc.getAttribute('data-locale-prefix');
   if (fromAttr) return fromAttr;
   const path = (window.location && window.location.pathname) || '';
-  if (path.startsWith('/es')) return '/es';
   if (path.startsWith('/en')) return '/en';
   return '';
 }

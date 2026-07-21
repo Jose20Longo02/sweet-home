@@ -7,7 +7,7 @@
 const nodeFetch = (...args) => import('node-fetch').then(({ default: f }) => f(...args));
 const fetchFn = typeof fetch === 'function' ? fetch : nodeFetch;
 
-const SUPPORTED = ['en', 'es', 'de'];
+const SUPPORTED = ['en', 'de'];
 
 function getEnvBoolean(name, defaultValue) {
   const v = process.env[name];
