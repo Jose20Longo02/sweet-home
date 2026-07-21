@@ -290,16 +290,24 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 
 ---
 
-### Fix 7 — Old dead URLs (~530 legacy 404 / soft-404)
+### Fix 7 — Old dead URLs (~530 legacy 404 / soft-404) ✅ DONE for non-Spanish batch (2026-07-21)
 
-- [ ] Merge consultant URL list with GSC “Not found” export
-- [ ] Apply 301 for true equivalents, 410 for permanently removed content
-- [ ] Avoid mass-redirecting everything to homepage (bad practice)
-- [ ] Update `seo-redirect-map-2026-04-28.csv` and validate
+- [x] Merge consultant URL list with GSC “Not found” export — Adi sent `Sweet_Home_404_Classification.xlsx` (469 rows)
+- [x] Apply 301 for true equivalents, 410 for permanently removed content (non-Spanish rows)
+  - **261** exact-path **301**s: removed blog posts → `/blog`; sold/legacy listings → `/properties/for-sale/germany/berlin`
+  - **71** exact-path **410**s: Hebrew/legacy junk, dead CMS paths
+  - **112** Spanish `/es` rows **deferred** to Spanish-removal / go-live (per Adi)
+- [x] Avoid mass-redirecting everything to homepage
+- [x] Runtime rules in `config/seo-404-gsc-2026-07-21.json` + `middleware/seo404Classification.js` (wired in `app.js` before generic `/de/*` collapses)
+- [x] Review overrides: did **not** 410 `/en`, `/de/properties`, `/de/projects`, `/en/staff` (would break live pages / already have better 301s)
+- [x] Local sample validation PASS (301/410/controls)
+- [ ] Re-verify a sample on production after deploy
+- [ ] Spanish `/es` 404 rows when Spanish is removed
 
+**Artifacts:** `docs/seo-404-classification-2026-07-21.csv`, `seo-redirect-map-2026-07-21-gsc404.csv`, `config/seo-404-gsc-2026-07-21.json`  
 **Done when:** Sample of legacy URLs return 410 or 301, not soft-404.  
 **Owner:** Dev + SEO  
-**Files likely involved:** `app.js`, `seo-redirect-map-2026-04-28.csv`, `scripts/validate-redirect-map.js`
+**Status:** ✅ Non-Spanish batch DONE (code) 2026-07-21 — Spanish rows + live spot-check remaining
 
 ---
 
@@ -754,4 +762,5 @@ For **each** URL below, verify columns A–F.
 | 2026-07-20 | **Fix #15 CLOSED** — Live production validated on `/contact`: 0 events on load, 1 config (no double page_view), 1 `contact_form_submit` after successful submit | Dev |
 | 2026-07-20 | **Fix #6 DONE** — Stopped `/de/en` & `/es/en` hreflang generation; catch-all 301s to `/en/*` | Dev |
 | 2026-07-20 | **Fix #5 DONE** — Projects/blog filter+topic noindex with clean canonicals; properties `page=1` 301; local verification PASS | Dev |
-| | **Next:** #7 (legacy dead URLs — needs Adi’s list / GSC export), then migration items #1–4, #8–9 at go-live | |
+| 2026-07-21 | **Fix #7 non-Spanish DONE** — Loaded Adi’s GSC 404 classification: 261×301 + 71×410 via `seo404Classification` middleware; 112 `/es` rows deferred to Spanish removal | Dev |
+| | **Next:** Deploy + live spot-check #7; then Spanish removal (+ deferred `/es` 404s); then go-live checklist with SEO | |

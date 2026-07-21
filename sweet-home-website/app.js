@@ -28,6 +28,7 @@ const { connectDB }  = require('./config/db');
 const sendMail       = require('./config/mailer');
 const locations      = require('./config/locations');
 const { query }      = require('./config/db');
+const { seo404ClassificationMiddleware } = require('./middleware/seo404Classification');
 const BlogPost       = require('./models/BlogPost');
 const i18nMiddleware = require('./config/i18n');
 const { logEvent }   = require('./utils/analytics');
@@ -578,6 +579,9 @@ app.use((req, res, next) => {
     return res.redirect(301, `${target}${query}`);
   }
 
+  // Fix #7 — GSC 404 classification (exact path → 301 or 410). Spanish rows deferred.
+  // Runs before generic /de/* collapses so Adi's list wins for sold listings / removed posts.
+  return seo404ClassificationMiddleware(req, res, () => {
   // Collapse legacy /de/* top-level pages to default-language canonical paths.
   const legacyDeTopLevelMatch = lowerPath.match(/^\/de\/(projects|properties|blog|about|contact|services|owners|terms|privacy|cookies)\/?$/);
   if (legacyDeTopLevelMatch) {
@@ -682,6 +686,7 @@ app.use((req, res, next) => {
   }
 
   next();
+  }); // end seo404ClassificationMiddleware fallback
 });
 
 // Icon theme test page (for debugging)

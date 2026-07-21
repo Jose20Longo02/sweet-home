@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sweet Home — SEO Technical Progress Update</title>
+  <style>
+    :root {
+      --ink: #1a1f1c;
+      --muted: #5a635c;
+      --line: #d8ddd9;
+      --green: #1f6b4a;
+      --green-soft: #e8f3ed;
+      --amber: #8a6a1a;
+      --amber-soft: #f7f1de;
+      --blue-soft: #eef0f5;
+      --blue: #3a4560;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      background: #fff;
+    }
+    .page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 36px 40px 48px;
+    }
+    h1 {
+      margin: 0 0 4px;
+      font-size: 20pt;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--green);
+    }
+    h2 {
+      margin: 26px 0 10px;
+      font-size: 13pt;
+      color: var(--green);
+      border-bottom: 1.5px solid var(--line);
+      padding-bottom: 4px;
+    }
+    h3 {
+      margin: 16px 0 4px;
+      font-size: 11.5pt;
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 10pt;
+      margin-bottom: 16px;
+    }
+    .intro {
+      background: var(--green-soft);
+      border-left: 4px solid var(--green);
+      padding: 12px 14px;
+      margin: 14px 0 20px;
+    }
+    .intro p { margin: 0 0 6px; }
+    .intro p:last-child { margin: 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 16px;
+      font-size: 10pt;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 7px 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #f4f6f4; font-weight: 600; }
+    .badge {
+      display: inline-block;
+      padding: 1px 7px;
+      border-radius: 3px;
+      font-size: 9pt;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .done { background: var(--green-soft); color: var(--green); }
+    .pending { background: var(--amber-soft); color: var(--amber); }
+    .later { background: var(--blue-soft); color: var(--blue); }
+    ul { margin: 4px 0 10px; padding-left: 18px; }
+    li { margin: 2px 0; }
+    .note { color: var(--muted); font-size: 9.5pt; }
+    .footer {
+      margin-top: 24px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 9pt;
+    }
+    @media print {
+      .page { padding: 0; max-width: none; }
+      h2, h3, table, .intro { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>SEO technical progress update</h1>
+    <div class="meta">
+      Sweet Home website · Technical SEO checklist from the migration plan<br />
+      Site: sweet-home.co.il · Target domain: sweethome-immobilien.de<br />
+      Updated: 20 July 2026
+    </div>
+
+    <div class="intro">
+      <p>Quick status so we’re all looking at the same picture: what’s already live, what’s next, and what waits for the domain switch.</p>
+      <p><strong>Right now:</strong> 8 checklist items done and verified. One Dev item left before go-live prep (#7 — old dead URLs). Migration items (#1–4, #8–9) wait for go-live. Disavow (#16) stays with SEO after the move.</p>
+    </div>
+
+    <h2>1. Status at a glance</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:10%">#</th>
+          <th style="width:62%">Item</th>
+          <th style="width:28%">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>10</td><td>Doubled-brand titles</td><td><span class="badge done">Done</span></td></tr>
+        <tr><td>11</td><td>Language-correct titles &amp; H1</td><td><span class="badge done">Done</span></td></tr>
+        <tr><td>12</td><td>Missing meta descriptions</td><td><span class="badge done">Done</span></td></tr>
+        <tr><td>13</td><td>Homepage schema + Berlin focus</td><td><span class="badge done">Done</span></td></tr>
+        <tr><td>14</td><td>Over-optimised district link blocks</td><td><span class="badge done">Done</span></td></tr>
+        <tr><td>15</td><td>Contact form tracking (GA4)</td><td><span class="badge done">Done</span></td></tr>
+        <tr><td>6</td><td>Broken language URLs (<code>/de/en</code>, <code>/es/en</code>)</td><td><span class="badge done">Done</span></td></tr>
+        <tr><td>5</td><td>Filter &amp; pagination duplicates</td><td><span class="badge done">Done</span></td></tr>
+        <tr><td>7</td><td>Old dead URLs (~530)</td><td><span class="badge pending">Next</span></td></tr>
+        <tr><td>16</td><td>Disavow toxic backlinks</td><td><span class="badge later">SEO / after migration</span></td></tr>
+        <tr><td>1–4, 8–9</td><td>Domain switch, sitemap, 301s, GSC Change of Address</td><td><span class="badge later">Go-live</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2>2. What we finished</h2>
+
+    <h3>#10 — Doubled-brand titles <span class="badge done">Done</span></h3>
+    <ul>
+      <li>Stopped titles like “Sweet Home | Sweet Home”.</li>
+      <li>Checked live — 21/21 pages look good.</li>
+    </ul>
+
+    <h3>#11 — Titles &amp; H1 in the right language <span class="badge done">Done</span></h3>
+    <ul>
+      <li>German pages show German titles/H1; EN and ES are localized too (about, contact, cookies, services, projects).</li>
+      <li>Live DE / EN / ES checks passed.</li>
+    </ul>
+
+    <h3>#12 — Meta descriptions <span class="badge done">Done</span></h3>
+    <ul>
+      <li>Fixed a bug that silently dropped descriptions on EN/ES home and projects.</li>
+      <li>Localized descriptions for home, projects, about, contact, cookies.</li>
+      <li>12/12 core URLs passed live.</li>
+    </ul>
+
+    <h3>#13 — Homepage schema + Berlin focus <span class="badge done">Done</span></h3>
+    <ul>
+      <li><strong>Schema:</strong> Organization + WebSite JSON-LD (with SearchAction). Schema.org validator: 0 errors / 0 warnings on DE/EN/ES.</li>
+      <li><strong>Content:</strong> Berlin-first hero, properties, districts, and projects. Dubai/Cyprus stay secondary and link to their landing pages. Compact map under the search bar defaults to Berlin.</li>
+    </ul>
+
+    <h3>#14 — District link dumps <span class="badge done">Done</span></h3>
+    <ul>
+      <li>Removed long SEO-style link lists and “Indexierung” copy.</li>
+      <li>Kept ~5 useful links per page (Berlin hub + nearby districts).</li>
+    </ul>
+
+    <h3>#15 — Contact form → GA4 <span class="badge done">Done</span></h3>
+    <ul>
+      <li>Event: <code>contact_form_submit</code> (property <code>G-6PL29347V3</code>).</li>
+      <li>Fires once on success only — not on page load, not on failed submit.</li>
+      <li>Also fixed a page-view double-count bug. Page views may look lower than before; that’s the double-count going away, not lost traffic.</li>
+      <li>Live check on <code>/contact</code>: 0 events on load → 1 after submit (<code>form_type: contact_form</code>).</li>
+      <li class="note">Nice to have on the SEO side: mark <code>contact_form_submit</code> as a key event in GA4, and optionally peek at Realtime/DebugView.</li>
+    </ul>
+
+    <h3>#6 — Broken <code>/de/en</code> and <code>/es/en</code> URLs <span class="badge done">Done</span></h3>
+    <ul>
+      <li>Stopped generating those combo paths in hreflang.</li>
+      <li>Old hits now 301 to the correct <code>/en/…</code> URL.</li>
+      <li>Local check: combos return 301, not 200; EN property hreflang looks clean.</li>
+    </ul>
+
+    <h3>#5 — Filter &amp; pagination duplicates <span class="badge done">Done</span></h3>
+    <ul>
+      <li><strong>Properties:</strong> country/city already go to clean paths; extra filters stay noindex; <code>?page=1</code> now 301s away.</li>
+      <li><strong>Projects:</strong> filtered/search URLs → noindex, canonical to clean <code>/projects</code> (locale-aware).</li>
+      <li><strong>Blog:</strong> <code>?topic=</code> → noindex, canonical to clean <code>/blog</code>.</li>
+      <li>Verified locally. GSC will catch up after deploy + recrawl.</li>
+    </ul>
+
+    <h2>3. What’s next</h2>
+
+    <h3>#7 — Old dead URLs (~530) <span class="badge pending">Next up</span></h3>
+    <ul>
+      <li>Map legacy 404 / soft-404 URLs: <strong>301</strong> where there’s a real equivalent, <strong>410</strong> where the content is gone for good.</li>
+      <li>No mass-redirect to the homepage.</li>
+      <li class="note"><strong>Helpful input:</strong> latest URL list from the SEO crawl / GSC “Not found” export so we can classify correctly.</li>
+    </ul>
+
+    <h3>After that / go-live (not coding now)</h3>
+    <ul>
+      <li><strong>#1–4, #8–9:</strong> make <code>.de</code> primary, canonicals, sitemap, 301 <code>.co.il</code> → <code>.de</code>, GSC Change of Address.</li>
+      <li><strong>#16 Disavow:</strong> SEO prepares the file and uploads it on the new <code>.de</code> property after migration.</li>
+      <li>hreflang tidy-ups (<code>en-us</code> → <code>en</code>, Spanish decision) tied to the final locale plan before go-live.</li>
+    </ul>
+
+    <h2>4. Suggested order from here</h2>
+    <ol>
+      <li>Deploy the latest #5 / #6 / #15 changes if not already live.</li>
+      <li>Share or confirm the dead-URL list → we do #7.</li>
+      <li>Then lock go-live date and run the migration checklist (#1–4, #8–9).</li>
+    </ol>
+
+  </div>
+</body>
+</html>
