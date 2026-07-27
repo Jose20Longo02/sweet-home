@@ -81,7 +81,7 @@ exports.generatePropertyPDF = async (req, res, next) => {
       }
     };
 
-    const baseUrl = 'https://sweet-home.co.il';
+    const baseUrl = (process.env.APP_URL || process.env.CANONICAL_DOMAIN || 'https://sweethome-immobilien.de').replace(/\/$/, '');
     console.log('[PDF] Base URL:', baseUrl);
     
     // Get logo URL - use Digital Ocean Spaces CDN URL directly
@@ -374,7 +374,7 @@ exports.generateProjectPDF = async (req, res, next) => {
     
     project.properties = normalizedProjectProperties;
 
-    const baseUrl = 'https://sweet-home.co.il';
+    const baseUrl = (process.env.APP_URL || process.env.CANONICAL_DOMAIN || 'https://sweethome-immobilien.de').replace(/\/$/, '');
     console.log('[PDF] Base URL:', baseUrl);
     
     // Get logo URL - use Digital Ocean Spaces CDN URL directly

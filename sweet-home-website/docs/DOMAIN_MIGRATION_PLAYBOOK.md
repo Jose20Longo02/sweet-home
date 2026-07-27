@@ -56,6 +56,42 @@ https://sweethome-immobilien.de/properties/foo?country=Germany
 
 ---
 
+# Adi’s Migration Checklist (go-live tracker)
+
+*Source: `Sweet_Home_Migration_Checklist.xlsx` — distinct from the 16-item technical fixes list.*
+
+## Before go-live
+
+| # | Task | Owner | Status |
+|---|------|-------|--------|
+| 1 | Finish the dead URLs (#7): 301 or 410 per the list | Dev | ✅ DONE 2026-07-21 (live) |
+| 2 | Confirm the 1:1 redirect map (`.co.il` URL → same `.de` URL) | Dev + SEO | ✅ Dev DONE 2026-07-23 — [map doc](./DOMAIN_MIGRATION_1TO1_REDIRECT_MAP.md) / [CSV](./domain-migration-1to1-redirect-map-2026-07-23.csv); **SEO sign-off pending** |
+| 3 | Add and verify `sweethome-immobilien.de` in Search Console | SEO / Dev | ✅ DONE 2026-07-26 (Luis verified) |
+| 4 | Point GA4 to the new domain | Dev | Prep done — flip stream URL on go-live day |
+| 5 | Pick a go-live date (lower-traffic window) | Both | ✅ 2026-07-27 |
+
+## Go-live (the switch)
+
+| # | Task | Owner | Status |
+|---|------|-------|--------|
+| 6 | Set `.de` as primary; canonicals self-reference `.de` | Dev | 🔄 IN PROGRESS 2026-07-27 — code + Render env |
+| 7 | Rewrite internal links, menu, footer to `.de` and clean URLs | Dev | Relative links OK; absolute via `APP_URL` |
+| 8 | Final hreflang on `.de`: `en-us`→`en`, keep `/en`, drop `/es`, retire `/de` | Dev | Prep done on `.co.il`; confirms on `.de` after deploy |
+| 9 | Publish the `.de` sitemap; remove the two old sitemaps | Dev | Auto via `/sitemap.xml` once `APP_URL=.de` |
+| 10 | 301 every `.co.il` URL to the exact `.de` match; keep `.co.il` live | Dev | Enable `DOMAIN_REDIRECT_ENABLED=true` on Render |
+
+## Right after / first weeks
+
+| # | Task | Owner | Status |
+|---|------|-------|--------|
+| 11 | Submit `.de` sitemap + Change of Address in Search Console | SEO | [ ] |
+| 12 | Test ~30 sample redirects (no loops or chains) | Dev + SEO | [ ] |
+| 13 | Upload disavow file on the new `.de` property | SEO | [ ] |
+| 14 | Watch GSC: coverage, clicks, 404s | SEO | [ ] |
+| 15 | Keep `.co.il` and the redirects live long term | Dev | [ ] |
+
+---
+
 # PHASE 0 — Decisions & preparation
 
 *Complete before any code or DNS changes.*
@@ -82,7 +118,7 @@ https://sweethome-immobilien.de/properties/foo?country=Germany
 ## 0.2 Business decisions (must be locked before migration)
 
 - [ ] **Confirm go-live date** (avoid peak Meta campaign weeks; expect 2–8 week ranking fluctuation)
-- [ ] **Drop Spanish (`/es`)?** — SEO plan says yes; confirm no Spanish ad spend / leads dependency
+- [x] **Drop Spanish (`/es`)?** — Approved (Adi / SEO plan); shipped 2026-07-21 (301 to DE + surfaces removed)
 - [ ] **Retire `/de` URL prefix?** — German at root `/`, English at `/en` only (aligns with existing `DE_DEFAULT_EN_PREFIX` migration — see `docs/DE_DEFAULT_EN_PREFIX_MIGRATION_IMPLEMENTATION.md`)
 - [ ] **Homepage “lead with Berlin”** — confirm with business (affects Cyprus/Dubai positioning)
 - [x] **Remove district page over-optimised link blocks** — trimmed to 3–5 useful links (#14 DONE 2026-07-17)
@@ -92,8 +128,8 @@ https://sweethome-immobilien.de/properties/foo?country=Germany
 
 | Decision | Approved by | Date | Notes |
 |----------|-------------|------|-------|
-| Drop `/es` | | | |
-| Go-live date | | | |
+| Drop `/es` | SEO (Adi) / Business | 2026-07-21 | Shipped: exact GSC `/es` 301s + catch-all strip; switcher/hreflang/sitemap DE+EN only |
+| Go-live date | Business / Dev | 2026-07-27 | Go-live day — Render `.de` live; cutover in progress |
 | Homepage Berlin-first | Business | 2026-07-17 | Approved and shipped on homepage (#13) |
 | Trim district over-optimised links | Dev / SEO | 2026-07-17 | 3–5 useful links; Indexierung copy removed (#14) |
 
@@ -153,16 +189,16 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 
 | Pattern | Action |
 |---------|--------|
-| `/es/*` | 301 to DE equivalent OR 410 (if dropping Spanish) |
+| `/es/*` | ✅ 301 to DE equivalent (exact GSC map + catch-all strip) — live 2026-07-21 |
 | `/de/*` legacy prefix | 301 to non-prefixed path (already partially in `app.js`) |
 | `/de/en/*`, `/es/en/*` | 301 to correct language URL; stop generating |
 | `?page=1` | 301 to URL without `page` param |
 | Filter URLs `?country=&city=&neighborhood=` | Canonical to clean landing page OR noindex |
-| ~530 legacy 404 / soft-404 URLs | 410 or 301 to closest live page |
+| ~530 legacy 404 / soft-404 URLs | ✅ Fix #7: 378×301 + 71×410 via `seo404Classification` — live 2026-07-21 |
 | Spam paths (`/content-hub/`, `/item/*.html`) | 410 (already in redirect map) |
 
-- [ ] URL map complete and reviewed by SEO consultant
-- [ ] Minimum 30 sample URLs selected for pre/post testing (see Phase 4)
+- [x] URL map complete (1:1 domain map) — `docs/domain-migration-1to1-redirect-map-2026-07-23.csv`; SEO review pending
+- [x] Minimum 30 sample URLs selected for pre/post testing (see Phase 4 + map `phase4-sample` rows)
 
 ---
 
@@ -281,49 +317,50 @@ Create spreadsheet: `domain-migration-url-map.xlsx` (or extend `seo-redirect-map
 - [x] Stop generating `/de/en` and `/es/en` URLs in hreflang (property list was emitting `/de` + `/en/...`)
 - [x] 301 existing `/de/en/*` → `/en/*` (and `/de/en` → `/en`)
 - [x] 301 existing `/es/en/*` → `/en/*`
-- [x] Verify no `/de/en` or `/es/en` return HTTP 200 — local checks return 301; EN property hreflang now uses unprefixed DE + `/en` + `/es` (0 broken combos)
+- [x] Verify no `/de/en` or `/es/en` return HTTP 200 — local + live 301; hreflang now DE+EN only (Spanish removed 2026-07-21)
 
 **Done when:** No broken language combo URLs resolve 200.  
 **Owner:** Dev  
-**Status:** ✅ DONE — local verified 2026-07-20  
+**Status:** ✅ DONE — local verified 2026-07-20; live reconfirmed with Spanish removal 2026-07-21  
 **Files changed:** `controllers/propertyController.js` (hreflang builder), `app.js` (catch-all 301s)
 
 ---
 
-### Fix 7 — Old dead URLs (~530 legacy 404 / soft-404) ✅ DONE (2026-07-21)
+### Fix 7 — Old dead URLs (~530 legacy 404 / soft-404) ✅ DONE + LIVE (2026-07-21)
 
 - [x] Merge consultant URL list with GSC “Not found” export — Adi sent `Sweet_Home_404_Classification.xlsx` (469 rows)
 - [x] Apply 301 for true equivalents, 410 for permanently removed content
-  - **261** exact-path **301**s (non-Spanish): removed blog posts → `/blog`; sold/legacy listings → `/properties/for-sale/germany/berlin`
+  - **378** exact-path **301**s total in `config/seo-404-gsc-2026-07-21.json`
+    - Non-Spanish: removed blog posts → `/blog`; sold/legacy listings → `/properties/for-sale/germany/berlin`
+    - **117** Spanish `/es` rows (deferred GSC batch + landing maps) merged with Spanish removal
   - **71** exact-path **410**s: Hebrew/legacy junk, dead CMS paths
-  - **117** Spanish `/es` exact-path **301**s merged at Spanish removal (GSC deferred rows + landing maps)
 - [x] Avoid mass-redirecting everything to homepage
 - [x] Runtime rules in `config/seo-404-gsc-2026-07-21.json` + `middleware/seo404Classification.js` (wired in `app.js` before generic `/de/*` collapses)
 - [x] Catch-all: any remaining `/es` or `/es/*` → German-equivalent path (strip `/es`, with landing overrides)
 - [x] Review overrides: did **not** 410 `/en`, `/de/properties`, `/de/projects`, `/en/staff` (would break live pages / already have better 301s)
 - [x] Local sample validation PASS (301/410/controls + Spanish catch-all)
-- [ ] Re-verify a sample on production after deploy
+- [x] Production live sample PASS 2026-07-21 — non-ES 301s, ES 301s, 410s, controls (`/en`, `/blog`, `/properties` still 200)
 
 **Artifacts:** `docs/seo-404-classification-2026-07-21.csv`, `seo-redirect-map-2026-07-21-gsc404.csv`, `config/seo-404-gsc-2026-07-21.json`  
 **Done when:** Sample of legacy URLs return 410 or 301, not soft-404.  
 **Owner:** Dev + SEO  
-**Status:** ✅ DONE (code) 2026-07-21 — live spot-check remaining after deploy
+**Status:** ✅ CLOSED — live verified on `sweet-home.co.il` 2026-07-21
 
 ---
 
-### Spanish removal ✅ DONE (code) (2026-07-21)
+### Spanish removal ✅ DONE + LIVE (2026-07-21)
 
-- [x] Unmount `/es` locale router / home; `/lang/es` → `/`
+- [x] Unmount `/es` locale router / home; `/lang/es` → `/` (301)
 - [x] Language switcher DE/EN only (`config/i18n.js` supported `['en','de']`)
 - [x] Remove Spanish from hreflang / sitemap / nav landing URLs
 - [x] Normalize hreflang keys to `en` + `de` (drop `en-us` / `de-de` / `es-es` on touched surfaces)
 - [x] Merge deferred GSC `/es` 404 rows into #7 redirect map + catch-all strip
-- [ ] Production deploy + live spot-check (`/es`, landings, blog, sold props)
+- [x] Production deploy + live spot-check — PASS 2026-07-21 (`/es` landings, blog, sold prop, `/lang/es`, `/es/en/about`, homepage hreflang/switcher, sitemap)
 - [ ] Confirm Meta/ad landing pages no longer point at `/es` (business)
 
 **Done when:** No `/es` returns 200; switcher/sitemap/hreflang are DE+EN only.  
 **Owner:** Dev  
-**Status:** ✅ Code DONE 2026-07-21 — deploy remaining
+**Status:** ✅ CLOSED — live verified on `sweet-home.co.il` 2026-07-21
 
 ### Fix 14 — Remove over-optimised link block on district pages
 
@@ -386,10 +423,10 @@ Target structure per SEO plan:
 | Spanish | **removed** | — |
 | Old `/de/...` | **retired** (301 to root paths) | — |
 
-- [ ] Change all `en-us` hreflang tags → `en`
+- [x] Change `en-us` / `de-de` / `es-es` hreflang → `en` + `de` on touched surfaces (homepage + property landings / list); sweep remaining pages before `.de` cutover if any leftovers
 - [ ] Ensure hreflang is reciprocal (each page lists all alternates)
-- [ ] German homepage `hreflang` points to `.de/` not `.co.il/`
-- [ ] Remove Spanish hreflang entries if dropping `/es`
+- [ ] German homepage `hreflang` points to `.de/` not `.co.il/` (still `.co.il` until domain cutover)
+- [x] Remove Spanish hreflang entries (`/es` dropped 2026-07-21; live homepage = `de` / `en` / `x-default`)
 
 **Files to update:**
 - `app.js` (`hreflangAlternates`, middleware)
@@ -432,10 +469,10 @@ APP_URL=https://sweethome-immobilien.de
 
 ## 2.3 Search Console & Analytics prep
 
-- [ ] Add `sweethome-immobilien.de` property in Google Search Console
-- [ ] Verify domain (DNS TXT or HTML file)
-- [ ] Confirm GA4 can track `.de` (same property with cross-domain, or note cutover date)
-- [ ] Do **not** submit Change of Address until go-live (Phase 5)
+- [x] Add `sweethome-immobilien.de` property in Google Search Console — verified 2026-07-26
+- [x] Verify domain (DNS TXT or HTML file) — done
+- [ ] Confirm GA4 can track `.de` (same property with cross-domain, or note cutover date) — Checklist #4
+- [ ] Do **not** submit Change of Address until go-live (Phase 5 / Checklist #11)
 
 ---
 
@@ -489,25 +526,31 @@ rg "sweet-home\.co\.il" --glob "!seo-redirect-map*" --glob "!docs/*" --glob "!SE
 
 ---
 
-## 3.4 `.co.il` → `.de` redirect middleware
+## 3.4 `.co.il` → `.de` redirect middleware ✅ READY (off until go-live)
 
-Add at top of request pipeline (or configure at Render/nginx level):
+**Migration Checklist #2:** 1:1 map confirmed 2026-07-23 — see `docs/DOMAIN_MIGRATION_1TO1_REDIRECT_MAP.md` + `docs/domain-migration-1to1-redirect-map-2026-07-23.csv` (331 rows, 0 path mismatches).
 
 ```
 IF request.host == 'sweet-home.co.il' OR 'www.sweet-home.co.il':
   301 → https://sweethome-immobilien.de{req.path}{req.query}
 ```
 
-- [ ] Redirect middleware implemented
-- [ ] Preserves path exactly
-- [ ] Preserves query string exactly
-- [ ] Single hop (no chains)
-- [ ] `.co.il` admin/API routes still work OR redirect appropriately (decide: redirect admin too?)
-- [ ] Test with `curl -I` for 10 URLs
+- [x] Redirect middleware implemented (`middleware/domainRedirect.js`, wired in `app.js`)
+- [x] Preserves path exactly
+- [x] Preserves query string exactly
+- [x] Disabled by default (`DOMAIN_REDIRECT_ENABLED` unset/false) — does not affect live `.co.il`
+- [ ] Enable on go-live (`DOMAIN_REDIRECT_ENABLED=true`) — Migration Checklist #10
+- [x] `.co.il` admin/API: same 1:1 rule (entire host redirects; app still reachable on `.de`)
+- [ ] Test with `curl -I` for 10 URLs **after** enable on go-live
 
-**Implementation notes:**
+**Enable on go-live only:**
+```
+DOMAIN_REDIRECT_ENABLED=true
+PRIMARY_ORIGIN=https://sweethome-immobilien.de
+LEGACY_HOSTS=sweet-home.co.il,www.sweet-home.co.il
+```
 
----
+**Regenerate map:** `node scripts/generate-domain-1to1-map.js`
 
 ## 3.5 Sitemap
 
@@ -517,22 +560,22 @@ IF request.host == 'sweet-home.co.il' OR 'www.sweet-home.co.il':
   ```
   Sitemap: https://sweethome-immobilien.de/sitemap.xml
   ```
-- [ ] No Spanish URLs in sitemap if dropping `/es`
+- [x] No Spanish URLs in sitemap (`/es` removed; live sitemap clean 2026-07-21)
 - [ ] No `/de/` prefixed URLs in sitemap (retired prefix)
 
 **File:** `app.js` (`/sitemap.xml` route, `/robots.txt` route)
 
 ---
 
-## 3.6 Spanish removal ✅ DONE (code) (2026-07-21)
+## 3.6 Spanish removal ✅ CLOSED (2026-07-21)
 
 - [x] `/es/*` routes return 301 to German equivalent (exact GSC map + catch-all strip)
 - [x] Remove `/es` from language switcher UI
 - [x] Remove `es-es` from hreflang (use `en` + `de`)
 - [x] Remove Spanish URLs from sitemap
 - [x] Keep `locales/es.json` in repo for legacy content references
+- [x] Production deploy + live spot-check — PASS 2026-07-21
 - [ ] Update any Spanish Meta ad landing pages before go-live (business)
-- [ ] Production deploy + live spot-check
 
 ---
 
@@ -752,6 +795,13 @@ For **each** URL below, verify columns A–F.
 |----------|---------|
 | `docs/DE_DEFAULT_EN_PREFIX_MIGRATION_IMPLEMENTATION.md` | DE-default URL structure (`/` = DE, `/en` = EN) |
 | `seo-redirect-map-2026-04-28.csv` | High-value 301/410 redirect rules |
+| `config/seo-404-gsc-2026-07-21.json` | Fix #7 GSC 404 classification (378×301 + 71×410) |
+| `middleware/seo404Classification.js` | Runtime 301/410 + `/es` catch-all |
+| `middleware/domainRedirect.js` | `.co.il` → `.de` 1:1 host redirect (env-gated) |
+| `docs/DOMAIN_MIGRATION_1TO1_REDIRECT_MAP.md` | Migration Checklist #2 confirmation |
+| `docs/domain-migration-1to1-redirect-map-2026-07-23.csv` | Full 1:1 URL map (sitemap + samples) |
+| `scripts/generate-domain-1to1-map.js` | Regenerate 1:1 map from live sitemap |
+| `docs/seo-404-classification-2026-07-21.csv` | Human-readable #7 classification export |
 | `scripts/validate-redirect-map.js` | Validate redirect map (`npm run seo:validate-redirects`) |
 | `DEVELOPER_ROLE_SWITCHING.md` | Dev account role switching (unrelated but in repo) |
 | SEO consultant: `Sweet_Home_Technical_2Weeks.docx` | Source technical plan |
@@ -777,6 +827,9 @@ For **each** URL below, verify columns A–F.
 | 2026-07-20 | **Fix #15 CLOSED** — Live production validated on `/contact`: 0 events on load, 1 config (no double page_view), 1 `contact_form_submit` after successful submit | Dev |
 | 2026-07-20 | **Fix #6 DONE** — Stopped `/de/en` & `/es/en` hreflang generation; catch-all 301s to `/en/*` | Dev |
 | 2026-07-20 | **Fix #5 DONE** — Projects/blog filter+topic noindex with clean canonicals; properties `page=1` 301; local verification PASS | Dev |
-| 2026-07-21 | **Fix #7 non-Spanish DONE** — Loaded Adi’s GSC 404 classification: 261×301 + 71×410 via `seo404Classification` middleware; 112 `/es` rows deferred to Spanish removal | Dev |
-| 2026-07-21 | **Spanish removal DONE (code)** — Dropped `/es` router/switcher/hreflang/sitemap; merged 117 `/es` GSC 301s + catch-all strip to DE; hreflang `en`+`de` | Dev |
-| | **Next:** Deploy + live spot-check Spanish + #7; then go-live checklist with SEO | |
+| 2026-07-21 | **Fix #7 CLOSED** — Adi’s GSC 404 classification live: **378×301** + **71×410** via `seo404Classification` (includes 117 `/es` rows); production sample PASS (non-ES 301s, ES 301s, 410s, controls) | Dev |
+| 2026-07-21 | **Spanish removal CLOSED** — Dropped `/es` router/switcher/hreflang/sitemap; catch-all strip to DE; live PASS on landings, blog, sold prop, `/lang/es`, homepage DE+EN only | Dev |
+| 2026-07-23 | **Migration Checklist #2 DONE (Dev)** — Confirmed 1:1 `.co.il`→`.de` map (331 rows from live sitemap + samples); `domainRedirect` middleware ready behind `DOMAIN_REDIRECT_ENABLED` (off); awaiting SEO sign-off | Dev |
+| 2026-07-26 | **Migration Checklist #3 DONE** — `sweethome-immobilien.de` verified in Google Search Console | Dev |
+| 2026-07-27 | **Go-live STARTED** — Render `.de` serving 200; canonical default → `.de`; awaiting Render env (`APP_URL` + `DOMAIN_REDIRECT_ENABLED`) + deploy | Dev |
+| | **Next:** Set Render env → deploy → smoke-test redirects → GSC sitemap + Change of Address | |

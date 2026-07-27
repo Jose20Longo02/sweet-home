@@ -29,6 +29,7 @@ const sendMail       = require('./config/mailer');
 const locations      = require('./config/locations');
 const { query }      = require('./config/db');
 const { seo404ClassificationMiddleware } = require('./middleware/seo404Classification');
+const { domainRedirectMiddleware } = require('./middleware/domainRedirect');
 const BlogPost       = require('./models/BlogPost');
 const i18nMiddleware = require('./config/i18n');
 const { logEvent }   = require('./utils/analytics');
@@ -227,11 +228,19 @@ if (process.env.TRUST_PROXY === 'true') {
   app.set('trust proxy', 1);
 }
 
-// Canonical base URL: prefer real domain (sweet-home.co.il) over Render URL (sweet-home-ien7.onrender.com)
-// When APP_URL or request host is onrender.com, use the real domain so links don't point to Render
-const CANONICAL_DOMAIN = 'https://sweet-home.co.il';
+// Domain migration (.co.il → .de): enable on go-live via DOMAIN_REDIRECT_ENABLED=true.
+// 1:1 path+query preserve — see docs/DOMAIN_MIGRATION_1TO1_REDIRECT_MAP.md
+app.use(domainRedirectMiddleware);
+
+// Canonical base URL: primary domain is sweethome-immobilien.de (go-live 2026-07-27).
+// Prefer APP_URL / CANONICAL_DOMAIN env; never emit the Render hostname in public links.
+const CANONICAL_DOMAIN = (
+  process.env.CANONICAL_DOMAIN
+  || process.env.APP_URL
+  || 'https://sweethome-immobilien.de'
+).replace(/\/$/, '');
 function getCanonicalBaseUrl(req) {
-  const appUrl = (process.env.APP_URL || '').replace(/\/$/, '');
+  const appUrl = (process.env.APP_URL || process.env.CANONICAL_DOMAIN || '').replace(/\/$/, '');
   if (appUrl && !appUrl.includes('onrender.com') && !appUrl.includes('localhost')) {
     return appUrl;
   }
@@ -239,8 +248,13 @@ function getCanonicalBaseUrl(req) {
   if (host.includes('onrender.com')) {
     return CANONICAL_DOMAIN;
   }
+  // Prefer primary .de when request somehow hits legacy host without redirect enabled yet
+  if (host.includes('sweet-home.co.il')) {
+    return CANONICAL_DOMAIN;
+  }
   const proto = (req.get && req.get('x-forwarded-proto')) || req.protocol || 'https';
-  return `${proto}://${host}`.replace(/\/$/, '');
+  if (host) return `${proto}://${host}`.replace(/\/$/, '');
+  return CANONICAL_DOMAIN;
 }
 
 // 1) Set up EJS **first**

@@ -17,7 +17,7 @@ const {
 
 const { validationResult } = require('express-validator');
 
-const DEFAULT_SITE_ORIGIN = 'https://sweet-home.co.il';
+const DEFAULT_SITE_ORIGIN = (process.env.APP_URL || process.env.CANONICAL_DOMAIN || 'https://sweethome-immobilien.de').replace(/\/$/, '');
 const META_PIXEL_ID_INVESTOR_STRATEGY_DE = String(process.env.META_PIXEL_ID_INVESTOR_STRATEGY_DE || '1659758728554816').trim();
 const META_CAPI_TOKEN = String(process.env.META_CAPI_ACCESS_TOKEN || '').trim();
 const META_CAPI_API_VERSION = String(process.env.META_CAPI_API_VERSION || 'v22.0').trim();
