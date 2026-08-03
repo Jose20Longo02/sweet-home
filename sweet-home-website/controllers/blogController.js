@@ -31,6 +31,8 @@ function inferTopicIds(text) {
     .map(([id]) => id);
 }
 
+const BLOG_GEO_TOPICS = ['berlin', 'dubai', 'cyprus'];
+
 function buildTopicSql(topicId, paramStartIndex = 1) {
   const terms = BLOG_TOPIC_DEFS[topicId];
   if (!terms || !terms.length) return null;
@@ -42,6 +44,34 @@ function buildTopicSql(topicId, paramStartIndex = 1) {
     sql: `(${clauses.join(' OR ')})`,
     values: terms.map((term) => `%${term.toLowerCase()}%`)
   };
+}
+
+function localizedBlogField(row, field, lang) {
+  const i18n = row && row[`${field}_i18n`];
+  if (i18n && typeof i18n === 'object' && i18n[lang]) return i18n[lang];
+  return (row && row[field]) || '';
+}
+
+function getGeoTopics(topicIds = []) {
+  return topicIds.filter((id) => BLOG_GEO_TOPICS.includes(id));
+}
+
+function inferPostTopicIds(row, lang) {
+  return inferTopicIds([
+    localizedBlogField(row, 'title', lang),
+    localizedBlogField(row, 'excerpt', lang),
+    row && row.title,
+    row && row.excerpt,
+    row && row.content
+  ].filter(Boolean).join(' '));
+}
+
+/** Prefer same-market posts; skip Cyprus/Dubai fillers on Berlin pages (and vice versa). */
+function isCompatibleRecommendedPost(row, currentGeoTopics, lang) {
+  if (!currentGeoTopics.length) return true;
+  const rowGeos = getGeoTopics(inferPostTopicIds(row, lang));
+  if (!rowGeos.length) return true; // non-geo filler is fine
+  return rowGeos.some((geo) => currentGeoTopics.includes(geo));
 }
 
 function clampForSeo(text, max = 60) {
@@ -439,41 +469,53 @@ exports.showPublic = async (req, res, next) => {
       localizedPost.content || ''
     ].join(' '));
     let recommendedPosts = [];
+    const currentGeoTopics = getGeoTopics(inferredTopicIds);
+    const recommendedSelect = `bp.title, bp.title_i18n, bp.excerpt, bp.excerpt_i18n, bp.slug, bp.cover_image, COALESCE(bp.published_at, bp.created_at) AS published_at, u.name AS author_name`;
     if (inferredTopicIds.length > 0) {
       const primaryTopic = inferredTopicIds[0];
       const topicClause = buildTopicSql(primaryTopic, 2);
       if (topicClause) {
         const { rows } = await query(
-          `SELECT bp.title, bp.slug, bp.cover_image, COALESCE(bp.published_at, bp.created_at) AS published_at, u.name AS author_name
+          `SELECT ${recommendedSelect}
              FROM blog_posts bp
              LEFT JOIN users u ON u.id = bp.author_id
             WHERE bp.status = 'published' AND bp.slug <> $1 AND ${topicClause.sql}
             ORDER BY COALESCE(bp.published_at, bp.created_at) DESC
-            LIMIT 4`,
+            LIMIT 8`,
           [req.params.slug, ...topicClause.values]
         );
-        recommendedPosts = rows || [];
+        for (const row of (rows || [])) {
+          if (!isCompatibleRecommendedPost(row, currentGeoTopics, lang)) continue;
+          recommendedPosts.push(row);
+          if (recommendedPosts.length >= 4) break;
+        }
       }
     }
-    // Fill with recent posts if topic-related list is short
+    // Fill with recent same-market posts if topic-related list is short
     if (recommendedPosts.length < 4) {
       const { rows: recentRows } = await query(
-        `SELECT bp.title, bp.slug, bp.cover_image, COALESCE(bp.published_at, bp.created_at) AS published_at, u.name AS author_name
+        `SELECT ${recommendedSelect}
          FROM blog_posts bp
          LEFT JOIN users u ON u.id = bp.author_id
         WHERE bp.status = 'published' AND bp.slug <> $1
         ORDER BY COALESCE(bp.published_at, bp.created_at) DESC
-        LIMIT 8`,
+        LIMIT 24`,
       [req.params.slug]
       );
       const seen = new Set(recommendedPosts.map((p) => p.slug));
       for (const row of (recentRows || [])) {
         if (seen.has(row.slug)) continue;
+        if (!isCompatibleRecommendedPost(row, currentGeoTopics, lang)) continue;
         recommendedPosts.push(row);
         seen.add(row.slug);
         if (recommendedPosts.length >= 4) break;
       }
     }
+    // Localize titles for the active language (fixes DE pages showing EN titles)
+    recommendedPosts = recommendedPosts.slice(0, 4).map((p) => ({
+      ...p,
+      title: localizedBlogField(p, 'title', lang) || p.title
+    }));
     res.render('blog/blog-detail', {
       title: pageTitle,
       post: localizedPost,
