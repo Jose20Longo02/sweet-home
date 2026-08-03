@@ -71,6 +71,7 @@
             <th>Lead</th>
             <th>Message</th>
             <th>Language</th>
+            <th>Traffic source</th>
             <th>Status</th>
             <th>Last Contact</th>
             <th>Actions</th>
@@ -78,7 +79,7 @@
         </thead>
         <tbody>
           <% if (!leads || leads.length === 0) { %>
-            <tr><td colspan="10" style="text-align:center;">No leads found</td></tr>
+            <tr><td colspan="12" style="text-align:center;">No leads found</td></tr>
           <% } %>
           <% leads.forEach(lead => { %>
             <tr>
@@ -158,6 +159,7 @@
                 <% } %>
               </td>
               <td data-label="Language"><%= lead.preferred_language ? String(lead.preferred_language).toUpperCase() : '-' %></td>
+              <td data-label="Traffic source"><%= (typeof deriveTrafficSource === 'function' ? deriveTrafficSource(lead) : '-') %></td>
               <td data-label="Status">
                 <select data-lead-id="<%= lead.id %>" class="lead-status">
                   <% ['New','Contacted','Interested','Not Interested','Closed'].forEach(s => { %>
@@ -176,7 +178,7 @@
               </td>
             </tr>
             <tr id="notes-<%= lead.id %>" class="notes-row" style="display:none;">
-              <td colspan="11">
+              <td colspan="12">
                 <% const _notesArr = (lead.internal_notes ? String(lead.internal_notes).split(/\n\n+/).filter(Boolean) : []); %>
                 <ul class="lead-notes-list" data-notes-list-for="<%= lead.id %>" style="padding-left:18px; margin:0 0 10px 0;">
                   <% _notesArr.forEach(function(n){

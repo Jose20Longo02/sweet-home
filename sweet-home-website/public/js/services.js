@@ -142,6 +142,9 @@
         urlBody.append('lead_type', 'unknown');
         urlBody.append('language', form.language.value || '');
         urlBody.append('recaptchaToken', token || '');
+        if (window.LeadAttribution && typeof LeadAttribution.applyToUrlSearchParams === 'function') {
+          LeadAttribution.applyToUrlSearchParams(urlBody);
+        }
         const res = await fetch('/api/leads/contact', {
           method:'POST',
           headers:{ 'x-csrf-token': form._csrf.value, 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8' },

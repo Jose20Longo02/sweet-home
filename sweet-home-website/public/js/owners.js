@@ -131,6 +131,9 @@
       urlBody.append('rooms', payload.rooms || '');
       urlBody.append('occupancy', payload.occupancy || '');
       urlBody.append('recaptchaToken', payload.recaptchaToken || '');
+      if (window.LeadAttribution && typeof LeadAttribution.applyToUrlSearchParams === 'function') {
+        LeadAttribution.applyToUrlSearchParams(urlBody);
+      }
 
       const res = await fetch('/api/leads/contact', {
         method: 'POST',

@@ -893,6 +893,9 @@ class PropertyDetailPage {
     // Add property information
     formDataObj.propertyId = this.propertyId;
     formDataObj.propertyTitle = document.querySelector('.property-title').textContent;
+    if (window.LeadAttribution && typeof LeadAttribution.applyToObject === 'function') {
+      LeadAttribution.applyToObject(formDataObj);
+    }
     
     // Send contact form
     fetch('/api/leads', {

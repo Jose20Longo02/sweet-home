@@ -96,6 +96,8 @@ router.post(
           return res.json({ success: true, throttled: true });
         }
       }
+      const { extractAttributionFromRequest } = require('../utils/leadAttribution');
+      const attribution = extractAttributionFromRequest(req);
       const lead = await Lead.create({
         property_id: null,
         project_id: null,
@@ -106,7 +108,8 @@ router.post(
         seller_neighborhood,
         seller_size,
         seller_rooms,
-        seller_occupancy_status
+        seller_occupancy_status,
+        ...attribution
       });
       try {
         await logEvent({

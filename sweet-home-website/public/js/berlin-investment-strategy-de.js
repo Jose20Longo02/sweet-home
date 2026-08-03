@@ -302,18 +302,25 @@
     try {
       var body = new FormData(form);
       var metaEventId = generateMetaEventId();
-      var params = new URLSearchParams(window.location.search);
-      var setIf = function (key, val) { if (!body.get(key) && val) body.set(key, val); };
-      setIf('utm_source', params.get('utm_source'));
-      setIf('utm_medium', params.get('utm_medium'));
-      setIf('utm_campaign', params.get('utm_campaign'));
-      setIf('utm_term', params.get('utm_term'));
-      setIf('utm_content', params.get('utm_content'));
-      setIf('referrer', document.referrer);
-      setIf('page_path', window.location.pathname);
+      if (window.LeadAttribution && typeof LeadAttribution.applyToFormData === 'function') {
+        LeadAttribution.applyToFormData(body);
+      } else {
+        var params = new URLSearchParams(window.location.search);
+        var setIf = function (key, val) { if (!body.get(key) && val) body.set(key, val); };
+        setIf('utm_source', params.get('utm_source'));
+        setIf('utm_medium', params.get('utm_medium'));
+        setIf('utm_campaign', params.get('utm_campaign'));
+        setIf('utm_term', params.get('utm_term'));
+        setIf('utm_content', params.get('utm_content'));
+        setIf('gclid', params.get('gclid'));
+        setIf('fbclid', params.get('fbclid'));
+        setIf('referrer', document.referrer);
+        setIf('page_path', window.location.pathname);
+      }
       body.set('meta_event_id', metaEventId);
-      setIf('meta_fbp', getCookie('_fbp'));
-      setIf('meta_fbc', getCookie('_fbc'));
+      var setIfMeta = function (key, val) { if (!body.get(key) && val) body.set(key, val); };
+      setIfMeta('meta_fbp', getCookie('_fbp'));
+      setIfMeta('meta_fbc', getCookie('_fbc'));
 
       var siteKey = form.getAttribute('data-recaptcha-site-key');
       if (siteKey && window.grecaptcha && typeof grecaptcha.execute === 'function') {

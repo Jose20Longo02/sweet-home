@@ -67,28 +67,28 @@ https://sweethome-immobilien.de/properties/foo?country=Germany
 | 1 | Finish the dead URLs (#7): 301 or 410 per the list | Dev | ✅ DONE 2026-07-21 (live) |
 | 2 | Confirm the 1:1 redirect map (`.co.il` URL → same `.de` URL) | Dev + SEO | ✅ Dev DONE 2026-07-23 — [map doc](./DOMAIN_MIGRATION_1TO1_REDIRECT_MAP.md) / [CSV](./domain-migration-1to1-redirect-map-2026-07-23.csv); **SEO sign-off pending** |
 | 3 | Add and verify `sweethome-immobilien.de` in Search Console | SEO / Dev | ✅ DONE 2026-07-26 (Luis verified) |
-| 4 | Point GA4 to the new domain | Dev | Prep done — flip stream URL on go-live day |
+| 4 | Point GA4 to the new domain | Dev | ✅ 2026-07-27 — existing stream URL → `.de` (same `G-6PL29347V3`) |
 | 5 | Pick a go-live date (lower-traffic window) | Both | ✅ 2026-07-27 |
 
 ## Go-live (the switch)
 
 | # | Task | Owner | Status |
 |---|------|-------|--------|
-| 6 | Set `.de` as primary; canonicals self-reference `.de` | Dev | 🔄 IN PROGRESS 2026-07-27 — code + Render env |
-| 7 | Rewrite internal links, menu, footer to `.de` and clean URLs | Dev | Relative links OK; absolute via `APP_URL` |
-| 8 | Final hreflang on `.de`: `en-us`→`en`, keep `/en`, drop `/es`, retire `/de` | Dev | Prep done on `.co.il`; confirms on `.de` after deploy |
-| 9 | Publish the `.de` sitemap; remove the two old sitemaps | Dev | Auto via `/sitemap.xml` once `APP_URL=.de` |
-| 10 | 301 every `.co.il` URL to the exact `.de` match; keep `.co.il` live | Dev | Enable `DOMAIN_REDIRECT_ENABLED=true` on Render |
+| 6 | Set `.de` as primary; canonicals self-reference `.de` | Dev | ✅ LIVE 2026-07-27 |
+| 7 | Rewrite internal links, menu, footer to `.de` and clean URLs | Dev | ✅ via `APP_URL` / relative links |
+| 8 | Final hreflang on `.de`: `en-us`→`en`, keep `/en`, drop `/es`, retire `/de` | Dev | ✅ live homepage `de`/`en`/`x-default` on `.de` |
+| 9 | Publish the `.de` sitemap; remove the two old sitemaps | Dev | ✅ `/sitemap.xml` = 320× `.de` URLs |
+| 10 | 301 every `.co.il` URL to the exact `.de` match; keep `.co.il` live | Dev | ✅ apex `.co.il` → `.de` 301; `www.co.il` is 2-hop via apex (Render) then `.de` |
 
 ## Right after / first weeks
 
 | # | Task | Owner | Status |
 |---|------|-------|--------|
-| 11 | Submit `.de` sitemap + Change of Address in Search Console | SEO | [ ] |
-| 12 | Test ~30 sample redirects (no loops or chains) | Dev + SEO | [ ] |
-| 13 | Upload disavow file on the new `.de` property | SEO | [ ] |
-| 14 | Watch GSC: coverage, clicks, 404s | SEO | [ ] |
-| 15 | Keep `.co.il` and the redirects live long term | Dev | [ ] |
+| 11 | Submit `.de` sitemap + Change of Address in Search Console | SEO / Dev | ✅ 2026-07-27 |
+| 12 | Test ~30 sample redirects (no loops or chains) | Dev + SEO | ✅ 2026-07-27 — 35/35 PASS (no loops; clean URLs 1 hop; legacy path cleanup 2 hops) |
+| 13 | Upload disavow file on the new `.de` property | SEO | [ ] when Adi has file |
+| 14 | Watch GSC: coverage, clicks, 404s | SEO | [ ] first weeks |
+| 15 | Keep `.co.il` and the redirects live long term | Dev | ✅ leave redirects on forever |
 
 ---
 
@@ -832,4 +832,6 @@ For **each** URL below, verify columns A–F.
 | 2026-07-23 | **Migration Checklist #2 DONE (Dev)** — Confirmed 1:1 `.co.il`→`.de` map (331 rows from live sitemap + samples); `domainRedirect` middleware ready behind `DOMAIN_REDIRECT_ENABLED` (off); awaiting SEO sign-off | Dev |
 | 2026-07-26 | **Migration Checklist #3 DONE** — `sweethome-immobilien.de` verified in Google Search Console | Dev |
 | 2026-07-27 | **Go-live STARTED** — Render `.de` serving 200; canonical default → `.de`; awaiting Render env (`APP_URL` + `DOMAIN_REDIRECT_ENABLED`) + deploy | Dev |
-| | **Next:** Set Render env → deploy → smoke-test redirects → GSC sitemap + Change of Address | |
+| 2026-07-27 | **Go-live SWITCH LIVE** — Canonical/hreflang/sitemap on `.de`; apex `.co.il`→`.de` 301 PASS; next: GA4 stream URL + GSC sitemap + Change of Address | Dev |
+| 2026-07-27 | **Checklist #12 DONE** — 35 sample redirects PASS (no loops); 1-hop for live URLs; 2-hop only for legacy path cleanup (`/de`, `/es`, `page=1`, filter→clean) | Dev |
+| | **Next:** #13 disavow when Adi sends file; #14 monitor GSC first weeks; business: Meta/GBP/email → `.de` | |

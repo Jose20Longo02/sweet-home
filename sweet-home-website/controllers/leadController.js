@@ -14,6 +14,7 @@ const {
   normalizeEmailList,
   updateLeadNotificationSettings
 } = require('../utils/leadNotificationSettings');
+const { extractAttributionFromRequest, deriveTrafficSource } = require('../utils/leadAttribution');
 
 const { validationResult } = require('express-validator');
 
@@ -327,6 +328,7 @@ exports.createFromProperty = async (req, res, next) => {
       [email, property.id]
     );
 
+    const attribution = extractAttributionFromRequest(req);
     const lead = dupCheck.rows[0] ? await Lead.findById(dupCheck.rows[0].id) : await Lead.create({
       property_id: property.id,
       agent_id: property.agent_id || null,
@@ -335,7 +337,8 @@ exports.createFromProperty = async (req, res, next) => {
       phone,
       message,
       preferred_language: language || null,
-      source: 'property_form'
+      source: 'property_form',
+      ...attribution
     });
 
     // Respond quickly, then send emails asynchronously
@@ -491,6 +494,7 @@ exports.createFromProject = async (req, res, next) => {
       [email, project.id]
     );
 
+    const attribution = extractAttributionFromRequest(req);
     const lead = dupCheck.rows[0] ? await Lead.findById(dupCheck.rows[0].id) : await Lead.create({
       project_id: project.id,
       agent_id: project.agent_id || null,
@@ -499,7 +503,8 @@ exports.createFromProject = async (req, res, next) => {
       phone,
       message,
       preferred_language: language || null,
-      source: 'project_form'
+      source: 'project_form',
+      ...attribution
     });
 
     // Respond quickly
@@ -616,7 +621,8 @@ exports.createFromBerlinInvestorStrategy = async (req, res, next) => {
 
     const { name, email, message, language } = req.body;
     const metaEventId = String(req.body.meta_event_id || '').trim() || null;
-    const pagePath = req.body.page_path || null;
+    const attribution = extractAttributionFromRequest(req);
+    const pagePath = attribution.page_path || null;
     const phone = `${(req.body.countryCode || '').trim()} ${(req.body.phone || '').trim()}`.trim();
     if (!name || !email || !phone) {
       return res.status(400).json({ success: false, message: 'Missing required fields' });
@@ -644,15 +650,7 @@ exports.createFromBerlinInvestorStrategy = async (req, res, next) => {
       message: message || null,
       preferred_language: language || null,
       source: 'berlin_investor_strategy_form',
-      utm_source: req.body.utm_source || null,
-      utm_medium: req.body.utm_medium || null,
-      utm_campaign: req.body.utm_campaign || null,
-      utm_term: req.body.utm_term || null,
-      utm_content: req.body.utm_content || null,
-      referrer: req.body.referrer || null,
-      page_path: pagePath,
-      ip_address: req.ip || null,
-      user_agent: req.get('user-agent') || null
+      ...attribution
     });
 
     res.json({ success: true, lead });
@@ -841,7 +839,8 @@ exports.listForAdmin = async (req, res, next) => {
       total,
       filters,
       currentUser: req.session.user,
-      activePage: 'leads'
+      activePage: 'leads',
+      deriveTrafficSource
     });
   } catch (err) { next(err); }
 };
@@ -883,7 +882,8 @@ exports.listAll = async (req, res, next) => {
       currentUser: req.session.user,
       activePage: 'leads',
       pendingCount,
-      allAgents
+      allAgents,
+      deriveTrafficSource
     });
   } catch (err) { next(err); }
 };
@@ -988,6 +988,7 @@ exports.exportAll = async (req, res, next) => {
         'Message': lead.message || '',
         'Status': lead.status || 'New',
         'Source': sourceText,
+        'Traffic Source': deriveTrafficSource(lead),
         'Preferred Language': lead.preferred_language ? String(lead.preferred_language).toUpperCase() : '',
         'Property ID': lead.property_id || '',
         'Property Title': lead.property_title || '',

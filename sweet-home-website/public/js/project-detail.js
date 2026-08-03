@@ -502,6 +502,9 @@ async function submitContactForm() {
   if (payload.countryCode || payload.phone) {
     payload.phone = `${payload.countryCode || ''} ${payload.phone || ''}`.trim();
   }
+  if (window.LeadAttribution && typeof LeadAttribution.applyToObject === 'function') {
+    LeadAttribution.applyToObject(payload);
+  }
 
   // Submit to server (JSON, like property leads)
   fetch('/api/leads/project', {

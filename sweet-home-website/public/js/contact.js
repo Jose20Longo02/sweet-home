@@ -58,16 +58,22 @@
       const langSelect = form.querySelector('#language');
       if (langSelect) body.set('language', langSelect.value || '');
 
-      // Capture UTM, referrer, and path
-      const params = new URLSearchParams(location.search);
-      const setIf = (key, val) => { if (!body.get(key) && val) body.set(key, val); };
-      setIf('utm_source', params.get('utm_source'));
-      setIf('utm_medium', params.get('utm_medium'));
-      setIf('utm_campaign', params.get('utm_campaign'));
-      setIf('utm_term', params.get('utm_term'));
-      setIf('utm_content', params.get('utm_content'));
-      setIf('referrer', document.referrer);
-      setIf('page_path', location.pathname);
+      // Capture first-touch UTM, referrer, and path
+      if (window.LeadAttribution && typeof LeadAttribution.applyToFormData === 'function') {
+        LeadAttribution.applyToFormData(body);
+      } else {
+        const params = new URLSearchParams(location.search);
+        const setIf = (key, val) => { if (!body.get(key) && val) body.set(key, val); };
+        setIf('utm_source', params.get('utm_source'));
+        setIf('utm_medium', params.get('utm_medium'));
+        setIf('utm_campaign', params.get('utm_campaign'));
+        setIf('utm_term', params.get('utm_term'));
+        setIf('utm_content', params.get('utm_content'));
+        setIf('gclid', params.get('gclid'));
+        setIf('fbclid', params.get('fbclid'));
+        setIf('referrer', document.referrer);
+        setIf('page_path', location.pathname);
+      }
 
       // Combine country code and phone if both present
       const country = body.get('countryCode') || '';
