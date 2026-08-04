@@ -241,7 +241,10 @@
         { name: 'Prenzlauer Berg', href: '/wohnung-kaufen-prenzlauer-berg', labelDe: 'Wohnung kaufen Prenzlauer Berg', labelEn: 'Apartments in Prenzlauer Berg', labelEs: 'Propiedades en Prenzlauer Berg' },
         { name: 'Kreuzberg', href: '/wohnung-kaufen-kreuzberg', labelDe: 'Wohnung kaufen Kreuzberg', labelEn: 'Apartments in Kreuzberg', labelEs: 'Propiedades en Kreuzberg' },
         { name: 'Schöneberg', href: '/wohnung-kaufen-schoeneberg', labelDe: 'Wohnung kaufen Schöneberg', labelEn: 'Apartments in Schöneberg', labelEs: 'Propiedades en Schöneberg' },
-        { name: 'Neukölln', href: '/wohnung-kaufen-neukoelln', labelDe: 'Wohnung kaufen Neukölln', labelEn: 'Apartments in Neukölln', labelEs: 'Propiedades en Neukölln' }
+        { name: 'Neukölln', href: '/wohnung-kaufen-neukoelln', labelDe: 'Wohnung kaufen Neukölln', labelEn: 'Apartments in Neukölln', labelEs: 'Propiedades en Neukölln' },
+        { name: 'Moabit', href: '/wohnung-kaufen-moabit', labelDe: 'Wohnung kaufen Moabit', labelEn: 'Apartments in Moabit', labelEs: 'Propiedades en Moabit' },
+        { name: 'Mitte', href: '/wohnung-kaufen-berlin-mitte', labelDe: 'Wohnung kaufen Berlin Mitte', labelEn: 'Apartments in Berlin Mitte', labelEs: 'Propiedades en Berlin Mitte' },
+        { name: 'Pankow', href: '/wohnung-kaufen-pankow', labelDe: 'Wohnung kaufen Pankow', labelEn: 'Apartments in Pankow', labelEs: 'Propiedades en Pankow' }
       ]; %>
       <% if (lang === 'de') { %>
         <h2 id="berlin-internal-links-heading" class="berlin-content__title">Beliebte Berliner Stadtteile</h2>
@@ -295,10 +298,10 @@
       <h2 id="berlin-areas-heading" class="berlin-content__title"><%= berlinContent.bestAreasTitle %></h2>
       <p class="berlin-content__intro"><%= berlinContent.bestAreasIntro %></p>
       <ul class="berlin-areas__list">
-        <li class="berlin-areas__item"><strong>Mitte</strong> – <%= berlinContent.bestAreasMitte %></li>
-        <li class="berlin-areas__item"><strong>Charlottenburg-Wilmersdorf</strong> – <%= berlinContent.bestAreasCharlottenburg %></li>
-        <li class="berlin-areas__item"><strong>Pankow</strong> – <%= berlinContent.bestAreasPankow %></li>
-        <li class="berlin-areas__item"><strong>Neukölln</strong> – <%= berlinContent.bestAreasNeukoelln %></li>
+        <li class="berlin-areas__item"><strong><% if (lang === 'de') { %><a href="/wohnung-kaufen-berlin-mitte">Mitte</a><% } else { %>Mitte<% } %></strong> – <%= berlinContent.bestAreasMitte %></li>
+        <li class="berlin-areas__item"><strong><% if (lang === 'de') { %><a href="/wohnung-kaufen-charlottenburg">Charlottenburg-Wilmersdorf</a><% } else { %>Charlottenburg-Wilmersdorf<% } %></strong> – <%= berlinContent.bestAreasCharlottenburg %></li>
+        <li class="berlin-areas__item"><strong><% if (lang === 'de') { %><a href="/wohnung-kaufen-pankow">Pankow</a><% } else { %>Pankow<% } %></strong> – <%= berlinContent.bestAreasPankow %></li>
+        <li class="berlin-areas__item"><strong><% if (lang === 'de') { %><a href="/wohnung-kaufen-neukoelln">Neukölln</a><% } else { %>Neukölln<% } %></strong> – <%= berlinContent.bestAreasNeukoelln %></li>
         <li class="berlin-areas__item"><strong>Lichtenberg &amp; Marzahn-Hellersdorf</strong> – <%= berlinContent.bestAreasLichtenberg %></li>
       </ul>
       <p class="berlin-content__outro"><%= berlinContent.bestAreasOutro %></p>

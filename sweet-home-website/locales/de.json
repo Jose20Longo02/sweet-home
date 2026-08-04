@@ -198,7 +198,8 @@
       "h1": {
         "default": "Neubau- und Entwicklungsprojekte – Luxusimmobilien",
         "country": "Entwicklungsprojekte in {country}",
-        "city": "Entwicklungsprojekte in {city}, {country}",
+        "city": "Entwicklungsprojekte in {city}",
+        "neighborhood": "Entwicklungsprojekte in {neighborhood}, {city}",
         "page": " – Seite {page}"
       },
       "metaDescription": {
@@ -419,8 +420,9 @@
       },
       "h1": {
         "default": "Immobilien zum Verkauf - Finden Sie Ihr Traumhaus",
-        "country": "Immobilien zum Verkauf in {country}",
-        "city": "Immobilien zum Verkauf in {city}, {country}"
+        "country": "Alle Immobilien in {country}",
+        "city": "Alle Immobilien in {city}",
+        "neighborhood": "Immobilien in {neighborhood}, {city}"
       },
       "seo": {
         "operationSale": "zum Verkauf",

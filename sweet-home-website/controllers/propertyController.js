@@ -528,6 +528,7 @@ exports.listPropertiesPublic = async (req, res, next) => {
       : (_kind, value) => value;
     const displayCountry = selectedCountry ? translateLocation('country', selectedCountry) : '';
     const displayCity = selectedCity ? translateLocation('city', selectedCity) : '';
+    const displayNeighborhood = neighborhood ? String(neighborhood).trim() : '';
     const queryPath = getCurrentListPath(req);
     const locationPath = buildLocationSearchPath(req, selectedCountry, selectedCity);
 
@@ -565,7 +566,28 @@ exports.listPropertiesPublic = async (req, res, next) => {
     let seoDescription = res.locals.t('properties.list.seo.defaultDescription', 'Browse available properties in key markets with updated prices, photos, and location details.');
     let seoH1 = res.locals.t('properties.list.h1.default', 'Properties for Sale - Find Your Dream Home');
 
-    if (displayCity && displayCountry) {
+    if (displayNeighborhood && displayCity) {
+      seoTitle = res.locals.t('properties.list.seo.cityTitle', '{count} properties {operation} in {city}, {country}', {
+        count: totalProperties,
+        operation: operationLabel,
+        city: `${displayNeighborhood}, ${displayCity}`,
+        country: displayCountry || displayCity
+      });
+      seoDescription = res.locals.t(
+        'properties.list.seo.cityDescription',
+        'Explore {count} properties {operation} in {city}, {country}. Compare prices, photos, and neighborhood context.',
+        {
+          count: totalProperties,
+          operation: operationLabel,
+          city: displayNeighborhood,
+          country: displayCountry ? `${displayCity}, ${displayCountry}` : displayCity
+        }
+      );
+      seoH1 = res.locals.t('properties.list.h1.neighborhood', 'Properties in {neighborhood}, {city}', {
+        neighborhood: displayNeighborhood,
+        city: displayCity
+      });
+    } else if (displayCity && displayCountry) {
       seoTitle = res.locals.t('properties.list.seo.cityTitle', '{count} properties {operation} in {city}, {country}', {
         count: totalProperties,
         operation: operationLabel,
@@ -577,7 +599,7 @@ exports.listPropertiesPublic = async (req, res, next) => {
         'Explore {count} properties {operation} in {city}, {country}. Compare prices, photos, and neighborhood context.',
         { count: totalProperties, operation: operationLabel, city: displayCity, country: displayCountry }
       );
-      seoH1 = res.locals.t('properties.list.h1.city', 'Properties for Sale in {city}, {country}', {
+      seoH1 = res.locals.t('properties.list.h1.city', 'All properties in {city}', {
         city: displayCity,
         country: displayCountry
       });
@@ -592,7 +614,7 @@ exports.listPropertiesPublic = async (req, res, next) => {
         'Discover {count} properties {operation} in {country}. Updated listings, photos, and pricing from Sweet Home.',
         { count: totalProperties, operation: operationLabel, country: displayCountry }
       );
-      seoH1 = res.locals.t('properties.list.h1.country', 'Properties for Sale in {country}', { country: displayCountry });
+      seoH1 = res.locals.t('properties.list.h1.country', 'All properties in {country}', { country: displayCountry });
     } else if (!q && totalProperties > 0) {
       seoTitle = res.locals.t('properties.list.seo.allTitle', '{count} properties for sale', { count: totalProperties });
       seoDescription = res.locals.t(

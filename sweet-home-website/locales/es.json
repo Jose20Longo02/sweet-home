@@ -314,8 +314,9 @@
       },
       "h1": {
         "default": "Propiedades en venta - Encuentra la casa de tus sueños",
-        "country": "Propiedades en venta en {country}",
-        "city": "Propiedades en venta en {city}, {country}"
+        "country": "Todas las propiedades en {country}",
+        "city": "Todas las propiedades en {city}",
+        "neighborhood": "Propiedades en {neighborhood}, {city}"
       },
       "seo": {
         "operationSale": "en venta",
@@ -712,7 +713,8 @@
       "h1": {
         "default": "Proyectos de desarrollo – inmobiliaria de lujo",
         "country": "Proyectos de desarrollo en {country}",
-        "city": "Proyectos de desarrollo en {city}, {country}",
+        "city": "Proyectos de desarrollo en {city}",
+        "neighborhood": "Proyectos de desarrollo en {neighborhood}, {city}",
         "page": " – Página {page}"
       },
       "metaDescription": {

@@ -266,7 +266,8 @@
       "h1": {
         "default": "Development Projects - Luxury Real Estate",
         "country": "Development Projects in {country}",
-        "city": "Development Projects in {city}, {country}",
+        "city": "Development Projects in {city}",
+        "neighborhood": "Development Projects in {neighborhood}, {city}",
         "page": " - Page {page}"
       },
       "metaDescription": {
@@ -431,8 +432,9 @@
       "in": "in",
       "h1": {
         "default": "Properties for Sale - Find Your Dream Home",
-        "country": "Properties for Sale in {country}",
-        "city": "Properties for Sale in {city}, {country}"
+        "country": "All properties in {country}",
+        "city": "All properties in {city}",
+        "neighborhood": "Properties in {neighborhood}, {city}"
       },
       "seo": {
         "operationSale": "for sale",

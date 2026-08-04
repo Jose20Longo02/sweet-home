@@ -1257,14 +1257,32 @@ exports.listProjectsPublic = async (req, res, next) => {
       return { ...p, has_variants: has, variant_base: base };
     });
 
-    // Unique page title for SEO (avoids duplicate title tags on paginated/filtered pages)
+    // Unique page title + H1 for SEO (localized location labels; neighborhood when filtered)
     const t = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t.bind(res.locals) : ((k, fb) => fb);
+    const translateLocation = typeof res.locals.translateLocation === 'function'
+      ? res.locals.translateLocation
+      : (_kind, value) => value;
+    const displayCountry = country ? translateLocation('country', country) : '';
+    const displayCity = city ? translateLocation('city', city) : '';
+    const displayNeighborhood = neighborhood ? String(neighborhood).trim() : '';
     const currentPageNum = parseInt(page, 10) || 1;
     let pageTitle = t('projects.list.h1.default', 'Development Projects - Luxury Real Estate');
-    if (country && city) {
-      pageTitle = t('projects.list.h1.city', 'Development Projects in {city}, {country}', { city, country });
-    } else if (country) {
-      pageTitle = t('projects.list.h1.country', 'Development Projects in {country}', { country });
+    let seoH1 = pageTitle;
+    if (displayNeighborhood && displayCity) {
+      seoH1 = t('projects.list.h1.neighborhood', 'Development Projects in {neighborhood}, {city}', {
+        neighborhood: displayNeighborhood,
+        city: displayCity
+      });
+      pageTitle = seoH1;
+    } else if (displayCity) {
+      seoH1 = t('projects.list.h1.city', 'Development Projects in {city}', {
+        city: displayCity,
+        country: displayCountry || displayCity
+      });
+      pageTitle = seoH1;
+    } else if (displayCountry) {
+      seoH1 = t('projects.list.h1.country', 'Development Projects in {country}', { country: displayCountry });
+      pageTitle = seoH1;
     }
     if (currentPageNum > 1) {
       pageTitle += t('projects.list.h1.page', ' - Page {page}', { page: currentPageNum });
@@ -1290,6 +1308,7 @@ exports.listProjectsPublic = async (req, res, next) => {
 
     res.render('projects/project-list', { 
       title: pageTitle,
+      seoH1,
       projects: projectsWithVariants,
       locations,
       filters,

@@ -21,7 +21,7 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 
 ## How to use this document
 
-- **Current priority:** Phase M **P1 done** + blog drafts **#1–3 published** (2026-08-05). Next: Phase M P2/P3 + Phase C + Phase B #4+.
+- **Current priority:** Phase C **done in code** (deploy needed for H1 + money district link updates). Next: Phase M P2/P3 or Phase B #4+.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Blog drafts #1–3 were reviewed by Adi (2026-08-04) — **publish her edited versions to live**.
 - For **next** blog posts, apply Adi’s feedback pattern (see Phase B notes below) before sending for review.
@@ -54,7 +54,7 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 
 1. ~~Phase M P1 (301 + cache + sample)~~ ✅ 2026-08-04  
 2. ~~Publish Adi-approved blog drafts #1–3 to live~~ ✅ 2026-08-05  
-3. Phase C headings + money page (if still open) ← next  
+3. ~~Phase C headings + money page~~ ✅ code 2026-08-05 (deploy)  
 4. Continue Phase B remaining posts (with Adi’s craft rules)  
 5. Phase M P2 (TTFB) + P3 (on-page)  
 6. Phase G page creates / keyword map  
@@ -166,8 +166,13 @@ Crawl note: no missing H1 / no double H1 — but several listing / category / pr
 
 **Done when:** Main Berlin pages each have a unique, descriptive H1.
 
-- [ ] Audit main Berlin listing / hub / money pages for generic shared H1
-- [ ] Give each main Berlin page a unique H1
+- [x] Audit main Berlin listing / hub / money pages for generic shared H1  
+  - Money DE `Wohnungen in Berlin kaufen` + district landings already unique  
+  - Shared generic H1 was on **property list** (city filter, incl. `?neighborhood=`) and **project list** (raw `Germany` in DE H1)
+- [x] Give each main Berlin page a unique H1 (code 2026-08-05; **needs deploy**)  
+  - Listing city: `Alle Immobilien in {city}` (≠ money H1)  
+  - Listing neighborhood: `Immobilien in {neighborhood}, {city}`  
+  - Projects: localized country/city; city H1 `Entwicklungsprojekte in {city}`; neighborhood variant when filtered
 
 ### C2. Money page: `/wohnungen-berlin-kaufen`
 
@@ -175,9 +180,8 @@ Content already in place.
 
 **Done when:** Breadcrumb schema valid + district links live.
 
-- [ ] Confirm breadcrumb schema is valid
-- [ ] Confirm in-content / structural links to district pages are live
-
+- [x] Confirm breadcrumb schema is valid — live check 2026-08-05: `BreadcrumbList` Startseite → Wohnungen in Berlin kaufen (required fields present)
+- [x] Confirm in-content / structural links to district pages are live — neighborhood grid CTAs already map DE districts; curated “Beliebte Berliner Stadtteile” + best-areas bullets now include/link **Moabit, Mitte, Pankow** (+ Charlottenburg/Neukölln in best-areas). **Needs deploy** for curated/best-areas link updates.
 ---
 
 # Phase D — Housekeeping + QA cleanup
@@ -396,6 +400,7 @@ Blockers / questions:
 | 2026-08-04 | Adi: blogs approved + Migration Fixes Now | Received | **Phase M** added as HIGH PRIORITY (P1 today) |
 | 2026-08-04 | Phase M P1 verified live | **Send sample report to Adi** | 33 URLs all 301; report `migration-p1-redirect-sample-2026-08-04.md` |
 | 2026-08-05 | Blog drafts #1–3 → live `*_i18n.de` | Notify Adi | Live slugs unchanged; draft posts renamed `zz-archived-*` |
+| 2026-08-05 | Phase C: unique list/project H1s + money district links | After deploy | Listing/neighborhood H1s; projects localized; curated+best-areas district links |
 
 ---
 
