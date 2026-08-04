@@ -13,6 +13,7 @@
 | `Sweet_Home_Blog_Best_Practices.docx` | Checklist for improving / writing Berlin posts |
 | `Sweet_Home_Internal_Link_Map.xlsx` | Exact in-content links to add |
 | `Sweet_Home_Pages_and_Keywords_Berlin.xlsx` | Page/keyword map (exists vs create) |
+| `Sweet_Home_Migration_Fixes_Now.docx` | **HIGH PRIORITY** post-migration integrity fixes (P1–P3) — received 2026-08-04 |
 
 Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBOOK.md) (go-live / redirects / GSC).
 
@@ -20,37 +21,91 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 
 ## How to use this document
 
-- Work in Adi’s priority order (Phase A → D).
+- **Current priority:** Phase M **P1 done** + blog drafts **#1–3 published** (2026-08-05). Next: Phase M P2/P3 + Phase C + Phase B #4+.
 - Check boxes as you go: `- [ ]` → `- [x]`.
-- **Do not publish new German wording while Adi is away** — keep improved/new DE copy as **draft for her review**.
-- If something is unclear or too large, ask Adi to split or jump on a call.
+- Blog drafts #1–3 were reviewed by Adi (2026-08-04) — **publish her edited versions to live**.
+- For **next** blog posts, apply Adi’s feedback pattern (see Phase B notes below) before sending for review.
 - Cyprus / Dubai content is **off-focus** — deprioritize; no internal-link work there.
 
 ### Key contacts
 
 | Role | Name | Notes |
 |------|------|-------|
-| Dev / delivery | Luis / Medialy | Code, drafts, QA, weekly status |
-| SEO consultant | Adi | Reviews DE drafts; GSC monitoring next weeks |
+| Dev / delivery | Luis / José / Medialy | Code, drafts, QA, weekly status |
+| SEO consultant | Adi | Reviews DE drafts; GSC monitoring; migration QA |
 | Business | Israel / team | Approvals as needed |
 
 ### Standing rules from Adi
 
-1. New / rewritten **German copy stays draft** until she reviews.
-2. Weekly status by email is enough (she is in Asia for ~1 month).
-3. Use AI to help with content — but quality must read as natural German, not machine-translated.
-4. Goal for blog work: be the **best answer for the keyword**, not just “exist.”
+1. Weekly status by email is enough (she is in Asia for ~1 month).
+2. Use AI to help with content — but quality must read as natural German, not machine-translated.
+3. Goal for blog work: be the **best answer for the keyword**, not just “exist.”
+4. **Blog tone / craft (apply to all next posts — Adi 2026-08-04):**
+   - Friendlier, less technical — written for a real buyer, not like a tax form
+   - Title + excerpt: keep keyword, more inviting; put **one number in the excerpt** for CTR
+   - Internal links: woven into running text (not a list block); anchor = target page’s keyword
+   - Sources: link a credible source for figures; wording accuracy (e.g. “gesetzliche Maklerkostenteilung (Dezember 2020)” not “Bestellerprinzip”)
+   - Capitalize German nouns; clear CTA
+   - **GEO / AI:** mention brand **“Sweet Home Berlin”** a few more times in the text
 
 ---
 
-## Priority order (from Adi’s email)
+## Priority order (updated 2026-08-04)
 
-1. Fix German related-posts titles (bug)  
-2. Improve top Berlin blog posts (checklist + internal links) — drafts  
-3. Heading fixes + housekeeping  
-4. QA cleanup list  
+1. ~~Phase M P1 (301 + cache + sample)~~ ✅ 2026-08-04  
+2. ~~Publish Adi-approved blog drafts #1–3 to live~~ ✅ 2026-08-05  
+3. Phase C headings + money page (if still open) ← next  
+4. Continue Phase B remaining posts (with Adi’s craft rules)  
+5. Phase M P2 (TTFB) + P3 (on-page)  
+6. Phase G page creates / keyword map  
 
-Then continue with remaining posts / page creates from the keyword sheet.
+---
+
+# Phase M — Migration Fixes Now (HIGH PRIORITY)
+
+**Source:** `Sweet_Home_Migration_Fixes_Now.docx` (Adi, 2026-08-04)  
+**Rule:** Prioritise **P1** before other SEO/content work.
+
+## P1 — Migration integrity (today)
+
+- [x] **Change all redirects from 302 → 301.** App middleware already uses `res.redirect(301, …)` (`middleware/domainRedirect.js`). Live re-check **2026-08-04:** Adi’s sample URLs (and full phase4-sample) return **301** to matching `.de` URLs — **no 302** observed.  
+  **Done when:** sample old URLs return **301** (not 302) to the matching `.de` URL. ✅
+
+- [x] **Purge CDN / edge cache on `sweet-home.co.il`.** Live re-check **2026-08-04:** `/`, `/en`, `/blog` (and `?cachebust=1` variants) all return **301 to `.de`** — no **200 old HTML**. Stale edge cache Adi saw earlier is **not reproducible** from this check (`CF-Cache-Status: DYNAMIC`). If Adi’s region still sees 200s, Ronli should still **purge Cloudflare** for `sweet-home.co.il` as belt-and-suspenders.  
+  **Done when:** all three return a **301 to `.de` with no query string**, from a cold client. ✅ (from our probe)
+
+- [x] **Re-run the 30-URL sample check** — report: [`docs/migration-p1-redirect-sample-2026-08-04.md`](./migration-p1-redirect-sample-2026-08-04.md) (**33 URLs**, 32 exact PASS + 1 www→apex CHAIN). **Send that file / summary to Adi.**  
+  **Done when:** sample output shared and every URL is a clean **1:1 301**. ✅ (www is two-hop 301: Cloudflare www→apex, then apex→`.de`)
+
+| Item | Owner | Date | Notes |
+|------|-------|------|-------|
+| 302 → 301 | Dev | 2026-08-04 | Live = 301; no code change needed |
+| CDN purge `.co.il` | Dev verified; Ronli if Adi still sees stale | 2026-08-04 | Apex `/` `/en` `/blog` already 301 |
+| 30-URL re-check + send Adi | Dev | 2026-08-04 | See `migration-p1-redirect-sample-2026-08-04.md` |
+
+## P2 — Server speed
+
+- [ ] **TTFB 1.5–2.0s** on `/wohnungen-berlin-kaufen` and `/wohnung-kaufen-*` district pages. Blog posts ~0.45s; old domain ~0.21s in July crawl → listing query likely **uncached** on new domain.  
+  **Done when:** TTFB **under 800ms** on money page and district pages.
+
+| Item | Owner | Date | Notes |
+|------|-------|------|-------|
+| Listing/district page TTFB | | | Cache query, optimize SQL, or edge cache HTML |
+
+## P3 — On-page
+
+- [ ] **Homepage:** 13 of 29 images have no `alt` — add descriptive **German** alt text  
+- [ ] **Homepage:** 3 empty `<h2>` tags — remove or fill  
+- [ ] **Footer on German pages** mixes languages (`Regions`, `Log in`, `Register`, `Forgot password?`, `Support`, `Funktionen`) — localize to German  
+- [ ] **`/es/*` redirects to homepage** instead of 1:1 — map to closest DE/EN or return **410** (low priority; Spanish dropped)  
+
+**Done when:** homepage images have alt text, empty H2s gone, German footer reads in German. (`/es/*` fixed or noted.)
+
+| Item | Owner | Date | Notes |
+|------|-------|------|-------|
+| Homepage alts + empty H2s | | | |
+| DE footer i18n | | | Partial work already in Phase D — finish full DE labels |
+| `/es/*` 1:1 or 410 | | | Low priority |
 
 ---
 
@@ -79,9 +134,9 @@ Use **Phase E checklist** + **Phase F internal link map**. Start with these 6, t
 
 | # | URL slug | Target keyword / role | Status |
 |---|----------|----------------------|--------|
-| 1 | `/blog/hidden-costs-of-buying-property-in-berlin` | Kaufnebenkosten Berlin | [x] Draft ready — CMS draft `kaufnebenkosten-berlin-draft-review` (id 145) + repo md (awaiting Adi) |
-| 2 | `/blog/berlin-real-estate-investment-guide-2026` | Investor pillar | [x] Draft ready — CMS `berlin-real-estate-investment-guide-2026-draft-review` + repo md (awaiting Adi) |
-| 3 | `/blog/how-foreigners-can-buy-property-in-berlin` | Foreign buyers (strengthen EN too) | [x] Draft ready — CMS `how-foreigners-can-buy-property-in-berlin-draft-review` + repo md (DE first; EN pass later) |
+| 1 | `/blog/hidden-costs-of-buying-property-in-berlin` | Kaufnebenkosten Berlin | [x] **Published live** DE (`*_i18n.de`) 2026-08-05 |
+| 2 | `/blog/berlin-real-estate-investment-guide-2026` | Investor pillar | [x] **Published live** DE 2026-08-05 |
+| 3 | `/blog/how-foreigners-can-buy-property-in-berlin` | Foreign buyers (strengthen EN too) | [x] **Published live** DE 2026-08-05 (EN strengthen later) |
 | 4 | `/blog/best-berlin-districts-for-property-investment` | Districts for investment | [ ] Draft ready |
 | 5 | `/blog/what-to-check-before-buying-an-apartment-in-berlin` | Pre-purchase checks | [ ] Draft ready |
 | 6 | `/blog/berlin-rental-laws-explained-for-property-buyers` | Rental laws / investors | [ ] Draft ready |
@@ -94,7 +149,12 @@ Use **Phase E checklist** + **Phase F internal link map**. Start with these 6, t
 | 8 | `/blog/best-berlin-districts-for-families` | + district / money links | [ ] |
 | 9 | `/blog/how-smart-investors-buy-berlin-at-a-40-discount` | Reframe “40% discount” angle | [ ] |
 
-**Hand-off:** Share drafts with Adi for review before publishing DE copy.
+**Hand-off:** Drafts #1–3 **published to live** DE via `*_i18n.de` (2026-08-05). For posts #4+, apply her craft rules, keep as draft until review.
+
+**Publish checklist (drafts → live):**
+- [x] Sync Adi’s edited CMS draft content into live posts’ `*_i18n.de` (Kaufnebenkosten first — most edits)
+- [x] Spot-check live DE URLs + internal links (titles live; Kaufnebenkosten has Sweet Home Berlin + Maklerkostenteilung, no Bestellerprinzip)
+- [x] Archive draft-review posts (renamed `zz-archived-*-draft-review-*`; status stays `draft`)
 
 ---
 
@@ -329,10 +389,13 @@ Blockers / questions:
 | Date | What shipped / drafted | Shared with Adi? | Notes |
 |------|------------------------|------------------|-------|
 | 2026-08-03 | Phase A: DE related-post titles + same-geo filter | Validated by Luis | `blogController.showPublic` |
-| 2026-08-03 | Phase B #1 draft: Kaufnebenkosten Berlin | Pending send | CMS `kaufnebenkosten-berlin-draft-review` + repo md — live DE untouched |
-| 2026-08-03 | Phase B #2 draft: Immobilie als Kapitalanlage / investment guide 2026 | Pending send | CMS `berlin-real-estate-investment-guide-2026-draft-review` + repo md — live DE untouched |
-| 2026-08-03 | Phase B #3 draft: Wie Ausländer Immobilien in Berlin kaufen können | Pending send | CMS `how-foreigners-can-buy-property-in-berlin-draft-review` (id 147) — live untouched; EN pass later |
+| 2026-08-03 | Phase B #1 draft: Kaufnebenkosten Berlin | Sent / Adi edited | CMS draft → **publish her version to live** |
+| 2026-08-03 | Phase B #2 draft: investment guide 2026 | Sent / Adi OK | **Publish to live** |
+| 2026-08-03 | Phase B #3 draft: foreigners buy Berlin | Sent / Adi OK | **Publish to live** (EN later) |
 | 2026-08-03 | Phase D housekeeping + QA | Pending deploy | Console clean, footer Berlin-first, beds/bath DE, Mitte/Pankow pages, FAQ visible |
+| 2026-08-04 | Adi: blogs approved + Migration Fixes Now | Received | **Phase M** added as HIGH PRIORITY (P1 today) |
+| 2026-08-04 | Phase M P1 verified live | **Send sample report to Adi** | 33 URLs all 301; report `migration-p1-redirect-sample-2026-08-04.md` |
+| 2026-08-05 | Blog drafts #1–3 → live `*_i18n.de` | Notify Adi | Live slugs unchanged; draft posts renamed `zz-archived-*` |
 
 ---
 
