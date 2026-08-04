@@ -27,13 +27,15 @@
     <div class="footer-col">
       <h4><%= t('footer.regions','Regions') %></h4>
       <ul>
-        <li><a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Cyprus"><%= t('footer.propertiesCyprus','Properties in Cyprus') %></a></li>
-        <li><a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=UAE&city=Dubai"><%= t('footer.propertiesDubai','Properties in Dubai') %></a></li>
-        <li><a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Germany&city=Berlin"><%= t('footer.propertiesBerlin','Properties in Berlin') %></a></li>
-        <li><a href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>?country=Cyprus"><%= t('footer.projectsCyprus','Projects in Cyprus') %></a></li>
-        <li><a href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>?country=UAE&city=Dubai"><%= t('footer.projectsDubai','Projects in Dubai') %></a></li>
-        <li><a href="<%= (typeof localePath === 'function') ? localePath('/projects') : '/projects' %>?country=Germany&city=Berlin"><%= t('footer.projectsBerlin','Projects in Berlin') %></a></li>
+        <li><a href="/wohnungen-berlin-kaufen"><%= t('footer.propertiesBerlin','Properties in Berlin') %></a></li>
+        <li><a href="/en/properties-for-sale-berlin"><%= t('footer.propertiesBerlinEn','Berlin apartments (EN)') %></a></li>
+        <li><a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Germany&city=Berlin"><%= t('footer.berlinSearch','Search Berlin listings') %></a></li>
       </ul>
+      <p class="footer-other-markets"><%= t('footer.otherMarkets','Also:') %>
+        <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Cyprus"><%= t('footer.cyprusShort','Cyprus') %></a>
+        ·
+        <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=UAE&city=Dubai"><%= t('footer.dubaiShort','Dubai') %></a>
+      </p>
     </div>
 
     <div class="footer-col">
@@ -48,7 +50,7 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <p class="copyright">2025 Sweet Home Real Estate Investments GMBH</p>
+    <p class="copyright"><%= new Date().getFullYear() %> Sweet Home Real Estate Investments GMBH</p>
     <div class="socials" aria-label="<%= t('footer.social','Social media') %>">
       <a href="https://www.facebook.com/profile.php?id=100093168151239" aria-label="Facebook" target="_blank" rel="noopener">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -130,6 +132,23 @@
   .footer-col a:hover { 
     color: var(--primary-color, #359c4b);
     transform: translateX(4px);
+  }
+
+  .footer-other-markets {
+    margin: 16px 0 0;
+    font-size: 0.85rem;
+    color: #999999;
+    line-height: 1.5;
+  }
+
+  .footer-other-markets a {
+    color: #999999;
+    text-decoration: none;
+  }
+
+  .footer-other-markets a:hover {
+    color: var(--primary-color, #359c4b);
+    transform: none;
   }
   
   .brand { 

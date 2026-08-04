@@ -431,6 +431,10 @@ app.use((req, res, next) => {
     '/de/wohnung-kaufen-kreuzberg': { de: '/wohnung-kaufen-kreuzberg', en: '/en/properties-for-sale-berlin' },
     '/wohnung-kaufen-spandau': { de: '/wohnung-kaufen-spandau', en: '/en/properties-for-sale-berlin' },
     '/de/wohnung-kaufen-spandau': { de: '/wohnung-kaufen-spandau', en: '/en/properties-for-sale-berlin' },
+    '/wohnung-kaufen-berlin-mitte': { de: '/wohnung-kaufen-berlin-mitte', en: '/en/properties-for-sale-berlin' },
+    '/de/wohnung-kaufen-berlin-mitte': { de: '/wohnung-kaufen-berlin-mitte', en: '/en/properties-for-sale-berlin' },
+    '/wohnung-kaufen-pankow': { de: '/wohnung-kaufen-pankow', en: '/en/properties-for-sale-berlin' },
+    '/de/wohnung-kaufen-pankow': { de: '/wohnung-kaufen-pankow', en: '/en/properties-for-sale-berlin' },
     '/immobilien-dubai-kaufen': { de: '/immobilien-dubai-kaufen', en: '/en/properties-for-sale-dubai' },
     '/de/immobilien-dubai-kaufen': { de: '/immobilien-dubai-kaufen', en: '/en/properties-for-sale-dubai' },
     '/en/properties-for-sale-dubai': { de: '/immobilien-dubai-kaufen', en: '/en/properties-for-sale-dubai' },
@@ -798,6 +802,8 @@ app.get('/wohnung-kaufen-neukoelln', propertyController.neukoellnPropertiesPageD
 app.get('/wohnung-kaufen-reinickendorf', propertyController.reinickendorfPropertiesPageDe);
 app.get('/wohnung-kaufen-kreuzberg', propertyController.kreuzbergPropertiesPageDe);
 app.get('/wohnung-kaufen-spandau', propertyController.spandauPropertiesPageDe);
+app.get('/wohnung-kaufen-berlin-mitte', propertyController.mittePropertiesPageDe);
+app.get('/wohnung-kaufen-pankow', propertyController.pankowPropertiesPageDe);
 app.get('/en/berlin-tenant-occupied-entry-strategy', propertyController.berlinInvestorStrategyPageEn);
 app.get('/berlin-mieter-belegte-einstiegsstrategie', propertyController.berlinInvestorStrategyPageDe);
 app.get('/berlin-tenant-occupied-entry-strategy', (req, res) => {
@@ -831,6 +837,8 @@ app.get('/de/wohnung-kaufen-neukoelln', (req, res) => res.redirect(301, '/wohnun
 app.get('/de/wohnung-kaufen-reinickendorf', (req, res) => res.redirect(301, '/wohnung-kaufen-reinickendorf'));
 app.get('/de/wohnung-kaufen-kreuzberg', (req, res) => res.redirect(301, '/wohnung-kaufen-kreuzberg'));
 app.get('/de/wohnung-kaufen-spandau', (req, res) => res.redirect(301, '/wohnung-kaufen-spandau'));
+app.get('/de/wohnung-kaufen-berlin-mitte', (req, res) => res.redirect(301, '/wohnung-kaufen-berlin-mitte'));
+app.get('/de/wohnung-kaufen-pankow', (req, res) => res.redirect(301, '/wohnung-kaufen-pankow'));
 
 // Dubai landing page
 app.get('/immobilien-dubai-kaufen', propertyController.dubaiPropertiesPage);
@@ -1048,7 +1056,10 @@ const BERLIN_DISTRICT_LANDING_PATHS = {
   neukolln: '/wohnung-kaufen-neukoelln',
   reinickendorf: '/wohnung-kaufen-reinickendorf',
   kreuzberg: '/wohnung-kaufen-kreuzberg',
-  spandau: '/wohnung-kaufen-spandau'
+  spandau: '/wohnung-kaufen-spandau',
+  mitte: '/wohnung-kaufen-berlin-mitte',
+  'berlin-mitte': '/wohnung-kaufen-berlin-mitte',
+  pankow: '/wohnung-kaufen-pankow'
 };
 
 const HOME_DUBAI_NEIGHBORHOOD_CONTENT = {
@@ -1763,6 +1774,8 @@ app.get('/sitemap.xml', async (req, res, next) => {
     staticUrls.push({ loc: `${base}/wohnung-kaufen-reinickendorf`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/wohnung-kaufen-kreuzberg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/wohnung-kaufen-spandau`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/wohnung-kaufen-berlin-mitte`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/wohnung-kaufen-pankow`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
 
     // Dynamic properties
     const props = await query(`SELECT slug, updated_at, created_at FROM properties WHERE slug IS NOT NULL ORDER BY updated_at DESC NULLS LAST, created_at DESC NULLS LAST LIMIT 5000`);

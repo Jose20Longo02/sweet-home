@@ -79,9 +79,9 @@ Use **Phase E checklist** + **Phase F internal link map**. Start with these 6, t
 
 | # | URL slug | Target keyword / role | Status |
 |---|----------|----------------------|--------|
-| 1 | `/blog/hidden-costs-of-buying-property-in-berlin` | Kaufnebenkosten Berlin | [ ] Draft ready |
-| 2 | `/blog/berlin-real-estate-investment-guide-2026` | Investor pillar | [ ] Draft ready |
-| 3 | `/blog/how-foreigners-can-buy-property-in-berlin` | Foreign buyers (strengthen EN too) | [ ] Draft ready |
+| 1 | `/blog/hidden-costs-of-buying-property-in-berlin` | Kaufnebenkosten Berlin | [x] Draft ready — CMS draft `kaufnebenkosten-berlin-draft-review` (id 145) + repo md (awaiting Adi) |
+| 2 | `/blog/berlin-real-estate-investment-guide-2026` | Investor pillar | [x] Draft ready — CMS `berlin-real-estate-investment-guide-2026-draft-review` + repo md (awaiting Adi) |
+| 3 | `/blog/how-foreigners-can-buy-property-in-berlin` | Foreign buyers (strengthen EN too) | [x] Draft ready — CMS `how-foreigners-can-buy-property-in-berlin-draft-review` + repo md (DE first; EN pass later) |
 | 4 | `/blog/best-berlin-districts-for-property-investment` | Districts for investment | [ ] Draft ready |
 | 5 | `/blog/what-to-check-before-buying-an-apartment-in-berlin` | Pre-purchase checks | [ ] Draft ready |
 | 6 | `/blog/berlin-rental-laws-explained-for-property-buyers` | Rental laws / investors | [ ] Draft ready |
@@ -126,19 +126,25 @@ Content already in place.
 
 **Done when:** Browser console is clean on a property page.
 
-- [ ] Remove leftover debug code (`console.log`, etc.)
-- [ ] Remove forced debug inline styles (e.g. `z-index: 99999` on similar-property links)
-- [ ] Fix Leaflet source-map warning (don’t load `.js.map` in production, or allow it in CSP)
+- [x] Remove leftover debug code (`console.log`, etc.)
+- [x] Remove forced debug inline styles (e.g. `z-index: 99999` on similar-property links)
+- [x] Fix Leaflet source-map warning (don’t load `.js.map` in production, or allow it in CSP)
 
 ### D2. QA cleanup (go-live check leftovers)
 
 **Done when:** Fixed, or noted back to Adi with a reason.
 
-- [ ] Footer “Regions”: de-emphasize Cyprus / Dubai (Berlin focus)
-- [ ] Property cards: localize `beds` / `bath` on German pages
-- [ ] Mitte and Pankow: link to their own pages, not filter URLs
-- [ ] Footer year: update from 2025 → current year
-- [ ] FAQ answers on blog + money pages: visible text (not hidden)
+- [x] Footer “Regions”: de-emphasize Cyprus / Dubai (Berlin focus)
+- [x] Property cards: localize `beds` / `bath` on German pages
+- [x] Mitte and Pankow: link to their own pages, not filter URLs
+- [x] Footer year: update from 2025 → current year
+- [x] FAQ answers on blog + money pages: visible text (not hidden)
+
+**Notes (2026-08-03):**
+- Leaflet now served from `/js/libs/leaflet.js` (no sourceMappingURL)
+- New pages: `/wohnung-kaufen-berlin-mitte`, `/wohnung-kaufen-pankow`
+- Money-page + district FAQs render answers visible by default
+- Blog FAQ content lives in CMS HTML (not accordion-hidden); no change needed unless a specific post hides answers
 
 ---
 
@@ -203,9 +209,9 @@ Add links **inside the page body** (not only menu/footer). New domain: `sweethom
 
 | # | From page | Link to | Suggested anchors | Notes | Done |
 |---|-----------|---------|-------------------|-------|------|
-| 1 | `/blog/hidden-costs-of-buying-property-in-berlin` | Money page; Grunderwerbsteuer post; Ablauf post | Wohnung kaufen in Berlin; Grunderwerbsteuer Berlin; Ablauf Immobilienkauf | Kaufnebenkosten post | [ ] |
-| 2 | `/blog/berlin-real-estate-investment-guide-2026` | Money; Kapitalanlage; Mietrendite; Immobilienpreise | Wohnung kaufen Berlin; Immobilie als Kapitalanlage; Mietrendite berechnen | Investor pillar | [ ] |
-| 3 | `/blog/how-foreigners-can-buy-property-in-berlin` | EN money `/en/properties-for-sale-berlin`; Ablauf; Kaufnebenkosten | buy an apartment in Berlin; the buying process; cost of buying | Strengthen EN | [ ] |
+| 1 | `/blog/hidden-costs-of-buying-property-in-berlin` | Money page; Grunderwerbsteuer post; Ablauf post | Wohnung kaufen in Berlin; Grunderwerbsteuer Berlin; Ablauf Immobilienkauf | Kaufnebenkosten post — draft links money + interim related posts; swap when dedicated posts exist | [x] draft |
+| 2 | `/blog/berlin-real-estate-investment-guide-2026` | Money; Kapitalanlage; Mietrendite; Immobilienpreise | Wohnung kaufen Berlin; Immobilie als Kapitalanlage; Mietrendite berechnen | Investor pillar — draft has money + cluster links; add immobilienpreise post when live | [x] draft |
+| 3 | `/blog/how-foreigners-can-buy-property-in-berlin` | EN money `/en/properties-for-sale-berlin`; Ablauf; Kaufnebenkosten | buy an apartment in Berlin; the buying process; cost of buying | DE draft done; EN strengthen after Adi OK | [x] draft |
 | 4 | `/blog/best-berlin-districts-for-property-investment` | District pages with inventory; money | Wohnung kaufen Kreuzberg; Wohnung kaufen Berlin | Only districts with stock | [ ] |
 | 5 | `/blog/what-to-check-before-buying-an-apartment-in-berlin` | Money; Kaufnebenkosten; Ablauf | Wohnung kaufen Berlin; Kaufnebenkosten Berlin | | [ ] |
 | 6 | `/blog/berlin-rental-laws-explained-for-property-buyers` | Kapitalanlage; Mietrendite; money | Immobilie als Kapitalanlage; Mietrendite berechnen | Investor-relevant | [ ] |
@@ -262,7 +268,8 @@ From `Sweet_Home_Pages_and_Keywords_Berlin.xlsx`. Do **after** Phases A–D and 
 | District | `/wohnung-kaufen-tempelhof` | Exists | wohnung kaufen tempelhof | TBC | Optimize | [ ] |
 | District | `/wohnung-kaufen-spandau` | Exists | wohnung kaufen spandau | TBC | Optimize (low priority) | [ ] |
 | District | `/wohnung-kaufen-reinickendorf` | Exists | wohnung kaufen reinickendorf | TBC | Optimize (low priority) | [ ] |
-| District | `/wohnung-kaufen-berlin-mitte` | **Missing** | wohnung kaufen berlin mitte | 400 | **CREATE** — biggest district term, no page | [ ] |
+| District | `/wohnung-kaufen-berlin-mitte` | Exists (created Phase D) | wohnung kaufen berlin mitte | 400 | Optimize further as needed | [x] created |
+| District | `/wohnung-kaufen-pankow` | Exists (created Phase D) | wohnung kaufen pankow | TBC | Optimize further as needed | [x] created |
 | Blog refresh | `/blog/hidden-costs-of-buying-property-in-berlin` | Exists | kaufnebenkosten berlin | 200 | Refresh + German QA | [ ] |
 | Blog refresh | `/blog/berlin-real-estate-investment-guide-2026` | Exists | immobilie als kapitalanlage | 600 | Refresh into investor pillar | [ ] |
 | Blog create | `/blog/immobilienpreise-berlin` | **Missing** | immobilienpreise berlin | 2,400 | **CREATE** | [ ] |
@@ -321,7 +328,11 @@ Blockers / questions:
 
 | Date | What shipped / drafted | Shared with Adi? | Notes |
 |------|------------------------|------------------|-------|
-| | | | |
+| 2026-08-03 | Phase A: DE related-post titles + same-geo filter | Validated by Luis | `blogController.showPublic` |
+| 2026-08-03 | Phase B #1 draft: Kaufnebenkosten Berlin | Pending send | CMS `kaufnebenkosten-berlin-draft-review` + repo md — live DE untouched |
+| 2026-08-03 | Phase B #2 draft: Immobilie als Kapitalanlage / investment guide 2026 | Pending send | CMS `berlin-real-estate-investment-guide-2026-draft-review` + repo md — live DE untouched |
+| 2026-08-03 | Phase B #3 draft: Wie Ausländer Immobilien in Berlin kaufen können | Pending send | CMS `how-foreigners-can-buy-property-in-berlin-draft-review` (id 147) — live untouched; EN pass later |
+| 2026-08-03 | Phase D housekeeping + QA | Pending deploy | Console clean, footer Berlin-first, beds/bath DE, Mitte/Pankow pages, FAQ visible |
 
 ---
 

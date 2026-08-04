@@ -136,6 +136,8 @@
 <script>
 window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
   learnMore: <%- JSON.stringify(typeof learnMoreText !== 'undefined' ? learnMoreText : (typeof t === 'function' ? t('common.learnMore', 'Learn more') : 'Learn more')) %>,
+  beds: <%- JSON.stringify(typeof t === 'function' ? t('properties.list.meta.rooms', 'rooms') : 'rooms') %>,
+  baths: <%- JSON.stringify(typeof t === 'function' ? t('properties.list.meta.baths', 'baths') : 'baths') %>,
   locations: <%- JSON.stringify(typeof locationsTranslations !== 'undefined' && locationsTranslations ? locationsTranslations : { countries: {}, cities: {} }) %>
 };
 </script>
@@ -171,11 +173,11 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
                 <% if (typeof property.rooms !== 'undefined' && property.rooms !== null) { %>
                 <div class="feature">
                   <span class="icon icon-16 icon-inline icon-mask icon-bed"></span>
-                  <span><%= property.rooms %> <%= t('properties.list.meta.beds','beds') %></span>
+                  <span><%= property.rooms %> <%= t('properties.list.meta.rooms','rooms') %></span>
                 </div>
                 <% } %>
                 <% if (typeof property.bathrooms !== 'undefined' && property.bathrooms !== null) { %>
-                <div class="feature">
+                  <div class="feature">
                   <span class="icon icon-16 icon-inline icon-mask icon-bath"></span>
                   <span><%= property.bathrooms %> <%= t('properties.list.meta.baths','baths') %></span>
                 </div>
@@ -568,7 +570,7 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
   </div>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/js/libs/leaflet.js"></script>
 <script src="/js/market-map-data.js?v=<%= assetVersion %>"></script>
 <script src="/js/home.js?v=<%= assetVersion %>-map-clean-20260717"></script>
 <script src="/js/contact.js" defer></script>

@@ -553,12 +553,12 @@ async function loadFeaturedProperties() {
               ${beds ? `
               <div class="feature">
                 <span class="icon icon-16 icon-inline icon-mask icon-bed"></span>
-                <span>${beds} bed${Number(beds) === 1 ? '' : 's'}</span>
+                <span>${beds} ${(window.__FEATURED_I18N__ && window.__FEATURED_I18N__.beds) || 'rooms'}</span>
               </div>` : ''}
               ${baths ? `
               <div class="feature">
                 <span class="icon icon-16 icon-inline icon-mask icon-bath"></span>
-                <span>${baths} bath${Number(baths) === 1 ? '' : 's'}</span>
+                <span>${baths} ${(window.__FEATURED_I18N__ && window.__FEATURED_I18N__.baths) || 'baths'}</span>
               </div>` : ''}
             </div>
             <a class="learn-more" href="${(document.getElementById('locations-data')?.getAttribute('data-locale-prefix') || '')}/properties/${property.slug}">${learnMoreText} →</a>

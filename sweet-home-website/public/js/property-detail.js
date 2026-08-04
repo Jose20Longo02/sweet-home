@@ -569,10 +569,7 @@ class PropertyDetailPage {
 
   loadSimilarProperties() {
     const similarContainer = document.getElementById('similarProperties');
-    if (!similarContainer) {
-      console.warn('[property-detail] similarProperties container not found');
-      return;
-    }
+    if (!similarContainer) return;
 
     // Fetch similar properties from the same city/country
     try {
@@ -592,8 +589,6 @@ class PropertyDetailPage {
         if (cityText) propertyCity = cityText;
       }
       
-      console.log('[property-detail] Loading similar properties for:', propertyCountry, propertyCity);
-      
       fetch(`/properties/api/similar?country=${encodeURIComponent(propertyCountry)}&city=${encodeURIComponent(propertyCity)}&exclude=${this.propertyId}&limit=3`)
         .then(response => {
           if (!response.ok) {
@@ -602,20 +597,16 @@ class PropertyDetailPage {
           return response.json();
         })
         .then(data => {
-          console.log('[property-detail] Similar properties API response:', data);
           if (data.success && data.properties && data.properties.length > 0) {
             this.renderSimilarProperties(data.properties);
           } else {
-            console.warn('[property-detail] No similar properties found');
             this.showSimilarPropertiesError();
           }
         })
-        .catch(error => {
-          console.error('[property-detail] Error loading similar properties:', error);
+        .catch(() => {
           this.showSimilarPropertiesError();
         });
-    } catch (error) {
-      console.error('[property-detail] Error in loadSimilarProperties:', error);
+    } catch (_) {
       this.showSimilarPropertiesError();
     }
   }
@@ -633,10 +624,7 @@ class PropertyDetailPage {
 
   renderSimilarProperties(properties) {
     const similarContainer = document.getElementById('similarProperties');
-    if (!similarContainer) {
-      console.warn('[property-detail] similarProperties container not found');
-      return;
-    }
+    if (!similarContainer) return;
 
     // Clear any existing content
     similarContainer.innerHTML = properties.map(property => {
@@ -667,41 +655,6 @@ class PropertyDetailPage {
         </a>
       `;
     }).join('');
-    
-    // Test: Verify links are created and make them absolutely clickable
-    setTimeout(() => {
-      const links = similarContainer.querySelectorAll('a.similar-property');
-      console.log('[property-detail] ✅ Created', links.length, 'similar property links');
-      
-      if (links.length === 0) {
-        console.error('[property-detail] ❌ No links found! Check if properties are loading.');
-        return;
-      }
-      
-      links.forEach((link, index) => {
-        const href = link.getAttribute('href');
-        console.log(`[property-detail] Link ${index + 1}:`, href, 'Element:', link);
-        
-        // Remove ALL inline styles that might interfere
-        link.removeAttribute('style');
-        
-        // Add only essential styles via setProperty (CSP-safe)
-        link.style.setProperty('pointer-events', 'auto', 'important');
-        link.style.setProperty('cursor', 'pointer', 'important');
-        link.style.setProperty('position', 'relative', 'important');
-        link.style.setProperty('z-index', '99999', 'important');
-        link.style.setProperty('display', 'flex', 'important');
-        link.style.setProperty('flex-direction', 'row', 'important');
-        
-        // Test click programmatically to verify it works
-        console.log(`[property-detail] Testing link ${index + 1}...`);
-        
-        // Add a simple test - if you can see this in console, links exist
-        link.setAttribute('data-test-clickable', 'true');
-      });
-      
-      console.log('[property-detail] ✅ All links should be clickable now. Try clicking one!');
-    }, 200);
   }
 
   initRecaptcha() {

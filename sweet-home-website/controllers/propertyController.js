@@ -5535,3 +5535,78 @@ exports.spandauPropertiesPageDe = async (req, res, next) => renderBerlinDistrict
     ]
   }
 });
+
+// German district landing page: Berlin-Mitte
+exports.mittePropertiesPageDe = async (req, res, next) => renderBerlinDistrictPageDe(req, res, next, {
+  path: '/wohnung-kaufen-berlin-mitte',
+  displayName: 'Mitte',
+  defaultNeighborhood: 'Mitte',
+  heroImage: '/images/berlin-hero.jpg',
+  title: 'Wohnung kaufen Berlin Mitte',
+  metaDescription: 'Wohnung kaufen Berlin Mitte: zentrale Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
+  propertiesWhere: "(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) = $2 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $3)",
+  propertiesParams: ['%mitte%', 'mitte', '%berlin-mitte%'],
+  projectsWhere: "(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) = $2 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $3)",
+  projectsParams: ['%mitte%', 'mitte', '%berlin-mitte%'],
+  content: {
+    heroTitle: 'Wohnung kaufen Berlin Mitte',
+    heroDescription: 'Berlin-Mitte ist die zentrale Premiumlage der Hauptstadt – gefragt bei Eigennutzern und internationalen Kapitalanlegern mit Fokus auf Lagequalität und langfristige Vermietbarkeit.',
+    sectionTitleProperties: 'Eigentumswohnungen in Berlin-Mitte',
+    sectionTitleProjects: 'Neubauprojekte in Berlin-Mitte',
+    sectionTitleWhy: 'Warum Mitte für Immobilienkäufer interessant ist',
+    whyP1: 'Mitte verbindet zentrale Erreichbarkeit, internationale Nachfrage und starke Infrastruktur. Die Lage stützt sowohl Eigennutzung als auch langfristige Vermietung.',
+    whyP2: 'Einstiegspreise liegen oft über dem Berliner Durchschnitt – dafür sprechen Bestandsschutz der Lage und anhaltende Nachfrage durch Berufstätige und internationale Mieter.',
+    sectionTitleMicro: 'Gefragte Mikrolagen in Mitte',
+    microAreas: [
+      'Hackescher Markt / Scheunenviertel – urbane Top-Lage mit hoher Nachfrage.',
+      'Regierungsviertel / Spreebogen – zentrale Adressen mit starker Infrastruktur.',
+      'Alexanderplatz-Umfeld – gute Anbindung und gemischte Bestände.',
+      'Oranienburger Straße / Museumsinsel-Nähe – repräsentative Altbau- und Bestandsobjekte.'
+    ],
+    sectionTitleFaq: 'Häufige Fragen zu Wohnungen in Berlin-Mitte',
+    faq: [
+      { q: 'Lohnt sich Wohnung kaufen in Berlin-Mitte?', a: 'Für lageorientierte Käufer oft ja: zentrale Nachfrage, starke Infrastruktur und langfristige Vermietbarkeit – bei entsprechend höherem Einstiegspreis.' },
+      { q: 'Welche Käufer suchen in Mitte?', a: 'Eigennutzer, die zentral wohnen wollen, sowie Investoren mit Fokus auf Lagequalität und internationale Mietnachfrage.' },
+      { q: 'Worauf sollte man bei Altbau in Mitte achten?', a: 'Auf Energieausweis, WEG-Rücklagen, Sanierungsstau und realistische Kaufnebenkosten – die zentralen Lagen rechtfertigen keine fehlende Due Diligence.' },
+      { q: 'Wie hilft Sweet Home beim Kauf in Mitte?', a: 'Wir unterstützen bei Objektauswahl, Preis- und Lageeinordnung, Verhandlung und der Abwicklung bis zum Grundbucheintrag.' }
+    ]
+  }
+});
+
+// German district landing page: Pankow (Berlin)
+exports.pankowPropertiesPageDe = async (req, res, next) => renderBerlinDistrictPageDe(req, res, next, {
+  path: '/wohnung-kaufen-pankow',
+  displayName: 'Pankow',
+  defaultNeighborhood: 'Pankow',
+  heroImage: '/images/berlin-hero.jpg',
+  title: 'Wohnung kaufen Pankow',
+  metaDescription: 'Wohnung kaufen Pankow: Eigentumswohnungen in Pankow und angrenzenden Lagen vergleichen – mit Sweet Home.',
+  propertiesWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
+  propertiesParams: ['%pankow%'],
+  projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
+  projectsParams: ['%pankow%'],
+  content: {
+    heroTitle: 'Wohnung kaufen Pankow',
+    heroDescription: 'Pankow zählt zu den nachgefragten Berliner Bezirken für Familien und Berufstätige – mit grüneren Lagen, guter Anbindung und laufender Quartiersentwicklung.',
+    sectionTitleProperties: 'Eigentumswohnungen in Pankow',
+    sectionTitleProjects: 'Neubauprojekte in Pankow',
+    sectionTitleWhy: 'Warum Pankow für Immobilienkäufer interessant ist',
+    whyP1: 'Pankow bietet eine Mischung aus ruhigeren Wohnquartieren und gut erreichbaren Kiezen. Viele Käufer schätzen die Balance aus Wohnqualität und Stadtanbindung.',
+    whyP2: 'Für Investoren und Eigennutzer zählen stabile Nachfrage, familienfreundliche Strukturen und Entwicklungspotenzial in ausgewählten Mikrolagen.',
+    sectionTitleMicro: 'Gefragte Mikrolagen in Pankow',
+    microAreas: [
+      'Pankow Ortsteil – gewachsene Strukturen und gute Nahversorgung.',
+      'Weißensee – ruhigere Wohnlagen mit Potenzial.',
+      'Französisch Buchholz – familienfreundlich und grüner.',
+      'Karow / Buch – mehr Fläche und Neubauentwicklung am Stadtrand.'
+    ],
+    sectionTitleFaq: 'Häufige Fragen zu Wohnungen in Pankow',
+    faq: [
+      { q: 'Ist Pankow für Familien geeignet?', a: 'Ja. Viele Teilbereiche bieten Schulen, Grünflächen und ruhigere Wohnumfelder bei weiterhin guter Anbindung nach Mitte und Prenzlauer Berg.' },
+      { q: 'Wie unterscheidet sich Pankow von Prenzlauer Berg?', a: 'Prenzlauer Berg ist oft dichter und teurer; Pankow bietet in vielen Lagen mehr Ruhe und teils attraktivere Einstiegspreise – mikrolageabhängig.' },
+      { q: 'Worauf sollte man beim Kauf in Pankow achten?', a: 'Auf Anbindung, Gebäudezustand, WEG-Unterlagen und ob die Mikrolage zu Ihrer Nutzung (Eigennutzung vs. Vermietung) passt.' },
+      { q: 'Wie hilft Sweet Home in Pankow?', a: 'Wir helfen bei der Lageauswahl, Objektprüfung und der kompletten Kaufbegleitung.' }
+    ]
+  }
+});
+
