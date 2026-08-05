@@ -499,7 +499,9 @@
     },
     "international": {
       "title": "Other international property markets",
-      "see": "See properties"
+      "see": "See properties",
+      "dubaiImgAlt": "Dubai skyline – international property markets",
+      "cyprusImgAlt": "Cyprus coast – international property markets"
     },
     "newDevelopment": {
       "title": "New development",
@@ -542,7 +544,8 @@
     "about": {
       "title": "About Sweet Home",
       "copy": "At Sweet Home, we turn property goals into real-life keys. From your first chat to closing day, our friendly experts guide you with clear advice, curated options, and stress-free support. Ready to move forward with confidence? Let's find the place that truly feels like home.",
-      "cta": "Learn more about Sweet Home"
+      "cta": "Learn more about Sweet Home",
+      "imgAlt": "Sweet Home Berlin – guidance for property buyers"
     },
     "services": {
       "title": "Our Services",
@@ -909,6 +912,16 @@
     "emailAddress": "Email address",
     "subscribe": "Subscribe",
     "rights": "All rights reserved.",
-    "social": "Social media"
+    "social": "Social media",
+    "regions": "Regions",
+    "propertiesBerlin": "Properties in Berlin",
+    "propertiesBerlinEn": "Berlin apartments (EN)",
+    "berlinSearch": "Search Berlin listings",
+    "otherMarkets": "Also:",
+    "cyprusShort": "Cyprus",
+    "dubaiShort": "Dubai",
+    "staffLogin": "Log in",
+    "staffRegister": "Register",
+    "staffForgot": "Forgot password?"
   }
 }

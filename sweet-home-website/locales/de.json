@@ -487,7 +487,9 @@
     },
     "international": {
       "title": "Weitere internationale Immobilienmärkte",
-      "see": "Immobilien ansehen"
+      "see": "Immobilien ansehen",
+      "dubaiImgAlt": "Dubai Skyline – internationale Immobilienmärkte",
+      "cyprusImgAlt": "Zypern – Küste und Immobilienmarkt"
     },
     "newDevelopment": {
       "title": "Neue Projekte",
@@ -530,7 +532,8 @@
     "about": {
       "title": "Über Sweet Home",
       "copy": "Bei Sweet Home machen wir aus Immobilienzielen echte Schlüssel. Vom ersten Gespräch bis zum Notartermin begleiten unsere freundlichen Experten Sie mit klarer Beratung, kuratierten Optionen und stressfreier Unterstützung. Bereit, den nächsten Schritt mit Vertrauen zu gehen? Finden wir den Ort, der sich wirklich wie Zuhause anfühlt.",
-      "cta": "Mehr über Sweet Home erfahren"
+      "cta": "Mehr über Sweet Home erfahren",
+      "imgAlt": "Sweet Home Berlin – Beratung für Immobilienkäufer"
     },
     "services": {
       "title": "Unsere Leistungen",
@@ -884,7 +887,7 @@
   "footer": {
     "tagline": "Das beste Team, das Sie je brauchen werden.",
     "help": "Hilfe",
-    "features": "Funktionen",
+    "features": "Angebote",
     "company": "Unternehmen",
     "support": "Support",
     "realEstate": "Immobilien",
@@ -897,6 +900,16 @@
     "emailAddress": "E-Mail-Adresse",
     "subscribe": "Abonnieren",
     "rights": "Alle Rechte vorbehalten.",
-    "social": "Soziale Medien"
+    "social": "Soziale Medien",
+    "regions": "Regionen",
+    "propertiesBerlin": "Wohnungen in Berlin",
+    "propertiesBerlinEn": "Berlin apartments (EN)",
+    "berlinSearch": "Berliner Angebote durchsuchen",
+    "otherMarkets": "Auch:",
+    "cyprusShort": "Zypern",
+    "dubaiShort": "Dubai",
+    "staffLogin": "Anmelden",
+    "staffRegister": "Registrieren",
+    "staffForgot": "Passwort vergessen?"
   }
 }

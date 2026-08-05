@@ -15,6 +15,11 @@ const { ensureCompleteTranslations } = require('../utils/translationHelper');
 const { generateSEOFileName } = require('../utils/imageNaming');
 const { logEvent } = require('../utils/analytics');
 const { getNeighborhoodCountMap } = require('../utils/neighborhoodCounts');
+const {
+  getLandingPageCache,
+  setLandingPageCache,
+  setPublicLandingCacheHeaders
+} = require('../utils/landingPageCache');
 
 function normalizeSlug(value) {
   return slugify(String(value || ''), { lower: true, strict: true, locale: 'en' });
@@ -3104,8 +3109,19 @@ exports.getFeaturedProperties = async (req, res, next) => {
 // Berlin landing page: Properties for Sale Berlin (most-viewed in Germany)
 exports.berlinPropertiesPage = async (req, res, next) => {
   try {
-    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
-    const propertiesSql = `
+    const lang = res.locals.lang || 'en';
+    const cacheKey = `berlin-landing:${lang}`;
+    let neighborhoodCounts;
+    let properties;
+    let projects;
+
+    const cached = getLandingPageCache(cacheKey);
+    if (cached) {
+      neighborhoodCounts = cached.neighborhoodCounts;
+      properties = cached.properties;
+      projects = cached.projects;
+    } else {
+      const propertiesSql = `
       SELECT
         p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
         p.price, p.photos, p.type, p.rooms, p.bathrooms,
@@ -3122,10 +3138,14 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       LEFT JOIN users u ON p.agent_id = u.id
       LEFT JOIN property_stats ps ON ps.property_id = p.id
       WHERE p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND COALESCE(p.sold, false) IS NOT TRUE
+        AND p.slug IS NOT NULL
+        AND p.slug <> ''
       ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
       LIMIT 30
     `;
-    const projectsSql = `
+      const projectsSql = `
       SELECT
         p.id,
         p.slug,
@@ -3149,11 +3169,17 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       ORDER BY p.created_at DESC
       LIMIT 9
     `;
-    const [{ rows: properties }, { rows: projects }] = await Promise.all([
-      query(propertiesSql),
-      query(projectsSql)
-    ]);
-    const lang = res.locals.lang || 'en';
+      const [counts, propResult, projResult] = await Promise.all([
+        getNeighborhoodCountMap(locations),
+        query(propertiesSql),
+        query(projectsSql)
+      ]);
+      neighborhoodCounts = counts;
+      properties = propResult.rows;
+      projects = projResult.rows;
+      setLandingPageCache(cacheKey, { neighborhoodCounts, properties, projects });
+    }
+
     const recommendedProperties = (properties || []).map(p => {
       const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
       return {
@@ -3464,6 +3490,7 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       };
     });
 
+    setPublicLandingCacheHeaders(res);
     res.render('properties-for-sale-berlin', {
       title: titles[lang] || titles.en,
       useMainContainer: false,
@@ -4285,9 +4312,21 @@ exports.villasForSaleCyprusPage = async (req, res, next) => {
 // German district landing page: Charlottenburg (Berlin)
 exports.charlottenburgPropertiesPageDe = async (req, res, next) => {
   try {
-    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
+    const cacheKey = 'district-de:/wohnung-kaufen-charlottenburg';
     const districtPattern = '%charlottenburg%';
-    const propertiesSql = `
+    let neighborhoodCounts;
+    let properties;
+    let projects;
+    let statsRows;
+
+    const cached = getLandingPageCache(cacheKey);
+    if (cached) {
+      neighborhoodCounts = cached.neighborhoodCounts;
+      properties = cached.properties;
+      projects = cached.projects;
+      statsRows = cached.statsRows;
+    } else {
+      const propertiesSql = `
       SELECT
         p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
         p.price, p.photos, p.type, p.rooms, p.bathrooms,
@@ -4311,7 +4350,7 @@ exports.charlottenburgPropertiesPageDe = async (req, res, next) => {
       ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
       LIMIT 30
     `;
-    const projectsSql = `
+      const projectsSql = `
       SELECT
         p.id,
         p.slug,
@@ -4335,7 +4374,7 @@ exports.charlottenburgPropertiesPageDe = async (req, res, next) => {
       ORDER BY p.created_at DESC
       LIMIT 9
     `;
-    const statsSql = `
+      const statsSql = `
       SELECT
         COUNT(*)::int AS total_properties,
         ROUND(AVG(p.price))::int AS avg_price,
@@ -4353,11 +4392,18 @@ exports.charlottenburgPropertiesPageDe = async (req, res, next) => {
         AND LOWER(COALESCE(p.neighborhood, '')) LIKE $1
     `;
 
-    const [{ rows: properties }, { rows: projects }, { rows: statsRows }] = await Promise.all([
-      query(propertiesSql, [districtPattern]),
-      query(projectsSql, [districtPattern]),
-      query(statsSql, [districtPattern])
-    ]);
+      const [counts, propResult, projResult, statsResult] = await Promise.all([
+        getNeighborhoodCountMap(locations),
+        query(propertiesSql, [districtPattern]),
+        query(projectsSql, [districtPattern]),
+        query(statsSql, [districtPattern])
+      ]);
+      neighborhoodCounts = counts;
+      properties = propResult.rows;
+      projects = projResult.rows;
+      statsRows = statsResult.rows;
+      setLandingPageCache(cacheKey, { neighborhoodCounts, properties, projects, statsRows });
+    }
 
     const lang = 'de';
     const recommendedProperties = (properties || []).map((p) => {
@@ -4445,6 +4491,7 @@ exports.charlottenburgPropertiesPageDe = async (req, res, next) => {
       ]
     };
 
+    setPublicLandingCacheHeaders(res);
     res.render('properties-charlottenburg-de', {
       title: pageTitle,
       useMainContainer: false,
@@ -4469,8 +4516,17 @@ exports.charlottenburgPropertiesPageDe = async (req, res, next) => {
 // German district landing page: Moabit (Berlin)
 exports.moabitPropertiesPageDe = async (req, res, next) => {
   try {
-    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
+    const cacheKey = 'district-de:/wohnung-kaufen-moabit';
     const districtPattern = '%moabit%';
+    let neighborhoodCounts;
+    let properties;
+    let projects;
+    const cached = getLandingPageCache(cacheKey);
+    if (cached) {
+      neighborhoodCounts = cached.neighborhoodCounts;
+      properties = cached.properties;
+      projects = cached.projects;
+    } else {
     const propertiesSql = `
       SELECT
         p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
@@ -4521,10 +4577,16 @@ exports.moabitPropertiesPageDe = async (req, res, next) => {
       LIMIT 9
     `;
 
-    const [{ rows: properties }, { rows: projects }] = await Promise.all([
+    const [counts, propResult, projResult] = await Promise.all([
+      getNeighborhoodCountMap(locations),
       query(propertiesSql, [districtPattern]),
       query(projectsSql, [districtPattern])
     ]);
+    neighborhoodCounts = counts;
+    properties = propResult.rows;
+    projects = projResult.rows;
+    setLandingPageCache(cacheKey, { neighborhoodCounts, properties, projects });
+    }
 
     const lang = 'de';
     const recommendedProperties = (properties || []).map((p) => {
@@ -4605,6 +4667,8 @@ exports.moabitPropertiesPageDe = async (req, res, next) => {
       ]
     };
 
+    setPublicLandingCacheHeaders(res);
+    setPublicLandingCacheHeaders(res);
     res.render('properties-moabit-de', {
       title: pageTitle,
       useMainContainer: false,
@@ -4628,7 +4692,6 @@ exports.moabitPropertiesPageDe = async (req, res, next) => {
 // German district landing page: Friedrichshain-Kreuzberg (Berlin)
 exports.friedrichshainKreuzbergPropertiesPageDe = async (req, res, next) => {
   try {
-    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
     const districtPattern = '%friedrichshain-kreuzberg%';
     const propertiesSql = `
       SELECT
@@ -4680,7 +4743,8 @@ exports.friedrichshainKreuzbergPropertiesPageDe = async (req, res, next) => {
       LIMIT 9
     `;
 
-    const [{ rows: properties }, { rows: projects }] = await Promise.all([
+    const [neighborhoodCounts, { rows: properties }, { rows: projects }] = await Promise.all([
+      getNeighborhoodCountMap(locations),
       query(propertiesSql, [districtPattern]),
       query(projectsSql, [districtPattern])
     ]);
@@ -4764,6 +4828,8 @@ exports.friedrichshainKreuzbergPropertiesPageDe = async (req, res, next) => {
       ]
     };
 
+    setPublicLandingCacheHeaders(res);
+
     res.render('properties-friedrichshain-kreuzberg-de', {
       title: pageTitle,
       useMainContainer: false,
@@ -4787,7 +4853,6 @@ exports.friedrichshainKreuzbergPropertiesPageDe = async (req, res, next) => {
 // German district landing page: Schoeneberg (Berlin)
 exports.schoenebergPropertiesPageDe = async (req, res, next) => {
   try {
-    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
     const patternWithUmlaut = '%schöneberg%';
     const patternWithoutUmlaut = '%schoneberg%';
     const propertiesSql = `
@@ -4834,7 +4899,8 @@ exports.schoenebergPropertiesPageDe = async (req, res, next) => {
       LIMIT 9
     `;
 
-    const [{ rows: properties }, { rows: projects }] = await Promise.all([
+    const [neighborhoodCounts, { rows: properties }, { rows: projects }] = await Promise.all([
+      getNeighborhoodCountMap(locations),
       query(propertiesSql, [patternWithUmlaut, patternWithoutUmlaut]),
       query(projectsSql, [patternWithUmlaut, patternWithoutUmlaut])
     ]);
@@ -4898,6 +4964,8 @@ exports.schoenebergPropertiesPageDe = async (req, res, next) => {
       ]
     };
 
+    setPublicLandingCacheHeaders(res);
+
     res.render('properties-schoeneberg-de', {
       title: 'Wohnung kaufen Schöneberg',
       useMainContainer: false,
@@ -4921,7 +4989,6 @@ exports.schoenebergPropertiesPageDe = async (req, res, next) => {
 // German district landing page: Prenzlauer Berg (Berlin)
 exports.prenzlauerBergPropertiesPageDe = async (req, res, next) => {
   try {
-    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
     const districtPattern = '%prenzlauer berg%';
     const propertiesSql = `
       SELECT
@@ -4961,7 +5028,8 @@ exports.prenzlauerBergPropertiesPageDe = async (req, res, next) => {
       LIMIT 9
     `;
 
-    const [{ rows: properties }, { rows: projects }] = await Promise.all([
+    const [neighborhoodCounts, { rows: properties }, { rows: projects }] = await Promise.all([
+      getNeighborhoodCountMap(locations),
       query(propertiesSql, [districtPattern]),
       query(projectsSql, [districtPattern])
     ]);
@@ -5025,6 +5093,8 @@ exports.prenzlauerBergPropertiesPageDe = async (req, res, next) => {
       ]
     };
 
+    setPublicLandingCacheHeaders(res);
+
     res.render('properties-prenzlauer-berg-de', {
       title: 'Wohnung kaufen Prenzlauer Berg',
       useMainContainer: false,
@@ -5048,7 +5118,6 @@ exports.prenzlauerBergPropertiesPageDe = async (req, res, next) => {
 // German district landing page: Wedding (Berlin)
 exports.weddingPropertiesPageDe = async (req, res, next) => {
   try {
-    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
     const patternWedding = '%wedding%';
     const patternGesundbrunnen = '%gesundbrunnen%';
     const propertiesSql = `
@@ -5094,7 +5163,8 @@ exports.weddingPropertiesPageDe = async (req, res, next) => {
       ORDER BY p.created_at DESC
       LIMIT 9
     `;
-    const [{ rows: properties }, { rows: projects }] = await Promise.all([
+    const [neighborhoodCounts, { rows: properties }, { rows: projects }] = await Promise.all([
+      getNeighborhoodCountMap(locations),
       query(propertiesSql, [patternWedding, patternGesundbrunnen]),
       query(projectsSql, [patternWedding, patternGesundbrunnen])
     ]);
@@ -5158,6 +5228,8 @@ exports.weddingPropertiesPageDe = async (req, res, next) => {
       ]
     };
 
+    setPublicLandingCacheHeaders(res);
+
     res.render('properties-wedding-de', {
       title: 'Wohnung kaufen Wedding',
       useMainContainer: false,
@@ -5181,7 +5253,6 @@ exports.weddingPropertiesPageDe = async (req, res, next) => {
 // German district landing page: Tempelhof (Berlin)
 exports.tempelhofPropertiesPageDe = async (req, res, next) => {
   try {
-    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
     const districtPattern = '%tempelhof%';
     const propertiesSql = `
       SELECT
@@ -5220,7 +5291,8 @@ exports.tempelhofPropertiesPageDe = async (req, res, next) => {
       ORDER BY p.created_at DESC
       LIMIT 9
     `;
-    const [{ rows: properties }, { rows: projects }] = await Promise.all([
+    const [neighborhoodCounts, { rows: properties }, { rows: projects }] = await Promise.all([
+      getNeighborhoodCountMap(locations),
       query(propertiesSql, [districtPattern]),
       query(projectsSql, [districtPattern])
     ]);
@@ -5284,6 +5356,8 @@ exports.tempelhofPropertiesPageDe = async (req, res, next) => {
       ]
     };
 
+    setPublicLandingCacheHeaders(res);
+
     res.render('properties-tempelhof-de', {
       title: 'Wohnung kaufen Tempelhof',
       useMainContainer: false,
@@ -5306,8 +5380,18 @@ exports.tempelhofPropertiesPageDe = async (req, res, next) => {
 
 async function renderBerlinDistrictPageDe(req, res, next, config) {
   try {
-    const neighborhoodCounts = await getNeighborhoodCountMap(locations);
-    const propertiesSql = `
+    const cacheKey = `district-de:${config.path}`;
+    let neighborhoodCounts;
+    let properties;
+    let projects;
+
+    const cached = getLandingPageCache(cacheKey);
+    if (cached) {
+      neighborhoodCounts = cached.neighborhoodCounts;
+      properties = cached.properties;
+      projects = cached.projects;
+    } else {
+      const propertiesSql = `
       SELECT
         p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
         p.price, p.photos, p.type, p.rooms, p.bathrooms,
@@ -5327,11 +5411,12 @@ async function renderBerlinDistrictPageDe(req, res, next, config) {
       LEFT JOIN property_stats ps ON ps.property_id = p.id
       WHERE p.country = 'Germany'
         AND p.city = 'Berlin'
+        AND COALESCE(p.sold, false) IS NOT TRUE
         AND ${config.propertiesWhere}
       ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
       LIMIT 30
     `;
-    const projectsSql = `
+      const projectsSql = `
       SELECT
         p.id, p.slug, p.title, p.title_i18n, p.description, p.description_i18n,
         p.country, p.city, p.neighborhood, p.photos, p.min_price, p.max_price,
@@ -5345,10 +5430,16 @@ async function renderBerlinDistrictPageDe(req, res, next, config) {
       LIMIT 9
     `;
 
-    const [{ rows: properties }, { rows: projects }] = await Promise.all([
-      query(propertiesSql, config.propertiesParams || []),
-      query(projectsSql, config.projectsParams || [])
-    ]);
+      const [counts, propResult, projResult] = await Promise.all([
+        getNeighborhoodCountMap(locations),
+        query(propertiesSql, config.propertiesParams || []),
+        query(projectsSql, config.projectsParams || [])
+      ]);
+      neighborhoodCounts = counts;
+      properties = propResult.rows;
+      projects = projResult.rows;
+      setLandingPageCache(cacheKey, { neighborhoodCounts, properties, projects });
+    }
 
     const lang = 'de';
     const recommendedProperties = (properties || []).map((p) => {
@@ -5387,6 +5478,7 @@ async function renderBerlinDistrictPageDe(req, res, next, config) {
       de: `${baseUrl}${config.path}`,
     };
 
+    setPublicLandingCacheHeaders(res);
     res.render('properties-berlin-district-de', {
       title: config.title,
       useMainContainer: false,

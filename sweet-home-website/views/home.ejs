@@ -352,7 +352,7 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
     <button class="carousel-nav prev" data-target="#intlCarousel" aria-label="<%= t('common.previous','Previous') %>">&#8249;</button>
     <div class="stretch-track">
       <article class="stretch-card is-focused" data-title="<%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %>">
-        <img src="/images/dubai-international.jpg" alt="" loading="lazy">
+        <img src="/images/dubai-international.jpg" alt="<%= t('home.international.dubaiImgAlt','Dubai Skyline – internationale Immobilienmärkte') %>" loading="lazy">
         <span class="vertical-title"><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %></span>
         <div class="expanded-info">
           <h3><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %></h3>
@@ -360,7 +360,7 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
         </div>
       </article>
       <article class="stretch-card is-collapsed" data-title="<%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %>">
-        <img src="/images/cyprus-international.jpg" alt="" loading="lazy">
+        <img src="/images/cyprus-international.jpg" alt="<%= t('home.international.cyprusImgAlt','Zypern – internationale Immobilienmärkte') %>" loading="lazy">
         <span class="vertical-title"><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></span>
         <div class="expanded-info">
           <h3><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></h3>
@@ -374,7 +374,7 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
 
 <!-- 5) About Section over panoramic image -->
 <section class="about-hero">
-  <img src="/images/berlin-about.jpg" alt="" loading="lazy">
+  <img src="/images/berlin-about.jpg" alt="<%= t('home.about.imgAlt','Sweet Home Berlin – Beratung für Immobilienkäufer') %>" loading="lazy">
   <div class="about-overlay">
     <h2><%= t('home.about.title','About Sweet Home') %></h2>
     <p><%= t('home.about.copy','') %></p>

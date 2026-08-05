@@ -21,7 +21,7 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 
 ## How to use this document
 
-- **Current priority:** Phase C **done in code** (deploy needed for H1 + money district link updates). Next: Phase M P2/P3 or Phase B #4+.
+- **Current priority:** Phase M **P2/P3 done in code** (deploy + re-measure TTFB). Next: Phase B #4+ or Phase G.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Blog drafts #1–3 were reviewed by Adi (2026-08-04) — **publish her edited versions to live**.
 - For **next** blog posts, apply Adi’s feedback pattern (see Phase B notes below) before sending for review.
@@ -54,9 +54,9 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 
 1. ~~Phase M P1 (301 + cache + sample)~~ ✅ 2026-08-04  
 2. ~~Publish Adi-approved blog drafts #1–3 to live~~ ✅ 2026-08-05  
-3. ~~Phase C headings + money page~~ ✅ code 2026-08-05 (deploy)  
-4. Continue Phase B remaining posts (with Adi’s craft rules)  
-5. Phase M P2 (TTFB) + P3 (on-page)  
+3. ~~Phase C headings + money page~~ ✅  
+4. ~~Phase M P2 (TTFB) + P3 (on-page)~~ ✅ code 2026-08-05 (deploy + re-measure)  
+5. Continue Phase B remaining posts (with Adi’s craft rules) ← next  
 6. Phase G page creates / keyword map  
 
 ---
@@ -85,27 +85,29 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 
 ## P2 — Server speed
 
-- [ ] **TTFB 1.5–2.0s** on `/wohnungen-berlin-kaufen` and `/wohnung-kaufen-*` district pages. Blog posts ~0.45s; old domain ~0.21s in July crawl → listing query likely **uncached** on new domain.  
-  **Done when:** TTFB **under 800ms** on money page and district pages.
+- [x] **TTFB improvements for money/district pages** (code 2026-08-05; **needs deploy**)  
+  Baseline from this session: money ~0.4–1.2s, most districts ~0.3s, Charlottenburg outlier ~5s cold.  
+  Shipped: 90s in-memory landing query cache, parallelize neighborhood counts + listings, tighten Berlin `WHERE` (city + not sold), `Cache-Control: s-maxage=60` on public landings.  
+  **Done when:** TTFB **under 800ms** on money page and district pages — **re-measure after deploy** (warm origin + CDN).
 
 | Item | Owner | Date | Notes |
 |------|-------|------|-------|
-| Listing/district page TTFB | | | Cache query, optimize SQL, or edge cache HTML |
+| Listing/district page TTFB | Dev | 2026-08-05 | `utils/landingPageCache.js` + berlin/district handlers |
 
 ## P3 — On-page
 
-- [ ] **Homepage:** 13 of 29 images have no `alt` — add descriptive **German** alt text  
-- [ ] **Homepage:** 3 empty `<h2>` tags — remove or fill  
-- [ ] **Footer on German pages** mixes languages (`Regions`, `Log in`, `Register`, `Forgot password?`, `Support`, `Funktionen`) — localize to German  
-- [ ] **`/es/*` redirects to homepage** instead of 1:1 — map to closest DE/EN or return **410** (low priority; Spanish dropped)  
+- [x] **Homepage:** empty `alt` on Dubai/Cyprus/about images → descriptive DE/EN alts (code; needs deploy). Live audit: only those 3 content images (+ FB pixel) lacked alts; Adi’s “13 of 29” likely included older crawl / dynamic cards that already use `property.title`.
+- [x] **Homepage:** empty `<h2>` — **none found** on live homepage 2026-08-05 (verified).
+- [x] **Footer on German pages** — added missing DE keys (`regions`, staff login/register/forgot, Berlin links, etc.); `features` → “Angebote” (needs deploy).
+- [x] **`/es/*`** — noted low priority; Spanish already redirected/removed in app (`/lang/es` → `/`, Fix #7 maps). No further change this pass.
 
-**Done when:** homepage images have alt text, empty H2s gone, German footer reads in German. (`/es/*` fixed or noted.)
+**Done when:** homepage images have alt text, empty H2s gone, German footer reads in German. (`/es/*` fixed or noted.) ✅ (pending deploy for alts/footer)
 
 | Item | Owner | Date | Notes |
 |------|-------|------|-------|
-| Homepage alts + empty H2s | | | |
-| DE footer i18n | | | Partial work already in Phase D — finish full DE labels |
-| `/es/*` 1:1 or 410 | | | Low priority |
+| Homepage alts + empty H2s | Dev | 2026-08-05 | Alts fixed; empty H2 none live |
+| DE footer i18n | Dev | 2026-08-05 | `locales/de.json` footer keys |
+| `/es/*` 1:1 or 410 | Dev | 2026-08-05 | Noted; existing redirects cover drop of ES |
 
 ---
 
@@ -401,6 +403,7 @@ Blockers / questions:
 | 2026-08-04 | Phase M P1 verified live | **Send sample report to Adi** | 33 URLs all 301; report `migration-p1-redirect-sample-2026-08-04.md` |
 | 2026-08-05 | Blog drafts #1–3 → live `*_i18n.de` | Notify Adi | Live slugs unchanged; draft posts renamed `zz-archived-*` |
 | 2026-08-05 | Phase C: unique list/project H1s + money district links | After deploy | Listing/neighborhood H1s; projects localized; curated+best-areas district links |
+| 2026-08-05 | Phase M P2/P3 | After deploy | Landing query cache + Cache-Control; homepage alts; DE footer i18n |
 
 ---
 
