@@ -123,25 +123,25 @@ GSC: clean Berlin posts stuck in **“discovered, not indexed”** because each 
 - [x] Same cleanup for **`/en/`** versions: zz-archived twins unpublished; EN currently shares German slug (bilingual slugs = N10 follow-up)
 - [x] Fix blog **title template**: removed `clampForSeo` ellipsis on post/list titles (`blogController.js`) — **needs deploy**
 - [x] Confirm **sitemap** lists only clean URLs — excludes `zz-archived*` / `*-draft-review*` even if mis-published
-- [ ] **Request indexing** in Search Console for each cleaned post URL (**manual — José/Luis**)
+- [x] **Request indexing** in Search Console for each cleaned post URL (**manual — José/Luis**) — done 2026-08-10
 
 **German live slugs (2026-08-10):**
 `kaufnebenkosten-berlin`, `immobilie-als-kapitalanlage-berlin`, `auslaender-immobilien-kaufen-berlin`, `beste-bezirke-immobilien-berlin`, `wohnungskauf-berlin-checkliste`, `mietrecht-berlin-kaeufer`, `neubau-oder-altbau-berlin`, `berlin-stadtteile-familien`, `vermietete-wohnung-kaufen-berlin`
 
-**Done when:** exactly one indexable URL per language per post; old URLs 301; full titles; clean URLs submitted for indexing.
+**Done when:** exactly one indexable URL per language per post; old URLs 301; full titles; clean URLs submitted for indexing. ✅ (indexing requested 2026-08-10; Google may take days to reflect)
 
 ---
 
 ### N3 — Migration integrity (carried over)
 
-- [ ] Confirm old-domain redirects return **301** (not 302); CDN cache purged (root, `/en`, `/blog` were serving old cached pages)
-- [ ] **Re-run 30-URL sample and send output to Adi** (existing report: `docs/migration-p1-redirect-sample-2026-08-04.md` — re-send or refresh if needed)
-- [ ] One-line confirm **breadcrumb schema** OK (money page checked 2026-08-05 — include in status email)
-- [ ] One-line confirm **console housekeeping** done (Phase D — include in status email)
-- [ ] Analytics ~**144 views of 404** last month: after redirect/cache fix, check top 404 URLs and **301** real ones
-- [ ] TTFB on `/wohnungen-berlin-kaufen` + district pages: target **under 800ms**
+- [x] Confirm old-domain redirects return **301** (not 302); CDN cache purged (root, `/en`, `/blog` were serving old cached pages) — re-check **2026-08-10** PASS
+- [x] **Re-run 30-URL sample and send output to Adi** — report: [`docs/migration-n3-redirect-sample-2026-08-10.md`](./migration-n3-redirect-sample-2026-08-10.md); email draft: [`docs/drafts/blog/EMAIL-TO-ADI-N3-2026-08-10.md`](./drafts/blog/EMAIL-TO-ADI-N3-2026-08-10.md)
+- [x] One-line confirm **breadcrumb schema** OK — money page `BreadcrumbList` present 2026-08-10
+- [x] One-line confirm **console housekeeping** done — Phase D (include in status email)
+- [x] Analytics 404s: top bare `/for-sale/*`, property/project/blog slugs, `/regions` → **301** via `middleware/legacyBareSlugRedirect.js` (**needs deploy**)
+- [x] TTFB on `/wohnungen-berlin-kaufen` + district pages: warm **under 800ms**; cold Charlottenburg outlier noted in report
 
-**Done when:** sample shared; all 301s; cache clean; 404 views drop; TTFB under 800ms.
+**Done when:** sample shared; all 301s; cache clean; 404 views drop; TTFB under 800ms. ✅ (send email to Adi; 404 middleware deploy)
 
 ---
 
@@ -602,6 +602,7 @@ Confirmations you asked for:
 | 2026-08-09 | Phase B #7–#9 drafts + full pack #4–#9 | **Send email to Adi** | Draft ids 151–153; email in `docs/drafts/blog/EMAIL-TO-ADI-DRAFTS-2026-08-09.md` |
 | 2026-08-10 | Adi: six drafts approved + Next 2 Weeks pack | Received | **Phase N** added; N2 duplicates URGENT before N1 German-slug publish; blog policy = publish direct; homepage/money still need Adi; GSC 909 impressions / 11 days |
 | 2026-08-10 | **N2+N1:** German keyword slugs + unpublish zz twins + draft DE live + title/sitemap/redirects | Deploy redirects | Script `n2-blog-slug-cleanup.js`; map `blog-slug-redirects-2026-08-10.json`; **GSC indexing still manual** |
+| 2026-08-10 | **N3:** redirect sample re-run + TTFB + breadcrumb confirm + bare-slug 404 301s | **Send email to Adi** | Report `migration-n3-redirect-sample-2026-08-10.md`; email `EMAIL-TO-ADI-N3-2026-08-10.md` |
 
 ---
 

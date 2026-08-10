@@ -29,6 +29,7 @@ const sendMail       = require('./config/mailer');
 const locations      = require('./config/locations');
 const { query }      = require('./config/db');
 const { seo404ClassificationMiddleware } = require('./middleware/seo404Classification');
+const { legacyBareSlugRedirectMiddleware } = require('./middleware/legacyBareSlugRedirect');
 const { domainRedirectMiddleware } = require('./middleware/domainRedirect');
 const BlogPost       = require('./models/BlogPost');
 const i18nMiddleware = require('./config/i18n');
@@ -593,6 +594,8 @@ app.use((req, res, next) => {
   // Fix #7 — GSC 404 classification (exact path → 301 or 410) + Spanish /es → DE.
   // Runs before generic /de/* collapses so Adi's list wins for sold listings / removed posts.
   return seo404ClassificationMiddleware(req, res, () => {
+  // N3 — bare legacy paths missing /properties|/projects|/blog (high analytics 404 traffic)
+  return legacyBareSlugRedirectMiddleware(req, res, () => {
   // Collapse legacy /de/* top-level pages to default-language canonical paths.
   const legacyDeTopLevelMatch = lowerPath.match(/^\/de\/(projects|properties|blog|about|contact|services|owners|terms|privacy|cookies)\/?$/);
   if (legacyDeTopLevelMatch) {
@@ -697,6 +700,7 @@ app.use((req, res, next) => {
   }
 
   next();
+  }); // end legacyBareSlugRedirectMiddleware
   }); // end seo404ClassificationMiddleware fallback
 });
 
