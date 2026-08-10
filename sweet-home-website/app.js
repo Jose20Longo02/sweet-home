@@ -1796,7 +1796,17 @@ app.get('/sitemap.xml', async (req, res, next) => {
     }));
 
     // Dynamic blog posts
-    const posts = await query(`SELECT slug, updated_at, created_at, status, published_at FROM blog_posts WHERE slug IS NOT NULL AND status = 'published' ORDER BY COALESCE(updated_at, created_at) DESC NULLS LAST LIMIT 5000`);
+    const posts = await query(`
+      SELECT slug, updated_at, created_at, status, published_at
+      FROM blog_posts
+      WHERE slug IS NOT NULL
+        AND status = 'published'
+        AND slug NOT LIKE 'zz-archived%'
+        AND slug NOT LIKE '%-draft-review%'
+        AND slug NOT LIKE '%-draft-review'
+      ORDER BY COALESCE(updated_at, created_at) DESC NULLS LAST
+      LIMIT 5000
+    `);
     const blogUrls = (posts.rows || []).map(r => ({
       loc: `${base}/blog/${r.slug}`,
       lastmod: (r.updated_at || r.published_at || r.created_at) ? new Date(r.updated_at || r.published_at || r.created_at).toISOString() : null,

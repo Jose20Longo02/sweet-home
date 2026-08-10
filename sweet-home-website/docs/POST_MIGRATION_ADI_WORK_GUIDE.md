@@ -14,6 +14,7 @@
 | `Sweet_Home_Internal_Link_Map.xlsx` | Exact in-content links to add |
 | `Sweet_Home_Pages_and_Keywords_Berlin.xlsx` | Page/keyword map (exists vs create) |
 | `Sweet_Home_Migration_Fixes_Now.docx` | **HIGH PRIORITY** post-migration integrity fixes (P1–P3) — received 2026-08-04 |
+| `Sweet_Home_Dev_Tasks_Next_2_Weeks.docx` | **ACTIVE** next-two-weeks tasks (N1–N11) — received 2026-08-10 |
 
 Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBOOK.md) (go-live / redirects / GSC).
 
@@ -21,43 +22,222 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 
 ## How to use this document
 
-- **Current priority:** Phase M **P2/P3 done in code** (deploy + re-measure TTFB). Next: Phase B #4+ or Phase G.
+- **Current priority (2026-08-10):** **Phase N** — Adi’s next-two-weeks pack. **Urgent first:** N2 duplicate blog URLs → then N1 publish six drafts on German keyword slugs → rest of N3–N11.
 - Check boxes as you go: `- [ ]` → `- [x]`.
-- Blog drafts #1–3 were reviewed by Adi (2026-08-04) — **publish her edited versions to live**.
-- For **next** blog posts, apply Adi’s feedback pattern (see Phase B notes below) before sending for review.
-- Cyprus / Dubai content is **off-focus** — deprioritize; no internal-link work there.
+- Cyprus / Dubai content is **off-focus** — reduce crawl weight (see N5); no internal-link work there.
+
+### Adi reply 2026-08-10 (email summary)
+
+- Six drafts **approved for publishing**, with condition: live at **German keyword slugs**; clean up **zz-archived** duplicate URLs first (N2) — GSC shows clean Berlin posts stuck “discovered, not indexed” because of duplicates.
+- **New policy:** do **not** wait for Adi review on blog posts. Follow the checklist and **publish directly**; she reviews live posts weekly. **Only homepage and money page copy** still comes to her first.
+- Attached tasks = next two weeks (closed items listed + carried-over + six new posts in N9). She still needs: **30-URL redirect sample output**, plus one-line confirmations for **breadcrumb schema** and **console housekeeping**.
+- **GSC data point (first 11 days on new domain):** 909 impressions; ~⅔ non-branded Berlin searches; district pages already appearing (Schöneberg first). Foundation works — these tasks push page 3 → page 1.
+- Weekly status by email remains fine.
 
 ### Key contacts
 
 | Role | Name | Notes |
 |------|------|-------|
 | Dev / delivery | Luis / José / Medialy | Code, drafts, QA, weekly status |
-| SEO consultant | Adi | Reviews DE drafts; GSC monitoring; migration QA |
+| SEO consultant | Adi | Weekly live blog review; GSC; homepage/money copy review |
 | Business | Israel / team | Approvals as needed |
 
 ### Standing rules from Adi
 
-1. Weekly status by email is enough (she is in Asia for ~1 month).
+1. Weekly status by email is enough.
 2. Use AI to help with content — but quality must read as natural German, not machine-translated.
 3. Goal for blog work: be the **best answer for the keyword**, not just “exist.”
-4. **Blog tone / craft (apply to all next posts — Adi 2026-08-04):**
+4. **Blog publish policy (updated 2026-08-10):** Follow Phase E checklist → publish on **German keyword slug** directly. No draft-and-wait. Adi reviews live weekly. Homepage + money page copy still need her OK first.
+5. **Blog tone / craft (apply to all posts — Adi 2026-08-04):**
    - Friendlier, less technical — written for a real buyer, not like a tax form
    - Title + excerpt: keep keyword, more inviting; put **one number in the excerpt** for CTR
    - Internal links: woven into running text (not a list block); anchor = target page’s keyword
+   - **At least four** in-text links to other posts with keyword anchors + money/district where it fits (N9)
+   - When a new post goes live, add **one reciprocal link** from the most related existing post
    - Sources: link a credible source for figures; wording accuracy (e.g. “gesetzliche Maklerkostenteilung (Dezember 2020)” not “Bestellerprinzip”)
    - Capitalize German nouns; clear CTA
    - **GEO / AI:** mention brand **“Sweet Home Berlin”** a few more times in the text
 
 ---
 
-## Priority order (updated 2026-08-04)
+## Priority order (updated 2026-08-10)
 
-1. ~~Phase M P1 (301 + cache + sample)~~ ✅ 2026-08-04  
+1. ~~Phase M P1 (301 + cache + sample)~~ ✅ 2026-08-04 (Adi still wants sample output re-sent — see N3)  
 2. ~~Publish Adi-approved blog drafts #1–3 to live~~ ✅ 2026-08-05  
 3. ~~Phase C headings + money page~~ ✅  
-4. ~~Phase M P2 (TTFB) + P3 (on-page)~~ ✅ code 2026-08-05 (deploy + re-measure)  
-5. Continue Phase B remaining posts (with Adi’s craft rules) ← next  
-6. Phase G page creates / keyword map  
+4. ~~Phase M P2 (TTFB) + P3 (on-page)~~ ✅ code 2026-08-05  
+5. **N2 — Fix duplicate blog URLs (URGENT)** ← do first  
+6. **N1 — Publish six drafts on German keyword slugs** (+ 301 old 40% URL)  
+7. N3 migration integrity (re-send sample; 404s; TTFB)  
+8. N4 homepage Berlin-first  
+9. N5 Cyprus/Dubai crawl weight  
+10. N6 district FAQ SSR  
+11. N7 wrong Bezirk on listings + duplicate Moabit + Bäder typo  
+12. N8 social profiles → `.de`  
+13. N9 six new posts (3/week), publish directly  
+14. N10 EN versions of Berlin posts (after N2)  
+15. N11 Ratgeber blocks on district pages  
+
+---
+
+# Phase N — Next two weeks (Adi 2026-08-10) — ACTIVE
+
+**Source:** `Sweet_Home_Dev_Tasks_Next_2_Weeks.docx` + Adi email 2026-08-10  
+**Cadence:** Short weekly status email to Adi (as before).
+
+### Status from last cycle (Adi’s closed list)
+
+**Done and verified (per Adi):** related-posts titles; improved posts + six new drafts; unique H1s; district links on money page; Zimmer/Bad labels; footer year; Mitte/Pankow district links; German footer.
+
+**Still open / carried over (Adi asks):** items marked below; also **send 30-URL redirect sample output**; one-line confirmation each for **breadcrumb schema** and **console housekeeping**.
+
+---
+
+### N1 — Publish the six drafts on clean German slugs
+
+Approved for publishing. **Condition:** each post goes live at its **German keyword slug**. No draft / archive / English names in the slug.
+
+| # | Target live slug (example) | Notes |
+|---|----------------------------|-------|
+| 4 | `/blog/beste-bezirke-immobilien-berlin` | From draft id 148 / live was English slug |
+| 5 | `/blog/wohnungskauf-berlin-checkliste` | |
+| 6 | `/blog/mietrecht-berlin-kaeufer` | |
+| 7 | `/blog/neubau-oder-altbau-berlin` | |
+| 8 | `/blog/berlin-stadtteile-familien` | |
+| 9 | `/blog/vermietete-wohnung-kaufen-berlin` | Replaces old 40%-discount post |
+
+- [ ] Publish all six at `/blog/[german-keyword]` with approved DE content
+- [ ] **301** old URL `how-smart-investors-buy-berlin-at-a-40-discount` → new vermietete-wohnung post
+- [ ] No draft/archive/English names left as the canonical slug
+
+**Done when:** all six live at German keyword slugs; old discount post 301s to replacement.
+
+---
+
+### N2 — Fix duplicate blog URLs (**URGENT**, carried over) — do before / with N1
+
+GSC: clean Berlin posts stuck in **“discovered, not indexed”** because each improved post has a twin `zz-archived-draft-review` URL that **canonicalises to itself**.
+
+- [x] Keep **one URL per post** (German keyword slug); **301** each `zz-archived` URL to the clean URL; only the canonical URL indexable — DB: unpublished twins 145–147; redirects in `config/blog-slug-redirects-2026-08-10.json` (**needs deploy**)
+- [x] Rename remaining **English slugs on German posts** to German keywords + **301** (script `scripts/n2-blog-slug-cleanup.js`, 2026-08-10)
+- [x] Same cleanup for **`/en/`** versions: zz-archived twins unpublished; EN currently shares German slug (bilingual slugs = N10 follow-up)
+- [x] Fix blog **title template**: removed `clampForSeo` ellipsis on post/list titles (`blogController.js`) — **needs deploy**
+- [x] Confirm **sitemap** lists only clean URLs — excludes `zz-archived*` / `*-draft-review*` even if mis-published
+- [ ] **Request indexing** in Search Console for each cleaned post URL (**manual — José/Luis**)
+
+**German live slugs (2026-08-10):**
+`kaufnebenkosten-berlin`, `immobilie-als-kapitalanlage-berlin`, `auslaender-immobilien-kaufen-berlin`, `beste-bezirke-immobilien-berlin`, `wohnungskauf-berlin-checkliste`, `mietrecht-berlin-kaeufer`, `neubau-oder-altbau-berlin`, `berlin-stadtteile-familien`, `vermietete-wohnung-kaufen-berlin`
+
+**Done when:** exactly one indexable URL per language per post; old URLs 301; full titles; clean URLs submitted for indexing.
+
+---
+
+### N3 — Migration integrity (carried over)
+
+- [ ] Confirm old-domain redirects return **301** (not 302); CDN cache purged (root, `/en`, `/blog` were serving old cached pages)
+- [ ] **Re-run 30-URL sample and send output to Adi** (existing report: `docs/migration-p1-redirect-sample-2026-08-04.md` — re-send or refresh if needed)
+- [ ] One-line confirm **breadcrumb schema** OK (money page checked 2026-08-05 — include in status email)
+- [ ] One-line confirm **console housekeeping** done (Phase D — include in status email)
+- [ ] Analytics ~**144 views of 404** last month: after redirect/cache fix, check top 404 URLs and **301** real ones
+- [ ] TTFB on `/wohnungen-berlin-kaufen` + district pages: target **under 800ms**
+
+**Done when:** sample shared; all 301s; cache clean; 404 views drop; TTFB under 800ms.
+
+---
+
+### N4 — Homepage: make it Berlin-first
+
+- [ ] **Title:** change from `Internationales Immobilien Investment Unternehmen | Sweet Home` to brand+Berlin aligned with H1, e.g. `Sweet Home Berlin | Immobilien und Neubauprojekte in Berlin`  
+  **Do not** use `Wohnung kaufen Berlin` in homepage title (belongs to money page — no competition)
+- [ ] **Meta description:** rewrite around Berlin only
+- [ ] **og:image:** replace Dubai photo with a Berlin image
+- [ ] Leave H1 as-is (already right)
+- [ ] Homepage: missing image alts + empty H2s if not already done (alts/footer shipped earlier — re-verify live)
+
+**Done when:** title, description, share image lead with Berlin; no empty H2s / missing alts.  
+**Note:** Homepage copy still needs Adi OK before publish (policy exception).
+
+---
+
+### N5 — Reduce Cyprus and Dubai crawl weight
+
+GSC ~120 Cyprus/Dubai pages discovered but not indexed — wasting crawl budget.
+
+- [ ] Remove Cyprus/Dubai from **main nav**; keep **one link each in footer**
+- [ ] Remove their listings from **sitemap**; **noindex** bulk individual listing pages
+- [ ] Keep **one Cyprus hub** + **one Dubai hub** live and reachable
+- [ ] Blog index meta description: still English + mentions Cyprus/Dubai → rewrite **German, Berlin-focused**
+
+**Done when:** nav + sitemap Berlin-only; one hub each for CY/DXB; blog index description DE + Berlin.
+
+---
+
+### N6 — District FAQ answers in HTML (carried over)
+
+Charlottenburg FAQ answers only via JS (empty for crawlers); Pankow SSR is correct.
+
+- [ ] Server-render FAQ answers on **every** district page (like Pankow)
+- [ ] Verify: answer text appears in **View Source**
+
+**Done when:** FAQ answers in View Source on every district page.
+
+---
+
+### N7 — Fix wrong districts on listings
+
+- [ ] Correct wrong Bezirk tags (e.g. Moabit flats tagged Charlottenburg-Wilmersdorf; Mitte flat tagged Friedrichshain-Kreuzberg)
+- [ ] Duplicate Moabit listings at Erasmusstrasse (same flat, two URLs): merge or remove one
+- [ ] Card typo: `Bader` → `Bäder`
+
+**Done when:** correct Bezirk; duplicate resolved; typo fixed.
+
+---
+
+### N8 — Update domain on social profiles
+
+- [ ] Instagram, Facebook, LinkedIn, directories/listings: website → `sweethome-immobilien.de`
+- [ ] No profile still links to `sweet-home.co.il`
+
+**Done when:** all accessible profiles point to `.de`.
+
+---
+
+### N9 — New posts, three per week, publish directly
+
+**Policy:** no draft-and-wait. Phase E checklist; German keyword in slug, title, H1; ≥4 in-text keyword-anchor links to other posts + money/district where fit; reciprocal link from most related existing post. Adi reviews live weekly.
+
+#### Week 1
+- [ ] `/blog/immobilienpreise-berlin` — price overview by district (citable table/chart)
+- [ ] `/blog/grunderwerbsteuer-berlin`
+- [ ] `/blog/mietrendite-berechnen` — formula + worked examples
+
+#### Week 2
+- [ ] `/blog/…` — Wie viel Eigenkapital braucht man beim Wohnungskauf (German keyword slug)
+- [ ] `/blog/…` — Mietpreise Berlin nach Bezirk (citable rent table)
+- [ ] `/blog/…` — Wo in Berlin eine Wohnung kaufen? Bezirke im Vergleich (link every district page with keyword anchor)
+
+**Done when:** six posts live by end of two weeks, each on keyword slug.
+
+---
+
+### N10 — English versions of the Berlin posts
+
+**After N2 is done.**
+
+- [ ] EN versions of improved Berlin posts (auto-translate OK as base; ~10 min human read before live)
+- [ ] English keyword slug under `/en/blog/` (e.g. `cost-of-buying-property-berlin`); hreflang pair; self-canonical per language
+- [ ] Exception: **How foreigners can buy property in Berlin** — proper English edit, not machine output
+
+**Done when:** each Berlin post has live EN at English keyword slug, correctly paired.
+
+---
+
+### N11 — Guide links on district pages
+
+- [ ] On each district page, low on page: small **Ratgeber** block with **2–4** relevant blog posts (fit the district — not the same three everywhere)
+- [ ] Descriptive keyword anchors (not “mehr lesen”)
+
+**Done when:** every district page links 2–4 fitting guides with keyword anchors.
 
 ---
 
@@ -139,24 +319,25 @@ Use **Phase E checklist** + **Phase F internal link map**. Start with these 6, t
 | 1 | `/blog/hidden-costs-of-buying-property-in-berlin` | Kaufnebenkosten Berlin | [x] **Published live** DE (`*_i18n.de`) 2026-08-05 |
 | 2 | `/blog/berlin-real-estate-investment-guide-2026` | Investor pillar | [x] **Published live** DE 2026-08-05 |
 | 3 | `/blog/how-foreigners-can-buy-property-in-berlin` | Foreign buyers (strengthen EN too) | [x] **Published live** DE 2026-08-05 (EN strengthen later) |
-| 4 | `/blog/best-berlin-districts-for-property-investment` | Districts for investment | [ ] Draft ready |
-| 5 | `/blog/what-to-check-before-buying-an-apartment-in-berlin` | Pre-purchase checks | [ ] Draft ready |
-| 6 | `/blog/berlin-rental-laws-explained-for-property-buyers` | Rental laws / investors | [ ] Draft ready |
+| 4 | `/blog/best-berlin-districts-for-property-investment` | Districts for investment | [x] **Approved** — publish as `/blog/beste-bezirke-immobilien-berlin` (N1; after N2) |
+| 5 | `/blog/what-to-check-before-buying-an-apartment-in-berlin` | Pre-purchase checks | [x] **Approved** — publish as `/blog/wohnungskauf-berlin-checkliste` (N1) |
+| 6 | `/blog/berlin-rental-laws-explained-for-property-buyers` | Rental laws / investors | [x] **Approved** — publish as `/blog/mietrecht-berlin-kaeufer` (N1) |
 
 ### Next wave (after first 6)
 
 | # | URL slug | Notes | Status |
 |---|----------|-------|--------|
-| 7 | `/blog/new-build-vs-altbau-in-berlin-which-is-better` | + district / money links | [ ] |
-| 8 | `/blog/best-berlin-districts-for-families` | + district / money links | [ ] |
-| 9 | `/blog/how-smart-investors-buy-berlin-at-a-40-discount` | Reframe “40% discount” angle | [ ] |
+| 7 | `/blog/new-build-vs-altbau-in-berlin-which-is-better` | + district / money links | [x] **Approved** → `/blog/neubau-oder-altbau-berlin` (N1) |
+| 8 | `/blog/best-berlin-districts-for-families` | + district / money links | [x] **Approved** → `/blog/berlin-stadtteile-familien` (N1) |
+| 9 | `/blog/how-smart-investors-buy-berlin-at-a-40-discount` | Reframe “40% discount” angle | [x] **Approved** → `/blog/vermietete-wohnung-kaufen-berlin` + **301** old URL (N1) |
 
-**Hand-off:** Drafts #1–3 **published to live** DE via `*_i18n.de` (2026-08-05). For posts #4+, apply her craft rules, keep as draft until review.
+**Hand-off (updated 2026-08-10):** Drafts #4–#9 **approved by Adi**. Publish on **German keyword slugs** after/with **N2 duplicate URL cleanup**. Do not leave content on English or zz-archived slugs as canonical.
 
 **Publish checklist (drafts → live):**
-- [x] Sync Adi’s edited CMS draft content into live posts’ `*_i18n.de` (Kaufnebenkosten first — most edits)
-- [x] Spot-check live DE URLs + internal links (titles live; Kaufnebenkosten has Sweet Home Berlin + Maklerkostenteilung, no Bestellerprinzip)
-- [x] Archive draft-review posts (renamed `zz-archived-*-draft-review-*`; status stays `draft`)
+- [x] Sync Adi’s edited CMS draft content into live posts’ `*_i18n.de` (Kaufnebenkosten first — most edits) — #1–3
+- [x] Spot-check live DE URLs + internal links (#1–3)
+- [x] Archive draft-review posts for #1–3 (`zz-archived-*`) — **N2: these twins must 301 to clean URLs and stop self-canonicalizing**
+- [ ] **N1+N2:** Publish #4–#9 on German keyword slugs; 301 English + zz-archived URLs; fix title ellipsis; sitemap + GSC indexing
 
 ---
 
@@ -261,7 +442,7 @@ Example: keyword `Kaufnebenkosten Berlin` → slug `.../kaufnebenkosten-berlin`,
 ### 9. CTA
 - [ ] Clear next step at the end (consultation and/or Berlin properties), linked
 
-**Quick test:** Is this the best, most useful answer for the keyword vs what currently ranks? If yes → ready for Adi’s review.
+**Quick test:** Is this the best, most useful answer for the keyword vs what currently ranks? If yes → **publish** (Adi reviews live weekly). Homepage/money copy still needs her OK first.
 
 ---
 
@@ -278,12 +459,12 @@ Add links **inside the page body** (not only menu/footer). New domain: `sweethom
 | 1 | `/blog/hidden-costs-of-buying-property-in-berlin` | Money page; Grunderwerbsteuer post; Ablauf post | Wohnung kaufen in Berlin; Grunderwerbsteuer Berlin; Ablauf Immobilienkauf | Kaufnebenkosten post — draft links money + interim related posts; swap when dedicated posts exist | [x] draft |
 | 2 | `/blog/berlin-real-estate-investment-guide-2026` | Money; Kapitalanlage; Mietrendite; Immobilienpreise | Wohnung kaufen Berlin; Immobilie als Kapitalanlage; Mietrendite berechnen | Investor pillar — draft has money + cluster links; add immobilienpreise post when live | [x] draft |
 | 3 | `/blog/how-foreigners-can-buy-property-in-berlin` | EN money `/en/properties-for-sale-berlin`; Ablauf; Kaufnebenkosten | buy an apartment in Berlin; the buying process; cost of buying | DE draft done; EN strengthen after Adi OK | [x] draft |
-| 4 | `/blog/best-berlin-districts-for-property-investment` | District pages with inventory; money | Wohnung kaufen Kreuzberg; Wohnung kaufen Berlin | Only districts with stock | [ ] |
-| 5 | `/blog/what-to-check-before-buying-an-apartment-in-berlin` | Money; Kaufnebenkosten; Ablauf | Wohnung kaufen Berlin; Kaufnebenkosten Berlin | | [ ] |
-| 6 | `/blog/berlin-rental-laws-explained-for-property-buyers` | Kapitalanlage; Mietrendite; money | Immobilie als Kapitalanlage; Mietrendite berechnen | Investor-relevant | [ ] |
-| 7 | `/blog/new-build-vs-altbau-in-berlin-which-is-better` | Money; districts | Wohnung kaufen Berlin; Altbauwohnung Berlin | | [ ] |
-| 8 | `/blog/best-berlin-districts-for-families` | Districts; money | Wohnung kaufen in [Bezirk]; Wohnung kaufen Berlin | | [ ] |
-| 9 | `/blog/how-smart-investors-buy-berlin-at-a-40-discount` | Investor pillar; money; Kapitalanlage | Immobilie als Kapitalanlage Berlin; Wohnung kaufen Berlin | Reframe 40% angle | [ ] |
+| 4 | `/blog/best-berlin-districts-for-property-investment` | District pages with inventory; money | Wohnung kaufen Kreuzberg; Wohnung kaufen Berlin | Only districts with stock | [x] draft |
+| 5 | `/blog/what-to-check-before-buying-an-apartment-in-berlin` | Money; Kaufnebenkosten; Ablauf | Wohnung kaufen Berlin; Kaufnebenkosten Berlin | | [x] draft |
+| 6 | `/blog/berlin-rental-laws-explained-for-property-buyers` | Kapitalanlage; Mietrendite; money | Immobilie als Kapitalanlage; Mietrendite berechnen | Investor-relevant | [x] draft |
+| 7 | `/blog/new-build-vs-altbau-in-berlin-which-is-better` | Money; districts | Wohnung kaufen Berlin; Altbauwohnung Berlin | | [x] draft |
+| 8 | `/blog/best-berlin-districts-for-families` | Districts; money | Wohnung kaufen in [Bezirk]; Wohnung kaufen Berlin | | [x] draft |
+| 9 | `/blog/how-smart-investors-buy-berlin-at-a-40-discount` | Investor pillar; money; Kapitalanlage | Immobilie als Kapitalanlage Berlin; Wohnung kaufen Berlin | Reframed tenanted/vacant gap | [x] draft |
 
 ### Money pages and structure (hub & spoke)
 
@@ -338,10 +519,14 @@ From `Sweet_Home_Pages_and_Keywords_Berlin.xlsx`. Do **after** Phases A–D and 
 | District | `/wohnung-kaufen-pankow` | Exists (created Phase D) | wohnung kaufen pankow | TBC | Optimize further as needed | [x] created |
 | Blog refresh | `/blog/hidden-costs-of-buying-property-in-berlin` | Exists | kaufnebenkosten berlin | 200 | Refresh + German QA | [ ] |
 | Blog refresh | `/blog/berlin-real-estate-investment-guide-2026` | Exists | immobilie als kapitalanlage | 600 | Refresh into investor pillar | [ ] |
-| Blog create | `/blog/immobilienpreise-berlin` | **Missing** | immobilienpreise berlin | 2,400 | **CREATE** | [ ] |
-| Blog create | `/blog/grunderwerbsteuer-berlin` | **Missing** | grunderwerbsteuer berlin | 1,500 | **CREATE** | [ ] |
-| Blog create | `/blog/grundbuch-eintragung-kosten` | **Missing** | grundbuch eintragung kosten | 700 | **CREATE** | [ ] |
-| Blog create | `/blog/ablauf-immobilienkauf` | **Missing** | ablauf immobilienkauf | 250 | **CREATE** | [ ] |
+| Blog create | `/blog/immobilienpreise-berlin` | **Missing** | immobilienpreise berlin | 2,400 | **CREATE** — Phase **N9 week 1** | [ ] |
+| Blog create | `/blog/grunderwerbsteuer-berlin` | **Missing** | grunderwerbsteuer berlin | 1,500 | **CREATE** — Phase **N9 week 1** | [ ] |
+| Blog create | `/blog/mietrendite-berechnen` | **Missing** | mietrendite berechnen | TBC | **CREATE** — Phase **N9 week 1** | [ ] |
+| Blog create | `/blog/eigenkapital-wohnungskauf` *(slug TBC)* | **Missing** | eigenkapital wohnungskauf | TBC | **CREATE** — Phase **N9 week 2** | [ ] |
+| Blog create | `/blog/mietpreise-berlin-bezirk` *(slug TBC)* | **Missing** | mietpreise berlin | TBC | **CREATE** — Phase **N9 week 2** | [ ] |
+| Blog create | `/blog/wo-in-berlin-wohnung-kaufen` *(slug TBC)* | **Missing** | wo in berlin wohnung kaufen | TBC | **CREATE** — Phase **N9 week 2**; link all districts | [ ] |
+| Blog create | `/blog/grundbuch-eintragung-kosten` | **Missing** | grundbuch eintragung kosten | 700 | **CREATE** (later) | [ ] |
+| Blog create | `/blog/ablauf-immobilienkauf` | **Missing** | ablauf immobilienkauf | 250 | **CREATE** (later) | [ ] |
 
 ### English pages
 
@@ -366,9 +551,12 @@ From `Sweet_Home_Pages_and_Keywords_Berlin.xlsx`. Do **after** Phases A–D and 
 
 | Day | Focus |
 |-----|--------|
-| Mon–Tue | Phase A bug + Phase D housekeeping/QA |
-| Wed–Fri | Phase B blog drafts (1–2 posts/week with checklist + links) |
-| Friday | Email Adi: done / drafts for review / blockers / next week |
+| Now / Mon | **N2** duplicate blog URLs + title template + sitemap (urgent) |
+| Same cycle | **N1** publish six drafts on German keyword slugs + 301s |
+| Ongoing | N3 sample re-send + 404s + TTFB; N4–N8 tech/SEO tasks |
+| Wed–Fri | **N9** new posts (3/week) — publish directly on keyword slugs |
+| After N2 | N10 EN versions; N11 district Ratgeber blocks |
+| Friday | Email Adi: done / live posts shipped / blockers / next week |
 
 ### Weekly status email template
 
@@ -378,7 +566,7 @@ Subject: Sweet Home SEO — weekly status (YYYY-MM-DD)
 Done this week:
 - …
 
-Drafts for your review (not published):
+Published live (for your weekly review):
 - …
 
 In progress / next week:
@@ -386,8 +574,12 @@ In progress / next week:
 
 Blockers / questions:
 - …
-```
 
+Confirmations you asked for:
+- Redirect sample: …
+- Breadcrumb schema: …
+- Console housekeeping: …
+```
 ---
 
 # Progress log
@@ -404,6 +596,11 @@ Blockers / questions:
 | 2026-08-05 | Blog drafts #1–3 → live `*_i18n.de` | Notify Adi | Live slugs unchanged; draft posts renamed `zz-archived-*` |
 | 2026-08-05 | Phase C: unique list/project H1s + money district links | After deploy | Listing/neighborhood H1s; projects localized; curated+best-areas district links |
 | 2026-08-05 | Phase M P2/P3 | After deploy | Landing query cache + Cache-Control; homepage alts; DE footer i18n |
+| 2026-08-09 | Phase B #4 draft: best Berlin districts for investment | Send to Adi | CMS draft id 148; live post 136 unchanged |
+| 2026-08-09 | Phase B #5 draft: what to check before buying in Berlin | Send to Adi | CMS draft id 149; live post 138 unchanged |
+| 2026-08-09 | Phase B #6 draft: Berlin rental laws for buyers | Send to Adi | CMS draft id 150; live post 140 unchanged |
+| 2026-08-09 | Phase B #7–#9 drafts + full pack #4–#9 | **Send email to Adi** | Draft ids 151–153; email in `docs/drafts/blog/EMAIL-TO-ADI-DRAFTS-2026-08-09.md` |
+| 2026-08-10 | Adi: six drafts approved + Next 2 Weeks pack | Received | **Phase N** added; N2 duplicates URGENT before N1 German-slug publish; blog policy = publish direct; homepage/money still need Adi; GSC 909 impressions / 11 days |
 
 ---
 

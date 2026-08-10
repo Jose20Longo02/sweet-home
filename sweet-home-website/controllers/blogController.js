@@ -74,13 +74,6 @@ function isCompatibleRecommendedPost(row, currentGeoTopics, lang) {
   return rowGeos.some((geo) => currentGeoTopics.includes(geo));
 }
 
-function clampForSeo(text, max = 60) {
-  const normalized = String(text || '').replace(/\s+/g, ' ').trim();
-  if (!normalized) return '';
-  if (normalized.length <= max) return normalized;
-  return `${normalized.slice(0, Math.max(0, max - 1)).trim()}…`;
-}
-
 // Helper function to add ALT attributes to images in HTML content
 function addAltToImages(htmlContent, fallbackAlt = 'Blog post image') {
   if (!htmlContent || typeof htmlContent !== 'string') return htmlContent;
@@ -415,8 +408,7 @@ exports.listPublic = async (req, res, next) => {
     const topicLabel = topicFilter && res.locals.t && typeof res.locals.t === 'function'
       ? res.locals.t(`blog.topics.${topicFilter}`, topicFilter)
       : '';
-    const rawPageTitle = `${blogTitle}${topicLabel ? `: ${topicLabel}` : ''}${page > 1 ? ` - Page ${page}` : ''}`;
-    const pageTitle = clampForSeo(rawPageTitle, 56);
+    const pageTitle = `${blogTitle}${topicLabel ? `: ${topicLabel}` : ''}${page > 1 ? ` - Page ${page}` : ''}`;
     res.render('blog/blog-list', {
       title: pageTitle,
       posts: localizedPosts,
@@ -462,7 +454,7 @@ exports.showPublic = async (req, res, next) => {
     if (slugSuffix && slugSuffix[1]) {
       pageTitle = `${localizedPost.title} (${slugSuffix[1]})`;
     }
-    pageTitle = clampForSeo(pageTitle, 56);
+    // Full title for <title> (Adi N2): do not truncate with ellipsis
     const inferredTopicIds = inferTopicIds([
       localizedPost.title || '',
       localizedPost.excerpt || '',

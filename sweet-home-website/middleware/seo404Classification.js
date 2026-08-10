@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const DATA_FILE = path.join(__dirname, '../config/seo-404-gsc-2026-07-21.json');
+const BLOG_SLUG_REDIRECTS_FILE = path.join(__dirname, '../config/blog-slug-redirects-2026-08-10.json');
 
 const ES_LANDING_MAP = {
   '/es': '/',
@@ -27,16 +28,26 @@ function normalizeLookupPath(pathname) {
   return p || '/';
 }
 
-function loadRules() {
-  const raw = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-  const redirects = new Map();
-  Object.entries(raw.redirects || {}).forEach(([from, to]) => {
+function addRedirectEntries(redirects, entries) {
+  Object.entries(entries || {}).forEach(([from, to]) => {
     redirects.set(normalizeLookupPath(from), to);
     const lower = normalizeLookupPath(from).toLowerCase();
     if (lower !== normalizeLookupPath(from) && !redirects.has(lower)) {
       redirects.set(lower, to);
     }
   });
+}
+
+function loadRules() {
+  const raw = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+  const redirects = new Map();
+  addRedirectEntries(redirects, raw.redirects);
+  try {
+    const blogSlugs = JSON.parse(fs.readFileSync(BLOG_SLUG_REDIRECTS_FILE, 'utf8'));
+    addRedirectEntries(redirects, blogSlugs.redirects);
+  } catch (err) {
+    console.warn('[seo404] Could not load blog slug redirects:', err.message);
+  }
   Object.entries(ES_LANDING_MAP).forEach(([from, to]) => {
     redirects.set(normalizeLookupPath(from), to);
   });
@@ -48,7 +59,7 @@ function loadRules() {
   return {
     redirects,
     gone,
-    redirectCount: Object.keys(raw.redirects || {}).length,
+    redirectCount: redirects.size,
     goneCount: (raw.gone || []).length
   };
 }

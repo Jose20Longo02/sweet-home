@@ -1,0 +1,69 @@
+{
+  "source": "Phase N2 — duplicate blog URL cleanup (Adi 2026-08-10)",
+  "notes": "301 old English slugs, zz-archived twins, and draft-review URLs to German keyword slugs. Same target for /blog and /en/blog (shared slug model until N10).",
+  "redirects": {
+    "/blog/hidden-costs-of-buying-property-in-berlin": "/blog/kaufnebenkosten-berlin",
+    "/en/blog/hidden-costs-of-buying-property-in-berlin": "/en/blog/kaufnebenkosten-berlin",
+    "/blog/zz-archived-kaufnebenkosten-berlin-draft-review-msf3gnf3": "/blog/kaufnebenkosten-berlin",
+    "/en/blog/zz-archived-kaufnebenkosten-berlin-draft-review-msf3gnf3": "/en/blog/kaufnebenkosten-berlin",
+    "/blog/kaufnebenkosten-berlin-draft-review": "/blog/kaufnebenkosten-berlin",
+    "/en/blog/kaufnebenkosten-berlin-draft-review": "/en/blog/kaufnebenkosten-berlin",
+
+    "/blog/berlin-real-estate-investment-guide-2026": "/blog/immobilie-als-kapitalanlage-berlin",
+    "/en/blog/berlin-real-estate-investment-guide-2026": "/en/blog/immobilie-als-kapitalanlage-berlin",
+    "/blog/zz-archived-berlin-real-estate-investment-guide-2026-draft-review-msf3go37": "/blog/immobilie-als-kapitalanlage-berlin",
+    "/en/blog/zz-archived-berlin-real-estate-investment-guide-2026-draft-review-msf3go37": "/en/blog/immobilie-als-kapitalanlage-berlin",
+    "/blog/berlin-real-estate-investment-guide-2026-draft-review": "/blog/immobilie-als-kapitalanlage-berlin",
+    "/en/blog/berlin-real-estate-investment-guide-2026-draft-review": "/en/blog/immobilie-als-kapitalanlage-berlin",
+
+    "/blog/how-foreigners-can-buy-property-in-berlin": "/blog/auslaender-immobilien-kaufen-berlin",
+    "/en/blog/how-foreigners-can-buy-property-in-berlin": "/en/blog/auslaender-immobilien-kaufen-berlin",
+    "/blog/zz-archived-how-foreigners-can-buy-property-in-berlin-draft-review-msf3gom9": "/blog/auslaender-immobilien-kaufen-berlin",
+    "/en/blog/zz-archived-how-foreigners-can-buy-property-in-berlin-draft-review-msf3gom9": "/en/blog/auslaender-immobilien-kaufen-berlin",
+    "/blog/how-foreigners-can-buy-property-in-berlin-draft-review": "/blog/auslaender-immobilien-kaufen-berlin",
+    "/en/blog/how-foreigners-can-buy-property-in-berlin-draft-review": "/en/blog/auslaender-immobilien-kaufen-berlin",
+
+    "/blog/best-berlin-districts-for-property-investment": "/blog/beste-bezirke-immobilien-berlin",
+    "/en/blog/best-berlin-districts-for-property-investment": "/en/blog/beste-bezirke-immobilien-berlin",
+    "/blog/best-berlin-districts-for-property-investment-draft-review": "/blog/beste-bezirke-immobilien-berlin",
+    "/en/blog/best-berlin-districts-for-property-investment-draft-review": "/en/blog/beste-bezirke-immobilien-berlin",
+
+    "/blog/what-to-check-before-buying-an-apartment-in-berlin": "/blog/wohnungskauf-berlin-checkliste",
+    "/en/blog/what-to-check-before-buying-an-apartment-in-berlin": "/en/blog/wohnungskauf-berlin-checkliste",
+    "/blog/what-to-check-before-buying-an-apartment-in-berlin-draft-review": "/blog/wohnungskauf-berlin-checkliste",
+    "/en/blog/what-to-check-before-buying-an-apartment-in-berlin-draft-review": "/en/blog/wohnungskauf-berlin-checkliste",
+
+    "/blog/berlin-rental-laws-explained-for-property-buyers": "/blog/mietrecht-berlin-kaeufer",
+    "/en/blog/berlin-rental-laws-explained-for-property-buyers": "/en/blog/mietrecht-berlin-kaeufer",
+    "/blog/berlin-rental-laws-explained-for-property-buyers-draft-review": "/blog/mietrecht-berlin-kaeufer",
+    "/en/blog/berlin-rental-laws-explained-for-property-buyers-draft-review": "/en/blog/mietrecht-berlin-kaeufer",
+
+    "/blog/new-build-vs-altbau-in-berlin-which-is-better": "/blog/neubau-oder-altbau-berlin",
+    "/en/blog/new-build-vs-altbau-in-berlin-which-is-better": "/en/blog/neubau-oder-altbau-berlin",
+    "/blog/new-build-vs-altbau-in-berlin-which-is-better-draft-review": "/blog/neubau-oder-altbau-berlin",
+    "/en/blog/new-build-vs-altbau-in-berlin-which-is-better-draft-review": "/en/blog/neubau-oder-altbau-berlin",
+
+    "/blog/best-berlin-districts-for-families": "/blog/berlin-stadtteile-familien",
+    "/en/blog/best-berlin-districts-for-families": "/en/blog/berlin-stadtteile-familien",
+    "/blog/best-berlin-districts-for-families-draft-review": "/blog/berlin-stadtteile-familien",
+    "/en/blog/best-berlin-districts-for-families-draft-review": "/en/blog/berlin-stadtteile-familien",
+
+    "/blog/how-smart-investors-buy-berlin-at-a-40-discount": "/blog/vermietete-wohnung-kaufen-berlin",
+    "/en/blog/how-smart-investors-buy-berlin-at-a-40-discount": "/en/blog/vermietete-wohnung-kaufen-berlin",
+    "/blog/how-smart-investors-buy-berlin-at-a-40-discount-draft-review": "/blog/vermietete-wohnung-kaufen-berlin",
+    "/en/blog/how-smart-investors-buy-berlin-at-a-40-discount-draft-review": "/en/blog/vermietete-wohnung-kaufen-berlin",
+
+    "/blog/zz-archived-beste-bezirke-immobilien-berlin-draft-review": "/blog/beste-bezirke-immobilien-berlin",
+    "/en/blog/zz-archived-beste-bezirke-immobilien-berlin-draft-review": "/en/blog/beste-bezirke-immobilien-berlin",
+    "/blog/zz-archived-wohnungskauf-berlin-checkliste-draft-review": "/blog/wohnungskauf-berlin-checkliste",
+    "/en/blog/zz-archived-wohnungskauf-berlin-checkliste-draft-review": "/en/blog/wohnungskauf-berlin-checkliste",
+    "/blog/zz-archived-mietrecht-berlin-kaeufer-draft-review": "/blog/mietrecht-berlin-kaeufer",
+    "/en/blog/zz-archived-mietrecht-berlin-kaeufer-draft-review": "/en/blog/mietrecht-berlin-kaeufer",
+    "/blog/zz-archived-neubau-oder-altbau-berlin-draft-review": "/blog/neubau-oder-altbau-berlin",
+    "/en/blog/zz-archived-neubau-oder-altbau-berlin-draft-review": "/en/blog/neubau-oder-altbau-berlin",
+    "/blog/zz-archived-berlin-stadtteile-familien-draft-review": "/blog/berlin-stadtteile-familien",
+    "/en/blog/zz-archived-berlin-stadtteile-familien-draft-review": "/en/blog/berlin-stadtteile-familien",
+    "/blog/zz-archived-vermietete-wohnung-kaufen-berlin-draft-review": "/blog/vermietete-wohnung-kaufen-berlin",
+    "/en/blog/zz-archived-vermietete-wohnung-kaufen-berlin-draft-review": "/en/blog/vermietete-wohnung-kaufen-berlin"
+  }
+}
