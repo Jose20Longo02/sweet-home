@@ -602,7 +602,7 @@ Confirmations you asked for:
 | 2026-08-09 | Phase B #7–#9 drafts + full pack #4–#9 | **Send email to Adi** | Draft ids 151–153; email in `docs/drafts/blog/EMAIL-TO-ADI-DRAFTS-2026-08-09.md` |
 | 2026-08-10 | Adi: six drafts approved + Next 2 Weeks pack | Received | **Phase N** added; N2 duplicates URGENT before N1 German-slug publish; blog policy = publish direct; homepage/money still need Adi; GSC 909 impressions / 11 days |
 | 2026-08-10 | **N2+N1:** German keyword slugs + unpublish zz twins + draft DE live + title/sitemap/redirects | Deploy redirects | Script `n2-blog-slug-cleanup.js`; map `blog-slug-redirects-2026-08-10.json`; **GSC indexing still manual** |
-| 2026-08-10 | **N3:** redirect sample re-run + TTFB + breadcrumb confirm + bare-slug 404 301s | **Send email to Adi** | Report `migration-n3-redirect-sample-2026-08-10.md`; email `EMAIL-TO-ADI-N3-2026-08-10.md` |
+| 2026-08-10 | **N3:** redirect sample re-run + TTFB + breadcrumb confirm + bare-slug 404 301s | **Sent to Adi** (email + PDF) | Report `migration-n3-redirect-sample-2026-08-10.md`; PDF `Sweet-Home-Migration-N3-Redirect-Sample-2026-08-10.pdf` |
 
 ---
 

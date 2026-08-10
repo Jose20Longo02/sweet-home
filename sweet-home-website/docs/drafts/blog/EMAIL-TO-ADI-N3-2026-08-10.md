@@ -13,7 +13,7 @@ Quick status on the items you flagged.
 - **Console housekeeping:** Done (property-page debug noise / Leaflet map warning cleaned earlier).
 
 ### Redirect sample (re-run today)
-Full table: `docs/migration-n3-redirect-sample-2026-08-10.md`
+**Attach PDF:** `Sweet-Home-Migration-N3-Redirect-Sample-2026-08-10.pdf`
 
 **Verdict:** PASS — 33/34 URLs clean **301** `.co.il` → `.de` (path+query preserved). No **302**. No stale **200** HTML on `/`, `/en`, `/blog`. www is still a two-hop 301 (www→apex→`.de`).
 
