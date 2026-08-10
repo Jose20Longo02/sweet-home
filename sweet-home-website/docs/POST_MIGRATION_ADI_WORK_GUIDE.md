@@ -106,9 +106,9 @@ Approved for publishing. **Condition:** each post goes live at its **German keyw
 | 8 | `/blog/berlin-stadtteile-familien` | |
 | 9 | `/blog/vermietete-wohnung-kaufen-berlin` | Replaces old 40%-discount post |
 
-- [ ] Publish all six at `/blog/[german-keyword]` with approved DE content
-- [ ] **301** old URL `how-smart-investors-buy-berlin-at-a-40-discount` → new vermietete-wohnung post
-- [ ] No draft/archive/English names left as the canonical slug
+- [x] Publish all six at `/blog/[german-keyword]` with approved DE content (done with N2 script 2026-08-10)
+- [x] **301** old URL `how-smart-investors-buy-berlin-at-a-40-discount` → new vermietete-wohnung post (in redirect map — **needs deploy**)
+- [x] No draft/archive/English names left as the canonical slug
 
 **Done when:** all six live at German keyword slugs; old discount post 301s to replacement.
 
@@ -601,6 +601,7 @@ Confirmations you asked for:
 | 2026-08-09 | Phase B #6 draft: Berlin rental laws for buyers | Send to Adi | CMS draft id 150; live post 140 unchanged |
 | 2026-08-09 | Phase B #7–#9 drafts + full pack #4–#9 | **Send email to Adi** | Draft ids 151–153; email in `docs/drafts/blog/EMAIL-TO-ADI-DRAFTS-2026-08-09.md` |
 | 2026-08-10 | Adi: six drafts approved + Next 2 Weeks pack | Received | **Phase N** added; N2 duplicates URGENT before N1 German-slug publish; blog policy = publish direct; homepage/money still need Adi; GSC 909 impressions / 11 days |
+| 2026-08-10 | **N2+N1:** German keyword slugs + unpublish zz twins + draft DE live + title/sitemap/redirects | Deploy redirects | Script `n2-blog-slug-cleanup.js`; map `blog-slug-redirects-2026-08-10.json`; **GSC indexing still manual** |
 
 ---
 
