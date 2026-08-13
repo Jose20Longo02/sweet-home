@@ -604,6 +604,7 @@ Confirmations you asked for:
 | 2026-08-10 | **N2+N1:** German keyword slugs + unpublish zz twins + draft DE live + title/sitemap/redirects | Deploy redirects | Script `n2-blog-slug-cleanup.js`; map `blog-slug-redirects-2026-08-10.json`; **GSC indexing still manual** |
 | 2026-08-10 | **N3:** redirect sample re-run + TTFB + breadcrumb confirm + bare-slug 404 301s | **Sent to Adi** (email + PDF) | Report `migration-n3-redirect-sample-2026-08-10.md`; PDF `Sweet-Home-Migration-N3-Redirect-Sample-2026-08-10.pdf` |
 | 2026-08-13 | **N5:** reduce Cyprus/Dubai crawl weight | Deploy | Nav Berlin-only; footer hubs; sitemap exclude CY/UAE listings; noindex CY/UAE details; blog meta DE Berlin |
+| 2026-08-13 | **N6:** district FAQ answers in HTML (Pankow pattern) | Deploy | Removed `hidden` on FAQ answers across district templates |
 
 ---
 

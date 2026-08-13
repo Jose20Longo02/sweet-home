@@ -168,11 +168,11 @@
         <% const aId = `fk-faq-a${idx + 1}`; %>
         <article class="berlin-faq__item">
           <h3 class="berlin-faq__question">
-            <button type="button" class="berlin-faq__trigger" aria-expanded="false" aria-controls="<%= aId %>" id="<%= qId %>" data-faq-toggle>
+            <button type="button" class="berlin-faq__trigger" aria-expanded="true" aria-controls="<%= aId %>" id="<%= qId %>" data-faq-toggle>
               <%= item.q %>
             </button>
           </h3>
-          <div class="berlin-faq__answer" id="<%= aId %>" role="region" aria-labelledby="<%= qId %>" hidden>
+          <div class="berlin-faq__answer" id="<%= aId %>" role="region" aria-labelledby="<%= qId %>">
             <p><%= item.a %></p>
           </div>
         </article>
@@ -187,10 +187,7 @@
 document.querySelectorAll('[data-faq-toggle]').forEach(function(btn) {
   btn.addEventListener('click', function() {
     var expanded = this.getAttribute('aria-expanded') === 'true';
-    var targetId = this.getAttribute('aria-controls');
-    var target = targetId ? document.getElementById(targetId) : null;
-    this.setAttribute('aria-expanded', !expanded);
-    if (target) target.hidden = expanded;
+    this.setAttribute('aria-expanded', (!expanded).toString());
   });
 });
 
