@@ -645,7 +645,8 @@
       "topicsLabel": "Blog topics",
       "allTopics": "All topics",
       "topicIntroLabel": "Topic overview",
-      "topicIntroFallback": "Explore hand-picked articles from our team."
+      "topicIntroFallback": "Explore hand-picked articles from our team.",
+      "metaDescription": "Berlin property guides from Sweet Home Berlin — districts, buying costs, and practical tips for apartment buyers and investors."
     },
     "detail": {
       "recent": "Recent articles",

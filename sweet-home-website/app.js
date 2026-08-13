@@ -1746,27 +1746,18 @@ app.get('/sitemap.xml', async (req, res, next) => {
     // Core city landing pages (all languages)
     staticUrls.push({ loc: `${base}/wohnungen-berlin-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     staticUrls.push({ loc: `${base}/en/properties-for-sale-berlin`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
-    staticUrls.push({ loc: `${base}/immobilien-dubai-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
-    staticUrls.push({ loc: `${base}/en/properties-for-sale-dubai`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
-    staticUrls.push({ loc: `${base}/villa-kaufen-dubai`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
-    staticUrls.push({ loc: `${base}/immobilien-zypern-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
-    staticUrls.push({ loc: `${base}/en/properties-for-sale-cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
-    staticUrls.push({ loc: `${base}/en/villas-for-sale-cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    // Keep one hub each for Cyprus / Dubai (N5); exclude bulk CY/DXB listings below
+    staticUrls.push({ loc: `${base}/immobilien-dubai-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/en/properties-for-sale-dubai`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/immobilien-zypern-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
+    staticUrls.push({ loc: `${base}/en/properties-for-sale-cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/en/berlin-tenant-occupied-entry-strategy`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/berlin-mieter-belegte-einstiegsstrategie`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
-    // Clean SEO property search URLs (country + city)
+    // Clean SEO property search URLs (Berlin / Germany only)
     staticUrls.push({ loc: `${base}/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/properties/for-sale/uae`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/properties/for-sale/uae/dubai`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/properties/for-sale/cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/properties/for-sale/cyprus/paphos`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/en/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/en/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/en/properties/for-sale/uae`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/en/properties/for-sale/uae/dubai`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/en/properties/for-sale/cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/en/properties/for-sale/cyprus/paphos`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/wohnung-kaufen-charlottenburg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/wohnung-kaufen-moabit`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/wohnung-kaufen-friedrichshain-kreuzberg`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
@@ -1781,8 +1772,15 @@ app.get('/sitemap.xml', async (req, res, next) => {
     staticUrls.push({ loc: `${base}/wohnung-kaufen-berlin-mitte`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/wohnung-kaufen-pankow`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
 
-    // Dynamic properties
-    const props = await query(`SELECT slug, updated_at, created_at FROM properties WHERE slug IS NOT NULL ORDER BY updated_at DESC NULLS LAST, created_at DESC NULLS LAST LIMIT 5000`);
+    // Dynamic properties (Berlin / Germany focus — exclude Cyprus & UAE individual listings, N5)
+    const props = await query(`
+      SELECT slug, updated_at, created_at
+      FROM properties
+      WHERE slug IS NOT NULL
+        AND COALESCE(country, '') NOT IN ('Cyprus', 'UAE')
+      ORDER BY updated_at DESC NULLS LAST, created_at DESC NULLS LAST
+      LIMIT 5000
+    `);
     const propUrls = (props.rows || []).map(r => ({
       loc: `${base}/properties/${r.slug}`,
       lastmod: (r.updated_at || r.created_at) ? new Date(r.updated_at || r.created_at).toISOString() : null,
@@ -1790,8 +1788,15 @@ app.get('/sitemap.xml', async (req, res, next) => {
       priority: '0.9'
     }));
 
-    // Dynamic projects
-    const projs = await query(`SELECT slug, updated_at, created_at FROM projects WHERE slug IS NOT NULL ORDER BY updated_at DESC NULLS LAST, created_at DESC NULLS LAST LIMIT 5000`);
+    // Dynamic projects (exclude Cyprus & UAE, N5)
+    const projs = await query(`
+      SELECT slug, updated_at, created_at
+      FROM projects
+      WHERE slug IS NOT NULL
+        AND COALESCE(country, '') NOT IN ('Cyprus', 'UAE')
+      ORDER BY updated_at DESC NULLS LAST, created_at DESC NULLS LAST
+      LIMIT 5000
+    `);
     const projUrls = (projs.rows || []).map(r => ({
       loc: `${base}/projects/${r.slug}`,
       lastmod: (r.updated_at || r.created_at) ? new Date(r.updated_at || r.created_at).toISOString() : null,

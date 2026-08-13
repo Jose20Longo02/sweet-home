@@ -633,7 +633,8 @@
       "topicsLabel": "Blog-Themen",
       "allTopics": "Alle Themen",
       "topicIntroLabel": "Themenuberblick",
-      "topicIntroFallback": "Entdecken Sie kuratierte Artikel unseres Teams."
+      "topicIntroFallback": "Entdecken Sie kuratierte Artikel unseres Teams.",
+      "metaDescription": "Ratgeber und Marktinfos rund um Wohnung kaufen in Berlin — Bezirke, Kaufnebenkosten und Tipps von Sweet Home Berlin."
     },
     "detail": {
       "recent": "Neueste Artikel",

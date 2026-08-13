@@ -26,7 +26,9 @@
     if (clean.length <= max) return clean;
     return `${clean.slice(0, Math.max(0, max - 1)).trim()}…`;
   };
-  const baseDesc = 'Browse our real estate blog for insights on property markets in Cyprus, Dubai, and Berlin. Expert advice, market trends, and investment guides.';
+  const baseDesc = (typeof t === 'function')
+    ? t('blog.list.metaDescription', 'Ratgeber und Marktinfos rund um Wohnung kaufen in Berlin — Bezirke, Kaufnebenkosten und Tipps von Sweet Home Berlin.')
+    : 'Ratgeber und Marktinfos rund um Wohnung kaufen in Berlin — Bezirke, Kaufnebenkosten und Tipps von Sweet Home Berlin.';
   const topicDesc = topicParam && typeof t === 'function'
     ? t(`blog.topicIntro.${topicParam}.metaDescription`, baseDesc)
     : baseDesc;

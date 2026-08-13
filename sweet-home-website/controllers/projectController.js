@@ -1499,12 +1499,16 @@ exports.showProject = async (req, res, next) => {
       };
     });
 
+    const projectCountry = String(project.country || '').trim();
+    const robotsMeta = ['Cyprus', 'UAE'].includes(projectCountry) ? 'noindex,follow' : 'index,follow';
+
     res.render('projects/project-detail', {
       project,
       relatedProjects: normalizedRelatedProjects,
       projectProperties: normalizedProjectProperties,
       locations,
-      baseUrl: res.locals.baseUrl
+      baseUrl: res.locals.baseUrl,
+      robotsMeta
     });
   } catch (err) {
     next(err);

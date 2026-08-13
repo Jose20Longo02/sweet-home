@@ -776,7 +776,10 @@ exports.showProperty = async (req, res, next) => {
       }
     };
 
-    res.render('properties/property-detail', { property, baseUrl: res.locals.baseUrl });
+    const countryKey = String(p.country || '').trim();
+    const robotsMeta = ['Cyprus', 'UAE'].includes(countryKey) ? 'noindex,follow' : 'index,follow';
+
+    res.render('properties/property-detail', { property, baseUrl: res.locals.baseUrl, robotsMeta });
   } catch (err) {
     next(err);
   }

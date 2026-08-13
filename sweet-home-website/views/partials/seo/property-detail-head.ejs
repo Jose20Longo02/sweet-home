@@ -10,6 +10,7 @@
     : `${siteBaseUrl}/img/property-placeholder.jpg`;
 %>
   <meta name="description" content="<%= (property.description || '').slice(0, 160) %>">
+  <meta name="robots" content="<%= (typeof robotsMeta !== 'undefined' && robotsMeta) ? robotsMeta : 'index,follow' %>">
   <link rel="canonical" href="<%= propertyUrl %>">
 
   <!-- Open Graph -->

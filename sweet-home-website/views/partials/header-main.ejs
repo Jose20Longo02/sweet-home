@@ -1,8 +1,6 @@
 <%
   var navLang = typeof lang !== 'undefined' ? lang : 'de';
   var propBerlin = navLang === 'de' ? '/wohnungen-berlin-kaufen' : '/en/properties-for-sale-berlin';
-  var propDubai = navLang === 'de' ? '/immobilien-dubai-kaufen' : '/en/properties-for-sale-dubai';
-  var propCyprus = navLang === 'de' ? '/immobilien-zypern-kaufen' : '/en/properties-for-sale-cyprus';
 %>
 <header class="site-header main" role="banner">
   <div class="nav-container">
@@ -20,8 +18,6 @@
         <button type="button" class="nav-properties-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="nav-properties-menu" id="nav-properties-btn"><%= t('nav.properties','Properties') %></button>
         <div id="nav-properties-menu" class="nav-properties-menu" role="menu" aria-labelledby="nav-properties-btn" hidden>
           <a href="<%= propBerlin %>" role="menuitem"><%= t('nav.propertiesBerlin','Berlin') %></a>
-          <a href="<%= propDubai %>" role="menuitem"><%= t('nav.propertiesDubai','Dubai') %></a>
-          <a href="<%= propCyprus %>" role="menuitem"><%= t('nav.propertiesCyprus','Cyprus') %></a>
         </div>
       </div>
       <a href="<%= (typeof localePath === 'function') ? localePath('/owners') : '/owners' %>"><%= t('nav.owners','Owners') %></a>
@@ -48,8 +44,6 @@
         <button type="button" class="mobile-properties-trigger" aria-expanded="false" aria-controls="mobile-properties-list"><%= t('nav.properties','Properties') %></button>
         <div id="mobile-properties-list" class="mobile-properties-list" hidden>
           <a href="<%= propBerlin %>"><%= t('nav.propertiesBerlin','Berlin') %></a>
-          <a href="<%= propDubai %>"><%= t('nav.propertiesDubai','Dubai') %></a>
-          <a href="<%= propCyprus %>"><%= t('nav.propertiesCyprus','Cyprus') %></a>
         </div>
       </div>
       <a href="<%= (typeof localePath === 'function') ? localePath('/owners') : '/owners' %>"><%= t('nav.owners','Owners') %></a>

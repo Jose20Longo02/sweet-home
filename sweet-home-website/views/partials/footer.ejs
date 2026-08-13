@@ -26,15 +26,20 @@
 
     <div class="footer-col">
       <h4><%= t('footer.regions','Regions') %></h4>
+      <%
+        var footerLang = typeof lang !== 'undefined' ? lang : 'de';
+        var footerCyprus = footerLang === 'de' ? '/immobilien-zypern-kaufen' : '/en/properties-for-sale-cyprus';
+        var footerDubai = footerLang === 'de' ? '/immobilien-dubai-kaufen' : '/en/properties-for-sale-dubai';
+      %>
       <ul>
         <li><a href="/wohnungen-berlin-kaufen"><%= t('footer.propertiesBerlin','Properties in Berlin') %></a></li>
         <li><a href="/en/properties-for-sale-berlin"><%= t('footer.propertiesBerlinEn','Berlin apartments (EN)') %></a></li>
         <li><a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Germany&city=Berlin"><%= t('footer.berlinSearch','Search Berlin listings') %></a></li>
       </ul>
       <p class="footer-other-markets"><%= t('footer.otherMarkets','Also:') %>
-        <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=Cyprus"><%= t('footer.cyprusShort','Cyprus') %></a>
+        <a href="<%= footerCyprus %>"><%= t('footer.cyprusShort','Cyprus') %></a>
         ·
-        <a href="<%= (typeof localePath === 'function') ? localePath('/properties') : '/properties' %>?country=UAE&city=Dubai"><%= t('footer.dubaiShort','Dubai') %></a>
+        <a href="<%= footerDubai %>"><%= t('footer.dubaiShort','Dubai') %></a>
       </p>
     </div>
 

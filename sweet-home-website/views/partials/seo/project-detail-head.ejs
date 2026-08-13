@@ -14,6 +14,7 @@
   const projectDescription = (project.description || '').slice(0, 160) || `${project.title} - ${project.city}, ${project.country}`;
 %>
 <meta name="description" content="<%= projectDescription %>">
+<meta name="robots" content="<%= (typeof robotsMeta !== 'undefined' && robotsMeta) ? robotsMeta : 'index,follow' %>">
 <link rel="canonical" href="<%= projectUrl %>">
 
 <!-- Open Graph -->
