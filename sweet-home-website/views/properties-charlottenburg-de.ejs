@@ -89,7 +89,7 @@
                   <div class="feature"><span class="icon icon-16 icon-inline icon-mask icon-bed"></span><span><%= beds %> Zimmer</span></div>
                 <% } %>
                 <% if (baths !== null) { %>
-                  <div class="feature"><span class="icon icon-16 icon-inline icon-mask icon-bath"></span><span><%= baths %> Bad<%= Number(baths) === 1 ? '' : 'er' %></span></div>
+                  <div class="feature"><span class="icon icon-16 icon-inline icon-mask icon-bath"></span><span><%= baths %> <%= Number(baths) === 1 ? 'Bad' : 'Bäder' %></span></div>
                 <% } %>
               </div>
               <span class="learn-more">Details ansehen →</span>

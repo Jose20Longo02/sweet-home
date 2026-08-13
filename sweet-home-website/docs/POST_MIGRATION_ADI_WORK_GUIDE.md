@@ -185,11 +185,11 @@ Charlottenburg FAQ answers only via JS (empty for crawlers); Pankow SSR is corre
 
 ### N7 — Fix wrong districts on listings
 
-- [ ] Correct wrong Bezirk tags (e.g. Moabit flats tagged Charlottenburg-Wilmersdorf; Mitte flat tagged Friedrichshain-Kreuzberg)
-- [ ] Duplicate Moabit listings at Erasmusstrasse (same flat, two URLs): merge or remove one
-- [ ] Card typo: `Bader` → `Bäder`
+- [x] Correct wrong Bezirk tags — Moabit (114, 260), Mitte (227), Neukölln (255)
+- [x] Duplicate Moabit Erasmusstrasse listings — kept id 87; marked id 229 sold + **301** to 87
+- [x] Card typo: `Bader` → `Bäder` on district property cards
 
-**Done when:** correct Bezirk; duplicate resolved; typo fixed.
+**Done when:** correct Bezirk; duplicate resolved; typo fixed. ✅ (2026-08-13)
 
 ---
 
@@ -605,6 +605,7 @@ Confirmations you asked for:
 | 2026-08-10 | **N3:** redirect sample re-run + TTFB + breadcrumb confirm + bare-slug 404 301s | **Sent to Adi** (email + PDF) | Report `migration-n3-redirect-sample-2026-08-10.md`; PDF `Sweet-Home-Migration-N3-Redirect-Sample-2026-08-10.pdf` |
 | 2026-08-13 | **N5:** reduce Cyprus/Dubai crawl weight | Deploy | Nav Berlin-only; footer hubs; sitemap exclude CY/UAE listings; noindex CY/UAE details; blog meta DE Berlin |
 | 2026-08-13 | **N6:** district FAQ answers in HTML (Pankow pattern) | Deploy | Removed `hidden` on FAQ answers across district templates |
+| 2026-08-13 | **N7:** wrong Bezirk + Erasmusstrasse duplicate + Bäder typo | Deploy | DB neighborhood fixes; sold+301 id 229→87; card label Bäder |
 
 ---
 

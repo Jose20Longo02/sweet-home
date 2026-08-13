@@ -681,7 +681,12 @@ app.use((req, res, next) => {
     '/en/properties/3-bedroon-villa-premier-residences-by-aristo-developers': '/en/properties/3-bedroom-villa-premier-residences-by-aristo-developers',
     '/en/properties/wilmersdorf-hubertusallee-6-8': '/properties/wilmersdorf-hubertusallee-6-8',
     '/en/properties/steglitz-steglitzer-damm-24-8': '/properties/steglitz-steglitzer-damm-24-8',
-    '/en/properties/moabit-stephanstr-52-3': '/properties/moabit-stephanstr-52-3'
+    '/en/properties/moabit-stephanstr-52-3': '/properties/moabit-stephanstr-52-3',
+    // N7 — duplicate Erasmusstraße Moabit listing (id 229 → keep id 87)
+    '/properties/geraumige-3-zimmer-wohnung-im-herzen-von-moabit-kapitalanlage-mit-stabiler-rendite':
+      '/properties/helle-wohnung-im-3-og-mit-aufzug-in-moabit-ideal-zur-eigennutzung',
+    '/en/properties/geraumige-3-zimmer-wohnung-im-herzen-von-moabit-kapitalanlage-mit-stabiler-rendite':
+      '/properties/helle-wohnung-im-3-og-mit-aufzug-in-moabit-ideal-zur-eigennutzung'
   };
   if (highValueLegacyRedirects[normalizedPath]) {
     const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
