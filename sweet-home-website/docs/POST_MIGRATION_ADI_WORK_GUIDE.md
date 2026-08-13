@@ -176,10 +176,10 @@ GSC ~120 Cyprus/Dubai pages discovered but not indexed — wasting crawl budget.
 
 Charlottenburg FAQ answers only via JS (empty for crawlers); Pankow SSR is correct.
 
-- [ ] Server-render FAQ answers on **every** district page (like Pankow)
-- [ ] Verify: answer text appears in **View Source**
+- [x] Server-render FAQ answers on **every** district page (like Pankow) — removed `hidden`; answers expanded in HTML
+- [x] Verify: answer text appears in **View Source**
 
-**Done when:** FAQ answers in View Source on every district page.
+**Done when:** FAQ answers in View Source on every district page. ✅ (2026-08-13)
 
 ---
 
