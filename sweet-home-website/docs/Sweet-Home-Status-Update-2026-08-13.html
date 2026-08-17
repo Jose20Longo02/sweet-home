@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Sweet Home — Status Update 2026-08-13</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      color: #1a1a1a;
+      font-size: 11.5px;
+      line-height: 1.45;
+      margin: 28px 32px;
+    }
+    h1 { font-size: 18px; margin: 0 0 4px; }
+    h2 {
+      font-size: 13px;
+      margin: 18px 0 8px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 3px;
+    }
+    h3 { font-size: 12px; margin: 12px 0 4px; }
+    .meta { color: #555; margin-bottom: 12px; }
+    .box {
+      background: #f3f8ff;
+      border: 1px solid #bbdefb;
+      padding: 10px 12px;
+      border-radius: 4px;
+      margin: 12px 0;
+      font-size: 12px;
+    }
+    .done { color: #1b5e20; font-weight: 600; }
+    .wait { color: #e65100; font-weight: 600; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0 14px;
+      font-size: 10.5px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 5px 7px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #f5f5f5; font-weight: 600; }
+    ul { margin: 6px 0 10px 18px; padding: 0; }
+    li { margin-bottom: 3px; }
+    a { color: #0d47a1; word-break: break-all; }
+    .note { color: #444; font-size: 10.5px; }
+    .footer {
+      margin-top: 22px;
+      padding-top: 10px;
+      border-top: 1px solid #ddd;
+      color: #555;
+      font-size: 10.5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sweet Home — Status Update</h1>
+  <div class="meta">
+    <strong>Date:</strong> 2026-08-13<br />
+    <strong>Domain:</strong> sweethome-immobilien.de<br />
+    <strong>Reference:</strong> Continues from the 2026-08-10 report (N2/N3 redirect sample, breadcrumbs, TTFB, blog duplicate cleanup)
+  </div>
+
+  <div class="box">
+    <strong>Summary:</strong> Since the 2026-08-10 report, <strong>N5–N8</strong> are complete and <strong>N9 Week 1</strong> is live (3 new German keyword posts, ready for weekly review).
+    <strong>Pending approval:</strong> homepage Berlin-first copy (N4) — title / meta / og:image need sign-off before the live homepage is changed.
+  </div>
+
+  <h2>1. Already covered on 2026-08-10 (recap)</h2>
+  <ul>
+    <li>Redirect sample PASS (33×301 + www chain); breadcrumb OK; console housekeeping done</li>
+    <li>Blog duplicates cleaned; 9 Berlin posts on German keyword slugs; GSC indexing requested</li>
+    <li>TTFB warm money/district pages under 800ms; bare-path 404 → 301s</li>
+  </ul>
+
+  <h2>2. Completed since 2026-08-10</h2>
+
+  <h3>N5 — Reduce Cyprus / Dubai crawl weight <span class="done">DONE</span></h3>
+  <ul>
+    <li>Cyprus &amp; Dubai removed from <strong>main nav</strong>; one hub link each kept in the <strong>footer</strong></li>
+    <li>CY/UAE individual listings excluded from <strong>sitemap</strong>; property/project detail pages set to <strong>noindex,follow</strong></li>
+    <li>CY + Dubai <strong>hub pages</strong> remain live and crawlable</li>
+    <li>Blog index meta description rewritten: <strong>German, Berlin-focused</strong> (no CY/DXB framing)</li>
+  </ul>
+
+  <h3>N6 — District FAQ answers in HTML <span class="done">DONE</span></h3>
+  <ul>
+    <li>FAQ answers now server-rendered on <strong>all</strong> district templates (Pankow pattern)</li>
+    <li>Answer text visible in View Source (no longer JS-only / hidden)</li>
+  </ul>
+
+  <h3>N7 — Wrong Bezirk + duplicate Moabit + card typo <span class="done">DONE</span></h3>
+  <ul>
+    <li>Corrected neighborhood tags: listings → Moabit / Mitte / Neukölln as applicable</li>
+    <li>Duplicate Erasmusstrasse Moabit: kept listing <strong>id 87</strong>; marked <strong>id 229</strong> sold + <strong>301</strong> to 87</li>
+    <li>District card label typo fixed: <strong>Bader → Bäder</strong></li>
+  </ul>
+
+  <h3>N8 — Social profiles → .de <span class="done">DONE</span></h3>
+  <ul>
+    <li>Instagram, Facebook, LinkedIn, directories/listings updated to <strong>sweethome-immobilien.de</strong></li>
+    <li>No remaining profile pointing to sweet-home.co.il (confirmed)</li>
+  </ul>
+
+  <h3>N9 Week 1 — three new posts, published directly <span class="done">DONE</span></h3>
+  <p class="note">Per the 2026-08-10 policy: blog posts published on German keyword slugs for weekly live review (no draft-wait). Sources cited; ≥4 in-text keyword links + money/district where fit; reciprocal links added from related existing posts.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Slug</th>
+        <th>Live URL</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>immobilienpreise-berlin</td>
+        <td><a href="https://sweethome-immobilien.de/blog/immobilienpreise-berlin">/blog/immobilienpreise-berlin</a></td>
+        <td>District price table; source Guthmann Estate H1 2026 (Ø ~5.320 €/m² Bestand)</td>
+      </tr>
+      <tr>
+        <td>grunderwerbsteuer-berlin</td>
+        <td><a href="https://sweethome-immobilien.de/blog/grunderwerbsteuer-berlin">/blog/grunderwerbsteuer-berlin</a></td>
+        <td>6% Berlin rate; examples + payment timing; Senatsverwaltung Finanzen FAQ</td>
+      </tr>
+      <tr>
+        <td>mietrendite-berechnen</td>
+        <td><a href="https://sweethome-immobilien.de/blog/mietrendite-berechnen">/blog/mietrendite-berechnen</a></td>
+        <td>Brutto/Netto formulas + worked examples</td>
+      </tr>
+    </tbody>
+  </table>
+  <p><strong>Reciprocal links added:</strong></p>
+  <ul>
+    <li><code>immobilie-als-kapitalanlage-berlin</code> → Immobilienpreise + Mietrendite</li>
+    <li><code>kaufnebenkosten-berlin</code> → Grunderwerbsteuer</li>
+    <li><code>beste-bezirke-immobilien-berlin</code> → Immobilienpreise</li>
+  </ul>
+
+  <h2>3. Still open / pending approval</h2>
+  <table>
+    <thead>
+      <tr><th>Item</th><th>Status</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>N4</strong> Homepage Berlin-first (title, meta, og:image)</td>
+        <td class="wait">Blocked</td>
+        <td>Copy approval required before changing the live homepage (policy exception).</td>
+      </tr>
+      <tr>
+        <td><strong>N9 Week 2</strong> — 3 more posts</td>
+        <td>Next</td>
+        <td>Eigenkapital Wohnungskauf; Mietpreise Berlin nach Bezirk; Wo in Berlin Wohnung kaufen (link all districts).</td>
+      </tr>
+      <tr>
+        <td><strong>N10</strong> English versions</td>
+        <td>Queued</td>
+        <td>EN keyword slugs + hreflang after bilingual slug work.</td>
+      </tr>
+      <tr>
+        <td><strong>N11</strong> Ratgeber blocks on district pages</td>
+        <td>Queued</td>
+        <td>2–4 keyword-anchor guide links per district page.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4. Suggested homepage copy for approval (N4)</h2>
+  <p class="note">Draft only — <strong>not live</strong> until approved.</p>
+  <ul>
+    <li><strong>Title (proposal):</strong> Sweet Home Berlin | Immobilien und Neubauprojekte in Berlin</li>
+    <li><strong>Note:</strong> Avoid “Wohnung kaufen Berlin” in the homepage title (reserved for the money page).</li>
+    <li><strong>Meta:</strong> rewrite Berlin-only (full draft text available on request).</li>
+    <li><strong>og:image:</strong> replace Dubai share image with a Berlin photo.</li>
+    <li><strong>H1:</strong> leave as-is (already correct).</li>
+  </ul>
+
+  <h2>5. Next steps</h2>
+  <ol>
+    <li>Start <strong>N9 Week 2</strong> posts (publish directly on German keyword slugs).</li>
+    <li>Ship <strong>N4</strong> once title / meta / og:image are approved.</li>
+    <li>Then <strong>N10</strong> EN versions and <strong>N11</strong> district Ratgeber blocks.</li>
+  </ol>
+
+  <div class="footer">
+    Feedback welcome on the three new live posts and/or N4 homepage copy.
+  </div>
+</body>
+</html>

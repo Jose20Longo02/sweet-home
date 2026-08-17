@@ -73,8 +73,8 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 9. N5 Cyprus/Dubai crawl weight  
 10. N6 district FAQ SSR  
 11. N7 wrong Bezirk on listings + duplicate Moabit + Bäder typo  
-12. N8 social profiles → `.de`  
-13. N9 six new posts (3/week), publish directly  
+12. ~~N8 social profiles → `.de`~~ ✅ 2026-08-13  
+13. ~~N9 six new posts (3/week), publish directly~~ — **Week 1 done** (3/6); Week 2 pending  
 14. N10 EN versions of Berlin posts (after N2)  
 15. N11 Ratgeber blocks on district pages  
 
@@ -195,10 +195,10 @@ Charlottenburg FAQ answers only via JS (empty for crawlers); Pankow SSR is corre
 
 ### N8 — Update domain on social profiles
 
-- [ ] Instagram, Facebook, LinkedIn, directories/listings: website → `sweethome-immobilien.de`
-- [ ] No profile still links to `sweet-home.co.il`
+- [x] Instagram, Facebook, LinkedIn, directories/listings: website → `sweethome-immobilien.de`
+- [x] No profile still links to `sweet-home.co.il`
 
-**Done when:** all accessible profiles point to `.de`.
+**Done when:** all accessible profiles point to `.de`. ✅ (confirmed 2026-08-13)
 
 ---
 
@@ -207,16 +207,18 @@ Charlottenburg FAQ answers only via JS (empty for crawlers); Pankow SSR is corre
 **Policy:** no draft-and-wait. Phase E checklist; German keyword in slug, title, H1; ≥4 in-text keyword-anchor links to other posts + money/district where fit; reciprocal link from most related existing post. Adi reviews live weekly.
 
 #### Week 1
-- [ ] `/blog/immobilienpreise-berlin` — price overview by district (citable table/chart)
-- [ ] `/blog/grunderwerbsteuer-berlin`
-- [ ] `/blog/mietrendite-berechnen` — formula + worked examples
+- [x] `/blog/immobilienpreise-berlin` — price overview (official Gutachterausschuss 2025/2026) — **live** id 154 (2026-08-13); competitor Guthmann link removed 2026-08-16
+- [x] `/blog/grunderwerbsteuer-berlin` — **live** id 155 (2026-08-13); source Senatsverwaltung Finanzen FAQ
+- [x] `/blog/mietrendite-berechnen` — formula + worked examples — **live** id 156 (2026-08-13)
+
+**Reciprocal links (Week 1):** kapitalanlage → immobilienpreise + mietrendite; kaufnebenkosten → grunderwerbsteuer; beste-bezirke → immobilienpreise. Script: `scripts/n9-week1-publish-posts.js`.
 
 #### Week 2
 - [ ] `/blog/…` — Wie viel Eigenkapital braucht man beim Wohnungskauf (German keyword slug)
 - [ ] `/blog/…` — Mietpreise Berlin nach Bezirk (citable rent table)
 - [ ] `/blog/…` — Wo in Berlin eine Wohnung kaufen? Bezirke im Vergleich (link every district page with keyword anchor)
 
-**Done when:** six posts live by end of two weeks, each on keyword slug.
+**Done when:** six posts live by end of two weeks, each on keyword slug. (Week 1 = 3/6 ✅)
 
 ---
 
@@ -519,9 +521,9 @@ From `Sweet_Home_Pages_and_Keywords_Berlin.xlsx`. Do **after** Phases A–D and 
 | District | `/wohnung-kaufen-pankow` | Exists (created Phase D) | wohnung kaufen pankow | TBC | Optimize further as needed | [x] created |
 | Blog refresh | `/blog/hidden-costs-of-buying-property-in-berlin` | Exists | kaufnebenkosten berlin | 200 | Refresh + German QA | [ ] |
 | Blog refresh | `/blog/berlin-real-estate-investment-guide-2026` | Exists | immobilie als kapitalanlage | 600 | Refresh into investor pillar | [ ] |
-| Blog create | `/blog/immobilienpreise-berlin` | **Missing** | immobilienpreise berlin | 2,400 | **CREATE** — Phase **N9 week 1** | [ ] |
-| Blog create | `/blog/grunderwerbsteuer-berlin` | **Missing** | grunderwerbsteuer berlin | 1,500 | **CREATE** — Phase **N9 week 1** | [ ] |
-| Blog create | `/blog/mietrendite-berechnen` | **Missing** | mietrendite berechnen | TBC | **CREATE** — Phase **N9 week 1** | [ ] |
+| Blog create | `/blog/immobilienpreise-berlin` | **Live** id 154 | immobilienpreise berlin | 2,400 | **CREATE** — Phase **N9 week 1** | [x] |
+| Blog create | `/blog/grunderwerbsteuer-berlin` | **Live** id 155 | grunderwerbsteuer berlin | 1,500 | **CREATE** — Phase **N9 week 1** | [x] |
+| Blog create | `/blog/mietrendite-berechnen` | **Live** id 156 | mietrendite berechnen | TBC | **CREATE** — Phase **N9 week 1** | [x] |
 | Blog create | `/blog/eigenkapital-wohnungskauf` *(slug TBC)* | **Missing** | eigenkapital wohnungskauf | TBC | **CREATE** — Phase **N9 week 2** | [ ] |
 | Blog create | `/blog/mietpreise-berlin-bezirk` *(slug TBC)* | **Missing** | mietpreise berlin | TBC | **CREATE** — Phase **N9 week 2** | [ ] |
 | Blog create | `/blog/wo-in-berlin-wohnung-kaufen` *(slug TBC)* | **Missing** | wo in berlin wohnung kaufen | TBC | **CREATE** — Phase **N9 week 2**; link all districts | [ ] |
@@ -606,6 +608,10 @@ Confirmations you asked for:
 | 2026-08-13 | **N5:** reduce Cyprus/Dubai crawl weight | Deploy | Nav Berlin-only; footer hubs; sitemap exclude CY/UAE listings; noindex CY/UAE details; blog meta DE Berlin |
 | 2026-08-13 | **N6:** district FAQ answers in HTML (Pankow pattern) | Deploy | Removed `hidden` on FAQ answers across district templates |
 | 2026-08-13 | **N7:** wrong Bezirk + Erasmusstrasse duplicate + Bäder typo | Deploy | DB neighborhood fixes; sold+301 id 229→87; card label Bäder |
+| 2026-08-13 | **N8:** social profiles → sweethome-immobilien.de | Done (manual) | Instagram / Facebook / LinkedIn / directories updated |
+| 2026-08-13 | **N8:** social profiles → sweethome-immobilien.de | Done (manual) | Confirmed by Luis/José |
+| 2026-08-13 | **N9 week 1:** 3 new posts published on keyword slugs | Live (DB) | ids 154–156; script `n9-week1-publish-posts.js`; reciprocal links on kapitalanlage / kaufnebenkosten / beste-bezirke; EN stub → N10 |
+| 2026-08-13 | Status PDF + email draft for Adi (post-N3) | **Send to Adi** | PDF `Sweet-Home-Status-Update-2026-08-13.pdf`; email `docs/drafts/blog/EMAIL-TO-ADI-STATUS-2026-08-13.md` |
 
 ---
 
