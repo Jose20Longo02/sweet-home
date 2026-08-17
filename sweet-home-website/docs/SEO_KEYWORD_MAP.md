@@ -125,7 +125,7 @@ Tracks page-level keyword targeting by language, including estimated search volu
 - **Template:** `views/properties-for-sale-cyprus.ejs`
 - **Intent:** Transactional (buy house/apartment/property in Cyprus)
 - **Status:** Optimized (on-page + schema + DE buyer costs/timeline module)
-- **Recent SEO additions:** DE buyer costs/timeline block with official-source references; CTR variants documented in `docs/CYPRUS_DE_CTR_TEST_PLAN.md`
+- **Recent SEO additions:** DE buyer costs/timeline block with official-source references. Cyprus/Dubai crawl weight reduced (N5, 2026-08-13).
 
 | Keyword | Search Volume | SEO Difficulty | Priority |
 |---|---:|---:|---|
