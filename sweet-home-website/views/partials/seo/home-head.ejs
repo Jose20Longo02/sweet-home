@@ -6,9 +6,9 @@
   const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
   const tFn = (typeof t === 'function') ? t : ((k, fb) => fb);
   const defaultDescriptions = {
-    de: 'Finden Sie ausgewählte Anlageimmobilien in Berlin, Dubai und Zypern. Sweet Home begleitet internationale Käufer von der Suche bis zum Erwerb.',
-    en: 'Find carefully selected investment properties in Berlin, Dubai, and Cyprus. Sweet Home guides international buyers from sourcing to acquisition.',
-    es: 'Encuentra propiedades de inversión seleccionadas en Berlín, Dubái y Chipre. Sweet Home acompaña a compradores internacionales de la búsqueda a la adquisición.'
+    de: 'Sweet Home Berlin: ausgewählte Eigentumswohnungen und Neubauprojekte in Berlin, mit persönlicher Beratung für Eigennutzer und internationale Investoren.',
+    en: 'Sweet Home Berlin: selected apartments and new developments in Berlin, with personal guidance for owner-occupiers and international investors.',
+    es: 'Sweet Home Berlin: apartamentos y nuevos desarrollos seleccionados en Berlín, con asesoramiento personal para compradores e inversores internacionales.'
   };
   const resolvedMetaDescription = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription)
     ? pageMetaDescription
@@ -18,8 +18,11 @@
     : (currentLang === 'de' ? 'de_DE' : 'en_US');
   const rawHomeTitle = (typeof title !== 'undefined' && title) ? String(title).trim() : '';
   const homeOgTitle = rawHomeTitle
-    ? (/\| Sweet Home$/i.test(rawHomeTitle) ? rawHomeTitle : (rawHomeTitle + ' | Sweet Home'))
-    : 'International Real Estate Investment Company | Sweet Home';
+    ? (/Sweet Home/i.test(rawHomeTitle) ? rawHomeTitle : (rawHomeTitle + ' | Sweet Home'))
+    : (currentLang === 'de'
+      ? 'Sweet Home Berlin | Immobilien und Neubauprojekte in Berlin'
+      : 'Sweet Home Berlin | Properties and New Developments in Berlin');
+  const homeOgImage = `${resolvedBaseUrl}/images/berlin-hero.jpg`;
   const homeOgUrl = (typeof canonicalUrl !== 'undefined' && canonicalUrl)
     ? canonicalUrl
     : (resolvedBaseUrl + (currentLang === 'en' ? '/en' : '/'));
@@ -32,7 +35,7 @@
 <meta property="og:title" content="<%= homeOgTitle %>">
 <meta property="og:description" content="<%= resolvedMetaDescription %>">
 <meta property="og:url" content="<%= homeOgUrl %>">
-<meta property="og:image" content="<%= resolvedBaseUrl %>/images/dubai-hero.jpg">
+<meta property="og:image" content="<%= homeOgImage %>">
 <meta property="og:site_name" content="<%= siteName %>">
 <meta property="og:locale" content="<%= pageOgLocale %>">
 
@@ -40,7 +43,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="<%= homeOgTitle %>">
 <meta name="twitter:description" content="<%= resolvedMetaDescription %>">
-<meta name="twitter:image" content="<%= resolvedBaseUrl %>/images/dubai-hero.jpg">
+<meta name="twitter:image" content="<%= homeOgImage %>">
 
 <!-- Organization and WebSite entities share stable IDs across all language versions. -->
 <%

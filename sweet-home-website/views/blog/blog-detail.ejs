@@ -64,6 +64,12 @@
     display: block;
     margin-top: 12px;
   }
+  .blog-detail .cover-listing-link {
+    display: block;
+  }
+  .blog-detail .cover-listing-link .cover {
+    margin-top: 12px;
+  }
   .blog-detail .blog-author-badge {
     display: flex !important;
     align-items: center !important;
@@ -268,7 +274,13 @@
           </div>
         <% } %>
         <% if (post.cover_image) { %>
-          <img src="<%= post.cover_image %>" alt="<%= post.title %>" class="cover" />
+          <% if (typeof coverListingHref !== 'undefined' && coverListingHref) { %>
+            <a href="<%= coverListingHref %>" class="cover-listing-link">
+              <img src="<%= post.cover_image %>" alt="<%= post.title %>" class="cover" />
+            </a>
+          <% } else { %>
+            <img src="<%= post.cover_image %>" alt="<%= post.title %>" class="cover" />
+          <% } %>
         <% } %>
       </header>
       <section class="content">

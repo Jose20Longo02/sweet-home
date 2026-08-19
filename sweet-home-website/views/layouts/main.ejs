@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <%
     const __rawTitle = (typeof title !== 'undefined' && title) ? String(title).trim() : '';
+    // If title already includes the brand (e.g. "Sweet Home Berlin | …"), keep it as-is
     const __pageTitle = __rawTitle
-      ? (/\| Sweet Home$/i.test(__rawTitle) ? __rawTitle : (__rawTitle + ' | Sweet Home'))
+      ? (/Sweet Home/i.test(__rawTitle) ? __rawTitle : (__rawTitle + ' | Sweet Home'))
       : 'Sweet Home';
   %>
   <title><%= __pageTitle %></title>

@@ -1450,9 +1450,9 @@ async function renderHomePage(req, res, langPath, next) {
       'de': `${baseUrl}/`
     };
     const homeTitles = {
-      en: 'International Real Estate Investment Company',
-      de: 'Internationales Immobilien Investment Unternehmen',
-      es: 'Agencia internacional de inversión inmobiliaria'
+      en: 'Sweet Home Berlin | Properties and New Developments in Berlin',
+      de: 'Sweet Home Berlin | Immobilien und Neubauprojekte in Berlin',
+      es: 'Sweet Home Berlin | Inmuebles y nuevos desarrollos en Berlín'
     };
     const pageTitle = homeTitles[lang] || homeTitles.en;
     const t = res.locals.t;
@@ -1541,8 +1541,8 @@ async function renderHomePage(req, res, langPath, next) {
       hreflangAlternates,
       headPartial: '../partials/seo/home-head',
       pageMetaDescription: (t && typeof t === 'function')
-        ? t('home.metaDescription', 'Find carefully selected investment properties in Berlin, Dubai, and Cyprus. Sweet Home guides international buyers from sourcing to acquisition.')
-        : 'Find carefully selected investment properties in Berlin, Dubai, and Cyprus. Sweet Home guides international buyers from sourcing to acquisition.'
+        ? t('home.metaDescription', 'Sweet Home Berlin: selected apartments and new developments in Berlin, with personal guidance for owner-occupiers and international investors.')
+        : 'Sweet Home Berlin: selected apartments and new developments in Berlin, with personal guidance for owner-occupiers and international investors.'
     });
   } catch (e) { next(e); }
 }

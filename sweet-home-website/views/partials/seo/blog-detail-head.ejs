@@ -18,7 +18,8 @@
   const publishedDate = post.published_at || post.created_at;
   const modifiedDate = post.updated_at || publishedDate;
   const pageTitle = (typeof title !== 'undefined' && title) ? title : post.title;
-  const socialTitle = clampText(pageTitle, 65);
+  // Full title for og/twitter (Adi): do not truncate with ellipsis — same rule as <title>
+  const socialTitle = normalizeText(pageTitle);
   const topicIds = Array.isArray(postTopicIds) ? postTopicIds : [];
   const faqTopic = topicIds.find((id) => ['berlin','dubai','cyprus','investment','market','buying'].includes(id)) || 'buying';
   const faqItems = (typeof t === 'function') ? [

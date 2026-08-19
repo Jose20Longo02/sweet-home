@@ -13,11 +13,11 @@ const NOW = new Date().toISOString();
 
 const COVERS = {
   immobilienpreise:
-    'https://sweet-home-spaces.fra1.cdn.digitaloceanspaces.com/blog/best-berlin-districts-for-property-investment/cover/1779760759345-berlin-photo.jpg',
+    'https://sweet-home-spaces.fra1.cdn.digitaloceanspaces.com/properties/3-room-apartment-for-sale-suitable-for-owner-occupation-or-as-an-investment/photos/apartment-charlottenburg-wilmersdorf-1.jpg',
   grunderwerbsteuer:
-    'https://sweet-home-spaces.fra1.cdn.digitaloceanspaces.com/blog/hidden-costs-of-buying-property-in-berlin/cover/1780341245533-real-estate-transaction-image.jpg',
+    'https://sweet-home-spaces.fra1.cdn.digitaloceanspaces.com/properties/grosszugige-4-zimmer-wohnung-in-berlin-spandau-ideal-zur-eigennutzung/photos/apartment-berlin-1.jpg',
   mietrendite:
-    'https://sweet-home-spaces.fra1.cdn.digitaloceanspaces.com/blog/berlin-real-estate-investment-guide-2026/cover/1776877242773-berlin-aerial-view.jpg'
+    'https://sweet-home-spaces.fra1.cdn.digitaloceanspaces.com/properties/top-kapitalanlage-in-weissensee/photos/apartment-pankow-1.jpg'
 };
 
 const posts = [

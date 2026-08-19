@@ -69,7 +69,7 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 5. **N2 — Fix duplicate blog URLs (URGENT)** ← do first  
 6. **N1 — Publish six drafts on German keyword slugs** (+ 301 old 40% URL)  
 7. N3 migration integrity (re-send sample; 404s; TTFB)  
-8. N4 homepage Berlin-first  
+8. ~~N4 homepage Berlin-first~~ ✅ 2026-08-19  
 9. N5 Cyprus/Dubai crawl weight  
 10. N6 district FAQ SSR  
 11. N7 wrong Bezirk on listings + duplicate Moabit + Bäder typo  
@@ -147,15 +147,13 @@ GSC: clean Berlin posts stuck in **“discovered, not indexed”** because each 
 
 ### N4 — Homepage: make it Berlin-first
 
-- [ ] **Title:** change from `Internationales Immobilien Investment Unternehmen | Sweet Home` to brand+Berlin aligned with H1, e.g. `Sweet Home Berlin | Immobilien und Neubauprojekte in Berlin`  
-  **Do not** use `Wohnung kaufen Berlin` in homepage title (belongs to money page — no competition)
-- [ ] **Meta description:** rewrite around Berlin only
-- [ ] **og:image:** replace Dubai photo with a Berlin image
-- [ ] Leave H1 as-is (already right)
-- [ ] Homepage: missing image alts + empty H2s if not already done (alts/footer shipped earlier — re-verify live)
+- [x] **Title:** `Sweet Home Berlin | Immobilien und Neubauprojekte in Berlin` (Adi OK 2026-08-19)
+- [x] **Meta description:** Adi-approved Berlin-only copy
+- [x] **og:image:** `/images/berlin-hero.jpg` (replaces Dubai)
+- [x] Leave H1 as-is (`home.hero.berlinTitle`)
+- [x] Homepage: missing image alts + empty H2s if not already done (alts/footer shipped earlier — re-verify live)
 
-**Done when:** title, description, share image lead with Berlin; no empty H2s / missing alts.  
-**Note:** Homepage copy still needs Adi OK before publish (policy exception).
+**Done when:** title, description, share image lead with Berlin; no empty H2s / missing alts. ✅ (Adi approved copy 2026-08-19; ship with og/twitter title + unique cover fixes)
 
 ---
 
@@ -612,6 +610,7 @@ Confirmations you asked for:
 | 2026-08-13 | **N8:** social profiles → sweethome-immobilien.de | Done (manual) | Confirmed by Luis/José |
 | 2026-08-13 | **N9 week 1:** 3 new posts published on keyword slugs | Live (DB) | ids 154–156; script `n9-week1-publish-posts.js`; reciprocal links on kapitalanlage / kaufnebenkosten / beste-bezirke; EN stub → N10 |
 | 2026-08-13 | Status PDF + email draft for Adi (post-N3) | **Send to Adi** | PDF `Sweet-Home-Status-Update-2026-08-13.pdf`; email `docs/drafts/blog/EMAIL-TO-ADI-STATUS-2026-08-13.md` |
+| 2026-08-19 | Adi: N9 week 1 pass; N4 homepage copy OK; Week 2 green light | Ship | og/twitter titles no ellipsis; unique listing covers + link; homepage Berlin title/meta/og:image |
 
 ---
 

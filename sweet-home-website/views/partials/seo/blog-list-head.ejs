@@ -35,7 +35,8 @@
   const rawDesc = (typeof page !== 'undefined' && page > 1) ? `${topicDesc} - Page ${page}.` : topicDesc;
   const listDesc = clampText(rawDesc, 155);
   const rawTitle = (typeof title !== 'undefined' && title) ? title : 'Blog - Real Estate Insights';
-  const socialTitle = clampText(rawTitle, 65);
+  // Full title for og/twitter (Adi): do not truncate with ellipsis
+  const socialTitle = normalizeText(rawTitle);
 %>
 <meta name="description" content="<%= listDesc %>">
 <meta name="robots" content="<%= robotsContent %>">

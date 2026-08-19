@@ -9,6 +9,7 @@ const {
   getInternalLandingPresetLabel
 } = require('../config/internalLandingPresets');
 const { detectLanguageFromFields, getTargetLanguages } = require('../utils/languageDetection');
+const { getBlogCoverListingHref } = require('../config/blogCoverListingLinks');
 
 const BLOG_TOPIC_DEFS = {
   berlin: ['berlin', 'mitte', 'kreuzberg', 'charlottenburg', 'pankow', 'schoneberg', 'spandau'],
@@ -511,6 +512,7 @@ exports.showPublic = async (req, res, next) => {
     res.render('blog/blog-detail', {
       title: pageTitle,
       post: localizedPost,
+      coverListingHref: getBlogCoverListingHref(localizedPost.slug),
       recommendedPosts: recommendedPosts || [],
       relatedLandingLinks: relatedLandingSet.links || [],
       relatedLandingMarket: relatedLandingSet.market || '',
