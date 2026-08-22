@@ -212,11 +212,13 @@ Charlottenburg FAQ answers only via JS (empty for crawlers); Pankow SSR is corre
 **Reciprocal links (Week 1):** kapitalanlage → immobilienpreise + mietrendite; kaufnebenkosten → grunderwerbsteuer; beste-bezirke → immobilienpreise. Script: `scripts/n9-week1-publish-posts.js`.
 
 #### Week 2
-- [ ] `/blog/…` — Wie viel Eigenkapital braucht man beim Wohnungskauf (German keyword slug)
-- [ ] `/blog/…` — Mietpreise Berlin nach Bezirk (citable rent table)
-- [ ] `/blog/…` — Wo in Berlin eine Wohnung kaufen? Bezirke im Vergleich (link every district page with keyword anchor)
+- [x] `/blog/eigenkapital-wohnungskauf` — **live** id 157 (2026-08-20); source Verbraucherzentrale (20–30 % + Nebenkosten) + Senatsverwaltung Finanzen (6 % GrESt)
+- [x] `/blog/mietpreise-berlin-bezirk` — **live** id 158 (2026-08-20); Berliner Mietspiegel 2026 (Median 7,71 €/m²; Wohnlage-Mediane Tab. 13 Dokumentation); citable Wohnlage table (no competitor rent portals)
+- [x] `/blog/wo-in-berlin-wohnung-kaufen` — **live** id 159 (2026-08-20); links all 13 district landing pages with keyword anchors
 
-**Done when:** six posts live by end of two weeks, each on keyword slug. (Week 1 = 3/6 ✅)
+**Reciprocal links (Week 2):** kaufnebenkosten → eigenkapital; immobilienpreise → mietpreise; beste-bezirke → wo-in-berlin. Script: `scripts/n9-week2-publish-posts.js`. Covers: unique listing photos via `config/blogCoverListingLinks.js`.
+
+**Done when:** six posts live by end of two weeks, each on keyword slug. (Week 1+2 = 6/6 ✅)
 
 ---
 
