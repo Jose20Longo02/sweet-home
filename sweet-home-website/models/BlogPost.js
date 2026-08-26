@@ -49,6 +49,10 @@ class BlogPost {
   }
 
   static async findBySlug(slug) {
+    return BlogPost.findByPublicSlug(slug);
+  }
+
+  static async findByPublicSlug(slug) {
     const res = await query(
       `SELECT bp.*,
               u.name AS author_name,
@@ -59,6 +63,8 @@ class BlogPost {
          FROM blog_posts bp
          LEFT JOIN users u ON u.id = bp.author_id
         WHERE bp.slug = $1
+           OR bp.slug_i18n->>'en' = $1
+           OR bp.slug_i18n->>'de' = $1
         LIMIT 1`,
       [slug]
     );

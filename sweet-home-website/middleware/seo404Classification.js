@@ -7,6 +7,7 @@ const path = require('path');
 
 const DATA_FILE = path.join(__dirname, '../config/seo-404-gsc-2026-07-21.json');
 const BLOG_SLUG_REDIRECTS_FILE = path.join(__dirname, '../config/blog-slug-redirects-2026-08-10.json');
+const { DE_TO_EN_SLUG, N10_BERLIN_POSTS } = require('../config/n10-berlin-post-slugs');
 
 const ES_LANDING_MAP = {
   '/es': '/',
@@ -38,6 +39,18 @@ function addRedirectEntries(redirects, entries) {
   });
 }
 
+function applyN10BlogRedirects(redirects) {
+  N10_BERLIN_POSTS.forEach(({ de, en }) => {
+    redirects.set(normalizeLookupPath(`/en/blog/${de}`), `/en/blog/${en}`);
+  });
+  for (const [from, to] of [...redirects.entries()]) {
+    const match = String(to).match(/^\/en\/blog\/([^/]+)$/);
+    if (match && DE_TO_EN_SLUG[match[1]]) {
+      redirects.set(from, `/en/blog/${DE_TO_EN_SLUG[match[1]]}`);
+    }
+  }
+}
+
 function loadRules() {
   const raw = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
   const redirects = new Map();
@@ -48,6 +61,7 @@ function loadRules() {
   } catch (err) {
     console.warn('[seo404] Could not load blog slug redirects:', err.message);
   }
+  applyN10BlogRedirects(redirects);
   Object.entries(ES_LANDING_MAP).forEach(([from, to]) => {
     redirects.set(normalizeLookupPath(from), to);
   });

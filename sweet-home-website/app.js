@@ -386,7 +386,12 @@ app.use((req, res, next) => {
       let localePath;
       if (isPropertyDetail) localePath = `/en/properties${req.path.slice('/properties'.length)}`;
       else if (isProjectDetail) localePath = `/en/projects${req.path.slice('/projects'.length)}`;
-      else if (isBlogDetail) localePath = `/en/blog${req.path.slice('/blog'.length)}`;
+      else if (isBlogDetail) {
+        const slugPart = req.path.slice('/blog'.length).replace(/^\//, '').split('/')[0];
+        const { DE_TO_EN_SLUG } = require('./config/n10-berlin-post-slugs');
+        const enSlug = DE_TO_EN_SLUG[slugPart] || slugPart;
+        localePath = `/en/blog/${enSlug}${req.path.slice('/blog'.length + slugPart.length + 1) || ''}`;
+      }
       if (localePath) return res.redirect(302, localePath + (req.originalUrl.includes('?') ? '?' + req.originalUrl.split('?')[1] : ''));
     }
   }
@@ -1811,7 +1816,7 @@ app.get('/sitemap.xml', async (req, res, next) => {
 
     // Dynamic blog posts
     const posts = await query(`
-      SELECT slug, updated_at, created_at, status, published_at
+      SELECT slug, slug_i18n, updated_at, created_at, status, published_at
       FROM blog_posts
       WHERE slug IS NOT NULL
         AND status = 'published'
@@ -1821,6 +1826,7 @@ app.get('/sitemap.xml', async (req, res, next) => {
       ORDER BY COALESCE(updated_at, created_at) DESC NULLS LAST
       LIMIT 5000
     `);
+    const { getBlogSlugForLang } = require('./utils/blogSlugI18n');
     const blogUrls = (posts.rows || []).map(r => ({
       loc: `${base}/blog/${r.slug}`,
       lastmod: (r.updated_at || r.published_at || r.created_at) ? new Date(r.updated_at || r.published_at || r.created_at).toISOString() : null,
@@ -1829,8 +1835,9 @@ app.get('/sitemap.xml', async (req, res, next) => {
     }));
     const localizedBlogUrls = (posts.rows || []).flatMap(r => {
       const lastmod = (r.updated_at || r.published_at || r.created_at) ? new Date(r.updated_at || r.published_at || r.created_at).toISOString() : null;
+      const enSlug = getBlogSlugForLang(r, 'en');
       return ([
-        { loc: `${base}/en/blog/${r.slug}`, lastmod, changefreq: 'monthly', priority: '0.7' },
+        { loc: `${base}/en/blog/${enSlug}`, lastmod, changefreq: 'monthly', priority: '0.7' },
       ]);
     });
 

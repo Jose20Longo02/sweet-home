@@ -74,8 +74,8 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 10. N6 district FAQ SSR  
 11. N7 wrong Bezirk on listings + duplicate Moabit + Bäder typo  
 12. ~~N8 social profiles → `.de`~~ ✅ 2026-08-13  
-13. ~~N9 six new posts (3/week), publish directly~~ — **Week 1 done** (3/6); Week 2 pending  
-14. N10 EN versions of Berlin posts (after N2)  
+13. ~~N9 six new posts (3/week), publish directly~~ ✅ 6/6  
+14. ~~N10 EN versions of Berlin posts~~ ✅ 2026-08-26 (deploy code)  
 15. N11 Ratgeber blocks on district pages  
 
 ---
@@ -226,11 +226,15 @@ Charlottenburg FAQ answers only via JS (empty for crawlers); Pankow SSR is corre
 
 **After N2 is done.**
 
-- [ ] EN versions of improved Berlin posts (auto-translate OK as base; ~10 min human read before live)
-- [ ] English keyword slug under `/en/blog/` (e.g. `cost-of-buying-property-berlin`); hreflang pair; self-canonical per language
-- [ ] Exception: **How foreigners can buy property in Berlin** — proper English edit, not machine output
+- [x] EN versions of improved Berlin posts (DeepL DE→EN base; review before next Adi cycle)
+- [x] English keyword slug under `/en/blog/`; hreflang pair; self-canonical per language — **code + DB 2026-08-26**
+- [ ] Exception: **How foreigners can buy property in Berlin** — proper English edit, not machine output (existing EN kept if substantial; flag for Adi)
 
-**Done when:** each Berlin post has live EN at English keyword slug, correctly paired.
+**15 posts live at EN slugs** (see `config/n10-berlin-post-slugs.js`). Script: `scripts/n10-publish-en-posts.js`. Schema: `slug_i18n` JSONB (`mitigations/add_slug_i18n_to_blog_posts.sql`).
+
+**Redirects:** N10 rules in `middleware/seo404Classification.js` — `/en/blog/{de-slug}` → `/en/blog/{en-slug}`; old EN slugs retargeted to EN keyword slug.
+
+**Done when:** each Berlin post has live EN at English keyword slug, correctly paired. ✅ (deploy code to activate routing/hreflang on production)
 
 ---
 

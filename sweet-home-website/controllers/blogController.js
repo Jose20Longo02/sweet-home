@@ -10,6 +10,7 @@ const {
 } = require('../config/internalLandingPresets');
 const { detectLanguageFromFields, getTargetLanguages } = require('../utils/languageDetection');
 const { getBlogCoverListingHref } = require('../config/blogCoverListingLinks');
+const { getBlogSlugForLang, withPublicBlogSlug } = require('../utils/blogSlugI18n');
 
 const BLOG_TOPIC_DEFS = {
   berlin: ['berlin', 'mitte', 'kreuzberg', 'charlottenburg', 'pankow', 'schoneberg', 'spandau'],
@@ -388,7 +389,7 @@ exports.listPublic = async (req, res, next) => {
     const listRows = await query(listSql, params);
     const posts = listRows.rows || [];
     const lang = res.locals.lang || 'en';
-    const localizedPosts = (posts || []).map(p => ({
+    const localizedPosts = (posts || []).map((p) => withPublicBlogSlug({
       ...p,
       title: (p.title_i18n && p.title_i18n[lang]) || p.title,
       excerpt: (p.excerpt_i18n && p.excerpt_i18n[lang]) || p.excerpt,
@@ -396,7 +397,7 @@ exports.listPublic = async (req, res, next) => {
         (p.title_i18n && p.title_i18n[lang]) || p.title || '',
         (p.excerpt_i18n && p.excerpt_i18n[lang]) || p.excerpt || ''
       ].join(' '))
-    }));
+    }, lang));
     const countSql = topicSql
       ? `SELECT COUNT(*)::int AS count FROM blog_posts bp WHERE ${whereSql}`
       : `SELECT COUNT(*)::int AS count FROM blog_posts bp WHERE bp.status = 'published'`;
@@ -426,9 +427,15 @@ exports.listPublic = async (req, res, next) => {
 
 exports.showPublic = async (req, res, next) => {
   try {
-    const post = await BlogPost.findBySlug(req.params.slug);
+    const post = await BlogPost.findByPublicSlug(req.params.slug);
     if (!post || post.status !== 'published') return res.status(410).render('errors/404');
     const lang = res.locals.lang || 'en';
+    const canonicalSlug = getBlogSlugForLang(post, lang);
+    if (canonicalSlug && req.params.slug !== canonicalSlug) {
+      const prefix = lang === 'en' ? '/en' : '';
+      const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
+      return res.redirect(301, `${prefix}/blog/${canonicalSlug}${query}`);
+    }
     const postTitle = (post.title_i18n && post.title_i18n[lang]) || post.title;
     const postContent = (post.content_i18n && post.content_i18n[lang]) || post.content;
     const localizedLinksContent = renderInternalLandingTokens(postContent, lang);
@@ -436,12 +443,12 @@ exports.showPublic = async (req, res, next) => {
     let processedContent = addAltToImages(localizedLinksContent, `Image from ${postTitle}`);
     processedContent = convertH1ToH2(processedContent);
     
-    const localizedPost = {
+    const localizedPost = withPublicBlogSlug({
       ...post,
       title: postTitle,
       excerpt: (post.excerpt_i18n && post.excerpt_i18n[lang]) || post.excerpt,
       content: processedContent
-    };
+    }, lang);
     const relatedLandingSet = buildRelatedLandingLinks({
       title: localizedPost.title,
       excerpt: localizedPost.excerpt,
@@ -472,10 +479,10 @@ exports.showPublic = async (req, res, next) => {
           `SELECT ${recommendedSelect}
              FROM blog_posts bp
              LEFT JOIN users u ON u.id = bp.author_id
-            WHERE bp.status = 'published' AND bp.slug <> $1 AND ${topicClause.sql}
+            WHERE bp.status = 'published' AND bp.id <> $1 AND ${topicClause.sql}
             ORDER BY COALESCE(bp.published_at, bp.created_at) DESC
             LIMIT 8`,
-          [req.params.slug, ...topicClause.values]
+          [post.id, ...topicClause.values]
         );
         for (const row of (rows || [])) {
           if (!isCompatibleRecommendedPost(row, currentGeoTopics, lang)) continue;
@@ -490,10 +497,10 @@ exports.showPublic = async (req, res, next) => {
         `SELECT ${recommendedSelect}
          FROM blog_posts bp
          LEFT JOIN users u ON u.id = bp.author_id
-        WHERE bp.status = 'published' AND bp.slug <> $1
+        WHERE bp.status = 'published' AND bp.id <> $1
         ORDER BY COALESCE(bp.published_at, bp.created_at) DESC
         LIMIT 24`,
-      [req.params.slug]
+      [post.id]
       );
       const seen = new Set(recommendedPosts.map((p) => p.slug));
       for (const row of (recentRows || [])) {
@@ -505,14 +512,14 @@ exports.showPublic = async (req, res, next) => {
       }
     }
     // Localize titles for the active language (fixes DE pages showing EN titles)
-    recommendedPosts = recommendedPosts.slice(0, 4).map((p) => ({
+    recommendedPosts = recommendedPosts.slice(0, 4).map((p) => withPublicBlogSlug({
       ...p,
       title: localizedBlogField(p, 'title', lang) || p.title
-    }));
+    }, lang));
     res.render('blog/blog-detail', {
       title: pageTitle,
       post: localizedPost,
-      coverListingHref: getBlogCoverListingHref(localizedPost.slug),
+      coverListingHref: getBlogCoverListingHref(post.slug),
       recommendedPosts: recommendedPosts || [],
       relatedLandingLinks: relatedLandingSet.links || [],
       relatedLandingMarket: relatedLandingSet.market || '',
