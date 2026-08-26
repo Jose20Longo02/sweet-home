@@ -1,4 +1,5 @@
 <%
+  const { getDistrictRatgeberLinks } = require('../../config/districtRatgeberLinks');
   const berlinRelatedDistricts = {
     'Charlottenburg': ['Moabit', 'Schöneberg', 'Prenzlauer Berg'],
     'Moabit': ['Charlottenburg', 'Wedding', 'Kreuzberg'],
@@ -40,7 +41,23 @@
     .slice(0, 3);
   const berlinSearchHref = ((typeof localePath === 'function') ? localePath('/properties/for-sale/germany/berlin') : '/properties/for-sale/germany/berlin')
     + '?neighborhood=' + encodeURIComponent(currentNeighborhood);
+  const ratgeberLinks = getDistrictRatgeberLinks(currentDistrictName);
 %>
+<% if (ratgeberLinks.length > 0) { %>
+<section class="berlin-content section berlin-district-ratgeber" aria-labelledby="district-ratgeber-heading">
+  <div class="berlin-content__inner">
+    <h2 id="district-ratgeber-heading" class="berlin-content__title">Ratgeber zum Wohnungskauf</h2>
+    <p class="berlin-content__intro">Passende Guides von Sweet Home Berlin — speziell hilfreich, wenn Sie in <%= currentDistrictName %> kaufen oder vergleichen möchten.</p>
+    <ul class="berlin-areas__list">
+      <% ratgeberLinks.forEach(function(link) { %>
+        <li class="berlin-areas__item">
+          <a href="<%= (typeof localePath === 'function') ? localePath(link.href) : link.href %>"><%= link.anchor %></a>
+        </li>
+      <% }); %>
+    </ul>
+  </div>
+</section>
+<% } %>
 <section class="berlin-content section berlin-best-areas" aria-labelledby="district-internal-links-heading">
   <div class="berlin-content__inner">
     <h2 id="district-internal-links-heading" class="berlin-content__title">Weitere Berliner Bezirke entdecken</h2>

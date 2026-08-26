@@ -76,7 +76,7 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 12. ~~N8 social profiles → `.de`~~ ✅ 2026-08-13  
 13. ~~N9 six new posts (3/week), publish directly~~ ✅ 6/6  
 14. ~~N10 EN versions of Berlin posts~~ ✅ 2026-08-26 (deploy code)  
-15. N11 Ratgeber blocks on district pages  
+15. ~~N11 Ratgeber blocks on district pages~~ ✅ 2026-08-26  
 
 ---
 
@@ -240,10 +240,12 @@ Charlottenburg FAQ answers only via JS (empty for crawlers); Pankow SSR is corre
 
 ### N11 — Guide links on district pages
 
-- [ ] On each district page, low on page: small **Ratgeber** block with **2–4** relevant blog posts (fit the district — not the same three everywhere)
-- [ ] Descriptive keyword anchors (not “mehr lesen”)
+- [x] On each district page, low on page: small **Ratgeber** block with **2–4** relevant blog posts (fit the district — not the same three everywhere)
+- [x] Descriptive keyword anchors (not “mehr lesen”)
 
-**Done when:** every district page links 2–4 fitting guides with keyword anchors.
+**Implementation:** `config/districtRatgeberLinks.js` + block at top of `views/partials/berlin-district-related-links.ejs` (all 13 district pages).
+
+**Done when:** every district page links 2–4 fitting guides with keyword anchors. ✅ (deploy)
 
 ---
 
