@@ -46,7 +46,15 @@ function applyN10BlogRedirects(redirects) {
   for (const [from, to] of [...redirects.entries()]) {
     const match = String(to).match(/^\/en\/blog\/([^/]+)$/);
     if (match && DE_TO_EN_SLUG[match[1]]) {
-      redirects.set(from, `/en/blog/${DE_TO_EN_SLUG[match[1]]}`);
+      const next = `/en/blog/${DE_TO_EN_SLUG[match[1]]}`;
+      const fromKey = normalizeLookupPath(from);
+      const toKey = normalizeLookupPath(next);
+      if (fromKey === toKey) {
+        redirects.delete(from);
+        redirects.delete(fromKey.toLowerCase());
+      } else {
+        redirects.set(from, next);
+      }
     }
   }
 }
