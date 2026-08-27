@@ -1,5 +1,4 @@
 <%
-  const { getDistrictRatgeberLinks } = require('../../config/districtRatgeberLinks');
   const berlinRelatedDistricts = {
     'Charlottenburg': ['Moabit', 'Schöneberg', 'Prenzlauer Berg'],
     'Moabit': ['Charlottenburg', 'Wedding', 'Kreuzberg'],
@@ -41,7 +40,9 @@
     .slice(0, 3);
   const berlinSearchHref = ((typeof localePath === 'function') ? localePath('/properties/for-sale/germany/berlin') : '/properties/for-sale/germany/berlin')
     + '?neighborhood=' + encodeURIComponent(currentNeighborhood);
-  const ratgeberLinks = getDistrictRatgeberLinks(currentDistrictName);
+  const ratgeberLinks = (typeof getDistrictRatgeberLinks === 'function')
+    ? getDistrictRatgeberLinks(currentDistrictName)
+    : [];
 %>
 <% if (ratgeberLinks.length > 0) { %>
 <section class="berlin-content section berlin-district-ratgeber" aria-labelledby="district-ratgeber-heading">

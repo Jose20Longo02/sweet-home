@@ -261,6 +261,8 @@ function getCanonicalBaseUrl(req) {
 // 1) Set up EJS **first**
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+const { getDistrictRatgeberLinks } = require('./config/districtRatgeberLinks');
+app.locals.getDistrictRatgeberLinks = getDistrictRatgeberLinks;
 
 // 2) Then register the layouts middleware
 app.use(expressLayouts);
