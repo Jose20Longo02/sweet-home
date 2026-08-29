@@ -7,6 +7,7 @@ const sendMail           = require('../config/mailer');
 const adminController    = require('../controllers/adminController');
 const analyticsController = require('../controllers/analyticsController');
 const leadController = require('../controllers/leadController');
+const campaignLinkController = require('../controllers/campaignLinkController');
 const areaRoles          = require('../config/roles');
 const path               = require('path');
 const fs                 = require('fs');
@@ -171,6 +172,13 @@ router.get(
   ensureAuthenticated,
   ensureSuperAdmin,
   analyticsController.dashboard
+);
+
+router.get(
+  '/campaign-links',
+  ensureAuthenticated,
+  ensureSuperAdmin,
+  campaignLinkController.showGuide
 );
 
 // Analytics exports

@@ -104,6 +104,13 @@
             <span class="btn-text"><%= t('common.downloadExpose','Download Expose') %></span>
           </button>
         </div>
+        <div data-campaign-tool>
+          <%- include('../partials/campaign-link-tool', {
+            pageType: 'property',
+            pageSlug: property.slug,
+            pageTitle: property.title
+          }) %>
+        </div>
       </div>
     </header>
 

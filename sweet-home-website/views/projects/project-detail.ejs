@@ -163,6 +163,13 @@
                 Open Brochure
               </a>
             <% } %>
+            <div data-campaign-tool>
+              <%- include('../partials/campaign-link-tool', {
+                pageType: 'project',
+                pageSlug: project.slug,
+                pageTitle: project.title
+              }) %>
+            </div>
           </div>
 
           <!-- Project Description -->

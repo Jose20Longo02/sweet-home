@@ -1,0 +1,43 @@
+<% title = 'Campaign links'; %>
+
+<div class="campaign-guide-page">
+  <div class="campaign-guide-header">
+    <div>
+      <span class="campaign-link-eyebrow">Sweet Home marketing tools</span>
+      <h1>Campaign links</h1>
+      <p>Create a tracked link before sharing a property or project by email, social media or WhatsApp.</p>
+    </div>
+    <a class="btn btn-light" href="<%= dashboardPath %>">← Back to dashboard</a>
+  </div>
+
+  <div data-campaign-tool>
+    <%- include('../partials/campaign-link-tool', {
+      standalone: true,
+      pageType: 'page',
+      pageSlug: 'campaign'
+    }) %>
+  </div>
+
+  <section class="campaign-guide-notes" aria-labelledby="campaign-guide-notes-title">
+    <span class="campaign-link-eyebrow">Quick guide</span>
+    <h2 id="campaign-guide-notes-title">How to use it</h2>
+    <div class="campaign-guide-grid">
+      <article>
+        <span class="campaign-guide-number">01</span>
+        <h3>Choose the channel</h3>
+        <p>Select where you will share the link. This tells the leads dashboard how the visitor arrived.</p>
+      </article>
+      <article>
+        <span class="campaign-guide-number">02</span>
+        <h3>Name the campaign</h3>
+        <p>Use a short, recognisable name such as <strong>summer_2026</strong> or <strong>new_building_launch</strong>.</p>
+      </article>
+      <article>
+        <span class="campaign-guide-number">03</span>
+        <h3>Copy and share</h3>
+        <p>Use the generated link in the CTA. Do not remove anything after the question mark.</p>
+      </article>
+    </div>
+    <p class="campaign-guide-tip"><strong>Tip:</strong> Use the same campaign name for all links in one campaign, and change the CTA or placement to compare different buttons.</p>
+  </section>
+</div>

@@ -7,6 +7,7 @@ const uploadProfilePic   = require('../middleware/uploadProfilePic');
 const propertyController   = require('../controllers/propertyController');
 const projectController  = require('../controllers/projectController');
 const uploadProjectMedia = require('../middleware/uploadProjectMedia');
+const campaignLinkController = require('../controllers/campaignLinkController');
 
 // Allow Admin and SuperAdmin
 const allowStaff = (req, res, next) => {
@@ -36,6 +37,7 @@ router.post('/profile',
 );
 
 router.get('/my-properties', ensureAuthenticated, ensureAdmin, propertyController.listMyProperties);
+router.get('/campaign-links', ensureAuthenticated, ensureAdmin, campaignLinkController.showGuide);
 // Projects management (all staff)
 router.get('/projects', ensureAuthenticated, ensureAdmin, projectController.listProjectsForAdmin);
 router.get('/projects/new', ensureAuthenticated, allowStaff, projectController.newProjectForm);
