@@ -42,7 +42,12 @@ function showMessageModal(message) {
   const modal = document.getElementById('messageModal');
   const content = document.getElementById('messageContent');
   if (modal && content) {
-    content.textContent = decodeURIComponent(message);
+    try {
+      content.textContent = decodeURIComponent(message);
+    } catch (error) {
+      // Keep the message usable even if a legacy lead has malformed encoding.
+      content.textContent = message;
+    }
     // Ensure proper positioning and overlay
     modal.style.display = 'flex';
     modal.style.position = 'fixed';
@@ -103,9 +108,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('click', function(e) {
-  const showMessageId = e.target.getAttribute('data-show-message');
-  if (showMessageId) {
-    const message = e.target.getAttribute('data-message');
+  const messageButton = e.target.closest('[data-show-message]');
+  if (messageButton) {
+    e.preventDefault();
+    const message = messageButton.getAttribute('data-message');
     if (message) {
       showMessageModal(message);
     }

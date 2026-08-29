@@ -151,7 +151,7 @@
               </td>
               <td data-label="Message">
                 <% if (lead.message && lead.message.trim()) { %>
-                  <button class="btn btn-primary btn-sm" data-show-message="<%= lead.id %>" data-message="<%= encodeURIComponent(lead.message) %>">
+                  <button type="button" class="btn btn-primary btn-sm" data-show-message="<%= lead.id %>" data-message="<%= encodeURIComponent(lead.message) %>">
                     See message
                   </button>
                 <% } else { %>
@@ -305,7 +305,7 @@
   </div>
 </div>
 
-<script src="/js/superadmin-leads.js?v=2" defer></script>
+<script src="/js/superadmin-leads.js?v=3" defer></script>
 <script src="/js/superadmin-export-leads.js?v=2" defer></script>
 
 
