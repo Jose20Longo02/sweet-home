@@ -100,8 +100,7 @@
     });
   }
 
-  function closeModal(root) {
-    var modal = root.querySelector('[data-campaign-modal]');
+  function closeModal(modal) {
     if (!modal) return;
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
@@ -127,6 +126,9 @@
     var shareButton = form.querySelector('[data-campaign-share]');
 
     if (openButton && modal) {
+      // The property/project containers create their own stacking context.
+      // Portaling the modal to body keeps the overlay above the site header.
+      if (modal.parentNode !== document.body) document.body.appendChild(modal);
       openButton.addEventListener('click', function () {
         modal.classList.add('is-open');
         modal.setAttribute('aria-hidden', 'false');
@@ -135,10 +137,10 @@
       });
     }
 
-    if (closeButton) closeButton.addEventListener('click', function () { closeModal(root); });
+    if (closeButton) closeButton.addEventListener('click', function () { closeModal(modal); });
     if (modal) {
       modal.addEventListener('click', function (event) {
-        if (event.target === modal) closeModal(root);
+        if (event.target === modal) closeModal(modal);
       });
     }
 
@@ -176,7 +178,7 @@
 
     document.addEventListener('keydown', function (event) {
       if (event.key === 'Escape' && modal && modal.classList.contains('is-open')) {
-        closeModal(root);
+        closeModal(modal);
       }
     });
   }

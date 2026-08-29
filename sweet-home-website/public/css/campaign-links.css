@@ -3,14 +3,16 @@
 .campaign-link-trigger {
   width: 100%;
   justify-content: center;
-  background: var(--white);
-  color: var(--brand-green-dark);
-  border-color: var(--brand-green);
+  box-sizing: border-box;
+  background-color: transparent;
+  color: var(--gray-600, #475569);
+  border: 2px solid var(--gray-200, #e2e8f0);
 }
 
 .campaign-link-trigger:hover {
-  background: var(--brand-green);
-  color: var(--white);
+  background-color: transparent;
+  color: var(--brand-green, #2ea862);
+  border-color: var(--brand-green, #2ea862);
 }
 
 .campaign-link-trigger__icon {
@@ -21,7 +23,7 @@
 .campaign-link-modal {
   position: fixed;
   inset: 0;
-  z-index: 10000;
+  z-index: 2147483647;
   display: flex;
   align-items: center;
   justify-content: center;

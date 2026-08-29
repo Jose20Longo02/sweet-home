@@ -6,7 +6,7 @@
   const toolSlug = typeof pageSlug !== 'undefined' && pageSlug ? pageSlug : '';
 %>
 <% if (campaignUser || isStandalone) { %>
-  <link rel="stylesheet" href="/css/campaign-links.css?v=1" />
+  <link rel="stylesheet" href="/css/campaign-links.css?v=3" />
 
   <% if (!isStandalone) { %>
     <button type="button" class="btn campaign-link-trigger" data-campaign-open>
@@ -104,5 +104,5 @@
     </div>
   <% } %>
 
-  <script src="/js/campaign-links.js?v=1" defer></script>
+  <script src="/js/campaign-links.js?v=2" defer></script>
 <% } %>
