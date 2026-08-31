@@ -355,13 +355,8 @@
         window.fbq('trackSingle', '1659758728554816', 'Lead', {}, { eventID: metaEventId });
       }
 
-      showSuccessMessage('Danke! Ihr Formular wurde erfolgreich gesendet. Unser Team meldet sich in Kürze bei Ihnen.');
-      if (messageEl) {
-        messageEl.style.display = 'block';
-        messageEl.className = 'form-status form-status--success';
-        messageEl.textContent = 'Danke! Ihre Anfrage wurde erfolgreich gesendet. Unser Team meldet sich in Kürze.';
-      }
-      form.reset();
+      window.location.assign(data.thank_you_url || '/thank-you');
+      return;
     } catch (err) {
       var errText = err && err.message ? err.message : 'Es ist ein Fehler aufgetreten. Bitte später erneut versuchen.';
       if (errText === 'reCAPTCHA verification failed') {

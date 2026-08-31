@@ -524,8 +524,8 @@ async function submitContactForm() {
         const projectId = payload.projectId || getProjectId();
         window.analytics.trackFormSubmit('project_contact', null, projectId);
       }
-      showSuccessMessage('Thank you! Your message has been sent successfully.');
-      form.reset();
+      window.location.assign(data.thank_you_url || '/thank-you');
+      return;
     } else {
       console.error('Project form submission error:', data);
       showErrorMessage(data.message || 'Error sending message. Please try again.');

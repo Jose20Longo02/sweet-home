@@ -112,9 +112,8 @@
           const leadType = body.get('lead_type') || 'unknown';
           window.analytics.trackFormSubmit(leadType === 'seller' ? 'seller_form' : 'contact_form', null, null);
         }
-        messageEl.classList.add('success');
-        messageEl.textContent = (window.i18nGetHome ? i18nGetHome('contact.sent','Thank you! Your message has been sent successfully.') : 'Thank you! Your message has been sent successfully.');
-        form.reset();
+        window.location.assign(data.thank_you_url || '/thank-you');
+        return;
       } else {
         throw new Error((data && data.message) || 'Unable to send your message. Please try again.');
       }

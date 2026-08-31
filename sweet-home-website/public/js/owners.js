@@ -154,6 +154,8 @@
             rooms: payload.rooms || null
           });
         }
+        window.location.assign(data.thank_you_url || '/thank-you');
+        return;
       }
       status.textContent = data && data.success ? t('form.successShort','Thanks! We will reach out shortly.') : t('form.submitted','Submission received.');
       const toast = document.getElementById('toast');

@@ -151,7 +151,12 @@
           body: urlBody.toString()
         });
         if (!res.ok) throw new Error('Failed');
-        status.style.display='block'; status.textContent=i18nGetServices('form.successShort','Thanks! We will contact you shortly.');
+        const data = await res.json();
+        if (data && data.success) {
+          window.location.assign(data.thank_you_url || '/thank-you');
+          return;
+        }
+        throw new Error((data && data.message) || 'Failed');
         const toast = document.getElementById('toast');
         if (toast) {
           toast.textContent = i18nGetServices('form.successToast','Thank you! Your message was successfully sent.');

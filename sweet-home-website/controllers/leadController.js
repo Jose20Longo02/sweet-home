@@ -15,6 +15,7 @@ const {
   updateLeadNotificationSettings
 } = require('../utils/leadNotificationSettings');
 const { extractAttributionFromRequest, deriveTrafficSource } = require('../utils/leadAttribution');
+const { setLeadThankYou } = require('../utils/leadThankYou');
 
 const { validationResult } = require('express-validator');
 
@@ -341,8 +342,10 @@ exports.createFromProperty = async (req, res, next) => {
       ...attribution
     });
 
+    setLeadThankYou(req, { name, language });
+
     // Respond quickly, then send emails asynchronously
-    res.json({ success: true, lead });
+    res.json({ success: true, lead, thank_you_url: '/thank-you' });
 
     // Send to Zapier webhook (async)
     setImmediate(() => {
@@ -507,8 +510,10 @@ exports.createFromProject = async (req, res, next) => {
       ...attribution
     });
 
+    setLeadThankYou(req, { name, language });
+
     // Respond quickly
-    res.json({ success: true, lead });
+    res.json({ success: true, lead, thank_you_url: '/thank-you' });
 
     // Send to Zapier webhook (async)
     setImmediate(() => {
@@ -653,7 +658,8 @@ exports.createFromBerlinInvestorStrategy = async (req, res, next) => {
       ...attribution
     });
 
-    res.json({ success: true, lead });
+    setLeadThankYou(req, { name, language });
+    res.json({ success: true, lead, thank_you_url: '/thank-you' });
 
     setImmediate(async () => {
       if (!isDuplicate) {

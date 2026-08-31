@@ -868,10 +868,8 @@ class PropertyDetailPage {
             property_title: formDataObj.propertyTitle || ''
           });
         }
-        this.showSuccessMessage('Thank you! Your inquiry was submitted. A team member will be in touch soon.');
-        // Close the contact modal
-        if (typeof closeContactModal === 'function') closeContactModal();
-        event.target.reset();
+        window.location.assign(data.thank_you_url || '/thank-you');
+        return;
       } else {
         this.showErrorMessage(data.message || 'Failed to send message. Please try again.');
       }

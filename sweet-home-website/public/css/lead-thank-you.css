@@ -1,0 +1,131 @@
+@import url('/css/variables.css');
+
+.lead-thank-you-page {
+  display: grid;
+  min-height: min(720px, calc(100vh - 160px));
+  place-items: center;
+  padding: clamp(2rem, 7vw, 6rem) 1rem;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(217, 205, 184, 0.35), transparent 32%),
+    linear-gradient(135deg, var(--gray-50), var(--white));
+}
+
+.lead-thank-you-card {
+  position: relative;
+  width: min(100%, 620px);
+  box-sizing: border-box;
+  padding: clamp(2rem, 6vw, 4rem);
+  overflow: hidden;
+  border: 1px solid var(--brand-sand);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 22px 65px rgba(15, 23, 42, 0.12);
+  text-align: center;
+}
+
+.lead-thank-you-card::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, var(--brand-green), var(--brand-sand-dark), var(--brand-green));
+  content: '';
+}
+
+.lead-thank-you-mark {
+  display: grid;
+  width: 4.5rem;
+  height: 4.5rem;
+  place-items: center;
+  margin: 0 auto 1.5rem;
+  border: 1px solid rgba(46, 168, 98, 0.25);
+  border-radius: 50%;
+  background: rgba(46, 168, 98, 0.1);
+  color: var(--brand-green-dark);
+}
+
+.lead-thank-you-mark span {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.lead-thank-you-eyebrow {
+  display: block;
+  margin-bottom: 0.65rem;
+  color: var(--brand-green-dark);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.lead-thank-you-card h1 {
+  margin: 0;
+  color: var(--brand-charcoal);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.3rem, 7vw, 4rem);
+  line-height: 1;
+}
+
+.lead-thank-you-greeting {
+  margin: 1.35rem 0 0.65rem;
+  color: var(--gray-800);
+  font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+  font-weight: 700;
+}
+
+.lead-thank-you-body {
+  max-width: 480px;
+  margin: 0 auto;
+  color: var(--gray-600);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.lead-thank-you-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.lead-thank-you-actions .btn {
+  min-width: 210px;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.lead-thank-you-actions .btn-outline {
+  border: 2px solid var(--gray-200);
+  color: var(--gray-700);
+}
+
+.lead-thank-you-note {
+  margin: 1.8rem 0 0;
+  color: var(--brand-green-dark);
+  font-size: 0.88rem;
+  font-style: italic;
+}
+
+@media (max-width: 520px) {
+  .lead-thank-you-page {
+    min-height: calc(100vh - 120px);
+    padding: 2rem 0.75rem;
+  }
+
+  .lead-thank-you-card {
+    padding: 2.25rem 1.25rem;
+    border-radius: 18px;
+  }
+
+  .lead-thank-you-actions {
+    flex-direction: column;
+  }
+
+  .lead-thank-you-actions .btn {
+    width: 100%;
+    min-width: 0;
+  }
+}

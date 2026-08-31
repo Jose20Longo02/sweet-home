@@ -346,8 +346,8 @@
         window.analytics.trackFormSubmit('berlin_investor_strategy_form', null, null);
       }
 
-      showSuccessMessage('Thank you! Your form was submitted successfully. A team member will contact you shortly.');
-      form.reset();
+      window.location.assign(data.thank_you_url || '/thank-you');
+      return;
     } catch (err) {
       showMessage(err.message || 'Something went wrong. Please try again later.', 'error');
     } finally {

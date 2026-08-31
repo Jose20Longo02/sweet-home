@@ -11,6 +11,7 @@ const { recaptchaRequired } = require('../middleware/recaptcha');
 const { spamDetection } = require('../middleware/spamDetection');
 const { logEvent } = require('../utils/analytics');
 const { getLeadNotificationSetting, getZapierDefaultAgentForSource, normalizeEmailList } = require('../utils/leadNotificationSettings');
+const { consumeLeadThankYou, setLeadThankYou } = require('../utils/leadThankYou');
 const recaptchaMinScore = (() => {
   const v = parseFloat(process.env.RECAPTCHA_MIN_SCORE || '0.5');
   return Number.isFinite(v) ? v : 0.5;
@@ -33,6 +34,18 @@ const leadValidations = [
   body('propertyId').optional({ checkFalsy: true }).isInt({ min: 1 }),
   body('projectId').optional({ checkFalsy: true }).isInt({ min: 1 })
 ];
+
+// Lead confirmation page. The name and language are read once from the session,
+// rather than exposed in the URL.
+router.get('/thank-you', (req, res) => {
+  const thankYou = consumeLeadThankYou(req);
+  res.set('X-Robots-Tag', 'noindex, nofollow');
+  res.render('lead/thank-you', {
+    title: 'Thank you',
+    leadName: thankYou.name,
+    leadLanguage: thankYou.language
+  });
+});
 
 // Public API endpoints (rate limited + validated + spam detection)
 // Legacy crawler hits this POST-only endpoint with GET; return 410 to deindex quickly.
@@ -93,7 +106,8 @@ router.post(
           [email]
         );
         if (existing.length) {
-          return res.json({ success: true, throttled: true });
+          setLeadThankYou(req, { name, language });
+          return res.json({ success: true, throttled: true, thank_you_url: '/thank-you' });
         }
       }
       const { extractAttributionFromRequest } = require('../utils/leadAttribution');
@@ -125,7 +139,8 @@ router.post(
           req
         });
       } catch (_) {}
-      res.json({ success: true, lead });
+      setLeadThankYou(req, { name, language });
+      res.json({ success: true, lead, thank_you_url: '/thank-you' });
 
       // Send to Zapier webhook (async)
       setImmediate(async () => {

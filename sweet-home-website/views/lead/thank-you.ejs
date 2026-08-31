@@ -1,0 +1,52 @@
+<%
+  const language = ['de', 'es'].includes(leadLanguage) ? leadLanguage : 'en';
+  const copy = {
+    en: {
+      eyebrow: 'Sweet Home Berlin',
+      title: 'Thank you',
+      greeting: leadName ? `Thank you, ${leadName}.` : 'Thank you for getting in touch.',
+      body: 'We have received your request. A member of our team will review it and get back to you shortly.',
+      primary: 'Explore Berlin properties',
+      secondary: 'Return to homepage',
+      note: 'We look forward to speaking with you.'
+    },
+    de: {
+      eyebrow: 'Sweet Home Berlin',
+      title: 'Vielen Dank',
+      greeting: leadName ? `Vielen Dank, ${leadName}.` : 'Vielen Dank für Ihre Anfrage.',
+      body: 'Wir haben Ihre Anfrage erhalten. Unser Team prüft sie und meldet sich in Kürze bei Ihnen.',
+      primary: 'Berliner Immobilien entdecken',
+      secondary: 'Zur Startseite',
+      note: 'Wir freuen uns auf Ihre Nachricht.'
+    },
+    es: {
+      eyebrow: 'Sweet Home Berlin',
+      title: 'Gracias',
+      greeting: leadName ? `Gracias, ${leadName}.` : 'Gracias por contactarnos.',
+      body: 'Hemos recibido tu solicitud. Nuestro equipo la revisará y se pondrá en contacto contigo pronto.',
+      primary: 'Ver propiedades en Berlín',
+      secondary: 'Volver al inicio',
+      note: 'Estamos deseando hablar contigo.'
+    }
+  }[language];
+%>
+
+<link rel="stylesheet" href="/css/lead-thank-you.css?v=1" />
+<meta name="robots" content="noindex, nofollow" />
+
+<div class="lead-thank-you-page">
+  <section class="lead-thank-you-card" aria-labelledby="lead-thank-you-title">
+    <div class="lead-thank-you-mark" aria-hidden="true">
+      <span>✓</span>
+    </div>
+    <span class="lead-thank-you-eyebrow"><%= copy.eyebrow %></span>
+    <h1 id="lead-thank-you-title"><%= copy.title %></h1>
+    <p class="lead-thank-you-greeting"><%= copy.greeting %></p>
+    <p class="lead-thank-you-body"><%= copy.body %></p>
+    <div class="lead-thank-you-actions">
+      <a class="btn btn-primary" href="/wohnungen-berlin-kaufen"><%= copy.primary %></a>
+      <a class="btn btn-outline" href="/"><%= copy.secondary %></a>
+    </div>
+    <p class="lead-thank-you-note"><%= copy.note %></p>
+  </section>
+</div>
