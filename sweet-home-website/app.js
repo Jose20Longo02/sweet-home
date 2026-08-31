@@ -80,16 +80,16 @@ app.use(
       "base-uri": ["'self'"],
       "form-action": ["'self'"],
       // permit CDN images broadly; Spaces CDN is HTTPS
-      "img-src": ["'self'", 'data:', 'blob:', 'https:', 'https://*.tile.openstreetmap.org', 'https://unpkg.com', 'https://www.google-analytics.com', 'https://*.google-analytics.com'],
+      "img-src": ["'self'", 'data:', 'blob:', 'https:', 'https://*.tile.openstreetmap.org', 'https://unpkg.com', 'https://www.google-analytics.com', 'https://*.google-analytics.com', 'https://backoffice.contact.org.il'],
       "media-src": ["'self'", 'blob:', 'https:'],
-      "script-src": ["'self'", "'unsafe-inline'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com', 'https://connect.facebook.net'],
-      "script-src-elem": ["'self'", "'unsafe-inline'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com', 'https://connect.facebook.net'],
+      "script-src": ["'self'", "'unsafe-inline'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com', 'https://connect.facebook.net', 'https://backoffice.contact.org.il'],
+      "script-src-elem": ["'self'", "'unsafe-inline'", 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://unpkg.com', 'https://www.googletagmanager.com', 'https://www.youtube.com', 'https://connect.facebook.net', 'https://backoffice.contact.org.il'],
       "script-src-attr": ["'none'"],
       "style-src": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
       "style-src-elem": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
       "style-src-attr": ["'unsafe-inline'"],
       "font-src": ["'self'", 'data:', 'https://fonts.gstatic.com'],
-      "connect-src": ["'self'", 'https://nominatim.openstreetmap.org', 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://www.google-analytics.com', 'https://region1.google-analytics.com', 'https://*.google-analytics.com', 'https://www.googletagmanager.com'],
+      "connect-src": ["'self'", 'https://nominatim.openstreetmap.org', 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://www.google-analytics.com', 'https://region1.google-analytics.com', 'https://*.google-analytics.com', 'https://www.googletagmanager.com', 'https://backoffice.contact.org.il'],
       "frame-src": ['https://www.google.com', 'https://www.youtube.com', 'https://player.vimeo.com']
     }
   })

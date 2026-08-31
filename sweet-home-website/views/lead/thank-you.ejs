@@ -50,3 +50,17 @@
     <p class="lead-thank-you-note"><%= copy.note %></p>
   </section>
 </div>
+
+<% if (isLeadConfirmation) { %>
+  <!-- ContactBeat conversion pixel: fires only after a successful lead submission -->
+  <script>
+    !function(f,b,n)
+    {if(f.ctq)return;n=f.ctq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._ctq)f._ctq=n;n.push=n;n.loaded=!0;n.version='1.0';
+      n.queue=[];
+    }(window, document);
+    ctq('init', '01m0yzqb67ht2dz7e0rjnaab2e');
+    ctq('track', 'Lead');
+  </script>
+<% } %>

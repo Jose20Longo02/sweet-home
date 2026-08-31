@@ -43,7 +43,8 @@ router.get('/thank-you', (req, res) => {
   res.render('lead/thank-you', {
     title: 'Thank you',
     leadName: thankYou.name,
-    leadLanguage: thankYou.language
+    leadLanguage: thankYou.language,
+    isLeadConfirmation: Boolean(thankYou.name)
   });
 });
 
