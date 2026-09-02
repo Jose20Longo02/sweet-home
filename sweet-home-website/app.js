@@ -1785,15 +1785,22 @@ app.get('/sitemap.xml', async (req, res, next) => {
     staticUrls.push({ loc: `${base}/wohnung-kaufen-pankow`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
 
     // Dynamic properties (Berlin / Germany focus — exclude Cyprus & UAE individual listings, N5)
+    // Also exclude legacy slugs that 301 via highValueLegacyRedirects (Semrush "wrong pages in sitemap").
+    const sitemapExcludedPropertySlugs = new Set([
+      'geraumige-3-zimmer-wohnung-im-herzen-von-moabit-kapitalanlage-mit-stabiler-rendite'
+    ]);
     const props = await query(`
       SELECT slug, updated_at, created_at
       FROM properties
       WHERE slug IS NOT NULL
         AND COALESCE(country, '') NOT IN ('Cyprus', 'UAE')
+        AND COALESCE(status, 'active') = 'active'
       ORDER BY updated_at DESC NULLS LAST, created_at DESC NULLS LAST
       LIMIT 5000
     `);
-    const propUrls = (props.rows || []).map(r => ({
+    const propUrls = (props.rows || [])
+      .filter((r) => r.slug && !sitemapExcludedPropertySlugs.has(String(r.slug)))
+      .map(r => ({
       loc: `${base}/properties/${r.slug}`,
       lastmod: (r.updated_at || r.created_at) ? new Date(r.updated_at || r.created_at).toISOString() : null,
       changefreq: 'weekly',

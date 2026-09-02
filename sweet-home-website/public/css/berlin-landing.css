@@ -787,6 +787,66 @@
   margin-bottom: 28px;
 }
 
+/* District Ratgeber — image + title cards (both clickable; title remains text link) */
+.berlin-ratgeber-cards {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.berlin-ratgeber-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.berlin-ratgeber-card__media {
+  display: block;
+  overflow: hidden;
+  border-radius: 4px;
+  aspect-ratio: 16 / 10;
+  background: var(--gray-100, #f1f5f9);
+}
+
+.berlin-ratgeber-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.berlin-ratgeber-card:hover .berlin-ratgeber-card__media img,
+.berlin-ratgeber-card:focus-within .berlin-ratgeber-card__media img {
+  transform: scale(1.03);
+}
+
+.berlin-ratgeber-card__title {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--primary-color, #2ea862);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.berlin-ratgeber-card__title:hover,
+.berlin-ratgeber-card__title:focus-visible {
+  color: var(--primary-dark, #247a4c);
+}
+
+@media (max-width: 640px) {
+  .berlin-ratgeber-cards {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
 .berlin-areas__list {
   list-style: none;
   margin: 0 0 32px;

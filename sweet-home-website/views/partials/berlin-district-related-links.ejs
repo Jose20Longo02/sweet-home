@@ -49,10 +49,16 @@
   <div class="berlin-content__inner">
     <h2 id="district-ratgeber-heading" class="berlin-content__title">Ratgeber zum Wohnungskauf</h2>
     <p class="berlin-content__intro">Passende Guides von Sweet Home Berlin — speziell hilfreich, wenn Sie in <%= currentDistrictName %> kaufen oder vergleichen möchten.</p>
-    <ul class="berlin-areas__list">
-      <% ratgeberLinks.forEach(function(link) { %>
-        <li class="berlin-areas__item">
-          <a href="<%= (typeof localePath === 'function') ? localePath(link.href) : link.href %>"><%= link.anchor %></a>
+    <ul class="berlin-ratgeber-cards">
+      <% ratgeberLinks.forEach(function(link) {
+        const cardHref = (typeof localePath === 'function') ? localePath(link.href) : link.href;
+        const coverSrc = link.cover || '/images/berlin-hero.jpg';
+      %>
+        <li class="berlin-ratgeber-card">
+          <a class="berlin-ratgeber-card__media" href="<%= cardHref %>" tabindex="-1" aria-hidden="true">
+            <img src="<%= coverSrc %>" alt="" loading="lazy" decoding="async" width="640" height="400">
+          </a>
+          <a class="berlin-ratgeber-card__title" href="<%= cardHref %>"><%= link.anchor %></a>
         </li>
       <% }); %>
     </ul>
