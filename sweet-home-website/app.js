@@ -89,7 +89,7 @@ app.use(
       "style-src-elem": ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://fonts.googleapis.com'],
       "style-src-attr": ["'unsafe-inline'"],
       "font-src": ["'self'", 'data:', 'https://fonts.gstatic.com'],
-      "connect-src": ["'self'", 'https://nominatim.openstreetmap.org', 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://www.google-analytics.com', 'https://region1.google-analytics.com', 'https://*.google-analytics.com', 'https://www.googletagmanager.com', 'https://backoffice.contact.org.il'],
+      "connect-src": ["'self'", 'https://nominatim.openstreetmap.org', 'https://www.google.com', 'https://www.gstatic.com', 'https://www.recaptcha.net', 'https://www.google-analytics.com', 'https://region1.google-analytics.com', 'https://*.google-analytics.com', 'https://www.googletagmanager.com', 'https://backoffice.contact.org.il', 'https://ipapi.co'],
       "frame-src": ['https://www.google.com', 'https://www.youtube.com', 'https://player.vimeo.com']
     }
   })

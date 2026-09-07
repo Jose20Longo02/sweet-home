@@ -73,13 +73,14 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 9. N5 Cyprus/Dubai crawl weight  
 10. N6 district FAQ SSR  
 11. N7 wrong Bezirk on listings + duplicate Moabit + Bäder typo  
-12. ~~N8 social profiles → `.de`~~ ⚠️ Adi 2026-09: IG/FB bios still show old `.co.il/en` — reconfirm ownership + update  
+12. ~~N8 social profiles → `.de`~~ ✅ reconfirmed 2026-09-02 (IG/FB bios updated by Luis)  
 13. ~~N9 six new posts (3/week), publish directly~~ ✅ 6/6  
 14. ~~N10 EN versions of Berlin posts~~ ✅ 2026-08-26 (deploy code)  
 15. ~~N11 Ratgeber blocks on district pages~~ ✅ 2026-08-26 → **UX cards** (image + title) in progress / deploy  
 16. **Adi follow-up:** rework `/blog/wo-in-berlin-wohnung-kaufen` (over-linked) ✅ DB 2026-09-02  
 17. **Adi follow-up:** sitemap clean indexable URLs only (exclude 301 legacy property slug) — deploy  
 18. Breadcrumb schema + console housekeeping — closed by Adi  
+19. **Singapore junk traffic (Adi 2026-09):** Cloudflare **Managed Challenge** for SG + exclude SG from GA4 performance reviews; escalate to Block only if junk persists after 1–2 weeks  
 
 ---
 
@@ -623,6 +624,8 @@ Confirmations you asked for:
 | 2026-08-13 | Status PDF + email draft for Adi (post-N3) | **Send to Adi** | PDF `Sweet-Home-Status-Update-2026-08-13.pdf`; email `docs/drafts/blog/EMAIL-TO-ADI-STATUS-2026-08-13.md` |
 | 2026-08-19 | Adi: N9 week 1 pass; N4 homepage copy OK; Week 2 green light | Ship | og/twitter titles no ellipsis; unique listing covers + link; homepage Berlin title/meta/og:image |
 | 2026-09-02 | Adi week-2 review notes | Ship / confirm | Bezirke post rework (DB); Ratgeber visual cards; sitemap exclude 301 Moabit slug; reopen N8 IG/FB bios |
+| 2026-09-02 | **N8 reconfirm:** IG/FB website → sweethome-immobilien.de | Done (manual) | Luis has access; bios updated after Adi’s note |
+| 2026-09-02 | Singapore GA4 junk traffic | Adi decision | Managed Challenge (not Block) in Cloudflare; exclude SG from GA4 reviews; revisit Block in 1–2 weeks if needed |
 
 ---
 
