@@ -14,6 +14,7 @@
       <p class="subtitle">All inquiries across all properties</p>
     </div>
     <div class="right">
+      <button type="button" id="enrichGa4Btn" class="btn btn-light" style="margin-right: 10px;" title="Lookup GA4 acquisition for leads that have a client id">↻ Enrich from GA4</button>
       <button type="button" id="exportLeadsBtn" class="btn btn-primary" style="margin-right: 10px;">📥 Export Leads</button>
       <a href="/superadmin/dashboard" class="btn btn-light">← Return to dashboard</a>
     </div>
@@ -159,7 +160,7 @@
                 <% } %>
               </td>
               <td data-label="Language"><%= lead.preferred_language ? String(lead.preferred_language).toUpperCase() : '-' %></td>
-              <td data-label="Traffic source"><%= (typeof deriveTrafficSource === 'function' ? deriveTrafficSource(lead) : '-') %></td>
+              <td data-label="Traffic source" title="<%= lead.ga_client_id ? ('GA4 client_id: ' + lead.ga_client_id) : '' %>"><%= (typeof deriveTrafficSource === 'function' ? deriveTrafficSource(lead) : '-') %><% if (lead.ga_session_source || lead.ga_channel_group) { %><div class="muted" style="font-size:0.75rem;margin-top:2px;">via GA4</div><% } else if (lead.ga_client_id) { %><div class="muted" style="font-size:0.75rem;margin-top:2px;">GA linked</div><% } %></td>
               <td data-label="Status">
                 <select data-lead-id="<%= lead.id %>" class="lead-status">
                   <% ['New','Contacted','Interested','Not Interested','Closed'].forEach(s => { %>
@@ -305,7 +306,44 @@
   </div>
 </div>
 
-<script src="/js/superadmin-leads.js?v=3" defer></script>
+<script src="/js/superadmin-leads.js?v=4" defer></script>
 <script src="/js/superadmin-export-leads.js?v=2" defer></script>
+<script>
+(function () {
+  var btn = document.getElementById('enrichGa4Btn');
+  if (!btn) return;
+  btn.addEventListener('click', async function () {
+    if (!confirm('Look up GA4 acquisition for recent leads that have a GA client id but no GA source yet?')) return;
+    btn.disabled = true;
+    var prev = btn.textContent;
+    btn.textContent = 'Enriching…';
+    try {
+      var res = await fetch('/superadmin/dashboard/leads/enrich-ga4', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'CSRF-Token': (document.querySelector('meta[name="csrf-token"]') || {}).content || '',
+          'X-CSRF-Token': (document.querySelector('meta[name="csrf-token"]') || {}).content || ''
+        },
+        body: JSON.stringify({ limit: 40 })
+      });
+      var data = await res.json().catch(function () { return {}; });
+      if (!res.ok || data.success === false) {
+        alert(data.message || data.reason || ('Enrich failed (' + res.status + ')'));
+      } else {
+        var ok = (data.results || []).filter(function (r) { return r.ok; }).length;
+        alert('GA4 enrich done. Updated: ' + ok + ' / attempted: ' + (data.count || 0) + '. Reload to see “via GA4”.');
+        window.location.reload();
+      }
+    } catch (err) {
+      alert('Enrich request failed: ' + (err && err.message ? err.message : err));
+    } finally {
+      btn.disabled = false;
+      btn.textContent = prev;
+    }
+  });
+})();
+</script>
 
 

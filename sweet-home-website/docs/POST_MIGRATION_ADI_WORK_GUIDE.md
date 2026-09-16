@@ -626,6 +626,8 @@ Confirmations you asked for:
 | 2026-09-02 | Adi week-2 review notes | Ship / confirm | Bezirke post rework (DB); Ratgeber visual cards; sitemap exclude 301 Moabit slug; reopen N8 IG/FB bios |
 | 2026-09-02 | **N8 reconfirm:** IG/FB website → sweethome-immobilien.de | Done (manual) | Luis has access; bios updated after Adi’s note |
 | 2026-09-02 | Singapore GA4 junk traffic | Adi decision | Managed Challenge (not Block) in Cloudflare; exclude SG from GA4 reviews; revisit Block in 1–2 weeks if needed |
+| 2026-09-15 | Lead attribution: organic fill + GA4 client_id | Deploy | First-touch fill-if-empty; Google/Bing referrer → organic UTMs; store `ga_client_id` on leads for later GA4 source lookup |
+| 2026-09-16 | Lead attribution Phase 2: GA4 acquisition lookup | Deploy + GA4 setup | Data API enrich by `sh_ga_cid`; delayed + batch enrich; see `docs/GA4_LEAD_ATTRIBUTION.md` |
 
 ---
 

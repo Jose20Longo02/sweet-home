@@ -15,6 +15,7 @@ const {
   updateLeadNotificationSettings
 } = require('../utils/leadNotificationSettings');
 const { extractAttributionFromRequest, deriveTrafficSource } = require('../utils/leadAttribution');
+const { scheduleLeadEnrichment, enrichLeadById, enrichPendingLeads, isConfigured: isGa4AcquisitionConfigured } = require('../utils/ga4Acquisition');
 const { setLeadThankYou } = require('../utils/leadThankYou');
 
 const { validationResult } = require('express-validator');
@@ -347,6 +348,10 @@ exports.createFromProperty = async (req, res, next) => {
     // Respond quickly, then send emails asynchronously
     res.json({ success: true, lead, thank_you_url: '/thank-you' });
 
+    if (!dupCheck.rows[0] && lead && lead.id) {
+      scheduleLeadEnrichment(lead.id);
+    }
+
     // Send to Zapier webhook (async)
     setImmediate(() => {
       sendToZapier(lead);
@@ -515,6 +520,10 @@ exports.createFromProject = async (req, res, next) => {
     // Respond quickly
     res.json({ success: true, lead, thank_you_url: '/thank-you' });
 
+    if (!dupCheck.rows[0] && lead && lead.id) {
+      scheduleLeadEnrichment(lead.id);
+    }
+
     // Send to Zapier webhook (async)
     setImmediate(() => {
       sendToZapier(lead);
@@ -660,6 +669,10 @@ exports.createFromBerlinInvestorStrategy = async (req, res, next) => {
 
     setLeadThankYou(req, { name, language });
     res.json({ success: true, lead, thank_you_url: '/thank-you' });
+
+    if (!isDuplicate && lead && lead.id) {
+      scheduleLeadEnrichment(lead.id);
+    }
 
     setImmediate(async () => {
       if (!isDuplicate) {
@@ -1018,7 +1031,11 @@ exports.exportAll = async (req, res, next) => {
         'UTM Term': lead.utm_term || '',
         'UTM Content': lead.utm_content || '',
         'Referrer': lead.referrer || '',
-        'Page Path': lead.page_path || ''
+        'Page Path': lead.page_path || '',
+        'GA4 Client ID': lead.ga_client_id || '',
+        'GA4 Source': lead.ga_session_source || '',
+        'GA4 Medium': lead.ga_session_medium || '',
+        'GA4 Channel': lead.ga_channel_group || ''
       };
     });
 
@@ -1146,6 +1163,51 @@ exports.updateLead = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
+// Enrich one lead from GA4 Data API (Admin: own leads; SuperAdmin: any)
+exports.enrichLeadFromGa4 = async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (!Number.isFinite(id)) return res.status(400).json({ success: false, message: 'Invalid id' });
+    if (!isGa4AcquisitionConfigured()) {
+      return res.status(503).json({
+        success: false,
+        message: 'GA4 acquisition lookup is not configured (set GA4_PROPERTY_ID + service account).'
+      });
+    }
+
+    const { rows } = await query('SELECT agent_id FROM leads WHERE id = $1', [id]);
+    if (!rows.length) return res.status(404).json({ success: false, message: 'Lead not found' });
+    const ownerId = rows[0].agent_id;
+    const role = req.session.user?.role;
+    const currentId = req.session.user?.id;
+    if (!(role === 'SuperAdmin' || ownerId === currentId)) {
+      return res.status(403).json({ success: false, message: 'Forbidden' });
+    }
+
+    const force = String(req.body?.force || req.query?.force || '') === '1';
+    const result = await enrichLeadById(id, { force });
+    return res.json({
+      success: Boolean(result.ok),
+      ...result,
+      traffic_source: result.lead ? deriveTrafficSource(result.lead) : null
+    });
+  } catch (err) { next(err); }
+};
+
+// SuperAdmin batch enrich
+exports.enrichLeadsFromGa4Batch = async (req, res, next) => {
+  try {
+    if (!isGa4AcquisitionConfigured()) {
+      return res.status(503).json({
+        success: false,
+        message: 'GA4 acquisition lookup is not configured (set GA4_PROPERTY_ID + service account).'
+      });
+    }
+    const limit = parseInt(req.body?.limit || req.query?.limit || '40', 10);
+    const result = await enrichPendingLeads({ limit });
+    return res.json({ success: true, ...result });
+  } catch (err) { next(err); }
+};
 
 // Delete lead (Admin can delete own leads; SuperAdmin can delete any)
 exports.deleteLead = async (req, res, next) => {

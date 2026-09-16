@@ -127,6 +127,10 @@ router.post(
         ...attribution
       });
       try {
+        const { scheduleLeadEnrichment } = require('../utils/ga4Acquisition');
+        if (lead && lead.id) scheduleLeadEnrichment(lead.id);
+      } catch (_) {}
+      try {
         await logEvent({
           eventType: 'contact_form_submit',
           entityType: lead_type === 'seller' ? 'seller' : 'general',
@@ -361,6 +365,10 @@ router.get('/superadmin/dashboard/leads/export', ensureSuperAdmin, leadControlle
 
 // Update lead (status/notes)
 router.post('/api/leads/:id', ensureAuthenticated, leadController.updateLead);
+
+// Enrich traffic source from GA4 (by stored ga_client_id)
+router.post('/api/leads/:id/enrich-ga4', ensureAuthenticated, leadController.enrichLeadFromGa4);
+router.post('/superadmin/dashboard/leads/enrich-ga4', ensureSuperAdmin, leadController.enrichLeadsFromGa4Batch);
 
 // Delete lead (Admin: own leads; SuperAdmin: any)
 router.delete('/api/leads/:id', ensureAuthenticated, leadController.deleteLead);

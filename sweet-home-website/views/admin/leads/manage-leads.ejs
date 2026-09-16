@@ -124,7 +124,7 @@
                 <% } %>
               </td>
               <td data-label="Language"><%= lead.preferred_language ? String(lead.preferred_language).toUpperCase() : '-' %></td>
-              <td data-label="Traffic source"><%= (typeof deriveTrafficSource === 'function' ? deriveTrafficSource(lead) : '-') %></td>
+              <td data-label="Traffic source" title="<%= lead.ga_client_id ? ('GA4 client_id: ' + lead.ga_client_id) : '' %>"><%= (typeof deriveTrafficSource === 'function' ? deriveTrafficSource(lead) : '-') %><% if (lead.ga_session_source || lead.ga_channel_group) { %><div class="muted" style="font-size:0.75rem;margin-top:2px;">via GA4</div><% } else if (lead.ga_client_id) { %><div class="muted" style="font-size:0.75rem;margin-top:2px;">GA linked</div><% } %></td>
               <td data-label="Status">
                 <select data-lead-id="<%= lead.id %>" class="lead-status">
                   <% ['New','Contacted','Interested','Not Interested','Closed'].forEach(s => { %>

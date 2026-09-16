@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-analytics/data": "^7.1.0",
     "aws-sdk": "^1.18.0",
     "bcrypt": "^6.0.0",
     "chart.js": "^4.4.1",

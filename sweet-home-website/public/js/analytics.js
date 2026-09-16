@@ -212,6 +212,27 @@
     trackPageView(virtualPath, virtualTitle);
   }
 
+  /**
+   * Attach GA4 client_id as a user property so the Data API can look up
+   * first-user acquisition for CRM leads (customUser:sh_ga_cid).
+   */
+  function syncGaClientUserProperty() {
+    if (!hasGA) return;
+    try {
+      let clientId = '';
+      const match = document.cookie.match(/(?:^|; )_ga=([^;]*)/);
+      if (match) {
+        const parts = decodeURIComponent(match[1]).split('.');
+        if (parts.length >= 4) clientId = parts.slice(2).join('.');
+      }
+      if (!clientId) return;
+      gtag('set', 'user_properties', { sh_ga_cid: String(clientId) });
+      logEvent('user_properties', { sh_ga_cid: clientId });
+    } catch (error) {
+      console.error('[Analytics] Error setting GA client user property:', error);
+    }
+  }
+
   // Export public API
   window.analytics = {
     trackEvent: trackEvent,
@@ -225,13 +246,19 @@
     trackFilterApplied: trackFilterApplied,
     trackSortApplied: trackSortApplied,
     trackPageView: trackPageView,
-    trackVirtualPageView: trackVirtualPageView
+    trackVirtualPageView: trackVirtualPageView,
+    syncGaClientUserProperty: syncGaClientUserProperty
   };
 
   // NOTE: Do not auto-track page views here. The gtag('config', ...) call in the
   // layout head already sends the initial page_view; sending another config with
   // page_path on load double-counted every page view in GA4.
   // trackPageView/trackVirtualPageView remain available for SPA-style navigation.
+
+  // Link CRM ↔ GA4 via user property (needed for organic vs Direct enrichment)
+  try { syncGaClientUserProperty(); } catch (_) {}
+  // Cookie may appear slightly after gtag loads
+  setTimeout(function () { try { syncGaClientUserProperty(); } catch (_) {} }, 1500);
 
 })();
 
