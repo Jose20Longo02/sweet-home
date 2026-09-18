@@ -484,7 +484,11 @@ class PropertyDetailPage {
           if (fallbackApplied || !this.map) return;
           fallbackApplied = true;
           this.map.removeLayer(primaryTileLayer);
-          L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+          const cartoKey = (document.querySelector('meta[name="carto-basemap-key"]')?.getAttribute('content') || '').trim();
+          const cartoTileUrl = cartoKey
+            ? `https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?api_key=${encodeURIComponent(cartoKey)}`
+            : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+          L.tileLayer(cartoTileUrl, {
             attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
             subdomains: 'abcd',
             crossOrigin: true

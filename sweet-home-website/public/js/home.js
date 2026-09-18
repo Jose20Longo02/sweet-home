@@ -216,7 +216,11 @@ function initializeMarketExplorer() {
     worldCopyJump: true
   }).setView([35, 33], 3);
 
-  const primaryTiles = Leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  const cartoKey = (document.querySelector('meta[name="carto-basemap-key"]')?.getAttribute('content') || '').trim();
+  const cartoTileUrl = cartoKey
+    ? `https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?api_key=${encodeURIComponent(cartoKey)}`
+    : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+  const primaryTiles = Leaflet.tileLayer(cartoTileUrl, {
     attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
     subdomains: 'abcd',
     maxZoom: 20

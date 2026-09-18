@@ -35,6 +35,9 @@
   <link rel="preload" as="style" href="/css/variables.css" />
   <link rel="stylesheet" href="/css/variables.css" />
   <meta name="csrf-token" content="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+  <% if (typeof CARTO_BASEMAP_API_KEY !== 'undefined' && CARTO_BASEMAP_API_KEY) { %>
+  <meta name="carto-basemap-key" content="<%= String(CARTO_BASEMAP_API_KEY).replace(/"/g, '&quot;') %>">
+  <% } %>
   <!-- Dynamic Icon Theme CSS Variables - Must come after styles.css to override -->
   <link rel="stylesheet" href="/css/icon-theme.css" />
   <% if ((typeof GA_MEASUREMENT_ID !== 'undefined' && GA_MEASUREMENT_ID) && !(typeof currentPath !== 'undefined' && (/^\/(admin|superadmin)/).test(currentPath))) { %>

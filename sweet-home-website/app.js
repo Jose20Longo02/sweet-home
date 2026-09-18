@@ -168,6 +168,7 @@ app.use(i18nMiddleware);
 app.use((req, res, next) => { try { res.set('X-App-Lang', res.locals.lang || ''); } catch (_) {} next(); });
 // Expose GA Measurement ID to views
 app.use((req, res, next) => { res.locals.GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID || ''; next(); });
+app.use((req, res, next) => { res.locals.CARTO_BASEMAP_API_KEY = process.env.CARTO_BASEMAP_API_KEY || ''; next(); });
 // Expose default consent
 // Default to 'granted' for analytics_storage to enable proper user tracking
 // Set GA_CONSENT_DEFAULT=denied in .env if you need to implement a consent banner
