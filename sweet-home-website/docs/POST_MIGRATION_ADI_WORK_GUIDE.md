@@ -14,7 +14,8 @@
 | `Sweet_Home_Internal_Link_Map.xlsx` | Exact in-content links to add |
 | `Sweet_Home_Pages_and_Keywords_Berlin.xlsx` | Page/keyword map (exists vs create) |
 | `Sweet_Home_Migration_Fixes_Now.docx` | **HIGH PRIORITY** post-migration integrity fixes (P1–P3) — received 2026-08-04 |
-| `Sweet_Home_Dev_Tasks_Next_2_Weeks.docx` | **ACTIVE** next-two-weeks tasks (N1–N11) — received 2026-08-10 |
+| `Sweet_Home_Dev_Tasks_Next_2_Weeks.docx` | Next-two-weeks tasks (N1–N11) — received 2026-08-10. **Closed** as previous cycle |
+| `Sweet_Home_Tasks_Sep_Cycle.docx` | **ACTIVE** next two weeks (S1–S10) — received 2026-09-18 |
 
 Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBOOK.md) (go-live / redirects / GSC).
 
@@ -22,9 +23,9 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 
 ## How to use this document
 
-- **Current priority (2026-08-10):** **Phase N** — Adi’s next-two-weeks pack. **Urgent first:** N2 duplicate blog URLs → then N1 publish six drafts on German keyword slugs → rest of N3–N11.
+- **Current priority (2026-09-18):** **Phase S** — Adi’s September cycle. Do **S1–S5 first** (homepage crawl, remove empty markets, popup, Paphos URLs, strategy page). Then EN districts + six new posts. Phase N is closed.
 - Check boxes as you go: `- [ ]` → `- [x]`.
-- Cyprus / Dubai content is **off-focus** — reduce crawl weight (see N5); no internal-link work there.
+- Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
 ### Adi reply 2026-08-10 (email summary)
 
@@ -47,7 +48,7 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 1. Weekly status by email is enough.
 2. Use AI to help with content — but quality must read as natural German, not machine-translated.
 3. Goal for blog work: be the **best answer for the keyword**, not just “exist.”
-4. **Blog publish policy (updated 2026-08-10):** Follow Phase E checklist → publish on **German keyword slug** directly. No draft-and-wait. Adi reviews live weekly. Homepage + money page copy still need her OK first.
+4. **Blog publish policy (updated 2026-09-18 for this cycle):** Quality over speed. **Human read-through before anything goes live.** Flowing article text with images, not a list. German keyword slug + English version with an English slug (never the German slug). Homepage + money page copy still need Adi’s OK first. Previous “publish directly” rule from 2026-08-10 is paused for this cycle.
 5. **Blog tone / craft (apply to all posts — Adi 2026-08-04):**
    - Friendlier, less technical — written for a real buyer, not like a tax form
    - Title + excerpt: keep keyword, more inviting; put **one number in the excerpt** for CTR
@@ -60,31 +61,130 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 
 ---
 
-## Priority order (updated 2026-08-10)
+## Priority order (updated 2026-09-18) — Phase S
 
-1. ~~Phase M P1 (301 + cache + sample)~~ ✅ 2026-08-04 (Adi still wants sample output re-sent — see N3)  
-2. ~~Publish Adi-approved blog drafts #1–3 to live~~ ✅ 2026-08-05  
-3. ~~Phase C headings + money page~~ ✅  
-4. ~~Phase M P2 (TTFB) + P3 (on-page)~~ ✅ code 2026-08-05  
-5. **N2 — Fix duplicate blog URLs (URGENT)** ← do first  
-6. **N1 — Publish six drafts on German keyword slugs** (+ 301 old 40% URL)  
-7. N3 migration integrity (re-send sample; 404s; TTFB)  
-8. ~~N4 homepage Berlin-first~~ ✅ 2026-08-19  
-9. N5 Cyprus/Dubai crawl weight  
-10. N6 district FAQ SSR  
-11. N7 wrong Bezirk on listings + duplicate Moabit + Bäder typo  
-12. ~~N8 social profiles → `.de`~~ ✅ reconfirmed 2026-09-02 (IG/FB bios updated by Luis)  
-13. ~~N9 six new posts (3/week), publish directly~~ ✅ 6/6  
-14. ~~N10 EN versions of Berlin posts~~ ✅ 2026-08-26 (deploy code)  
-15. ~~N11 Ratgeber blocks on district pages~~ ✅ 2026-08-26 → **UX cards** (image + title) in progress / deploy  
-16. **Adi follow-up:** rework `/blog/wo-in-berlin-wohnung-kaufen` (over-linked) ✅ DB 2026-09-02  
-17. **Adi follow-up:** sitemap clean indexable URLs only (exclude 301 legacy property slug) — deploy  
-18. Breadcrumb schema + console housekeeping — closed by Adi  
-19. **Singapore junk traffic (Adi 2026-09):** Cloudflare **Managed Challenge** for SG + exclude SG from GA4 performance reviews; escalate to Block only if junk persists after 1–2 weeks  
+**Why this cycle:** GSC impressions are up over 4× this month; average position is about 10–11. Goal is to push key pages higher, not to ship more pages.
+
+1. **S1** Homepage district section in the HTML (DE + EN) + district-specific button labels  
+2. **S2** Remove “Weitere internationale Immobilienmärkte” (Dubai/Cyprus carousel) from both homepages  
+3. **S3** Popup: exit intent, desktop only, once per session; never on mobile; never right after a Google landing  
+4. **S4** Paphos duplicate URLs + EN kapitalanlage slug / hreflang  
+5. **S5** Tenant-occupied strategy page: umlauts, source, reciprocal links; ask Adi about traffic intent  
+6. **S6** EN district pages (start with Moabit, Charlottenburg, Mitte, Prenzlauer Berg if 13 is too much)  
+7. **S7** Six new posts (3/week), each with a real EN version  
+8. **S8** Photos in long guides, starting with the Bezirke post  
+9. **S9** Title length + thin content — **lists to Adi before editing**  
+10. **S10** Carousel year mismatch; listing schema address (low)  
+
+Spanish comes **after** EN is in good shape. Not this cycle.
+
+Previous August order (Phase N) is done or closed. Do not restart N1–N11 unless a live regression shows up.
 
 ---
 
-# Phase N — Next two weeks (Adi 2026-08-10) — ACTIVE
+# Phase S — Next two weeks (Adi 2026-09-18) — ACTIVE
+
+**Source:** `Sweet_Home_Tasks_Sep_Cycle.docx` + Adi email 2026-09-18  
+**Cadence:** Short weekly status email. Adi is back in Berlin and can join the next meeting in person.  
+**Rule:** Read every change as a reader before it goes live. Pleasant flowing text, images, not a list.
+
+### S1 — Homepage district section crawlable (DE + EN) — priority
+
+Search engines currently see **no links** from the homepage to the 13 district pages because the panels are injected on click. Hidden-until-click is fine. Missing from the server HTML is not.
+
+- [x] District names and panel content in the **server HTML** on the German homepage
+- [x] Same on the English homepage
+- [x] Button label includes the district: `Wohnungen in Mitte entdecken` (not generic `Wohnungen entdecken`)
+- [x] EN: `Explore apartments in Mitte` (same pattern for all 13)
+
+**Done when:** view-source of `/` and `/en` shows the 13 district links and panel text without clicking.
+
+**Code (2026-09-18, not deployed yet):** The panel copy was already in the server HTML, inside a `hidden` panel. The link is now outside that panel (still hidden until the card opens, which Adi said is fine). Each button uses the district name. Both homepages link to the 13 existing `/wohnung-kaufen-*` pages. English district pages do not exist yet (S6), so the English homepage points at those German pages until then.
+
+### S2 — Remove international markets carousel — priority
+
+- [ ] Remove the Dubai and Cyprus carousel (`Weitere internationale Immobilienmärkte`) from the German homepage
+- [ ] Remove the same block from the English homepage
+- [ ] Leave footer links so those hubs stay reachable
+- [ ] Do not delete the pages; easy to restore if stock returns
+
+### S3 — Popup rules — priority
+
+Rankings issue, not only UX. Popups that cover content on mobile entry can count as intrusive interstitials.
+
+- [ ] Open only on **real exit intent**
+- [ ] **Desktop only**
+- [ ] **At most once per session**
+- [ ] Never auto-open on mobile
+- [ ] Never open shortly after a visitor arrives from Google
+
+### S4 — Paphos duplicate URLs + EN investment slug — priority
+
+- [ ] Five Paphos articles: keep `/en/blog/...`, **301** the German-path `/blog/...` copies (same English slugs) to the EN URLs
+- [ ] Sitemap lists only the `/en/blog/` versions
+- [ ] `/en/blog/immobilie-als-kapitalanlage-berlin` is English on a German slug and splits visibility with the DE post. Rename to an English slug (e.g. `/en/blog/berlin-property-investment-guide`) **or** fold into `/en/blog/berlin-real-estate-investment-guide-2026` if the content overlaps
+- [ ] 301 the old EN URL
+- [ ] hreflang pair points at the German post
+
+### S5 — Tenant-occupied strategy page — priority
+
+Live copy already has broken umlauts in `views/berlin-investment-strategy-de.ejs` (`Zurueck`, `Fuellen`).
+
+- [ ] Fix calculator/UI strings: Füllen, Zurück, Verfügbarer, Geschätzt
+- [ ] Add a source for “~222k Wohnungen bis 2040”, ideally an official Berlin Senate page
+- [ ] Link **to** this page from `/blog/vermietete-wohnung-kaufen-berlin`
+- [ ] Link **back** from the strategy page to that post
+- [ ] **Ask Adi** (do not guess): is this page for ads/email, or for organic search? That decides the next treatment
+
+### S6 — English district pages
+
+- [ ] EN versions of the 13 district pages under `/en/`
+- [ ] EN Ratgeber cards link to `/en/blog/` guides, not German slugs
+- [ ] hreflang pair each DE district page with its EN twin
+- [ ] Language switcher on district pages must not fall back to the generic EN listing
+- [ ] If 13 is too much this cycle: ship **Moabit, Charlottenburg, Mitte, Prenzlauer Berg** first and tell Adi the date for the rest
+
+### S7 — Six new posts (3 per week) + English versions
+
+Same craft as the reworked Bezirke post: one keyword in slug, title, and H1; flowing sections; varied anchors; **4–6 in-text links** plus one to the relevant money or district page; official sources only; human read before publish.
+
+Every post also gets `/en/blog/{english-keyword-slug}`: a real adaptation, not a machine translation; hreflang to the German post; internal links to `/en/` pages.
+
+| # | DE slug | EN slug | Must link to |
+|---|---------|---------|----------------|
+| 1 | `/blog/immobilienfinanzierung-berlin` | `/en/blog/mortgage-financing-berlin` | Ausländer post, Eigenkapital, money page |
+| 2 | `/blog/lohnt-sich-immobilie-kaufen-berlin` | `/en/blog/is-buying-property-in-berlin-worth-it` | Immobilienpreise, Kapitalanlage, money page |
+| 3 | `/blog/steuern-fuer-vermieter` | `/en/blog/german-rental-property-taxes` | Kapitalanlage pillar, Grunderwerbsteuer |
+| 4 | `/blog/spekulationssteuer-immobilie` | `/en/blog/capital-gains-tax-property-germany` | Steuern für Vermieter, Kapitalanlage |
+| 5 | `/blog/wohnung-kaufen-moabit-ratgeber` | `/en/blog/buying-apartment-moabit-guide` | Moabit district page, Bezirke comparison, money page |
+| 6 | `/blog/wohnung-kaufen-neukoelln-ratgeber` | `/en/blog/buying-apartment-neukoelln-guide` | Neukölln district page. GSC: buying queries sit on page 2–3 |
+
+District Ratgeber posts **support** the landing pages. The landing page sells listings; the post answers buying questions and sends the reader on. They must not compete.
+
+- [ ] Week 1: posts 1–3 live in DE + EN
+- [ ] Week 2: posts 4–6 live in DE + EN
+
+### S8 — Images in long guides
+
+- [ ] A photo of the area every few sections, starting with `/blog/wo-in-berlin-wohnung-kaufen`
+- [ ] District photos may link to the district pages
+- [ ] Keep real property photos as blog covers, with the link to the listing
+
+### S9 — Titles and thin content (audit)
+
+Do **not** edit until Adi has the lists.
+
+- [ ] Export or request the **17 long titles**; shorten to about **55–60 characters**, keyword first
+- [ ] Send Adi the **9 thin pages** before changing any of them — some may be fine
+
+### S10 — Small fixes (low)
+
+- [ ] Homepage carousel: one card says `Eigennutzung ab 2027` but the listing page and URL say `ab 2030`. Align the year
+- [ ] Listing schema: address warnings are warnings, not errors. When convenient, nest `address` inside `about` with type `Apartment` instead of on `RealEstateListing` directly
+
+---
+
+# Phase N — Next two weeks (Adi 2026-08-10) — CLOSED
 
 **Source:** `Sweet_Home_Dev_Tasks_Next_2_Weeks.docx` + Adi email 2026-08-10  
 **Cadence:** Short weekly status email to Adi (as before).
@@ -563,12 +663,11 @@ From `Sweet_Home_Pages_and_Keywords_Berlin.xlsx`. Do **after** Phases A–D and 
 
 | Day | Focus |
 |-----|--------|
-| Now / Mon | **N2** duplicate blog URLs + title template + sitemap (urgent) |
-| Same cycle | **N1** publish six drafts on German keyword slugs + 301s |
-| Ongoing | N3 sample re-send + 404s + TTFB; N4–N8 tech/SEO tasks |
-| Wed–Fri | **N9** new posts (3/week) — publish directly on keyword slugs |
-| After N2 | N10 EN versions; N11 district Ratgeber blocks |
-| Friday | Email Adi: done / live posts shipped / blockers / next week |
+| Now | **S1–S5** homepage, popup, Paphos URLs, strategy page |
+| Then | **S6** EN districts (4 first if needed) |
+| Wed–Fri | **S7** new posts, 3/week, DE + EN, human read before live |
+| After posts | **S8** photos; **S9** only after Adi sends the lists; **S10** when convenient |
+| Friday | Email Adi: done / live / blockers / next week |
 
 ### Weekly status email template
 
@@ -628,6 +727,7 @@ Confirmations you asked for:
 | 2026-09-02 | Singapore GA4 junk traffic | Adi decision | Managed Challenge (not Block) in Cloudflare; exclude SG from GA4 reviews; revisit Block in 1–2 weeks if needed |
 | 2026-09-15 | Lead attribution: organic fill + GA4 client_id | Deploy | First-touch fill-if-empty; Google/Bing referrer → organic UTMs; store `ga_client_id` on leads for later GA4 source lookup |
 | 2026-09-16 | Lead attribution Phase 2: GA4 acquisition lookup | Deploy + GA4 setup | Data API enrich by `sh_ga_cid`; delayed + batch enrich; see `docs/GA4_LEAD_ATTRIBUTION.md` |
+| 2026-09-18 | Adi September cycle received | Plan | **Phase S** added. Do S1–S5 first. Human review before live. Spanish waits until EN is solid |
 
 ---
 

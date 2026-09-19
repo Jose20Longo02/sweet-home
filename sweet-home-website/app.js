@@ -561,7 +561,10 @@ app.use((req, res, next) => {
     return res.redirect(301, `https://${cleanHost}${req.originalUrl || requestPath}`);
   }
   if (host && forwardedProto && forwardedProto.toLowerCase() === 'http') {
-    return res.redirect(301, `https://${host}${req.originalUrl || requestPath}`);
+    const localHost = /^(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/i.test(host);
+    if (!localHost) {
+      return res.redirect(301, `https://${host}${req.originalUrl || requestPath}`);
+    }
   }
 
   // Old lang query variant (?lang=de|en|es) -> clean URL (es maps to DE).
@@ -1517,7 +1520,7 @@ async function renderHomePage(req, res, langPath, next) {
           summary: item.summary || defaultSummary,
           realEstate: item.realEstate || defaultRealEstate,
           href: country === 'Germany' && city === 'Berlin'
-            ? ((lang === 'de' && BERLIN_DISTRICT_LANDING_PATHS[normalized]) || berlinHubPath)
+            ? (BERLIN_DISTRICT_LANDING_PATHS[normalized] || berlinHubPath)
             : null
         };
       });

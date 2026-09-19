@@ -516,7 +516,7 @@
       "title": "Berliner Stadtteile Guide",
       "hint": "Klicken Sie auf einen Stadtteil, um lokale Einordnung und Immobilienprofil zu sehen.",
       "realEstate": "Immobilien",
-      "exploreCta": "Wohnungen entdecken"
+      "exploreCta": "Wohnungen in {name} entdecken"
     },
     "neighborhoodGuides": {
       "title": "Berlin: Stadtteile im Überblick",
