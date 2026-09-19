@@ -103,10 +103,12 @@ Search engines currently see **no links** from the homepage to the 13 district p
 
 ### S2 — Remove international markets carousel — priority
 
-- [ ] Remove the Dubai and Cyprus carousel (`Weitere internationale Immobilienmärkte`) from the German homepage
-- [ ] Remove the same block from the English homepage
-- [ ] Leave footer links so those hubs stay reachable
-- [ ] Do not delete the pages; easy to restore if stock returns
+- [x] Remove the Dubai and Cyprus carousel (`Weitere internationale Immobilienmärkte`) from the German homepage
+- [x] Remove the same block from the English homepage
+- [x] Leave footer links so those hubs stay reachable
+- [x] Do not delete the pages; easy to restore if stock returns
+
+**Code (2026-09-18, not deployed yet).** Both homepages share `views/home.ejs`, so removing the carousel covers DE and EN. Footer still links to Zypern and Dubai. The hub pages are unchanged. Restore the block from git if stock returns.
 
 ### S3 — Popup rules — priority
 

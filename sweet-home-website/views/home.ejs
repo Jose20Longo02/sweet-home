@@ -334,42 +334,6 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
   </div>
 </section>
 
-<!-- Other international markets – interactive stretch/collapse carousel -->
-<%
-  var internationalMarketLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'de';
-  var dubaiLandingPath = internationalMarketLang === 'de'
-    ? '/immobilien-dubai-kaufen'
-    : '/en/properties-for-sale-dubai';
-  var cyprusLandingPath = internationalMarketLang === 'de'
-    ? '/immobilien-zypern-kaufen'
-    : '/en/properties-for-sale-cyprus';
-%>
-<section class="section international">
-  <h2 class="section-title"><%= t('home.international.title','Other international property markets') %></h2>
-  <div class="stretch-carousel" id="intlCarousel">
-    <button class="carousel-nav prev" data-target="#intlCarousel" aria-label="<%= t('common.previous','Previous') %>">&#8249;</button>
-    <div class="stretch-track">
-      <article class="stretch-card is-focused" data-title="<%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %>">
-        <img src="/images/dubai-international.jpg" alt="<%= t('home.international.dubaiImgAlt','Dubai Skyline – internationale Immobilienmärkte') %>" loading="lazy">
-        <span class="vertical-title"><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %></span>
-        <div class="expanded-info">
-          <h3><%= ((typeof translateLocation === 'function') ? translateLocation('city', 'Dubai') : 'Dubai') + ', ' + ((typeof translateLocation === 'function') ? translateLocation('country', 'UAE') : 'UAE') %></h3>
-          <a href="<%= dubaiLandingPath %>" class="see-link"><%= t('home.international.see','See properties') %></a>
-        </div>
-      </article>
-      <article class="stretch-card is-collapsed" data-title="<%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %>">
-        <img src="/images/cyprus-international.jpg" alt="<%= t('home.international.cyprusImgAlt','Zypern – internationale Immobilienmärkte') %>" loading="lazy">
-        <span class="vertical-title"><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></span>
-        <div class="expanded-info">
-          <h3><%= (typeof translateLocation === 'function') ? translateLocation('country', 'North Cyprus') : 'North Cyprus' %></h3>
-          <a href="<%= cyprusLandingPath %>" class="see-link"><%= t('home.international.see','See properties') %></a>
-        </div>
-      </article>
-    </div>
-    <button class="carousel-nav next" data-target="#intlCarousel" aria-label="<%= t('common.next','Next') %>">&#8250;</button>
-  </div>
-</section>
-
 <!-- 5) About Section over panoramic image -->
 <section class="about-hero">
   <img src="/images/berlin-about.jpg" alt="<%= t('home.about.imgAlt','Sweet Home Berlin – Beratung für Immobilienkäufer') %>" loading="lazy">
