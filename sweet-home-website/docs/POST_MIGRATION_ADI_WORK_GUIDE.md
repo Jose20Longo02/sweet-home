@@ -99,7 +99,7 @@ Search engines currently see **no links** from the homepage to the 13 district p
 
 **Done when:** view-source of `/` and `/en` shows the 13 district links and panel text without clicking.
 
-**Code (2026-09-18, not deployed yet):** The panel copy was already in the server HTML, inside a `hidden` panel. The link is now outside that panel (still hidden until the card opens, which Adi said is fine). Each button uses the district name. Both homepages link to the 13 existing `/wohnung-kaufen-*` pages. English district pages do not exist yet (S6), so the English homepage points at those German pages until then.
+**Live 2026-09-18.** View-source of `/` and `/en` shows 13 district links and panel text. Buttons are `Wohnungen in {name} entdecken` / `Explore apartments in {name}`. The link sits outside the `hidden` panel and still appears only after the card opens. English district pages do not exist yet (S6), so the English homepage points at the existing German `/wohnung-kaufen-*` pages until then.
 
 ### S2 — Remove international markets carousel — priority
 
@@ -728,6 +728,7 @@ Confirmations you asked for:
 | 2026-09-15 | Lead attribution: organic fill + GA4 client_id | Deploy | First-touch fill-if-empty; Google/Bing referrer → organic UTMs; store `ga_client_id` on leads for later GA4 source lookup |
 | 2026-09-16 | Lead attribution Phase 2: GA4 acquisition lookup | Deploy + GA4 setup | Data API enrich by `sh_ga_cid`; delayed + batch enrich; see `docs/GA4_LEAD_ATTRIBUTION.md` |
 | 2026-09-18 | Adi September cycle received | Plan | **Phase S** added. Do S1–S5 first. Human review before live. Spanish waits until EN is solid |
+| 2026-09-18 | **S1** homepage district links + distinct CTAs | Live | DE + EN view-source: 13 `/wohnung-kaufen-*` links, district button labels. EN still points at German district pages until S6 |
 
 ---
 
