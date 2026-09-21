@@ -74,6 +74,15 @@
 .berlin-investor-stat__label strong {
   color: #000000;
 }
+.berlin-investor-stat__source {
+  margin: 8px 0 0;
+  color: #5b6473;
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+.berlin-investor-stat__source a {
+  color: inherit;
+}
 .berlin-investor-hero__baseline {
   max-width: 1200px;
   margin: 0 auto;
@@ -553,6 +562,18 @@
   font-size: 0.84rem;
   line-height: 1.6;
   text-align: center;
+}
+.strategy-mechanics__guide {
+  max-width: 720px;
+  margin: 12px auto 0;
+  color: #3d4654;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-align: center;
+}
+.strategy-mechanics__guide a {
+  color: inherit;
+  text-underline-offset: 2px;
 }
 .investor-fit {
   padding-top: 30px;

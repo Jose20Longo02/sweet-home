@@ -69,7 +69,7 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 2. **S2** Remove “Weitere internationale Immobilienmärkte” (Dubai/Cyprus carousel) from both homepages  
 3. **S3** Popup: exit intent, desktop only, once per session; never on mobile; never right after a Google landing  
 4. **S4** Paphos duplicate URLs + EN kapitalanlage slug / hreflang  
-5. **S5** Tenant-occupied strategy page: umlauts, source, reciprocal links; ask Adi about traffic intent  
+5. **S5** Tenant-occupied strategy page: umlauts, source, reciprocal links; ads landing (`noindex`, out of sitemap)  
 6. **S6** EN district pages (start with Moabit, Charlottenburg, Mitte, Prenzlauer Berg if 13 is too much)  
 7. **S7** Six new posts (3/week), each with a real EN version  
 8. **S8** Photos in long guides, starting with the Bezirke post  
@@ -108,7 +108,7 @@ Search engines currently see **no links** from the homepage to the 13 district p
 - [x] Leave footer links so those hubs stay reachable
 - [x] Do not delete the pages; easy to restore if stock returns
 
-**Code (2026-09-18, not deployed yet).** Both homepages share `views/home.ejs`, so removing the carousel covers DE and EN. Footer still links to Zypern and Dubai. The hub pages are unchanged. Restore the block from git if stock returns.
+**Live 2026-09-21.** The Dubai and Cyprus carousel is gone from both homepages. Footer still links to Zypern and Dubai. The hub pages are unchanged. Restore the block from git if stock returns.
 
 ### S3 — Popup rules — priority
 
@@ -128,17 +128,19 @@ Rankings issue, not only UX. Popups that cover content on mobile entry can count
 - [x] 301 the old EN URL
 - [x] hreflang pair points at the German post
 
-**Code (2026-09-21, not deployed yet).** The five Paphos posts stay at `/en/blog/{english-slug}`. `/blog/{slug}` and `/de/blog/{slug}` 301 there, and the sitemap drops the German-path copies. The investment post was already paired: `/en/blog/immobilie-als-kapitalanlage-berlin` 301s to `/en/blog/berlin-real-estate-investment-guide-2026`, and hreflang points at `/blog/immobilie-als-kapitalanlage-berlin`.
+**Live 2026-09-21.** The five Paphos posts stay at `/en/blog/{english-slug}`. `/blog/{slug}` and `/de/blog/{slug}` 301 there, and the sitemap lists only those English URLs. The investment post stays paired: `/en/blog/immobilie-als-kapitalanlage-berlin` 301s to `/en/blog/berlin-real-estate-investment-guide-2026`, and hreflang points at `/blog/immobilie-als-kapitalanlage-berlin`.
 
 ### S5 — Tenant-occupied strategy page — priority
 
 Live copy already has broken umlauts in `views/berlin-investment-strategy-de.ejs` (`Zurueck`, `Fuellen`).
 
-- [ ] Fix calculator/UI strings: Füllen, Zurück, Verfügbarer, Geschätzt
-- [ ] Add a source for “~222k Wohnungen bis 2040”, ideally an official Berlin Senate page
-- [ ] Link **to** this page from `/blog/vermietete-wohnung-kaufen-berlin`
-- [ ] Link **back** from the strategy page to that post
-- [ ] **Ask Adi** (do not guess): is this page for ads/email, or for organic search? That decides the next treatment
+- [x] Fix calculator/UI strings: Füllen, Zurück, Verfügbarer, Geschätzt
+- [x] Add a source for “~222k Wohnungen bis 2040”, ideally an official Berlin Senate page
+- [x] Link **to** this page from `/blog/vermietete-wohnung-kaufen-berlin`
+- [x] Link **back** from the strategy page to that post
+- [x] **Ask Adi** (do not guess): is this page for ads/email, or for organic search? That decides the next treatment — **ads**
+
+**Ready 2026-09-21, not live until deploy.** Calculator labels and result notes use real umlauts. The ~222k stat cites the Senate page [StEP Wohnen 2040](https://www.berlin.de/sen/stadtentwicklung/planung/stadtentwicklungsplaene/step-wohnen-2040/) (222.000 neue Wohnungen, Beschluss 3. September 2024). The strategy page links to `/blog/vermietete-wohnung-kaufen-berlin`; that post’s German body links back to `/berlin-mieter-belegte-einstiegsstrategie`. The English pair does the same with `/en/blog/buying-tenanted-apartment-berlin` and `/en/berlin-tenant-occupied-entry-strategy`. The blog sentence is already in the database. José confirmed this is an ads landing, so both language versions are `noindex, follow` and left out of the sitemap. The pages stay live for campaigns. The page copy ships with the next deploy.
 
 ### S6 — English district pages
 
@@ -733,6 +735,10 @@ Confirmations you asked for:
 | 2026-09-16 | Lead attribution Phase 2: GA4 acquisition lookup | Deploy + GA4 setup | Data API enrich by `sh_ga_cid`; delayed + batch enrich; see `docs/GA4_LEAD_ATTRIBUTION.md` |
 | 2026-09-18 | Adi September cycle received | Plan | **Phase S** added. Do S1–S5 first. Human review before live. Spanish waits until EN is solid |
 | 2026-09-18 | **S1** homepage district links + distinct CTAs | Live | DE + EN view-source: 13 `/wohnung-kaufen-*` links, district button labels. EN still points at German district pages until S6 |
+| 2026-09-21 | **S2** remove Dubai/Cyprus homepage carousel | Live | Gone on `/` and `/en`. Footer Zypern and Dubai links stay |
+| 2026-09-21 | **S3** ContactBeat popup rules | ContactBeat | Exit intent, desktop only, once per session, never mobile, never right after Google. Not our code |
+| 2026-09-21 | **S4** Paphos duplicate URLs | Live | Five `/blog/` and `/de/blog/` English slugs 301 to `/en/blog/`. Sitemap EN only. Investment EN slug already paired with DE post |
+| 2026-09-21 | **S5** tenant-occupied strategy page | Ready, deploy pending | Umlauts fixed. ~222k cites StEP Wohnen 2040. Reciprocal links with the vermietete-Wohnung post. Ads landing: `noindex, follow`, out of the sitemap |
 
 ---
 

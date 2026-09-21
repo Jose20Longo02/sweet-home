@@ -1776,8 +1776,7 @@ app.get('/sitemap.xml', async (req, res, next) => {
     staticUrls.push({ loc: `${base}/en/properties-for-sale-dubai`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/immobilien-zypern-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/en/properties-for-sale-cyprus`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
-    staticUrls.push({ loc: `${base}/en/berlin-tenant-occupied-entry-strategy`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
-    staticUrls.push({ loc: `${base}/berlin-mieter-belegte-einstiegsstrategie`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    // Strategy pages are ad landings (S5). Keep them reachable; do not list them in the sitemap.
     // Clean SEO property search URLs (Berlin / Germany only)
     staticUrls.push({ loc: `${base}/properties/for-sale/germany`, lastmod: null, changefreq: 'weekly', priority: '0.7' });
     staticUrls.push({ loc: `${base}/properties/for-sale/germany/berlin`, lastmod: null, changefreq: 'weekly', priority: '0.7' });

@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="/css/berlin-landing.min.css?v=20260902-1" />
 <link rel="stylesheet" href="/css/contact.css?v=<%= assetVersion %>" />
 <link rel="stylesheet" href="/css/owners.css?v=<%= assetVersion %>" />
-<link rel="stylesheet" href="/css/berlin-investment-strategy-en.css?v=<%= assetVersion %>" />
+<link rel="stylesheet" href="/css/berlin-investment-strategy-en.css?v=<%= assetVersion %>-s5-20260921" />
 <% if (process.env.RECAPTCHA_SITE_KEY) { %>
   <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
 <% } %>
@@ -29,6 +29,7 @@
         <div class="berlin-investor-stat">
           <p class="berlin-investor-stat__value">~222k</p>
           <p class="berlin-investor-stat__label">Wohnungen bis 2040 in Berlin <strong>nötig</strong></p>
+          <p class="berlin-investor-stat__source">Quelle: <a href="https://www.berlin.de/sen/stadtentwicklung/planung/stadtentwicklungsplaene/step-wohnen-2040/" target="_blank" rel="noopener noreferrer">StEP Wohnen 2040</a>, Senat von Berlin (2024)</p>
         </div>
       </aside>
       <div class="berlin-investor-hero__cta">
@@ -256,6 +257,7 @@
       <p class="strategy-mechanics__disclaimer">
         Wichtig: Rabattbandbreiten, steuerliche Effekte und Finanzierungsergebnisse hängen immer vom Objekt und vom Käuferprofil ab. Diese Seite ersetzt keine Rechts- oder Steuerberatung.
       </p>
+      <p class="strategy-mechanics__guide">Wie der Kauf einer vermieteten Wohnung in Berlin abläuft, steht im Ratgeber <a href="/blog/vermietete-wohnung-kaufen-berlin">Vermietete Wohnung kaufen in Berlin</a>.</p>
       <p class="section-inline-cta">
         <a href="#strategy-calculator" class="btn btn-primary section-inline-cta__link">Prüfen, ob diese Strategie zu Ihrem Profil passt</a>
       </p>
@@ -327,7 +329,7 @@
                 <input id="calcEquityPct" type="number" min="12" max="100" step="1" value="12" inputmode="decimal">
               </div>
               <div class="strategy-calculator__field">
-                <label for="calcDebtServiceRate">Geschaetzte jaehrliche Schuldendienst-Rate (%)</label>
+                <label for="calcDebtServiceRate">Geschätzte jährliche Schuldendienst-Rate (%)</label>
                 <input id="calcDebtServiceRate" type="number" min="0" max="20" step="0.1" value="6" inputmode="decimal">
               </div>
             </div>
@@ -335,7 +337,7 @@
         </div>
 
         <div class="strategy-calculator__actions">
-          <button type="button" id="calcPrevBtn" class="strategy-calculator__btn strategy-calculator__btn--ghost">Zurueck</button>
+          <button type="button" id="calcPrevBtn" class="strategy-calculator__btn strategy-calculator__btn--ghost">Zurück</button>
           <button type="button" id="calcNextBtn" class="strategy-calculator__btn strategy-calculator__btn--primary">Weiter</button>
           <button type="button" id="calcRunBtn" class="strategy-calculator__btn strategy-calculator__btn--primary" hidden>Eignung berechnen</button>
         </div>
@@ -356,11 +358,11 @@
           <strong id="calcTotalExpenses">EUR 0</strong>
         </div>
         <div class="strategy-calculator__result">
-          <span class="strategy-calculator__result-label">Verfuegbarer Rest nach Ausgaben</span>
+          <span class="strategy-calculator__result-label">Verfügbarer Rest nach Ausgaben</span>
           <strong id="calcFinalBalance">EUR 0</strong>
         </div>
         <div class="strategy-calculator__result">
-          <span class="strategy-calculator__result-label">Geschaetzte Monatsrate (Geschaetzt)</span>
+          <span class="strategy-calculator__result-label">Geschätzte Monatsrate</span>
           <strong id="calcEstimatedPayment">EUR 0</strong>
         </div>
         <div class="strategy-calculator__result">
@@ -390,7 +392,7 @@
       </div>
 
       <p id="calcQualificationNote" class="strategy-calculator__note">
-        Fuellen Sie die 3 Schritte aus und klicken Sie auf <strong>Eignung berechnen</strong>, um Ihr Ergebnis zu sehen.
+        Füllen Sie die 3 Schritte aus und klicken Sie auf <strong>Eignung berechnen</strong>, um Ihr Ergebnis zu sehen.
       </p>
       <p class="section-inline-cta">
         <a href="#lead-cta" class="btn btn-primary section-inline-cta__link">Rechner-Ergebnis mit einem Berater besprechen</a>
@@ -466,4 +468,4 @@
     </div>
   </section>
 </div>
-<script src="/js/berlin-investment-strategy-de.js?v=<%= assetVersion %>-thankyou" defer></script>
+<script src="/js/berlin-investment-strategy-de.js?v=<%= assetVersion %>-s5-20260921" defer></script>

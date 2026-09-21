@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="/css/berlin-landing.min.css?v=20260902-1" />
 <link rel="stylesheet" href="/css/contact.css?v=<%= assetVersion %>" />
 <link rel="stylesheet" href="/css/owners.css?v=<%= assetVersion %>" />
-<link rel="stylesheet" href="/css/berlin-investment-strategy-en.css?v=<%= assetVersion %>" />
+<link rel="stylesheet" href="/css/berlin-investment-strategy-en.css?v=<%= assetVersion %>-s5-20260921" />
 <% if (process.env.RECAPTCHA_SITE_KEY) { %>
   <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
 <% } %>
@@ -29,6 +29,7 @@
         <div class="berlin-investor-stat">
           <p class="berlin-investor-stat__value">~222k</p>
           <p class="berlin-investor-stat__label">Homes <strong>needed</strong> by 2040 in Berlin</p>
+          <p class="berlin-investor-stat__source">Source: <a href="https://www.berlin.de/sen/stadtentwicklung/planung/stadtentwicklungsplaene/step-wohnen-2040/" target="_blank" rel="noopener noreferrer">StEP Wohnen 2040</a>, Senate of Berlin (2024)</p>
         </div>
       </aside>
       <div class="berlin-investor-hero__cta">
@@ -256,6 +257,7 @@
       <p class="strategy-mechanics__disclaimer">
         Important: discount ranges, tax impact, and financing outcomes depend on each property and buyer profile. This page is informational and not legal or tax advice.
       </p>
+      <p class="strategy-mechanics__guide">How buying a tenanted apartment in Berlin works is covered in <a href="/en/blog/buying-tenanted-apartment-berlin">Buying a tenanted apartment in Berlin</a>.</p>
       <p class="section-inline-cta">
         <a href="#strategy-calculator" class="btn btn-primary section-inline-cta__link">Check if this strategy fits your profile</a>
       </p>
@@ -360,7 +362,7 @@
           <strong id="calcFinalBalance">EUR 0</strong>
         </div>
         <div class="strategy-calculator__result">
-          <span class="strategy-calculator__result-label">Estimated monthly payment (Geschätzt)</span>
+          <span class="strategy-calculator__result-label">Estimated monthly payment</span>
           <strong id="calcEstimatedPayment">EUR 0</strong>
         </div>
         <div class="strategy-calculator__result">

@@ -170,20 +170,20 @@
       }
       if (output.qualificationNote) {
         if (qualifies) {
-          output.qualificationNote.innerHTML = 'Ergebnis: <strong>Unter den aktuellen Annahmen geeignet.</strong> Die geschaetzte Rate liegt unter Ihrem verfuegbaren Rest nach Ausgaben.';
+          output.qualificationNote.innerHTML = 'Ergebnis: <strong>Unter den aktuellen Annahmen geeignet.</strong> Die geschätzte Rate liegt unter Ihrem verfügbaren Rest nach Ausgaben.';
         } else {
           var shortfall = estimatedPayment - finalBalance;
           var reasons = [];
           if (finalBalance <= 0) {
-            reasons.push('Ihre aktuellen monatlichen Ausgaben binden den groessten Teil des verfuegbaren Einkommens');
+            reasons.push('Ihre aktuellen monatlichen Ausgaben binden den größten Teil des verfügbaren Einkommens');
           }
           if (estimatedPayment > finalBalance) {
-            reasons.push('die geschaetzte Monatsrate liegt etwa <strong>' + formatEur(shortfall) + '</strong> ueber Ihrem verfuegbaren Rest');
+            reasons.push('die geschätzte Monatsrate liegt etwa <strong>' + formatEur(shortfall) + '</strong> über Ihrem verfügbaren Rest');
           }
           if (equityPct < 12) {
-            reasons.push('der Eigenanteil liegt unter 12% und kann die Finanzierungsstaerke reduzieren');
+            reasons.push('der Eigenanteil liegt unter 12% und kann die Finanzierungsstärke reduzieren');
           }
-          output.qualificationNote.innerHTML = 'Ergebnis: <strong>Noch nicht geeignet unter den aktuellen Annahmen.</strong> Hauptgrund/Hauptgruende: ' + reasons.join('; ') + '. Verbessern koennen Sie das Ergebnis durch hoeheren Eigenanteil, niedrigeren Kaufpreis, geringere laufende Verpflichtungen oder bessere Finanzierungskonditionen.';
+          output.qualificationNote.innerHTML = 'Ergebnis: <strong>Noch nicht geeignet unter den aktuellen Annahmen.</strong> Hauptgrund/Hauptgründe: ' + reasons.join('; ') + '. Verbessern können Sie das Ergebnis durch höheren Eigenanteil, niedrigeren Kaufpreis, geringere laufende Verpflichtungen oder bessere Finanzierungskonditionen.';
         }
       }
 
