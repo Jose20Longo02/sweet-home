@@ -36,7 +36,7 @@
           <img src="<%= p.cover_image %>" alt="<%= p.title || 'Blog post cover image' %>" class="cover" />
         <% } %>
         <div class="info">
-          <h2><a href="<%= (typeof localePath === 'function') ? localePath('/blog/' + p.slug) : '/blog/' + p.slug %>"><%= p.title %></a></h2>
+          <h2><a href="<%= p.publicPath || ((typeof localePath === 'function') ? localePath('/blog/' + p.slug) : '/blog/' + p.slug) %>"><%= p.title %></a></h2>
           <% if (p.author_name) { %><p class="meta"><%= t('blog.by','By') %> <%= p.author_name %></p><% } %>
           <% if (p.excerpt) { %><p><%= p.excerpt %></p><% } %>
           <% if ((p.topicIds || []).length > 0) { %>

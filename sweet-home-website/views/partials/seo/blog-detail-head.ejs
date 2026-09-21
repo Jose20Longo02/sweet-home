@@ -4,8 +4,8 @@
   const blogUrl = `${siteBaseUrl}${localePrefixSafe}/blog/${post.slug}`;
   const deSlug = post.slugDe || post.slug;
   const enSlug = post.slugEn || post.slug;
-  const deUrl = `${siteBaseUrl}/blog/${deSlug}`;
   const enUrl = `${siteBaseUrl}/en/blog/${enSlug}`;
+  const deUrl = post.enOnly ? enUrl : `${siteBaseUrl}/blog/${deSlug}`;
   const ogLocale = (typeof lang !== 'undefined' && lang === 'de') ? 'de_DE' : 'en_US';
   const blogImage = post.cover_image 
     ? (post.cover_image.startsWith('http') ? post.cover_image : `${siteBaseUrl}${post.cover_image}`)
@@ -38,8 +38,10 @@
 <meta name="description" content="<%= blogDescription %>">
 <link rel="canonical" href="<%= blogUrl %>">
 <link rel="alternate" hreflang="en" href="<%= enUrl %>">
+<% if (!post.enOnly) { %>
 <link rel="alternate" hreflang="de" href="<%= deUrl %>">
-<link rel="alternate" hreflang="x-default" href="<%= deUrl %>">
+<% } %>
+<link rel="alternate" hreflang="x-default" href="<%= post.enOnly ? enUrl : deUrl %>">
 
 <!-- Open Graph -->
 <meta property="og:type" content="article">

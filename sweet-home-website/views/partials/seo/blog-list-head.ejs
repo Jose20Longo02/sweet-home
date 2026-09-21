@@ -74,9 +74,9 @@
     position: idx + 1,
     item: {
       '@type': 'BlogPosting',
-      '@id': `${siteBaseUrl}${blogBasePath}/${post.slug}`,
+      '@id': `${siteBaseUrl}${post.publicPath || (blogBasePath + '/' + post.slug)}`,
       name: post.title,
-      url: `${siteBaseUrl}${blogBasePath}/${post.slug}`
+      url: `${siteBaseUrl}${post.publicPath || (blogBasePath + '/' + post.slug)}`
     }
   }))
 }) : JSON.stringify({
@@ -87,9 +87,9 @@
     position: idx + 1,
     item: {
       '@type': 'BlogPosting',
-      '@id': `${siteBaseUrl}${blogBasePath}/${post.slug}`,
+      '@id': `${siteBaseUrl}${post.publicPath || (blogBasePath + '/' + post.slug)}`,
       name: post.title,
-      url: `${siteBaseUrl}${blogBasePath}/${post.slug}`
+      url: `${siteBaseUrl}${post.publicPath || (blogBasePath + '/' + post.slug)}`
     }
   }))
 })) %></script>

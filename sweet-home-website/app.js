@@ -349,6 +349,12 @@ app.use(['/api', '/auth', '/properties/api', '/projects/api'], apiLimiter);
 // Redirect details to /en when user language context requires it (Spanish removed).
 app.use((req, res, next) => {
   if (req.method !== 'GET') return next();
+  const { isEnOnlyBlogSlug } = require('./config/en-only-blog-slugs');
+  const enOnlyMatch = String(req.path || '').match(/^\/(?:de\/)?blog\/([^/]+)\/?$/);
+  if (enOnlyMatch && isEnOnlyBlogSlug(enOnlyMatch[1])) {
+    const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
+    return res.redirect(301, `/en/blog/${enOnlyMatch[1]}${query}`);
+  }
   if (req.path.startsWith('/en/') || req.path.startsWith('/es/')) return next();
   if (/^\/(admin|superadmin|auth|api)/.test(req.path)) return next();
   const isPropertyDetail = /^\/properties\/[^/]+$/.test(req.path) && req.path !== '/properties/new';
@@ -461,9 +467,12 @@ app.use((req, res, next) => {
     '/berlin-investment-strategy': { de: '/berlin-mieter-belegte-einstiegsstrategie', en: '/en/berlin-tenant-occupied-entry-strategy' }
   };
   const propertyAlternates = PROPERTY_PAGE_ALTERNATES[req.path];
-
-  // For lang switcher: path-based links for all public pages (so URL reflects language)
-  if (propertyAlternates) {
+  const enOnlyBlogMatch = String(req.path || '').match(/^(?:\/en)?\/blog\/([^/]+)\/?$/);
+  const { isEnOnlyBlogSlug } = require('./config/en-only-blog-slugs');
+  if (enOnlyBlogMatch && isEnOnlyBlogSlug(enOnlyBlogMatch[1])) {
+    const enPath = `/en/blog/${enOnlyBlogMatch[1]}`;
+    res.locals.localeAlternatePaths = { de: enPath, en: enPath };
+  } else if (propertyAlternates) {
     res.locals.localeAlternatePaths = propertyAlternates;
   } else if (prefix) {
     const pathWithoutLocale = req.path.slice(prefix.length) || '/';
@@ -1840,7 +1849,10 @@ app.get('/sitemap.xml', async (req, res, next) => {
       LIMIT 5000
     `);
     const { getBlogSlugForLang } = require('./utils/blogSlugI18n');
-    const blogUrls = (posts.rows || []).map(r => ({
+    const { isEnOnlyBlogSlug } = require('./config/en-only-blog-slugs');
+    const blogUrls = (posts.rows || [])
+      .filter((r) => !isEnOnlyBlogSlug(r.slug))
+      .map(r => ({
       loc: `${base}/blog/${r.slug}`,
       lastmod: (r.updated_at || r.published_at || r.created_at) ? new Date(r.updated_at || r.published_at || r.created_at).toISOString() : null,
       changefreq: 'monthly',

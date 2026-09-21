@@ -122,11 +122,13 @@ Rankings issue, not only UX. Popups that cover content on mobile entry can count
 
 ### S4 — Paphos duplicate URLs + EN investment slug — priority
 
-- [ ] Five Paphos articles: keep `/en/blog/...`, **301** the German-path `/blog/...` copies (same English slugs) to the EN URLs
-- [ ] Sitemap lists only the `/en/blog/` versions
-- [ ] `/en/blog/immobilie-als-kapitalanlage-berlin` is English on a German slug and splits visibility with the DE post. Rename to an English slug (e.g. `/en/blog/berlin-property-investment-guide`) **or** fold into `/en/blog/berlin-real-estate-investment-guide-2026` if the content overlaps
-- [ ] 301 the old EN URL
-- [ ] hreflang pair points at the German post
+- [x] Five Paphos articles: keep `/en/blog/...`, **301** the German-path `/blog/...` copies (same English slugs) to the EN URLs
+- [x] Sitemap lists only the `/en/blog/` versions
+- [x] `/en/blog/immobilie-als-kapitalanlage-berlin` is English on a German slug and splits visibility with the DE post. Rename to an English slug (e.g. `/en/blog/berlin-property-investment-guide`) **or** fold into `/en/blog/berlin-real-estate-investment-guide-2026` if the content overlaps
+- [x] 301 the old EN URL
+- [x] hreflang pair points at the German post
+
+**Code (2026-09-21, not deployed yet).** The five Paphos posts stay at `/en/blog/{english-slug}`. `/blog/{slug}` and `/de/blog/{slug}` 301 there, and the sitemap drops the German-path copies. The investment post was already paired: `/en/blog/immobilie-als-kapitalanlage-berlin` 301s to `/en/blog/berlin-real-estate-investment-guide-2026`, and hreflang points at `/blog/immobilie-als-kapitalanlage-berlin`.
 
 ### S5 — Tenant-occupied strategy page — priority
 

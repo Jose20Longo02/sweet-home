@@ -313,7 +313,7 @@
         <ul class="rec-list">
           <% recommendedPosts.forEach(r => { %>
             <li>
-              <a class="rec-item" href="<%= (typeof localePath === 'function') ? localePath('/blog/' + r.slug) : '/blog/' + r.slug %>">
+              <a class="rec-item" href="<%= r.publicPath || ((typeof localePath === 'function') ? localePath('/blog/' + r.slug) : '/blog/' + r.slug) %>">
                 <% if (r.cover_image) { %>
                   <img src="<%= r.cover_image %>" alt="<%= r.title %>" />
                 <% } %>
