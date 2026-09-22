@@ -20,6 +20,11 @@ const {
   setLandingPageCache,
   setPublicLandingCacheHeaders
 } = require('../utils/landingPageCache');
+const {
+  BERLIN_DISTRICT_LANDINGS,
+  getDistrictLanding,
+  getDistrictEnPathForDePath
+} = require('../config/berlinDistrictLandings');
 
 function normalizeSlug(value) {
   return slugify(String(value || ''), { lower: true, strict: true, locale: 'en' });
@@ -4449,7 +4454,7 @@ exports.charlottenburgPropertiesPageDe = async (req, res, next) => {
     const baseUrl = res.locals.baseUrl;
     const charlottenburgUrls = {
       de: `${baseUrl}/wohnung-kaufen-charlottenburg`,
-      en: `${baseUrl}/en/properties-for-sale-berlin`,
+      en: `${baseUrl}${getDistrictEnPathForDePath('/wohnung-kaufen-charlottenburg')}`,
     };
     const canonicalUrl = charlottenburgUrls.de;
     const hreflangAlternates = {
@@ -4625,7 +4630,7 @@ exports.moabitPropertiesPageDe = async (req, res, next) => {
     const baseUrl = res.locals.baseUrl;
     const districtUrls = {
       de: `${baseUrl}/wohnung-kaufen-moabit`,
-      en: `${baseUrl}/en/properties-for-sale-berlin`,
+      en: `${baseUrl}${getDistrictEnPathForDePath('/wohnung-kaufen-moabit')}`,
     };
     const canonicalUrl = districtUrls.de;
     const hreflangAlternates = {
@@ -4786,7 +4791,7 @@ exports.friedrichshainKreuzbergPropertiesPageDe = async (req, res, next) => {
     const baseUrl = res.locals.baseUrl;
     const districtUrls = {
       de: `${baseUrl}/wohnung-kaufen-friedrichshain-kreuzberg`,
-      en: `${baseUrl}/en/properties-for-sale-berlin`,
+      en: `${baseUrl}${getDistrictEnPathForDePath('/wohnung-kaufen-friedrichshain-kreuzberg')}`,
     };
     const canonicalUrl = districtUrls.de;
     const hreflangAlternates = {
@@ -4941,7 +4946,7 @@ exports.schoenebergPropertiesPageDe = async (req, res, next) => {
     const baseUrl = res.locals.baseUrl;
     const districtUrls = {
       de: `${baseUrl}/wohnung-kaufen-schoeneberg`,
-      en: `${baseUrl}/en/properties-for-sale-berlin`,
+      en: `${baseUrl}${getDistrictEnPathForDePath('/wohnung-kaufen-schoeneberg')}`,
     };
     const districtContent = {
       heroTitle: 'Wohnung kaufen Schöneberg',
@@ -5070,7 +5075,7 @@ exports.prenzlauerBergPropertiesPageDe = async (req, res, next) => {
     const baseUrl = res.locals.baseUrl;
     const districtUrls = {
       de: `${baseUrl}/wohnung-kaufen-prenzlauer-berg`,
-      en: `${baseUrl}/en/properties-for-sale-berlin`,
+      en: `${baseUrl}${getDistrictEnPathForDePath('/wohnung-kaufen-prenzlauer-berg')}`,
     };
     const districtContent = {
       heroTitle: 'Wohnung kaufen Prenzlauer Berg',
@@ -5205,7 +5210,7 @@ exports.weddingPropertiesPageDe = async (req, res, next) => {
     const baseUrl = res.locals.baseUrl;
     const districtUrls = {
       de: `${baseUrl}/wohnung-kaufen-wedding`,
-      en: `${baseUrl}/en/properties-for-sale-berlin`,
+      en: `${baseUrl}${getDistrictEnPathForDePath('/wohnung-kaufen-wedding')}`,
     };
     const districtContent = {
       heroTitle: 'Wohnung kaufen Wedding',
@@ -5333,7 +5338,7 @@ exports.tempelhofPropertiesPageDe = async (req, res, next) => {
     const baseUrl = res.locals.baseUrl;
     const districtUrls = {
       de: `${baseUrl}/wohnung-kaufen-tempelhof`,
-      en: `${baseUrl}/en/properties-for-sale-berlin`,
+      en: `${baseUrl}${getDistrictEnPathForDePath('/wohnung-kaufen-tempelhof')}`,
     };
     const districtContent = {
       heroTitle: 'Wohnung kaufen Tempelhof',
@@ -5477,7 +5482,7 @@ async function renderBerlinDistrictPageDe(req, res, next, config) {
 
     const baseUrl = res.locals.baseUrl;
     const districtUrls = {
-      en: `${baseUrl}/en/properties-for-sale-berlin`,
+      en: `${baseUrl}${getDistrictEnPathForDePath(config.path)}`,
       de: `${baseUrl}${config.path}`,
     };
 
@@ -5494,6 +5499,7 @@ async function renderBerlinDistrictPageDe(req, res, next, config) {
       districtDisplayName: config.displayName,
       districtHeroImage: config.heroImage,
       defaultNeighborhood: config.defaultNeighborhood || config.displayName,
+      districtPageLang: 'de',
       locations,
       neighborhoodCounts,
       recommendedProperties,
@@ -5727,3 +5733,136 @@ exports.pankowPropertiesPageDe = async (req, res, next) => renderBerlinDistrictP
   }
 });
 
+
+async function renderBerlinDistrictPageEn(req, res, next, landing) {
+  try {
+    const cacheKey = `district-en:${landing.enPath}`;
+    let neighborhoodCounts;
+    let properties;
+    let projects;
+
+    const cached = getLandingPageCache(cacheKey);
+    if (cached) {
+      neighborhoodCounts = cached.neighborhoodCounts;
+      properties = cached.properties;
+      projects = cached.projects;
+    } else {
+      const propertiesSql = `
+      SELECT
+        p.id, p.title, p.title_i18n, p.description_i18n, p.slug, p.country, p.city, p.neighborhood,
+        p.price, p.photos, p.type, p.rooms, p.bathrooms,
+        CASE
+          WHEN p.type = 'Apartment' THEN p.apartment_size
+          WHEN p.type IN ('House', 'Villa') THEN p.living_space
+          WHEN p.type = 'Land' THEN p.land_size
+          ELSE NULL
+        END as size,
+        p.created_at,
+        p.description,
+        COALESCE(ps.views, 0) AS views,
+        u.name as agent_name,
+        u.profile_picture as agent_profile_picture
+      FROM properties p
+      LEFT JOIN users u ON p.agent_id = u.id
+      LEFT JOIN property_stats ps ON ps.property_id = p.id
+      WHERE p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND COALESCE(p.sold, false) IS NOT TRUE
+        AND ${landing.propertiesWhere}
+      ORDER BY COALESCE(ps.views, 0) DESC, p.created_at DESC
+      LIMIT 30
+    `;
+      const projectsSql = `
+      SELECT
+        p.id, p.slug, p.title, p.title_i18n, p.description, p.description_i18n,
+        p.country, p.city, p.neighborhood, p.photos, p.min_price, p.max_price,
+        p.total_units, p.completion_date, p.created_at
+      FROM projects p
+      WHERE p.status = 'active'
+        AND p.country = 'Germany'
+        AND p.city = 'Berlin'
+        AND ${landing.projectsWhere}
+      ORDER BY p.created_at DESC
+      LIMIT 9
+    `;
+
+      const [counts, propResult, projResult] = await Promise.all([
+        getNeighborhoodCountMap(locations),
+        query(propertiesSql, landing.propertiesParams || []),
+        query(projectsSql, landing.projectsParams || [])
+      ]);
+      neighborhoodCounts = counts;
+      properties = propResult.rows;
+      projects = projResult.rows;
+      setLandingPageCache(cacheKey, { neighborhoodCounts, properties, projects });
+    }
+
+    const lang = 'en';
+    const recommendedProperties = (properties || []).map((p) => {
+      const photos = Array.isArray(p.photos) ? p.photos : (p.photos ? [p.photos] : []);
+      return {
+        ...p,
+        title: getLocalizedTitle(p, lang),
+        description: (p.description_i18n && p.description_i18n[lang]) || p.description,
+        photos,
+        agent: { name: p.agent_name || 'Agent', profile_picture: p.agent_profile_picture || null }
+      };
+    });
+
+    const districtProjects = (projects || []).map((project) => {
+      const photos = Array.isArray(project.photos) ? project.photos : (project.photos ? [project.photos] : []);
+      const normalizedPhotos = photos.map((ph) => {
+        if (!ph) return ph;
+        const phStr = String(ph);
+        if (phStr.startsWith('/uploads/') || phStr.startsWith('http')) return phStr;
+        return `/uploads/projects/${project.id}/${phStr}`;
+      });
+      const titleI18n = project.title_i18n && typeof project.title_i18n === 'object' ? project.title_i18n : null;
+      const descriptionI18n = project.description_i18n && typeof project.description_i18n === 'object' ? project.description_i18n : null;
+      return {
+        ...project,
+        title: (titleI18n && (titleI18n[lang] || titleI18n.en || titleI18n.de)) || project.title,
+        description: (descriptionI18n && (descriptionI18n[lang] || descriptionI18n.en || descriptionI18n.de)) || project.description,
+        photos: normalizedPhotos,
+        slug: project.slug || `project-${project.id}`
+      };
+    });
+
+    const baseUrl = res.locals.baseUrl;
+    const districtUrls = {
+      en: `${baseUrl}${landing.enPath}`,
+      de: `${baseUrl}${landing.dePath}`,
+    };
+
+    setPublicLandingCacheHeaders(res);
+    res.render('properties-berlin-district-en', {
+      title: landing.titleEn,
+      useMainContainer: false,
+      useHomeHeader: true,
+      headPartial: '../partials/seo/berlin-district-properties-head-en',
+      canonicalUrl: districtUrls.en,
+      hreflangAlternates: { en: districtUrls.en, de: districtUrls.de },
+      pageMetaDescription: landing.metaEn,
+      districtContent: landing.contentEn,
+      districtDisplayName: landing.displayName,
+      districtHeroImage: landing.heroImage,
+      defaultNeighborhood: landing.defaultNeighborhood || landing.displayName,
+      districtPageLang: 'en',
+      locations,
+      neighborhoodCounts,
+      recommendedProperties,
+      districtProjects,
+      baseUrl: res.locals.baseUrl
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+BERLIN_DISTRICT_LANDINGS.forEach((landing) => {
+  const exportName = `${landing.key.replace(/-([a-z])/g, (_, c) => c.toUpperCase())}PropertiesPageEn`;
+  exports[exportName] = async (req, res, next) => renderBerlinDistrictPageEn(req, res, next, landing);
+});
+
+exports.renderBerlinDistrictPageEn = renderBerlinDistrictPageEn;
+exports.BERLIN_DISTRICT_LANDINGS = BERLIN_DISTRICT_LANDINGS;

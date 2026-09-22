@@ -263,7 +263,9 @@ function getCanonicalBaseUrl(req) {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 const { getDistrictRatgeberLinks } = require('./config/districtRatgeberLinks');
+const { BERLIN_DISTRICT_LANDINGS, buildDistrictAlternateMap, buildHomeDistrictPaths } = require('./config/berlinDistrictLandings');
 app.locals.getDistrictRatgeberLinks = getDistrictRatgeberLinks;
+app.locals.BERLIN_DISTRICT_LANDINGS = BERLIN_DISTRICT_LANDINGS;
 
 // 2) Then register the layouts middleware
 app.use(expressLayouts);
@@ -424,32 +426,7 @@ app.use((req, res, next) => {
     '/wohnungen-berlin-kaufen': { de: '/wohnungen-berlin-kaufen', en: '/en/properties-for-sale-berlin' },
     '/de/wohnungen-berlin-kaufen': { de: '/wohnungen-berlin-kaufen', en: '/en/properties-for-sale-berlin' },
     '/en/properties-for-sale-berlin': { de: '/wohnungen-berlin-kaufen', en: '/en/properties-for-sale-berlin' },
-    '/wohnung-kaufen-charlottenburg': { de: '/wohnung-kaufen-charlottenburg', en: '/en/properties-for-sale-berlin' },
-    '/de/wohnung-kaufen-charlottenburg': { de: '/wohnung-kaufen-charlottenburg', en: '/en/properties-for-sale-berlin' },
-    '/wohnung-kaufen-moabit': { de: '/wohnung-kaufen-moabit', en: '/en/properties-for-sale-berlin' },
-    '/de/wohnung-kaufen-moabit': { de: '/wohnung-kaufen-moabit', en: '/en/properties-for-sale-berlin' },
-    '/wohnung-kaufen-friedrichshain-kreuzberg': { de: '/wohnung-kaufen-friedrichshain-kreuzberg', en: '/en/properties-for-sale-berlin' },
-    '/de/wohnung-kaufen-friedrichshain-kreuzberg': { de: '/wohnung-kaufen-friedrichshain-kreuzberg', en: '/en/properties-for-sale-berlin' },
-    '/wohnung-kaufen-schoeneberg': { de: '/wohnung-kaufen-schoeneberg', en: '/en/properties-for-sale-berlin' },
-    '/de/wohnung-kaufen-schoeneberg': { de: '/wohnung-kaufen-schoeneberg', en: '/en/properties-for-sale-berlin' },
-    '/wohnung-kaufen-prenzlauer-berg': { de: '/wohnung-kaufen-prenzlauer-berg', en: '/en/properties-for-sale-berlin' },
-    '/de/wohnung-kaufen-prenzlauer-berg': { de: '/wohnung-kaufen-prenzlauer-berg', en: '/en/properties-for-sale-berlin' },
-    '/wohnung-kaufen-wedding': { de: '/wohnung-kaufen-wedding', en: '/en/properties-for-sale-berlin' },
-    '/de/wohnung-kaufen-wedding': { de: '/wohnung-kaufen-wedding', en: '/en/properties-for-sale-berlin' },
-    '/wohnung-kaufen-tempelhof': { de: '/wohnung-kaufen-tempelhof', en: '/en/properties-for-sale-berlin' },
-    '/de/wohnung-kaufen-tempelhof': { de: '/wohnung-kaufen-tempelhof', en: '/en/properties-for-sale-berlin' },
-    '/wohnung-kaufen-neukoelln': { de: '/wohnung-kaufen-neukoelln', en: '/en/properties-for-sale-berlin' },
-    '/de/wohnung-kaufen-neukoelln': { de: '/wohnung-kaufen-neukoelln', en: '/en/properties-for-sale-berlin' },
-    '/wohnung-kaufen-reinickendorf': { de: '/wohnung-kaufen-reinickendorf', en: '/en/properties-for-sale-berlin' },
-    '/de/wohnung-kaufen-reinickendorf': { de: '/wohnung-kaufen-reinickendorf', en: '/en/properties-for-sale-berlin' },
-    '/wohnung-kaufen-kreuzberg': { de: '/wohnung-kaufen-kreuzberg', en: '/en/properties-for-sale-berlin' },
-    '/de/wohnung-kaufen-kreuzberg': { de: '/wohnung-kaufen-kreuzberg', en: '/en/properties-for-sale-berlin' },
-    '/wohnung-kaufen-spandau': { de: '/wohnung-kaufen-spandau', en: '/en/properties-for-sale-berlin' },
-    '/de/wohnung-kaufen-spandau': { de: '/wohnung-kaufen-spandau', en: '/en/properties-for-sale-berlin' },
-    '/wohnung-kaufen-berlin-mitte': { de: '/wohnung-kaufen-berlin-mitte', en: '/en/properties-for-sale-berlin' },
-    '/de/wohnung-kaufen-berlin-mitte': { de: '/wohnung-kaufen-berlin-mitte', en: '/en/properties-for-sale-berlin' },
-    '/wohnung-kaufen-pankow': { de: '/wohnung-kaufen-pankow', en: '/en/properties-for-sale-berlin' },
-    '/de/wohnung-kaufen-pankow': { de: '/wohnung-kaufen-pankow', en: '/en/properties-for-sale-berlin' },
+    ...buildDistrictAlternateMap(),
     '/immobilien-dubai-kaufen': { de: '/immobilien-dubai-kaufen', en: '/en/properties-for-sale-dubai' },
     '/de/immobilien-dubai-kaufen': { de: '/immobilien-dubai-kaufen', en: '/en/properties-for-sale-dubai' },
     '/en/properties-for-sale-dubai': { de: '/immobilien-dubai-kaufen', en: '/en/properties-for-sale-dubai' },
@@ -833,6 +810,15 @@ app.get('/wohnung-kaufen-kreuzberg', propertyController.kreuzbergPropertiesPageD
 app.get('/wohnung-kaufen-spandau', propertyController.spandauPropertiesPageDe);
 app.get('/wohnung-kaufen-berlin-mitte', propertyController.mittePropertiesPageDe);
 app.get('/wohnung-kaufen-pankow', propertyController.pankowPropertiesPageDe);
+
+BERLIN_DISTRICT_LANDINGS.forEach((landing) => {
+  const exportName = `${landing.key.replace(/-([a-z])/g, (_, c) => c.toUpperCase())}PropertiesPageEn`;
+  const handler = propertyController[exportName];
+  if (typeof handler === 'function') {
+    app.get(landing.enPath, handler);
+  }
+});
+
 app.get('/en/berlin-tenant-occupied-entry-strategy', propertyController.berlinInvestorStrategyPageEn);
 app.get('/berlin-mieter-belegte-einstiegsstrategie', propertyController.berlinInvestorStrategyPageDe);
 app.get('/berlin-tenant-occupied-entry-strategy', (req, res) => {
@@ -1074,22 +1060,8 @@ const HOME_BERLIN_NEIGHBORHOOD_CONTENT = {
   }
 };
 
-const BERLIN_DISTRICT_LANDING_PATHS = {
-  charlottenburgwilmersdorf: '/wohnung-kaufen-charlottenburg',
-  moabit: '/wohnung-kaufen-moabit',
-  friedrichshainkreuzberg: '/wohnung-kaufen-friedrichshain-kreuzberg',
-  schoneberg: '/wohnung-kaufen-schoeneberg',
-  prenzlauerberg: '/wohnung-kaufen-prenzlauer-berg',
-  weddinggesundbrunnen: '/wohnung-kaufen-wedding',
-  tempelhof: '/wohnung-kaufen-tempelhof',
-  neukolln: '/wohnung-kaufen-neukoelln',
-  reinickendorf: '/wohnung-kaufen-reinickendorf',
-  kreuzberg: '/wohnung-kaufen-kreuzberg',
-  spandau: '/wohnung-kaufen-spandau',
-  mitte: '/wohnung-kaufen-berlin-mitte',
-  'berlin-mitte': '/wohnung-kaufen-berlin-mitte',
-  pankow: '/wohnung-kaufen-pankow'
-};
+const BERLIN_DISTRICT_LANDING_PATHS_DE = buildHomeDistrictPaths('de');
+const BERLIN_DISTRICT_LANDING_PATHS_EN = buildHomeDistrictPaths('en');
 
 const HOME_DUBAI_NEIGHBORHOOD_CONTENT = {
   en: {
@@ -1529,7 +1501,7 @@ async function renderHomePage(req, res, langPath, next) {
           summary: item.summary || defaultSummary,
           realEstate: item.realEstate || defaultRealEstate,
           href: country === 'Germany' && city === 'Berlin'
-            ? (BERLIN_DISTRICT_LANDING_PATHS[normalized] || berlinHubPath)
+            ? ((lang === 'en' ? BERLIN_DISTRICT_LANDING_PATHS_EN : BERLIN_DISTRICT_LANDING_PATHS_DE)[normalized] || berlinHubPath)
             : null
         };
       });
@@ -1795,6 +1767,9 @@ app.get('/sitemap.xml', async (req, res, next) => {
     staticUrls.push({ loc: `${base}/wohnung-kaufen-spandau`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/wohnung-kaufen-berlin-mitte`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
     staticUrls.push({ loc: `${base}/wohnung-kaufen-pankow`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    BERLIN_DISTRICT_LANDINGS.forEach((landing) => {
+      staticUrls.push({ loc: `${base}${landing.enPath}`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    });
 
     // Dynamic properties (Berlin / Germany focus — exclude Cyprus & UAE individual listings, N5)
     // Also exclude legacy slugs that 301 via highValueLegacyRedirects (Semrush "wrong pages in sitemap").

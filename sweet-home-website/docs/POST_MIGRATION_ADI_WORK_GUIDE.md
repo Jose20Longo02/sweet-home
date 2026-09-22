@@ -144,11 +144,13 @@ Live copy already has broken umlauts in `views/berlin-investment-strategy-de.ejs
 
 ### S6 — English district pages
 
-- [ ] EN versions of the 13 district pages under `/en/`
-- [ ] EN Ratgeber cards link to `/en/blog/` guides, not German slugs
-- [ ] hreflang pair each DE district page with its EN twin
-- [ ] Language switcher on district pages must not fall back to the generic EN listing
-- [ ] If 13 is too much this cycle: ship **Moabit, Charlottenburg, Mitte, Prenzlauer Berg** first and tell Adi the date for the rest
+- [x] EN versions of the 13 district pages under `/en/`
+- [x] EN Ratgeber cards link to `/en/blog/` guides, not German slugs
+- [x] hreflang pair each DE district page with its EN twin
+- [x] Language switcher on district pages must not fall back to the generic EN listing
+- [x] If 13 is too much this cycle: ship **Moabit, Charlottenburg, Mitte, Prenzlauer Berg** first and tell Adi the date for the rest — **shipped all 13**
+
+**Ready 2026-09-22, not live until deploy.** All 13 English district pages live under `/en/properties-for-sale-{district}` (Mitte: `/en/properties-for-sale-mitte`). Each pairs with its German `/wohnung-kaufen-*` twin for hreflang and the language switcher. Ratgeber cards on EN pages use `/en/blog/{english-slug}` anchors. The English homepage district CTAs now point at the EN district pages. Sitemap lists the 13 EN URLs.
 
 ### S7 — Six new posts (3 per week) + English versions
 
@@ -670,7 +672,7 @@ From `Sweet_Home_Pages_and_Keywords_Berlin.xlsx`. Do **after** Phases A–D and 
 | Day | Focus |
 |-----|--------|
 | Now | **S1–S5** homepage, popup, Paphos URLs, strategy page |
-| Then | **S6** EN districts (4 first if needed) |
+| Then | **S6** EN districts — **all 13 ready** |
 | Wed–Fri | **S7** new posts, 3/week, DE + EN, human read before live |
 | After posts | **S8** photos; **S9** only after Adi sends the lists; **S10** when convenient |
 | Friday | Email Adi: done / live / blockers / next week |
@@ -739,6 +741,7 @@ Confirmations you asked for:
 | 2026-09-21 | **S3** ContactBeat popup rules | ContactBeat | Exit intent, desktop only, once per session, never mobile, never right after Google. Not our code |
 | 2026-09-21 | **S4** Paphos duplicate URLs | Live | Five `/blog/` and `/de/blog/` English slugs 301 to `/en/blog/`. Sitemap EN only. Investment EN slug already paired with DE post |
 | 2026-09-21 | **S5** tenant-occupied strategy page | Ready, deploy pending | Umlauts fixed. ~222k cites StEP Wohnen 2040. Reciprocal links with the vermietete-Wohnung post. Ads landing: `noindex, follow`, out of the sitemap |
+| 2026-09-22 | **S6** English district pages | Ready, deploy pending | All 13 `/en/properties-for-sale-*` twins. hreflang + switcher paired. EN Ratgeber → `/en/blog/`. EN homepage CTAs updated |
 
 ---
 

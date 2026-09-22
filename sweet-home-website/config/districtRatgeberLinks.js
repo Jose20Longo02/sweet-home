@@ -2,6 +2,8 @@
  * N11 — district-specific blog guide links (keyword anchors).
  * Keys match districtDisplayName in district landing templates.
  */
+const { DE_TO_EN_SLUG } = require('./n10-berlin-post-slugs');
+
 const BLOG_ANCHORS = {
   'kaufnebenkosten-berlin': 'Kaufnebenkosten Berlin',
   'immobilie-als-kapitalanlage-berlin': 'Immobilie als Kapitalanlage Berlin',
@@ -18,6 +20,24 @@ const BLOG_ANCHORS = {
   'eigenkapital-wohnungskauf': 'Eigenkapital Wohnungskauf',
   'mietpreise-berlin-bezirk': 'Mietpreise Berlin',
   'wo-in-berlin-wohnung-kaufen': 'wo in Berlin Wohnung kaufen'
+};
+
+const BLOG_ANCHORS_EN = {
+  'kaufnebenkosten-berlin': 'Cost of buying property in Berlin',
+  'immobilie-als-kapitalanlage-berlin': 'Berlin real estate as an investment',
+  'auslaender-immobilien-kaufen-berlin': 'How foreigners can buy property in Berlin',
+  'beste-bezirke-immobilien-berlin': 'Best Berlin districts for property investment',
+  'wohnungskauf-berlin-checkliste': 'What to check before buying an apartment in Berlin',
+  'mietrecht-berlin-kaeufer': 'Berlin rental laws for property buyers',
+  'neubau-oder-altbau-berlin': 'New build vs Altbau in Berlin',
+  'berlin-stadtteile-familien': 'Best Berlin districts for families',
+  'vermietete-wohnung-kaufen-berlin': 'Buying a tenanted apartment in Berlin',
+  'immobilienpreise-berlin': 'Berlin property prices',
+  'grunderwerbsteuer-berlin': 'Berlin transfer tax (Grunderwerbsteuer)',
+  'mietrendite-berechnen': 'How to calculate rental yield in Berlin',
+  'eigenkapital-wohnungskauf': 'Down payment for buying an apartment in Berlin',
+  'mietpreise-berlin-bezirk': 'Berlin rents by district',
+  'wo-in-berlin-wohnung-kaufen': 'Where to buy an apartment in Berlin'
 };
 
 /** Cover images for Ratgeber cards (synced from published blog_posts.cover_image). */
@@ -140,18 +160,23 @@ const DEFAULT_SLUGS = [
   'wo-in-berlin-wohnung-kaufen'
 ];
 
-function getDistrictRatgeberLinks(districtName) {
+function getDistrictRatgeberLinks(districtName, lang = 'de') {
   const slugs = DISTRICT_RATGEBER_SLUGS[String(districtName || '').trim()] || DEFAULT_SLUGS;
-  return slugs.slice(0, 4).map((slug) => ({
-    slug,
-    href: `/blog/${slug}`,
-    anchor: BLOG_ANCHORS[slug] || slug,
-    cover: BLOG_COVERS[slug] || '/images/berlin-hero.jpg'
-  }));
+  const isEn = String(lang || 'de').toLowerCase().slice(0, 2) === 'en';
+  return slugs.slice(0, 4).map((slug) => {
+    const enSlug = DE_TO_EN_SLUG[slug] || slug;
+    return {
+      slug,
+      href: isEn ? `/en/blog/${enSlug}` : `/blog/${slug}`,
+      anchor: isEn ? (BLOG_ANCHORS_EN[slug] || BLOG_ANCHORS[slug] || slug) : (BLOG_ANCHORS[slug] || slug),
+      cover: BLOG_COVERS[slug] || '/images/berlin-hero.jpg'
+    };
+  });
 }
 
 module.exports = {
   BLOG_ANCHORS,
+  BLOG_ANCHORS_EN,
   BLOG_COVERS,
   DISTRICT_RATGEBER_SLUGS,
   getDistrictRatgeberLinks

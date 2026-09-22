@@ -1,4 +1,8 @@
 <%
+  const pageLang = (typeof districtPageLang !== 'undefined' && districtPageLang)
+    ? String(districtPageLang).slice(0, 2)
+    : 'de';
+  const isEn = pageLang === 'en';
   const berlinRelatedDistricts = {
     'Charlottenburg': ['Moabit', 'Schöneberg', 'Prenzlauer Berg'],
     'Moabit': ['Charlottenburg', 'Wedding', 'Kreuzberg'],
@@ -14,21 +18,13 @@
     'Mitte': ['Prenzlauer Berg', 'Charlottenburg', 'Kreuzberg'],
     'Pankow': ['Prenzlauer Berg', 'Wedding', 'Reinickendorf']
   };
-  const berlinDistrictHrefs = {
-    'Charlottenburg': '/wohnung-kaufen-charlottenburg',
-    'Moabit': '/wohnung-kaufen-moabit',
-    'Friedrichshain-Kreuzberg': '/wohnung-kaufen-friedrichshain-kreuzberg',
-    'Schöneberg': '/wohnung-kaufen-schoeneberg',
-    'Prenzlauer Berg': '/wohnung-kaufen-prenzlauer-berg',
-    'Wedding': '/wohnung-kaufen-wedding',
-    'Tempelhof': '/wohnung-kaufen-tempelhof',
-    'Neukölln': '/wohnung-kaufen-neukoelln',
-    'Reinickendorf': '/wohnung-kaufen-reinickendorf',
-    'Kreuzberg': '/wohnung-kaufen-kreuzberg',
-    'Spandau': '/wohnung-kaufen-spandau',
-    'Mitte': '/wohnung-kaufen-berlin-mitte',
-    'Pankow': '/wohnung-kaufen-pankow'
-  };
+  const districtLandings = (typeof BERLIN_DISTRICT_LANDINGS !== 'undefined' && Array.isArray(BERLIN_DISTRICT_LANDINGS))
+    ? BERLIN_DISTRICT_LANDINGS
+    : [];
+  const berlinDistrictHrefs = {};
+  districtLandings.forEach(function (d) {
+    berlinDistrictHrefs[d.displayName] = isEn ? d.enPath : d.dePath;
+  });
   const currentDistrictName = (typeof districtDisplayName !== 'undefined' && districtDisplayName)
     ? String(districtDisplayName)
     : '';
@@ -38,20 +34,36 @@
   const relatedNames = (berlinRelatedDistricts[currentDistrictName] || ['Charlottenburg', 'Prenzlauer Berg', 'Kreuzberg'])
     .filter(function(name){ return name !== currentDistrictName && berlinDistrictHrefs[name]; })
     .slice(0, 3);
+  const berlinHubHref = isEn ? '/en/properties-for-sale-berlin' : '/wohnungen-berlin-kaufen';
   const berlinSearchHref = ((typeof localePath === 'function') ? localePath('/properties/for-sale/germany/berlin') : '/properties/for-sale/germany/berlin')
     + '?neighborhood=' + encodeURIComponent(currentNeighborhood);
   const ratgeberLinks = (typeof getDistrictRatgeberLinks === 'function')
-    ? getDistrictRatgeberLinks(currentDistrictName)
+    ? getDistrictRatgeberLinks(currentDistrictName, pageLang)
     : [];
+  const ratgeberTitle = isEn ? 'Guides for buying an apartment' : 'Ratgeber zum Wohnungskauf';
+  const ratgeberIntro = isEn
+    ? ('Practical Sweet Home Berlin guides — especially useful if you are buying or comparing in ' + currentDistrictName + '.')
+    : ('Passende Guides von Sweet Home Berlin — speziell hilfreich, wenn Sie in ' + currentDistrictName + ' kaufen oder vergleichen möchten.');
+  const relatedTitle = isEn ? 'Explore more Berlin districts' : 'Weitere Berliner Bezirke entdecken';
+  const relatedIntro = isEn
+    ? ('Compare ' + currentDistrictName + ' with nearby areas, or return to the Berlin overview.')
+    : ('Vergleichen Sie ' + currentDistrictName + ' mit nahegelegenen Lagen oder kehren Sie zur Berlin-Übersicht zurück.');
+  const berlinHubLabel = isEn ? 'Apartments for sale in Berlin' : 'Wohnungen in Berlin kaufen';
+  const currentOffersLabel = isEn
+    ? ('Current listings in ' + currentDistrictName)
+    : ('Aktuelle Angebote in ' + currentDistrictName);
+  const relatedDistrictLabel = function (name) {
+    return isEn ? ('Apartments for sale in ' + name) : ('Wohnung kaufen ' + name);
+  };
 %>
 <% if (ratgeberLinks.length > 0) { %>
 <section class="berlin-content section berlin-district-ratgeber" aria-labelledby="district-ratgeber-heading">
   <div class="berlin-content__inner">
-    <h2 id="district-ratgeber-heading" class="berlin-content__title">Ratgeber zum Wohnungskauf</h2>
-    <p class="berlin-content__intro">Passende Guides von Sweet Home Berlin — speziell hilfreich, wenn Sie in <%= currentDistrictName %> kaufen oder vergleichen möchten.</p>
+    <h2 id="district-ratgeber-heading" class="berlin-content__title"><%= ratgeberTitle %></h2>
+    <p class="berlin-content__intro"><%= ratgeberIntro %></p>
     <ul class="berlin-ratgeber-cards">
       <% ratgeberLinks.forEach(function(link) {
-        const cardHref = (typeof localePath === 'function') ? localePath(link.href) : link.href;
+        const cardHref = link.href;
         const coverSrc = link.cover || '/images/berlin-hero.jpg';
       %>
         <li class="berlin-ratgeber-card">
@@ -67,13 +79,13 @@
 <% } %>
 <section class="berlin-content section berlin-best-areas" aria-labelledby="district-internal-links-heading">
   <div class="berlin-content__inner">
-    <h2 id="district-internal-links-heading" class="berlin-content__title">Weitere Berliner Bezirke entdecken</h2>
-    <p class="berlin-content__intro">Vergleichen Sie <%= currentDistrictName %> mit nahegelegenen Lagen oder kehren Sie zur Berlin-Übersicht zurück.</p>
+    <h2 id="district-internal-links-heading" class="berlin-content__title"><%= relatedTitle %></h2>
+    <p class="berlin-content__intro"><%= relatedIntro %></p>
     <ul class="berlin-areas__list">
-      <li class="berlin-areas__item"><a href="/wohnungen-berlin-kaufen">Wohnungen in Berlin kaufen</a></li>
-      <li class="berlin-areas__item"><a href="<%= berlinSearchHref %>">Aktuelle Angebote in <%= currentDistrictName %></a></li>
+      <li class="berlin-areas__item"><a href="<%= berlinHubHref %>"><%= berlinHubLabel %></a></li>
+      <li class="berlin-areas__item"><a href="<%= berlinSearchHref %>"><%= currentOffersLabel %></a></li>
       <% relatedNames.forEach(function(name){ %>
-        <li class="berlin-areas__item"><a href="<%= berlinDistrictHrefs[name] %>">Wohnung kaufen <%= name %></a></li>
+        <li class="berlin-areas__item"><a href="<%= berlinDistrictHrefs[name] %>"><%= relatedDistrictLabel(name) %></a></li>
       <% }); %>
     </ul>
   </div>
