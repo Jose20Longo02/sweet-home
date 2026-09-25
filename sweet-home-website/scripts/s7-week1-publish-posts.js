@@ -15,13 +15,19 @@ const AUTHOR_ID = 12; // Irem Demirci
 const NOW = new Date().toISOString();
 const WANT_PUBLISH = process.env.PUBLISH === '1';
 const STATUS = WANT_PUBLISH ? 'published' : 'draft';
-const APP_ORIGIN = (process.env.APP_URL || 'https://sweethome-immobilien.de').replace(/\/$/, '');
+
+// Relative paths (same pattern as N9) — works on any host/port; do not bake APP_URL/localhost.
+const COVERS = {
+  finanzierung: '/images/blog/immobilienfinanzierung-berlin.jpg',
+  lohntSich: '/images/blog/lohnt-sich-immobilie-kaufen-berlin.jpg',
+  steuern: '/images/blog/steuern-fuer-vermieter.jpg',
+};
 
 const posts = [
   {
     slug: 'immobilienfinanzierung-berlin',
     slug_en: 'mortgage-financing-berlin',
-    cover_image: `${APP_ORIGIN}/images/blog/immobilienfinanzierung-berlin.jpg`,
+    cover_image: COVERS.finanzierung,
     title_de: 'Immobilienfinanzierung Berlin: So planen Käufer den Kredit',
     excerpt_de:
       'Immobilienfinanzierung in Berlin startet selten bei null Eigenkapital. So planen Sie Kredit, Rate und Nebenkosten – auch als Ausländer oder Selbstständige.',
@@ -116,7 +122,7 @@ const posts = [
   {
     slug: 'lohnt-sich-immobilie-kaufen-berlin',
     slug_en: 'is-buying-property-in-berlin-worth-it',
-    cover_image: `${APP_ORIGIN}/images/blog/lohnt-sich-immobilie-kaufen-berlin.jpg`,
+    cover_image: COVERS.lohntSich,
     title_de: 'Lohnt sich Immobilie kaufen in Berlin noch?',
     excerpt_de:
       'Lohnt sich Immobilie kaufen in Berlin noch? Offizielle Kaufpreise lagen 2025 bei 5.511 €/m² im Mittel – so prüfen Sie, ob Kauf für Sie noch Sinn ergibt.',
@@ -203,7 +209,7 @@ const posts = [
   {
     slug: 'steuern-fuer-vermieter',
     slug_en: 'german-rental-property-taxes',
-    cover_image: `${APP_ORIGIN}/images/blog/steuern-fuer-vermieter.jpg`,
+    cover_image: COVERS.steuern,
     title_de: 'Steuern für Vermieter: AfA, Zinsen und Kaufnebenkosten',
     excerpt_de:
       'Steuern für Vermieter starten oft bei der AfA: für viele Wohngebäude mit Bauantrag nach 2022 gilt 3 % linear. Was Zinsen, Grunderwerbsteuer und Co. bedeuten.',
