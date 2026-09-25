@@ -50,12 +50,12 @@
   height: auto;
   border-radius: 8px;
   display: block;
-  margin: var(--spacing-5) auto;
+  margin: var(--spacing-5) 0;
 }
 .blog-article .content a:has(> img) {
   display: block;
   max-width: min(100%, 480px);
-  margin: var(--spacing-5) auto;
+  margin: var(--spacing-5) 0;
 }
 .blog-article .content a:has(> img) img {
   margin: 0;
