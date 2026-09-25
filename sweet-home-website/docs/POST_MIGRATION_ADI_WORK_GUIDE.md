@@ -70,7 +70,7 @@ Related internal doc: [`DOMAIN_MIGRATION_PLAYBOOK.md`](./DOMAIN_MIGRATION_PLAYBO
 3. **S3** Popup: exit intent, desktop only, once per session; never on mobile; never right after a Google landing  
 4. **S4** Paphos duplicate URLs + EN kapitalanlage slug / hreflang  
 5. **S5** Tenant-occupied strategy page: umlauts, source, reciprocal links; ads landing (`noindex`, out of sitemap)  
-6. **S6** EN district pages (start with Moabit, Charlottenburg, Mitte, Prenzlauer Berg if 13 is too much)  
+6. **S6** EN district pages — **all 13 live**  
 7. **S7** Six new posts (3/week), each with a real EN version  
 8. **S8** Photos in long guides, starting with the Bezirke post  
 9. **S9** Title length + thin content — **lists to Adi before editing**  
@@ -99,7 +99,7 @@ Search engines currently see **no links** from the homepage to the 13 district p
 
 **Done when:** view-source of `/` and `/en` shows the 13 district links and panel text without clicking.
 
-**Live 2026-09-18.** View-source of `/` and `/en` shows 13 district links and panel text. Buttons are `Wohnungen in {name} entdecken` / `Explore apartments in {name}`. The link sits outside the `hidden` panel and still appears only after the card opens. English district pages do not exist yet (S6), so the English homepage points at the existing German `/wohnung-kaufen-*` pages until then.
+**Live 2026-09-18.** View-source of `/` and `/en` shows 13 district links and panel text. Buttons are `Wohnungen in {name} entdecken` / `Explore apartments in {name}`. The link sits outside the `hidden` panel and still appears only after the card opens. English district pages shipped in S6 (2026-09-22); the English homepage now points at `/en/properties-for-sale-*`.
 
 ### S2 — Remove international markets carousel — priority
 
@@ -140,7 +140,7 @@ Live copy already has broken umlauts in `views/berlin-investment-strategy-de.ejs
 - [x] Link **back** from the strategy page to that post
 - [x] **Ask Adi** (do not guess): is this page for ads/email, or for organic search? That decides the next treatment — **ads**
 
-**Ready 2026-09-21, not live until deploy.** Calculator labels and result notes use real umlauts. The ~222k stat cites the Senate page [StEP Wohnen 2040](https://www.berlin.de/sen/stadtentwicklung/planung/stadtentwicklungsplaene/step-wohnen-2040/) (222.000 neue Wohnungen, Beschluss 3. September 2024). The strategy page links to `/blog/vermietete-wohnung-kaufen-berlin`; that post’s German body links back to `/berlin-mieter-belegte-einstiegsstrategie`. The English pair does the same with `/en/blog/buying-tenanted-apartment-berlin` and `/en/berlin-tenant-occupied-entry-strategy`. The blog sentence is already in the database. José confirmed this is an ads landing, so both language versions are `noindex, follow` and left out of the sitemap. The pages stay live for campaigns. The page copy ships with the next deploy.
+**Live 2026-09-22.** Calculator labels and result notes use real umlauts. The ~222k stat cites the Senate page [StEP Wohnen 2040](https://www.berlin.de/sen/stadtentwicklung/planung/stadtentwicklungsplaene/step-wohnen-2040/) (222.000 neue Wohnungen, Beschluss 3. September 2024). The strategy page links to `/blog/vermietete-wohnung-kaufen-berlin`; that post’s German body links back to `/berlin-mieter-belegte-einstiegsstrategie`. The English pair does the same with `/en/blog/buying-tenanted-apartment-berlin` and `/en/berlin-tenant-occupied-entry-strategy`. José confirmed this is an ads landing, so both language versions are `noindex, follow` and left out of the sitemap. The pages stay live for campaigns.
 
 ### S6 — English district pages
 
@@ -150,7 +150,7 @@ Live copy already has broken umlauts in `views/berlin-investment-strategy-de.ejs
 - [x] Language switcher on district pages must not fall back to the generic EN listing
 - [x] If 13 is too much this cycle: ship **Moabit, Charlottenburg, Mitte, Prenzlauer Berg** first and tell Adi the date for the rest — **shipped all 13**
 
-**Ready 2026-09-22, not live until deploy.** All 13 English district pages live under `/en/properties-for-sale-{district}` (Mitte: `/en/properties-for-sale-mitte`). Each pairs with its German `/wohnung-kaufen-*` twin for hreflang and the language switcher. Ratgeber cards on EN pages use `/en/blog/{english-slug}` anchors. The English homepage district CTAs now point at the EN district pages. Sitemap lists the 13 EN URLs.
+**Live 2026-09-22.** All 13 English district pages are under `/en/properties-for-sale-{district}` (Mitte: `/en/properties-for-sale-mitte`). Each pairs with its German `/wohnung-kaufen-*` twin for hreflang and the language switcher. Ratgeber cards on EN pages use `/en/blog/{english-slug}` anchors. The English homepage district CTAs point at the EN district pages. Sitemap lists the 13 EN URLs.
 
 ### S7 — Six new posts (3 per week) + English versions
 
@@ -169,8 +169,10 @@ Every post also gets `/en/blog/{english-keyword-slug}`: a real adaptation, not a
 
 District Ratgeber posts **support** the landing pages. The landing page sells listings; the post answers buying questions and sends the reader on. They must not compete.
 
-- [ ] Week 1: posts 1–3 live in DE + EN
+- [ ] Week 1: posts 1–3 live in DE + EN — **drafts ready for human read (ids 160–162)**; publish after review with `PUBLISH=1 node scripts/s7-week1-publish-posts.js`
 - [ ] Week 2: posts 4–6 live in DE + EN
+
+**Drafts 2026-09-25 (not live).** Week 1 bodies are in the database as `draft` with real EN adaptations and official sources only (BaFin, Bundesbank, Gutachterausschuss / Senat Berlin, gesetze-im-internet / EStG, Senatsverwaltung Finanzen for Grunderwerbsteuer). Covers: `/images/blog/{slug}.jpg`. Reciprocal links from related posts run only on publish.
 
 ### S8 — Images in long guides
 
@@ -671,8 +673,8 @@ From `Sweet_Home_Pages_and_Keywords_Berlin.xlsx`. Do **after** Phases A–D and 
 
 | Day | Focus |
 |-----|--------|
-| Now | **S1–S5** homepage, popup, Paphos URLs, strategy page |
-| Then | **S6** EN districts — **all 13 ready** |
+| Now | **S7** six new posts DE + EN |
+| Then | **S8–S10** images, titles/thin audit, IG/FB |
 | Wed–Fri | **S7** new posts, 3/week, DE + EN, human read before live |
 | After posts | **S8** photos; **S9** only after Adi sends the lists; **S10** when convenient |
 | Friday | Email Adi: done / live / blockers / next week |
@@ -740,8 +742,9 @@ Confirmations you asked for:
 | 2026-09-21 | **S2** remove Dubai/Cyprus homepage carousel | Live | Gone on `/` and `/en`. Footer Zypern and Dubai links stay |
 | 2026-09-21 | **S3** ContactBeat popup rules | ContactBeat | Exit intent, desktop only, once per session, never mobile, never right after Google. Not our code |
 | 2026-09-21 | **S4** Paphos duplicate URLs | Live | Five `/blog/` and `/de/blog/` English slugs 301 to `/en/blog/`. Sitemap EN only. Investment EN slug already paired with DE post |
-| 2026-09-21 | **S5** tenant-occupied strategy page | Ready, deploy pending | Umlauts fixed. ~222k cites StEP Wohnen 2040. Reciprocal links with the vermietete-Wohnung post. Ads landing: `noindex, follow`, out of the sitemap |
-| 2026-09-22 | **S6** English district pages | Ready, deploy pending | All 13 `/en/properties-for-sale-*` twins. hreflang + switcher paired. EN Ratgeber → `/en/blog/`. EN homepage CTAs updated |
+| 2026-09-21 | **S5** tenant-occupied strategy page | Live | Umlauts, StEP Wohnen 2040 source, reciprocal blog links. Ads: `noindex, follow`, out of sitemap |
+| 2026-09-22 | **S6** English district pages | Live | All 13 `/en/properties-for-sale-*` twins. hreflang + switcher paired. EN Ratgeber → `/en/blog/`. EN homepage CTAs updated |
+| 2026-09-25 | **S7** week-1 posts (1–3) | Drafts for human read | Finanzierung, Lohnt sich Kauf, Steuern für Vermieter — DE+EN, official sources only. Publish after review |
 
 ---
 

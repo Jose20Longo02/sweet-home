@@ -17,7 +17,10 @@ const N10_BERLIN_POSTS = [
   { de: 'mietrendite-berechnen', en: 'how-to-calculate-rental-yield-berlin' },
   { de: 'eigenkapital-wohnungskauf', en: 'down-payment-for-buying-apartment-berlin' },
   { de: 'mietpreise-berlin-bezirk', en: 'berlin-rents-by-district-2026' },
-  { de: 'wo-in-berlin-wohnung-kaufen', en: 'where-to-buy-apartment-in-berlin' }
+  { de: 'wo-in-berlin-wohnung-kaufen', en: 'where-to-buy-apartment-in-berlin' },
+  { de: 'immobilienfinanzierung-berlin', en: 'mortgage-financing-berlin' },
+  { de: 'lohnt-sich-immobilie-kaufen-berlin', en: 'is-buying-property-in-berlin-worth-it' },
+  { de: 'steuern-fuer-vermieter', en: 'german-rental-property-taxes' }
 ];
 
 const DE_TO_EN_SLUG = Object.fromEntries(N10_BERLIN_POSTS.map((p) => [p.de, p.en]));
