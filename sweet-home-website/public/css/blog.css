@@ -43,7 +43,24 @@
 .blog-recommended .empty { color: var(--gray-500); }
 
 .blog-article header .cover { width: 100%; max-height: 360px; object-fit: cover; border-radius: var(--radius-lg); }
-.blog-article .content img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: var(--spacing-4) 0; }
+/* Inline/body images stay smaller than the cover — complementary, not competing */
+.blog-article .content img {
+  max-width: min(100%, 480px);
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  margin: var(--spacing-5) auto;
+}
+.blog-article .content a:has(> img) {
+  display: block;
+  max-width: min(100%, 480px);
+  margin: var(--spacing-5) auto;
+}
+.blog-article .content a:has(> img) img {
+  margin: 0;
+  max-width: 100%;
+}
 .blog-article .content { line-height: 1.75; }
 .blog-article .content h2 { margin-top: var(--spacing-6); }
 
