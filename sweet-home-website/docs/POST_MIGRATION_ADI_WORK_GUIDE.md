@@ -169,16 +169,18 @@ Every post also gets `/en/blog/{english-keyword-slug}`: a real adaptation, not a
 
 District Ratgeber posts **support** the landing pages. The landing page sells listings; the post answers buying questions and sends the reader on. They must not compete.
 
-- [ ] Week 1: posts 1–3 live in DE + EN — **drafts ready for human read (ids 160–162)**; publish after review with `PUBLISH=1 node scripts/s7-week1-publish-posts.js`
+- [x] Week 1: posts 1–3 live in DE + EN — ids **160–162** (Finanzierung, Lohnt sich Kauf, Steuern für Vermieter). Covers `/images/blog/{slug}.jpg`. Official sources only. Script: `scripts/s7-week1-publish-posts.js`
 - [ ] Week 2: posts 4–6 live in DE + EN
 
-**Drafts 2026-09-25 (not live).** Week 1 bodies are in the database as `draft` with real EN adaptations and official sources only (BaFin, Bundesbank, Gutachterausschuss / Senat Berlin, gesetze-im-internet / EStG, Senatsverwaltung Finanzen for Grunderwerbsteuer). Covers: `/images/blog/{slug}.jpg`. Reciprocal links from related posts run only on publish.
+**Done 2026-09-25.** Week 1 live with real EN adaptations. Sources: BaFin, Bundesbank, Gutachterausschuss / Senat Berlin, gesetze-im-internet / EStG, Senatsverwaltung Finanzen (Grunderwerbsteuer).
 
 ### S8 — Images in long guides
 
-- [ ] A photo of the area every few sections, starting with `/blog/wo-in-berlin-wohnung-kaufen`
-- [ ] District photos may link to the district pages
-- [ ] Keep real property photos as blog covers, with the link to the listing
+- [x] A photo of the area every few sections, starting with `/blog/wo-in-berlin-wohnung-kaufen`
+- [x] District photos may link to the district pages
+- [x] Keep real property photos as blog covers, with the link to the listing
+
+**Done 2026-09-25.** Eight district photos in DE + EN body of id 159 (`wo-in-berlin-wohnung-kaufen` / `where-to-buy-apartment-in-berlin`): Mitte, Charlottenburg, Kreuzberg, Schöneberg, Moabit, Neukölln, Pankow, Spandau. Each image links to its district landing. Files: `/images/blog/wo-in-berlin-{district}.jpg`. Script: `scripts/s8-insert-district-images.js` (DB update, no Admin-Save). **Needs deploy** of the new JPGs for live image URLs.
 
 ### S9 — Titles and thin content (audit)
 
@@ -673,10 +675,10 @@ From `Sweet_Home_Pages_and_Keywords_Berlin.xlsx`. Do **after** Phases A–D and 
 
 | Day | Focus |
 |-----|--------|
-| Now | **S7** six new posts DE + EN |
-| Then | **S8–S10** images, titles/thin audit, IG/FB |
-| Wed–Fri | **S7** new posts, 3/week, DE + EN, human read before live |
-| After posts | **S8** photos; **S9** only after Adi sends the lists; **S10** when convenient |
+| Now | **S7** week 2 (posts 4–6) DE + EN |
+| Then | **S9–S10** (titles/thin wait for Adi; carousel year / schema) |
+| Wed–Fri | **S7** week 2 posts, DE + EN, human read before live |
+| After posts | **S9** only after Adi sends the lists; **S10** when convenient |
 | Friday | Email Adi: done / live / blockers / next week |
 
 ### Weekly status email template
@@ -744,7 +746,8 @@ Confirmations you asked for:
 | 2026-09-21 | **S4** Paphos duplicate URLs | Live | Five `/blog/` and `/de/blog/` English slugs 301 to `/en/blog/`. Sitemap EN only. Investment EN slug already paired with DE post |
 | 2026-09-21 | **S5** tenant-occupied strategy page | Live | Umlauts, StEP Wohnen 2040 source, reciprocal blog links. Ads: `noindex, follow`, out of sitemap |
 | 2026-09-22 | **S6** English district pages | Live | All 13 `/en/properties-for-sale-*` twins. hreflang + switcher paired. EN Ratgeber → `/en/blog/`. EN homepage CTAs updated |
-| 2026-09-25 | **S7** week-1 posts (1–3) | Drafts for human read | Finanzierung, Lohnt sich Kauf, Steuern für Vermieter — DE+EN, official sources only. Publish after review |
+| 2026-09-25 | **S7** week-1 posts (1–3) | Live | ids 160–162; Finanzierung, Lohnt sich Kauf, Steuern für Vermieter — DE+EN, official sources only; covers fixed to relative `/images/blog/` paths |
+| 2026-09-25 | **S8** district photos in Bezirke guide | Live (DB); JPGs need deploy | 8 linked area photos in DE+EN of `wo-in-berlin-wohnung-kaufen`; script `s8-insert-district-images.js` |
 
 ---
 
