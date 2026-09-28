@@ -113,10 +113,13 @@
       '@type': 'RealEstateListing',
       name: p.title,
       url: `${siteBaseUrl}/properties/${p.slug}`,
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: p.city || 'Dubai',
-        addressCountry: p.country || 'UAE'
+      about: {
+        '@type': 'Apartment',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: p.city || 'Dubai',
+          addressCountry: p.country || 'UAE'
+        }
       }
     }
   }))
@@ -132,10 +135,13 @@
       '@type': 'RealEstateListing',
       name: p.title,
       url: `${siteBaseUrl}/properties/${p.slug}`,
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: p.city || 'Dubai',
-        addressCountry: p.country || 'UAE'
+      about: {
+        '@type': 'Apartment',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: p.city || 'Dubai',
+          addressCountry: p.country || 'UAE'
+        }
       }
     }
   }))

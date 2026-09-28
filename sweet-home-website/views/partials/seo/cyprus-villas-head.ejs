@@ -69,10 +69,13 @@
       '@type': 'RealEstateListing',
       name: p.title,
       url: `${siteBaseUrl}/properties/${p.slug}`,
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: p.city || 'Paphos',
-        addressCountry: p.country || 'Cyprus'
+      about: {
+        '@type': 'House',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: p.city || 'Paphos',
+          addressCountry: p.country || 'Cyprus'
+        }
       }
     }
   }))

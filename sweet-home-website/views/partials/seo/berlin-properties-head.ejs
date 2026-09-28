@@ -199,10 +199,13 @@
       '@type': 'RealEstateListing',
       name: p.title,
       url: `${siteBaseUrl}/properties/${p.slug}`,
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: p.city || 'Berlin',
-        addressCountry: p.country || 'Germany'
+      about: {
+        '@type': 'Apartment',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: p.city || 'Berlin',
+          addressCountry: p.country || 'Germany'
+        }
       }
     }
   }))
@@ -218,10 +221,13 @@
       '@type': 'RealEstateListing',
       name: p.title,
       url: `${siteBaseUrl}/properties/${p.slug}`,
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: p.city || 'Berlin',
-        addressCountry: p.country || 'Germany'
+      about: {
+        '@type': 'Apartment',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: p.city || 'Berlin',
+          addressCountry: p.country || 'Germany'
+        }
       }
     }
   }))

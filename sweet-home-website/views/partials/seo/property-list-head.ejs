@@ -47,10 +47,13 @@
       '@type': 'RealEstateListing',
       name: p.title || '',
       url: `${siteBaseUrl}/properties/${p.slug}`,
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: p.city || '',
-        addressCountry: p.country || ''
+      about: {
+        '@type': 'Apartment',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: p.city || '',
+          addressCountry: p.country || ''
+        }
       }
     }
   }))
@@ -67,10 +70,13 @@
       '@type': 'RealEstateListing',
       name: p.title || '',
       url: `${siteBaseUrl}/properties/${p.slug}`,
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: p.city || '',
-        addressCountry: p.country || ''
+      about: {
+        '@type': 'Apartment',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: p.city || '',
+          addressCountry: p.country || ''
+        }
       }
     }
   }))
