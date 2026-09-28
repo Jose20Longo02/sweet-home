@@ -205,7 +205,7 @@ Do **not** edit until Adi confirms the lists / proposed titles. Some thin pages 
 - [x] Homepage carousel: one card says `Eigennutzung ab 2027` but the listing page and URL say `ab 2030`. Align the year
 - [x] Listing schema: address warnings are warnings, not errors. When convenient, nest `address` inside `about` with type `Apartment` instead of on `RealEstateListing` directly
 
-**Done 2026-09-27.** Property id 101 (`sanierungsbedurftige-altbauwohnung-eigennutzung-ab-2030`): DE/EN/ES titles now say 2030, matching the slug and the German listing title. Live homepage card confirmed. Listing JSON-LD now puts `address` on `about` (`Apartment`; `House` on villa lists). **Schema needs deploy.**
+**Done 2026-09-27.** Property id 101 (`sanierungsbedurftige-altbauwohnung-eigennutzung-ab-2030`): DE/EN/ES titles now say 2030, matching the slug and the German listing title. Live homepage card confirmed. Listing JSON-LD puts `address` on `about` (`Apartment`; `House` on villa lists). Verified live 2026-09-27 on `/wohnungen-berlin-kaufen` and `/properties`.
 
 ---
 
@@ -806,7 +806,7 @@ Confirmations you asked for:
 | 2026-09-25 | **S7** week-1 posts (1–3)                                                                      | Live                          | ids 160–162; Finanzierung, Lohnt sich Kauf, Steuern für Vermieter — DE+EN, official sources only; covers fixed to relative `/images/blog/` paths                  |
 | 2026-09-25 | **S8** district photos in Bezirke guide                                                        | Live                          | 8 linked area photos in DE+EN; CSS inline imgs max 480px left-aligned                                                                                             |
 | 2026-09-25 | **S9** long titles + thin pages export                                                         | Waiting on Adi                | Lists + drafts in `docs/drafts/blog/S9-LONG-TITLES-AND-THIN-PAGES.md` — no live edits yet                                                                         |
-| 2026-09-27 | **S10** carousel year + listing schema                                                         | Year live; schema needs deploy | Property 101 titles aligned to 2030. `address` nested under `about` (`Apartment` / villa `House`)                                                                 |
+| 2026-09-27 | **S10** carousel year + listing schema                                                         | Live                          | Property 101 titles aligned to 2030. `address` nested under `about` (`Apartment` / villa `House`), verified on money page and `/properties`                      |
 
 
 ---
