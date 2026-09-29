@@ -77,7 +77,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 6. **S6** EN district pages — **all 13 live**
 7. **S7** Six new posts (3/week), each with a real EN version
 8. **S8** Photos in long guides, starting with the Bezirke post
-9. **S9** Title length + thin content — **lists to Adi before editing**
+9. **S9** Title length + thin content — **live 2026-09-29**
 10. **S10** Carousel year mismatch; listing schema address (low)
 
 Spanish comes **after** EN is in good shape. Not this cycle.
@@ -199,7 +199,7 @@ Adi approved the lists on 2026-09-29. Apply her titles exactly. Expand only the 
 - [x] Apply only the thin-page actions Adi marks — expand Services, Owners, Spandau (DE+EN), Reinickendorf (DE+EN). About left as-is
 
 **Export 2026-09-25:** `docs/drafts/blog/S9-LONG-TITLES-AND-THIN-PAGES.md`.
-**Applied 2026-09-29.** Titles are live in the DB (H1 follows `title_i18n`). District, services, and owners copy ships with the next deploy. EN Reinickendorf was expanded with its German twin so the pair stays aligned; it was not one of the nine thin URLs.
+**Applied 2026-09-29. Verified live after deploy.** Titles (H1 follows `title_i18n`), Services, Owners, Spandau, and Reinickendorf (DE+EN). About left as-is. EN Reinickendorf was expanded with its German twin so the pair stays aligned; it was not one of the nine thin URLs.
 
 ### S10 — Small fixes (low)
 
@@ -254,7 +254,7 @@ GSC: clean Berlin posts stuck in **“discovered, not indexed”** because each 
 - [x] Rename remaining **English slugs on German posts** to German keywords + **301** (script `scripts/n2-blog-slug-cleanup.js`, 2026-08-10)
 - [x] Same cleanup for `**/en/**` versions: zz-archived twins unpublished; EN currently shares German slug (bilingual slugs = N10 follow-up)
 - [x] Fix blog **title template**: removed `clampForSeo` ellipsis on post/list titles (`blogController.js`) — **needs deploy**
-- [x] Confirm **sitemap** lists only clean URLs — excludes `zz-archived`* / `*-draft-review*` even if mis-published
+- [x] Confirm **sitemap** lists only clean URLs — excludes `zz-archived`* / `*-draft-review`* even if mis-published
 - [x] **Request indexing** in Search Console for each cleaned post URL (**manual — José/Luis**) — done 2026-08-10
 
 **German live slugs (2026-08-10):**
@@ -728,13 +728,13 @@ From `Sweet_Home_Pages_and_Keywords_Berlin.xlsx`. Do **after** Phases A–D and 
 # Suggested weekly workflow
 
 
-| Day         | Focus                                                          |
-| ----------- | -------------------------------------------------------------- |
-| Now         | **S9** applied 2026-09-29 — titles live in DB; page copy on next deploy |
+| Day         | Focus                                                                   |
+| ----------- | ----------------------------------------------------------------------- |
+| Now         | **S9** live 2026-09-29 — titles, Services, Owners, Spandau, Reinickendorf |
 | Then        | **S7** week 2 if continuing posts                                       |
-| Wed–Fri     | **S7** week 2 posts, or Adi’s notes on the expanded thin pages |
-| After posts | **S10** already live; nothing else queued from this cycle     |
-| Friday      | Email Adi: done / live / blockers / next week                  |
+| Wed–Fri     | **S7** week 2 posts, or Adi’s notes on the expanded thin pages          |
+| After posts | **S10** already live; nothing else queued from this cycle               |
+| Friday      | Email Adi: done / live / blockers / next week                           |
 
 
 ### Weekly status email template
@@ -807,8 +807,9 @@ Confirmations you asked for:
 | 2026-09-25 | **S7** week-1 posts (1–3)                                                                      | Live                          | ids 160–162; Finanzierung, Lohnt sich Kauf, Steuern für Vermieter — DE+EN, official sources only; covers fixed to relative `/images/blog/` paths                  |
 | 2026-09-25 | **S8** district photos in Bezirke guide                                                        | Live                          | 8 linked area photos in DE+EN; CSS inline imgs max 480px left-aligned                                                                                             |
 | 2026-09-25 | **S9** long titles + thin pages export                                                         | Waiting on Adi                | Lists + drafts in `docs/drafts/blog/S9-LONG-TITLES-AND-THIN-PAGES.md` — no live edits yet                                                                         |
-| 2026-09-27 | **S10** carousel year + listing schema                                                         | Live                          | Property 101 titles aligned to 2030. `address` nested under `about` (`Apartment` / villa `House`), verified on money page and `/properties`                      |
-| 2026-09-29 | **S9** Adi OK applied                                                                          | Titles live; copy on deploy   | 17 titles via `scripts/s9-apply-approved-titles.js` (no body edit). Expanded Services, Owners, Spandau, Reinickendorf. About left.                                 |
+| 2026-09-27 | **S10** carousel year + listing schema                                                         | Live                          | Property 101 titles aligned to 2030. `address` nested under `about` (`Apartment` / villa `House`), verified on money page and `/properties`                       |
+| 2026-09-29 | **S9** Adi OK applied and verified live                                                        | Live                          | 17 titles via `scripts/s9-apply-approved-titles.js` (no body edit). Expanded Services, Owners, Spandau, Reinickendorf DE+EN. About left.                           |
+| 2026-09-29 | Yield per-m² formula + `llms.txt` (Adi on Israel’s scan)                                      | Formula live; llms on deploy  | Post 156 DE+EN: monthly rent × 12 in the m² gross-yield line. `public/llms.txt` rewritten Berlin-first, DE default, EN `/en`, current domain. Checklist and seller series wait. |
 
 
 ---

@@ -1677,45 +1677,34 @@ Sitemap: ${baseUrl}/sitemap.xml`;
 app.get('/llms.txt', (req, res) => {
   res.type('text/plain');
   const baseUrl = res.locals.baseUrl;
-  const llmsContent = `# Sweet Home Real Estate Platform
+  const llmsContent = `# Sweet Home Berlin
 
 ## About
-Sweet Home is a real estate agency platform specializing in luxury properties in Cyprus, Dubai, and Berlin. We help buyers find their dream homes and assist sellers with property management and sales services.
+Sweet Home Berlin helps people buy, sell, and let apartments in Berlin. German is the default language. English pages use the /en/ prefix.
 
-## Main Content Areas
-- **Properties**: Browse luxury apartments, villas, and real estate investments with advanced search and filtering
-- **Projects**: Explore real estate development projects in Cyprus and Dubai
-- **Blog**: Real estate insights, market analysis, and investment guides
-- **Services**: Property consulting, management, and financial services
-- **About**: Learn about our team and expertise
+## What the site covers
+- Buying an apartment in Berlin: listings, district pages, and guides on purchase costs, financing, rental yield, landlord taxes, and where to buy
+- Selling or letting a home in Berlin
+- Services in Berlin: purchase and sale advice, management of a rented apartment, and introductions to financing partners. Sweet Home is not a bank and does not lend
 
 ## Languages
-The website is available in three languages:
-- English (en)
-- Spanish (es)
-- German (de)
+- German: unprefixed URLs, for example ${baseUrl}/wohnungen-berlin-kaufen
+- English: /en/ prefix, for example ${baseUrl}/en/properties-for-sale-berlin
 
-## Key Features
-- Property listings with detailed information, photos, and interactive maps
-- Project showcases with pricing, unit types, and amenities
-- Blog posts covering real estate trends and investment advice
-- Mortgage calculator for property financing
-- Multi-language support for international clients
-
-## Important Pages
+## Important pages
 - Home: ${baseUrl}/
-- Properties: ${baseUrl}/properties
-- Projects: ${baseUrl}/projects
+- English home: ${baseUrl}/en
+- Apartments for sale in Berlin (German): ${baseUrl}/wohnungen-berlin-kaufen
+- Apartments for sale in Berlin (English): ${baseUrl}/en/properties-for-sale-berlin
 - Blog: ${baseUrl}/blog
+- English blog: ${baseUrl}/en/blog
 - Services: ${baseUrl}/services
+- English services: ${baseUrl}/en/services
+- For sellers: ${baseUrl}/owners
+- English for sellers: ${baseUrl}/en/owners
 - About: ${baseUrl}/about
 - Contact: ${baseUrl}/contact
-
-## Sitemap
-For a complete list of all pages, see: ${baseUrl}/sitemap.xml
-
-## Contact
-For inquiries, visit: ${baseUrl}/contact
+- Sitemap: ${baseUrl}/sitemap.xml
 `;
   res.send(llmsContent);
 });

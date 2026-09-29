@@ -225,7 +225,7 @@ const posts = [
 <p>Die Bruttomietrendite setzt die Jahreskaltmiete ins Verhältnis zum Kaufpreis – ohne Erwerbsnebenkosten und ohne laufende Eigentümerkosten. Die Logik entspricht gängigen Ratgebern wie <a href="https://www.finanztip.de/baufinanzierung/mietrendite-berechnen/" rel="noopener noreferrer" target="_blank">Finanztip zur Mietrendite</a>.</p>
 <p><strong>Formel:</strong><br>Bruttomietrendite (%) = (Jahreskaltmiete ÷ Kaufpreis) × 100</p>
 <p>Jahreskaltmiete = monatliche Nettokaltmiete × 12 (ohne Betriebskosten, die Sie nur durchreichen).</p>
-<p>Alternative über Quadratmeter:<br>Brutto (%) ≈ (Kaltmiete €/m² ÷ Kaufpreis €/m²) × 100</p>
+<p>Alternative über Quadratmeter (monatliche Kaltmiete):<br>Brutto (%) ≈ (Kaltmiete €/m² × 12 ÷ Kaufpreis €/m²) × 100</p>
 <p><br></p>
 <h2>Beispiel 1: Bruttomietrendite</h2>
 <p>Angenommen:</p>
