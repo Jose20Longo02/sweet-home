@@ -190,15 +190,16 @@ District Ratgeber posts **support** the landing pages. The landing page sells li
 
 ### S9 — Titles and thin content (audit)
 
-Do **not** edit until Adi confirms the lists / proposed titles. Some thin pages may be fine.
+Adi approved the lists on 2026-09-29. Apply her titles exactly. Expand only the thin pages she marked. Leave the About pages.
 
 - [x] Export the **17 long titles** (Berlin blog; title core without `| Sweet Home`) — with proposed ~55–60 keyword-first rewrites
 - [x] Export **9 thin-page candidates** for Adi before changing any of them
-- [ ] Adi OK on which titles to shorten + which thin pages to touch
-- [ ] Apply approved title shortenings (DB / templates; no Admin-Save DeepL risk on DE bodies)
-- [ ] Apply only the thin-page actions Adi marks
+- [x] Adi OK on which titles to shorten + which thin pages to touch — **2026-09-29**
+- [x] Apply approved title shortenings (DB / templates; no Admin-Save DeepL risk on DE bodies) — script `scripts/s9-apply-approved-titles.js`, titles + `title_i18n` only
+- [x] Apply only the thin-page actions Adi marks — expand Services, Owners, Spandau (DE+EN), Reinickendorf (DE+EN). About left as-is
 
-**Export 2026-09-25:** `docs/drafts/blog/S9-LONG-TITLES-AND-THIN-PAGES.md` (includes email draft). Waiting on Adi — **no live title/content edits yet.**
+**Export 2026-09-25:** `docs/drafts/blog/S9-LONG-TITLES-AND-THIN-PAGES.md`.
+**Applied 2026-09-29.** Titles are live in the DB (H1 follows `title_i18n`). District, services, and owners copy ships with the next deploy. EN Reinickendorf was expanded with its German twin so the pair stays aligned; it was not one of the nine thin URLs.
 
 ### S10 — Small fixes (low)
 
@@ -729,10 +730,10 @@ From `Sweet_Home_Pages_and_Keywords_Berlin.xlsx`. Do **after** Phases A–D and 
 
 | Day         | Focus                                                          |
 | ----------- | -------------------------------------------------------------- |
-| Now         | **S9** wait Adi OK on lists; **S7** week 2 if continuing posts |
-| Then        | **S10** carousel year / schema when convenient                 |
-| Wed–Fri     | Apply S9 after Adi OK; or **S7** week 2 posts                  |
-| After posts | **S10** when convenient                                        |
+| Now         | **S9** applied 2026-09-29 — titles live in DB; page copy on next deploy |
+| Then        | **S7** week 2 if continuing posts                                       |
+| Wed–Fri     | **S7** week 2 posts, or Adi’s notes on the expanded thin pages |
+| After posts | **S10** already live; nothing else queued from this cycle     |
 | Friday      | Email Adi: done / live / blockers / next week                  |
 
 
@@ -807,6 +808,7 @@ Confirmations you asked for:
 | 2026-09-25 | **S8** district photos in Bezirke guide                                                        | Live                          | 8 linked area photos in DE+EN; CSS inline imgs max 480px left-aligned                                                                                             |
 | 2026-09-25 | **S9** long titles + thin pages export                                                         | Waiting on Adi                | Lists + drafts in `docs/drafts/blog/S9-LONG-TITLES-AND-THIN-PAGES.md` — no live edits yet                                                                         |
 | 2026-09-27 | **S10** carousel year + listing schema                                                         | Live                          | Property 101 titles aligned to 2030. `address` nested under `about` (`Apartment` / villa `House`), verified on money page and `/properties`                      |
+| 2026-09-29 | **S9** Adi OK applied                                                                          | Titles live; copy on deploy   | 17 titles via `scripts/s9-apply-approved-titles.js` (no body edit). Expanded Services, Owners, Spandau, Reinickendorf. About left.                                 |
 
 
 ---

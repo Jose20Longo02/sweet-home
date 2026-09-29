@@ -5562,25 +5562,27 @@ exports.reinickendorfPropertiesPageDe = async (req, res, next) => renderBerlinDi
   projectsParams: ['%reinickendorf%'],
   content: {
     heroTitle: 'Wohnung kaufen Reinickendorf',
-    heroDescription: 'Reinickendorf steht für ruhigeres Wohnen, viel Grün und gute Erreichbarkeit. Der Bezirk ist vor allem bei Familien und Käufern mit langfristigem Anlagehorizont gefragt.',
+    heroDescription: 'Reinickendorf liegt im Norden Berlins: Tegeler See, Tegeler Forst und Ortsteile von Tegel und Heiligensee bis Hermsdorf, Frohnau und Wittenau. Wer hier eine Wohnung kaufen will, kauft Ruhe und Fläche — und sollte den Ortsteil benennen, nicht nur den Bezirk.',
     sectionTitleProperties: 'Eigentumswohnungen in Reinickendorf',
     sectionTitleProjects: 'Neubauprojekte in Reinickendorf',
     sectionTitleWhy: 'Warum Reinickendorf für Immobilienkäufer interessant ist',
-    whyP1: 'Der Bezirk bietet zahlreiche Wohnquartiere mit solider Infrastruktur, Schulen und Freizeitflächen. Im Vergleich zu zentralen Innenstadtlagen sind die Preise oft ausgewogener.',
-    whyP2: 'Für Käufer interessant sind stabile Nachfragesegmente und ein breites Angebot aus Bestandswohnungen und punktuellen Neubauprojekten.',
+    whyP1: 'Tegel verbindet See, Ortskern und die Nachnutzung des ehemaligen Flughafens. Auf dem Gelände läuft Berlin TXL; das verändert das Umfeld über Jahre, ersetzt aber keine Prüfung der einzelnen Straße. Hermsdorf, Frohnau und Waidmannslust sind etablierte Wohnlagen mit einem anderen Tempo als die Innenstadt.',
+    whyP2: 'Heiligensee und Konradshöhe leben vom Wasser und vom Wohnwert, nicht vom kurzen Weg nach Mitte. Wittenau und Reinickendorf-Ost sind städtischer und hängen stärker an S- und U-Bahn. Das Märkische Viertel ist ein Großsiedlungsquartier mit eigener Logik aus Bestand, Sanierung und Nachfrage. Preise und Zielgruppe unterscheiden sich hier stärker, als die Bezirkskarte vermuten lässt.',
+    whoTitle: 'Für wen sich Reinickendorf eignet',
+    whoP: 'Für Familien und Eigennutzer, die Grün, Wasser oder ein gewachsenes Wohnumfeld suchen und die Innenstadt nicht als Alltag brauchen. Für Käufer mit längerem Anlagehorizont in stabilen Wohnlagen wie Hermsdorf oder Frohnau. Weniger für jemanden, dessen Plan eine Szene-Lage oder der kürzeste Weg nach Kreuzberg ist. Die Vermietbarkeit hängt am Ortsteil und an der Bahn, nicht am Namen Reinickendorf.',
     sectionTitleMicro: 'Gefragte Mikrolagen in Reinickendorf',
     microAreas: [
-      'Alt-Tegel – wassernahe Lagen und gewachsenes Umfeld.',
-      'Waidmannslust – ruhige Wohnstraßen mit Familienfokus.',
-      'Hermsdorf – grün, etabliert und hochwertig nachgefragt.',
-      'Reinickendorf-Ost – gute Anbindung und urbane Infrastruktur.'
+      'Tegel und Alt-Tegel — See, Ortskern und das Umfeld des ehemaligen Flughafens. Berlin TXL verändert die Nachbarschaft über Jahre; die Straße selbst bleibt die Kaufentscheidung.',
+      'Hermsdorf, Frohnau und Waidmannslust — etablierte Wohnstraßen, eher Familie und längerer Halt als Szene. Ruhige Lagen und Hauptachsen liegen hier nah beieinander.',
+      'Heiligensee und Konradshöhe — wassernah und ruhig. Der Preis folgt dem Wasser und der Abgeschiedenheit, nicht der Nähe zur City.',
+      'Wittenau, Reinickendorf-Ost und Märkisches Viertel — städtischer, besser angebunden, anderes Bestandsbild. Hier lohnt der Vergleich von Sanierung, Hausgeld und konkreter Lage besonders.'
     ],
     sectionTitleFaq: 'Häufige Fragen zu Wohnungen in Reinickendorf',
     faq: [
-      { q: 'Für wen eignet sich Reinickendorf besonders?', a: 'Reinickendorf eignet sich besonders für Familien, Eigennutzer mit Platzbedarf und Anleger, die auf stabile Wohnlagen setzen.' },
-      { q: 'Wie ist das Preisniveau in Reinickendorf?', a: 'Das Preisniveau variiert nach Mikrolage, liegt aber oft unter sehr zentralen Innenstadtbezirken bei gleichzeitig guter Wohnqualität.' },
-      { q: 'Welche Teile von Reinickendorf sind besonders gefragt?', a: 'Tegel, Hermsdorf und gut angebundene Teile von Reinickendorf-Ost zählen zu den gefragteren Bereichen.' },
-      { q: 'Wie hilft Sweet Home beim Immobilienkauf?', a: 'Wir analysieren Lage und Preis, kuratieren passende Objekte und begleiten Sie bis zur notariellen Beurkundung.' }
+      { q: 'Für wen eignet sich eine Wohnung in Reinickendorf?', a: 'Für Eigennutzer und Familien, die Fläche, Grün oder Wasser höher gewichten als einen kurzen Weg nach Mitte. Anleger passen eher zu gut angebundenen Lagen in Tegel, Wittenau oder Reinickendorf-Ost als zu abgelegenen Wasserlagen, deren Nachfrage enger ist.' },
+      { q: 'Wie unterscheidet sich Reinickendorf von zentralen Bezirken?', a: 'Der Einstieg liegt oft unter Charlottenburg oder Mitte, der Alltag ist ruhiger, der Weg länger. Innerhalb des Bezirks ist die Spanne groß: Frohnau ist nicht das Märkische Viertel, und eine Straße am Tegeler See ist nicht Wittenau.' },
+      { q: 'Welche Ortsteile werden am häufigsten verglichen?', a: 'Tegel wegen See und Nachnutzung des Flughafens, Hermsdorf und Frohnau als gewachsene Wohnlagen, Waidmannslust als ruhigere Zwischenlage, Wittenau und Reinickendorf-Ost wegen der Bahn. Heiligensee kommt dazu, wenn Wasser und Ruhe das Kriterium sind.' },
+      { q: 'Wie begleitet Sweet Home einen Kauf in Reinickendorf?', a: 'Wir grenzen den Ortsteil auf Budget und Nutzung ein, ordnen den Preis zur Straße ein, prüfen Zustand, Hausgeld und Unterlagen und begleiten Verhandlung und Notartermin.' }
     ]
   }
 });
@@ -5636,25 +5638,27 @@ exports.spandauPropertiesPageDe = async (req, res, next) => renderBerlinDistrict
   projectsParams: ['%spandau%'],
   content: {
     heroTitle: 'Wohnung kaufen Spandau',
-    heroDescription: 'Spandau bietet viel Wohnraum, grünere Lagen und ein attraktives Preis-Leistungs-Verhältnis innerhalb Berlins. Der Bezirk ist für Eigennutzer und langfristig orientierte Anleger relevant.',
+    heroDescription: 'Spandau liegt im Westen Berlins, zwischen Havel und Spree. Wer hier eine Wohnung kaufen will, vergleicht nicht einen Bezirk, sondern Ortsteile: Altstadt, Wilhelmstadt, Haselhorst, Siemensstadt, Kladow und Gatow unterscheiden sich in Anbindung, Bestand und Preis deutlich.',
     sectionTitleProperties: 'Eigentumswohnungen in Spandau',
     sectionTitleProjects: 'Neubauprojekte in Spandau',
     sectionTitleWhy: 'Warum Spandau für Immobilienkäufer interessant ist',
-    whyP1: 'In Spandau finden Käufer häufig größere Wohnflächen und familienfreundliche Quartiere. Der Bezirk kombiniert gewachsene Kieze mit neuen Entwicklungsflächen.',
-    whyP2: 'Für Investoren sind stabile Nachfrage in vielen Segmenten und teils attraktivere Einstiegspreise im Berliner Vergleich wichtige Argumente.',
+    whyP1: 'Die Altstadt hat die Zitadelle, Einzelhandel und den Bahnhof Spandau mit S-Bahn, Regionalverkehr und U7. Wilhelmstadt schließt südlich an, mit gewachsenem Wohnbestand zwischen Altstadt und Havel. Haselhorst und Siemensstadt liegen näher an der Spree und haben mehr Neubau; Siemensstadt ist durch die Industriegeschichte und die jüngere Quartiersentwicklung ein anderer Markt als die Altstadt.',
+    whyP2: 'Kladow und Gatow sind grüner und ruhiger. Der Weg in die Innenstadt ist länger, der Wohnwert vor Ort ist der Grund für den Kauf. Wassernahe Straßen an der Havel haben ein anderes Preisniveau als der Bestand abseits des Wassers. Für den Kauf zählen Straße und Zustand, nicht das Bezirksschild.',
+    whoTitle: 'Für wen sich Spandau eignet',
+    whoP: 'Für Eigennutzer, die mehr Fläche oder ein ruhigeres Wohnumfeld suchen und einen längeren Weg nach Mitte oder Charlottenburg akzeptieren. Für Familien, denen Grün, Schulen und der Alltag im Ortsteil wichtiger sind als ein Szene-Kiez. Für Anleger, die Einstiegspreise unter den zentralen Lagen prüfen wollen und die Vermietbarkeit an U7, S-Bahn und der konkreten Mikrolage festmachen — nicht am Namen Spandau.',
     sectionTitleMicro: 'Gefragte Mikrolagen in Spandau',
     microAreas: [
-      'Altstadt Spandau – zentrale Versorgung und S/U-Bahn-Nähe.',
-      'Kladow – grün, wassernahe Wohnlagen mit hoher Qualität.',
-      'Wilhelmstadt – familienfreundliche Quartiere mit Potenzial.',
-      'Haselhorst – gute Anbindung und Neubauentwicklung.'
+      'Altstadt Spandau — Bahnhof, Versorgung und die Zitadelle in der Nähe. Gefragt bei Käufern, die Alltag und Anschluss in einem Ortsteil wollen.',
+      'Wilhelmstadt — gewachsener Wohnbestand zwischen Altstadt und Havel. Eher Eigennutzung als Szene, mit klaren Unterschieden von Straße zu Straße.',
+      'Haselhorst und Siemensstadt — mehr Neubau und eine andere Nachbarschaft als die Altstadt. Anbindung und Baufortschritt des Quartiers entscheiden mit.',
+      'Kladow und Gatow — grün, ruhig, teils wassernah. Der Preis folgt der Lage am Wasser und der Ruhe, nicht der Nähe zur City.'
     ],
     sectionTitleFaq: 'Häufige Fragen zu Wohnungen in Spandau',
     faq: [
-      { q: 'Ist Spandau für Familien geeignet?', a: 'Ja, Spandau ist wegen größerer Wohnflächen, grüner Umgebung und guter Nahversorgung bei Familien sehr beliebt.' },
-      { q: 'Wie unterscheidet sich Spandau von zentralen Berliner Lagen?', a: 'Spandau bietet oft mehr Fläche pro Budget und ruhigere Wohnumfelder, bei weiterhin guter Erreichbarkeit wichtiger Stadtbereiche.' },
-      { q: 'Welche Lagen in Spandau sind besonders gefragt?', a: 'Gefragt sind insbesondere gut angebundene Bereiche rund um Altstadt Spandau, Wilhelmstadt und ausgewählte wassernahe Lagen.' },
-      { q: 'Wie hilft Sweet Home beim Wohnungskauf in Spandau?', a: 'Wir unterstützen mit Lagevergleich, Objektprüfung, Verhandlung und vollständiger Transaktionsbegleitung.' }
+      { q: 'Ist Spandau zu weit von der Innenstadt?', a: 'Es kommt auf den Ortsteil an. Altstadt und Wilhelmstadt hängen an S-Bahn, Regionalverkehr und U7. Kladow und Gatow sind bewusst die ruhigere, längere Variante. Wer jeden Tag nach Mitte pendelt, sollte die konkrete Verbindung prüfen, bevor der Preisvergleich mit Charlottenburg entscheidet.' },
+      { q: 'Eigennutzer oder Kapitalanlage?', a: 'Eigennutzer kaufen hier oft Fläche und Ruhe. Anleger schauen auf die Vermietbarkeit entlang der Bahn und auf den Zustand des Bestands. Eine vermietete Wohnung mit Miete unter dem örtlichen Niveau ist ein anderes Geschäft als eine leere Wohnung in Kladow — das gehört in die Kalkulation, nicht ein Bezirksdurchschnitt.' },
+      { q: 'Welche Lagen in Spandau werden am häufigsten verglichen?', a: 'Altstadt wegen Anschluss und Versorgung, Wilhelmstadt als Wohnlage, Haselhorst und Siemensstadt wegen Neubau, Kladow und Gatow wegen Grün und Wasser. Innerhalb jedes Ortsteils liegen ruhige Wohnstraßen und lautere Achsen nebeneinander.' },
+      { q: 'Wie begleitet Sweet Home einen Kauf in Spandau?', a: 'Wir grenzen die Ortsteile auf Budget und Nutzung ein, ordnen den Preis zur Straße ein, prüfen Zustand und Unterlagen und begleiten Verhandlung und Notartermin.' }
     ]
   }
 });

@@ -3,7 +3,9 @@
     ? canonicalUrl.replace(/\/services$/, '').replace(/\/$/, '') 
     : ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
   const servicesUrl = `${siteBaseUrl}/services`;
-  const metaDescription = 'Expert real estate services in Cyprus, Dubai, and Berlin. Property consulting, management, and financial services to help you with your real estate investments.';
+  const metaDescription = (typeof t === 'function')
+    ? t('services.metaDescription', 'Sweet Home services in Berlin: buying and selling advice, management of rented homes, and financing through partners.')
+    : 'Sweet Home services in Berlin: buying and selling advice, management of rented homes, and financing through partners.';
   const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
   const ogLocaleMap = { en: 'en_US', es: 'es_ES', de: 'de_DE' };
   const ogLocale = ogLocaleMap[currentLang] || 'en_US';

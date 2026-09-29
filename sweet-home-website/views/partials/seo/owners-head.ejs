@@ -1,7 +1,9 @@
 <%
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
   const ownersUrl = `${siteBaseUrl}/owners`;
-  const pageDesc = 'Sell your property with Sweet Home. Expert real estate services for property owners in Cyprus, Dubai, and Berlin.';
+  const pageDesc = (typeof t === 'function')
+    ? t('owners.metaDescription', 'Sell or let a home in Berlin: pricing against local sales, the exposé, viewings, and support through to the notary.')
+    : 'Sell or let a home in Berlin: pricing against local sales, the exposé, viewings, and support through to the notary.';
   const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
   const pageOgLocale = (typeof ogLocale !== 'undefined' && ogLocale)
     ? ogLocale

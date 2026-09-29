@@ -85,6 +85,13 @@
       },
       "altBerlin": "Berlin skyline"
     },
+    "scope": {
+      "title": "What we do for sellers and landlords in Berlin",
+      "p1": "If you want to sell or let an apartment or a house in Berlin, it starts with the location, not with a listing. We set the price against similar sales in the district, say what the condition changes about that price, and decide whether vacant or tenanted is the better route.",
+      "p2": "Then photos and the exposé, the asking price, the viewings, and the negotiation. On a sale we stay with you through the notary. On a letting we handle the tenant search, screening, the lease, and the handover.",
+      "p3": "We need the district, the size, the number of rooms, and whether the home is vacant or tenanted. That becomes a concrete next step."
+    },
+    "metaDescription": "Sell or let a home in Berlin: pricing against local sales, the exposé, viewings, and support through to the notary.",
     "form": {
       "submit": "Send",
       "selectLanguage": "Select language",
@@ -598,18 +605,29 @@
     "panel": {
       "consulting": {
         "title": "Property Consulting",
-        "copy": "Strategic advice for buying or selling residential assets. We benchmark local comps, build the pricing strategy, prepare the marketing narrative, and negotiate on your behalf to achieve the strongest outcome."
+        "copy": "Buying and selling apartments in Berlin: we narrow the district and the budget, compare the price with similar sales, factor in purchase costs, and stay with you through viewings, negotiation, and the notary."
       },
       "management": {
         "title": "Property Management",
-        "copy": "Hands‑on, end‑to‑end management: tenant sourcing and screening, contracts and check‑ins, rent collection, preventative maintenance and repairs, and monthly performance reporting—so your investment stays hassle‑free."
+        "copy": "For rented homes in Berlin: tenant search and screening, the lease, handover, rent collection, maintenance, and a monthly overview."
       },
       "finance": {
         "title": "Financial Services",
-        "copy": "Independent financing guidance: mortgage pre‑assessment, lender introductions, yield modeling and cash‑flow planning, plus tax‑aware structures with our trusted partners to optimise returns."
+        "copy": "We are not a bank. We sort the documents, estimate what you can carry each month, and introduce financing partners. The lender makes the credit decision."
       },
       "cta": "Contact Us!"
     },
+    "scope": {
+      "title": "What Sweet Home actually does in Berlin",
+      "intro": "Three services, all for homes in Berlin: buying and selling, managing a rented apartment, and the path to financing through partners.",
+      "consultingTitle": "Buying and selling advice",
+      "consulting": "We narrow district, budget, and use with you — living in the home or holding it as an investment. On a purchase we compare the asking price with similar apartments, add the purchase costs, and stay through viewings, negotiation, and the notary appointment. On a sale we set the pricing, prepare the exposé, and run the viewings.",
+      "managementTitle": "Managing a rented apartment",
+      "management": "Finding and screening tenants, the lease, the handover, collecting the rent, coordinating repairs, and a monthly note of income and open items. You remain the owner; the running of the flat stays understandable.",
+      "financeTitle": "Financing through partners",
+      "finance": "Sweet Home is not a bank and does not lend. We sort the paperwork, estimate with you what the monthly payment can roughly bear, and introduce financing partners. The lender decides on the loan. The purchase continues in parallel, so a viewing or a notary date is not waiting on missing documents."
+    },
+    "metaDescription": "Sweet Home services in Berlin: buying and selling advice, management of rented homes, and financing through partners.",
     "contact": {
       "title": "Contact Us"
     }

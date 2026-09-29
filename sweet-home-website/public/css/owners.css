@@ -41,6 +41,12 @@
 .checklist .icon-check { color: var(--brand-green); display: inline-flex; align-items: center; justify-content: center; }
 .why-media img { width: 100%; max-width: 560px; aspect-ratio: 16/10; object-fit: cover; border-radius: 14px; background: #d4d4d8; box-shadow: var(--shadow-md); margin: 0 auto; display: block; }
 
+.owners-scope { background: #fff; padding: 20px 0 72px; }
+.owners-scope__inner { width: min(760px, 92%); margin: 0 auto; }
+.owners-scope h2 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 40px); text-align: center; margin: 0 0 24px; }
+.owners-scope p { color: var(--gray-800); line-height: 1.7; margin: 0 0 16px; }
+.owners-scope p:last-child { margin-bottom: 0; }
+
 /* 4) Lead CTA */
 .owners-lead { background: #f6f7f9; padding: 80px 0 100px; }
 .owners-lead h2 { text-align: center; font-size: clamp(28px, 3.6vw, 42px); margin-bottom: 80px; font-weight: 300; }

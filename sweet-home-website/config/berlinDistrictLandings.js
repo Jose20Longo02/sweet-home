@@ -324,25 +324,27 @@ const BERLIN_DISTRICT_LANDINGS = [
     metaEn: 'Apartments for sale in Reinickendorf, Berlin: compare curated listings and buy with Sweet Home.',
     contentEn: {
       heroTitle: 'Apartments for sale in Reinickendorf',
-      heroDescription: 'Reinickendorf stands for quieter living, greenery, and solid reachability. Families and long-horizon buyers often shortlist it for those reasons.',
+      heroDescription: 'Reinickendorf is north Berlin: Lake Tegel, the Tegeler Forst, and localities from Tegel and Heiligensee to Hermsdorf, Frohnau, and Wittenau. Buying an apartment here means buying space and quiet — and naming the locality, not just the borough.',
       sectionTitleProperties: 'Apartments in Reinickendorf',
       sectionTitleProjects: 'New developments in Reinickendorf',
-      sectionTitleWhy: 'Why Reinickendorf attracts buyers',
-      whyP1: 'Many residential quarters offer schools, leisure space, and a calmer rhythm than dense inner districts.',
-      whyP2: 'Prices are often more balanced than central Berlin while still offering stable demand segments and a mix of stock and selected new builds.',
-      sectionTitleMicro: 'Popular areas in Reinickendorf',
+      sectionTitleWhy: 'Why buyers look at Reinickendorf',
+      whyP1: 'Tegel combines the lake, a local centre, and the reuse of the former airport. Berlin TXL is being built on that site; it will change the surroundings over years, and it does not replace a check of the individual street. Hermsdorf, Frohnau, and Waidmannslust are established residential areas with a slower rhythm than the inner city.',
+      whyP2: 'Heiligensee and Konradshöhe are about the water and everyday calm, not a short ride to Mitte. Wittenau and Reinickendorf-Ost are more urban and sit closer to the S-Bahn and U-Bahn. Märkisches Viertel is a large housing estate with its own mix of stock, refurbishment, and demand. Prices and buyer types differ more than a borough map suggests.',
+      whoTitle: 'Who Reinickendorf suits',
+      whoP: 'Families and owner-occupiers who want greenery, water, or an established neighbourhood, and who do not need Mitte as a daily base. Buyers with a longer hold in stable pockets such as Hermsdorf or Frohnau. It is a weaker fit for someone whose plan is a scene district or the shortest trip to Kreuzberg. Lettings depend on the locality and the rail line, not on the name Reinickendorf.',
+      sectionTitleMicro: 'Micro-locations buyers compare in Reinickendorf',
       microAreas: [
-        'Alt-Tegel — water-near living and an established setting.',
-        'Waidmannslust — quieter streets with a family focus.',
-        'Hermsdorf — green, established, and well regarded.',
-        'Reinickendorf-Ost — solid connectivity and urban amenities.'
+        'Tegel and Alt-Tegel — lake, local centre, and the former airport surroundings. Berlin TXL will reshape the area over years; the street is still the purchase decision.',
+        'Hermsdorf, Frohnau, and Waidmannslust — established residential streets, more family living and longer holds than nightlife. Quiet blocks and busier roads sit close together.',
+        'Heiligensee and Konradshöhe — waterside and quiet. Price follows the water and the seclusion, not proximity to the city centre.',
+        'Wittenau, Reinickendorf-Ost, and Märkisches Viertel — more urban, better connected, a different stock. Compare refurbishment, service charges, and the exact block.'
       ],
-      sectionTitleFaq: 'FAQ: Reinickendorf apartments',
+      sectionTitleFaq: 'FAQ: buying an apartment in Reinickendorf',
       faq: [
-        { q: 'Who is Reinickendorf best for?', a: 'Families, owner-occupiers who need more space, and investors seeking stable residential locations.' },
-        { q: 'How do prices compare with central districts?', a: 'They vary by pocket, but often sit below the priciest inner-city districts.' },
-        { q: 'Which parts see the most demand?', a: 'Tegel, Hermsdorf, and well-connected parts of Reinickendorf-Ost are frequently shortlisted.' },
-        { q: 'How does Sweet Home help?', a: 'We analyse location and price, curate options, and support through notarisation.' }
+        { q: 'Who is an apartment in Reinickendorf best suited for?', a: 'Owner-occupiers and families who value space, greenery, or water over a short trip to Mitte. Investors fit better in well-connected parts of Tegel, Wittenau, or Reinickendorf-Ost than in remote waterside streets with a narrower tenant pool.' },
+        { q: 'How does Reinickendorf differ from central boroughs?', a: 'Entry prices often sit below Charlottenburg or Mitte, daily life is quieter, and the commute is longer. Inside the borough the range is wide: Frohnau is not Märkisches Viertel, and a street on Lake Tegel is not Wittenau.' },
+        { q: 'Which localities do buyers compare most often?', a: 'Tegel for the lake and the airport reuse, Hermsdorf and Frohnau as established residential areas, Waidmannslust as a quieter in-between, Wittenau and Reinickendorf-Ost for the rail links. Heiligensee comes in when water and quiet are the criteria.' },
+        { q: 'How does Sweet Home help with a purchase in Reinickendorf?', a: 'We narrow the locality to your budget and how you will use the home, set the price against the street, check condition, service charges, and documents, and stay through negotiation and the notary.' }
       ]
     }
   },
@@ -400,25 +402,27 @@ const BERLIN_DISTRICT_LANDINGS = [
     metaEn: 'Apartments for sale in Spandau, Berlin: compare curated listings and buy with Sweet Home.',
     contentEn: {
       heroTitle: 'Apartments for sale in Spandau',
-      heroDescription: 'Spandau offers a more spacious west-Berlin setting with historic centre, Havel waterfront, and room for family living at comparatively accessible price levels.',
+      heroDescription: 'Spandau is west Berlin, between the Havel and the Spree. Buying an apartment here means comparing localities, not a single borough: the old town, Wilhelmstadt, Haselhorst, Siemensstadt, Kladow, and Gatow differ in transport, building stock, and price.',
       sectionTitleProperties: 'Apartments in Spandau',
       sectionTitleProjects: 'New developments in Spandau',
       sectionTitleWhy: 'Why buyers consider Spandau',
-      whyP1: 'More space, greener surroundings, and a distinct local centre make Spandau attractive for owner-occupiers who do not need to live in the densest core.',
-      whyP2: 'Selected waterfront and well-connected residential pockets also work for longer-hold investment strategies.',
-      sectionTitleMicro: 'Areas to know in Spandau',
+      whyP1: 'The old town has the citadel, everyday shops, and Spandau station, with S-Bahn, regional trains, and the U7. Wilhelmstadt sits to the south, established housing between the old town and the Havel. Haselhorst and Siemensstadt lie closer to the Spree and have more new build; Siemensstadt’s industrial past and newer quarter development make it a different market from the old town.',
+      whyP2: 'Kladow and Gatow are greener and quieter. The trip into the inner city is longer, and the reason to buy is the living quality on the spot. Streets on the Havel price differently from stock set back from the water. The purchase turns on the street and the condition of the building, not the borough sign.',
+      whoTitle: 'Who Spandau suits',
+      whoP: 'Owner-occupiers who want more space or a quieter setting and will accept a longer trip to Mitte or Charlottenburg. Families for whom greenery, schools, and daily life in the locality matter more than a scene neighbourhood. Investors comparing entry prices below the central boroughs, and tying lettability to the U7, the S-Bahn, and the specific street — not to the name Spandau.',
+      sectionTitleMicro: 'Micro-locations to know in Spandau',
       microAreas: [
-        'Altstadt Spandau — historic centre with everyday amenities.',
-        'Wilhelmstadt — established residential fabric.',
-        'Water-near streets — lifestyle premium from the Havel.',
-        'Well-connected pockets toward the city — stronger commute convenience.'
+        'Spandau old town — station, shops, and the citadel nearby. The usual shortlist for buyers who want daily life and a rail connection in one place.',
+        'Wilhelmstadt — established housing between the old town and the Havel. More owner-occupation than nightlife, with real differences from one street to the next.',
+        'Haselhorst and Siemensstadt — more new build and a different neighbourhood from the old town. Transport and how far the quarter has actually been built out both matter.',
+        'Kladow and Gatow — green, quiet, in places on the water. Price follows the water and the calm, not proximity to the city centre.'
       ],
-      sectionTitleFaq: 'FAQ: Spandau apartments',
+      sectionTitleFaq: 'FAQ: buying an apartment in Spandau',
       faq: [
-        { q: 'Is Spandau too far from central Berlin?', a: 'It depends on your commute and lifestyle. Many buyers accept the distance for space and price.' },
-        { q: 'Which locations are most requested?', a: 'Well-connected areas around Altstadt Spandau, Wilhelmstadt, and selected waterfront streets.' },
-        { q: 'Owner-occupier or investor?', a: 'Both, with a strong owner-occupier share.' },
-        { q: 'How does Sweet Home help?', a: 'With location comparison, property checks, negotiation, and full transaction support.' }
+        { q: 'Is Spandau too far from central Berlin?', a: 'It depends on the locality. The old town and Wilhelmstadt are on the S-Bahn, regional trains, and the U7. Kladow and Gatow are the quieter, longer option on purpose. Anyone commuting to Mitte every day should check that specific connection before comparing the price with Charlottenburg.' },
+        { q: 'Owner-occupier or investment?', a: 'Owner-occupiers often buy space and quiet here. Investors look at lettability along the rail lines and at the condition of the stock. A tenanted flat with rent below the local level is a different deal from an empty flat in Kladow — that belongs in the calculation, not a borough average.' },
+        { q: 'Which parts of Spandau do buyers compare?', a: 'The old town for the station and shops, Wilhelmstadt as a residential area, Haselhorst and Siemensstadt for new build, Kladow and Gatow for greenery and water. Inside each locality, quiet residential streets and busier roads sit side by side.' },
+        { q: 'How does Sweet Home help with a purchase in Spandau?', a: 'We narrow the localities to your budget and how you will use the home, set the price against the street, check condition and documents, and stay through negotiation and the notary.' }
       ]
     }
   },

@@ -17,6 +17,13 @@
       },
       "altBerlin": "Berliner Skyline"
     },
+    "scope": {
+      "title": "Was wir für Verkäufer und Vermieter in Berlin tun",
+      "p1": "Wenn Sie eine Wohnung oder ein Haus in Berlin verkaufen oder vermieten wollen, beginnt es mit der Lage, nicht mit einem Inserat. Wir ordnen den Preis zu vergleichbaren Abschlüssen im Bezirk ein, sagen, was der Zustand am Preis ändert, und klären, ob leer oder vermietet der passendere Weg ist.",
+      "p2": "Danach folgen Fotos und Exposé, der Preis im Inserat, die Besichtigungen und die Verhandlung. Beim Verkauf begleiten wir Sie bis zur Beurkundung beim Notar. Bei der Vermietung übernehmen wir Mietersuche, Bonitätsprüfung, Vertrag und Übergabe.",
+      "p3": "Dafür brauchen wir Bezirk, Größe, Zimmerzahl und ob die Wohnung leer oder vermietet ist. Daraus wird ein konkreter nächster Schritt."
+    },
+    "metaDescription": "Wohnung oder Haus in Berlin verkaufen oder vermieten: Preiseinordnung, Exposé, Besichtigungen und Begleitung bis zum Notar.",
     "form": {
       "submit": "Senden",
       "selectLanguage": "Sprache auswählen",
@@ -586,18 +593,29 @@
     "panel": {
       "consulting": {
         "title": "Immobilienberatung",
-        "copy": "Strategische Beratung beim Kauf oder Verkauf von Wohnimmobilien. Wir analysieren Vergleichswerte, entwickeln die Preisstrategie, erstellen die Vermarktungsstory und verhandeln in Ihrem Namen für das bestmögliche Ergebnis."
+        "copy": "Kauf und Verkauf von Wohnungen in Berlin: Bezirk und Budget eingrenzen, den Preis mit ähnlichen Abschlüssen vergleichen, Kaufnebenkosten einrechnen und Besichtigung, Verhandlung und Notartermin begleiten."
       },
       "management": {
         "title": "Immobilienverwaltung",
-        "copy": "Umfassende Betreuung von A bis Z: Mieterakquise und ‑prüfung, Verträge und Check‑ins, Mietinkasso, präventive Wartung und Reparaturen sowie monatliches Reporting – damit Ihre Investition stressfrei bleibt."
+        "copy": "Für vermietete Wohnungen in Berlin: Mietersuche und Bonitätsprüfung, Mietvertrag, Übergabe, Mieteingang, Instandhaltung und eine monatliche Übersicht."
       },
       "finance": {
         "title": "Finanzdienstleistungen",
-        "copy": "Unabhängige Finanzierungsberatung: Vorab‑Check, Einführung bei Kreditgebern, Rendite‑ und Cash‑Flow‑Modelle sowie steuerbewusste Strukturen mit unseren Partnern zur Optimierung der Erträge."
+        "copy": "Wir sind keine Bank. Wir sortieren die Unterlagen, schätzen mit Ihnen die grobe Tragfähigkeit und stellen den Kontakt zu Finanzierungspartnern her. Die Zusage trifft der Finanzierer."
       },
       "cta": "Kontaktieren Sie uns!"
     },
+    "scope": {
+      "title": "Was Sweet Home in Berlin konkret übernimmt",
+      "intro": "Drei Leistungen, alle für Wohnimmobilien in Berlin: Kauf und Verkauf, Verwaltung einer vermieteten Wohnung und der Weg zur Finanzierung über Partner.",
+      "consultingTitle": "Kauf- und Verkaufsberatung",
+      "consulting": "Wir grenzen mit Ihnen Bezirk, Budget und Nutzung ein — Eigennutzung oder Kapitalanlage. Beim Kauf vergleichen wir den Angebotspreis mit ähnlichen Wohnungen, rechnen die Kaufnebenkosten ein und begleiten Besichtigung, Verhandlung und Notartermin. Beim Verkauf legen wir die Preisstrategie fest, bereiten das Exposé vor und führen die Besichtigungen.",
+      "managementTitle": "Verwaltung vermieteter Wohnungen",
+      "management": "Mietersuche und Bonitätsprüfung, Mietvertrag, Wohnungsübergabe, Mieteingang, Koordination der Instandhaltung und eine monatliche Übersicht über Einnahmen und offene Punkte. Sie bleiben Eigentümer; der Betrieb der Wohnung bleibt nachvollziehbar.",
+      "financeTitle": "Finanzierung über Partner",
+      "finance": "Sweet Home ist keine Bank und vergibt keine Darlehen. Wir sortieren die Unterlagen, schätzen mit Ihnen die grobe monatliche Tragfähigkeit und stellen den Kontakt zu Finanzierungspartnern her. Die Kreditzusage trifft der Finanzierer. Parallel läuft der Kauf weiter, damit Besichtigung und Notartermin nicht an fehlenden Unterlagen hängen."
+    },
+    "metaDescription": "Leistungen von Sweet Home in Berlin: Kauf- und Verkaufsberatung, Verwaltung vermieteter Wohnungen und Finanzierung über Partner.",
     "contact": {
       "title": "Kontakt"
     }

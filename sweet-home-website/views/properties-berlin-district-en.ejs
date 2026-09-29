@@ -146,6 +146,17 @@
     </div>
   </section>
 
+  <% if (districtContent.whoTitle && districtContent.whoP) { %>
+  <section class="berlin-content section berlin-why-invest" aria-labelledby="district-who-heading">
+    <div class="berlin-content__inner">
+      <h2 id="district-who-heading" class="berlin-content__title"><%= districtContent.whoTitle %></h2>
+      <div class="berlin-content__body">
+        <p><%= districtContent.whoP %></p>
+      </div>
+    </div>
+  </section>
+  <% } %>
+
   <section class="berlin-content section berlin-best-areas" aria-labelledby="district-micro-heading">
     <div class="berlin-content__inner">
       <h2 id="district-micro-heading" class="berlin-content__title"><%= districtContent.sectionTitleMicro %></h2>

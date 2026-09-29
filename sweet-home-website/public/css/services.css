@@ -30,6 +30,15 @@
 .panel-media { position:relative; width:100%; height: 320px; border-radius: 16px; background: #cbd5e1 center/cover no-repeat; overflow:hidden; }
 .panel-media::after { content:''; position:absolute; inset:0; background: linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,0) 35%); pointer-events:none; }
 
+/* Concrete scope — in the HTML, not only inside the tab panel */
+.services-scope { background: #fff; padding: 72px 0 32px; }
+.services-scope__inner { width: min(1100px, 92%); margin: 0 auto; }
+.services-scope h2 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 40px); margin: 0 0 16px; text-align: center; }
+.services-scope__intro { max-width: 68ch; margin: 0 auto 36px; text-align: center; color: var(--gray-700); line-height: 1.6; }
+.services-scope__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.services-scope article h3 { font-family: var(--font-sans); font-size: 1.15rem; font-weight: 700; margin: 0 0 10px; color: var(--gray-900); }
+.services-scope article p { margin: 0; color: var(--gray-700); line-height: 1.65; }
+
 /* Contact */
 .services-contact { background:#f6f7f9; padding: 80px 0 60px; }
 .services-contact .section-title { text-align:center; font-family: 'Playfair Display', serif; font-size: clamp(24px,2.6vw,34px); margin: 0 0 65px 0; font-weight: 400;}
@@ -57,6 +66,7 @@
   .panel-inner { grid-template-columns: 1fr; }
   .panel-media { height: 220px; }
   .contact-grid { grid-template-columns: 1fr; width: min(100%, 560px); }
+  .services-scope__grid { grid-template-columns: 1fr; }
 }
 
 /* Add extra breathing room below the fixed header on tablets/phones */

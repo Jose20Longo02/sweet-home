@@ -1,7 +1,11 @@
 # S9 — Long titles + thin pages (export for Adi)
 
 **Date:** 2026-09-25  
-**Rule:** Do **not** edit live until Adi confirms these lists / OK’s shortened titles. Some thin pages may be fine as-is.
+**Applied:** 2026-09-29, after Adi's email. Titles are in the database. Thin-page copy is in the repo and needs a deploy.
+
+**Adi's decision:** approved as proposed #2, 3, 4, 5, 7, 13, 14, 16. Rewrote #1, 6, 8, 9, 10, 11, 12, 15, 17 (see script `scripts/s9-apply-approved-titles.js` for the exact strings). Expand thin pages 1–4 and 7–9. Leave About (5 and 6).
+
+**Rule that applied before her reply:** Do **not** edit live until Adi confirms these lists. That hold is lifted for the items she marked.
 
 **Method:**
 - Title length = post/page title **without** ` | Sweet Home` brand suffix (Google display budget is ~55–60 on the unique part; brand is appended in `<title>`).
