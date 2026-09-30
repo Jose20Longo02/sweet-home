@@ -149,7 +149,7 @@
             
             <div class="form-group">
               <label for="filterCity"><%= t('forms.city','City') %></label>
-               <select id="filterCity" name="city" class="form-select">
+               <select id="filterCity" name="city" class="form-select" data-selected="<%= locals.filters?.city || '' %>">
                 <option value=""><%= t('forms.anyCity','Any City') %></option>
                 <!-- Cities will be populated dynamically -->
               </select>
@@ -157,7 +157,7 @@
             
             <div class="form-group">
               <label for="filterNeighborhood"><%= t('forms.neighborhood','Neighborhood') %></label>
-              <select id="filterNeighborhood" name="neighborhood" class="form-select">
+              <select id="filterNeighborhood" name="neighborhood" class="form-select" data-selected="<%= locals.filters?.neighborhood || '' %>">
                 <option value=""><%= t('forms.anyNeighborhood','Any Neighborhood') %></option>
                 <!-- Neighborhoods will be populated dynamically -->
               </select>
@@ -729,4 +729,4 @@
 </div>
 
 <script src="/js/libs/leaflet.js"></script>
-<script src="/js/property-list.js"></script>
+<script src="/js/property-list.js?v=20260930-filters"></script>

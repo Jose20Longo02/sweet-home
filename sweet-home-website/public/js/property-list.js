@@ -183,18 +183,33 @@ function clearAllFilters() {
 
 // Function to remove a specific filter
 function removeFilter(filterType, value = null) {
-  const currentUrl = new URL(window.location);
-  
-  switch (filterType) {
-    case 'country':
+  const currentUrl = new URL(window.location.href);
+
+  // Location lives in the path on clean URLs. Dropping only the query
+  // leaves /for-sale/germany/berlin in place, so the chip does nothing.
+  if (filterType === 'country' || filterType === 'city' || filterType === 'neighborhood') {
+    const countryValue = document.getElementById('filterCountry')?.value || currentUrl.searchParams.get('country') || '';
+    const cityValue = document.getElementById('filterCity')?.value || currentUrl.searchParams.get('city') || '';
+    currentUrl.pathname = `${getLocalePrefix()}/properties`;
+    if (filterType === 'country') {
       currentUrl.searchParams.delete('country');
       currentUrl.searchParams.delete('city');
       currentUrl.searchParams.delete('neighborhood');
-      break;
-    case 'city':
+    } else if (filterType === 'city') {
+      if (countryValue) currentUrl.searchParams.set('country', countryValue);
       currentUrl.searchParams.delete('city');
       currentUrl.searchParams.delete('neighborhood');
-      break;
+    } else {
+      if (countryValue) currentUrl.searchParams.set('country', countryValue);
+      if (cityValue) currentUrl.searchParams.set('city', cityValue);
+      currentUrl.searchParams.delete('neighborhood');
+    }
+    currentUrl.searchParams.delete('page');
+    window.location.href = currentUrl.toString();
+    return;
+  }
+  
+  switch (filterType) {
     case 'type':
       if (value) {
         const types = currentUrl.searchParams.getAll('type');
@@ -1201,20 +1216,34 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Function to update filters from form inputs
+// Function to update filters from form inputs.
+// Always start from /properties. A location slug in the path (/for-sale/germany/berlin)
+// would otherwise override the country and city the user just chose.
 function updateFilters() {
   const form = document.getElementById('filtersForm');
   if (!form) return;
   normalizePriceHiddenInputs();
-  
+
+  // Disabled selects are omitted from FormData. Keep a real selection.
+  ['filterCity', 'filterNeighborhood'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el && el.disabled && String(el.value || '').trim() !== '') el.disabled = false;
+  });
+
   const formData = new FormData(form);
-  const currentUrl = new URL(window.location);
-  
-  // Clear existing filter params
-  const filterParams = ['country', 'city', 'neighborhood', 'type', 'min_price', 'max_price', 
-                       'rooms', 'bathrooms', 'featured', 'new_listing', 'min_size', 'max_size',
-                       'year_built_min', 'year_built_max', 'features', 'status'];
-  filterParams.forEach(param => currentUrl.searchParams.delete(param));
+  const previousUrl = new URL(window.location.href);
+  const currentUrl = new URL(window.location.href);
+  currentUrl.pathname = `${getLocalePrefix()}/properties`;
+  currentUrl.search = '';
+
+  ['q', 'operation'].forEach((key) => {
+    const value = previousUrl.searchParams.get(key);
+    if (value && value.trim() !== '') currentUrl.searchParams.set(key, value);
+  });
+  const previousSort = previousUrl.searchParams.get('sort');
+  if (previousSort && previousSort !== 'relevance') {
+    currentUrl.searchParams.set('sort', previousSort);
+  }
   
   // Add new filter params
   for (let [key, value] of formData.entries()) {
@@ -1404,5 +1433,21 @@ function initializeFilterState() {
     if (yearBuiltMaxInput) yearBuiltMaxInput.value = yearBuiltMax;
   }
   
+  // Clean URLs keep location in the path, not the query. Restore the
+  // current city and neighborhood so the bar matches the results.
+  if (!urlParams.get('city')) {
+    const citySelect = document.getElementById('filterCity');
+    const city = citySelect && citySelect.getAttribute('data-selected');
+    if (citySelect && city && [...citySelect.options].some((opt) => opt.value === city)) {
+      citySelect.value = city;
+      updateNeighborhoods();
+      const neighborhoodSelect = document.getElementById('filterNeighborhood');
+      const neighborhood = neighborhoodSelect && neighborhoodSelect.getAttribute('data-selected');
+      if (neighborhoodSelect && neighborhood && [...neighborhoodSelect.options].some((opt) => opt.value === neighborhood)) {
+        neighborhoodSelect.value = neighborhood;
+      }
+    }
+  }
+
   console.log('✅ Filter state initialization complete');
 }

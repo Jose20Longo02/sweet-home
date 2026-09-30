@@ -176,32 +176,26 @@ exports.listPropertiesPublic = async (req, res, next) => {
       page = 1
     } = req.query;
 
-    // Fallback to clean URL params when query params are absent.
-    // Example: /properties/for-sale/uae should behave as country=UAE.
-    let country = queryCountry;
-    let city = queryCity;
-    if (!country && req.params && req.params.countrySlug) {
-      country = resolveCountryBySlug(req.params.countrySlug) || '';
-    }
-    if (!city && req.params && req.params.citySlug && country) {
-      city = resolveCityBySlug(country, req.params.citySlug) || '';
+    // Query wins over the path. A filter change on /properties/for-sale/germany/berlin
+    // arrives as ?country=&city= and must not be overwritten by the old slug.
+    const explicitCountry = String(queryCountry || '').trim();
+    const explicitCity = String(queryCity || '').trim();
+    const slugCountry = req.params && req.params.countrySlug
+      ? (resolveCountryBySlug(req.params.countrySlug) || '')
+      : '';
+    const slugCity = req.params && req.params.citySlug
+      ? (resolveCityBySlug(slugCountry, req.params.citySlug) || '')
+      : '';
+    const selectedCountry = explicitCountry || slugCountry;
+    let selectedCity = explicitCity;
+    if (!selectedCity && (!explicitCountry || explicitCountry === slugCountry)) {
+      selectedCity = slugCity;
     }
 
     const parsedPage = Number.parseInt(page, 10);
     const currentPage = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
     const normalizedSort = String(sort || '').trim().toLowerCase() || 'relevance';
     const operationMode = getOperationValue(operation);
-    // Source country/city from clean URL params when present.
-    let selectedCountry = country;
-    let selectedCity = city;
-    if (req.params && req.params.countrySlug) {
-      const countryFromSlug = resolveCountryBySlug(req.params.countrySlug);
-      if (countryFromSlug) selectedCountry = countryFromSlug;
-    }
-    if (req.params && req.params.citySlug) {
-      const cityFromSlug = resolveCityBySlug(selectedCountry, req.params.citySlug);
-      if (cityFromSlug) selectedCity = cityFromSlug;
-    }
 
     // Redirect clean indexable location queries to stable SEO paths.
     const queryEntries = nonEmptyQueryEntries(req.query);
@@ -210,7 +204,11 @@ exports.listPropertiesPublic = async (req, res, next) => {
     const hasDisallowedRedirectKeys = Array.from(queryKeys).some((key) => !allowedRedirectKeys.has(key));
     const hasLocationInQuery = String(selectedCountry || '').trim() !== '';
     const routeIsBaseResults = String(req.path || '') === '/';
-    const canRedirectToCleanPath = routeIsBaseResults
+    const slugMismatch = Boolean(
+      (slugCountry && selectedCountry && slugCountry !== selectedCountry)
+      || (slugCity && selectedCity !== slugCity && (explicitCity || explicitCountry))
+    );
+    const canRedirectToCleanPath = (routeIsBaseResults || slugMismatch)
       && hasLocationInQuery
       && !hasDisallowedRedirectKeys
       && (normalizedSort === 'relevance');

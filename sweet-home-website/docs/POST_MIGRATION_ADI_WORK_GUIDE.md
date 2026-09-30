@@ -25,7 +25,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-09-18):** **Phase S** — Adi’s September cycle. Do **S1–S5 first** (homepage crawl, remove empty markets, popup, Paphos URLs, strategy page). Then EN districts + six new posts. Phase N is closed.
+- **Current priority (2026-09-30):** **Phase S** is done except **S3**. S3 is the ContactBeat popup (exit intent, desktop only, once per session, never mobile, never right after Google). That is not our code.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -75,7 +75,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 4. **S4** Paphos duplicate URLs + EN kapitalanlage slug / hreflang
 5. **S5** Tenant-occupied strategy page: umlauts, source, reciprocal links; ads landing (`noindex`, out of sitemap)
 6. **S6** EN district pages — **all 13 live**
-7. **S7** Six new posts (3/week), each with a real EN version
+7. **S7** Six new posts (3/week), each with a real EN version — **live 2026-09-30**, covers included
 8. **S8** Photos in long guides, starting with the Bezirke post
 9. **S9** Title length + thin content — **live 2026-09-29**
 10. **S10** Carousel year mismatch; listing schema address (low)
@@ -86,7 +86,7 @@ Previous August order (Phase N) is done or closed. Do not restart N1–N11 unles
 
 ---
 
-# Phase S — Next two weeks (Adi 2026-09-18) — ACTIVE
+# Phase S — Next two weeks (Adi 2026-09-18) — done except S3
 
 **Source:** `Sweet_Home_Tasks_Sep_Cycle.docx` + Adi email 2026-09-18  
 **Cadence:** Short weekly status email. Adi is back in Berlin and can join the next meeting in person.  
@@ -123,6 +123,8 @@ Rankings issue, not only UX. Popups that cover content on mobile entry can count
 - [ ] **At most once per session**
 - [ ] Never auto-open on mobile
 - [ ] Never open shortly after a visitor arrives from Google
+
+**Not our code.** Rules sit in ContactBeat. Checked boxes stay open until that tool is set.
 
 ### S4 — Paphos duplicate URLs + EN investment slug — priority
 
@@ -180,7 +182,7 @@ District Ratgeber posts **support** the landing pages. The landing page sells li
 
 **Done 2026-09-25.** Week 1 live with real EN adaptations. Sources: BaFin, Bundesbank, Gutachterausschuss / Senat Berlin, gesetze-im-internet / EStG, Senatsverwaltung Finanzen (Grunderwerbsteuer).
 
-**Done 2026-09-30.** Week 2 live in DE + EN. Sources: § 23 EStG (gesetze-im-internet), Bezirksamt Mitte (Moabit), Bezirksamt Neukölln (fünf Ortsteile). No invented €/m². Reciprocal links from Steuern für Vermieter, Kapitalanlage, and the Bezirke post. Covers `/images/blog/{slug}.jpg` — **needs deploy** of the three JPGs.
+**Done 2026-09-30.** Week 2 live in DE + EN. Sources: § 23 EStG (gesetze-im-internet), Bezirksamt Mitte (Moabit), Bezirksamt Neukölln (fünf Ortsteile). No invented €/m². Reciprocal links from Steuern für Vermieter, Kapitalanlage, and the Bezirke post. Covers verified live the same day.
 
 ### S8 — Images in long guides
 
@@ -732,10 +734,10 @@ From `Sweet_Home_Pages_and_Keywords_Berlin.xlsx`. Do **after** Phases A–D and 
 
 | Day         | Focus                                                                   |
 | ----------- | ----------------------------------------------------------------------- |
-| Now         | **S7** week 2 live 2026-09-30 — ids 163–165. Cover JPGs need deploy.    |
-| Then        | Human read of the three German posts, then Adi’s notes                  |
-| Wed–Fri     | Cover deploy, or Adi’s notes on the expanded thin pages                 |
-| After posts | **S10** already live; nothing else queued from this cycle               |
+| Now         | Phase S done except **S3** (ContactBeat). Covers and `llms.txt` live.   |
+| Then        | Human read of the three German week-2 posts, then the Friday note to Adi |
+| Wed–Fri     | Nothing else queued from this cycle                                     |
+| After posts | Checklist download and seller series wait for a later cycle (Adi)      |
 | Friday      | Email Adi: done / live / blockers / next week                           |
 
 
@@ -811,8 +813,8 @@ Confirmations you asked for:
 | 2026-09-25 | **S9** long titles + thin pages export                                                         | Waiting on Adi                | Lists + drafts in `docs/drafts/blog/S9-LONG-TITLES-AND-THIN-PAGES.md` — no live edits yet                                                                         |
 | 2026-09-27 | **S10** carousel year + listing schema                                                         | Live                          | Property 101 titles aligned to 2030. `address` nested under `about` (`Apartment` / villa `House`), verified on money page and `/properties`                       |
 | 2026-09-29 | **S9** Adi OK applied and verified live                                                        | Live                          | 17 titles via `scripts/s9-apply-approved-titles.js` (no body edit). Expanded Services, Owners, Spandau, Reinickendorf DE+EN. About left.                           |
-| 2026-09-29 | Yield per-m² formula + `llms.txt` (Adi on Israel’s scan)                                      | Formula live; llms on deploy  | Post 156 DE+EN: monthly rent × 12 in the m² gross-yield line. `public/llms.txt` rewritten Berlin-first, DE default, EN `/en`, current domain. Checklist and seller series wait. |
-| 2026-09-30 | **S7** week 2 posts 4–6                                                                        | Live (DB); covers on deploy   | ids 163–165. Spekulationssteuer § 23 EStG; Moabit and Neukölln ratgeber support the district pages. DE+EN. Reciprocal links on 162, 131, 159. |
+| 2026-09-29 | Yield per-m² formula + `llms.txt` (Adi on Israel’s scan)                                      | Live                          | Post 156 DE+EN: monthly rent × 12 in the m² gross-yield line. `llms.txt` Berlin-first, verified live 2026-09-30. Checklist and seller series wait. |
+| 2026-09-30 | **S7** week 2 posts 4–6 + covers                                                               | Live                          | ids 163–165. Spekulationssteuer § 23 EStG; Moabit and Neukölln ratgeber. DE+EN. Reciprocal links on 162, 131, 159. Three cover JPGs return 200. Phase S closed except S3. |
 
 
 ---
