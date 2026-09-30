@@ -176,9 +176,11 @@ Every post also gets `/en/blog/{english-keyword-slug}`: a real adaptation, not a
 District Ratgeber posts **support** the landing pages. The landing page sells listings; the post answers buying questions and sends the reader on. They must not compete.
 
 - [x] Week 1: posts 1–3 live in DE + EN — ids **160–162** (Finanzierung, Lohnt sich Kauf, Steuern für Vermieter). Covers `/images/blog/{slug}.jpg`. Official sources only. Script: `scripts/s7-week1-publish-posts.js`
-- [ ] Week 2: posts 4–6 live in DE + EN
+- [x] Week 2: posts 4–6 live in DE + EN — ids **163–165** (Spekulationssteuer, Moabit-Ratgeber, Neukölln-Ratgeber). Script: `scripts/s7-week2-publish-posts.js`
 
 **Done 2026-09-25.** Week 1 live with real EN adaptations. Sources: BaFin, Bundesbank, Gutachterausschuss / Senat Berlin, gesetze-im-internet / EStG, Senatsverwaltung Finanzen (Grunderwerbsteuer).
+
+**Done 2026-09-30.** Week 2 live in DE + EN. Sources: § 23 EStG (gesetze-im-internet), Bezirksamt Mitte (Moabit), Bezirksamt Neukölln (fünf Ortsteile). No invented €/m². Reciprocal links from Steuern für Vermieter, Kapitalanlage, and the Bezirke post. Covers `/images/blog/{slug}.jpg` — **needs deploy** of the three JPGs.
 
 ### S8 — Images in long guides
 
@@ -730,9 +732,9 @@ From `Sweet_Home_Pages_and_Keywords_Berlin.xlsx`. Do **after** Phases A–D and 
 
 | Day         | Focus                                                                   |
 | ----------- | ----------------------------------------------------------------------- |
-| Now         | **S9** live 2026-09-29 — titles, Services, Owners, Spandau, Reinickendorf |
-| Then        | **S7** week 2 if continuing posts                                       |
-| Wed–Fri     | **S7** week 2 posts, or Adi’s notes on the expanded thin pages          |
+| Now         | **S7** week 2 live 2026-09-30 — ids 163–165. Cover JPGs need deploy.    |
+| Then        | Human read of the three German posts, then Adi’s notes                  |
+| Wed–Fri     | Cover deploy, or Adi’s notes on the expanded thin pages                 |
 | After posts | **S10** already live; nothing else queued from this cycle               |
 | Friday      | Email Adi: done / live / blockers / next week                           |
 
@@ -810,6 +812,7 @@ Confirmations you asked for:
 | 2026-09-27 | **S10** carousel year + listing schema                                                         | Live                          | Property 101 titles aligned to 2030. `address` nested under `about` (`Apartment` / villa `House`), verified on money page and `/properties`                       |
 | 2026-09-29 | **S9** Adi OK applied and verified live                                                        | Live                          | 17 titles via `scripts/s9-apply-approved-titles.js` (no body edit). Expanded Services, Owners, Spandau, Reinickendorf DE+EN. About left.                           |
 | 2026-09-29 | Yield per-m² formula + `llms.txt` (Adi on Israel’s scan)                                      | Formula live; llms on deploy  | Post 156 DE+EN: monthly rent × 12 in the m² gross-yield line. `public/llms.txt` rewritten Berlin-first, DE default, EN `/en`, current domain. Checklist and seller series wait. |
+| 2026-09-30 | **S7** week 2 posts 4–6                                                                        | Live (DB); covers on deploy   | ids 163–165. Spekulationssteuer § 23 EStG; Moabit and Neukölln ratgeber support the district pages. DE+EN. Reciprocal links on 162, 131, 159. |
 
 
 ---
