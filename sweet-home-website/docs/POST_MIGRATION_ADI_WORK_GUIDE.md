@@ -26,7 +26,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-01):** **Phase T** — Adi’s October fixes, before the next blog list. **T1** is ready (deploy the landing-link map). Next is **T3** (popup rules). Phase S is otherwise done.
+- **Current priority (2026-10-01):** **Phase T** — Adi’s October fixes, before the next blog list. **T1** is live. **T3** is ready (deploy the Christmas popup script). Phase S is otherwise done.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -743,7 +743,7 @@ Source: `Sweet_Home_Fixes_Oct_2026.docx`. Review of the published posts, plus it
 - [x] Fix the landing-link map where the English URL is still the German path (`config/internalLandingPresets.js`, Moabit and the other districts)
 - [x] No Admin-Save. DB update of `content_i18n.en` only
 
-Ready 2026-10-01. English bodies updated in the database (posts 159–162). District and landing tokens, plus the Relevant pages block, need the next deploy of `config/internalLandingPresets.js`. Local check on port 3034: all 26 English posts, article and Relevant pages, link only to `/en/` URLs. German bodies were left as they are.
+Verified live 2026-10-01. All 26 English posts: article links and the Relevant pages block point only at `/en/` URLs. Moabit and Neukölln district pages return 200. German bodies still link to German pages.
 
 ### T2 — Writing and link rules (fix existing, then keep)
 
@@ -756,13 +756,13 @@ Ready 2026-10-01. English bodies updated in the database (posts 159–162). Dist
 
 Even if the popup stays, it must follow these rules. If it is removed entirely, this task closes itself.
 
-- [ ] Real exit intent only
-- [ ] Desktop only
-- [ ] At most once per session
-- [ ] Never auto-open on mobile
-- [ ] Never open shortly after a visitor arrives from Google
+- [x] Real exit intent only
+- [x] Desktop only
+- [x] At most once per session
+- [x] Never auto-open on mobile
+- [x] Never open shortly after a visitor arrives from Google
 
-The overlay we render is the Christmas popup (`views/layouts/main.ejs`, `public/js/christmas-popup.js`). Apply the rules there. ContactBeat (`contact.js` in the layout) is a separate third-party widget. Do not treat Israel’s earlier scan as a reason to skip this.
+Ready 2026-10-01. The Christmas popup no longer opens on a timer. It opens when the pointer leaves through the top of a desktop window, once per session. A Google arrival (referrer, `gclid`, or `utm_source=google`) blocks it for 45 seconds. Mobile stays closed. ContactBeat is unchanged. Needs deploy of `public/js/christmas-popup.js`.
 
 ### T4 — Language switcher on blog posts
 
@@ -806,7 +806,7 @@ Adi still sees these as short. S9 already expanded them on 2026-09-29. Check the
 
 | Day         | Focus                                                                   |
 | ----------- | ----------------------------------------------------------------------- |
-| Now         | **Phase T.** T1 English links, then T3 popup rules.                      |
+| Now         | **Phase T.** T1 is live. T3 popup rules are ready to deploy.            |
 | Then        | T4 language switcher, T5 title `(2026)`, then one content pass (T2)     |
 | Wed–Fri     | T8 listing cards, T6 services/owners check, T7 German labels            |
 | After posts | Next blog list comes from Adi once T1–T7 are done                       |
@@ -888,7 +888,8 @@ Confirmations you asked for:
 | 2026-09-29 | Yield per-m² formula + `llms.txt` (Adi on Israel’s scan)                                      | Live                          | Post 156 DE+EN: monthly rent × 12 in the m² gross-yield line. `llms.txt` Berlin-first, verified live 2026-09-30. Checklist and seller series wait. |
 | 2026-09-30 | **S7** week 2 posts 4–6 + covers                                                               | Live                          | ids 163–165. Spekulationssteuer § 23 EStG; Moabit and Neukölln ratgeber. DE+EN. Reciprocal links on 162, 131, 159. Three cover JPGs return 200. Phase S closed except S3. |
 | 2026-10-01 | **Phase T** checklist from Adi’s October fixes                                                         | Plan                          | `Sweet_Home_Fixes_Oct_2026.docx`. Urgent: EN links to EN pages, popup rules. Next post list waits. |
-| 2026-10-01 | **T1** English posts link only to English pages                                                        | Ready, deploy for the map     | `content_i18n.en` on 159–162 updated. Presets now use `/en/properties-for-sale-*`. Relevant pages follow on deploy. |
+| 2026-10-01 | **T1** English posts link only to English pages                                                        | Live                          | All 26 EN posts checked. Article and Relevant pages use `/en/` only. Moabit and Neukölln landings return 200. |
+| 2026-10-01 | **T3** Christmas popup rules                                                                           | Ready, needs deploy           | Exit intent, desktop only, once per session, no mobile, 45s grace after a Google arrival. ContactBeat unchanged. |
 
 
 ---

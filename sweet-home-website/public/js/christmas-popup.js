@@ -1,130 +1,121 @@
-// Christmas Popup Handler
-(function() {
+// Christmas popup: desktop exit intent, once per session.
+// Never on a timer, never on mobile, never in the first moments after a Google arrival.
+(function () {
   'use strict';
 
-  // Check if Christmas mode is active
-  const body = document.body;
-  const isChristmasMode = body.getAttribute('data-icon-theme') === 'christmas';
-  
+  var SESSION_KEY = 'christmasPopupShown';
+  var GOOGLE_ARRIVAL_KEY = 'christmasPopupGoogleArrival';
+  var GOOGLE_GRACE_MS = 45000;
+  var body = document.body;
+  var isChristmasMode = body && body.getAttribute('data-icon-theme') === 'christmas';
+
   if (!isChristmasMode) {
-    // If Christmas mode is disabled, clear the popup flag so it can show again when reactivated
     try {
+      sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(GOOGLE_ARRIVAL_KEY);
       localStorage.removeItem('christmasPopupShown_christmas');
-    } catch (e) {
-      // localStorage not available, ignore
-    }
-    return; // Exit if not in Christmas mode
+    } catch (e) { /* storage unavailable */ }
+    return;
   }
 
-  const popup = document.getElementById('christmas-popup');
-  if (!popup) {
-    console.log('Christmas popup: Popup element not found');
-    return; // Exit if popup doesn't exist
+  var popup = document.getElementById('christmas-popup');
+  if (!popup) return;
+
+  var closeBtn = popup.querySelector('.christmas-popup__close');
+  var overlay = popup.querySelector('.christmas-popup__overlay');
+  var armed = false;
+  var open = false;
+
+  function isDesktop() {
+    return window.matchMedia('(min-width: 1024px)').matches
+      && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   }
-  
-  console.log('Christmas popup: Found popup element, initializing...');
 
-  // Use a key specific to Christmas mode activation
-  // This allows the popup to show again when Christmas mode is reactivated
-  const STORAGE_KEY = 'christmasPopupShown_christmas';
-  const closeBtn = popup.querySelector('.christmas-popup__close');
-  const overlay = popup.querySelector('.christmas-popup__overlay');
-
-  // Check if popup has already been shown for this Christmas activation
-  function hasPopupBeenShown() {
+  function alreadyShown() {
     try {
-      return localStorage.getItem(STORAGE_KEY) === 'true';
+      return sessionStorage.getItem(SESSION_KEY) === '1';
     } catch (e) {
-      // localStorage not available (private browsing, etc.)
       return false;
     }
   }
 
-  // Mark popup as shown
-  function markPopupAsShown() {
+  function markShown() {
     try {
-      localStorage.setItem(STORAGE_KEY, 'true');
+      sessionStorage.setItem(SESSION_KEY, '1');
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function googleHost(hostname) {
+    var host = String(hostname || '').toLowerCase().replace(/^www\./, '');
+    return /(^|\.)google\./.test(host);
+  }
+
+  function landedFromGoogle() {
+    try {
+      if (document.referrer && googleHost(new URL(document.referrer).hostname)) return true;
+    } catch (e) { /* ignore bad referrer */ }
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('gclid') || params.get('gbraid') || params.get('wbraid')) return true;
+    return (params.get('utm_source') || '').toLowerCase().indexOf('google') !== -1;
+  }
+
+  function rememberGoogleArrival() {
+    if (!landedFromGoogle()) return;
+    try {
+      if (!sessionStorage.getItem(GOOGLE_ARRIVAL_KEY)) {
+        sessionStorage.setItem(GOOGLE_ARRIVAL_KEY, String(Date.now()));
+      }
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function googleGraceActive() {
+    try {
+      var arrived = sessionStorage.getItem(GOOGLE_ARRIVAL_KEY);
+      if (!arrived) return false;
+      return (Date.now() - Number(arrived)) < GOOGLE_GRACE_MS;
     } catch (e) {
-      // localStorage not available, ignore
+      return landedFromGoogle();
     }
   }
 
-  // Show popup
   function showPopup() {
+    if (open || alreadyShown() || !armed || !isDesktop() || googleGraceActive()) return;
+    open = true;
+    markShown();
     popup.style.display = 'flex';
-    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    document.body.style.overflow = 'hidden';
   }
 
-  // Hide popup
   function hidePopup() {
+    open = false;
     popup.style.display = 'none';
-    document.body.style.overflow = ''; // Restore scrolling
-    markPopupAsShown();
+    document.body.style.overflow = '';
+    markShown();
   }
 
-  // Close button click handler
-  if (closeBtn) {
-    closeBtn.addEventListener('click', hidePopup);
-  }
+  rememberGoogleArrival();
 
-  // Overlay click handler (close when clicking outside)
+  document.addEventListener('mousemove', function () {
+    armed = true;
+  }, { once: true });
+
+  document.addEventListener('mouseout', function (event) {
+    if (event.relatedTarget || event.toElement) return;
+    if (event.clientY > 0) return;
+    showPopup();
+  });
+
+  if (closeBtn) closeBtn.addEventListener('click', hidePopup);
   if (overlay) {
-    overlay.addEventListener('click', function(e) {
-      if (e.target === overlay) {
-        hidePopup();
-      }
+    overlay.addEventListener('click', function (event) {
+      if (event.target === overlay) hidePopup();
     });
   }
-
-  // Escape key handler
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && popup.style.display === 'flex') {
-      hidePopup();
-    }
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && popup.style.display === 'flex') hidePopup();
   });
 
-  // Show popup if it hasn't been shown before
-  // Wait for DOM to be ready and then show after a delay
-  function initPopup() {
-    setTimeout(function() {
-      const hasBeenShown = hasPopupBeenShown();
-      console.log('Christmas popup: Has been shown?', hasBeenShown);
-      if (!hasBeenShown) {
-        console.log('Christmas popup: Showing popup...');
-        showPopup();
-      } else {
-        console.log('Christmas popup: Popup already shown, skipping');
-      }
-    }, 3500); // Show after 3.5 seconds delay
-  }
-
-  // Try multiple ways to ensure the popup shows
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initPopup);
-  } else {
-    // DOM is already ready
-    initPopup();
-  }
-
-  // Also try on window load as a fallback
-  window.addEventListener('load', function() {
-    if (!hasPopupBeenShown() && popup.style.display === 'none') {
-      showPopup();
-    }
+  window.addEventListener('resize', function () {
+    if (!isDesktop() && popup.style.display === 'flex') hidePopup();
   });
-
-  // Debug helper: Expose reset function to window for easy testing
-  // Usage: window.resetChristmasPopup() in console
-  window.resetChristmasPopup = function() {
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-      console.log('Christmas popup: Reset! Refresh the page to see it again.');
-      return true;
-    } catch (e) {
-      console.error('Christmas popup: Failed to reset', e);
-      return false;
-    }
-  };
-
 })();
-
