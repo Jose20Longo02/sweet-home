@@ -11,6 +11,7 @@ const {
 const { detectLanguageFromFields, getTargetLanguages } = require('../utils/languageDetection');
 const { getBlogCoverListingHref } = require('../config/blogCoverListingLinks');
 const { getBlogSlugForLang, withPublicBlogSlug } = require('../utils/blogSlugI18n');
+const { rewriteEnBlogInternalLinks } = require('../config/n10-berlin-post-slugs');
 
 const BLOG_TOPIC_DEFS = {
   berlin: ['berlin', 'mitte', 'kreuzberg', 'charlottenburg', 'pankow', 'schoneberg', 'spandau'],
@@ -355,6 +356,13 @@ function resolveSelectedAuthorId(rawAuthorId, authorOptions, fallbackAuthorId) {
   return exists ? parsed : fallbackAuthorId;
 }
 
+function prefixCoverListingHref(href, lang) {
+  const path = String(href || '');
+  if (!path || lang !== 'en') return path;
+  if (path.startsWith('/en/') || path.startsWith('http')) return path;
+  return `/en${path.startsWith('/') ? path : `/${path}`}`;
+}
+
 // Public
 exports.listPublic = async (req, res, next) => {
   try {
@@ -437,7 +445,8 @@ exports.showPublic = async (req, res, next) => {
       return res.redirect(301, `${prefix}/blog/${canonicalSlug}${query}`);
     }
     const postTitle = (post.title_i18n && post.title_i18n[lang]) || post.title;
-    const postContent = (post.content_i18n && post.content_i18n[lang]) || post.content;
+    const storedContent = (post.content_i18n && post.content_i18n[lang]) || post.content;
+    const postContent = lang === 'en' ? rewriteEnBlogInternalLinks(storedContent) : storedContent;
     const localizedLinksContent = renderInternalLandingTokens(postContent, lang);
     // Process content: add ALT attributes and convert H1 tags to H2 to avoid multiple H1s
     let processedContent = addAltToImages(localizedLinksContent, `Image from ${postTitle}`);
@@ -519,7 +528,7 @@ exports.showPublic = async (req, res, next) => {
     res.render('blog/blog-detail', {
       title: pageTitle,
       post: localizedPost,
-      coverListingHref: getBlogCoverListingHref(post.slug),
+      coverListingHref: prefixCoverListingHref(getBlogCoverListingHref(post.slug), lang),
       recommendedPosts: recommendedPosts || [],
       relatedLandingLinks: relatedLandingSet.links || [],
       relatedLandingMarket: relatedLandingSet.market || '',

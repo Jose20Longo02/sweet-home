@@ -16,7 +16,8 @@
 | `Sweet_Home_Pages_and_Keywords_Berlin.xlsx` | Page/keyword map (exists vs create)                                               |
 | `Sweet_Home_Migration_Fixes_Now.docx`       | **HIGH PRIORITY** post-migration integrity fixes (P1–P3) — received 2026-08-04    |
 | `Sweet_Home_Dev_Tasks_Next_2_Weeks.docx`    | Next-two-weeks tasks (N1–N11) — received 2026-08-10. **Closed** as previous cycle |
-| `Sweet_Home_Tasks_Sep_Cycle.docx`           | **ACTIVE** next two weeks (S1–S10) — received 2026-09-18                          |
+| `Sweet_Home_Tasks_Sep_Cycle.docx`           | Phase S (S1–S10) — received 2026-09-18. Done except the popup, now in Phase T     |
+| `Sweet_Home_Fixes_Oct_2026.docx`            | **ACTIVE** fixes before the next post list (T1–T7) — received 2026-10-01          |
 
 
 Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOOK.md)` (go-live / redirects / GSC).
@@ -25,7 +26,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-09-30):** **Phase S** is done except **S3**. S3 is the ContactBeat popup (exit intent, desktop only, once per session, never mobile, never right after Google). That is not our code.
+- **Current priority (2026-10-01):** **Phase T** — Adi’s October fixes, before the next blog list. **T1** is ready (deploy the landing-link map). Next is **T3** (popup rules). Phase S is otherwise done.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -124,7 +125,7 @@ Rankings issue, not only UX. Popups that cover content on mobile entry can count
 - [ ] Never auto-open on mobile
 - [ ] Never open shortly after a visitor arrives from Google
 
-**Not our code.** Rules sit in ContactBeat. Checked boxes stay open until that tool is set.
+**Moved to Phase T3 (2026-10-01).** Adi asked us to implement the rules on the overlay we control, whether or not the popup stays. The Christmas overlay is in `views/layouts/main.ejs`. ContactBeat is still a third-party script.
 
 ### S4 — Paphos duplicate URLs + EN investment slug — priority
 
@@ -729,15 +730,86 @@ From `Sweet_Home_Pages_and_Keywords_Berlin.xlsx`. Do **after** Phases A–D and 
 
 ---
 
+# Phase T — Fixes before the next post list (Adi 2026-10-01) — ACTIVE
+
+Source: `Sweet_Home_Fixes_Oct_2026.docx`. Review of the published posts, plus items still open. The next blog list waits until these are done.
+
+**Do first:** T1 and T3. Adi called both urgent. Google treats a popup that covers the page for search visitors as an intrusive interstitial.
+
+### T1 — English posts link only to English pages — urgent
+
+- [x] Audit every EN blog body. Internal links go to `/en/` pages, never to a German district page or a German post
+- [x] Same for the “Relevant pages” block (example Adi named: `/en/blog/mortgage-financing-berlin`, and the EN Moabit and Neukölln guides)
+- [x] Fix the landing-link map where the English URL is still the German path (`config/internalLandingPresets.js`, Moabit and the other districts)
+- [x] No Admin-Save. DB update of `content_i18n.en` only
+
+Ready 2026-10-01. English bodies updated in the database (posts 159–162). District and landing tokens, plus the Relevant pages block, need the next deploy of `config/internalLandingPresets.js`. Local check on port 3034: all 26 English posts, article and Relevant pages, link only to `/en/` URLs. German bodies were left as they are.
+
+### T2 — Writing and link rules (fix existing, then keep)
+
+- [ ] No em dashes in copy from now on. Use a comma or a shorter sentence
+- [ ] Internal links open in the same tab. Only external links (berlin.de and other outside sources) open in a new tab. Some posts currently do the opposite
+- [ ] Internal links point at the final URL, not an old URL that redirects (example: `/en/blog/wohnung-kaufen-neukoelln-ratgeber` should be `/en/blog/buying-apartment-neukoelln-guide`)
+- [ ] Links sit inside the sentence, not as a standalone “Browse X properties” line. Apply to `/en/blog/berlin-real-estate-investment-guide-2026`, same principle as the Bezirke rework
+
+### T3 — Popup rules — urgent
+
+Even if the popup stays, it must follow these rules. If it is removed entirely, this task closes itself.
+
+- [ ] Real exit intent only
+- [ ] Desktop only
+- [ ] At most once per session
+- [ ] Never auto-open on mobile
+- [ ] Never open shortly after a visitor arrives from Google
+
+The overlay we render is the Christmas popup (`views/layouts/main.ejs`, `public/js/christmas-popup.js`). Apply the rules there. ContactBeat (`contact.js` in the layout) is a separate third-party widget. Do not treat Israel’s earlier scan as a reason to skip this.
+
+### T4 — Language switcher on blog posts
+
+The switcher builds the other language by swapping the `/en/` prefix and keeping the same slug. On the EN Moabit guide, Deutsch points at `/blog/buying-apartment-moabit-guide`. German and English slugs differ, so the click often misses the paired post. A redirect only saves the cases that happen to have one.
+
+- [ ] The switcher links directly to the paired URL of the other language
+- [ ] The same map drives the hreflang tags
+- [ ] Check a post whose slugs differ (Moabit guide) and one whose slugs match
+
+### T5 — Doubled year in the title tag
+
+On `/en/blog/berlin-real-estate-investment-guide-2026` the title tag reads `Berlin Real Estate Investment Guide 2026 (2026)`. The page H1 is fine. Google shows the title tag.
+
+- [ ] Stop appending `(2026)` when the slug ends in `-2026` (`blogController.js` treats a trailing number in the slug as a duplicate suffix)
+- [ ] Confirm the title tag no longer contains `(2026)` and that real duplicate slugs (`-2`, `-3`) still get a suffix
+
+### T6 — Services and For Sellers — verify, then fill only what is still thin
+
+Adi still sees these as short. S9 already expanded them on 2026-09-29. Check the live HTML before writing them again.
+
+- [ ] `/services` and `/en/services`: concrete scope for each service is in the server HTML, not only in the first tab
+- [ ] `/owners` and `/en/owners`: what sellers get (valuation, documents, marketing, negotiation)
+- [ ] Meta description on `/services` is Berlin, in the page language. It must not still say “Expert real estate services in Cyprus, Dubai, and Berlin” on the German page
+
+### T7 — German interface labels
+
+- [ ] “Last updated” on German blog posts is German
+- [ ] Footer items that still render in English on German pages are localized
+
+### T8 — Current-listing cards in posts
+
+- [ ] A server-rendered block of 2–3 current listings (photo, title, price, link) in the middle or near the bottom of district and investment posts. Same spirit as the Ratgeber cards
+- [ ] Start with the Moabit and Neukölln guides, German and English
+
+**Order:** T1 → T3 → T4 → T5 → T2 → T8 → T6 → T7. T1 and T3 unblock the next post list. T4 and T5 are small code fixes on the blog. T2 is one content pass after the link map is fixed, so posts are not edited twice. T8 needs that pass done. T6 starts with a live check. T7 is labels only.
+
+---
+
 # Suggested weekly workflow
 
 
 | Day         | Focus                                                                   |
 | ----------- | ----------------------------------------------------------------------- |
-| Now         | Phase S done except **S3** (ContactBeat). Covers and `llms.txt` live.   |
-| Then        | Human read of the three German week-2 posts, then the Friday note to Adi |
-| Wed–Fri     | Nothing else queued from this cycle                                     |
-| After posts | Checklist download and seller series wait for a later cycle (Adi)      |
+| Now         | **Phase T.** T1 English links, then T3 popup rules.                      |
+| Then        | T4 language switcher, T5 title `(2026)`, then one content pass (T2)     |
+| Wed–Fri     | T8 listing cards, T6 services/owners check, T7 German labels            |
+| After posts | Next blog list comes from Adi once T1–T7 are done                       |
 | Friday      | Email Adi: done / live / blockers / next week                           |
 
 
@@ -815,6 +887,8 @@ Confirmations you asked for:
 | 2026-09-29 | **S9** Adi OK applied and verified live                                                        | Live                          | 17 titles via `scripts/s9-apply-approved-titles.js` (no body edit). Expanded Services, Owners, Spandau, Reinickendorf DE+EN. About left.                           |
 | 2026-09-29 | Yield per-m² formula + `llms.txt` (Adi on Israel’s scan)                                      | Live                          | Post 156 DE+EN: monthly rent × 12 in the m² gross-yield line. `llms.txt` Berlin-first, verified live 2026-09-30. Checklist and seller series wait. |
 | 2026-09-30 | **S7** week 2 posts 4–6 + covers                                                               | Live                          | ids 163–165. Spekulationssteuer § 23 EStG; Moabit and Neukölln ratgeber. DE+EN. Reciprocal links on 162, 131, 159. Three cover JPGs return 200. Phase S closed except S3. |
+| 2026-10-01 | **Phase T** checklist from Adi’s October fixes                                                         | Plan                          | `Sweet_Home_Fixes_Oct_2026.docx`. Urgent: EN links to EN pages, popup rules. Next post list waits. |
+| 2026-10-01 | **T1** English posts link only to English pages                                                        | Ready, deploy for the map     | `content_i18n.en` on 159–162 updated. Presets now use `/en/properties-for-sale-*`. Relevant pages follow on deploy. |
 
 
 ---

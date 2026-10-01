@@ -1,3 +1,11 @@
+const { getDistrictLanding } = require('./berlinDistrictLandings');
+
+function districtUrls(key) {
+  const row = getDistrictLanding(key);
+  if (!row) throw new Error(`Missing Berlin district landing: ${key}`);
+  return { de: row.dePath, en: row.enPath };
+}
+
 const INTERNAL_LANDING_PRESETS = {
   berlin_main: {
     label: 'Berlin Landing Page - Main',
@@ -34,110 +42,91 @@ const INTERNAL_LANDING_PRESETS = {
     market: 'berlin',
     type: 'neighborhood',
     keywords: ['charlottenburg', 'west berlin'],
-    urls: {
-      de: '/wohnung-kaufen-charlottenburg',
-      en: '/wohnung-kaufen-charlottenburg'
-    }
+    urls: districtUrls('charlottenburg')
   },
   berlin_moabit: {
     label: 'Berlin Neighborhood Landing Page - Moabit',
     market: 'berlin',
     type: 'neighborhood',
     keywords: ['moabit', 'mitte'],
-    urls: {
-      de: '/wohnung-kaufen-moabit',
-      en: '/wohnung-kaufen-moabit'
-    }
+    urls: districtUrls('moabit')
   },
   berlin_friedrichshain_kreuzberg: {
     label: 'Berlin Neighborhood Landing Page - Friedrichshain-Kreuzberg',
     market: 'berlin',
     type: 'neighborhood',
     keywords: ['friedrichshain', 'kreuzberg', 'fhain'],
-    urls: {
-      de: '/wohnung-kaufen-friedrichshain-kreuzberg',
-      en: '/wohnung-kaufen-friedrichshain-kreuzberg'
-    }
+    urls: districtUrls('friedrichshain-kreuzberg')
   },
   berlin_schoeneberg: {
     label: 'Berlin Neighborhood Landing Page - Schoeneberg',
     market: 'berlin',
     type: 'neighborhood',
     keywords: ['schoeneberg', 'schoneberg'],
-    urls: {
-      de: '/wohnung-kaufen-schoeneberg',
-      en: '/wohnung-kaufen-schoeneberg'
-    }
+    urls: districtUrls('schoeneberg')
   },
   berlin_prenzlauer_berg: {
     label: 'Berlin Neighborhood Landing Page - Prenzlauer Berg',
     market: 'berlin',
     type: 'neighborhood',
     keywords: ['prenzlauer berg', 'pberg', 'prenzlauer'],
-    urls: {
-      de: '/wohnung-kaufen-prenzlauer-berg',
-      en: '/wohnung-kaufen-prenzlauer-berg'
-    }
+    urls: districtUrls('prenzlauer-berg')
   },
   berlin_wedding: {
     label: 'Berlin Neighborhood Landing Page - Wedding',
     market: 'berlin',
     type: 'neighborhood',
     keywords: ['wedding', 'gesundbrunnen'],
-    urls: {
-      de: '/wohnung-kaufen-wedding',
-      en: '/wohnung-kaufen-wedding'
-    }
+    urls: districtUrls('wedding')
   },
   berlin_tempelhof: {
     label: 'Berlin Neighborhood Landing Page - Tempelhof',
     market: 'berlin',
     type: 'neighborhood',
     keywords: ['tempelhof', 'tempelhofer'],
-    urls: {
-      de: '/wohnung-kaufen-tempelhof',
-      en: '/wohnung-kaufen-tempelhof'
-    }
+    urls: districtUrls('tempelhof')
   },
   berlin_neukoelln: {
     label: 'Berlin Neighborhood Landing Page - Neukoelln',
     market: 'berlin',
     type: 'neighborhood',
     keywords: ['neukoelln', 'neukölln', 'neukolln'],
-    urls: {
-      de: '/wohnung-kaufen-neukoelln',
-      en: '/wohnung-kaufen-neukoelln'
-    }
+    urls: districtUrls('neukoelln')
   },
   berlin_reinickendorf: {
     label: 'Berlin Neighborhood Landing Page - Reinickendorf',
     market: 'berlin',
     type: 'neighborhood',
     keywords: ['reinickendorf'],
-    urls: {
-      de: '/wohnung-kaufen-reinickendorf',
-      en: '/wohnung-kaufen-reinickendorf'
-    }
+    urls: districtUrls('reinickendorf')
   },
   berlin_kreuzberg: {
     label: 'Berlin Neighborhood Landing Page - Kreuzberg',
     market: 'berlin',
     type: 'neighborhood',
     keywords: ['kreuzberg', 'bergmannkiez'],
-    urls: {
-      de: '/wohnung-kaufen-kreuzberg',
-      en: '/wohnung-kaufen-kreuzberg'
-    }
+    urls: districtUrls('kreuzberg')
   },
   berlin_spandau: {
     label: 'Berlin Neighborhood Landing Page - Spandau',
     market: 'berlin',
     type: 'neighborhood',
     keywords: ['spandau'],
-    urls: {
-      de: '/wohnung-kaufen-spandau',
-      en: '/wohnung-kaufen-spandau'
-    }
+    urls: districtUrls('spandau')
+  },
+  berlin_mitte: {
+    label: 'Berlin Neighborhood Landing Page - Mitte',
+    market: 'berlin',
+    type: 'neighborhood',
+    keywords: ['berlin-mitte', 'bezirk mitte'],
+    urls: districtUrls('mitte')
+  },
+  berlin_pankow: {
+    label: 'Berlin Neighborhood Landing Page - Pankow',
+    market: 'berlin',
+    type: 'neighborhood',
+    keywords: ['pankow'],
+    urls: districtUrls('pankow')
   }
 };
 

@@ -20,7 +20,10 @@ const N10_BERLIN_POSTS = [
   { de: 'wo-in-berlin-wohnung-kaufen', en: 'where-to-buy-apartment-in-berlin' },
   { de: 'immobilienfinanzierung-berlin', en: 'mortgage-financing-berlin' },
   { de: 'lohnt-sich-immobilie-kaufen-berlin', en: 'is-buying-property-in-berlin-worth-it' },
-  { de: 'steuern-fuer-vermieter', en: 'german-rental-property-taxes' }
+  { de: 'steuern-fuer-vermieter', en: 'german-rental-property-taxes' },
+  { de: 'spekulationssteuer-immobilie', en: 'capital-gains-tax-property-germany' },
+  { de: 'wohnung-kaufen-moabit-ratgeber', en: 'buying-apartment-moabit-guide' },
+  { de: 'wohnung-kaufen-neukoelln-ratgeber', en: 'buying-apartment-neukoelln-guide' }
 ];
 
 const DE_TO_EN_SLUG = Object.fromEntries(N10_BERLIN_POSTS.map((p) => [p.de, p.en]));
@@ -58,10 +61,34 @@ function rewriteBlogLinksForLang(html, lang) {
     if (normalized === 'en') {
       out = out.replace(new RegExp(`href="/blog/${de}(?=["'#?\\s>]|$)`, 'g'), `href="/en/blog/${en}`);
       out = out.replace(new RegExp(`href='/blog/${de}(?=['"#?\\s>]|$)`, 'g'), `href='/en/blog/${en}`);
+      out = out.replace(new RegExp(`href="/en/blog/${de}(?=["'#?\\s>]|$)`, 'g'), `href="/en/blog/${en}`);
+      out = out.replace(new RegExp(`href='/en/blog/${de}(?=['"#?\\s>]|$)`, 'g'), `href='/en/blog/${en}`);
     } else {
       out = out.replace(new RegExp(`href="/en/blog/${en}(?=["'#?\\s>]|$)`, 'g'), `href="/blog/${de}`);
       out = out.replace(new RegExp(`href='/en/blog/${en}(?=['"#?\\s>]|$)`, 'g'), `href='/blog/${de}`);
     }
+  });
+  return out;
+}
+
+const MARKET_PATHS_DE_TO_EN = [
+  ['/wohnungen-berlin-kaufen', '/en/properties-for-sale-berlin'],
+  ['/immobilien-zypern-kaufen', '/en/properties-for-sale-cyprus'],
+  ['/immobilien-dubai-kaufen', '/en/properties-for-sale-dubai']
+];
+
+function rewriteEnBlogInternalLinks(html) {
+  let out = rewriteBlogLinksForLang(html, 'en');
+  if (!out) return out;
+  const { BERLIN_DISTRICT_LANDINGS } = require('./berlinDistrictLandings');
+  const paths = [
+    ...BERLIN_DISTRICT_LANDINGS.map((district) => [district.dePath, district.enPath]),
+    ...MARKET_PATHS_DE_TO_EN
+  ].sort((a, b) => b[0].length - a[0].length);
+  paths.forEach(([dePath, enPath]) => {
+    const escaped = dePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    out = out.replace(new RegExp(`href="${escaped}(?=["'#?\\s>]|$)`, 'g'), `href="${enPath}`);
+    out = out.replace(new RegExp(`href='${escaped}(?=['"#?\\s>]|$)`, 'g'), `href='${enPath}`);
   });
   return out;
 }
@@ -73,5 +100,6 @@ module.exports = {
   N10_DE_SLUGS,
   parseSlugI18n,
   getBlogSlugForLang,
-  rewriteBlogLinksForLang
+  rewriteBlogLinksForLang,
+  rewriteEnBlogInternalLinks
 };
