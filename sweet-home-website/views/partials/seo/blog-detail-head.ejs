@@ -2,10 +2,11 @@
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
   const localePrefixSafe = (typeof localePrefix !== 'undefined' && localePrefix) ? localePrefix : '';
   const blogUrl = `${siteBaseUrl}${localePrefixSafe}/blog/${post.slug}`;
+  const paired = (typeof localeAlternateUrls !== 'undefined' && localeAlternateUrls) ? localeAlternateUrls : null;
   const deSlug = post.slugDe || post.slug;
   const enSlug = post.slugEn || post.slug;
-  const enUrl = `${siteBaseUrl}/en/blog/${enSlug}`;
-  const deUrl = post.enOnly ? enUrl : `${siteBaseUrl}/blog/${deSlug}`;
+  const enUrl = (paired && paired.en) || `${siteBaseUrl}/en/blog/${enSlug}`;
+  const deUrl = (paired && paired.de) || (post.enOnly ? enUrl : `${siteBaseUrl}/blog/${deSlug}`);
   const ogLocale = (typeof lang !== 'undefined' && lang === 'de') ? 'de_DE' : 'en_US';
   const blogImage = post.cover_image 
     ? (post.cover_image.startsWith('http') ? post.cover_image : `${siteBaseUrl}${post.cover_image}`)

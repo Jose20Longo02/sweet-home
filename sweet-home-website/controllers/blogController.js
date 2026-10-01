@@ -10,7 +10,7 @@ const {
 } = require('../config/internalLandingPresets');
 const { detectLanguageFromFields, getTargetLanguages } = require('../utils/languageDetection');
 const { getBlogCoverListingHref } = require('../config/blogCoverListingLinks');
-const { getBlogSlugForLang, withPublicBlogSlug } = require('../utils/blogSlugI18n');
+const { getBlogSlugForLang, withPublicBlogSlug, blogLanguagePaths } = require('../utils/blogSlugI18n');
 const { rewriteEnBlogInternalLinks } = require('../config/n10-berlin-post-slugs');
 
 const BLOG_TOPIC_DEFS = {
@@ -525,6 +525,13 @@ exports.showPublic = async (req, res, next) => {
       ...p,
       title: localizedBlogField(p, 'title', lang) || p.title
     }, lang));
+    const languagePaths = blogLanguagePaths(localizedPost);
+    const siteBase = String(res.locals.baseUrl || '').replace(/\/$/, '');
+    res.locals.localeAlternatePaths = languagePaths;
+    res.locals.localeAlternateUrls = {
+      de: siteBase + languagePaths.de,
+      en: siteBase + languagePaths.en
+    };
     res.render('blog/blog-detail', {
       title: pageTitle,
       post: localizedPost,

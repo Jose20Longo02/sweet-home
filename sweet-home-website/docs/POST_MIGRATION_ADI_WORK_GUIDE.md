@@ -26,7 +26,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-01):** **Phase T** — Adi’s October fixes, before the next blog list. **T1** is live. **T3** is ready (deploy the Christmas popup script). Phase S is otherwise done.
+- **Current priority (2026-10-01):** **Phase T** — Adi’s October fixes, before the next blog list. **T1** is live. **T3** and **T4** are ready to deploy. Phase S is otherwise done.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -768,9 +768,11 @@ Ready 2026-10-01. The Christmas popup no longer opens on a timer. It opens when 
 
 The switcher builds the other language by swapping the `/en/` prefix and keeping the same slug. On the EN Moabit guide, Deutsch points at `/blog/buying-apartment-moabit-guide`. German and English slugs differ, so the click often misses the paired post. A redirect only saves the cases that happen to have one.
 
-- [ ] The switcher links directly to the paired URL of the other language
-- [ ] The same map drives the hreflang tags
-- [ ] Check a post whose slugs differ (Moabit guide) and one whose slugs match
+- [x] The switcher links directly to the paired URL of the other language
+- [x] The same map drives the hreflang tags
+- [x] Check a post whose slugs differ (Moabit guide) and one whose slugs match
+
+Ready 2026-10-01. On the English Moabit guide, Deutsch goes to `/blog/wohnung-kaufen-moabit-ratgeber` and stays there. hreflang uses that same pair. English-only posts (Paphos) keep both languages on the `/en/blog/` URL. An English cookie no longer bounces a real language switch back to English when the slugs differ. Needs deploy.
 
 ### T5 — Doubled year in the title tag
 
@@ -890,6 +892,7 @@ Confirmations you asked for:
 | 2026-10-01 | **Phase T** checklist from Adi’s October fixes                                                         | Plan                          | `Sweet_Home_Fixes_Oct_2026.docx`. Urgent: EN links to EN pages, popup rules. Next post list waits. |
 | 2026-10-01 | **T1** English posts link only to English pages                                                        | Live                          | All 26 EN posts checked. Article and Relevant pages use `/en/` only. Moabit and Neukölln landings return 200. |
 | 2026-10-01 | **T3** Christmas popup rules                                                                           | Ready, needs deploy           | Exit intent, desktop only, once per session, no mobile, 45s grace after a Google arrival. ContactBeat unchanged. |
+| 2026-10-01 | **T4** Blog language switcher and hreflang                                                            | Ready, needs deploy           | Paired slugs. EN Moabit Deutsch → `/blog/wohnung-kaufen-moabit-ratgeber`. English cookie does not bounce that switch. |
 
 
 ---

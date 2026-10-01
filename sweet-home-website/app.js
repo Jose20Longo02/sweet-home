@@ -377,6 +377,16 @@ app.use((req, res, next) => {
         const refPathWithoutLocale = refPath.replace(/^\/(en|es)(?=\/|$)/, '') || '/';
         // Explicit switch to DE (prefix removed) must not bounce back to /en.
         if (refererLang && refPathWithoutLocale === req.path) explicitSwitchToDe = true;
+        // Blog pairs use different slugs, so stripping /en does not match the German path.
+        if (!explicitSwitchToDe && isBlogDetail && refererLang === 'en') {
+          const destSlug = req.path.replace(/^\/blog\//, '').split('/')[0];
+          const refBlog = refPath.match(/^\/en\/blog\/([^/]+)\/?$/);
+          if (refBlog) {
+            const { EN_TO_DE_SLUG } = require('./config/n10-berlin-post-slugs');
+            const pairedDe = EN_TO_DE_SLUG[refBlog[1]] || refBlog[1];
+            if (pairedDe === destSlug) explicitSwitchToDe = true;
+          }
+        }
       }
     } catch (_) { /* ignore malformed referer */ }
     if (explicitSwitchToDe) return next();
