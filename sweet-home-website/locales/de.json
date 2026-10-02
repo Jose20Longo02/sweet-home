@@ -644,6 +644,7 @@
     "submit": "Senden"
   },
   "blog": {
+    "lastUpdated": "Zuletzt aktualisiert",
     "by": "Von",
     "publishedBy": "Veröffentlicht von",
     "read": "Artikel lesen",
@@ -663,6 +664,8 @@
       "authorExpertiseTitle": "Autor-Expertise",
       "authorExpertiseBody": "Dieser Artikel wird von unserem Immobilien-Team auf lokale Marktgenauigkeit und praxisnahe Käuferhinweise geprüft.",
       "authorNamePrefix": "Gepruft von",
+      "currentListingsTitle": "Aktuelle Wohnungen in {district}",
+      "currentListingsIntro": "Drei aktuelle Angebote in {district}. Die Ratgeberseite erklärt die Lage, diese Karten zeigen Wohnungen.",
       "relatedLandingTitle": "Relevante Seiten",
       "relatedLandingIntro": "Entdecken Sie passende Seiten, um Wohnungen zum Kauf nach Stadt und Stadtteil zu vergleichen.",
       "faq": {
@@ -909,7 +912,7 @@
     "help": "Hilfe",
     "features": "Angebote",
     "company": "Unternehmen",
-    "support": "Support",
+    "support": "Kundenservice",
     "realEstate": "Immobilien",
     "agents": "Makler",
     "mapSearch": "Kartensuche",
@@ -923,7 +926,7 @@
     "social": "Soziale Medien",
     "regions": "Regionen",
     "propertiesBerlin": "Wohnungen in Berlin",
-    "propertiesBerlinEn": "Berlin apartments (EN)",
+    "propertiesBerlinEn": "Wohnungen in Berlin (Englisch)",
     "berlinSearch": "Berliner Angebote durchsuchen",
     "otherMarkets": "Auch:",
     "cyprusShort": "Zypern",

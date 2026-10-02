@@ -286,6 +286,27 @@
       <section class="content">
         <%- post.content %>
       </section>
+      <% if ((postListings || []).length > 0) { %>
+        <section class="blog-listing-cards" aria-label="<%= t('blog.detail.currentListingsTitle', 'Current apartments in {district}', { district: postListingsDistrict || '' }) %>">
+          <h2><%= t('blog.detail.currentListingsTitle', 'Current apartments in {district}', { district: postListingsDistrict || '' }) %></h2>
+          <p class="blog-listing-cards__intro"><%= t('blog.detail.currentListingsIntro', 'Three current listings in {district}.', { district: postListingsDistrict || '' }) %></p>
+          <ul class="blog-listing-cards__list">
+            <% postListings.forEach(function(item) { %>
+              <li>
+                <a class="blog-listing-card" href="<%= item.href %>">
+                  <% if (item.photo) { %>
+                    <img src="<%= item.photo %>" alt="" loading="lazy" decoding="async" width="640" height="400">
+                  <% } %>
+                  <span class="blog-listing-card__title"><%= item.title %></span>
+                  <% if (item.priceLabel) { %>
+                    <span class="blog-listing-card__price"><%= item.priceLabel %></span>
+                  <% } %>
+                </a>
+              </li>
+            <% }) %>
+          </ul>
+        </section>
+      <% } %>
       <% if ((relatedLandingLinks || []).length > 0) { %>
         <section class="blog-related-landings" aria-label="<%= t('blog.detail.relatedLandingTitle', 'Relevant pages') %>">
           <h2><%= t('blog.detail.relatedLandingTitle', 'Relevant pages') %></h2>

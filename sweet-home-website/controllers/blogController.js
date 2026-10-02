@@ -356,6 +356,81 @@ function resolveSelectedAuthorId(rawAuthorId, authorOptions, fallbackAuthorId) {
   return exists ? parsed : fallbackAuthorId;
 }
 
+const BLOG_LISTING_CARDS = {
+  'wohnung-kaufen-moabit-ratgeber': {
+    district: 'Moabit',
+    where: `LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+      AND (
+        p.title ILIKE '%moabit%'
+        OR COALESCE(p.title_i18n->>'de', '') ILIKE '%moabit%'
+        OR COALESCE(p.title_i18n->>'en', '') ILIKE '%moabit%'
+      )`,
+    params: ['%moabit%']
+  },
+  'wohnung-kaufen-neukoelln-ratgeber': {
+    district: 'Neukölln',
+    where: `(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2)
+      AND (
+        p.title ILIKE '%neukölln%' OR p.title ILIKE '%neukolln%' OR p.title ILIKE '%neukoelln%'
+        OR COALESCE(p.title_i18n->>'de', '') ILIKE '%neukölln%'
+        OR COALESCE(p.title_i18n->>'de', '') ILIKE '%neukolln%'
+        OR COALESCE(p.title_i18n->>'en', '') ILIKE '%neukölln%'
+        OR COALESCE(p.title_i18n->>'en', '') ILIKE '%neukolln%'
+        OR COALESCE(p.title_i18n->>'en', '') ILIKE '%neukoelln%'
+      )`,
+    params: ['%neukölln%', '%neukolln%']
+  }
+};
+
+function listingPhoto(photos) {
+  const list = Array.isArray(photos) ? photos : (photos ? [photos] : []);
+  const first = list[0];
+  if (!first) return '';
+  if (typeof first === 'string') return first;
+  if (first && typeof first === 'object' && first.url) return String(first.url);
+  return '';
+}
+
+function listingTitle(row, lang) {
+  const i18n = row && row.title_i18n && typeof row.title_i18n === 'object' ? row.title_i18n : null;
+  return (i18n && (i18n[lang] || i18n.en || i18n.de)) || (row && row.title) || '';
+}
+
+function formatListingPrice(amount) {
+  const value = Number(amount);
+  if (!Number.isFinite(value) || value <= 0) return '';
+  return `€${new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 }).format(value)}`;
+}
+
+async function loadBlogListingCards(deSlug, lang) {
+  const spec = BLOG_LISTING_CARDS[String(deSlug || '').trim()];
+  if (!spec) return { district: '', cards: [] };
+  try {
+    const { rows } = await query(
+      `SELECT p.title, p.title_i18n, p.slug, p.price, p.photos
+         FROM properties p
+        WHERE p.country = 'Germany'
+          AND p.city = 'Berlin'
+          AND COALESCE(p.sold, false) IS NOT TRUE
+          AND ${spec.where}
+        ORDER BY p.created_at DESC
+        LIMIT 3`,
+      spec.params
+    );
+    const prefix = lang === 'en' ? '/en' : '';
+    const cards = (rows || []).map((row) => ({
+      title: listingTitle(row, lang),
+      href: `${prefix}/properties/${row.slug}`,
+      photo: listingPhoto(row.photos),
+      priceLabel: formatListingPrice(row.price)
+    })).filter((card) => card.title && card.href);
+    return { district: spec.district, cards };
+  } catch (err) {
+    console.error('Blog listing cards failed', err);
+    return { district: spec.district, cards: [] };
+  }
+}
+
 function prefixCoverListingHref(href, lang) {
   const path = String(href || '');
   if (!path || lang !== 'en') return path;
@@ -525,6 +600,7 @@ exports.showPublic = async (req, res, next) => {
       ...p,
       title: localizedBlogField(p, 'title', lang) || p.title
     }, lang));
+    const listingCards = await loadBlogListingCards(localizedPost.slugDe || post.slug, lang);
     const languagePaths = blogLanguagePaths(localizedPost);
     const siteBase = String(res.locals.baseUrl || '').replace(/\/$/, '');
     res.locals.localeAlternatePaths = languagePaths;
@@ -537,6 +613,8 @@ exports.showPublic = async (req, res, next) => {
       post: localizedPost,
       coverListingHref: prefixCoverListingHref(getBlogCoverListingHref(post.slug), lang),
       recommendedPosts: recommendedPosts || [],
+      postListings: listingCards.cards,
+      postListingsDistrict: listingCards.district,
       relatedLandingLinks: relatedLandingSet.links || [],
       relatedLandingMarket: relatedLandingSet.market || '',
       postTopicIds: inferredTopicIds,

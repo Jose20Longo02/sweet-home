@@ -656,6 +656,7 @@
     "submit": "Send"
   },
   "blog": {
+    "lastUpdated": "Last updated",
     "by": "By",
     "publishedBy": "Published by",
     "read": "Read article",
@@ -675,6 +676,8 @@
       "authorExpertiseTitle": "Author expertise",
       "authorExpertiseBody": "This article is reviewed by our real estate team for local market accuracy and practical buyer guidance.",
       "authorNamePrefix": "Reviewed by",
+      "currentListingsTitle": "Current apartments in {district}",
+      "currentListingsIntro": "Three current listings in {district}. This guide explains the area. These cards show homes.",
       "relatedLandingTitle": "Relevant pages",
       "relatedLandingIntro": "Explore these relevant pages to compare apartments for sale by city and neighborhood.",
       "faq": {

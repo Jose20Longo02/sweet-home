@@ -26,7 +26,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-02):** **Phase T** — Adi’s October fixes, before the next blog list. **T1**, **T4**, and **T5** are live. **T6** seller copy is ready to deploy. **T3** script is deployed; the overlay stays off while the theme is `default`. Next is **T2**. Phase S is otherwise done.
+- **Current priority (2026-10-02):** **Phase T** — Adi’s October fixes, before the next blog list. **T1**, **T4**, and **T5** are live. **T6** seller copy, **T7** German labels, and **T8** listing cards are ready to deploy. **T3** script is deployed; the overlay stays off while the theme is `default`. Next is **T2**. Phase S is otherwise done.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -795,13 +795,17 @@ Verified live 2026-10-02 before editing. Services already lists buying, manageme
 
 ### T7 — German interface labels
 
-- [ ] “Last updated” on German blog posts is German
-- [ ] Footer items that still render in English on German pages are localized
+- [x] “Last updated” on German blog posts is German
+- [x] Footer items that still render in English on German pages are localized
+
+Checked locally 2026-10-02. German posts show `Zuletzt aktualisiert`. Footer `Support` is `Kundenservice`, and `Berlin apartments (EN)` is `Wohnungen in Berlin (Englisch)`. The English footer keeps the English labels. Needs a deploy.
 
 ### T8 — Current-listing cards in posts
 
-- [ ] A server-rendered block of 2–3 current listings (photo, title, price, link) in the middle or near the bottom of district and investment posts. Same spirit as the Ratgeber cards
-- [ ] Start with the Moabit and Neukölln guides, German and English
+- [x] A server-rendered block of 2–3 current listings (photo, title, price, link) in the middle or near the bottom of district and investment posts. Same spirit as the Ratgeber cards
+- [x] Start with the Moabit and Neukölln guides, German and English
+
+Checked locally 2026-10-02. Moabit and Neukölln, German and English, each show three current listings after the article and before Relevant pages. Cards have a photo, title, euro price, and a same-language `/properties/` link. A card click opens the listing. The investment guide has no cards. A listing stored as Neukölln but titled Kreuzberg is left out. Needs a deploy. Other investment posts wait.
 
 **Order:** T1 → T3 → T4 → T5 → T2 → T8 → T6 → T7. T1 and T3 unblock the next post list. T4 and T5 are small code fixes on the blog. T2 is one content pass after the link map is fixed, so posts are not edited twice. T8 needs that pass done. T6 starts with a live check. T7 is labels only.
 
@@ -812,7 +816,7 @@ Verified live 2026-10-02 before editing. Services already lists buying, manageme
 
 | Day         | Focus                                                                   |
 | ----------- | ----------------------------------------------------------------------- |
-| Now         | **Phase T.** T1 is live. T3 popup rules are ready to deploy.            |
+| Now         | **Phase T.** T6, T7, and T8 are ready to deploy. Next open item is T2. |
 | Then        | T4 language switcher, T5 title `(2026)`, then one content pass (T2)     |
 | Wed–Fri     | T8 listing cards, T6 services/owners check, T7 German labels            |
 | After posts | Next blog list comes from Adi once T1–T7 are done                       |
@@ -901,6 +905,7 @@ Confirmations you asked for:
 | 2026-10-02 | **T4** Blog language switcher and hreflang                                                            | Live                          | EN Moabit Deutsch → German Moabit URL and stays. hreflang matches. |
 | 2026-10-02 | **T3** Christmas popup script                                                                         | Deployed, overlay off         | Exit-intent script is on the server. Live theme is `default`, so the popup is not rendered. |
 | 2026-10-02 | **T6** Services and For Sellers                                                                       | Services live; sellers ready  | Services scope and Berlin meta already live. Seller page now names valuation, documents, marketing, and negotiation. |
+| 2026-10-02 | **T7** German labels + **T8** listing cards on Moabit and Neukölln                                    | Ready to deploy               | German posts: Zuletzt aktualisiert; footer Kundenservice and Wohnungen in Berlin (Englisch). Three current listings on both guides, DE and EN. |
 
 
 ---
