@@ -26,7 +26,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-02):** **Phase T** — Adi’s October fixes, before the next blog list. **T1** is live. **T3**, **T4**, and **T5** are ready to deploy. Phase S is otherwise done.
+- **Current priority (2026-10-02):** **Phase T** — Adi’s October fixes, before the next blog list. **T1**, **T4**, and **T5** are live. **T6** seller copy is ready to deploy. **T3** script is deployed; the overlay stays off while the theme is `default`. Next is **T2**. Phase S is otherwise done.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -762,7 +762,7 @@ Even if the popup stays, it must follow these rules. If it is removed entirely, 
 - [x] Never auto-open on mobile
 - [x] Never open shortly after a visitor arrives from Google
 
-Ready 2026-10-01. The Christmas popup no longer opens on a timer. It opens when the pointer leaves through the top of a desktop window, once per session. A Google arrival (referrer, `gclid`, or `utm_source=google`) blocks it for 45 seconds. Mobile stays closed. ContactBeat is unchanged. Needs deploy of `public/js/christmas-popup.js`.
+Deployed 2026-10-02. The new script is on the server (exit intent, desktop, once per session, 45s Google grace). The live theme is `default`, so the overlay is not in the page until Christmas mode is turned on. ContactBeat is unchanged.
 
 ### T4 — Language switcher on blog posts
 
@@ -772,7 +772,7 @@ The switcher builds the other language by swapping the `/en/` prefix and keeping
 - [x] The same map drives the hreflang tags
 - [x] Check a post whose slugs differ (Moabit guide) and one whose slugs match
 
-Ready 2026-10-01. On the English Moabit guide, Deutsch goes to `/blog/wohnung-kaufen-moabit-ratgeber` and stays there. hreflang uses that same pair. English-only posts (Paphos) keep both languages on the `/en/blog/` URL. An English cookie no longer bounces a real language switch back to English when the slugs differ. Needs deploy.
+Verified live 2026-10-02. On the English Moabit guide, Deutsch goes to `/blog/wohnung-kaufen-moabit-ratgeber` and that request stays (200) even with an English cookie. hreflang uses the same pair. English-only Paphos posts keep both languages on `/en/blog/`.
 
 ### T5 — Doubled year in the title tag
 
@@ -781,15 +781,17 @@ On `/en/blog/berlin-real-estate-investment-guide-2026` the title tag reads `Berl
 - [x] Stop appending `(2026)` when the slug ends in `-2026` (`blogController.js` treats a trailing number in the slug as a duplicate suffix)
 - [x] Confirm the title tag no longer contains `(2026)` and that real duplicate slugs (`-2`, `-3`) still get a suffix
 
-Ready 2026-10-02. A one- or two-digit slug ending (`-2`, `-3`) still adds that number. A year such as `-2026` does not. Local title on the English investment guide is `Berlin Real Estate Investment Guide 2026 | Sweet Home`. The H1 is unchanged. Needs deploy.
+Verified live 2026-10-02. Title tag is `Berlin Real Estate Investment Guide 2026 | Sweet Home`. The H1 matches, without `(2026)`. Property-prices title is clean too. A one- or two-digit slug ending (`-2`, `-3`) still adds that number.
 
 ### T6 — Services and For Sellers — verify, then fill only what is still thin
 
 Adi still sees these as short. S9 already expanded them on 2026-09-29. Check the live HTML before writing them again.
 
-- [ ] `/services` and `/en/services`: concrete scope for each service is in the server HTML, not only in the first tab
-- [ ] `/owners` and `/en/owners`: what sellers get (valuation, documents, marketing, negotiation)
-- [ ] Meta description on `/services` is Berlin, in the page language. It must not still say “Expert real estate services in Cyprus, Dubai, and Berlin” on the German page
+- [x] `/services` and `/en/services`: concrete scope for each service is in the server HTML, not only in the first tab
+- [x] `/owners` and `/en/owners`: what sellers get (valuation, documents, marketing, negotiation)
+- [x] Meta description on `/services` is Berlin, in the page language. It must not still say “Expert real estate services in Cyprus, Dubai, and Berlin” on the German page
+
+Verified live 2026-10-02 before editing. Services already lists buying, management, and financing in the HTML, in both languages. The German services meta is Berlin and does not mention Cyprus or Dubai. Sellers were the thin part: the page now names valuation, the document set, marketing, and negotiation, in German and English. That seller copy needs a deploy.
 
 ### T7 — German interface labels
 
@@ -893,9 +895,12 @@ Confirmations you asked for:
 | 2026-09-30 | **S7** week 2 posts 4–6 + covers                                                               | Live                          | ids 163–165. Spekulationssteuer § 23 EStG; Moabit and Neukölln ratgeber. DE+EN. Reciprocal links on 162, 131, 159. Three cover JPGs return 200. Phase S closed except S3. |
 | 2026-10-01 | **Phase T** checklist from Adi’s October fixes                                                         | Plan                          | `Sweet_Home_Fixes_Oct_2026.docx`. Urgent: EN links to EN pages, popup rules. Next post list waits. |
 | 2026-10-01 | **T1** English posts link only to English pages                                                        | Live                          | All 26 EN posts checked. Article and Relevant pages use `/en/` only. Moabit and Neukölln landings return 200. |
-| 2026-10-01 | **T3** Christmas popup rules                                                                           | Ready, needs deploy           | Exit intent, desktop only, once per session, no mobile, 45s grace after a Google arrival. ContactBeat unchanged. |
-| 2026-10-01 | **T4** Blog language switcher and hreflang                                                            | Ready, needs deploy           | Paired slugs. EN Moabit Deutsch → `/blog/wohnung-kaufen-moabit-ratgeber`. English cookie does not bounce that switch. |
-| 2026-10-02 | **T5** Stop doubling the year in the title tag                                                        | Ready, needs deploy           | `-2026` no longer appends `(2026)`. `-2` and `-3` still do. Investment guide title checked locally. |
+| 2026-10-01 | **T3** Christmas popup rules                                                                           | Deployed 2026-10-02           | Exit intent, desktop only, once per session, no mobile, 45s grace after a Google arrival. ContactBeat unchanged. |
+| 2026-10-01 | **T4** Blog language switcher and hreflang                                                            | Live 2026-10-02               | Paired slugs. EN Moabit Deutsch → `/blog/wohnung-kaufen-moabit-ratgeber`. English cookie does not bounce that switch. |
+| 2026-10-02 | **T5** Stop doubling the year in the title tag                                                        | Live                          | Investment guide title is `Berlin Real Estate Investment Guide 2026 \| Sweet Home`. No `(2026)`. |
+| 2026-10-02 | **T4** Blog language switcher and hreflang                                                            | Live                          | EN Moabit Deutsch → German Moabit URL and stays. hreflang matches. |
+| 2026-10-02 | **T3** Christmas popup script                                                                         | Deployed, overlay off         | Exit-intent script is on the server. Live theme is `default`, so the popup is not rendered. |
+| 2026-10-02 | **T6** Services and For Sellers                                                                       | Services live; sellers ready  | Services scope and Berlin meta already live. Seller page now names valuation, documents, marketing, and negotiation. |
 
 
 ---
