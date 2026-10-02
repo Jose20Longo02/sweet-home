@@ -26,7 +26,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-01):** **Phase T** — Adi’s October fixes, before the next blog list. **T1** is live. **T3** and **T4** are ready to deploy. Phase S is otherwise done.
+- **Current priority (2026-10-02):** **Phase T** — Adi’s October fixes, before the next blog list. **T1** is live. **T3**, **T4**, and **T5** are ready to deploy. Phase S is otherwise done.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -778,8 +778,10 @@ Ready 2026-10-01. On the English Moabit guide, Deutsch goes to `/blog/wohnung-ka
 
 On `/en/blog/berlin-real-estate-investment-guide-2026` the title tag reads `Berlin Real Estate Investment Guide 2026 (2026)`. The page H1 is fine. Google shows the title tag.
 
-- [ ] Stop appending `(2026)` when the slug ends in `-2026` (`blogController.js` treats a trailing number in the slug as a duplicate suffix)
-- [ ] Confirm the title tag no longer contains `(2026)` and that real duplicate slugs (`-2`, `-3`) still get a suffix
+- [x] Stop appending `(2026)` when the slug ends in `-2026` (`blogController.js` treats a trailing number in the slug as a duplicate suffix)
+- [x] Confirm the title tag no longer contains `(2026)` and that real duplicate slugs (`-2`, `-3`) still get a suffix
+
+Ready 2026-10-02. A one- or two-digit slug ending (`-2`, `-3`) still adds that number. A year such as `-2026` does not. Local title on the English investment guide is `Berlin Real Estate Investment Guide 2026 | Sweet Home`. The H1 is unchanged. Needs deploy.
 
 ### T6 — Services and For Sellers — verify, then fill only what is still thin
 
@@ -893,6 +895,7 @@ Confirmations you asked for:
 | 2026-10-01 | **T1** English posts link only to English pages                                                        | Live                          | All 26 EN posts checked. Article and Relevant pages use `/en/` only. Moabit and Neukölln landings return 200. |
 | 2026-10-01 | **T3** Christmas popup rules                                                                           | Ready, needs deploy           | Exit intent, desktop only, once per session, no mobile, 45s grace after a Google arrival. ContactBeat unchanged. |
 | 2026-10-01 | **T4** Blog language switcher and hreflang                                                            | Ready, needs deploy           | Paired slugs. EN Moabit Deutsch → `/blog/wohnung-kaufen-moabit-ratgeber`. English cookie does not bounce that switch. |
+| 2026-10-02 | **T5** Stop doubling the year in the title tag                                                        | Ready, needs deploy           | `-2026` no longer appends `(2026)`. `-2` and `-3` still do. Investment guide title checked locally. |
 
 
 ---

@@ -464,10 +464,10 @@ exports.showPublic = async (req, res, next) => {
       content: (post.content_i18n && post.content_i18n[lang]) || post.content,
       lang
     });
-    // Ensure unique <title> for SEO when slug ends with -2, -3, etc. (avoids duplicate title tags)
+    // Copy slugs end in -2, -3. A year such as -2026 is part of the title, not a duplicate suffix.
     let pageTitle = localizedPost.title;
     const slug = (localizedPost.slug || '').trim();
-    const slugSuffix = slug.match(/-(\d+)$/);
+    const slugSuffix = slug.match(/-(\d{1,2})$/);
     if (slugSuffix && slugSuffix[1]) {
       pageTitle = `${localizedPost.title} (${slugSuffix[1]})`;
     }
