@@ -26,7 +26,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-02):** **Phase T** — Adi’s October fixes, before the next blog list. **T1**, **T4**, and **T5** are live. **T6** seller copy, **T7** German labels, and **T8** listing cards are ready to deploy. **T3** script is deployed; the overlay stays off while the theme is `default`. Next is **T2**. Phase S is otherwise done.
+- **Current priority (2026-10-02):** **Phase T** — Adi’s October fixes, before the next blog list. **T1**, **T2**, **T4**, and **T5** are live. **T6** seller copy, **T7** German labels, and **T8** listing cards are ready to deploy. **T3** script is deployed; the overlay stays off while the theme is `default`. Phase S is otherwise done.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -747,10 +747,12 @@ Verified live 2026-10-01. All 26 English posts: article links and the Relevant p
 
 ### T2 — Writing and link rules (fix existing, then keep)
 
-- [ ] No em dashes in copy from now on. Use a comma or a shorter sentence
-- [ ] Internal links open in the same tab. Only external links (berlin.de and other outside sources) open in a new tab. Some posts currently do the opposite
-- [ ] Internal links point at the final URL, not an old URL that redirects (example: `/en/blog/wohnung-kaufen-neukoelln-ratgeber` should be `/en/blog/buying-apartment-neukoelln-guide`)
-- [ ] Links sit inside the sentence, not as a standalone “Browse X properties” line. Apply to `/en/blog/berlin-real-estate-investment-guide-2026`, same principle as the Bezirke rework
+- [x] No em dashes in copy from now on. Use a comma or a shorter sentence
+- [x] Internal links open in the same tab. Only external links (berlin.de and other outside sources) open in a new tab. Some posts currently do the opposite
+- [x] Internal links point at the final URL, not an old URL that redirects (example: `/en/blog/wohnung-kaufen-neukoelln-ratgeber` should be `/en/blog/buying-apartment-neukoelln-guide`)
+- [x] Links sit inside the sentence, not as a standalone “Browse X properties” line. Apply to `/en/blog/berlin-real-estate-investment-guide-2026`, same principle as the Bezirke rework
+
+Live in the database 2026-10-02 (no code deploy). All 26 published posts. Spaced dashes are commas. Numeric ranges such as 30–40 stay. Internal links stay in this tab and use the final path. External sources still open in a new tab. On the English investment guide, district names are linked inside the sentence. The English Bezirke post no longer has the standalone district list. Contact buttons at the end of a post stay.
 
 ### T3 — Popup rules — urgent
 
@@ -816,7 +818,7 @@ Checked locally 2026-10-02. Moabit and Neukölln, German and English, each show 
 
 | Day         | Focus                                                                   |
 | ----------- | ----------------------------------------------------------------------- |
-| Now         | **Phase T.** T6, T7, and T8 are ready to deploy. Next open item is T2. |
+| Now         | **Phase T.** T2 is live. T6, T7, and T8 are ready to deploy.            |
 | Then        | T4 language switcher, T5 title `(2026)`, then one content pass (T2)     |
 | Wed–Fri     | T8 listing cards, T6 services/owners check, T7 German labels            |
 | After posts | Next blog list comes from Adi once T1–T7 are done                       |
@@ -906,6 +908,7 @@ Confirmations you asked for:
 | 2026-10-02 | **T3** Christmas popup script                                                                         | Deployed, overlay off         | Exit-intent script is on the server. Live theme is `default`, so the popup is not rendered. |
 | 2026-10-02 | **T6** Services and For Sellers                                                                       | Services live; sellers ready  | Services scope and Berlin meta already live. Seller page now names valuation, documents, marketing, and negotiation. |
 | 2026-10-02 | **T7** German labels + **T8** listing cards on Moabit and Neukölln                                    | Ready to deploy               | German posts: Zuletzt aktualisiert; footer Kundenservice and Wohnungen in Berlin (Englisch). Three current listings on both guides, DE and EN. |
+| 2026-10-02 | **T2** Writing and link rules                                                                         | Live (database)               | 26 posts. Dashes to commas, internal links same tab and final URL, browse lines folded into the sentence. |
 
 
 ---
