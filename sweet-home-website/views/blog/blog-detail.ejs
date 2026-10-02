@@ -1,5 +1,5 @@
 <% if (typeof title === 'undefined' || !title) { title = post.title; } headPartial = '../partials/seo/blog-detail-head'; %>
-<link rel="stylesheet" href="/css/blog.css" />
+<link rel="stylesheet" href="/css/blog.css?v=20261002-cards" />
 <style>
   .blog-detail .content .internal-landing-link {
     color: #1f7a45;
@@ -56,6 +56,94 @@
     text-decoration: underline;
     text-underline-offset: 2px;
     font-weight: 600;
+  }
+  .blog-detail .blog-listing-cards {
+    margin-top: 28px;
+  }
+  .blog-detail .blog-listing-cards h2 {
+    margin: 0 0 6px;
+    font-size: 1.35rem;
+    color: #152233;
+  }
+  .blog-detail .blog-listing-cards__intro {
+    margin: 0 0 16px;
+    color: #4b5b6f;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .blog-detail .blog-listing-cards__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .blog-detail .blog-listing-cards__list > li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  .blog-detail .blog-listing-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    border: 1px solid #d7e7dc;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(19, 42, 28, 0.06);
+  }
+  .blog-detail .blog-listing-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px rgba(19, 42, 28, 0.1);
+  }
+  .blog-detail .blog-listing-card__media {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #e8f0eb;
+  }
+  .blog-detail .blog-listing-card__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    margin: 0;
+    object-fit: cover;
+  }
+  .blog-detail .blog-listing-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    padding: 12px 12px 14px;
+  }
+  .blog-detail .blog-listing-card__title {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #152233;
+    text-decoration: none;
+  }
+  .blog-detail .blog-listing-card__price {
+    margin-top: auto;
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: #0b6a41;
+  }
+  @media (max-width: 720px) {
+    .blog-detail .blog-listing-cards__list {
+      grid-template-columns: 1fr;
+    }
   }
   .blog-detail .blog-article header .post-topics {
     margin-bottom: 14px;
@@ -295,12 +383,16 @@
               <li>
                 <a class="blog-listing-card" href="<%= item.href %>">
                   <% if (item.photo) { %>
-                    <img src="<%= item.photo %>" alt="" loading="lazy" decoding="async" width="640" height="400">
+                    <span class="blog-listing-card__media">
+                      <img src="<%= item.photo %>" alt="" loading="lazy" decoding="async">
+                    </span>
                   <% } %>
-                  <span class="blog-listing-card__title"><%= item.title %></span>
-                  <% if (item.priceLabel) { %>
-                    <span class="blog-listing-card__price"><%= item.priceLabel %></span>
-                  <% } %>
+                  <span class="blog-listing-card__body">
+                    <span class="blog-listing-card__title"><%= item.title %></span>
+                    <% if (item.priceLabel) { %>
+                      <span class="blog-listing-card__price"><%= item.priceLabel %></span>
+                    <% } %>
+                  </span>
                 </a>
               </li>
             <% }) %>

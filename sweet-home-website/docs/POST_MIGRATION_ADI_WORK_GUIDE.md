@@ -805,7 +805,7 @@ Checked locally 2026-10-02. German posts show `Zuletzt aktualisiert`. Footer `Su
 - [x] A server-rendered block of 2–3 current listings (photo, title, price, link) in the middle or near the bottom of district and investment posts. Same spirit as the Ratgeber cards
 - [x] Start with the Moabit and Neukölln guides, German and English
 
-Checked locally 2026-10-02. Moabit and Neukölln, German and English, each show three current listings after the article and before Relevant pages. Cards have a photo, title, euro price, and a same-language `/properties/` link. A card click opens the listing. The investment guide has no cards. A listing stored as Neukölln but titled Kreuzberg is left out. Needs a deploy. Other investment posts wait.
+Checked locally 2026-10-02. Moabit and Neukölln, German and English, each show three current listings after the article and before Relevant pages, in one row of cards (photo, title, price). A card click opens the listing. The investment guide has no cards. A listing stored as Neukölln but titled Kreuzberg is left out. Needs a deploy. Other investment posts wait.
 
 **Order:** T1 → T3 → T4 → T5 → T2 → T8 → T6 → T7. T1 and T3 unblock the next post list. T4 and T5 are small code fixes on the blog. T2 is one content pass after the link map is fixed, so posts are not edited twice. T8 needs that pass done. T6 starts with a live check. T7 is labels only.
 
