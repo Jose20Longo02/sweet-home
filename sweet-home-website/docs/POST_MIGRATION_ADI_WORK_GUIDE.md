@@ -17,7 +17,8 @@
 | `Sweet_Home_Migration_Fixes_Now.docx`       | **HIGH PRIORITY** post-migration integrity fixes (P1–P3) — received 2026-08-04    |
 | `Sweet_Home_Dev_Tasks_Next_2_Weeks.docx`    | Next-two-weeks tasks (N1–N11) — received 2026-08-10. **Closed** as previous cycle |
 | `Sweet_Home_Tasks_Sep_Cycle.docx`           | Phase S (S1–S10) — received 2026-09-18. Done except the popup, now in Phase T     |
-| `Sweet_Home_Fixes_Oct_2026.docx`            | **ACTIVE** fixes before the next post list (T1–T7) — received 2026-10-01          |
+| `Sweet_Home_Fixes_Oct_2026.docx`            | Phase T (T1–T8) — received 2026-10-01. **Closed** on the site 2026-10-02            |
+| `Sweet_Home_Tasks_Oct_Cycle.docx`           | **ACTIVE** next two weeks (U0–U6) — received 2026-10-06                            |
 
 
 Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOOK.md)` (go-live / redirects / GSC).
@@ -26,7 +27,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-02):** **Phase T** — Adi’s October fixes, before the next blog list. **T1**, **T2**, **T4**, and **T5** are live. **T6** seller copy, **T7** German labels, and **T8** listing cards are ready to deploy. **T3** script is deployed; the overlay stays off while the theme is `default`. Phase S is otherwise done.
+- **Current priority (2026-10-06):** **Phase U**. **U0** is closed: the three carry-overs are already live, no rewrite. Next is **U1**, the calculator pages. Then **U2** links, **U3** four English district pages, **U4** three new guides. Phase T is on the site.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -730,7 +731,7 @@ From `Sweet_Home_Pages_and_Keywords_Berlin.xlsx`. Do **after** Phases A–D and 
 
 ---
 
-# Phase T — Fixes before the next post list (Adi 2026-10-01) — ACTIVE
+# Phase T — Fixes before the next post list (Adi 2026-10-01) — CLOSED
 
 Source: `Sweet_Home_Fixes_Oct_2026.docx`. Review of the published posts, plus items still open. The next blog list waits until these are done.
 
@@ -793,23 +794,169 @@ Adi still sees these as short. S9 already expanded them on 2026-09-29. Check the
 - [x] `/owners` and `/en/owners`: what sellers get (valuation, documents, marketing, negotiation)
 - [x] Meta description on `/services` is Berlin, in the page language. It must not still say “Expert real estate services in Cyprus, Dubai, and Berlin” on the German page
 
-Verified live 2026-10-02 before editing. Services already lists buying, management, and financing in the HTML, in both languages. The German services meta is Berlin and does not mention Cyprus or Dubai. Sellers were the thin part: the page now names valuation, the document set, marketing, and negotiation, in German and English. That seller copy needs a deploy.
+Verified live 2026-10-02. Services already listed buying, management, and financing, and the German services meta is Berlin. The seller pages now name valuation, the document set, marketing, and negotiation, in German and English.
 
 ### T7 — German interface labels
 
 - [x] “Last updated” on German blog posts is German
 - [x] Footer items that still render in English on German pages are localized
 
-Checked locally 2026-10-02. German posts show `Zuletzt aktualisiert`. Footer `Support` is `Kundenservice`, and `Berlin apartments (EN)` is `Wohnungen in Berlin (Englisch)`. The English footer keeps the English labels. Needs a deploy.
+Verified live 2026-10-02. German posts show `Zuletzt aktualisiert`. Footer `Support` is `Kundenservice`, and `Berlin apartments (EN)` is `Wohnungen in Berlin (Englisch)`. The English footer keeps the English labels.
 
 ### T8 — Current-listing cards in posts
 
 - [x] A server-rendered block of 2–3 current listings (photo, title, price, link) in the middle or near the bottom of district and investment posts. Same spirit as the Ratgeber cards
 - [x] Start with the Moabit and Neukölln guides, German and English
 
-Checked locally 2026-10-02. Moabit and Neukölln, German and English, each show three current listings after the article and before Relevant pages, in one row of cards (photo, title, price). A card click opens the listing. The investment guide has no cards. A listing stored as Neukölln but titled Kreuzberg is left out. Needs a deploy. Other investment posts wait.
+Verified live 2026-10-02. Moabit and Neukölln, German and English, each show three current listings after the article and before Relevant pages (photo, title, price, same-language link). The investment guide has no cards. A listing stored as Neukölln but titled Kreuzberg is left out. Other investment posts wait.
 
 **Order:** T1 → T3 → T4 → T5 → T2 → T8 → T6 → T7. T1 and T3 unblock the next post list. T4 and T5 are small code fixes on the blog. T2 is one content pass after the link map is fixed, so posts are not edited twice. T8 needs that pass done. T6 starts with a live check. T7 is labels only.
+
+---
+
+# Phase U — Next two weeks (Adi 2026-10-06) — ACTIVE
+
+Source: `Sweet_Home_Tasks_Oct_Cycle.docx`. Adi says most Phase T fixes are in and the posts look good. Same working rule as the last batches: read the page as a reader before it goes live. Flowing text, images in long guides, no wall of links.
+
+**Do first:** U0. The main build this cycle is U1.
+
+**Keep for every item below (U6):**
+
+- No em dashes. A comma or a shorter sentence. Number ranges can stay as 30–40.
+- Internal links open in the same tab. External links (berlin.de, gesetze-im-internet.de, and other outside sources) open in a new tab.
+- English pages link only to `/en/` pages. German pages link to German pages.
+- Links point at the final URL, not a URL that redirects.
+- One link per target per post. The link sits inside the sentence.
+- No Admin-Save for German or English blog bodies. Update `content_i18n` with a script. Official sources only. Cover and inline images use relative `/images/blog/` paths.
+- Human read-through before publish.
+
+**Order:** U0 → U1 → U2 (the rows that wait on a new URL stay blocked until that URL is live) → U4 week 1 (Hausgeld) → U3 and the district Ratgeber posts → U5. U6 applies the whole way.
+
+### U0 — Carry-overs Adi still sees as open
+
+Adi says three Phase T items were reported done and are still unchanged. Check the live HTML before editing. A rewrite of a page that is already correct will fight the last deploy.
+
+Live check on 2026-10-06, no cache:
+
+- `/services` meta is `Leistungen von Sweet Home in Berlin: Kauf- und Verkaufsberatung, Verwaltung vermieteter Wohnungen und Finanzierung über Partner.` It does not mention Cyprus or Dubai. The German footer shows `Kundenservice`, not `Support`.
+- `/owners` names `Preiseinordnung` and `Grundbuchauszug`. Meta is the Berlin seller sentence.
+- `/en/blog/berlin-real-estate-investment-guide-2026` title is `Berlin Real Estate Investment Guide 2026 | Sweet Home`. No `(2026)`, no `Browse` lines, no em dashes. hreflang `de` and the Deutsch switcher both point at `/blog/immobilie-als-kapitalanlage-berlin`.
+- `/blog/wohnung-kaufen-moabit-ratgeber` shows `Zuletzt aktualisiert`. Footer is `Kundenservice` and `Wohnungen in Berlin (Englisch)`.
+
+- [x] Compare those four URLs again in a private window. If they still match the lines above, email Adi the live title, meta, and one footer label. Do not rewrite the pages.
+- [x] Only if a named gap is still on the live HTML: Services and For Sellers are still a short stub, or the German `/services` meta is still the English Cyprus/Dubai sentence, or the footer on that German page is still mixed.
+- [x] Only if still on the live HTML: the English investment guide still has `(2026)` in the title, standalone Browse lines, German district links, em dashes, or a language switcher that misses `/blog/immobilie-als-kapitalanlage-berlin`.
+- [x] Only if still on the live HTML: German posts still say `Last updated`, or German footer items are still English.
+
+Closed 2026-10-06. Rechecked live, no cache. No rewrite.
+
+- `/services` meta is the Berlin German sentence. Footer: `Kundenservice`, `Wohnungen in Berlin (Englisch)`. `/en/services` meta is the Berlin English sentence.
+- `/owners` and `/en/owners` include the valuation, document set, marketing, and negotiation paragraphs.
+- Investment guide title has no `(2026)`. Article links and Relevant pages are `/en/` URLs. Deutsch and hreflang `de` go to `/blog/immobilie-als-kapitalanlage-berlin`.
+- German Kapitalanlage post shows `Zuletzt aktualisiert`. German footer has no `Support` or `Last updated`.
+
+Adi reviewed before this deploy landed, or from a cached page. Send her the lines above. Next is U1.
+
+### U1 — Calculator pages (main project)
+
+Real pages, own URL, server-rendered intro, the tool, and a visible FAQ. Built to earn links and capture leads. Two formulas are new. One tool already exists and only needs its own page.
+
+The homepage mortgage tool is `views/home.ejs` (`#mortgage`, `#mortgageForm`) and `calculateMortgage()` in `public/js/home.js`. Keep that block on the homepage. The new page reuses it.
+
+- [ ] `/hypothekenrechner`: the homepage mortgage calculator on its own URL, still on the homepage too. Intro and FAQ like the other two. This is the quickest of the three.
+- [ ] `/kaufnebenkosten-rechner`. Target query: `kaufnebenkosten rechner`. Bundesland dropdown, because transfer tax differs by state. Default: Berlin. One lookup table from official state rates, not a guessed list. Inputs: purchase price, state, agent commission yes/no. Output: transfer tax, notary and land registry estimate, agent share, total, and total as % of price. Label notary and land registry as an estimate, using the ranges already in the Kaufnebenkosten post.
+- [ ] `/mietrendite-rechner`. Target query: `mietrendite rechner`. Gross/net toggle (`bruttomietrendite rechner` is its own query). Inputs: price, monthly cold rent, purchase costs %, non-recoverable annual costs. Output: gross yield, net yield, price-to-rent multiple. Gross yield uses monthly cold rent × 12, divided by price. Net yield uses (annual cold rent − non-recoverable costs) ÷ (price + purchase costs). Same formulas as `/blog/mietrendite-berechnen`.
+- [ ] Each page: 200 to 300 words of intro above or beside the tool (what it calculates, what a realistic input looks like), 4 to 5 FAQ answers in the HTML, and links to the matching guides. Kaufnebenkosten calculator links to the Kaufnebenkosten and Grunderwerbsteuer posts. Yield calculator links to the Mietrendite and Kapitalanlage posts.
+- [ ] Tools stay in German. English guides link to these URLs with the anchor `calculator (German)`. Do not add a thin English twin this cycle.
+- [ ] Add the three URLs to the sitemap. Each returns 200, the FAQ text is in the HTML, and a sample calculation matches the published blog formula.
+
+### U2 — Older guides link back to the new posts
+
+The newer posts already link out. The older guides do not link back. Weave each link into a sentence. One link per target per post. Same links on the English version, with the English URL. Where the target is a German calculator, the English anchor is `calculator (German)`.
+
+| Older guide (DE / EN) | Add a link to |
+| --- | --- |
+| Kaufnebenkosten Berlin / cost of buying | Immobilienfinanzierung Berlin, and `/kaufnebenkosten-rechner` once U1 is live |
+| Eigenkapital Wohnungskauf / down payment | Immobilienfinanzierung Berlin, Lohnt sich der Immobilienkauf |
+| Immobilie als Kapitalanlage / investment guide | Steuern für Vermieter, Spekulationssteuer, Lohnt sich der Immobilienkauf |
+| Mietrendite berechnen / rental yield | Steuern für Vermieter, and `/mietrendite-rechner` once U1 is live |
+| Immobilienpreise Berlin / property prices | Lohnt sich der Immobilienkauf, Moabit Ratgeber, Neukölln Ratgeber |
+| Wo in Berlin Wohnung kaufen / where to buy | Moabit Ratgeber, Neukölln Ratgeber, then the Prenzlauer Berg and Kreuzberg Ratgeber posts once U4 is live |
+| Ausländer Immobilien kaufen / foreigners | Immobilienfinanzierung Berlin |
+| Wohnungskauf Checkliste / what to check | Immobilienfinanzierung Berlin, and the Hausgeld post once U4 is live |
+| District pages Moabit and Neukölln | Their own Ratgeber post, from the Ratgeber card block (`config/districtRatgeberLinks.js`) |
+
+- [ ] Kaufnebenkosten Berlin, DE and EN
+- [ ] Eigenkapital Wohnungskauf, DE and EN
+- [ ] Kapitalanlage pillar, DE and EN
+- [ ] Mietrendite berechnen, DE and EN (calculator link waits on U1)
+- [ ] Immobilienpreise Berlin, DE and EN
+- [ ] Wo in Berlin Wohnung kaufen, DE and EN (new district posts wait on U4)
+- [ ] Ausländer Immobilien kaufen, DE and EN
+- [ ] Wohnungskauf Checkliste, DE and EN (Hausgeld link waits on U4)
+- [ ] Moabit and Neukölln district pages: Ratgeber card includes that district’s guide, DE and EN
+
+No Admin-Save. Script update of `content_i18n.de` and `content_i18n.en` only.
+
+### U3 — English district pages, batch 2
+
+S6 already published all 13 English district URLs, including these four. Do not create a second URL.
+
+Same pattern as the live Moabit and Spandau English pages: unique intro, FAQ in the HTML, listings, hreflang to the German twin, language switcher to that twin, Ratgeber cards pointing at `/en/blog/` guides.
+
+Order:
+
+1. Prenzlauer Berg: `/en/properties-for-sale-prenzlauer-berg` pairs with `/wohnung-kaufen-prenzlauer-berg`
+2. Neukölln: `/en/properties-for-sale-neukoelln` pairs with `/wohnung-kaufen-neukoelln`
+3. Charlottenburg: `/en/properties-for-sale-charlottenburg` pairs with `/wohnung-kaufen-charlottenburg`
+4. Mitte: `/en/properties-for-sale-mitte` pairs with `/wohnung-kaufen-berlin-mitte`
+
+More districts only if these four are done.
+
+- [ ] Confirm each of the four URLs returns 200 and the switcher and hreflang use the German twin, not the generic Berlin listings page
+- [ ] English Ratgeber cards on these four link to `/en/blog/` guides. Add the new Prenzlauer Berg and Kreuzberg guides after U4, and the Neukölln guide if the card block still omits `wohnung-kaufen-neukoelln-ratgeber`
+- [ ] If a page is still the short S6 template next to a richer Moabit or Spandau page, expand that page only. Do not rewrite a page that already matches.
+
+### U4 — Three new guides, German and English
+
+Three topics, both languages. Pace: three posts a week means one topic (DE + EN) at a flagship standard, then the next. Same structure as the Moabit and Neukölln guides. Listing cards where current listings exist (`loadBlogListingCards` in `controllers/blogController.js`). Author id 12. Cover `/images/blog/{german-slug}.jpg`, relative path. Official sources only. Publish with a script, no Admin-Save.
+
+| # | DE slug | EN slug | Must do |
+| --- | --- | --- | --- |
+| 1 | `/blog/hausgeld-eigentumswohnung` | `/en/blog/hausgeld-service-charges-germany` | Flagship. Keyword `hausgeld eigentumswohnung`. Opening answers `was ist hausgeld`. An H2 answers `hausgeld umlagefähig`. Link to Wohnungskauf Checkliste, Kaufnebenkosten, and Mietrendite. Source: Wohnungseigentumsgesetz, not a competitor blog. |
+| 2 | `/blog/wohnung-kaufen-prenzlauer-berg-ratgeber` | `/en/blog/buying-apartment-prenzlauer-berg-guide` | Same pattern as Moabit: localities, who it suits, link to the Prenzlauer Berg district page, the Bezirke comparison, and the money page. Listing cards for Prenzlauer Berg. |
+| 3 | `/blog/wohnung-kaufen-kreuzberg-ratgeber` | `/en/blog/buying-apartment-kreuzberg-guide` | Same pattern. Link to the Kreuzberg district page. Friedrichshain-Kreuzberg is a separate page: link it where the sentence is about the borough, and keep the post about Kreuzberg. Listing cards for Kreuzberg. |
+
+- [ ] Hausgeld guide live, DE and EN, hreflang paired, reciprocal links on the Checkliste post
+- [ ] Prenzlauer Berg Ratgeber live, DE and EN, listing cards, district page card updated
+- [ ] Kreuzberg Ratgeber live, DE and EN, listing cards, district page card updated
+- [ ] Each new slug is in `config/n10-berlin-post-slugs.js` so the language switcher, hreflang, and `/en/blog/{german-slug}` redirect use the English slug
+
+### U5 — Popup triggers
+
+The popup stays. It brings leads. Phase T turned our Christmas overlay off (`ICON_THEME=default`) and left ContactBeat as it was. Find which popup is the one that produces leads before changing either.
+
+Triggers Adi wants:
+
+- Desktop: exit intent, or after a meaningful scroll. Not on page load.
+- Mobile: never an overlay on arrival. A banner or a tap-to-open control instead.
+- Once per session (already true for our script).
+- Test: a visitor who lands from Google on a phone can read the page with no overlay on top of it.
+
+- [ ] Name the live lead popup (ContactBeat widget, or our overlay) before editing
+- [ ] Desktop trigger is exit intent or meaningful scroll, not a timer on load
+- [ ] Mobile does not auto-open an overlay. Banner or tap-to-open only
+- [ ] Once per session
+- [ ] Phone + Google referrer: the article is readable, no overlay
+
+### U6 — Quality gate before anything in U1–U5 goes live
+
+- [ ] No em dashes in the new copy
+- [ ] Internal links, same tab. External links, new tab
+- [ ] English pages link to English pages. Calculator links from English posts use the German tool URL and say `calculator (German)`
+- [ ] No href that 301s
+- [ ] One link per target per post, inside a sentence
+- [ ] Someone has read the page as a reader: flowing text, images in the long guides, anchors that are not all the same phrase
 
 ---
 
@@ -818,10 +965,10 @@ Checked locally 2026-10-02. Moabit and Neukölln, German and English, each show 
 
 | Day         | Focus                                                                   |
 | ----------- | ----------------------------------------------------------------------- |
-| Now         | **Phase T.** T2 is live. T6, T7, and T8 are ready to deploy.            |
-| Then        | T4 language switcher, T5 title `(2026)`, then one content pass (T2)     |
-| Wed–Fri     | T8 listing cards, T6 services/owners check, T7 German labels            |
-| After posts | Next blog list comes from Adi once T1–T7 are done                       |
+| Now         | **Phase U.** U0 is closed. Next is **U1**, the calculator pages.         |
+| Then        | **U1** calculator pages. Hypothekenrechner first, then Kaufnebenkosten, then Mietrendite. |
+| After U1    | **U2** reciprocal links, then **U4** Hausgeld, then the two district guides and **U3**. |
+| With that   | **U5** popup triggers, after we know which popup brings the leads.      |
 | Friday      | Email Adi: done / live / blockers / next week                           |
 
 
@@ -906,9 +1053,11 @@ Confirmations you asked for:
 | 2026-10-02 | **T5** Stop doubling the year in the title tag                                                        | Live                          | Investment guide title is `Berlin Real Estate Investment Guide 2026 \| Sweet Home`. No `(2026)`. |
 | 2026-10-02 | **T4** Blog language switcher and hreflang                                                            | Live                          | EN Moabit Deutsch → German Moabit URL and stays. hreflang matches. |
 | 2026-10-02 | **T3** Christmas popup script                                                                         | Deployed, overlay off         | Exit-intent script is on the server. Live theme is `default`, so the popup is not rendered. |
-| 2026-10-02 | **T6** Services and For Sellers                                                                       | Services live; sellers ready  | Services scope and Berlin meta already live. Seller page now names valuation, documents, marketing, and negotiation. |
-| 2026-10-02 | **T7** German labels + **T8** listing cards on Moabit and Neukölln                                    | Ready to deploy               | German posts: Zuletzt aktualisiert; footer Kundenservice and Wohnungen in Berlin (Englisch). Three current listings on both guides, DE and EN. |
+| 2026-10-02 | **T6** Services and For Sellers                                                                       | Live                          | Seller pages name valuation, documents, marketing, and negotiation, DE and EN. |
+| 2026-10-02 | **T7** German labels + **T8** listing cards on Moabit and Neukölln                                    | Live                          | Zuletzt aktualisiert; footer Kundenservice and Wohnungen in Berlin (Englisch). Three listing cards on both guides, DE and EN. |
 | 2026-10-02 | **T2** Writing and link rules                                                                         | Live (database)               | 26 posts. Dashes to commas, internal links same tab and final URL, browse lines folded into the sentence. |
+| 2026-10-06 | **Phase U** from Adi’s October cycle                                                                  | Plan                          | `Sweet_Home_Tasks_Oct_Cycle.docx`. U0 first. Main build is the calculator pages. Live re-check: the three carry-overs already match the October fixes. |
+| 2026-10-06 | **U0** three carry-overs                                                                               | Closed, no rewrite            | Live services meta, owners scope, investment guide, and German labels already match. Email Adi the live lines. |
 
 
 ---
