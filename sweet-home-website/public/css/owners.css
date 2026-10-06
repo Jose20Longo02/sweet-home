@@ -41,10 +41,10 @@
 .checklist .icon-check { color: var(--brand-green); display: inline-flex; align-items: center; justify-content: center; }
 .why-media img { width: 100%; max-width: 560px; aspect-ratio: 16/10; object-fit: cover; border-radius: 14px; background: #d4d4d8; box-shadow: var(--shadow-md); margin: 0 auto; display: block; }
 
-.owners-scope { background: #fff; padding: 20px 0 72px; }
-.owners-scope__inner { width: min(760px, 92%); margin: 0 auto; }
-.owners-scope h2 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 40px); text-align: center; margin: 0 0 24px; }
-.owners-scope p { color: var(--gray-800); line-height: 1.7; margin: 0 0 16px; }
+.owners-scope { background: #fff; padding: 88px 0 104px; }
+.owners-scope__inner { width: min(720px, 92%); margin: 0 auto; }
+.owners-scope h2 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.28; text-align: center; margin: 0 0 44px; }
+.owners-scope p { color: var(--gray-800); line-height: 1.85; margin: 0 0 32px; }
 .owners-scope p:last-child { margin-bottom: 0; }
 
 /* 4) Lead CTA */
@@ -80,6 +80,9 @@
   .why-grid { grid-template-columns: 1fr; }
   .lead-grid { grid-template-columns: 1fr; }
   .owners-hero .hero-inner { justify-items: start; }
+  .owners-scope { padding: 64px 0 72px; }
+  .owners-scope h2 { margin-bottom: 32px; }
+  .owners-scope p { margin-bottom: 24px; }
 }
 @media (max-width: 600px) {
   /* Tweak hero balance on small screens */
