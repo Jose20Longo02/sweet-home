@@ -1,0 +1,18 @@
+<%
+  const siteBase = (typeof canonicalUrl !== 'undefined' && canonicalUrl)
+    ? String(canonicalUrl).replace(/\/[^/]+$/, '')
+    : ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : '');
+  const pageUrl = (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : siteBase;
+  const metaDescription = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : '';
+  const pageTitle = (typeof title !== 'undefined' && title) ? title : 'Rechner';
+%>
+<meta name="description" content="<%= metaDescription %>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="<%= pageTitle %> | Sweet Home">
+<meta property="og:description" content="<%= metaDescription %>">
+<meta property="og:url" content="<%= pageUrl %>">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="de_DE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="<%= pageTitle %> | Sweet Home">
+<meta name="twitter:description" content="<%= metaDescription %>">

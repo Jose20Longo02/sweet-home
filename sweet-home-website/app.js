@@ -1563,6 +1563,46 @@ app.get('/admin', (req, res) => {
   return res.redirect('/auth/login');
 });
 
+// German calculator pages (U1). No English twin this cycle.
+const { TRANSFER_TAX_RATES } = require('./config/transferTaxRates');
+const CALCULATOR_PAGES = {
+  mortgage: {
+    path: '/hypothekenrechner',
+    title: 'Hypothekenrechner: monatliche Rate',
+    description: 'Monatliche Rate aus Kaufpreis, Eigenkapital, Zinssatz und Laufzeit. Dieselbe Annuität wie auf der Startseite, plus eine geschätzte Grundsteuer und Versicherung.'
+  },
+  costs: {
+    path: '/kaufnebenkosten-rechner',
+    title: 'Kaufnebenkosten-Rechner',
+    description: 'Grunderwerbsteuer nach Bundesland, Schätzung für Notar und Grundbuch, optional der Käuferanteil der Maklerprovision. Berlin ist voreingestellt.'
+  },
+  yield: {
+    path: '/mietrendite-rechner',
+    title: 'Mietrendite-Rechner: brutto und netto',
+    description: 'Brutto- und Nettomietrendite aus Kaltmiete, Kaufpreis und Kaufnebenkosten. Dieselbe Formel wie im Beitrag Mietrendite berechnen.'
+  }
+};
+
+function renderGermanCalculator(res, spec) {
+  const canonicalUrl = `${res.locals.baseUrl}${spec.path}`;
+  res.locals.localeAlternatePaths = { de: spec.path, en: spec.path };
+  res.locals.localeAlternateUrls = { de: canonicalUrl, en: canonicalUrl };
+  res.render('calculators/page', {
+    title: spec.title,
+    calculatorId: spec.id,
+    pageMetaDescription: spec.description,
+    canonicalUrl,
+    hreflangAlternates: { de: canonicalUrl },
+    transferTaxRates: TRANSFER_TAX_RATES,
+    useMainContainer: false,
+    headPartial: '../partials/seo/calculator-head'
+  });
+}
+
+Object.entries(CALCULATOR_PAGES).forEach(([id, spec]) => {
+  app.get(spec.path, (req, res) => renderGermanCalculator(res, Object.assign({ id }, spec)));
+});
+
 // Services page
 app.get('/services', (req, res) => {
   const baseUrl = res.locals.baseUrl;
@@ -1739,6 +1779,10 @@ app.get('/sitemap.xml', async (req, res, next) => {
       .forEach((p) => {
         staticUrls.push({ loc: `${base}/en/${p}`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
       });
+    // German calculator pages only. No English twin this cycle.
+    ['hypothekenrechner', 'kaufnebenkosten-rechner', 'mietrendite-rechner'].forEach((p) => {
+      staticUrls.push({ loc: `${base}/${p}`, lastmod: null, changefreq: 'monthly', priority: '0.8' });
+    });
     // Core city landing pages (all languages)
     staticUrls.push({ loc: `${base}/wohnungen-berlin-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     staticUrls.push({ loc: `${base}/en/properties-for-sale-berlin`, lastmod: null, changefreq: 'weekly', priority: '0.9' });

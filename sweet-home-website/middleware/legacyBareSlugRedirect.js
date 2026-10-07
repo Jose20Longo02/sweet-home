@@ -9,7 +9,8 @@ const RESERVED = new Set([
   '', 'about', 'contact', 'services', 'owners', 'privacy', 'terms', 'cookies',
   'blog', 'properties', 'projects', 'login', 'register', 'admin', 'superadmin',
   'en', 'de', 'es', 'lang', 'health', 'sitemap.xml', 'robots.txt', 'favicon.ico',
-  'api', 'uploads', 'js', 'css', 'images', 'fonts', 'regions'
+  'api', 'uploads', 'js', 'css', 'images', 'fonts', 'regions',
+  'hypothekenrechner', 'kaufnebenkosten-rechner', 'mietrendite-rechner'
 ]);
 
 const STATIC = {

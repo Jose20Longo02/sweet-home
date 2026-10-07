@@ -1,0 +1,350 @@
+<%
+  useMainContainer = false;
+  headPartial = '../partials/seo/calculator-head';
+  const tool = calculatorId;
+  function rateLabel(rate) {
+    const n = Math.round(rate * 1000) / 10;
+    return String(n).replace('.', ',') + ' %';
+  }
+%>
+<link rel="stylesheet" href="/css/calculators.css?v=20261006-live" />
+
+<section class="calc-page" data-calculator="<%= tool %>" aria-labelledby="calc-title">
+  <div class="calc-page__inner">
+    <% if (tool === 'mortgage') { %>
+      <h1 id="calc-title">Hypothekenrechner</h1>
+      <div class="calc-intro">
+        <p>Der Hypothekenrechner zeigt die monatliche Rate aus Kaufpreis, Eigenkapital, Zinssatz und Laufzeit. Gerechnet wird die Annuität: Zins und Tilgung bleiben jeden Monat gleich, solange der eingegebene Zinssatz über die ganze Laufzeit gilt. Dieselbe Rechnung steht auf der Startseite. Hier hat sie eine eigene Seite, damit Sie die Rate neben der Kaufplanung lesen können.</p>
+        <p>Ein realistischer Einstieg für eine Wohnung in Berlin ist oft ein Kaufpreis um 350.000 Euro, etwa 70.000 Euro Eigenkapital und der Zinssatz, den die Bank für die Zinsbindung nennt, zum Beispiel 4,50 Prozent auf 30 Jahre. Die Rate steigt, wenn der Zinssatz steigt oder die Laufzeit kürzer wird. Eine kürzere Laufzeit senkt dafür die Zinsen über die gesamte Kreditzeit. Die Felder unten sind mit diesem Beispiel gefüllt. Die Rate aktualisiert sich, sobald Sie eine Zahl ändern.</p>
+        <p>Zwei Zeilen unter der Rate sind Schätzungen, keine Bescheide. Die Grundsteuer ist mit 1,5 Prozent des Kaufpreises im Jahr angesetzt, die Versicherung mit 0,75 Prozent. Beide Beträge werden durch zwölf geteilt. Die Grundsteuer in Berlin folgt dem Grundsteuermessbetrag und dem Hebesatz, nicht diesem Prozentsatz. Die Zeilen sind ein Puffer, keine Steuerberechnung. Was hier fehlt, sind die Kaufnebenkosten. Grunderwerbsteuer, Notar, Grundbuch und gegebenenfalls der Makleranteil kommen zum Kaufpreis dazu. Viele Banken finanzieren diese Posten nur zum Teil.</p>
+        <p>Wie die Rate in den Berliner Kauf gehört, steht im Beitrag zur <a href="/blog/immobilienfinanzierung-berlin">Immobilienfinanzierung Berlin</a>. Sweet Home ist keine Bank und vergibt keine Darlehen. Die Zahl ist eine Orientierung, bevor Sie Konditionen vergleichen.</p>
+      </div>
+      <div class="calc-work">
+        <form class="calc-card" id="mortgageForm">
+          <div class="calc-grid-2">
+            <div class="calc-field">
+              <label for="propertyPrice">Kaufpreis</label>
+              <input id="propertyPrice" name="propertyPrice" inputmode="numeric" value="350000" autocomplete="off">
+            </div>
+            <div class="calc-field">
+              <label for="downPayment">Eigenkapital</label>
+              <input id="downPayment" name="downPayment" inputmode="numeric" value="70000" autocomplete="off">
+            </div>
+          </div>
+          <div class="calc-grid-2">
+            <div class="calc-field">
+              <label for="loanTerm">Laufzeit in Jahren</label>
+              <select id="loanTerm" name="loanTerm">
+                <option value="15">15</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+                <option value="30" selected>30</option>
+                <option value="35">35</option>
+                <option value="40">40</option>
+              </select>
+            </div>
+            <div class="calc-field">
+              <label for="interestRate">Zinssatz pro Jahr</label>
+              <input id="interestRate" name="interestRate" inputmode="decimal" value="4,50" autocomplete="off">
+            </div>
+          </div>
+          <button class="calc-submit" type="submit">Rate berechnen</button>
+          <p class="calc-error" data-calc-error hidden></p>
+        </form>
+        <aside class="calc-results" data-calc-results hidden>
+          <p class="calc-kicker">Zins und Tilgung im Monat</p>
+          <p class="calc-figure" id="mortgagePayment">0 €</p>
+          <div class="calc-rows">
+            <div class="calc-row"><span>Grundsteuer, geschätzt</span><strong id="mortgageTax">0 €</strong></div>
+            <div class="calc-row"><span>Versicherung, geschätzt</span><strong id="mortgageInsurance">0 €</strong></div>
+            <div class="calc-row is-total"><span>Monat inkl. Schätzungen</span><strong id="mortgageTotal">0 €</strong></div>
+            <div class="calc-row"><span>Kreditsumme</span><strong id="mortgageLoan">0 €</strong></div>
+            <div class="calc-row"><span>Zinsen über die Laufzeit</span><strong id="mortgageInterest">0 €</strong></div>
+            <div class="calc-row"><span>Zins und Tilgung gesamt</span><strong id="mortgageCost">0 €</strong></div>
+          </div>
+          <p class="calc-note">Grundsteuer und Versicherung sind dieselben Schätzungen wie auf der Startseite: 1,5 Prozent und 0,75 Prozent des Kaufpreises im Jahr. Sie ersetzen keinen Steuer- oder Versicherungsbescheid.</p>
+        </aside>
+      </div>
+      <section class="calc-faq" aria-labelledby="calc-faq-title">
+        <h2 class="calc-section-title" id="calc-faq-title">Häufige Fragen</h2>
+        <div class="calc-faq__list">
+          <article class="calc-faq__item">
+            <h3>
+              <button type="button" class="calc-faq__question" aria-expanded="false">Wie wird die monatliche Rate gerechnet?</button>
+            </h3>
+            <div class="calc-faq__answer">
+              <div class="calc-faq__answer-inner">
+                <p>Aus der Kreditsumme, also Kaufpreis minus Eigenkapital, dem Jahreszins und der Laufzeit. Der Zins wird auf den Monat umgelegt. Die Rate bleibt gleich, solange dieser Zinssatz gilt. Nach Ende der Zinsbindung setzt die Bank einen neuen Satz.</p>
+              </div>
+            </div>
+          </article>
+          <article class="calc-faq__item">
+            <h3>
+              <button type="button" class="calc-faq__question" aria-expanded="false">Was bedeuten Grundsteuer und Versicherung in der Anzeige?</button>
+            </h3>
+            <div class="calc-faq__answer">
+              <div class="calc-faq__answer-inner">
+                <p>Es sind Pauschalen, keine Berliner Bescheide. 1,5 Prozent des Kaufpreises im Jahr für die Grundsteuer und 0,75 Prozent für die Versicherung, jeweils geteilt durch zwölf. Die echte Grundsteuer hängt vom Messbetrag und vom Hebesatz ab.</p>
+              </div>
+            </div>
+          </article>
+          <article class="calc-faq__item">
+            <h3>
+              <button type="button" class="calc-faq__question" aria-expanded="false">Stecken die Kaufnebenkosten in der Rate?</button>
+            </h3>
+            <div class="calc-faq__answer">
+              <div class="calc-faq__answer-inner">
+                <p>Nein. Die Rate deckt nur den Kredit auf den Kaufpreis abzüglich Eigenkapital. Grunderwerbsteuer, Notar, Grundbuch und ein Makleranteil kommen extra dazu und werden oft nur zum Teil mitfinanziert.</p>
+              </div>
+            </div>
+          </article>
+          <article class="calc-faq__item">
+            <h3>
+              <button type="button" class="calc-faq__question" aria-expanded="false">Wie viel Eigenkapital ist ein realistischer Start?</button>
+            </h3>
+            <div class="calc-faq__answer">
+              <div class="calc-faq__answer-inner">
+                <p>Für viele Wohnungen in Berlin liegt der Start bei etwa 20 Prozent des Kaufpreises, plus den Nebenkosten, die die Bank nicht voll mitfinanziert. Die Einordnung steht unter <a href="/blog/eigenkapital-wohnungskauf">Eigenkapital Wohnungskauf</a>.</p>
+              </div>
+            </div>
+          </article>
+          <article class="calc-faq__item">
+            <h3>
+              <button type="button" class="calc-faq__question" aria-expanded="false">Ersetzt der Rechner ein Finanzierungsangebot?</button>
+            </h3>
+            <div class="calc-faq__answer">
+              <div class="calc-faq__answer-inner">
+                <p>Nein. Sweet Home ist keine Bank und vergibt keine Darlehen. Die Rate ist eine Orientierung. Kondition, Beleihung und Zusage kommen vom Finanzierer.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+    <% } else if (tool === 'costs') { %>
+      <h1 id="calc-title">Kaufnebenkosten-Rechner</h1>
+      <div class="calc-intro">
+        <p>Der Kaufnebenkosten-Rechner addiert die Posten, die neben dem Kaufpreis fällig werden: die Grunderwerbsteuer des Bundeslandes, eine Schätzung für Notar und Grundbuch, und auf Wunsch den üblichen Käuferanteil der Maklerprovision. Voreingestellt ist Berlin. Das Land lässt sich wechseln, weil jedes Bundesland seinen Steuersatz selbst festlegt.</p>
+        <p>Ein Beispiel aus dem Beitrag <a href="/blog/kaufnebenkosten-berlin">Kaufnebenkosten Berlin</a>: 450.000 Euro Kaufpreis. In Berlin sind 6 Prozent Grunderwerbsteuer 27.000 Euro. Notar und Grundbuch liegen in derselben Rechnung bei etwa 1,5 bis 2 Prozent, also 6.750 bis 9.000 Euro. Ist ein Makler beteiligt, kommt der Käuferanteil von etwa 3,57 Prozent inklusive Mehrwertsteuer dazu, rund 16.065 Euro. Zusammen sind das grob 50.000 Euro, also über 11 Prozent des Kaufpreises. Ohne Makler nennt derselbe Beitrag eher 7,5 bis 8,5 Prozent. Die Zeilen in diesem Rechner, Steuer plus 1,5 bis 2 Prozent, liegen am unteren Teil dieser Spanne.</p>
+        <p>Die Grunderwerbsteuer ist der Satz des Landes auf die Gegenleistung, in der Praxis meist der Kaufpreis. Notar und Grundbuch sind hier eine Schätzung in der Spanne 1,5 bis 2 Prozent, keine Gebührenrechnung. Die genaue Notarrechnung hängt von Beurkundung, Grundbuchanträgen und dem Geschäftswert ab. Der Makleranteil erscheint nur, wenn Sie „Makler: ja“ wählen. Er ist der marktübliche Käuferanteil, nicht eine gesetzlich feste Gebühr für jeden Vertrag.</p>
+        <p>Die Sätze der Länder stehen in den Landesgesetzen. Für Berlin nennt die <a href="https://www.berlin.de/sen/finanzen/steuern/informationen-fuer-steuerzahler-/faq-steuern/artikel.9062.php" target="_blank" rel="noopener noreferrer">Senatsverwaltung für Finanzen</a> 6 Prozent seit dem 1. Januar 2014. Wie sich Steuer, Notar und Makler im Ablauf unterscheiden, steht unter <a href="/blog/grunderwerbsteuer-berlin">Grunderwerbsteuer Berlin</a>.</p>
+      </div>
+      <div class="calc-work">
+        <form class="calc-card" id="costsForm">
+          <div class="calc-field">
+            <label for="purchasePrice">Kaufpreis</label>
+            <input id="purchasePrice" name="purchasePrice" inputmode="numeric" value="450000" autocomplete="off">
+          </div>
+          <div class="calc-field">
+            <label for="state">Bundesland</label>
+            <select id="state" name="state">
+              <% transferTaxRates.forEach(function (land) { %>
+                <option value="<%= land.rate %>" data-code="<%= land.code %>" <%= land.code === 'BE' ? 'selected' : '' %>><%= land.name %> <%= rateLabel(land.rate) %></option>
+              <% }) %>
+            </select>
+          </div>
+          <fieldset class="calc-choice">
+            <legend>Makler beteiligt?</legend>
+            <div class="calc-choice-row">
+              <label><input type="radio" name="agent" value="yes" checked> Ja, Käuferanteil 3,57 %</label>
+              <label><input type="radio" name="agent" value="no"> Nein</label>
+            </div>
+          </fieldset>
+          <button class="calc-submit" type="submit">Nebenkosten berechnen</button>
+          <p class="calc-error" data-calc-error hidden></p>
+        </form>
+        <aside class="calc-results" data-calc-results hidden>
+          <p class="calc-kicker">Nebenkosten in <span id="costsStateLabel">Berlin</span></p>
+          <p class="calc-figure" id="costsTotal">0 €</p>
+          <div class="calc-rows">
+            <div class="calc-row"><span>Grunderwerbsteuer</span><strong id="costsTax">0 €</strong></div>
+            <div class="calc-row"><span>Notar und Grundbuch, Schätzung</span><strong id="costsNotary">0 €</strong></div>
+            <div class="calc-row"><span>Makleranteil Käufer</span><strong id="costsAgent">0 €</strong></div>
+            <div class="calc-row is-total"><span>Anteil am Kaufpreis</span><strong id="costsPercent">0 %</strong></div>
+          </div>
+          <p class="calc-note">Notar und Grundbuch sind eine Spanne, keine Rechnung des Notars. Die Summe ist deshalb ebenfalls eine Spanne. Finanzierungskosten und spätere Instandhaltung sind nicht enthalten.</p>
+        </aside>
+      </div>
+      <section class="calc-rates" aria-labelledby="calc-rates-title">
+        <h2 class="calc-section-title" id="calc-rates-title">Grunderwerbsteuer nach Bundesland</h2>
+        <p class="calc-note">Stand Oktober 2026. Der Satz gilt für das Land, in dem das Grundstück liegt, nicht für den Wohnsitz des Käufers. Länder können den Satz ändern. Prüfen Sie ihn vor der Beurkundung.</p>
+        <table>
+          <thead>
+            <tr><th>Bundesland</th><th>Satz</th><th>Gilt seit</th></tr>
+          </thead>
+          <tbody>
+            <% transferTaxRates.forEach(function (land) { %>
+              <tr data-code="<%= land.code %>" class="<%= land.code === 'BE' ? 'is-default' : '' %>">
+                <td><%= land.name %></td>
+                <td><%= rateLabel(land.rate) %></td>
+                <td><%= land.since %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </section>
+      <section class="calc-faq" aria-labelledby="calc-faq-title">
+        <h2 class="calc-section-title" id="calc-faq-title">Häufige Fragen</h2>
+        <div class="calc-faq__list">
+          <article class="calc-faq__item">
+            <h3>
+              <button type="button" class="calc-faq__question" aria-expanded="false">Wie hoch sind die Kaufnebenkosten in Berlin?</button>
+            </h3>
+            <div class="calc-faq__answer">
+              <div class="calc-faq__answer-inner">
+                <p>Bei einem Makler oft grob 10 bis 12 Prozent des Kaufpreises. Im Beispiel mit 450.000 Euro sind das über 11 Prozent: 27.000 Euro Grunderwerbsteuer, 6.750 bis 9.000 Euro für Notar und Grundbuch, und rund 16.065 Euro Makleranteil.</p>
+              </div>
+            </div>
+          </article>
+          <article class="calc-faq__item">
+            <h3>
+              <button type="button" class="calc-faq__question" aria-expanded="false">Warum ist Notar und Grundbuch eine Spanne?</button>
+            </h3>
+            <div class="calc-faq__answer">
+              <div class="calc-faq__answer-inner">
+                <p>Weil der Beitrag zu den Kaufnebenkosten die Orientierung 1,5 bis 2 Prozent nennt, nicht eine feste Gebühr. Die Notarrechnung hängt vom Geschäftswert und von den Anträgen ab. Der Rechner zeigt deshalb die untere und die obere Grenze.</p>
+              </div>
+            </div>
+          </article>
+          <article class="calc-faq__item">
+            <h3>
+              <button type="button" class="calc-faq__question" aria-expanded="false">Was ändert sich ohne Makler?</button>
+            </h3>
+            <div class="calc-faq__answer">
+              <div class="calc-faq__answer-inner">
+                <p>Der Käuferanteil von 3,57 Prozent entfällt. Übrig bleiben Grunderwerbsteuer sowie die Schätzung für Notar und Grundbuch. In Berlin liegt diese Spanne dann näher an 7,5 bis 8 Prozent des Kaufpreises.</p>
+              </div>
+            </div>
+          </article>
+          <article class="calc-faq__item">
+            <h3>
+              <button type="button" class="calc-faq__question" aria-expanded="false">Gilt der Berliner Satz in jedem Bundesland?</button>
+            </h3>
+            <div class="calc-faq__answer">
+              <div class="calc-faq__answer-inner">
+                <p>Nein. Berlin liegt bei 6 Prozent. Bayern bei 3,5 Prozent, mehrere Länder bei 6,5 Prozent. Maßgeblich ist das Land, in dem das Grundstück liegt. Die Tabelle auf dieser Seite listet die aktuellen Sätze.</p>
+              </div>
+            </div>
+          </article>
+          <article class="calc-faq__item">
+            <h3>
+              <button type="button" class="calc-faq__question" aria-expanded="false">Sind das alle Kosten bis zum Einzug?</button>
+            </h3>
+            <div class="calc-faq__answer">
+              <div class="calc-faq__answer-inner">
+                <p>Nein. Bereitstellungszinsen, Gutachten, Umzug und spätere Instandhaltung fehlen. Die Grunderwerbsteuer wird in der Regel einen Monat nach dem Bescheid fällig, oft bevor die Bank den Kaufpreis auszahlt.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+    <% } else { %>
+      <h1 id="calc-title">Mietrendite-Rechner</h1>
+      <div class="calc-intro">
+        <p>Der Mietrendite-Rechner setzt die Jahreskaltmiete ins Verhältnis zum Kaufpreis. Die Jahreskaltmiete ist die monatliche Nettokaltmiete mal zwölf, ohne Betriebskosten, die Sie nur durchreichen. Zwischen Brutto und Netto können Sie umschalten. Beide Werte bleiben sichtbar, weil die Bruttozahl nur der erste Filter ist.</p>
+        <p>Ein Beispiel aus dem Beitrag <a href="/blog/mietrendite-berechnen">Mietrendite berechnen</a>: Kaufpreis 400.000 Euro, monatliche Kaltmiete 1.333 Euro. Zwölf Monate ergeben 15.996 Euro Jahreskaltmiete. Der Beitrag rundet diese Miete auf 16.000 Euro und kommt auf 4,0 Prozent brutto. Der Rechner rechnet mit der eingegebenen Miete mal zwölf und zeigt dieselbe 4,0 Prozent, sobald auf eine Nachkommastelle gerundet wird. Der Mietpreismultiplikator, Kaufpreis geteilt durch Jahreskaltmiete, liegt bei 25.</p>
+        <p>Für die Nettomietrendite ziehen Sie die nicht umlagefähigen Kosten ab und teilen durch Kaufpreis plus Kaufnebenkosten. Im selben Beispiel sind das 11 Prozent Kaufnebenkosten, also 44.000 Euro, und 3.200 Euro nicht umlagefähige Kosten im Jahr. Übrig bleiben rund 12.800 Euro Ertrag auf 444.000 Euro Einsatz, etwa 2,9 Prozent netto. Aus 4,0 Prozent brutto werden also rund 2,9 Prozent, bevor Finanzierung und Steuern beginnen.</p>
+        <p>Warmmiete, eine Marktmiete statt der Miete im Vertrag, und eine Rechnung ohne Kaufnebenkosten machen die Zahl schöner, als sie ist. Die Einordnung in die Kapitalanlage steht im Beitrag <a href="/blog/immobilie-als-kapitalanlage-berlin">Immobilie als Kapitalanlage Berlin</a>.</p>
+      </div>
+      <div class="calc-work">
+        <form class="calc-card" id="yieldForm">
+          <div class="calc-toggle" role="group" aria-label="Brutto oder Netto">
+            <button type="button" data-yield-mode="gross" aria-pressed="true">Bruttomietrendite</button>
+            <button type="button" data-yield-mode="net" aria-pressed="false">Nettomietrendite</button>
+          </div>
+          <div class="calc-field">
+            <label for="price">Kaufpreis</label>
+            <input id="price" name="price" inputmode="numeric" value="400000" autocomplete="off">
+          </div>
+          <div class="calc-field">
+            <label for="monthlyRent">Monatliche Kaltmiete</label>
+            <input id="monthlyRent" name="monthlyRent" inputmode="decimal" value="1333" autocomplete="off">
+          </div>
+          <div class="calc-field">
+            <label for="purchaseCostPercent">Kaufnebenkosten in Prozent</label>
+            <input id="purchaseCostPercent" name="purchaseCostPercent" inputmode="decimal" value="11" autocomplete="off">
+          </div>
+          <div class="calc-field">
+            <label for="nonRecoverable">Nicht umlagefähige Kosten im Jahr</label>
+            <input id="nonRecoverable" name="nonRecoverable" inputmode="numeric" value="3200" autocomplete="off">
+          </div>
+          <button class="calc-submit" type="submit">Rendite berechnen</button>
+          <p class="calc-error" data-calc-error hidden></p>
+        </form>
+        <aside class="calc-results" data-calc-results hidden>
+          <div class="calc-panel" data-yield-panel="gross">
+            <p class="calc-kicker">Bruttomietrendite</p>
+            <p class="calc-figure" id="yieldGross">0 %</p>
+          </div>
+          <div class="calc-panel" data-yield-panel="net">
+            <p class="calc-kicker">Nettomietrendite</p>
+            <p class="calc-figure" id="yieldNet">0 %</p>
+          </div>
+          <div class="calc-rows">
+            <div class="calc-row"><span>Jahreskaltmiete</span><strong id="yieldAnnual">0 €</strong></div>
+            <div class="calc-row"><span>Mietpreismultiplikator</span><strong id="yieldMultiple">0×</strong></div>
+          </div>
+          <p class="calc-note">Brutto ist Jahreskaltmiete geteilt durch den Kaufpreis. Netto ist Jahreskaltmiete minus nicht umlagefähige Kosten, geteilt durch Kaufpreis plus Kaufnebenkosten. Finanzierung und Steuern sind nicht enthalten.</p>
+        </aside>
+      </div>
+      <section class="calc-faq" aria-labelledby="calc-faq-title">
+        <h2 class="calc-section-title" id="calc-faq-title">Häufige Fragen</h2>
+        <div class="calc-faq__list">
+          <article class="calc-faq__item">
+            <h3>
+              <button type="button" class="calc-faq__question" aria-expanded="false">Wie berechnet man die Bruttomietrendite?</button>
+            </h3>
+            <div class="calc-faq__answer">
+              <div class="calc-faq__answer-inner">
+                <p>Monatliche Nettokaltmiete mal zwölf, geteilt durch den Kaufpreis, mal 100. Betriebskosten, die der Mieter zahlt, gehören nicht in die Kaltmiete. Kaufnebenkosten bleiben bei der Bruttozahl außen vor.</p>
+              </div>
+            </div>
+          </article>
+          <article class="calc-faq__item">
+            <h3>
+              <button type="button" class="calc-faq__question" aria-expanded="false">Wie berechnet man die Nettomietrendite?</button>
+            </h3>
+            <div class="calc-faq__answer">
+              <div class="calc-faq__answer-inner">
+                <p>Jahreskaltmiete minus nicht umlagefähige Kosten, geteilt durch Kaufpreis plus Kaufnebenkosten, mal 100. Im Beispiel sind das 15.996 Euro minus 3.200 Euro, geteilt durch 444.000 Euro, also rund 2,9 Prozent.</p>
+              </div>
+            </div>
+          </article>
+          <article class="calc-faq__item">
+            <h3>
+              <button type="button" class="calc-faq__question" aria-expanded="false">Was ist der Mietpreismultiplikator?</button>
+            </h3>
+            <div class="calc-faq__answer">
+              <div class="calc-faq__answer-inner">
+                <p>Kaufpreis geteilt durch die Jahreskaltmiete. Bei 400.000 Euro und etwa 16.000 Euro Jahresmiete sind das 25. Ein höherer Multiplikator ist eine niedrigere Bruttorendite.</p>
+              </div>
+            </div>
+          </article>
+          <article class="calc-faq__item">
+            <h3>
+              <button type="button" class="calc-faq__question" aria-expanded="false">Reicht die Bruttomietrendite für die Entscheidung?</button>
+            </h3>
+            <div class="calc-faq__answer">
+              <div class="calc-faq__answer-inner">
+                <p>Nur als Filter. Für den Kauf brauchen Sie die Nettorechnung, die nicht umlagefähigen Kosten und die Finanzierung. 4 Prozent im Exposé werden im Beispiel zu rund 2,9 Prozent netto.</p>
+              </div>
+            </div>
+          </article>
+          <article class="calc-faq__item">
+            <h3>
+              <button type="button" class="calc-faq__question" aria-expanded="false">Welche Miete gehört in den Rechner?</button>
+            </h3>
+            <div class="calc-faq__answer">
+              <div class="calc-faq__answer-inner">
+                <p>Die Nettokaltmiete, bei einer vermieteten Wohnung die Miete aus dem Vertrag, nicht die Warmmiete und nicht eine gewünschte Marktmiete. Ein Euro Unterschied im Monat verschiebt die Jahreszahl um zwölf Euro.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    <% } %>
+  </div>
+</section>
+<script src="/js/calculator-formulas.js?v=20261006-faq2"></script>
+<script src="/js/calculators.js?v=20261006-scroll2"></script>
