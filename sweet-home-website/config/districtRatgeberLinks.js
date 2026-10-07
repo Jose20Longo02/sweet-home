@@ -19,7 +19,9 @@ const BLOG_ANCHORS = {
   'mietrendite-berechnen': 'Mietrendite berechnen',
   'eigenkapital-wohnungskauf': 'Eigenkapital Wohnungskauf',
   'mietpreise-berlin-bezirk': 'Mietpreise Berlin',
-  'wo-in-berlin-wohnung-kaufen': 'wo in Berlin Wohnung kaufen'
+  'wo-in-berlin-wohnung-kaufen': 'wo in Berlin Wohnung kaufen',
+  'wohnung-kaufen-moabit-ratgeber': 'Wohnung kaufen Moabit',
+  'wohnung-kaufen-neukoelln-ratgeber': 'Wohnung kaufen Neukölln'
 };
 
 const BLOG_ANCHORS_EN = {
@@ -37,7 +39,9 @@ const BLOG_ANCHORS_EN = {
   'mietrendite-berechnen': 'How to calculate rental yield in Berlin',
   'eigenkapital-wohnungskauf': 'Down payment for buying an apartment in Berlin',
   'mietpreise-berlin-bezirk': 'Berlin rents by district',
-  'wo-in-berlin-wohnung-kaufen': 'Where to buy an apartment in Berlin'
+  'wo-in-berlin-wohnung-kaufen': 'Where to buy an apartment in Berlin',
+  'wohnung-kaufen-moabit-ratgeber': 'Buying an apartment in Moabit',
+  'wohnung-kaufen-neukoelln-ratgeber': 'Buying an apartment in Neukölln'
 };
 
 /** Cover images for Ratgeber cards (synced from published blog_posts.cover_image). */
@@ -68,7 +72,9 @@ const BLOG_COVERS = {
     'https://sweet-home-spaces.fra1.cdn.digitaloceanspaces.com/properties/top-kapitalanlage-in-weissensee/photos/apartment-pankow-1.jpg',
   'eigenkapital-wohnungskauf': '/images/blog/eigenkapital-wohnungskauf.jpg',
   'mietpreise-berlin-bezirk': '/images/blog/mietpreise-berlin-bezirk.jpg',
-  'wo-in-berlin-wohnung-kaufen': '/images/blog/wo-in-berlin-wohnung-kaufen.jpg'
+  'wo-in-berlin-wohnung-kaufen': '/images/blog/wo-in-berlin-wohnung-kaufen.jpg',
+  'wohnung-kaufen-moabit-ratgeber': '/images/blog/wohnung-kaufen-moabit-ratgeber.jpg',
+  'wohnung-kaufen-neukoelln-ratgeber': '/images/blog/wohnung-kaufen-neukoelln-ratgeber.jpg'
 };
 
 /** @type {Record<string, string[]>} district → ordered blog slugs (2–4) */
@@ -80,10 +86,10 @@ const DISTRICT_RATGEBER_SLUGS = {
     'wo-in-berlin-wohnung-kaufen'
   ],
   Moabit: [
+    'wohnung-kaufen-moabit-ratgeber',
     'kaufnebenkosten-berlin',
     'immobilienpreise-berlin',
-    'immobilie-als-kapitalanlage-berlin',
-    'wohnungskauf-berlin-checkliste'
+    'immobilie-als-kapitalanlage-berlin'
   ],
   'Friedrichshain-Kreuzberg': [
     'immobilienpreise-berlin',
@@ -116,10 +122,10 @@ const DISTRICT_RATGEBER_SLUGS = {
     'neubau-oder-altbau-berlin'
   ],
   Neukölln: [
+    'wohnung-kaufen-neukoelln-ratgeber',
     'mietrendite-berechnen',
     'vermietete-wohnung-kaufen-berlin',
-    'mietpreise-berlin-bezirk',
-    'immobilie-als-kapitalanlage-berlin'
+    'mietpreise-berlin-bezirk'
   ],
   Reinickendorf: [
     'eigenkapital-wohnungskauf',

@@ -27,7 +27,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-06):** **Phase U**. **U0** is closed: the three carry-overs are already live, no rewrite. Next is **U1**, the calculator pages. Then **U2** links, **U3** four English district pages, **U4** three new guides. Phase T is on the site.
+- **Current priority (2026-10-06):** **Phase U**. **U0** and **U1** are live. **U2** article links are live. The Moabit and Neukölln Ratgeber cards are in code and need a deploy. Prenzlauer Berg, Kreuzberg, and Hausgeld links wait on **U4**. Then **U3**. Phase T is on the site.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -863,12 +863,20 @@ Real pages, own URL, server-rendered intro, the tool, and a visible FAQ. Built t
 
 The homepage mortgage tool is `views/home.ejs` (`#mortgage`, `#mortgageForm`) and `calculateMortgage()` in `public/js/home.js`. Keep that block on the homepage. The new page reuses it.
 
-- [ ] `/hypothekenrechner`: the homepage mortgage calculator on its own URL, still on the homepage too. Intro and FAQ like the other two. This is the quickest of the three.
-- [ ] `/kaufnebenkosten-rechner`. Target query: `kaufnebenkosten rechner`. Bundesland dropdown, because transfer tax differs by state. Default: Berlin. One lookup table from official state rates, not a guessed list. Inputs: purchase price, state, agent commission yes/no. Output: transfer tax, notary and land registry estimate, agent share, total, and total as % of price. Label notary and land registry as an estimate, using the ranges already in the Kaufnebenkosten post.
-- [ ] `/mietrendite-rechner`. Target query: `mietrendite rechner`. Gross/net toggle (`bruttomietrendite rechner` is its own query). Inputs: price, monthly cold rent, purchase costs %, non-recoverable annual costs. Output: gross yield, net yield, price-to-rent multiple. Gross yield uses monthly cold rent × 12, divided by price. Net yield uses (annual cold rent − non-recoverable costs) ÷ (price + purchase costs). Same formulas as `/blog/mietrendite-berechnen`.
-- [ ] Each page: 200 to 300 words of intro above or beside the tool (what it calculates, what a realistic input looks like), 4 to 5 FAQ answers in the HTML, and links to the matching guides. Kaufnebenkosten calculator links to the Kaufnebenkosten and Grunderwerbsteuer posts. Yield calculator links to the Mietrendite and Kapitalanlage posts.
-- [ ] Tools stay in German. English guides link to these URLs with the anchor `calculator (German)`. Do not add a thin English twin this cycle.
-- [ ] Add the three URLs to the sitemap. Each returns 200, the FAQ text is in the HTML, and a sample calculation matches the published blog formula.
+- [x] `/hypothekenrechner`: the homepage mortgage calculator on its own URL, still on the homepage too. Intro and FAQ like the other two. This is the quickest of the three.
+- [x] `/kaufnebenkosten-rechner`. Target query: `kaufnebenkosten rechner`. Bundesland dropdown, because transfer tax differs by state. Default: Berlin. One lookup table from official state rates, not a guessed list. Inputs: purchase price, state, agent commission yes/no. Output: transfer tax, notary and land registry estimate, agent share, total, and total as % of price. Label notary and land registry as an estimate, using the ranges already in the Kaufnebenkosten post.
+- [x] `/mietrendite-rechner`. Target query: `mietrendite rechner`. Gross/net toggle (`bruttomietrendite rechner` is its own query). Inputs: price, monthly cold rent, purchase costs %, non-recoverable annual costs. Output: gross yield, net yield, price-to-rent multiple. Gross yield uses monthly cold rent × 12, divided by price. Net yield uses (annual cold rent − non-recoverable costs) ÷ (price + purchase costs). Same formulas as `/blog/mietrendite-berechnen`.
+- [x] Each page: 200 to 300 words of intro above or beside the tool (what it calculates, what a realistic input looks like), 4 to 5 FAQ answers in the HTML, and links to the matching guides. Kaufnebenkosten calculator links to the Kaufnebenkosten and Grunderwerbsteuer posts. Yield calculator links to the Mietrendite and Kapitalanlage posts.
+- [x] Tools stay in German. Do not add a thin English twin this cycle. The English anchor `calculator (German)` waits for U2, now that the URLs are live.
+- [x] Add the three URLs to the sitemap. Each returns 200, the FAQ text is in the HTML, and a sample calculation matches the published blog formula.
+
+Live 2026-10-06, no cache. Homepage mortgage tool still present.
+
+- `/hypothekenrechner` — 1.419 € on 350.000 / 70.000 / 30 years / 4,50 %. Intro 238 words. Five FAQ answers in the HTML.
+- `/kaufnebenkosten-rechner` — Berlin default, 450.000 € with agent, 49.815–52.065 €. Intro 238 words.
+- `/mietrendite-rechner` — 4,0 % gross, 2,9 % net, 25,0×. Intro 202 words.
+- `/en/` twins return 404. hreflang is `de` and `x-default`. Sitemap lists each German URL once.
+- Guide links return 200 in the same tab. The Berlin finance link opens in a new tab. No em dashes.
 
 ### U2 — Older guides link back to the new posts
 
@@ -886,15 +894,17 @@ The newer posts already link out. The older guides do not link back. Weave each 
 | Wohnungskauf Checkliste / what to check | Immobilienfinanzierung Berlin, and the Hausgeld post once U4 is live |
 | District pages Moabit and Neukölln | Their own Ratgeber post, from the Ratgeber card block (`config/districtRatgeberLinks.js`) |
 
-- [ ] Kaufnebenkosten Berlin, DE and EN
-- [ ] Eigenkapital Wohnungskauf, DE and EN
-- [ ] Kapitalanlage pillar, DE and EN
-- [ ] Mietrendite berechnen, DE and EN (calculator link waits on U1)
-- [ ] Immobilienpreise Berlin, DE and EN
-- [ ] Wo in Berlin Wohnung kaufen, DE and EN (new district posts wait on U4)
-- [ ] Ausländer Immobilien kaufen, DE and EN
-- [ ] Wohnungskauf Checkliste, DE and EN (Hausgeld link waits on U4)
-- [ ] Moabit and Neukölln district pages: Ratgeber card includes that district’s guide, DE and EN
+- [x] Kaufnebenkosten Berlin, DE and EN
+- [x] Eigenkapital Wohnungskauf, DE and EN
+- [x] Kapitalanlage pillar, DE and EN
+- [x] Mietrendite berechnen, DE and EN (calculator link waits on U1)
+- [x] Immobilienpreise Berlin, DE and EN
+- [x] Wo in Berlin Wohnung kaufen, DE and EN (new district posts wait on U4)
+- [x] Ausländer Immobilien kaufen, DE and EN
+- [x] Wohnungskauf Checkliste, DE and EN (Hausgeld link waits on U4)
+- [ ] Moabit and Neukölln district pages: Ratgeber card includes that district’s guide, DE and EN. Code is ready in `config/districtRatgeberLinks.js`. It goes live with the next deploy.
+
+Live 2026-10-06, no cache. Each new link is one sentence in the article, same tab. English calculator links use the German URL and the anchor `calculator (German)`. Spekulationssteuer was already linked from the investment guide. Moabit and Neukölln were already linked from the where-to-buy guide. Prenzlauer Berg, Kreuzberg, and Hausgeld still wait on U4.
 
 No Admin-Save. Script update of `content_i18n.de` and `content_i18n.en` only.
 
@@ -965,9 +975,9 @@ Triggers Adi wants:
 
 | Day         | Focus                                                                   |
 | ----------- | ----------------------------------------------------------------------- |
-| Now         | **Phase U.** U0 is closed. Next is **U1**, the calculator pages.         |
-| Then        | **U1** calculator pages. Hypothekenrechner first, then Kaufnebenkosten, then Mietrendite. |
-| After U1    | **U2** reciprocal links, then **U4** Hausgeld, then the two district guides and **U3**. |
+| Now         | **Phase U.** U2 article links are live. Deploy the Moabit and Neukölln Ratgeber cards. |
+| Then        | **U4** Hausgeld, then the Prenzlauer Berg and Kreuzberg guides. |
+| After that  | **U3** four English district pages. |
 | With that   | **U5** popup triggers, after we know which popup brings the leads.      |
 | Friday      | Email Adi: done / live / blockers / next week                           |
 
@@ -1058,6 +1068,8 @@ Confirmations you asked for:
 | 2026-10-02 | **T2** Writing and link rules                                                                         | Live (database)               | 26 posts. Dashes to commas, internal links same tab and final URL, browse lines folded into the sentence. |
 | 2026-10-06 | **Phase U** from Adi’s October cycle                                                                  | Plan                          | `Sweet_Home_Tasks_Oct_Cycle.docx`. U0 first. Main build is the calculator pages. Live re-check: the three carry-overs already match the October fixes. |
 | 2026-10-06 | **U0** three carry-overs                                                                               | Closed, no rewrite            | Live services meta, owners scope, investment guide, and German labels already match. Email Adi the live lines. |
+| 2026-10-06 | **U1** three German calculator pages                                                                   | Live                          | `/hypothekenrechner`, `/kaufnebenkosten-rechner`, `/mietrendite-rechner`. Samples match the posts. No `/en/` twin. English `calculator (German)` links are U2. |
+| 2026-10-06 | **U2** older guides link back                                                                          | Live in the articles          | One in-sentence link per target, DE and EN. English calculators say `calculator (German)`. District Ratgeber cards wait on the next deploy. Hausgeld and the two new district guides wait on U4. |
 
 
 ---
