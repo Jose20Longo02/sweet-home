@@ -768,13 +768,14 @@ app.get('/about', async (req, res, next) => {
       title: (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('nav.about', 'About') : 'About',
       team: filtered,
       useMainContainer: false,
-      areaOrder
+      areaOrder,
+      canonicalUrl: `${res.locals.baseUrl}/about`
     });
   } catch (err) { next(err); }
 });
 app.get('/contact', (req, res) => {
   const title = (res.locals.t && typeof res.locals.t === 'function') ? res.locals.t('nav.contact', 'Contact') : 'Contact';
-  res.render('contact', { title });
+  res.render('contact', { title, canonicalUrl: `${res.locals.baseUrl}/contact` });
 });
 app.get('/terms', (req, res) => {
   const baseUrl = res.locals.baseUrl;

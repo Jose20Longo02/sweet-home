@@ -1,6 +1,8 @@
 <%
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : (process.env.APP_URL || 'https://sweethome.com')).replace(/\/$/, '');
-  const aboutUrl = `${siteBaseUrl}/about`;
+  const aboutUrl = (typeof canonicalUrl !== 'undefined' && canonicalUrl)
+    ? String(canonicalUrl).trim()
+    : `${siteBaseUrl}/about`;
   const currentLang = (typeof lang !== 'undefined' && lang) ? String(lang).toLowerCase() : 'en';
   const tFn = (typeof t === 'function') ? t : ((k, fb) => fb);
   const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription)
@@ -11,7 +13,7 @@
     : (currentLang === 'de' ? 'de_DE' : 'en_US');
 %>
 <meta name="description" content="<%= pageDesc %>">
-<link rel="canonical" href="<%= aboutUrl %>">
+<!-- Canonical URL is handled by main layout to avoid a second tag pointing at /about -->
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
