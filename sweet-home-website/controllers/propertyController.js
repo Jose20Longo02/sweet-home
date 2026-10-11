@@ -5514,7 +5514,7 @@ exports.neukoellnPropertiesPageDe = async (req, res, next) => renderBerlinDistri
   path: '/wohnung-kaufen-neukoelln',
   displayName: 'Neukölln',
   defaultNeighborhood: 'Neukölln',
-  heroImage: '/images/Neukölln.jpg',
+  heroImage: '/images/Neuk\u00f6lln.jpg',
   title: 'Wohnung kaufen Neukölln',
   metaDescription: 'Wohnung kaufen Neukölln: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
   propertiesWhere: "(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2)",
