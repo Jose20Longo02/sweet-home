@@ -27,7 +27,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-06):** **Phase U**. **U0** and **U1** are live. **U2** article links are live. The Moabit and Neukölln Ratgeber cards are in code and need a deploy. Prenzlauer Berg, Kreuzberg, and Hausgeld links wait on **U4**. Then **U3**. Phase T is on the site.
+- **Current priority (2026-10-06):** **Phase U**. **U0**, **U1**, and **U2** are live. Next is **U4** Hausgeld, then the Prenzlauer Berg and Kreuzberg guides. Those three links back into the older posts wait until the new URLs exist. Then **U3**. Phase T is on the site.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -902,7 +902,7 @@ The newer posts already link out. The older guides do not link back. Weave each 
 - [x] Wo in Berlin Wohnung kaufen, DE and EN (new district posts wait on U4)
 - [x] Ausländer Immobilien kaufen, DE and EN
 - [x] Wohnungskauf Checkliste, DE and EN (Hausgeld link waits on U4)
-- [ ] Moabit and Neukölln district pages: Ratgeber card includes that district’s guide, DE and EN. Code is ready in `config/districtRatgeberLinks.js`. It goes live with the next deploy.
+- [x] Moabit and Neukölln district pages: Ratgeber card includes that district’s guide, DE and EN. Live 2026-10-06. The district guide is the first card. English cards use the English guide URL.
 
 Live 2026-10-06, no cache. Each new link is one sentence in the article, same tab. English calculator links use the German URL and the anchor `calculator (German)`. Spekulationssteuer was already linked from the investment guide. Moabit and Neukölln were already linked from the where-to-buy guide. Prenzlauer Berg, Kreuzberg, and Hausgeld still wait on U4.
 
@@ -975,7 +975,7 @@ Triggers Adi wants:
 
 | Day         | Focus                                                                   |
 | ----------- | ----------------------------------------------------------------------- |
-| Now         | **Phase U.** U2 article links are live. Deploy the Moabit and Neukölln Ratgeber cards. |
+| Now         | **Phase U.** U2 is live, including the Moabit and Neukölln Ratgeber cards. Next is **U4**. |
 | Then        | **U4** Hausgeld, then the Prenzlauer Berg and Kreuzberg guides. |
 | After that  | **U3** four English district pages. |
 | With that   | **U5** popup triggers, after we know which popup brings the leads.      |
@@ -1069,7 +1069,7 @@ Confirmations you asked for:
 | 2026-10-06 | **Phase U** from Adi’s October cycle                                                                  | Plan                          | `Sweet_Home_Tasks_Oct_Cycle.docx`. U0 first. Main build is the calculator pages. Live re-check: the three carry-overs already match the October fixes. |
 | 2026-10-06 | **U0** three carry-overs                                                                               | Closed, no rewrite            | Live services meta, owners scope, investment guide, and German labels already match. Email Adi the live lines. |
 | 2026-10-06 | **U1** three German calculator pages                                                                   | Live                          | `/hypothekenrechner`, `/kaufnebenkosten-rechner`, `/mietrendite-rechner`. Samples match the posts. No `/en/` twin. English `calculator (German)` links are U2. |
-| 2026-10-06 | **U2** older guides link back                                                                          | Live in the articles          | One in-sentence link per target, DE and EN. English calculators say `calculator (German)`. District Ratgeber cards wait on the next deploy. Hausgeld and the two new district guides wait on U4. |
+| 2026-10-06 | **U2** older guides link back                                                                          | Live                          | One in-sentence link per target, DE and EN. English calculators say `calculator (German)`. Moabit and Neukölln Ratgeber cards lead with that district’s guide. Hausgeld and the two new district guides wait on U4. |
 
 
 ---

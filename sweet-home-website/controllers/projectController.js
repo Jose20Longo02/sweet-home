@@ -1305,6 +1305,18 @@ exports.listProjectsPublic = async (req, res, next) => {
     const robotsMeta = hasSeoFilters ? 'noindex,follow' : 'index,follow';
     const canonicalQuery = (!hasSeoFilters && currentPageNum > 1) ? `?page=${currentPageNum}` : '';
     const canonicalUrl = `${baseUrl}${projectsBasePath}${canonicalQuery}`;
+    // Page 2+ must hreflang itself and the same page in the other language.
+    // The middleware alternates omit the query, so they only point at page 1.
+    if (canonicalQuery) {
+      res.locals.localeAlternatePaths = {
+        de: `/projects${canonicalQuery}`,
+        en: `/en/projects${canonicalQuery}`
+      };
+      res.locals.localeAlternateUrls = {
+        de: `${baseUrl}/projects${canonicalQuery}`,
+        en: `${baseUrl}/en/projects${canonicalQuery}`
+      };
+    }
 
     res.render('projects/project-list', { 
       title: pageTitle,
