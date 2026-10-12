@@ -462,10 +462,17 @@ app.use((req, res, next) => {
   } else if (propertyAlternates) {
     res.locals.localeAlternatePaths = propertyAlternates;
   } else if (prefix) {
-    const pathWithoutLocale = req.path.slice(prefix.length) || '/';
+    const rawRest = req.path.slice(prefix.length) || '/';
+    const pathWithoutLocale = (rawRest !== '/' && rawRest.endsWith('/'))
+      ? rawRest.replace(/\/+$/, '')
+      : (rawRest || '/');
+    // /en and /en/ must alternate to /en. '/en' + '/' would be /en/, which does not self-reference.
+    const enPath = (pathWithoutLocale === '/' || pathWithoutLocale === '')
+      ? '/en'
+      : ('/en' + (pathWithoutLocale.startsWith('/') ? pathWithoutLocale : `/${pathWithoutLocale}`));
     res.locals.localeAlternatePaths = {
-      de: pathWithoutLocale === '/' ? '/' : pathWithoutLocale,
-      en: '/en' + pathWithoutLocale
+      de: (pathWithoutLocale === '/' || pathWithoutLocale === '') ? '/' : pathWithoutLocale,
+      en: enPath
     };
   } else {
     // Non-prefixed URL: DE default + /en and /es alternates
@@ -587,6 +594,11 @@ app.use((req, res, next) => {
 
   // Old German prefix routes from previous setup.
   if (lowerPath === '/de' || lowerPath === '/de/') return res.redirect(301, '/');
+  // /en/ is the same route as /en, but its hreflang points at /en, so it is not self-referencing.
+  if (lowerPath === '/en/') {
+    const query = req.originalUrl.includes('?') ? `?${req.originalUrl.split('?')[1]}` : '';
+    return res.redirect(301, `/en${query}`);
+  }
 
   // Broken language combo URLs (old hreflang emitted /de/en/... and /es/en/...).
   // Always 301 to the correct English (or root) path — never return 200.
