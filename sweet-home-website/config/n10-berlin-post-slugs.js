@@ -23,7 +23,10 @@ const N10_BERLIN_POSTS = [
   { de: 'steuern-fuer-vermieter', en: 'german-rental-property-taxes' },
   { de: 'spekulationssteuer-immobilie', en: 'capital-gains-tax-property-germany' },
   { de: 'wohnung-kaufen-moabit-ratgeber', en: 'buying-apartment-moabit-guide' },
-  { de: 'wohnung-kaufen-neukoelln-ratgeber', en: 'buying-apartment-neukoelln-guide' }
+  { de: 'wohnung-kaufen-neukoelln-ratgeber', en: 'buying-apartment-neukoelln-guide' },
+  { de: 'hausgeld-eigentumswohnung', en: 'hausgeld-service-charges-germany' },
+  { de: 'wohnung-kaufen-prenzlauer-berg-ratgeber', en: 'buying-apartment-prenzlauer-berg-guide' },
+  { de: 'wohnung-kaufen-kreuzberg-ratgeber', en: 'buying-apartment-kreuzberg-guide' }
 ];
 
 const DE_TO_EN_SLUG = Object.fromEntries(N10_BERLIN_POSTS.map((p) => [p.de, p.en]));

@@ -21,7 +21,9 @@ const BLOG_ANCHORS = {
   'mietpreise-berlin-bezirk': 'Mietpreise Berlin',
   'wo-in-berlin-wohnung-kaufen': 'wo in Berlin Wohnung kaufen',
   'wohnung-kaufen-moabit-ratgeber': 'Wohnung kaufen Moabit',
-  'wohnung-kaufen-neukoelln-ratgeber': 'Wohnung kaufen Neukölln'
+  'wohnung-kaufen-neukoelln-ratgeber': 'Wohnung kaufen Neukölln',
+  'wohnung-kaufen-prenzlauer-berg-ratgeber': 'Wohnung kaufen Prenzlauer Berg',
+  'wohnung-kaufen-kreuzberg-ratgeber': 'Wohnung kaufen Kreuzberg'
 };
 
 const BLOG_ANCHORS_EN = {
@@ -41,7 +43,9 @@ const BLOG_ANCHORS_EN = {
   'mietpreise-berlin-bezirk': 'Berlin rents by district',
   'wo-in-berlin-wohnung-kaufen': 'Where to buy an apartment in Berlin',
   'wohnung-kaufen-moabit-ratgeber': 'Buying an apartment in Moabit',
-  'wohnung-kaufen-neukoelln-ratgeber': 'Buying an apartment in Neukölln'
+  'wohnung-kaufen-neukoelln-ratgeber': 'Buying an apartment in Neukölln',
+  'wohnung-kaufen-prenzlauer-berg-ratgeber': 'Buying an apartment in Prenzlauer Berg',
+  'wohnung-kaufen-kreuzberg-ratgeber': 'Buying an apartment in Kreuzberg'
 };
 
 /** Cover images for Ratgeber cards (synced from published blog_posts.cover_image). */
@@ -74,7 +78,9 @@ const BLOG_COVERS = {
   'mietpreise-berlin-bezirk': '/images/blog/mietpreise-berlin-bezirk.jpg',
   'wo-in-berlin-wohnung-kaufen': '/images/blog/wo-in-berlin-wohnung-kaufen.jpg',
   'wohnung-kaufen-moabit-ratgeber': '/images/blog/wohnung-kaufen-moabit-ratgeber.jpg',
-  'wohnung-kaufen-neukoelln-ratgeber': '/images/blog/wohnung-kaufen-neukoelln-ratgeber.jpg'
+  'wohnung-kaufen-neukoelln-ratgeber': '/images/blog/wohnung-kaufen-neukoelln-ratgeber.jpg',
+  'wohnung-kaufen-prenzlauer-berg-ratgeber': '/images/blog/wohnung-kaufen-prenzlauer-berg-ratgeber.jpg',
+  'wohnung-kaufen-kreuzberg-ratgeber': '/images/blog/wohnung-kaufen-kreuzberg-ratgeber.jpg'
 };
 
 /** @type {Record<string, string[]>} district → ordered blog slugs (2–4) */
@@ -104,10 +110,10 @@ const DISTRICT_RATGEBER_SLUGS = {
     'neubau-oder-altbau-berlin'
   ],
   'Prenzlauer Berg': [
+    'wohnung-kaufen-prenzlauer-berg-ratgeber',
     'berlin-stadtteile-familien',
     'immobilienpreise-berlin',
-    'eigenkapital-wohnungskauf',
-    'wo-in-berlin-wohnung-kaufen'
+    'eigenkapital-wohnungskauf'
   ],
   Wedding: [
     'mietpreise-berlin-bezirk',
@@ -134,10 +140,10 @@ const DISTRICT_RATGEBER_SLUGS = {
     'berlin-stadtteile-familien'
   ],
   Kreuzberg: [
+    'wohnung-kaufen-kreuzberg-ratgeber',
     'mietrecht-berlin-kaeufer',
     'vermietete-wohnung-kaufen-berlin',
-    'immobilienpreise-berlin',
-    'beste-bezirke-immobilien-berlin'
+    'immobilienpreise-berlin'
   ],
   Spandau: [
     'eigenkapital-wohnungskauf',

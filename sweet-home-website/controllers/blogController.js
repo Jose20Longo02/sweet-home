@@ -367,6 +367,26 @@ const BLOG_LISTING_CARDS = {
       )`,
     params: ['%moabit%']
   },
+  'wohnung-kaufen-prenzlauer-berg-ratgeber': {
+    district: 'Prenzlauer Berg',
+    where: `LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+      AND (
+        p.title ILIKE '%prenzlauer%'
+        OR COALESCE(p.title_i18n->>'de', '') ILIKE '%prenzlauer%'
+        OR COALESCE(p.title_i18n->>'en', '') ILIKE '%prenzlauer%'
+      )`,
+    params: ['%prenzlauer berg%']
+  },
+  'wohnung-kaufen-kreuzberg-ratgeber': {
+    district: 'Kreuzberg',
+    where: `LOWER(COALESCE(p.neighborhood, '')) LIKE $1
+      AND (
+        p.title ILIKE '%kreuzberg%'
+        OR COALESCE(p.title_i18n->>'de', '') ILIKE '%kreuzberg%'
+        OR COALESCE(p.title_i18n->>'en', '') ILIKE '%kreuzberg%'
+      )`,
+    params: ['%kreuzberg%']
+  },
   'wohnung-kaufen-neukoelln-ratgeber': {
     district: 'Neukölln',
     where: `(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2)
@@ -511,7 +531,10 @@ exports.listPublic = async (req, res, next) => {
 exports.showPublic = async (req, res, next) => {
   try {
     const post = await BlogPost.findByPublicSlug(req.params.slug);
-    if (!post || post.status !== 'published') return res.status(410).render('errors/404');
+    const allowDraftPreview = process.env.ALLOW_DRAFT_PREVIEW === '1' && process.env.NODE_ENV !== 'production';
+    if (!post || (post.status !== 'published' && !(allowDraftPreview && post.status === 'draft'))) {
+      return res.status(410).render('errors/404');
+    }
     const lang = res.locals.lang || 'en';
     const canonicalSlug = getBlogSlugForLang(post, lang);
     if (canonicalSlug && req.params.slug !== canonicalSlug) {

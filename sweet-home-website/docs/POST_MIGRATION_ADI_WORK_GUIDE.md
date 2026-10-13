@@ -27,7 +27,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-13):** **Phase U**. **U0**, **U1**, and **U2** are live. **U3** English copy for Prenzlauer Berg, Neukölln, Charlottenburg, and Mitte is written locally and waits for deploy. Next after that is **U4** Hausgeld, then the Prenzlauer Berg and Kreuzberg guides. Phase T is on the site.
+- **Current priority (2026-10-13):** **Phase U**. **U0**, **U1**, **U2**, and **U3** are live. **U4** drafts are ready for local review and are not live yet. Phase T is on the site.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -925,11 +925,13 @@ More districts only if these four are done.
 
 - [x] Confirm each of the four URLs returns 200 and the switcher and hreflang use the German twin, not the generic Berlin listings page. Live 2026-10-13, no cache.
 - [x] English Ratgeber cards on these four link to `/en/blog/` guides. Neukölln already leads with `buying-apartment-neukoelln-guide`. Prenzlauer Berg and Kreuzberg guide cards wait on U4.
-- [x] The four pages were the short S6 template next to Spandau. English copy now names the localities, who the page suits, and four FAQ answers in the HTML. Local until deploy. Moabit was not rewritten.
+- [x] The four pages were the short S6 template next to Spandau. English copy now names the localities, who the page suits, and four FAQ answers in the HTML. Live 2026-10-13, no cache. Moabit was not rewritten.
 
 ### U4 — Three new guides, German and English
 
 Three topics, both languages. Pace: three posts a week means one topic (DE + EN) at a flagship standard, then the next. Same structure as the Moabit and Neukölln guides. Listing cards where current listings exist (`loadBlogListingCards` in `controllers/blogController.js`). Author id 12. Cover `/images/blog/{german-slug}.jpg`, relative path. Official sources only. Publish with a script, no Admin-Save.
+
+Drafts saved 2026-10-13 for local review. The live site still returns 410. The Checkliste backlink waits until publish. Deploy the district-card code in the same step as publish, or the live district pages would link to drafts.
 
 | # | DE slug | EN slug | Must do |
 | --- | --- | --- | --- |
@@ -975,7 +977,7 @@ Triggers Adi wants:
 
 | Day         | Focus                                                                   |
 | ----------- | ----------------------------------------------------------------------- |
-| Now         | **Phase U.** U3 English district copy is local. Deploy it, then **U4**. |
+| Now         | **Phase U.** U3 is live. Next is **U4**. |
 | Then        | **U4** Hausgeld, then the Prenzlauer Berg and Kreuzberg guides. |
 | After that  | Recheck the four U3 pages live, including the new guide cards once those posts exist. |
 | With that   | **U5** popup triggers, after we know which popup brings the leads.      |
