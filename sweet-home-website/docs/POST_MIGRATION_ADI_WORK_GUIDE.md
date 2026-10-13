@@ -27,7 +27,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-13):** **Phase U**. **U0**, **U1**, **U2**, and **U3** are live. **U4** drafts are ready for local review and are not live yet. Phase T is on the site.
+- **Current priority (2026-10-13):** **Phase U**. **U0** through **U4** are live. **U5** is identified and coded: ContactBeat is the lead popup. The timer overlays close after the next deploy. Phase T is on the site.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -924,14 +924,14 @@ Order:
 More districts only if these four are done.
 
 - [x] Confirm each of the four URLs returns 200 and the switcher and hreflang use the German twin, not the generic Berlin listings page. Live 2026-10-13, no cache.
-- [x] English Ratgeber cards on these four link to `/en/blog/` guides. Neukölln already leads with `buying-apartment-neukoelln-guide`. Prenzlauer Berg and Kreuzberg guide cards wait on U4.
+- [x] English Ratgeber cards on these four link to `/en/blog/` guides. Neukölln already leads with `buying-apartment-neukoelln-guide`. Prenzlauer Berg and Kreuzberg guide cards went live with U4 on 2026-10-13.
 - [x] The four pages were the short S6 template next to Spandau. English copy now names the localities, who the page suits, and four FAQ answers in the HTML. Live 2026-10-13, no cache. Moabit was not rewritten.
 
 ### U4 — Three new guides, German and English
 
 Three topics, both languages. Pace: three posts a week means one topic (DE + EN) at a flagship standard, then the next. Same structure as the Moabit and Neukölln guides. Listing cards where current listings exist (`loadBlogListingCards` in `controllers/blogController.js`). Author id 12. Cover `/images/blog/{german-slug}.jpg`, relative path. Official sources only. Publish with a script, no Admin-Save.
 
-Drafts saved 2026-10-13 for local review. The live site still returns 410. The Checkliste backlink waits until publish. Deploy the district-card code in the same step as publish, or the live district pages would link to drafts.
+Live 2026-10-13, no cache. Six URLs return 200, hreflang is paired, and `/en/blog/{german-slug}` redirects to the English slug. District cards lead with the new guides. Prenzlauer Berg shows three listing cards. Kreuzberg shows one. The Checkliste links to Hausgeld in both languages. An English machine translation had replaced the adaptations on publish; the English bodies were restored the same day. Covers are still the existing district photos and the keys image.
 
 | # | DE slug | EN slug | Must do |
 | --- | --- | --- | --- |
@@ -939,14 +939,18 @@ Drafts saved 2026-10-13 for local review. The live site still returns 410. The C
 | 2 | `/blog/wohnung-kaufen-prenzlauer-berg-ratgeber` | `/en/blog/buying-apartment-prenzlauer-berg-guide` | Same pattern as Moabit: localities, who it suits, link to the Prenzlauer Berg district page, the Bezirke comparison, and the money page. Listing cards for Prenzlauer Berg. |
 | 3 | `/blog/wohnung-kaufen-kreuzberg-ratgeber` | `/en/blog/buying-apartment-kreuzberg-guide` | Same pattern. Link to the Kreuzberg district page. Friedrichshain-Kreuzberg is a separate page: link it where the sentence is about the borough, and keep the post about Kreuzberg. Listing cards for Kreuzberg. |
 
-- [ ] Hausgeld guide live, DE and EN, hreflang paired, reciprocal links on the Checkliste post
-- [ ] Prenzlauer Berg Ratgeber live, DE and EN, listing cards, district page card updated
-- [ ] Kreuzberg Ratgeber live, DE and EN, listing cards, district page card updated
-- [ ] Each new slug is in `config/n10-berlin-post-slugs.js` so the language switcher, hreflang, and `/en/blog/{german-slug}` redirect use the English slug
+- [x] Hausgeld guide live, DE and EN, hreflang paired, reciprocal links on the Checkliste post
+- [x] Prenzlauer Berg Ratgeber live, DE and EN, listing cards, district page card updated
+- [x] Kreuzberg Ratgeber live, DE and EN, listing cards, district page card updated
+- [x] Each new slug is in `config/n10-berlin-post-slugs.js` so the language switcher, hreflang, and `/en/blog/{german-slug}` redirect use the English slug
 
 ### U5 — Popup triggers
 
 The popup stays. It brings leads. Phase T turned our Christmas overlay off (`ICON_THEME=default`) and left ContactBeat as it was. Find which popup is the one that produces leads before changing either.
+
+Live check 2026-10-13: the lead popup is **ContactBeat**, widget code `e73dec`. The Christmas overlay is not in the page (`data-icon-theme="default"`). ContactBeat runs four widgets: a bottom-left button (`Was passt, ansehen`), a full-screen form after 45 seconds, a full-screen form on leave, and a full-screen form after 35 seconds of inactivity. The two timers cover the article.
+
+`public/js/contactbeat-triggers.js` leaves the button, allows one desktop exit-intent form per session, and closes every other full-screen form. A Google arrival waits 45 seconds before that exit form can open. Checked locally on a desktop article and a phone-sized viewport. Not on the live site until the next deploy.
 
 Triggers Adi wants:
 
@@ -955,7 +959,7 @@ Triggers Adi wants:
 - Once per session (already true for our script).
 - Test: a visitor who lands from Google on a phone can read the page with no overlay on top of it.
 
-- [ ] Name the live lead popup (ContactBeat widget, or our overlay) before editing
+- [x] Name the live lead popup (ContactBeat widget, or our overlay) before editing
 - [ ] Desktop trigger is exit intent or meaningful scroll, not a timer on load
 - [ ] Mobile does not auto-open an overlay. Banner or tap-to-open only
 - [ ] Once per session
@@ -977,10 +981,9 @@ Triggers Adi wants:
 
 | Day         | Focus                                                                   |
 | ----------- | ----------------------------------------------------------------------- |
-| Now         | **Phase U.** U3 is live. Next is **U4**. |
-| Then        | **U4** Hausgeld, then the Prenzlauer Berg and Kreuzberg guides. |
-| After that  | Recheck the four U3 pages live, including the new guide cards once those posts exist. |
-| With that   | **U5** popup triggers, after we know which popup brings the leads.      |
+| Now         | **Phase U.** U5 is coded. Deploy, then confirm the article stays readable. |
+| Then        | Mark the U5 trigger boxes after that live check. |
+| After that  | Prenzlauer Berg and Kreuzberg district cards now lead with the new guides. |
 | Friday      | Email Adi: done / live / blockers / next week                           |
 
 
@@ -1072,6 +1075,8 @@ Confirmations you asked for:
 | 2026-10-06 | **U0** three carry-overs                                                                               | Closed, no rewrite            | Live services meta, owners scope, investment guide, and German labels already match. Email Adi the live lines. |
 | 2026-10-06 | **U1** three German calculator pages                                                                   | Live                          | `/hypothekenrechner`, `/kaufnebenkosten-rechner`, `/mietrendite-rechner`. Samples match the posts. No `/en/` twin. English `calculator (German)` links are U2. |
 | 2026-10-06 | **U2** older guides link back                                                                          | Live                          | One in-sentence link per target, DE and EN. English calculators say `calculator (German)`. Moabit and Neukölln Ratgeber cards lead with that district’s guide. Hausgeld and the two new district guides wait on U4. |
+| 2026-10-13 | **U4** Hausgeld, Prenzlauer Berg, and Kreuzberg guides                                                  | Live                          | Six URLs 200, hreflang paired, sitemap once each. Checkliste links to Hausgeld. District cards lead with the new guides. English adaptations restored after a machine translation on publish. |
+| 2026-10-13 | **U5** popup triggers                                                                                   | Coded, not deployed           | Live lead popup is ContactBeat `e73dec`. Christmas overlay is off. Guard closes the 45s and 35s forms. Button and one desktop exit stay. |
 
 
 ---

@@ -300,8 +300,34 @@ async function upsert(client, post) {
   return ins.rows[0].id;
 }
 
+async function restoreEnglish(client) {
+  for (const post of POSTS) {
+    const { rows } = await client.query(
+      `SELECT id, title_i18n, excerpt_i18n, content_i18n, slug_i18n FROM blog_posts WHERE slug = $1`,
+      [post.slug]
+    );
+    if (!rows[0]) throw new Error('missing ' + post.slug);
+    const parse = (value) => (typeof value === 'string' ? JSON.parse(value) : (value || {}));
+    const titleI18n = { ...parse(rows[0].title_i18n), en: post.title_en };
+    const excerptI18n = { ...parse(rows[0].excerpt_i18n), en: post.excerpt_en };
+    const contentI18n = { ...parse(rows[0].content_i18n), en: post.content_en };
+    const slugI18n = { ...parse(rows[0].slug_i18n), de: post.slug, en: post.slug_en };
+    if (DRY_RUN) {
+      console.log(`  would restore English for id=${rows[0].id}`);
+      continue;
+    }
+    await client.query(
+      `UPDATE blog_posts
+       SET title_i18n = $1::jsonb, excerpt_i18n = $2::jsonb, content_i18n = $3::jsonb, slug_i18n = $4::jsonb
+       WHERE id = $5`,
+      [JSON.stringify(titleI18n), JSON.stringify(excerptI18n), JSON.stringify(contentI18n), JSON.stringify(slugI18n), rows[0].id]
+    );
+    console.log(`  restored English id=${rows[0].id}`);
+  }
+}
+
 async function linkCheckliste(client) {
-  if (STATUS !== 'published' || DRY_RUN) {
+  if ((STATUS !== 'published' && process.env.RESTORE_EN !== '1') || DRY_RUN) {
     console.log('Checkliste backlink skipped until PUBLISH=1.');
     return;
   }
@@ -360,15 +386,20 @@ async function main() {
   });
   await client.connect();
   try {
-    for (const post of POSTS) {
-      console.log(post.slug);
-      await upsert(client, post);
+    if (process.env.RESTORE_EN === '1') {
+      await restoreEnglish(client);
+      await linkCheckliste(client);
+    } else {
+      for (const post of POSTS) {
+        console.log(post.slug);
+        await upsert(client, post);
+      }
+      await linkCheckliste(client);
     }
-    await linkCheckliste(client);
   } finally {
     await client.end();
   }
-  console.log(DRY_RUN ? 'dry run' : `saved as ${STATUS}`);
+  console.log(DRY_RUN ? 'dry run' : (process.env.RESTORE_EN === '1' ? 'English restored' : `saved as ${STATUS}`));
 }
 
 main().catch((err) => {
