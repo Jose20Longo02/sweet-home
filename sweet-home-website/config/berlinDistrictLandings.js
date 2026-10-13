@@ -20,25 +20,27 @@ const BERLIN_DISTRICT_LANDINGS = [
     metaEn: 'Apartments for sale in Charlottenburg, Berlin: compare curated listings and buy with Sweet Home.',
     contentEn: {
       heroTitle: 'Apartments for sale in Charlottenburg',
-      heroDescription: 'Charlottenburg is one of Berlin’s most sought-after residential areas. Classic Altbau, careful modernisations, and strong micro-locations meet steady demand from owner-occupiers and investors.',
+      heroDescription: 'Charlottenburg is an Ortsteil of Charlottenburg-Wilmersdorf, not the whole borough. Buying here means choosing among Savignyplatz, the Kurfürstendamm, Lietzensee, and the streets around Schloss Charlottenburg. Wilmersdorf is a different residential area.',
       sectionTitleProperties: 'Apartments in Charlottenburg',
       sectionTitleProjects: 'New developments in and around Charlottenburg',
-      sectionTitleWhy: 'Why Charlottenburg attracts property buyers',
-      whyP1: 'Charlottenburg combines urban quality of life, excellent infrastructure, and long-term location stability. Representative streets, nearby recreation, and strong transport links make it work for very different buyer profiles.',
-      whyP2: 'Investors get solid lettability; owner-occupiers get established neighbourhoods and short everyday distances. Central micro-locations in particular have shown resilient long-term value.',
-      sectionTitleMicro: 'Popular micro-locations in Charlottenburg',
+      sectionTitleWhy: 'Why buyers look at Charlottenburg',
+      whyP1: 'Savignyplatz is on the Stadtbahn, with shops and Altbau on the side streets. The Kurfürstendamm is the shopping avenue, with the U1 and a different noise level from the residential blocks behind it. Bahnhof Zoologischer Garten sits at the eastern edge, where S-Bahn and U-Bahn meet. Most of the stock is older buildings, some modernised, some not.',
+      whyP2: 'Lietzensee is the quieter residential side, away from the avenue. Schloss Charlottenburg and its park are the western anchor, with the U2 at Sophie-Charlotte-Platz. A flat facing the Ku\'damm and a flat on a courtyard toward Lietzensee can both be listed as Charlottenburg. The street decides the purchase.',
+      whoTitle: 'Who Charlottenburg suits',
+      whoP: 'Owner-occupiers who want an established west-Berlin address, the Stadtbahn or the U-Bahn, and Altbau rather than a scene Kiez. Buyers who will pay for that location and still read the building documents. Investors who tie the let to Savignyplatz, Zoo, or the U-Bahn, not to the borough name. It is a weaker fit for someone comparing it with an outer district on price alone.',
+      sectionTitleMicro: 'Micro-locations to know in Charlottenburg',
       microAreas: [
-        'Savignyplatz and surroundings — urban, lively, and architecturally in demand.',
-        'Lietzensee — a quieter, high-quality residential setting.',
-        'Near Kurfürstendamm — representative addresses with international demand.',
-        'Around Schloss Charlottenburg — characterful stock with steady buyer interest.'
+        'Savignyplatz: Stadtbahn, shops, and Altbau on the side streets. The square and the next residential block are not the same flat.',
+        'Kurfürstendamm and Zoo: the avenue, the U1, and Bahnhof Zoologischer Garten. Representative addresses, with traffic on the main road.',
+        'Lietzensee: quieter housing around the lake, used by buyers who want Charlottenburg without living on the Ku\'damm.',
+        'Schloss Charlottenburg: the palace park and the U2 at Sophie-Charlotte-Platz. Established streets, a different daily pattern from Savignyplatz.'
       ],
       sectionTitleFaq: 'FAQ: buying an apartment in Charlottenburg',
       faq: [
-        { q: 'Is Charlottenburg better for owner-occupiers or investors?', a: 'Both. Owner-occupiers value location quality and infrastructure; investors value stable demand, lettability, and location resilience.' },
-        { q: 'Which apartment types are most in demand?', a: 'Modernised Altbau, well-cut 2- to 4-room units, and high-quality new builds in central micro-locations.' },
-        { q: 'How does Charlottenburg differ from other Berlin districts?', a: 'It combines prestige, established neighbourhoods, strong infrastructure, and lasting purchase demand more consistently than most districts.' },
-        { q: 'How does Sweet Home help with a purchase in Charlottenburg?', a: 'We support the full process: shortlist, market context, viewings, negotiation, and closing support.' }
+        { q: 'Is Charlottenburg the same as Charlottenburg-Wilmersdorf?', a: 'No. Charlottenburg-Wilmersdorf is the borough. This page is the Ortsteil Charlottenburg: Savignyplatz, the Kurfürstendamm, Lietzensee, and the palace area. Wilmersdorf is not this shortlist.' },
+        { q: 'Who is an apartment in Charlottenburg best suited for?', a: 'Owner-occupiers who want west Berlin, rail, and Altbau, and investors who can name the station from the address. Buyers who only want the lowest entry price in Berlin are looking at a different borough.' },
+        { q: 'Which parts do buyers compare?', a: 'Savignyplatz for the Stadtbahn, the Kurfürstendamm and Zoo for the avenue, Lietzensee for a quieter block, and Schloss Charlottenburg for the park and the U2. Inside each, the main road and the courtyard are separate checks.' },
+        { q: 'How does Sweet Home help with a purchase in Charlottenburg?', a: 'We narrow the streets to your budget and how you will use the home, set the price against that street, check condition and the building documents, and stay through negotiation and the notary.' }
       ]
     }
   },
@@ -172,25 +174,27 @@ const BERLIN_DISTRICT_LANDINGS = [
     metaEn: 'Apartments for sale in Prenzlauer Berg, Berlin: compare curated listings and buy with Sweet Home.',
     contentEn: {
       heroTitle: 'Apartments for sale in Prenzlauer Berg',
-      heroDescription: 'Prenzlauer Berg is one of Berlin’s most desired residential addresses. Historic Altbau, family-friendly Kieze, and strong central demand shape the market.',
+      heroDescription: 'Prenzlauer Berg is an Ortsteil of Pankow, not the whole borough. Buying an apartment here means comparing Kieze inside that Ortsteil. Kollwitzplatz, Helmholtzplatz, the Winsviertel, and the Bötzowviertel are not the same street, even when the listing only says Prenzlauer Berg.',
       sectionTitleProperties: 'Apartments in Prenzlauer Berg',
       sectionTitleProjects: 'New developments in Prenzlauer Berg',
       sectionTitleWhy: 'Why Prenzlauer Berg stays in demand',
-      whyP1: 'Strong neighbourhood identity, high livability, and durable buyer demand make the submarket resilient.',
-      whyP2: 'Owner-occupiers value schools, parks, and daily amenities. Investors value depth of demand in well-positioned streets.',
+      whyP1: 'The U2 runs through Senefelderplatz, Eberswalder Straße, and Schönhauser Allee. At Schönhauser Allee the Ringbahn meets the U2. Mauerpark sits on the western edge. Most of the housing is late-19th-century Altbau with courtyards, not one new quarter. Kollwitzplatz and Helmholtzplatz are the dense cores, with shops on the square and quieter side streets a block away.',
+      whyP2: 'The borough of Pankow has its own page. This page is the Ortsteil south of the Ring. A flat off Kollwitzplatz and a flat on the main road at Schönhauser Allee can share the name Prenzlauer Berg and still be different purchases: noise, the courtyard, and how far the U2 entrance actually is. The Winsviertel and the Bötzowviertel are the calmer residential grids.',
+      whoTitle: 'Who Prenzlauer Berg suits',
+      whoP: 'Owner-occupiers who want Altbau, daily shops, and a short ride toward Mitte or Friedrichshain. Families who use the parks and the quieter grids in the Winsviertel or Bötzowviertel. Investors who tie lettability to the U2 and the Ringbahn, and who compare the street with the rent, not a Prenzlauer Berg average. It is a weaker fit for a buyer whose plan is an outer borough or a new-build quarter.',
       sectionTitleMicro: 'In-demand micro-locations in Prenzlauer Berg',
       microAreas: [
-        'Around Kollwitzplatz — classic, highly requested residential core.',
-        'Helmholtzplatz — lively cafés and strong everyday demand.',
-        'Near Mauerpark — urban energy with park access.',
-        'Quieter side streets off major roads — better for long-term living.'
+        'Kollwitzplatz: the residential core south of the U2. Altbau, daily shops, and a clear difference between the square and the next side street.',
+        'Helmholtzplatz: lively, with cafés on the square and housing on the streets behind it. Check the actual street, not only the Kiez name.',
+        'Winsviertel and Bötzowviertel: established Altbau grids, usually calmer than the squares. Families often shortlist these before the busiest corners.',
+        'Mauerpark edge and Schönhauser Allee: park access on one side, the U2 and the Ringbahn on the other. Main-road noise and a quiet courtyard can sit in the same block.'
       ],
       sectionTitleFaq: 'FAQ: Prenzlauer Berg apartments',
       faq: [
-        { q: 'Why are prices often high here?', a: 'Because demand is deep and supply of well-located Altbau is limited.' },
-        { q: 'Is it only a family district?', a: 'No, but families are a large and stable buyer group.' },
-        { q: 'What should investors check carefully?', a: 'Existing rents, building fabric, and whether the street supports long-term letting.' },
-        { q: 'How does Sweet Home help?', a: 'We filter for street quality, price realism, and transaction readiness.' }
+        { q: 'Is Prenzlauer Berg the same as Pankow?', a: 'No. Pankow is the borough. Prenzlauer Berg is the central Ortsteil inside it. Wedding is not here, and neither is the rest of Pankow. This page lists homes in Prenzlauer Berg.' },
+        { q: 'Who is an apartment in Prenzlauer Berg best suited for?', a: 'Owner-occupiers and families who want Altbau and a short trip toward the centre. Investors fit where the U2 or the Ringbahn and the street support a long let. A new-build search belongs on a different shortlist.' },
+        { q: 'Which parts do buyers compare?', a: 'Kollwitzplatz and Helmholtzplatz for the squares, the Winsviertel and Bötzowviertel for quieter grids, and the Mauerpark edge against Schönhauser Allee for park and rail. Inside each pocket, the side street and the main road are separate decisions.' },
+        { q: 'How does Sweet Home help with a purchase in Prenzlauer Berg?', a: 'We narrow the Kiez to your budget and how you will use the home, set the price against the street, check condition and the building documents, and stay through negotiation and the notary.' }
       ]
     }
   },
@@ -286,25 +290,27 @@ const BERLIN_DISTRICT_LANDINGS = [
     metaEn: 'Apartments for sale in Neukölln, Berlin: compare curated listings and buy with Sweet Home.',
     contentEn: {
       heroTitle: 'Apartments for sale in Neukölln',
-      heroDescription: 'Neukölln mixes urban energy, strong dynamics, and very different micro-locations. It attracts buyers looking for demand depth and development potential.',
+      heroDescription: 'Neukölln is a borough of five localities: Neukölln, Britz, Buckow, Rudow, and Gropiusstadt. The district office lists them that way. A flat in the Reuterkiez and a flat in Rudow share the borough name and are not the same purchase.',
       sectionTitleProperties: 'Apartments in Neukölln',
       sectionTitleProjects: 'New developments in Neukölln',
-      sectionTitleWhy: 'Why Neukölln interests buyers',
-      whyP1: 'Urban demand, solid public transport, and a range from Altbau to modernised stock keep the district on many shortlists.',
-      whyP2: 'International neighbourhoods and lively quarters support lettability, while price levels still differ sharply by street.',
-      sectionTitleMicro: 'In-demand micro-locations in Neukölln',
+      sectionTitleWhy: 'Why buyers compare localities inside Neukölln',
+      whyP1: 'Northern Neukölln is the dense Ortsteil: Reuterkiez, Schillerkiez by Tempelhofer Feld, and Rixdorf around the Böhmisches Dorf. The U7 and U8, and the Ringbahn at Hermannstraße and Neukölln station, are the usual rail checks. Karl-Marx-Straße is the main shopping road. A side street off it is a different flat from one on the road itself.',
+      whyP2: 'Britz sits south of that core, with the park and a quieter residential pattern. Buckow, Rudow, and Gropiusstadt are the southern localities. More distance to Kreuzberg, a different building stock, and a different daily trip. The first step is the locality on the expose, not the borough average.',
+      whoTitle: 'Who Neukölln suits',
+      whoP: 'Owner-occupiers who want the northern Kieze and will accept a lively street. Buyers who want the park and a calmer block, and who then look at Schillerkiez or Britz rather than the Reuterkiez. Investors who tie the let to the U7, the U8, or the Ringbahn and to the rent on that street. It is a weak fit if the shortlist treats Rudow and the Reuterkiez as one market.',
+      sectionTitleMicro: 'Micro-locations to know in Neukölln',
       microAreas: [
-        'Reuterkiez — urban, requested, and very lively.',
-        'Schillerkiez — near Tempelhofer Feld with strong livability.',
-        'Rixdorf / Böhmisches Dorf — characterful Altbau pockets.',
-        'Britz-Nord — quieter setting with practical infrastructure.'
+        'Reuterkiez: northern Neukölln, dense and lively. Check the street against Sonnenallee and the canal, not only the Kiez name.',
+        'Schillerkiez: next to Tempelhofer Feld. The park is the draw. The blocks facing busy roads are not the blocks behind them.',
+        'Rixdorf and the Böhmisches Dorf: older Altbau in the Ortsteil Neukölln, with its own street pattern south of Karl-Marx-Straße.',
+        'Britz, Buckow, Rudow, and Gropiusstadt: the other four localities in the borough. Name the one on the expose before comparing it with northern Neukölln.'
       ],
       sectionTitleFaq: 'FAQ: buying in Neukölln',
       faq: [
-        { q: 'Is Neukölln suitable as an investment?', a: 'Yes in many micro-locations with stable rental demand — after a clean location and building check.' },
-        { q: 'Which areas are most requested?', a: 'Central pockets such as Reuterkiez and Schillerkiez, plus well-connected residential streets.' },
-        { q: 'How is the market developing?', a: 'Demand has been robust for years, but differences between micro-locations remain large.' },
-        { q: 'How does Sweet Home help in Neukölln?', a: 'With pricing analysis, shortlisting, and full transaction support.' }
+        { q: 'Is Neukölln one apartment market?', a: 'No. The borough has five localities: Neukölln, Britz, Buckow, Rudow, and Gropiusstadt. Northern Neukölln is what most buyers mean. The south is a separate decision.' },
+        { q: 'Who is an apartment in Neukölln best suited for?', a: 'Owner-occupiers who have picked a locality, and investors who can point to the U7, the U8, or the Ringbahn from that address. A purchase that only says Neukölln, without the Ortsteil, is not ready to price.' },
+        { q: 'Which parts do buyers compare first?', a: 'Reuterkiez and Schillerkiez in the north, Rixdorf for older stock, Britz when the park and a quieter block matter. Buckow, Rudow, and Gropiusstadt belong on the list only when the expose is actually there.' },
+        { q: 'How does Sweet Home help with a purchase in Neukölln?', a: 'We name the locality first, set the price against the street, check condition and the building documents, and stay through negotiation and the notary.' }
       ]
     }
   },
@@ -442,25 +448,27 @@ const BERLIN_DISTRICT_LANDINGS = [
     metaEn: 'Apartments for sale in Berlin Mitte: compare central listings and buy with Sweet Home.',
     contentEn: {
       heroTitle: 'Apartments for sale in Berlin Mitte',
-      heroDescription: 'Berlin-Mitte is the city’s central premium location — requested by owner-occupiers and international investors who prioritise location quality and long-term lettability.',
+      heroDescription: 'This page is the central Ortsteil Mitte, not the whole borough. Moabit, Wedding, and Tiergarten have their own markets. Inside this Ortsteil, Hackescher Markt, the government quarter, Alexanderplatz, and the streets by Museum Island are different purchases.',
       sectionTitleProperties: 'Apartments in Berlin-Mitte',
       sectionTitleProjects: 'New developments in Berlin-Mitte',
-      sectionTitleWhy: 'Why Mitte attracts property buyers',
-      whyP1: 'Central access, international demand, and strong infrastructure support both living and long-term letting.',
-      whyP2: 'Entry prices often sit above the Berlin average — buyers pay for location resilience and lasting demand from professionals and international tenants.',
-      sectionTitleMicro: 'In-demand micro-locations in Mitte',
+      sectionTitleWhy: 'Why buyers look at central Mitte',
+      whyP1: 'Hackescher Markt is on the S-Bahn, next to the Scheunenviertel. Alexanderplatz brings together the U2, U5, U8, and the S-Bahn. Friedrichstraße adds the U6. The government quarter and the Spreebogen sit toward Hauptbahnhof, with the U5. Museum Island and Oranienburger Straße are the older representative streets between those hubs.',
+      whyP2: 'Entry prices here usually sit above many other Berlin districts, because the location is what the buyer is paying for. That does not make every building the same. A courtyard off a side street and a flat on a tourist route can share the label Mitte. The energy certificate, the reserves, and the street still decide the file.',
+      whoTitle: 'Who central Mitte suits',
+      whoP: 'Owner-occupiers who want to live in the centre and will compare Hackescher Markt with Alexanderplatz before they compare Mitte with another borough. Investors who tie the let to those stations and to international tenant demand, and who still read the building file. It is a weak fit for a buyer who meant Moabit, Wedding, or a quieter Ortsteil and searched only for the borough name.',
+      sectionTitleMicro: 'Micro-locations to know in Mitte',
       microAreas: [
-        'Hackescher Markt / Scheunenviertel — urban top location with deep demand.',
-        'Government quarter / Spreebogen — central addresses with strong infrastructure.',
-        'Around Alexanderplatz — excellent connectivity and mixed stock.',
-        'Oranienburger Straße / near Museum Island — representative Altbau and premium stock.'
+        'Hackescher Markt and the Scheunenviertel: S-Bahn and dense Altbau. Side streets and the busiest corners are not the same flat.',
+        'Government quarter and Spreebogen: central addresses toward Hauptbahnhof and the U5. Infrastructure first, not a Kiez square.',
+        'Alexanderplatz: U2, U5, U8, and S-Bahn. Mixed stock and heavy footfall. The block you buy matters more than the station name.',
+        'Oranienburger Straße and Museum Island: representative older buildings between the hubs. Check renovation, reserves, and whether the street is a through-route.'
       ],
       sectionTitleFaq: 'FAQ: buying in Berlin-Mitte',
       faq: [
-        { q: 'Is buying in Mitte still worth it?', a: 'For location-led buyers, often yes: central demand and strong infrastructure, at a higher entry price.' },
-        { q: 'Who buys in Mitte?', a: 'Owner-occupiers who want a central home, and investors focused on location quality and international tenant demand.' },
-        { q: 'What should Altbau buyers check?', a: 'Energy certificate, WEG reserves, renovation backlog, and realistic purchase costs — prestige does not replace due diligence.' },
-        { q: 'How does Sweet Home help in Mitte?', a: 'With shortlisting, price and location context, negotiation, and support through land-register registration.' }
+        { q: 'Does this page include all of borough Mitte?', a: 'No. Borough Mitte also includes Moabit, Wedding, Tiergarten, and Gesundbrunnen. Those are separate shortlists. This page is the central Ortsteil.' },
+        { q: 'Who is an apartment in Mitte best suited for?', a: 'Owner-occupiers who want the centre, and investors who can name the station and still accept a higher entry price. Buyers looking for a quieter residential grid usually compare another district.' },
+        { q: 'Which parts do buyers compare?', a: 'Hackescher Markt and the Scheunenviertel, the government quarter, Alexanderplatz, and the streets by Museum Island. Inside each, a courtyard and a main tourist street are different files.' },
+        { q: 'How does Sweet Home help with a purchase in Mitte?', a: 'We keep the search on this Ortsteil, set the price against the street, check condition, reserves, and the purchase costs, and stay through negotiation and the land-register entry.' }
       ]
     }
   },

@@ -27,7 +27,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-06):** **Phase U**. **U0**, **U1**, and **U2** are live. Next is **U4** Hausgeld, then the Prenzlauer Berg and Kreuzberg guides. Those three links back into the older posts wait until the new URLs exist. Then **U3**. Phase T is on the site.
+- **Current priority (2026-10-13):** **Phase U**. **U0**, **U1**, and **U2** are live. **U3** English copy for Prenzlauer Berg, Neukölln, Charlottenburg, and Mitte is written locally and waits for deploy. Next after that is **U4** Hausgeld, then the Prenzlauer Berg and Kreuzberg guides. Phase T is on the site.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -923,9 +923,9 @@ Order:
 
 More districts only if these four are done.
 
-- [ ] Confirm each of the four URLs returns 200 and the switcher and hreflang use the German twin, not the generic Berlin listings page
-- [ ] English Ratgeber cards on these four link to `/en/blog/` guides. Add the new Prenzlauer Berg and Kreuzberg guides after U4, and the Neukölln guide if the card block still omits `wohnung-kaufen-neukoelln-ratgeber`
-- [ ] If a page is still the short S6 template next to a richer Moabit or Spandau page, expand that page only. Do not rewrite a page that already matches.
+- [x] Confirm each of the four URLs returns 200 and the switcher and hreflang use the German twin, not the generic Berlin listings page. Live 2026-10-13, no cache.
+- [x] English Ratgeber cards on these four link to `/en/blog/` guides. Neukölln already leads with `buying-apartment-neukoelln-guide`. Prenzlauer Berg and Kreuzberg guide cards wait on U4.
+- [x] The four pages were the short S6 template next to Spandau. English copy now names the localities, who the page suits, and four FAQ answers in the HTML. Local until deploy. Moabit was not rewritten.
 
 ### U4 — Three new guides, German and English
 
@@ -975,9 +975,9 @@ Triggers Adi wants:
 
 | Day         | Focus                                                                   |
 | ----------- | ----------------------------------------------------------------------- |
-| Now         | **Phase U.** U2 is live, including the Moabit and Neukölln Ratgeber cards. Next is **U4**. |
+| Now         | **Phase U.** U3 English district copy is local. Deploy it, then **U4**. |
 | Then        | **U4** Hausgeld, then the Prenzlauer Berg and Kreuzberg guides. |
-| After that  | **U3** four English district pages. |
+| After that  | Recheck the four U3 pages live, including the new guide cards once those posts exist. |
 | With that   | **U5** popup triggers, after we know which popup brings the leads.      |
 | Friday      | Email Adi: done / live / blockers / next week                           |
 
