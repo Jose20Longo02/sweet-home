@@ -27,7 +27,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-13):** **Phase U**. **U0** through **U4** are live. **U5** is identified and coded: ContactBeat is the lead popup. The timer overlays close after the next deploy. Phase T is on the site.
+- **Current priority (2026-10-16):** **Phase U**. **U0** through **U4** are live. The U5 popup guard was removed the same day Israel reported it was closing ContactBeat forms. ContactBeat runs on its own again once that deploy is live. Next is **U6** on anything new before it goes live. Phase T is on the site.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -950,13 +950,13 @@ The popup stays. It brings leads. Phase T turned our Christmas overlay off (`ICO
 
 Live check 2026-10-13: the lead popup is **ContactBeat**, widget code `e73dec`. The Christmas overlay is not in the page (`data-icon-theme="default"`). ContactBeat runs four widgets: a bottom-left button (`Was passt, ansehen`), a full-screen form after 45 seconds, a full-screen form on leave, and a full-screen form after 35 seconds of inactivity. The two timers cover the article.
 
-`public/js/contactbeat-triggers.js` leaves the button, allows one desktop exit-intent form per session, and closes every other full-screen form. A Google arrival waits 45 seconds before that exit form can open. Checked locally on a desktop article and a phone-sized viewport. Not on the live site until the next deploy.
+On 2026-10-13, `public/js/contactbeat-triggers.js` was closing ContactBeat’s timed full-screen forms and allowing one desktop exit form per session. Israel reported a drop in ContactBeat leads and named that file. On 2026-10-16 the script tag was removed from the layout and the file was emptied. ContactBeat’s own widgets run again: corner button, 45-second form, exit form, and 35-second inactivity form. This is local until the next deploy.
 
 Triggers Adi wants:
 
 - Desktop: exit intent, or after a meaningful scroll. Not on page load.
 - Mobile: never an overlay on arrival. A banner or a tap-to-open control instead.
-- Once per session (already true for our script).
+- Once per session.
 - Test: a visitor who lands from Google on a phone can read the page with no overlay on top of it.
 
 - [x] Name the live lead popup (ContactBeat widget, or our overlay) before editing
@@ -981,8 +981,8 @@ Triggers Adi wants:
 
 | Day         | Focus                                                                   |
 | ----------- | ----------------------------------------------------------------------- |
-| Now         | **Phase U.** U5 is coded. Deploy, then confirm the article stays readable. |
-| Then        | Mark the U5 trigger boxes after that live check. |
+| Now         | **Phase U.** U5 popup guard is removed. Deploy so ContactBeat runs on its own. |
+| Then        | **U6** on the next page before it goes live. |
 | After that  | Prenzlauer Berg and Kreuzberg district cards now lead with the new guides. |
 | Friday      | Email Adi: done / live / blockers / next week                           |
 
@@ -1076,7 +1076,8 @@ Confirmations you asked for:
 | 2026-10-06 | **U1** three German calculator pages                                                                   | Live                          | `/hypothekenrechner`, `/kaufnebenkosten-rechner`, `/mietrendite-rechner`. Samples match the posts. No `/en/` twin. English `calculator (German)` links are U2. |
 | 2026-10-06 | **U2** older guides link back                                                                          | Live                          | One in-sentence link per target, DE and EN. English calculators say `calculator (German)`. Moabit and Neukölln Ratgeber cards lead with that district’s guide. Hausgeld and the two new district guides wait on U4. |
 | 2026-10-13 | **U4** Hausgeld, Prenzlauer Berg, and Kreuzberg guides                                                  | Live                          | Six URLs 200, hreflang paired, sitemap once each. Checkliste links to Hausgeld. District cards lead with the new guides. English adaptations restored after a machine translation on publish. |
-| 2026-10-13 | **U5** popup triggers                                                                                   | Coded, not deployed           | Live lead popup is ContactBeat `e73dec`. Christmas overlay is off. Guard closes the 45s and 35s forms. Button and one desktop exit stay. |
+| 2026-10-13 | **U5** popup triggers                                                                                   | Live                          | ContactBeat `e73dec` is the lead popup. Christmas overlay is off. Timed forms close. Corner button and one desktop exit stay. Phone article stays readable. |
+| 2026-10-16 | **U5** popup guard removed                                                                              | Tell Israel                   | `contactbeat-triggers.js` no longer closes ContactBeat forms. Layout no longer loads it. Live after deploy. |
 
 
 ---
