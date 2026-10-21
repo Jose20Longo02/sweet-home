@@ -1,0 +1,85 @@
+.catalogue {
+  width: min(1200px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 28px 0 64px;
+}
+.catalogue-intro h1 { margin: 0 0 8px; font-family: 'Playfair Display', Georgia, serif; font-size: clamp(2rem, 4vw, 3rem); color: #111; }
+.catalogue-intro p { margin: 0 0 22px; max-width: 42rem; color: var(--gray-600); font-size: 1.05rem; }
+
+.catalogue-filters { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr) auto; gap: 12px; align-items: end; background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; padding: 14px; box-shadow: 0 8px 24px rgba(15, 23, 42, .05); }
+.catalogue-filters label { display: grid; gap: 6px; font-size: .8rem; font-weight: 700; color: var(--gray-700); }
+.catalogue-filters select, .catalogue-filters input { width: 100%; min-height: 44px; padding: 8px 10px; border: 1px solid var(--gray-300); border-radius: 10px; font: inherit; background: #fff; }
+.catalogue-filter-actions { display: flex; align-items: center; gap: 10px; }
+.catalogue-reset { color: var(--gray-700); text-decoration: none; font-weight: 600; }
+.catalogue-error { color: #b91c1c; font-weight: 600; }
+
+.catalogue-empty { margin-top: 22px; padding: 36px 20px; text-align: center; background: #fff; border: 1px dashed var(--gray-300); border-radius: 16px; }
+.catalogue-empty h2 { margin: 0; font-size: 1.25rem; font-family: 'Playfair Display', Georgia, serif; }
+
+.catalogue-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin-top: 22px; }
+.catalogue-card { background: #fff; border: 1px solid rgba(15, 23, 42, .08); border-radius: 18px; overflow: hidden; box-shadow: 0 10px 28px rgba(15, 23, 42, .06); }
+.catalogue-media { position: relative; aspect-ratio: 16 / 10; background: #e8edf2; }
+.catalogue-media img, .catalogue-cover-empty { width: 100%; height: 100%; object-fit: cover; display: block; }
+.catalogue-cover-empty { display: grid; place-items: center; color: var(--gray-500); }
+.catalogue-rent { position: absolute; right: 12px; bottom: 12px; padding: 8px 12px; border-radius: 999px; background: #111; color: #fff; font-weight: 700; }
+.catalogue-rent small { margin-left: 4px; font-size: .72rem; font-weight: 500; opacity: .8; }
+.catalogue-body { padding: 12px 14px 14px; }
+.catalogue-body h2 { margin: 0; font-family: 'Playfair Display', Georgia, serif; font-size: 1.25rem; line-height: 1.3; color: #111; }
+.catalogue-place { margin: 4px 0 8px; color: var(--gray-600); }
+.catalogue-excerpt { margin: 0 0 10px; color: #334155; }
+.catalogue-facts, .catalogue-meta { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.catalogue-card .catalogue-facts { margin-bottom: 0; }
+.catalogue-facts li { background: #f4f7f5; border-radius: 999px; padding: 4px 9px; font-size: .8rem; }
+.catalogue-meta li { color: var(--gray-600); font-size: .85rem; }
+.catalogue-cta { width: 100%; margin-top: 14px; }
+
+body:has(.apartment) { background: var(--gray-50); }
+.apartment-back { display: inline-block; margin-bottom: 2rem; color: var(--primary-color); font-size: 0.9rem; font-weight: 500; text-decoration: none; }
+.apartment-layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 2rem; align-items: start; }
+.apartment-gallery { background: var(--white); border-radius: var(--card-radius); overflow: hidden; box-shadow: var(--card-shadow); }
+.apartment-hero { height: 400px; background: var(--gray-100); }
+.apartment-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.apartment-thumbs { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 1rem; background: #f8f9fa; overflow-x: auto; }
+.apartment-thumbs button { width: 80px; height: 60px; padding: 0; border: 3px solid transparent; border-radius: 8px; overflow: hidden; background: var(--gray-100); cursor: pointer; }
+.apartment-thumbs button.is-active { border-color: var(--primary-color); }
+.apartment-thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.apartment-copy { margin-top: 2rem; }
+.apartment-copy h1 { margin: 0 0 1rem; font-family: var(--font-family); font-size: var(--font-size-4xl); font-weight: 700; line-height: 1.2; color: var(--gray-800); }
+.apartment-place { margin: 0 0 1rem; color: var(--gray-600); font-size: 1.1rem; }
+.apartment-rent { margin: 0; font-family: var(--font-family); font-size: var(--font-size-2xl); font-weight: 800; color: var(--success-color); line-height: 1.2; }
+.apartment-rent span { margin-left: 6px; font-size: 0.9rem; font-weight: 500; color: var(--gray-600); }
+.apartment-details, .apartment-description { margin-top: 2rem; background: var(--white); border-radius: var(--card-radius); padding: 2rem; box-shadow: var(--card-shadow); }
+.apartment-details h2, .apartment-description h2 { margin: 0 0 1rem; font-family: var(--font-family); font-size: var(--font-size-2xl); font-weight: 700; color: var(--gray-800); }
+.apartment-details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 0; }
+.apartment-details-grid > div { display: flex; flex-direction: column; margin: 0; padding: 1rem; background: #f8f9fa; border-radius: 8px; }
+.apartment-details-grid dt { margin: 0 0 0.25rem; font-size: 0.8rem; font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase; color: var(--gray-600); }
+.apartment-details-grid dd { margin: 0; font-size: 1.1rem; font-weight: 600; line-height: 1.3; color: var(--gray-800); }
+.apartment-note { margin: 1rem 0 0; font-size: 1rem; line-height: 1.7; color: var(--gray-700); }
+.apartment-description p { margin: 0; font-size: 1rem; line-height: 1.7; color: var(--gray-700); white-space: pre-wrap; }
+.apartment-inquiry { background: var(--white); border-radius: var(--card-radius); padding: 1.5rem; box-shadow: var(--card-shadow); position: sticky; top: 1rem; }
+.apartment-inquiry h2 { margin: 0 0 1rem; font-family: var(--font-family); font-size: var(--font-size-xl); font-weight: 700; color: var(--gray-800); }
+.apartment-inquiry p { margin: 0 0 1.5rem; color: var(--gray-700); font-size: 1rem; line-height: 1.7; }
+.apartment-inquiry label { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; font-size: 0.9rem; font-weight: 500; color: var(--gray-800); }
+.apartment-inquiry input, .apartment-inquiry textarea { width: 100%; padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: 8px; font-family: var(--font-family); font-size: 1rem; color: var(--gray-800); background: var(--white); }
+.apartment-inquiry input:focus, .apartment-inquiry textarea:focus { outline: none; border-color: var(--primary-color); }
+.apartment-inquiry textarea { min-height: 110px; }
+.apartment-phone { display: grid; grid-template-columns: 110px 1fr; gap: 8px; }
+.apartment-optional { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+@media (max-width: 1024px) {
+  .apartment-layout, .apartment-optional { grid-template-columns: 1fr; }
+  .apartment-inquiry { position: static; }
+}
+@media (max-width: 900px) {
+  .catalogue-filters { grid-template-columns: 1fr 1fr; }
+  .catalogue-filter-actions { grid-column: 1 / -1; }
+}
+@media (max-width: 768px) {
+  .apartment-copy h1 { font-size: 2rem; }
+  .apartment-details-grid { grid-template-columns: 1fr; }
+  .apartment-hero { height: 260px; }
+}
+@media (max-width: 640px) {
+  .catalogue { width: min(1200px, calc(100% - 32px)); }
+  .catalogue-filters { grid-template-columns: 1fr; }
+}

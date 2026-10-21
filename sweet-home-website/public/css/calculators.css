@@ -21,9 +21,40 @@
 
 .calc-intro {
   max-width: 68ch;
-  margin: 0 auto 64px;
+  margin: 0 auto 28px;
   font-size: 1.0625rem;
   line-height: 1.8;
+}
+
+.calc-method {
+  max-width: 68ch;
+  margin: 48px auto 0;
+  border-top: 1px solid var(--gray-200);
+}
+
+.calc-method summary {
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.25rem;
+  padding: 18px 0;
+  color: var(--gray-800);
+  list-style: none;
+}
+
+.calc-method summary::-webkit-details-marker {
+  display: none;
+}
+
+.calc-method__body p {
+  margin: 0 0 18px;
+  line-height: 1.8;
+  color: var(--gray-700);
+}
+
+.calc-method a {
+  color: var(--brand-green-dark);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }
 
 .calc-intro p {

@@ -18,6 +18,17 @@ A person looking to buy never sees a monthly rent. A person looking to rent neve
 
 Stage 2 (booking, calendar, contracts) attaches to the rental record later. Sale listings stay untouched.
 
+## Build rules
+
+These rules apply to every step below. A branch protects the code. It does not protect the database: the local `.env` uses the live Render database.
+
+1. **Branch.** Start from current `main` on a branch named `furnished-rentals`. The sale site stays on `main`. Do not merge and do not deploy until the work has been reviewed locally.
+2. **First slice only.** A new rental table and an admin screen in the existing staff area. No public menu item, no public page, and no change to the sale property form, the sale search, the district pages, or the sale schema.
+3. **Local check before any deploy.** Run a preview on a free port (leave 3010 and 3012 alone). Save one draft apartment in the admin. Then open the homepage, one sale listing, and the sale search. They behave as they do now. The draft does not appear on any of those pages.
+4. **Database.** The first database change is a new table only. Do not add rental columns to the sale `properties` table. Do not run a migration that rewrites sale rows. Do not run the GitHub “Run SQL Migration” workflow until that new-table script has been reviewed. A draft row in the new table is invisible to the current live site, because the current site never reads that table.
+5. **Secrets.** Do not commit `.env`.
+6. **After the local check.** Commit on `furnished-rentals` and open a pull request. The public catalogue, the apartment page, and the nav item are a later step on the same branch. They go live only when explicitly deployed.
+
 ## What stage 1 includes
 
 - One catalogue page, German and English.
@@ -87,7 +98,7 @@ A rental editor in the existing staff area:
 
 - Create, edit, publish, unpublish.
 - Upload photos the same way as a sale listing.
-- German and English text saved directly. No automatic translation overwrite.
+- Choose the language of the title, description, and utilities note. Save as draft keeps that text as written. Publish translates it into the other language, German or English. A later publish retranslates only when that text changed.
 - Set monthly rent, deposit, utilities, available-from, and min/max stay.
 
 Staff do not need a new login.
@@ -113,7 +124,7 @@ The catalogue URL, the apartment URL, and the rental id stay the same through th
 ## Steps
 
 1. **Confirm the test with Irem** — Berlin only, Sweet Home’s own apartments, monthly rent, inquiry only, German and English. See the questions below.
-2. **Model and admin** — rental records, fields, photo upload, publish / unpublish.
+2. **Model and admin** — rental records, fields, photo upload, publish / unpublish. This is the first slice in **Build rules**. No public URL yet. On branch `furnished-rentals`: table `furnished_rentals`, staff screens at `/admin/dashboard/rentals` and `/superadmin/dashboard/rentals`. Sale pages are unchanged. A published apartment still has no public page.
 3. **Catalogue** — grid, three filters, empty state.
 4. **Apartment page** — gallery, facts, inquiry form, lead tagged as a rental.
 5. **Site fit** — nav item, hreflang, sitemap, and a hard exclusion from sale search, district pages, and sale schema.

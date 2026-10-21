@@ -1,0 +1,79 @@
+<link rel="stylesheet" href="/css/rentals-catalogue.css?v=20261018-catalogue-card" />
+<section class="catalogue">
+  <header class="catalogue-intro">
+    <h1><%= lang === 'en' ? 'Furnished apartments in Berlin' : 'Möblierte Wohnungen in Berlin' %></h1>
+    <p><%= lang === 'en'
+      ? 'Selected furnished apartments in Berlin, with a monthly rent, a neighborhood, and a move-in date.'
+      : 'Ausgewählte möblierte Wohnungen in Berlin, mit monatlichem Mietpreis, Lage und Einzugsdatum.' %></p>
+  </header>
+
+  <form class="catalogue-filters" method="get" action="<%= path %>">
+    <label>
+      <%= lang === 'en' ? 'Location' : 'Lage' %>
+      <select name="neighborhood">
+        <option value=""><%= lang === 'en' ? 'All neighborhoods' : 'Alle Lagen' %></option>
+        <% neighborhoods.forEach(function (name) { %>
+          <option value="<%= name %>" <%= filters.neighborhood === name ? 'selected' : '' %>><%= name %></option>
+        <% }) %>
+      </select>
+    </label>
+    <label>
+      <%= lang === 'en' ? 'Minimum rent (€)' : 'Miete ab (€)' %>
+      <input type="number" name="min_rent" min="0" step="1" value="<%= filters.min_rent %>">
+    </label>
+    <label>
+      <%= lang === 'en' ? 'Maximum rent (€)' : 'Miete bis (€)' %>
+      <input type="number" name="max_rent" min="0" step="1" value="<%= filters.max_rent %>">
+    </label>
+    <label>
+      <%= lang === 'en' ? 'Move in by' : 'Einzug bis' %>
+      <input type="date" name="available_from" value="<%= filters.available_from %>">
+    </label>
+    <div class="catalogue-filter-actions">
+      <button type="submit" class="btn btn-primary"><%= lang === 'en' ? 'Search' : 'Suchen' %></button>
+      <% if (hasFilters) { %>
+        <a class="catalogue-reset" href="<%= path %>"><%= lang === 'en' ? 'Reset' : 'Zurücksetzen' %></a>
+      <% } %>
+    </div>
+  </form>
+
+  <% if (filterError) { %>
+    <p class="catalogue-error"><%= filterError %></p>
+  <% } %>
+
+  <% if (!rentals.length) { %>
+    <div class="catalogue-empty">
+      <h2><%= hasFilters
+        ? (lang === 'en' ? 'No apartment matches this search.' : 'Keine Wohnung passt zu dieser Suche.')
+        : (lang === 'en' ? 'No furnished apartment is published yet.' : 'Noch keine möblierte Wohnung veröffentlicht.') %></h2>
+    </div>
+  <% } else { %>
+    <div class="catalogue-grid">
+      <% rentals.forEach(function (rental) { %>
+        <article class="catalogue-card">
+          <div class="catalogue-media">
+            <% if (rental.cover) { %>
+              <img src="<%= rental.cover %>" alt="<%= rental.title %>">
+            <% } else { %>
+              <span class="catalogue-cover-empty"><%= lang === 'en' ? 'No photo' : 'Kein Foto' %></span>
+            <% } %>
+            <span class="catalogue-rent"><%= rental.rentLabel %><small><%= lang === 'en' ? '/ month' : '/ Monat' %></small></span>
+          </div>
+          <div class="catalogue-body">
+            <h2><%= rental.title %></h2>
+            <p class="catalogue-place"><%= rental.neighborhood || 'Berlin' %><% if (rental.neighborhood) { %>, Berlin<% } %></p>
+            <ul class="catalogue-facts">
+              <% if (rental.sizeLabel) { %><li><%= rental.sizeLabel %></li><% } %>
+              <% if (rental.roomsLabel) { %><li><%= rental.roomsLabel %></li><% } %>
+              <% if (rental.floorLabel) { %><li><%= rental.floorLabel %></li><% } %>
+              <% if (rental.stayLabel) { %><li><%= rental.stayLabel %></li><% } %>
+            </ul>
+            <% if (rental.href) { %>
+              <a class="btn btn-primary catalogue-cta" href="<%= rental.href %>#inquiry"><%= lang === 'en' ? 'Send inquiry' : 'Anfrage senden' %></a>
+            <% } %>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  <% } %>
+</section>

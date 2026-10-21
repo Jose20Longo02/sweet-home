@@ -161,10 +161,10 @@ class Lead {
     // leadKind differentiates buyer/seller/unknown by source, independent of relation type
     if (leadKind === 'buyer')    { where.push(`(l.source = 'property_form' OR l.source = 'project_form')`); }
     if (leadKind === 'seller')   { where.push(`l.source = 'seller_form'`); }
-    if (leadKind === 'unknown')  { where.push(`(l.source IS NULL OR l.source NOT IN ('property_form','project_form','seller_form'))`); }
+    if (leadKind === 'unknown')  { where.push(`(l.source IS NULL OR l.source NOT IN ('property_form','project_form','seller_form','rental_inquiry'))`); }
     if (leadType === 'buyer')    { where.push(`(l.source = 'property_form' OR l.source = 'project_form')`); }
     if (leadType === 'seller')   { where.push(`l.source = 'seller_form'`); }
-    if (leadType === 'unknown')  { where.push(`(l.source IS NULL OR l.source NOT IN ('property_form','project_form','seller_form'))`); }
+    if (leadType === 'unknown')  { where.push(`(l.source IS NULL OR l.source NOT IN ('property_form','project_form','seller_form','rental_inquiry'))`); }
 
     const offset = (Math.max(1, Number(page)) - 1) * Math.max(1, Number(pageSize));
     const limit = Math.max(1, Number(pageSize));

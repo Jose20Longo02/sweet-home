@@ -1,0 +1,173 @@
+<% title = rental ? 'Edit furnished apartment' : 'New furnished apartment' %>
+<link rel="stylesheet" href="/css/admin/blog-new.css" />
+<link rel="stylesheet" href="/css/admin/rentals.css?v=20261018-board" />
+<div class="admin-panel<%= showSuperadminSidebar ? ' with-sidebar' : '' %>">
+  <div class="admin-body">
+    <% if (showSuperadminSidebar) { %>
+      <%- include('../../partials/superadmin-sidebar', { activePage: 'rentals', pendingCount: pendingCount || 0 }) %>
+    <% } %>
+    <main class="admin-content">
+      <div class="admin-header">
+        <div>
+          <h1><%= rental ? 'Edit furnished apartment' : 'New furnished apartment' %></h1>
+          <p class="subtitle">Write the title and description in one language. Publish creates the other. A draft stays as you wrote it. This still does not put the apartment on the public site.</p>
+        </div>
+        <div class="header-actions">
+          <% if (rental) { %>
+            <form method="post" action="<%= rentalBase %>/<%= rental.id %>/delete?_csrf=<%= csrfToken %>" onsubmit="return confirm('Delete this apartment and its photos? This cannot be undone.')">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button type="submit" class="btn-link btn-link--danger">Delete</button>
+            </form>
+          <% } %>
+          <a href="<%= rentalBase %>" class="back-home">← All apartments</a>
+        </div>
+      </div>
+
+      <% if (error) { %>
+        <p class="error"><%= error %></p>
+      <% } %>
+
+      <form id="rentalForm" action="<%= rental ? (rentalBase + '/' + rental.id) : rentalBase %>?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <label for="content_language">Content language</label>
+        <select id="content_language" name="content_language" required>
+          <option value="">Select language</option>
+          <option value="de" <%= values.content_language === 'de' ? 'selected' : '' %>>German</option>
+          <option value="en" <%= values.content_language === 'en' ? 'selected' : '' %>>English</option>
+        </select>
+        <small class="hint">Choose the language you are writing in. Publish translates the title, description, and utilities note into the other language.</small>
+
+        <label for="title">Title</label>
+        <input id="title" type="text" name="title" maxlength="255" required value="<%= values.title %>">
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="8" required><%= values.description %></textarea>
+
+        <% if (translation) { %>
+          <section class="translation-preview">
+            <h2><%= translation.languageName %></h2>
+            <p><%= translation.title %></p>
+            <% if (translation.description) { %><p class="translation-body"><%= translation.description %></p><% } %>
+            <% if (translation.note) { %><p class="hint">Utilities: <%= translation.note %></p><% } %>
+          </section>
+        <% } %>
+
+        <div class="field-row">
+          <div>
+            <label for="neighborhood">Neighborhood</label>
+            <select id="neighborhood" name="neighborhood">
+              <option value="">Select neighborhood (optional)</option>
+              <% neighborhoods.forEach(function (name) { %>
+                <option value="<%= name %>" <%= values.neighborhood === name ? 'selected' : '' %>><%= name %></option>
+              <% }) %>
+            </select>
+            <small class="hint">This is the location the public page will show later. City is Berlin.</small>
+          </div>
+          <div>
+            <label for="full_address">Full address</label>
+            <input id="full_address" type="text" name="full_address" maxlength="500" value="<%= values.full_address %>">
+            <small class="hint">Staff only. It stays off the public page.</small>
+          </div>
+        </div>
+
+        <div class="field-row field-row-3">
+          <div>
+            <label for="size_sqm">Size (m²)</label>
+            <input id="size_sqm" type="number" name="size_sqm" min="1" step="0.01" value="<%= values.size_sqm %>">
+          </div>
+          <div>
+            <label for="rooms">Rooms</label>
+            <input id="rooms" type="number" name="rooms" min="0" step="1" value="<%= values.rooms %>">
+          </div>
+          <div>
+            <label for="floor">Floor</label>
+            <input id="floor" type="number" name="floor" step="1" value="<%= values.floor %>">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="monthly_rent">Monthly rent (€)</label>
+            <input id="monthly_rent" type="number" name="monthly_rent" min="1" step="0.01" required value="<%= values.monthly_rent %>">
+          </div>
+          <div>
+            <label for="deposit">Deposit (€)</label>
+            <input id="deposit" type="number" name="deposit" min="0" step="0.01" value="<%= values.deposit %>">
+          </div>
+        </div>
+
+        <fieldset class="utilities">
+          <legend>Utilities</legend>
+          <label class="check"><input type="radio" name="utilities_mode" value="included" <%= values.utilities_mode !== 'amount' ? 'checked' : '' %>> Included in the rent</label>
+          <label class="check"><input type="radio" name="utilities_mode" value="amount" <%= values.utilities_mode === 'amount' ? 'checked' : '' %>> Monthly amount</label>
+          <label for="utilities_amount">Utilities amount (€ / month)</label>
+          <input id="utilities_amount" type="number" name="utilities_amount" min="0" step="0.01" value="<%= values.utilities_amount %>">
+          <label for="utilities_note">Utilities note</label>
+          <input id="utilities_note" type="text" name="utilities_note" maxlength="300" value="<%= values.utilities_note %>">
+          <small class="hint">Same language as the title. Publish translates this note too.</small>
+        </fieldset>
+
+        <div class="field-row field-row-3">
+          <div>
+            <label for="available_from">Available from</label>
+            <input id="available_from" type="date" name="available_from" value="<%= values.available_from %>">
+          </div>
+          <div>
+            <label for="min_stay_months">Minimum stay (months)</label>
+            <input id="min_stay_months" type="number" name="min_stay_months" min="1" step="1" value="<%= values.min_stay_months %>">
+          </div>
+          <div>
+            <label for="max_stay_months">Maximum stay (months)</label>
+            <input id="max_stay_months" type="number" name="max_stay_months" min="1" step="1" value="<%= values.max_stay_months %>">
+          </div>
+        </div>
+
+        <label for="agent_id">Agent</label>
+        <select id="agent_id" name="agent_id" required>
+          <% agents.forEach(function (agent) { %>
+            <option value="<%= agent.id %>" <%= String(values.agent_id) === String(agent.id) ? 'selected' : '' %>><%= agent.name || agent.email %></option>
+          <% }) %>
+        </select>
+
+        <label for="photos">Photos</label>
+        <input id="photos" type="file" name="photos" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple <%= photos.length ? '' : 'required' %>>
+        <small class="hint">Add one or more photos. Drag them into order. The first photo is the cover. Use × to remove one.</small>
+        <% photos.forEach(function (url) { %>
+          <input type="hidden" name="existing_photos" value="<%= url %>">
+        <% }) %>
+        <div class="preview-grid" id="photoPreview">
+          <% photos.forEach(function (url) { %>
+            <div class="item" data-url="<%= url %>">
+              <img class="thumb" src="<%= url %>" alt="">
+            </div>
+          <% }) %>
+        </div>
+        <div id="orderedPhotos"></div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-secondary" name="status" value="draft">Save as draft</button>
+          <button type="submit" class="btn" name="status" value="published">Publish</button>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>
+<div id="uploadOverlay" class="upload-overlay" hidden style="display:none;">
+  <div class="upload-dialog">
+    <div class="upload-spinner"></div>
+    <div>
+      <div class="upload-title">Uploading...</div>
+      <div class="upload-sub">This may take a moment. Please don’t close this page.</div>
+    </div>
+  </div>
+  <style>
+    .upload-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; z-index: 3000; }
+    .upload-dialog { background: #ffffff; border-radius: 12px; padding: 18px 22px; box-shadow: 0 10px 30px rgba(0,0,0,.25); display: flex; align-items: center; gap: 12px; min-width: 280px; }
+    .upload-spinner { width: 22px; height: 22px; border: 3px solid #e5e7eb; border-top-color: var(--primary-color); border-radius: 50%; animation: upload-spin 1s linear infinite; }
+    .upload-title { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; font-weight: 600; color: #111; }
+    .upload-sub { font-size: 12px; color: #666; margin-top: 2px; }
+    @keyframes upload-spin { to { transform: rotate(360deg); } }
+  </style>
+</div>
+<script src="/js/admin-rentals.js"></script>

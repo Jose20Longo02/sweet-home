@@ -1,6 +1,9 @@
 <%
   var navLang = typeof lang !== 'undefined' ? lang : 'de';
   var propBerlin = navLang === 'de' ? '/wohnungen-berlin-kaufen' : '/en/properties-for-sale-berlin';
+  var rentalCatalogue = navLang === 'de' ? '/moeblierte-wohnungen-berlin' : '/en/furnished-apartments-berlin';
+  var saleLabel = navLang === 'de' ? 'Kaufen' : 'For sale';
+  var rentLabel = navLang === 'de' ? 'Mieten' : 'For rent';
 %>
 <header class="site-header main" role="banner">
   <div class="nav-container">
@@ -17,7 +20,8 @@
       <div class="nav-properties-wrap">
         <button type="button" class="nav-properties-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="nav-properties-menu" id="nav-properties-btn"><%= t('nav.properties','Properties') %></button>
         <div id="nav-properties-menu" class="nav-properties-menu" role="menu" aria-labelledby="nav-properties-btn" hidden>
-          <a href="<%= propBerlin %>" role="menuitem"><%= t('nav.propertiesBerlin','Berlin') %></a>
+          <a href="<%= propBerlin %>" role="menuitem"><%= t('nav.forSale', saleLabel) %></a>
+          <a href="<%= rentalCatalogue %>" role="menuitem"><%= t('nav.forRent', rentLabel) %></a>
         </div>
       </div>
       <a href="<%= (typeof localePath === 'function') ? localePath('/owners') : '/owners' %>"><%= t('nav.owners','Owners') %></a>
@@ -43,7 +47,8 @@
       <div class="mobile-properties-wrap">
         <button type="button" class="mobile-properties-trigger" aria-expanded="false" aria-controls="mobile-properties-list"><%= t('nav.properties','Properties') %></button>
         <div id="mobile-properties-list" class="mobile-properties-list" hidden>
-          <a href="<%= propBerlin %>"><%= t('nav.propertiesBerlin','Berlin') %></a>
+          <a href="<%= propBerlin %>"><%= t('nav.forSale', saleLabel) %></a>
+          <a href="<%= rentalCatalogue %>"><%= t('nav.forRent', rentLabel) %></a>
         </div>
       </div>
       <a href="<%= (typeof localePath === 'function') ? localePath('/owners') : '/owners' %>"><%= t('nav.owners','Owners') %></a>
@@ -70,7 +75,8 @@
   .nav-properties-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
   .nav-properties-trigger { display: inline-flex; align-items: center; justify-content: center; background: none; border: 0; color: #111; font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; letter-spacing: .2px; font-size: inherit; cursor: pointer; padding: 0; text-align: center; }
   .nav-properties-trigger:hover { opacity: .8; }
-  .nav-properties-menu { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 6px; min-width: 140px; background: #fff; border: 1px solid rgba(0,0,0,.1); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.12); padding: 6px 0; z-index: 1100; display: flex; flex-direction: column; }
+  .nav-properties-menu { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 8px; min-width: 148px; background: #fff; border: 1px solid rgba(0,0,0,.1); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.12); padding: 6px 0; z-index: 1100; display: flex; flex-direction: column; }
+  .nav-properties-menu::before { content: ''; position: absolute; left: 0; right: 0; top: -10px; height: 10px; }
   .nav-properties-menu[hidden] { display: none !important; }
   .nav-properties-menu a { display: block; padding: 8px 16px; color: #111; text-decoration: none; text-align: left; white-space: nowrap; }
   .nav-properties-menu a:hover { background: rgba(0,0,0,.06); }
@@ -132,7 +138,12 @@
     function open() { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); }
     function close() { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
     function toggle() { if (menu.hidden) open(); else close(); }
+    var wrap = btn.closest('.nav-properties-wrap');
     btn.addEventListener('click', function(e) { e.stopPropagation(); toggle(); });
+    if (wrap) {
+      wrap.addEventListener('mouseenter', open);
+      wrap.addEventListener('mouseleave', close);
+    }
     document.addEventListener('click', function() { if (!menu.hidden) close(); });
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
   }

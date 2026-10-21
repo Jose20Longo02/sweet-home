@@ -951,7 +951,7 @@ exports.exportAll = async (req, res, next) => {
     if (filters.leadType === 'project')  { where.push(`l.project_id IS NOT NULL`); }
     if (filters.leadKind === 'buyer')    { where.push(`(l.source = 'property_form' OR l.source = 'project_form')`); }
     if (filters.leadKind === 'seller')   { where.push(`l.source = 'seller_form'`); }
-    if (filters.leadKind === 'unknown')  { where.push(`(l.source IS NULL OR l.source NOT IN ('property_form','project_form','seller_form'))`); }
+    if (filters.leadKind === 'unknown')  { where.push(`(l.source IS NULL OR l.source NOT IN ('property_form','project_form','seller_form','rental_inquiry'))`); }
 
     const exportSql = `
       SELECT l.*, 
@@ -976,6 +976,7 @@ exports.exportAll = async (req, res, next) => {
         case 'contact_form': sourceText = 'General Contact Form'; break;
         case 'property_form': sourceText = 'Property Form'; break;
         case 'project_form': sourceText = 'Project Form'; break;
+        case 'rental_inquiry': sourceText = 'Rental inquiry'; break;
         default: sourceText = lead.source || 'Unknown';
       }
 
@@ -1230,6 +1231,40 @@ exports.deleteLead = async (req, res, next) => {
     await require('../models/Lead').remove(id);
     return res.json({ success: true });
   } catch (err) { next(err); }
+};
+
+exports.acceptRentalInquiry = async (req, { rental, name, email, phone, message, language }) => {
+  const pagePath = req.path;
+  const dup = await query(
+    `SELECT id FROM leads
+      WHERE email = $1
+        AND source = 'rental_inquiry'
+        AND page_path = $2
+        AND created_at >= NOW() - INTERVAL '5 minutes'
+      ORDER BY created_at DESC
+      LIMIT 1`,
+    [email, pagePath]
+  );
+  setLeadThankYou(req, { name, language });
+  if (dup.rows[0]) return { duplicate: true };
+
+  const attribution = extractAttributionFromRequest(req);
+  const lead = await Lead.create({
+    property_id: null,
+    agent_id: rental.agent_id || null,
+    name,
+    email,
+    phone,
+    message,
+    source: 'rental_inquiry',
+    preferred_language: language || null,
+    ...attribution
+  });
+  if (lead && lead.id) {
+    setImmediate(() => { sendToZapier(lead); });
+    setImmediate(() => { scheduleLeadEnrichment(lead.id); });
+  }
+  return { lead };
 };
 
 

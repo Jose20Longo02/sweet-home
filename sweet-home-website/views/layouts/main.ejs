@@ -11,6 +11,9 @@
       : 'Sweet Home';
   %>
   <title><%= __pageTitle %></title>
+  <% if (typeof noindexHost !== 'undefined' && noindexHost) { %>
+  <meta name="robots" content="noindex, nofollow">
+  <% } %>
   <%
     // Fallback when a page has no SEO head partial (e.g. cookies). Pages with headPartial own their description.
     const __hasHeadPartial = (typeof headPartial !== 'undefined' && headPartial);

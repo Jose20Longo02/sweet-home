@@ -1,0 +1,135 @@
+<link rel="stylesheet" href="/css/rentals-catalogue.css?v=20261019-apartment-sale-style" />
+<section class="catalogue apartment">
+  <a class="apartment-back" href="<%= cataloguePath %>"><%= lang === 'en' ? 'All furnished apartments' : 'Alle möblierten Wohnungen' %></a>
+  <div class="apartment-layout">
+    <div>
+      <div class="apartment-gallery">
+        <div class="apartment-hero">
+          <% if (photos.length) { %>
+            <img id="apartment-hero" src="<%= photos[0] %>" alt="<%= rental.title %>">
+          <% } %>
+        </div>
+        <% if (photos.length > 1) { %>
+          <div class="apartment-thumbs">
+            <% photos.forEach(function (photo, index) { %>
+              <button type="button" class="<%= index === 0 ? 'is-active' : '' %>" data-photo="<%= photo %>" aria-label="<%= lang === 'en' ? 'Photo ' + (index + 1) : 'Foto ' + (index + 1) %>">
+                <img src="<%= photo %>" alt="">
+              </button>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+      <div class="apartment-copy">
+        <h1><%= rental.title %></h1>
+        <p class="apartment-place"><%= rental.neighborhood || 'Berlin' %><% if (rental.neighborhood) { %>, Berlin<% } %></p>
+        <p class="apartment-rent"><%= rental.rentLabel %> <span><%= lang === 'en' ? 'per month' : 'pro Monat' %></span></p>
+        <section class="apartment-details" aria-labelledby="apartment-details-title">
+          <h2 id="apartment-details-title"><%= lang === 'en' ? 'Apartment details' : 'Angaben zur Wohnung' %></h2>
+          <dl class="apartment-details-grid">
+            <% if (rental.sizeLabel) { %>
+              <div><dt><%= lang === 'en' ? 'Size' : 'Wohnfläche' %></dt><dd><%= rental.sizeLabel %></dd></div>
+            <% } %>
+            <% if (rental.roomsValue) { %>
+              <div><dt><%= lang === 'en' ? 'Rooms' : 'Zimmer' %></dt><dd><%= rental.roomsValue %></dd></div>
+            <% } %>
+            <% if (rental.floorValue) { %>
+              <div><dt><%= lang === 'en' ? 'Floor' : 'Etage' %></dt><dd><%= rental.floorValue %></dd></div>
+            <% } %>
+            <% if (rental.stayLabel) { %>
+              <div><dt><%= lang === 'en' ? 'Length of stay' : 'Mietdauer' %></dt><dd><%= rental.stayLabel %></dd></div>
+            <% } %>
+            <% if (rental.depositLabel) { %>
+              <div><dt><%= lang === 'en' ? 'Deposit' : 'Kaution' %></dt><dd><%= rental.depositLabel %></dd></div>
+            <% } %>
+            <% if (rental.availableLabel) { %>
+              <div><dt><%= lang === 'en' ? 'Available from' : 'Einzug ab' %></dt><dd><%= rental.availableLabel %></dd></div>
+            <% } %>
+            <% if (rental.utilitiesValue) { %>
+              <div><dt><%= lang === 'en' ? 'Utilities' : 'Nebenkosten' %></dt><dd><%= rental.utilitiesValue %></dd></div>
+            <% } %>
+          </dl>
+          <% if (rental.note) { %><p class="apartment-note"><%= rental.note %></p><% } %>
+        </section>
+        <% if (description) { %>
+          <section class="apartment-description">
+            <h2><%= lang === 'en' ? 'Description' : 'Beschreibung' %></h2>
+            <p><%= description %></p>
+          </section>
+        <% } %>
+      </div>
+    </div>
+    <aside class="apartment-inquiry" id="inquiry">
+      <h2><%= lang === 'en' ? 'Send inquiry' : 'Anfrage senden' %></h2>
+      <p><%= lang === 'en'
+        ? 'Tell us when you would like to move in. This is a request, not a booking.'
+        : 'Schreiben Sie uns, wann Sie einziehen möchten. Das ist eine Anfrage, keine Buchung.' %></p>
+      <% if (formError) { %><p class="catalogue-error"><%= formError %></p><% } %>
+      <form method="post" action="<%= rental.href %>" <% if (process.env.RECAPTCHA_SITE_KEY) { %> data-recaptcha-site-key="<%= process.env.RECAPTCHA_SITE_KEY %>" <% } %>>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <% if (process.env.RECAPTCHA_SITE_KEY) { %>
+          <input type="hidden" name="recaptchaToken" id="rentalRecaptchaToken">
+        <% } %>
+        <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
+        <label><%= lang === 'en' ? 'Name' : 'Name' %>
+          <input name="name" required maxlength="100" value="<%= form.name %>">
+        </label>
+        <label><%= lang === 'en' ? 'Email' : 'E-Mail' %>
+          <input type="email" name="email" required maxlength="200" value="<%= form.email %>">
+        </label>
+        <div class="apartment-phone">
+          <label><%= lang === 'en' ? 'Code' : 'Vorwahl' %>
+            <input name="countryCode" required maxlength="8" value="<%= form.countryCode || '+49' %>">
+          </label>
+          <label><%= lang === 'en' ? 'Phone' : 'Telefon' %>
+            <input name="phone" required maxlength="30" value="<%= form.phone %>">
+          </label>
+        </div>
+        <div class="apartment-optional">
+          <label><%= lang === 'en' ? 'Move-in' : 'Einzug' %>
+            <input type="date" name="moveIn" value="<%= form.moveIn %>">
+          </label>
+          <label><%= lang === 'en' ? 'Months' : 'Monate' %>
+            <input type="number" name="stay" min="1" max="36" value="<%= form.stay %>">
+          </label>
+          <label><%= lang === 'en' ? 'People' : 'Personen' %>
+            <input type="number" name="people" min="1" max="12" value="<%= form.people %>">
+          </label>
+        </div>
+        <label><%= lang === 'en' ? 'Message' : 'Nachricht' %>
+          <textarea name="message" required minlength="10" maxlength="2000"><%= form.message %></textarea>
+        </label>
+        <button type="submit" class="btn btn-primary catalogue-cta"><%= lang === 'en' ? 'Send inquiry' : 'Anfrage senden' %></button>
+      </form>
+    </aside>
+  </div>
+</section>
+<% if (process.env.RECAPTCHA_SITE_KEY) { %>
+  <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
+<% } %>
+<script>
+(function () {
+  var hero = document.getElementById('apartment-hero');
+  document.querySelectorAll('.apartment-thumbs button').forEach(function (button) {
+    button.addEventListener('click', function () {
+      if (hero) hero.src = button.getAttribute('data-photo');
+      document.querySelectorAll('.apartment-thumbs button').forEach(function (item) { item.classList.remove('is-active'); });
+      button.classList.add('is-active');
+    });
+  });
+  var form = document.querySelector('.apartment-inquiry form');
+  if (!form) return;
+  var siteKey = form.getAttribute('data-recaptcha-site-key');
+  if (!siteKey) return;
+  form.addEventListener('submit', function (event) {
+    var token = document.getElementById('rentalRecaptchaToken');
+    if (!token || token.value || !window.grecaptcha) return;
+    event.preventDefault();
+    window.grecaptcha.ready(function () {
+      window.grecaptcha.execute(siteKey, { action: 'rental_inquiry' }).then(function (value) {
+        token.value = value;
+        form.submit();
+      });
+    });
+  });
+})();
+</script>

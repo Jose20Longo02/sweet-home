@@ -23,6 +23,8 @@ const { publicRouter: propertyRoutes, adminRouter: adminPropertyRoutes } = requi
 const propertyController = require('./controllers/propertyController');
 const { publicRouter: blogPublicRoutes, adminRouter: blogAdminRoutes, superAdminRouter: blogSuperAdminRoutes } = require('./routes/blogRoutes');
 const leadRoutes     = require('./routes/leadRoutes');
+const rentalRoutes   = require('./routes/rentalRoutes');
+const rentalController = require('./controllers/rentalController');
 const { createLocaleRouter } = require('./routes/localeRoutes');
 const { connectDB }  = require('./config/db');
 const sendMail       = require('./config/mailer');
@@ -233,6 +235,16 @@ if (process.env.TRUST_PROXY === 'true') {
 // Domain migration (.co.il → .de): enable on go-live via DOMAIN_REDIRECT_ENABLED=true.
 // 1:1 path+query preserve — see docs/DOMAIN_MIGRATION_1TO1_REDIRECT_MAP.md
 app.use(domainRedirectMiddleware);
+
+// Render staging hosts are not the public site. Keep them out of Google.
+app.use((req, res, next) => {
+  const host = String((req.get && (req.get('x-forwarded-host') || req.get('host'))) || '');
+  if (host.includes('onrender.com')) {
+    res.set('X-Robots-Tag', 'noindex, nofollow');
+    res.locals.noindexHost = true;
+  }
+  next();
+});
 
 // Canonical base URL: primary domain is sweethome-immobilien.de (go-live 2026-07-27).
 // Prefer APP_URL / CANONICAL_DOMAIN env; never emit the Render hostname in public links.
@@ -451,7 +463,15 @@ app.use((req, res, next) => {
     '/berlin-mieter-belegte-einstiegsstrategie': { de: '/berlin-mieter-belegte-einstiegsstrategie', en: '/en/berlin-tenant-occupied-entry-strategy' },
     '/berlin-tenant-occupied-entry-strategy': { de: '/berlin-mieter-belegte-einstiegsstrategie', en: '/en/berlin-tenant-occupied-entry-strategy' },
     '/en/berlin-investment-strategy': { de: '/berlin-mieter-belegte-einstiegsstrategie', en: '/en/berlin-tenant-occupied-entry-strategy' },
-    '/berlin-investment-strategy': { de: '/berlin-mieter-belegte-einstiegsstrategie', en: '/en/berlin-tenant-occupied-entry-strategy' }
+    '/berlin-investment-strategy': { de: '/berlin-mieter-belegte-einstiegsstrategie', en: '/en/berlin-tenant-occupied-entry-strategy' },
+    '/moeblierte-wohnungen-berlin': { de: '/moeblierte-wohnungen-berlin', en: '/en/furnished-apartments-berlin' },
+    '/en/furnished-apartments-berlin': { de: '/moeblierte-wohnungen-berlin', en: '/en/furnished-apartments-berlin' },
+    '/hypothekenrechner': { de: '/hypothekenrechner', en: '/en/mortgage-calculator-germany' },
+    '/en/mortgage-calculator-germany': { de: '/hypothekenrechner', en: '/en/mortgage-calculator-germany' },
+    '/kaufnebenkosten-rechner': { de: '/kaufnebenkosten-rechner', en: '/en/property-purchase-costs-calculator-germany' },
+    '/en/property-purchase-costs-calculator-germany': { de: '/kaufnebenkosten-rechner', en: '/en/property-purchase-costs-calculator-germany' },
+    '/mietrendite-rechner': { de: '/mietrendite-rechner', en: '/en/rental-yield-calculator-germany' },
+    '/en/rental-yield-calculator-germany': { de: '/mietrendite-rechner', en: '/en/rental-yield-calculator-germany' }
   };
   const propertyAlternates = PROPERTY_PAGE_ALTERNATES[req.path];
   const enOnlyBlogMatch = String(req.path || '').match(/^(?:\/en)?\/blog\/([^/]+)\/?$/);
@@ -814,6 +834,8 @@ app.get('/cookies', (req, res) => {
     pageMetaDescription: t('legal.cookies.metaDescription', 'Learn how Sweet Home uses essential, analytics, and marketing cookies, and how you can manage cookie preferences in your browser.')
   });
 });
+app.use('/admin/dashboard/rentals', rentalRoutes);
+app.use('/superadmin/dashboard/rentals', rentalRoutes);
 app.use('/admin/dashboard', adminUserRoutes);
 app.use('/superadmin/dashboard', superAdminRoutes); // SuperAdmin landing
 app.use('/', leadRoutes); // mount lead routes (public API + pages)
@@ -1585,45 +1607,112 @@ app.get('/admin', (req, res) => {
   return res.redirect('/auth/login');
 });
 
-// German calculator pages (U1). No English twin this cycle.
+// German and English calculator pages. English slugs are the keyword URLs from Adi, October 2026.
 const { TRANSFER_TAX_RATES } = require('./config/transferTaxRates');
 const CALCULATOR_PAGES = {
   mortgage: {
-    path: '/hypothekenrechner',
-    title: 'Hypothekenrechner: monatliche Rate',
-    description: 'Monatliche Rate aus Kaufpreis, Eigenkapital, Zinssatz und Laufzeit. Dieselbe Annuität wie auf der Startseite, plus eine geschätzte Grundsteuer und Versicherung.'
+    de: {
+      path: '/hypothekenrechner',
+      title: 'Hypothekenrechner: monatliche Rate',
+      description: 'Monatliche Rate aus Kaufpreis, Eigenkapital, Zinssatz und Laufzeit. Dieselbe Annuität wie auf der Startseite, plus eine geschätzte Grundsteuer und Versicherung.'
+    },
+    en: {
+      path: '/en/mortgage-calculator-germany',
+      title: 'Mortgage Calculator Germany: Monthly Payment and Costs',
+      description: 'Monthly mortgage payment in Germany from the purchase price, down payment, interest rate, and term, including a repayment rate and a fixed interest period.'
+    }
   },
   costs: {
-    path: '/kaufnebenkosten-rechner',
-    title: 'Kaufnebenkosten-Rechner',
-    description: 'Grunderwerbsteuer nach Bundesland, Schätzung für Notar und Grundbuch, optional der Käuferanteil der Maklerprovision. Berlin ist voreingestellt.'
+    de: {
+      path: '/kaufnebenkosten-rechner',
+      title: 'Kaufnebenkosten-Rechner',
+      description: 'Grunderwerbsteuer nach Bundesland, Schätzung für Notar und Grundbuch, optional der Käuferanteil der Maklerprovision. Berlin ist voreingestellt.'
+    },
+    en: {
+      path: '/en/property-purchase-costs-calculator-germany',
+      title: 'Property Purchase Costs Calculator for Germany',
+      description: 'Closing costs when buying property in Germany: property transfer tax (Grunderwerbsteuer) by state, plus an estimate for notary and land registry fees.'
+    }
   },
   yield: {
-    path: '/mietrendite-rechner',
-    title: 'Mietrendite-Rechner: brutto und netto',
-    description: 'Brutto- und Nettomietrendite aus Kaltmiete, Kaufpreis und Kaufnebenkosten. Dieselbe Formel wie im Beitrag Mietrendite berechnen.'
+    de: {
+      path: '/mietrendite-rechner',
+      title: 'Mietrendite-Rechner: brutto und netto',
+      description: 'Brutto- und Nettomietrendite aus Kaltmiete, Kaufpreis und Kaufnebenkosten. Dieselbe Formel wie im Beitrag Mietrendite berechnen.'
+    },
+    en: {
+      path: '/en/rental-yield-calculator-germany',
+      title: 'Rental Yield Calculator Germany: Gross and Net',
+      description: 'Gross rental yield and net rental yield for a property in Germany, with the price-to-rent multiple and non-recoverable costs.'
+    }
   }
 };
 
-function renderGermanCalculator(res, spec) {
-  const canonicalUrl = `${res.locals.baseUrl}${spec.path}`;
-  res.locals.localeAlternatePaths = { de: spec.path, en: spec.path };
-  res.locals.localeAlternateUrls = { de: canonicalUrl, en: canonicalUrl };
+function renderCalculator(res, spec, pair) {
+  const base = res.locals.baseUrl;
+  const deUrl = `${base}${pair.de.path}`;
+  const enUrl = `${base}${pair.en.path}`;
+  res.locals.localeAlternatePaths = { de: pair.de.path, en: pair.en.path };
+  res.locals.localeAlternateUrls = { de: deUrl, en: enUrl };
   res.render('calculators/page', {
     title: spec.title,
     calculatorId: spec.id,
+    calcLang: spec.lang,
     pageMetaDescription: spec.description,
-    canonicalUrl,
-    hreflangAlternates: { de: canonicalUrl },
+    canonicalUrl: `${base}${spec.path}`,
+    hreflangAlternates: { de: deUrl, en: enUrl },
     transferTaxRates: TRANSFER_TAX_RATES,
     useMainContainer: false,
     headPartial: '../partials/seo/calculator-head'
   });
 }
 
-Object.entries(CALCULATOR_PAGES).forEach(([id, spec]) => {
-  app.get(spec.path, (req, res) => renderGermanCalculator(res, Object.assign({ id }, spec)));
+Object.entries(CALCULATOR_PAGES).forEach(([id, pair]) => {
+  ['de', 'en'].forEach((lang) => {
+    const spec = Object.assign({ id, lang }, pair[lang]);
+    app.get(spec.path, (req, res) => renderCalculator(res, spec, pair));
+  });
 });
+
+function redirectWithQuery(req, res, target) {
+  const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+  return res.redirect(301, target + query);
+}
+
+app.get('/furnished-apartments-berlin', (req, res) => redirectWithQuery(req, res, '/moeblierte-wohnungen-berlin'));
+app.get('/en/moeblierte-wohnungen-berlin', (req, res) => redirectWithQuery(req, res, '/en/furnished-apartments-berlin'));
+app.get('/moeblierte-wohnungen-berlin', rentalController.catalogue);
+app.get('/en/furnished-apartments-berlin', rentalController.catalogue);
+
+const { recaptchaRequired } = require('./middleware/recaptcha');
+const rentalInquiryLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false
+});
+const rentalRecaptchaMinScore = (() => {
+  const value = parseFloat(process.env.RECAPTCHA_MIN_SCORE || '0.5');
+  return Number.isFinite(value) ? value : 0.5;
+})();
+function rentalInquiry(req, res, next) {
+  return rentalInquiryLimiter(req, res, (limitErr) => {
+    if (limitErr) return next(limitErr);
+    return recaptchaRequired(rentalRecaptchaMinScore)(req, res, next);
+  });
+}
+app.get('/furnished-apartment/:slug', (req, res, next) => {
+  req.apartmentTargetLang = 'de';
+  return rentalController.apartmentRedirect(req, res, next);
+});
+app.get('/en/moeblierte-wohnung/:slug', (req, res, next) => {
+  req.apartmentTargetLang = 'en';
+  return rentalController.apartmentRedirect(req, res, next);
+});
+app.get('/moeblierte-wohnung/:slug', rentalController.apartment);
+app.get('/en/furnished-apartment/:slug', rentalController.apartment);
+app.post('/moeblierte-wohnung/:slug', rentalInquiry, rentalController.inquire);
+app.post('/en/furnished-apartment/:slug', rentalInquiry, rentalController.inquire);
 
 // Services page
 app.get('/services', (req, res) => {
@@ -1801,11 +1890,31 @@ app.get('/sitemap.xml', async (req, res, next) => {
       .forEach((p) => {
         staticUrls.push({ loc: `${base}/en/${p}`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
       });
-    // German calculator pages only. No English twin this cycle.
-    ['hypothekenrechner', 'kaufnebenkosten-rechner', 'mietrendite-rechner'].forEach((p) => {
+    [
+      'hypothekenrechner',
+      'kaufnebenkosten-rechner',
+      'mietrendite-rechner',
+      'en/mortgage-calculator-germany',
+      'en/property-purchase-costs-calculator-germany',
+      'en/rental-yield-calculator-germany'
+    ].forEach((p) => {
       staticUrls.push({ loc: `${base}/${p}`, lastmod: null, changefreq: 'monthly', priority: '0.8' });
     });
     // Core city landing pages (all languages)
+    staticUrls.push({ loc: `${base}/moeblierte-wohnungen-berlin`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    staticUrls.push({ loc: `${base}/en/furnished-apartments-berlin`, lastmod: null, changefreq: 'weekly', priority: '0.8' });
+    const FurnishedRental = require('./models/FurnishedRental');
+    const rentalRows = await FurnishedRental.publishedForSitemap();
+    rentalRows.forEach((rental) => {
+      const lastmod = rental.updated_at ? new Date(rental.updated_at).toISOString() : null;
+      if (rental.slug) {
+        staticUrls.push({ loc: `${base}/moeblierte-wohnung/${rental.slug}`, lastmod, changefreq: 'weekly', priority: '0.7' });
+      }
+      const enSlug = rental.slug_i18n && rental.slug_i18n.en;
+      if (enSlug) {
+        staticUrls.push({ loc: `${base}/en/furnished-apartment/${enSlug}`, lastmod, changefreq: 'weekly', priority: '0.7' });
+      }
+    });
     staticUrls.push({ loc: `${base}/wohnungen-berlin-kaufen`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     staticUrls.push({ loc: `${base}/en/properties-for-sale-berlin`, lastmod: null, changefreq: 'weekly', priority: '0.9' });
     // Keep one hub each for Cyprus / Dubai (N5); exclude bulk CY/DXB listings below

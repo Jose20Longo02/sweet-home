@@ -2,8 +2,15 @@
   const calc = window.SweetHomeCalc;
   if (!calc) return;
 
-  const euro = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
-  const oneDecimal = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  let euro = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+  let oneDecimal = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
+  function applyLocale(root) {
+    const english = root.getAttribute('data-lang') === 'en';
+    const locale = english ? 'en-IE' : 'de-DE';
+    euro = new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+    oneDecimal = new Intl.NumberFormat(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  }
 
   function money(n) {
     return euro.format(Math.round(n));
@@ -50,11 +57,11 @@
       const years = parseInt(form.loanTerm.value, 10) || 0;
       const rate = calc.parseDecimal(form.interestRate.value);
       if (price <= 0 || down < 0 || rate <= 0 || years <= 0) {
-        showError(form, 'Bitte Kaufpreis, Eigenkapital, Zinssatz und Laufzeit ausfüllen.');
+        showError(form, form.getAttribute('data-error-empty'));
         return;
       }
       if (down >= price) {
-        showError(form, 'Das Eigenkapital muss unter dem Kaufpreis liegen.');
+        showError(form, form.getAttribute('data-error-down'));
         return;
       }
       showError(form, '');
@@ -126,14 +133,14 @@
       const agent = form.agent.value === 'yes';
       highlight();
       if (price <= 0 || !(rate > 0)) {
-        showError(form, 'Bitte einen Kaufpreis und ein Bundesland wählen.');
+        showError(form, form.getAttribute('data-error-empty'));
         return;
       }
       showError(form, '');
       const result = calc.purchaseCosts({ price: price, rate: rate, agent: agent });
       setText('costsTax', money(result.tax));
       setText('costsNotary', range(result.notaryLow, result.notaryHigh));
-      setText('costsAgent', agent ? money(result.agentAmount) : '0 €');
+      setText('costsAgent', agent ? money(result.agentAmount) : money(0));
       setText('costsTotal', range(result.totalLow, result.totalHigh));
       setText('costsPercent', percentRange(result.pctLow, result.pctHigh));
       const stateLabel = form.state.options[form.state.selectedIndex].textContent;
@@ -179,11 +186,11 @@
       const purchaseCostPercent = calc.parseDecimal(form.purchaseCostPercent.value);
       const nonRecoverable = calc.parseMoney(form.nonRecoverable.value);
       if (price <= 0 || monthlyRent <= 0) {
-        showError(form, 'Bitte Kaufpreis und monatliche Kaltmiete ausfüllen.');
+        showError(form, form.getAttribute('data-error-empty'));
         return;
       }
       if (purchaseCostPercent < 0 || nonRecoverable < 0) {
-        showError(form, 'Kaufnebenkosten und Kosten dürfen nicht negativ sein.');
+        showError(form, form.getAttribute('data-error-negative'));
         return;
       }
       showError(form, '');
@@ -230,6 +237,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     const root = document.querySelector('[data-calculator]');
     if (!root) return;
+    applyLocale(root);
     wireFaq(root);
     const id = root.getAttribute('data-calculator');
     if (id === 'mortgage') wireMortgage(root);

@@ -44,6 +44,19 @@ function getOperationValue(value) {
   return '';
 }
 
+// The sale inventory has no rental listings. Mieten goes to the furnished catalogue.
+function furnishedCatalogueRedirect(lang, neighborhood, country, city) {
+  const catalogue = lang === 'de' ? '/moeblierte-wohnungen-berlin' : '/en/furnished-apartments-berlin';
+  const berlinNeighborhoods = ((locations.Germany || {}).Berlin) || [];
+  const countryOk = !country || country === 'Germany';
+  const cityOk = !city || city === 'Berlin';
+  const area = String(neighborhood || '').trim();
+  if (countryOk && cityOk && berlinNeighborhoods.includes(area)) {
+    return `${catalogue}?neighborhood=${encodeURIComponent(area)}`;
+  }
+  return catalogue;
+}
+
 function getPropertiesBasePath(req) {
   const base = String((req && req.baseUrl) || '/properties').replace(/\/$/, '');
   return base || '/properties';
@@ -196,6 +209,11 @@ exports.listPropertiesPublic = async (req, res, next) => {
     const currentPage = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
     const normalizedSort = String(sort || '').trim().toLowerCase() || 'relevance';
     const operationMode = getOperationValue(operation);
+
+    if (operationMode === 'rent') {
+      const rentLang = res.locals.lang === 'en' ? 'en' : 'de';
+      return res.redirect(302, furnishedCatalogueRedirect(rentLang, neighborhood, selectedCountry, selectedCity));
+    }
 
     // Redirect clean indexable location queries to stable SEO paths.
     const queryEntries = nonEmptyQueryEntries(req.query);

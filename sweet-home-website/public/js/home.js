@@ -14,6 +14,19 @@ function hGet(path, fallback) {
   } catch (_) { return fallback; }
 }
 
+function furnishedCatalogueUrl(prefix, country, city, neighborhood) {
+  const catalogue = prefix === '/en' ? '/en/furnished-apartments-berlin' : '/moeblierte-wohnungen-berlin';
+  const countryValue = String(country || '').trim();
+  const cityValue = String(city || '').trim();
+  const area = String(neighborhood || '').trim();
+  const countryOk = !countryValue || countryValue === 'Germany';
+  const cityOk = !cityValue || cityValue === 'Berlin';
+  if (countryOk && cityOk && area) {
+    return `${catalogue}?neighborhood=${encodeURIComponent(area)}`;
+  }
+  return catalogue;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   try { if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; } } catch (_) {}
   window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
@@ -310,6 +323,17 @@ function initializeMarketExplorer() {
   }
 
   function updateCta() {
+    if (operationSelect && operationSelect.value === 'rent') {
+      if (ctaElement) {
+        ctaElement.href = furnishedCatalogueUrl(
+          localePrefix,
+          countrySelect.value,
+          citySelect.value,
+          neighborhoodSelect.value
+        );
+      }
+      return;
+    }
     const params = new URLSearchParams();
     [
       ['country', countrySelect],
@@ -626,6 +650,18 @@ function initializeSearchForm() {
     }
     
     const formData = new FormData(this);
+    const prefix = (document.getElementById('locations-data')?.getAttribute('data-locale-prefix') || '');
+    if (String(formData.get('operation') || '').trim() === 'rent') {
+      const searchUrl = furnishedCatalogueUrl(
+        prefix,
+        formData.get('country'),
+        formData.get('city'),
+        formData.get('neighborhood')
+      );
+      console.log('🔍 Redirecting rental search to:', searchUrl);
+      window.location.href = searchUrl;
+      return;
+    }
     const searchParams = new URLSearchParams();
     
     // Build search query
@@ -637,7 +673,6 @@ function initializeSearchForm() {
     }
     
     // Redirect to properties page with search parameters (preserve locale prefix)
-    const prefix = (document.getElementById('locations-data')?.getAttribute('data-locale-prefix') || '');
     const searchUrl = `${prefix}/properties?${searchParams.toString()}`;
     console.log('🔍 Redirecting to:', searchUrl);
     window.location.href = searchUrl;

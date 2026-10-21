@@ -11,22 +11,22 @@
  * (finanzamt.brandenburg.de, Grunderwerbsteuer). Bayern keeps the federal 3,5 %.
  */
 const TRANSFER_TAX_RATES = [
-  { code: 'BW', name: 'Baden-Württemberg', rate: 0.05, since: '5. November 2011' },
-  { code: 'BY', name: 'Bayern', rate: 0.035, since: 'bundesgesetzlicher Satz' },
-  { code: 'BE', name: 'Berlin', rate: 0.06, since: '1. Januar 2014' },
-  { code: 'BB', name: 'Brandenburg', rate: 0.065, since: '1. Juli 2015' },
-  { code: 'HB', name: 'Bremen', rate: 0.055, since: '1. Juli 2025' },
-  { code: 'HH', name: 'Hamburg', rate: 0.055, since: '1. Januar 2023' },
-  { code: 'HE', name: 'Hessen', rate: 0.06, since: '1. August 2014' },
-  { code: 'MV', name: 'Mecklenburg-Vorpommern', rate: 0.06, since: '1. Juli 2019' },
-  { code: 'NI', name: 'Niedersachsen', rate: 0.05, since: '1. Januar 2014' },
-  { code: 'NW', name: 'Nordrhein-Westfalen', rate: 0.065, since: '1. Januar 2015' },
-  { code: 'RP', name: 'Rheinland-Pfalz', rate: 0.05, since: '1. März 2012' },
-  { code: 'SL', name: 'Saarland', rate: 0.065, since: '1. Januar 2015' },
-  { code: 'SN', name: 'Sachsen', rate: 0.055, since: '1. Januar 2023' },
-  { code: 'ST', name: 'Sachsen-Anhalt', rate: 0.05, since: '1. März 2012' },
-  { code: 'SH', name: 'Schleswig-Holstein', rate: 0.065, since: '1. Januar 2014' },
-  { code: 'TH', name: 'Thüringen', rate: 0.05, since: '1. Januar 2024' }
+  { code: 'BW', name: 'Baden-Württemberg', nameEn: 'Baden-Württemberg', rate: 0.05, since: '5. November 2011', sinceEn: '5 November 2011' },
+  { code: 'BY', name: 'Bayern', nameEn: 'Bavaria', rate: 0.035, since: 'bundesgesetzlicher Satz', sinceEn: 'federal statutory rate' },
+  { code: 'BE', name: 'Berlin', nameEn: 'Berlin', rate: 0.06, since: '1. Januar 2014', sinceEn: '1 January 2014' },
+  { code: 'BB', name: 'Brandenburg', nameEn: 'Brandenburg', rate: 0.065, since: '1. Juli 2015', sinceEn: '1 July 2015' },
+  { code: 'HB', name: 'Bremen', nameEn: 'Bremen', rate: 0.055, since: '1. Juli 2025', sinceEn: '1 July 2025' },
+  { code: 'HH', name: 'Hamburg', nameEn: 'Hamburg', rate: 0.055, since: '1. Januar 2023', sinceEn: '1 January 2023' },
+  { code: 'HE', name: 'Hessen', nameEn: 'Hesse', rate: 0.06, since: '1. August 2014', sinceEn: '1 August 2014' },
+  { code: 'MV', name: 'Mecklenburg-Vorpommern', nameEn: 'Mecklenburg-Western Pomerania', rate: 0.06, since: '1. Juli 2019', sinceEn: '1 July 2019' },
+  { code: 'NI', name: 'Niedersachsen', nameEn: 'Lower Saxony', rate: 0.05, since: '1. Januar 2014', sinceEn: '1 January 2014' },
+  { code: 'NW', name: 'Nordrhein-Westfalen', nameEn: 'North Rhine-Westphalia', rate: 0.065, since: '1. Januar 2015', sinceEn: '1 January 2015' },
+  { code: 'RP', name: 'Rheinland-Pfalz', nameEn: 'Rhineland-Palatinate', rate: 0.05, since: '1. März 2012', sinceEn: '1 March 2012' },
+  { code: 'SL', name: 'Saarland', nameEn: 'Saarland', rate: 0.065, since: '1. Januar 2015', sinceEn: '1 January 2015' },
+  { code: 'SN', name: 'Sachsen', nameEn: 'Saxony', rate: 0.055, since: '1. Januar 2023', sinceEn: '1 January 2023' },
+  { code: 'ST', name: 'Sachsen-Anhalt', nameEn: 'Saxony-Anhalt', rate: 0.05, since: '1. März 2012', sinceEn: '1 March 2012' },
+  { code: 'SH', name: 'Schleswig-Holstein', nameEn: 'Schleswig-Holstein', rate: 0.065, since: '1. Januar 2014', sinceEn: '1 January 2014' },
+  { code: 'TH', name: 'Thüringen', nameEn: 'Thuringia', rate: 0.05, since: '1. Januar 2024', sinceEn: '1 January 2024' }
 ];
 
 module.exports = { TRANSFER_TAX_RATES };
