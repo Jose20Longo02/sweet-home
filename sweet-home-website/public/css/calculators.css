@@ -29,20 +29,70 @@
 .calc-method {
   max-width: 68ch;
   margin: 48px auto 0;
-  border-top: 1px solid var(--gray-200);
+  border: 1px solid #d7e6dc;
+  border-radius: 14px;
+  background: #f7fbf8;
+  overflow: hidden;
 }
 
 .calc-method summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   cursor: pointer;
   font-weight: 700;
-  font-size: 1.25rem;
-  padding: 18px 0;
-  color: var(--gray-800);
+  font-size: 1.125rem;
+  line-height: 1.35;
+  padding: 16px 18px;
+  color: var(--gray-900);
   list-style: none;
+  background: #fff;
 }
 
-.calc-method summary::-webkit-details-marker {
+.calc-method summary::-webkit-details-marker,
+.calc-method summary::marker {
   display: none;
+  content: '';
+}
+
+.calc-method summary:hover {
+  background: #f3faf6;
+  color: var(--brand-green-dark);
+}
+
+.calc-method summary:focus-visible {
+  outline: 3px solid rgba(46, 168, 98, 0.35);
+  outline-offset: -3px;
+}
+
+.calc-method summary::after {
+  content: '';
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #e7f6ee;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M4 6.2l4 4 4-4' fill='none' stroke='%232ea862' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  flex: 0 0 auto;
+  transition: transform 240ms ease, background-color 240ms ease;
+}
+
+.calc-method summary:hover::after {
+  background-color: #d7f0e2;
+}
+
+.calc-method[open] summary {
+  border-bottom: 1px solid #d7e6dc;
+}
+
+.calc-method[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.calc-method__body {
+  padding: 18px 20px 4px;
 }
 
 .calc-method__body p {
@@ -438,7 +488,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .calc-faq__answer,
-  .calc-faq__question::after {
+  .calc-faq__question::after,
+  .calc-method summary::after {
     transition: none;
   }
 }
