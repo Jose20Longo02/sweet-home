@@ -1,0 +1,35 @@
+<%
+  const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : '').replace(/\/$/, '');
+  const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : '';
+  const pageTitle = (typeof title !== 'undefined' && title) ? title : '';
+  const pageUrl = (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : siteBaseUrl;
+  const ogLocale = (typeof lang !== 'undefined' && lang === 'de') ? 'de_DE' : 'en_US';
+  const list = (typeof rentals !== 'undefined' && Array.isArray(rentals))
+    ? rentals.filter((rental) => rental && rental.href && rental.title)
+    : [];
+  const itemList = list.length ? {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: pageTitle,
+    numberOfItems: list.length,
+    itemListElement: list.map((rental, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 1,
+      name: rental.title,
+      url: /^https?:\/\//.test(rental.href) ? rental.href : `${siteBaseUrl}${rental.href}`
+    }))
+  } : null;
+%>
+<meta name="description" content="<%= pageDesc %>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="<%= pageTitle %> | Sweet Home">
+<meta property="og:description" content="<%= pageDesc %>">
+<meta property="og:url" content="<%= pageUrl %>">
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="<%= ogLocale %>">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="<%= pageTitle %> | Sweet Home">
+<meta name="twitter:description" content="<%= pageDesc %>">
+<% if (itemList) { %>
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON(itemList) : JSON.stringify(itemList)) %></script>
+<% } %>

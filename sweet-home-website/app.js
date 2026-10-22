@@ -308,6 +308,9 @@ app.use((req, res, next) => {
   }
   // Expose user to all views
   res.locals.user = req.session.user || null;
+  // Own property so a view assignment stays on this request.
+  // An unset name in an EJS template would otherwise leak onto the global object.
+  res.locals.headPartial = '';
   next();
 });
 
