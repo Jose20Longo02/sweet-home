@@ -278,6 +278,7 @@ const { getDistrictRatgeberLinks } = require('./config/districtRatgeberLinks');
 const { BERLIN_DISTRICT_LANDINGS, buildDistrictAlternateMap, buildHomeDistrictPaths } = require('./config/berlinDistrictLandings');
 app.locals.getDistrictRatgeberLinks = getDistrictRatgeberLinks;
 app.locals.BERLIN_DISTRICT_LANDINGS = BERLIN_DISTRICT_LANDINGS;
+app.locals.energyCertificate = require('./config/energyCertificate');
 
 // 2) Then register the layouts middleware
 app.use(expressLayouts);

@@ -306,6 +306,21 @@
           <div class="value"><%= property.year_built %></div>
         </div>
       <% } %>
+      <% if (property.energy_certificate_type) { %>
+        <%
+          const energyLang = (typeof lang !== 'undefined' && lang === 'en') ? 'en' : 'de';
+          const energyTypeLabel = energyCertificate.labelFor(energyCertificate.CERTIFICATE_TYPES, property.energy_certificate_type, energyLang);
+          const energyBits = [energyTypeLabel];
+          if (property.energy_certificate_type !== 'none' && property.energy_efficiency_class) energyBits.push(property.energy_efficiency_class);
+          if (property.energy_certificate_type !== 'none' && property.energy_value != null && property.energy_value !== '') {
+            energyBits.push(Number(property.energy_value).toLocaleString(energyLang === 'de' ? 'de-DE' : 'en-US', { maximumFractionDigits: 2 }) + ' kWh/(m²·a)');
+          }
+        %>
+        <div class="info-card">
+          <h3><%= typeof t !== 'undefined' ? t('properties.detail.energyTitle', 'Energy certificate') : 'Energy certificate' %></h3>
+          <div class="value"><%= energyBits.join(' · ') %></div>
+        </div>
+      <% } %>
       <% if (property.occupancy_type) { %>
         <div class="info-card">
           <h3><%= typeof t !== 'undefined' ? t('common.pdf.occupancy', 'Occupancy') : 'Occupancy' %></h3>

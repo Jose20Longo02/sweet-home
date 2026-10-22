@@ -50,6 +50,8 @@ exports.generatePropertyPDF = async (req, res, next) => {
         p.featured, p.created_at, p.description,
         p.year_built, p.map_link,
         p.occupancy_type, p.rental_status, p.rental_income, p.housegeld,
+        p.energy_certificate_type, p.energy_value, p.energy_efficiency_class,
+        p.energy_sources, p.energy_certificate_year, p.heating_type,
         p.features,
         p.video_url, p.floorplan_url, p.plan_photo_url,
         p.is_in_project, p.project_id,

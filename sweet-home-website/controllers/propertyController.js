@@ -15,6 +15,7 @@ const { ensureCompleteTranslations } = require('../utils/translationHelper');
 const { generateSEOFileName } = require('../utils/imageNaming');
 const { logEvent } = require('../utils/analytics');
 const { getNeighborhoodCountMap } = require('../utils/neighborhoodCounts');
+const { readEnergyCertificate } = require('../config/energyCertificate');
 const {
   getLandingPageCache,
   setLandingPageCache,
@@ -733,6 +734,8 @@ exports.showProperty = async (req, res, next) => {
         p.featured, p.created_at, p.description,
         p.year_built, p.map_link,
         p.occupancy_type, p.rental_status, p.rental_income, p.housegeld,
+        p.energy_certificate_type, p.energy_value, p.energy_efficiency_class,
+        p.energy_sources, p.energy_certificate_year, p.heating_type,
         p.features,
         p.video_url, p.floorplan_url, p.plan_photo_url,
         p.is_in_project, p.project_id,
@@ -998,6 +1001,8 @@ exports.createProperty = async (req, res, next) => {
       if (!(landSize > 0))      errors.push('Land size is required and must be positive');
     }
     if (isInProject && !projectId) errors.push('Project is required when "Part of a project" is checked');
+    const energy = readEnergyCertificate(body);
+    energy.errors.forEach((message) => errors.push(message));
 
     // Build photos from uploads OR provided URLs
     const uploadedPhotosFiles = (req.files && Array.isArray(req.files.photos)) ? req.files.photos : [];
@@ -1128,6 +1133,8 @@ exports.createProperty = async (req, res, next) => {
          year_built,
          features,
          occupancy_type, rental_status, rental_income, housegeld,
+         energy_certificate_type, energy_value, energy_efficiency_class,
+         energy_sources, energy_certificate_year, heating_type,
          created_at
        ) VALUES (
          $1,$2,$3,$4,$5,$6,$7,
@@ -1140,6 +1147,7 @@ exports.createProperty = async (req, res, next) => {
          $26,
          $27,
          $28,$29,$30,$31,
+         $32,$33,$34,$35,$36,$37,
          NOW()
        ) RETURNING id`,
       [
@@ -1152,7 +1160,13 @@ exports.createProperty = async (req, res, next) => {
         mapLink,
         yearBuilt,
         JSON.stringify(featuresList || []),
-        occupancyType, rentalStatus, rentalIncome, housegeld
+        occupancyType, rentalStatus, rentalIncome, housegeld,
+        energy.values.energy_certificate_type,
+        energy.values.energy_value,
+        energy.values.energy_efficiency_class,
+        energy.values.energy_sources,
+        energy.values.energy_certificate_year,
+        energy.values.heating_type
       ]
     );
     const newId = insertRes.rows[0].id;
@@ -1733,6 +1747,8 @@ exports.updateProperty = async (req, res, next) => {
     if (type === 'Land') {
       if (!(landSize > 0))      errors.push('Land size is required and must be positive');
     }
+    const energy = readEnergyCertificate(body);
+    energy.errors.forEach((message) => errors.push(message));
 
     if (errors.length) {
       const [{ rows: projects }, { rows: teamMembers }] = await Promise.all([
@@ -1740,7 +1756,14 @@ exports.updateProperty = async (req, res, next) => {
         query(`SELECT id, name FROM users WHERE role IN ('Admin','SuperAdmin') AND approved = true ORDER BY name`)
       ]);
       return res.status(400).render('properties/edit-property', {
-        property: existing,
+        property: Object.assign({}, existing, {
+          energy_certificate_type: body.energy_certificate_type || '',
+          energy_value: body.energy_value,
+          energy_efficiency_class: body.energy_efficiency_class || '',
+          energy_sources: body.energy_sources || [],
+          energy_certificate_year: body.energy_certificate_year,
+          heating_type: body.heating_type || ''
+        }),
         locations,
         projects,
         teamMembers,
@@ -1856,8 +1879,10 @@ exports.updateProperty = async (req, res, next) => {
            sold=$25,
            sold_at=$26,
            occupancy_type=$27, rental_status=$28, rental_income=$29, housegeld=$30,
+           energy_certificate_type=$31, energy_value=$32, energy_efficiency_class=$33,
+           energy_sources=$34, energy_certificate_year=$35, heating_type=$36,
            updated_at=NOW()
-         WHERE id=$31`,
+         WHERE id=$37`,
         [
           country, city, neighborhood, fullAddress,
           title, newSlug, description,
@@ -1873,6 +1898,12 @@ exports.updateProperty = async (req, res, next) => {
           soldChecked,
           soldAt ? soldAt.toISOString() : null,
           occupancyType, rentalStatus, rentalIncome, housegeld,
+          energy.values.energy_certificate_type,
+          energy.values.energy_value,
+          energy.values.energy_efficiency_class,
+          energy.values.energy_sources,
+          energy.values.energy_certificate_year,
+          energy.values.heating_type,
           propId
         ]
       );
@@ -1910,8 +1941,10 @@ exports.updateProperty = async (req, res, next) => {
            sold=$27,
            sold_at=$28,
            occupancy_type=$29, rental_status=$30, rental_income=$31, housegeld=$32,
+           energy_certificate_type=$33, energy_value=$34, energy_efficiency_class=$35,
+           energy_sources=$36, energy_certificate_year=$37, heating_type=$38,
            updated_at=NOW()
-         WHERE id=$33`,
+         WHERE id=$39`,
         [
           country, city, neighborhood, fullAddress,
           title, newSlug, description,
@@ -1928,6 +1961,12 @@ exports.updateProperty = async (req, res, next) => {
           soldChecked,
           soldAt ? soldAt.toISOString() : null,
           occupancyType, rentalStatus, rentalIncome, housegeld,
+          energy.values.energy_certificate_type,
+          energy.values.energy_value,
+          energy.values.energy_efficiency_class,
+          energy.values.energy_sources,
+          energy.values.energy_certificate_year,
+          energy.values.heating_type,
           propId
         ]
       );

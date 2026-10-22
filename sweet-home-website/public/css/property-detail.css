@@ -1374,3 +1374,26 @@
     height: 45px;
   }
 }
+
+.energy-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem 1.5rem;
+  margin: 0;
+}
+
+.energy-facts div {
+  margin: 0;
+}
+
+.energy-facts dt {
+  color: var(--gray-600);
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+.energy-facts dd {
+  margin: 0;
+  color: var(--gray-800);
+  font-weight: 600;
+}

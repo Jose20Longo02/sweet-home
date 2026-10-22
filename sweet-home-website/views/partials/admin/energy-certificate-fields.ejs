@@ -1,0 +1,98 @@
+<%
+  const energy = (typeof values !== 'undefined' && values) ? values : {};
+  let selectedSources = energy.energy_sources || [];
+  if (typeof selectedSources === 'string') selectedSources = selectedSources ? [selectedSources] : [];
+  if (!Array.isArray(selectedSources)) selectedSources = [];
+  const energyType = energy.energy_certificate_type || '';
+  const showDetails = energyType === 'demand' || energyType === 'consumption';
+  function bilingual(row) {
+    return row.en === row.de ? row.en : (row.en + ' (' + row.de + ')');
+  }
+%>
+<section class="card" id="energyCertificateSection">
+  <h2>Energy Certificate (Energieausweis)<span class="req">*</span></h2>
+  <div class="field">
+    <label for="energy_certificate_type">Energy Certificate Type (Energieausweistyp)<span class="req">*</span></label>
+    <select id="energy_certificate_type" name="energy_certificate_type" required>
+      <option value="">Select</option>
+      <% energyCertificate.CERTIFICATE_TYPES.forEach(function (row) { %>
+        <option value="<%= row.value %>" <%= energyType === row.value ? 'selected' : '' %>><%= bilingual(row) %></option>
+      <% }) %>
+    </select>
+  </div>
+
+  <div id="energyDetails" <%= showDetails ? '' : 'hidden' %>>
+    <div class="grid-3">
+      <div class="field">
+        <label for="energy_value">
+          <span id="energyValueText"><%= energyType === 'consumption' ? 'Final energy consumption (Endenergieverbrauch)' : 'Final energy demand (Endenergiebedarf)' %></span>
+          <span class="req">*</span>
+        </label>
+        <input
+          id="energy_value"
+          name="energy_value"
+          type="number"
+          min="0"
+          max="999999.99"
+          step="0.01"
+          inputmode="decimal"
+          data-energy-required="1"
+          data-demand-label="Final energy demand (Endenergiebedarf)"
+          data-consumption-label="Final energy consumption (Endenergieverbrauch)"
+          value="<%= energy.energy_value != null && energy.energy_value !== '' ? energy.energy_value : '' %>"
+        />
+        <small class="field-hint">kWh/(m²·a)</small>
+      </div>
+      <div class="field">
+        <label for="energy_efficiency_class">Energy efficiency class (Energieeffizienzklasse)<span class="req">*</span></label>
+        <select id="energy_efficiency_class" name="energy_efficiency_class" data-energy-required="1">
+          <option value="">Select</option>
+          <% energyCertificate.EFFICIENCY_CLASSES.forEach(function (klass) { %>
+            <option value="<%= klass %>" <%= String(energy.energy_efficiency_class || '') === klass ? 'selected' : '' %>><%= klass %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="field">
+        <label for="energy_certificate_year">Construction year according to the energy certificate (Baujahr laut Energieausweis)<span class="req">*</span></label>
+        <input
+          id="energy_certificate_year"
+          name="energy_certificate_year"
+          type="number"
+          min="1800"
+          max="<%= new Date().getFullYear() %>"
+          step="1"
+          data-energy-required="1"
+          value="<%= energy.energy_certificate_year || '' %>"
+        />
+        <small class="field-hint">The year printed on the certificate. Year Built above stays the property year.</small>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="heating_type">Heating Type (Heizungsart)<span class="req">*</span></label>
+      <select id="heating_type" name="heating_type" data-energy-required="1">
+        <option value="">Select</option>
+        <% energyCertificate.HEATING_TYPES.forEach(function (row) { %>
+          <option value="<%= row.value %>" <%= String(energy.heating_type || '') === row.value ? 'selected' : '' %>><%= bilingual(row) %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Main energy sources (Wesentliche Energieträger)<span class="req">*</span></label>
+      <div class="chips" id="energySources">
+        <% energyCertificate.ENERGY_SOURCES.forEach(function (row) { %>
+          <label class="chip">
+            <input type="checkbox" name="energy_sources" value="<%= row.value %>" <%= selectedSources.indexOf(row.value) !== -1 ? 'checked' : '' %> />
+            <span><%= bilingual(row) %></span>
+          </label>
+        <% }) %>
+      </div>
+      <small class="field-hint">Select every source named on the certificate. No information clears the other sources.</small>
+    </div>
+  </div>
+</section>
+<style>
+  #energyDetails[hidden] { display: none !important; }
+  #energyCertificateSection .field-hint { display: block; margin-top: 6px; color: #6b7280; font-size: 12px; }
+</style>
