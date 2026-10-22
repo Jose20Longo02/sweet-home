@@ -17,6 +17,7 @@ const {
 const { extractAttributionFromRequest, deriveTrafficSource } = require('../utils/leadAttribution');
 const { scheduleLeadEnrichment, enrichLeadById, enrichPendingLeads, isConfigured: isGa4AcquisitionConfigured } = require('../utils/ga4Acquisition');
 const { setLeadThankYou } = require('../utils/leadThankYou');
+const { applyRentalToZapierPayload, rentalThankYouEmail, rentalStaffEmail } = require('../utils/rentalLeadDelivery');
 
 const { validationResult } = require('express-validator');
 
@@ -268,6 +269,7 @@ const sendToZapier = async (leadData) => {
       created_at: leadData.created_at,
       timestamp: new Date().toISOString()
     };
+    const zapierPayload = applyRentalToZapierPayload(payload, leadData, resolveOriginBase());
 
     const webhookTargets = [primaryWebhookUrl];
     if (String(leadData && leadData.source || '') === 'berlin_investor_strategy_form') {
@@ -281,7 +283,7 @@ const sendToZapier = async (leadData) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(zapierPayload)
         });
 
         if (response.ok) {
@@ -951,6 +953,7 @@ exports.exportAll = async (req, res, next) => {
     if (filters.leadType === 'project')  { where.push(`l.project_id IS NOT NULL`); }
     if (filters.leadKind === 'buyer')    { where.push(`(l.source = 'property_form' OR l.source = 'project_form')`); }
     if (filters.leadKind === 'seller')   { where.push(`l.source = 'seller_form'`); }
+    if (filters.leadKind === 'rental')   { where.push(`l.source = 'rental_inquiry'`); }
     if (filters.leadKind === 'unknown')  { where.push(`(l.source IS NULL OR l.source NOT IN ('property_form','project_form','seller_form','rental_inquiry'))`); }
 
     const exportSql = `
@@ -1233,8 +1236,23 @@ exports.deleteLead = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
-exports.acceptRentalInquiry = async (req, { rental, name, email, phone, message, language }) => {
-  const pagePath = req.path;
+exports.acceptRentalInquiry = async (req, {
+  rental,
+  name,
+  email,
+  phone,
+  message,
+  language,
+  visitorMessage,
+  apartmentTitle,
+  apartmentSlug,
+  apartmentPath,
+  neighborhood,
+  moveIn,
+  stay,
+  people
+}) => {
+  const pagePath = apartmentPath || req.path;
   const dup = await query(
     `SELECT id FROM leads
       WHERE email = $1
@@ -1249,6 +1267,7 @@ exports.acceptRentalInquiry = async (req, { rental, name, email, phone, message,
   if (dup.rows[0]) return { duplicate: true };
 
   const attribution = extractAttributionFromRequest(req);
+  if (!attribution.page_path) attribution.page_path = pagePath;
   const lead = await Lead.create({
     property_id: null,
     agent_id: rental.agent_id || null,
@@ -1261,10 +1280,117 @@ exports.acceptRentalInquiry = async (req, { rental, name, email, phone, message,
     ...attribution
   });
   if (lead && lead.id) {
+    const apartmentUrl = `${resolveOriginBase()}${pagePath.startsWith('/') ? pagePath : `/${pagePath}`}`;
+    lead.rentalLead = {
+      title: apartmentTitle || '',
+      slug: apartmentSlug || '',
+      path: pagePath,
+      url: apartmentUrl,
+      neighborhood: neighborhood || '',
+      moveIn: moveIn || '',
+      stay: stay || '',
+      people: people || ''
+    };
     setImmediate(() => { sendToZapier(lead); });
     setImmediate(() => { scheduleLeadEnrichment(lead.id); });
+    setImmediate(() => {
+      sendRentalInquiryEmails({
+        rental,
+        name,
+        email,
+        phone,
+        language,
+        visitorMessage,
+        apartmentTitle,
+        apartmentUrl,
+        neighborhood,
+        moveIn,
+        stay,
+        people,
+        req
+      }).catch(() => {});
+    });
   }
   return { lead };
 };
+
+async function sendRentalInquiryEmails({
+  rental,
+  name,
+  email,
+  phone,
+  language,
+  visitorMessage,
+  apartmentTitle,
+  apartmentUrl,
+  neighborhood,
+  moveIn,
+  stay,
+  people,
+  req
+}) {
+  const title = apartmentTitle || 'Furnished apartment';
+  try {
+    await recordFormSubmission({
+      entityType: 'rental',
+      entityId: rental && rental.id ? rental.id : null,
+      meta: {
+        form: 'rental_inquiry',
+        apartment_title: title,
+        apartment_url: apartmentUrl || null
+      },
+      req
+    });
+  } catch (_) {}
+
+  try {
+    const thankYou = rentalThankYouEmail({ name, apartmentTitle: title, language });
+    await sendMail({
+      to: email,
+      subject: thankYou.subject,
+      html: thankYou.html,
+      text: thankYou.text
+    });
+  } catch (_) {}
+
+  try {
+    let agentEmail = null;
+    if (rental && rental.agent_id) {
+      const { rows } = await query('SELECT email FROM users WHERE id = $1 LIMIT 1', [rental.agent_id]);
+      agentEmail = rows[0] && rows[0].email ? rows[0].email : null;
+    }
+    const notificationSettings = await getLeadNotificationSetting('property_form');
+    const additionalRecipients = normalizeEmailList(notificationSettings.recipientEmails || []);
+    const shouldNotifyAgent = Boolean(notificationSettings.notifyAssignedAgent);
+    const shouldSendToAssignedAgent = shouldNotifyAgent && agentEmail;
+    const toRecipients = shouldSendToAssignedAgent ? [agentEmail] : additionalRecipients;
+    const bccRecipients = shouldSendToAssignedAgent
+      ? additionalRecipients.filter((emailItem) => !equalsIgnoreCase(emailItem, agentEmail))
+      : [];
+    const toLine = mergeUniqueEmails(toRecipients).join(',');
+    const bccLine = mergeUniqueEmails(bccRecipients).join(',');
+    if (!toLine) return;
+    const staff = rentalStaffEmail({
+      name,
+      email,
+      phone,
+      language,
+      visitorMessage,
+      apartmentTitle: title,
+      apartmentUrl,
+      neighborhood,
+      moveIn,
+      stay,
+      people
+    });
+    await sendMail({
+      to: toLine,
+      ...(bccLine ? { bcc: bccLine } : {}),
+      subject: staff.subject,
+      html: staff.html,
+      text: staff.text
+    });
+  } catch (_) {}
+}
 
 

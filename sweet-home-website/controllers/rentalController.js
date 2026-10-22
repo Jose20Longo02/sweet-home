@@ -809,13 +809,22 @@ exports.inquire = async (req, res, next) => {
       return renderApartment(req, res, resolved, { form: details, formError: message });
     }
     const card = catalogueCard(rental, lang);
+    const apartmentPath = card.href || req.path;
     await leadController.acceptRentalInquiry(req, {
       rental,
       name: details.name,
       email: details.email,
       phone: phoneCombined,
       message: inquiryCopy(lang, card, details),
-      language: lang
+      language: lang,
+      visitorMessage: details.message,
+      apartmentTitle: card.title,
+      apartmentSlug: String(apartmentPath).split('/').filter(Boolean).pop() || rental.slug || '',
+      apartmentPath,
+      neighborhood: card.neighborhood || '',
+      moveIn: details.moveIn,
+      stay: details.stay,
+      people: details.people
     });
     return res.redirect('/thank-you');
   } catch (error) {

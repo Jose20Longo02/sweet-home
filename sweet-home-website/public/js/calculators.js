@@ -67,9 +67,6 @@
       showError(form, '');
       const result = calc.mortgage({ price: price, down: down, years: years, annualRatePercent: rate });
       setText('mortgagePayment', money(result.payment));
-      setText('mortgageTax', money(result.monthlyTax));
-      setText('mortgageInsurance', money(result.monthlyInsurance));
-      setText('mortgageTotal', money(result.totalMonthly));
       setText('mortgageLoan', money(result.loan));
       setText('mortgageInterest', money(result.totalInterest));
       setText('mortgageCost', money(result.totalPaid));

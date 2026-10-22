@@ -60,14 +60,10 @@
           <p class="calc-kicker"><%= en ? 'Interest and repayment per month' : 'Zins und Tilgung im Monat' %></p>
           <p class="calc-figure" id="mortgagePayment"><%= en ? '€0' : '0 €' %></p>
           <div class="calc-rows">
-            <div class="calc-row"><span><%= en ? 'Property tax, estimate' : 'Grundsteuer, geschätzt' %></span><strong id="mortgageTax"><%= en ? '€0' : '0 €' %></strong></div>
-            <div class="calc-row"><span><%= en ? 'Insurance, estimate' : 'Versicherung, geschätzt' %></span><strong id="mortgageInsurance"><%= en ? '€0' : '0 €' %></strong></div>
-            <div class="calc-row is-total"><span><%= en ? 'Month including estimates' : 'Monat inkl. Schätzungen' %></span><strong id="mortgageTotal"><%= en ? '€0' : '0 €' %></strong></div>
             <div class="calc-row"><span><%= en ? 'Loan amount' : 'Kreditsumme' %></span><strong id="mortgageLoan"><%= en ? '€0' : '0 €' %></strong></div>
             <div class="calc-row"><span><%= en ? 'Interest over the term' : 'Zinsen über die Laufzeit' %></span><strong id="mortgageInterest"><%= en ? '€0' : '0 €' %></strong></div>
             <div class="calc-row"><span><%= en ? 'Interest and repayment in total' : 'Zins und Tilgung gesamt' %></span><strong id="mortgageCost"><%= en ? '€0' : '0 €' %></strong></div>
           </div>
-          <p class="calc-note"><%= en ? 'Property tax and insurance use the same estimates as the homepage: 1.5 percent and 0.75 percent of the purchase price per year. They are not a tax or insurance assessment.' : 'Grundsteuer und Versicherung sind dieselben Schätzungen wie auf der Startseite: 1,5 Prozent und 0,75 Prozent des Kaufpreises im Jahr. Sie ersetzen keinen Steuer- oder Versicherungsbescheid.' %></p>
         </aside>
       </div>
       <details class="calc-method">
@@ -75,13 +71,12 @@
         <div class="calc-method__body">
           <% if (en) { %>
             <p>The payment is an annuity. Interest and principal repayment (Tilgung) stay the same each month for as long as the rate you enter applies across the fixed interest period. A typical Berlin start is a purchase price around €350,000, a down payment around €70,000, and 4.50 percent over 30 years. A higher rate or a shorter term raises the monthly payment. A shorter term lowers the interest paid over the life of the loan.</p>
-            <p>Two lines under the payment are estimates, not bills. Property tax is set at 1.5 percent of the purchase price per year, and insurance at 0.75 percent. Both are divided by twelve. Berlin property tax follows the assessed base and the municipal multiplier, not this percentage.</p>
-            <p>Closing costs when buying property in Germany are not inside the payment. Transfer tax, the notary, the land registry, and any agent share sit on top of the price, and many banks finance only part of them. For a non-resident, the down payment is often the first question, because the equity has to cover more than the gap in the loan. The practical range is in <a href="/en/blog/down-payment-for-buying-apartment-berlin">the down payment for buying an apartment in Berlin</a>. Current listings are on <a href="/en/properties-for-sale-berlin">apartments for sale in Berlin</a>.</p>
+            <p>Closing costs when buying property in Germany are not inside the payment. Property tax and building insurance are running costs, and they are not part of the mortgage payment either. Transfer tax, the notary, the land registry, and any agent share sit on top of the price, and many banks finance only part of them. For a non-resident, the down payment is often the first question, because the equity has to cover more than the gap in the loan. The practical range is in <a href="/en/blog/down-payment-for-buying-apartment-berlin">the down payment for buying an apartment in Berlin</a>. Current listings are on <a href="/en/properties-for-sale-berlin">apartments for sale in Berlin</a>.</p>
             <p>Sweet Home is not a bank and does not lend. The figure is a guide before you compare offers.</p>
           <% } else { %>
             <p>Gerechnet wird die Annuität: Zins und Tilgung bleiben jeden Monat gleich, solange der eingegebene Zinssatz über die ganze Laufzeit gilt. Dieselbe Rechnung steht auf der Startseite. Hier hat sie eine eigene Seite, damit Sie die Rate neben der Kaufplanung lesen können.</p>
             <p>Ein realistischer Einstieg für eine Wohnung in Berlin ist oft ein Kaufpreis um 350.000 Euro, etwa 70.000 Euro Eigenkapital und der Zinssatz, den die Bank für die Zinsbindung nennt, zum Beispiel 4,50 Prozent auf 30 Jahre. Die Rate steigt, wenn der Zinssatz steigt oder die Laufzeit kürzer wird. Eine kürzere Laufzeit senkt dafür die Zinsen über die gesamte Kreditzeit. Die Felder sind mit diesem Beispiel gefüllt.</p>
-            <p>Zwei Zeilen unter der Rate sind Schätzungen, keine Bescheide. Die Grundsteuer ist mit 1,5 Prozent des Kaufpreises im Jahr angesetzt, die Versicherung mit 0,75 Prozent. Beide Beträge werden durch zwölf geteilt. Die Grundsteuer in Berlin folgt dem Grundsteuermessbetrag und dem Hebesatz, nicht diesem Prozentsatz. Die Zeilen sind ein Puffer, keine Steuerberechnung. Was hier fehlt, sind die Kaufnebenkosten. Grunderwerbsteuer, Notar, Grundbuch und gegebenenfalls der Makleranteil kommen zum Kaufpreis dazu. Viele Banken finanzieren diese Posten nur zum Teil.</p>
+            <p>Die Rate enthält keine Grundsteuer und keine Versicherung. Das sind laufende Kosten, keine Bestandteile der Hypothek. Was ebenfalls fehlt, sind die Kaufnebenkosten. Grunderwerbsteuer, Notar, Grundbuch und gegebenenfalls der Makleranteil kommen zum Kaufpreis dazu. Viele Banken finanzieren diese Posten nur zum Teil.</p>
             <p>Wie die Rate in den Berliner Kauf gehört, steht im Beitrag zur <a href="/blog/immobilienfinanzierung-berlin">Immobilienfinanzierung Berlin</a>. Sweet Home ist keine Bank und vergibt keine Darlehen. Die Zahl ist eine Orientierung, bevor Sie Konditionen vergleichen.</p>
           <% } %>
         </div>
@@ -96,16 +91,6 @@
             <div class="calc-faq__answer">
               <div class="calc-faq__answer-inner">
                 <p><%= en ? 'From the loan, which is the purchase price minus the down payment, the annual interest rate, and the term. The rate is applied monthly. The payment stays the same while that rate applies. When the fixed interest period ends, the bank sets a new rate.' : 'Aus der Kreditsumme, also Kaufpreis minus Eigenkapital, dem Jahreszins und der Laufzeit. Der Zins wird auf den Monat umgelegt. Die Rate bleibt gleich, solange dieser Zinssatz gilt. Nach Ende der Zinsbindung setzt die Bank einen neuen Satz.' %></p>
-              </div>
-            </div>
-          </article>
-          <article class="calc-faq__item">
-            <h3>
-              <button type="button" class="calc-faq__question" aria-expanded="false"><%= en ? 'What do property tax and insurance mean in the result?' : 'Was bedeuten Grundsteuer und Versicherung in der Anzeige?' %></button>
-            </h3>
-            <div class="calc-faq__answer">
-              <div class="calc-faq__answer-inner">
-                <p><%= en ? 'They are allowances, not a Berlin assessment. 1.5 percent of the purchase price per year for property tax and 0.75 percent for insurance, each divided by twelve. The real property tax depends on the assessed base and the municipal multiplier.' : 'Es sind Pauschalen, keine Berliner Bescheide. 1,5 Prozent des Kaufpreises im Jahr für die Grundsteuer und 0,75 Prozent für die Versicherung, jeweils geteilt durch zwölf. Die echte Grundsteuer hängt vom Messbetrag und vom Hebesatz ab.' %></p>
               </div>
             </div>
           </article>
@@ -401,5 +386,5 @@
     <% } %>
   </div>
 </section>
-<script src="/js/calculator-formulas.js?v=20261020-en"></script>
-<script src="/js/calculators.js?v=20261020-en"></script>
+<script src="/js/calculator-formulas.js?v=20261022-mortgage"></script>
+<script src="/js/calculators.js?v=20261022-mortgage"></script>

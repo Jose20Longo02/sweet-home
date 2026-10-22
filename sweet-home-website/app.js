@@ -1617,7 +1617,7 @@ const CALCULATOR_PAGES = {
     de: {
       path: '/hypothekenrechner',
       title: 'Hypothekenrechner: monatliche Rate',
-      description: 'Monatliche Rate aus Kaufpreis, Eigenkapital, Zinssatz und Laufzeit. Dieselbe Annuität wie auf der Startseite, plus eine geschätzte Grundsteuer und Versicherung.'
+      description: 'Monatliche Rate aus Kaufpreis, Eigenkapital, Zinssatz und Laufzeit. Dieselbe Annuität wie auf der Startseite, ohne Grundsteuer und Versicherung.'
     },
     en: {
       path: '/en/mortgage-calculator-germany',

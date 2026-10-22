@@ -33,6 +33,7 @@
         <option value="">All Lead Kinds</option>
         <option value="buyer" <%= filters.leadKind === 'buyer' ? 'selected' : '' %>>Buyer leads (property/project)</option>
         <option value="seller" <%= filters.leadKind === 'seller' ? 'selected' : '' %>>Seller leads (owners form)</option>
+        <option value="rental" <%= filters.leadKind === 'rental' ? 'selected' : '' %>>Rental leads</option>
         <option value="unknown" <%= filters.leadKind === 'unknown' ? 'selected' : '' %>>Unknown (general forms)</option>
       </select>
       <select name="leadType">

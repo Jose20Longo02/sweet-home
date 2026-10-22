@@ -35,16 +35,11 @@
       payment = loan * (monthlyRate * pow) / (pow - 1);
     }
     const totalPaid = payment * payments;
-    const monthlyTax = (price * 0.015) / 12;
-    const monthlyInsurance = (price * 0.0075) / 12;
     return {
       loan: loan,
       payment: payment,
       totalInterest: totalPaid - loan,
-      totalPaid: totalPaid,
-      monthlyTax: monthlyTax,
-      monthlyInsurance: monthlyInsurance,
-      totalMonthly: payment + monthlyTax + monthlyInsurance
+      totalPaid: totalPaid
     };
   }
 

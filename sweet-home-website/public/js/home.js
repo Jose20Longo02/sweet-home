@@ -775,23 +775,8 @@ function calculateMortgage() {
   // Calculate total interest and cost
   const totalInterest = (monthlyPayment * numberOfPayments) - loanAmount;
   const totalCost = monthlyPayment * numberOfPayments;
-  
-  // Estimate property tax (typically 1-2% of property value annually)
-  const annualPropertyTax = propertyPrice * 0.015; // 1.5% estimate
-  const monthlyPropertyTax = annualPropertyTax / 12;
-  
-  // Estimate insurance (typically 0.5-1% of property value annually)
-  const annualInsurance = propertyPrice * 0.0075; // 0.75% estimate
-  const monthlyInsurance = annualInsurance / 12;
-  
-  const totalMonthlyPayment = monthlyPayment + monthlyPropertyTax + monthlyInsurance;
-  
-  // Display results
-  document.getElementById('monthlyPayment').textContent = formatEuro(monthlyPayment);
-  document.getElementById('propertyTax').textContent = formatEuro(monthlyPropertyTax);
-  document.getElementById('insurance').textContent = formatEuro(monthlyInsurance);
-  document.getElementById('totalPayment').textContent = formatEuro(totalMonthlyPayment);
 
+  document.getElementById('monthlyPayment').textContent = formatEuro(monthlyPayment);
   document.getElementById('loanAmount').textContent = formatEuro(loanAmount);
   document.getElementById('totalInterest').textContent = formatEuro(totalInterest);
   document.getElementById('totalCost').textContent = formatEuro(totalCost);

@@ -25,6 +25,7 @@
         <option value="">All Lead Types</option>
         <option value="property" <%= filters.leadType === 'property' ? 'selected' : '' %>>Only property leads</option>
         <option value="project" <%= filters.leadType === 'project' ? 'selected' : '' %>>Only project leads</option>
+        <option value="rental" <%= filters.leadType === 'rental' ? 'selected' : '' %>>Rental leads</option>
       </select>
       <input type="date" name="from" value="<%= filters.from || '' %>" />
       <input type="date" name="to" value="<%= filters.to || '' %>" />
