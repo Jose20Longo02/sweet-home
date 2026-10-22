@@ -308,9 +308,6 @@ app.use((req, res, next) => {
   }
   // Expose user to all views
   res.locals.user = req.session.user || null;
-  // Own property so a view assignment stays on this request.
-  // An unset name in an EJS template would otherwise leak onto the global object.
-  res.locals.headPartial = '';
   next();
 });
 
@@ -437,6 +434,9 @@ app.use((req, res, next) => {
 // Expose current path to views so layout can pick header variant
 app.use((req, res, next) => {
   res.locals.currentPath = req.path;
+  res.locals.currentSearch = req.originalUrl.includes('?')
+    ? req.originalUrl.slice(req.originalUrl.indexOf('?'))
+    : '';
   // Flag: use path-based locale links when we have a locale prefix (/, /en, /es or any /en/*, /es/*)
   res.locals.homeLangPaths = (req.path === '/' || req.path === '/en' || req.path.startsWith('/en/'));
   // Helper: prepend locale prefix to a path. e.g. localePath('/properties') -> '/en/properties' when on /en/* pages

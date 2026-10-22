@@ -457,6 +457,7 @@
         "countryDescription": "Discover {count} properties {operation} in {country}. Updated listings, photos, and pricing from Sweet Home.",
         "allTitle": "{count} properties for sale",
         "allDescription": "Browse {count} active property listings across Berlin, Dubai, and Cyprus.",
+        "pageTitle": " - Page {page}",
         "exploreCities": "Explore city property pages"
       },
       "saved": {

@@ -107,9 +107,23 @@
       : ((typeof localeAlternateUrls !== 'undefined' && localeAlternateUrls && typeof localeAlternateUrls === 'object')
           ? localeAlternateUrls
           : null);
+    const hrefPath = (value) => {
+      try {
+        const parsed = new URL(String(value), 'http://local.invalid');
+        return parsed.pathname + parsed.search;
+      } catch (e) {
+        return String(value || '');
+      }
+    };
+    const selfPath = (typeof currentPath !== 'undefined' ? currentPath : '')
+      + (typeof currentSearch !== 'undefined' ? currentSearch : '');
+    const alternatePaths = alternates
+      ? Object.keys(alternates).map((code) => hrefPath(alternates[code]))
+      : [];
+    const hreflangIncludesSelf = alternatePaths.indexOf(selfPath) !== -1;
   %>
     <link rel="canonical" href="<%= canonicalHref %>">
-    <% if (alternates) { %>
+    <% if (alternates && hreflangIncludesSelf) { %>
       <% Object.keys(alternates).forEach(function(hreflangCode) { %>
     <link rel="alternate" hreflang="<%= hreflangCode %>" href="<%= alternates[hreflangCode] %>">
       <% }); %>

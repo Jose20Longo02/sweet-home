@@ -650,6 +650,10 @@ exports.listPropertiesPublic = async (req, res, next) => {
       );
     }
 
+    if (currentPage > 1) {
+      seoTitle += res.locals.t('properties.list.seo.pageTitle', ' - Page {page}', { page: currentPage });
+    }
+
     const pagePathForPagination = queryPath;
     const queryForPagination = { ...req.query };
     const prevPageUrl = currentPage > 1

@@ -445,6 +445,7 @@
         "countryDescription": "Entdecken Sie {count} Immobilien {operation} in {country}. Aktuelle Angebote mit Fotos und Preisen von Sweet Home.",
         "allTitle": "{count} Immobilien zum Verkauf",
         "allDescription": "Durchsuchen Sie {count} aktive Immobilienangebote in Berlin, Dubai und Zypern.",
+        "pageTitle": " – Seite {page}",
         "exploreCities": "Stadt-Immobilienseiten entdecken"
       },
       "saved": {
