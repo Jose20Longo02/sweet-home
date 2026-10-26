@@ -106,14 +106,28 @@
         <input id="energy_certificate_pdf" name="energy_certificate_pdf" type="file" accept="application/pdf,.pdf" />
         <input type="hidden" id="remove_existing_energy_pdf" name="remove_existing_energy_pdf" value="false" />
         <button type="button" class="energy-pass-drop" id="energyPassDrop" <%= energyPdfUrl ? 'hidden' : '' %>>
-          <span class="energy-pass-mark">PDF</span>
+          <span class="energy-pass-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"></path>
+              <path d="M14 2v5h5"></path>
+              <path d="M12 18v-6"></path>
+              <path d="M9.5 14.5 12 12l2.5 2.5"></path>
+            </svg>
+          </span>
           <span class="energy-pass-drop-copy">
             <strong>Upload the energy pass</strong>
-            <small>PDF only, up to 20 MB. Click here or drop the file.</small>
+            <small>Drop a PDF here, or click to browse. Maximum 20 MB.</small>
           </span>
         </button>
         <div class="energy-pass-file" id="energyPassFile" <%= energyPdfUrl ? '' : 'hidden' %>>
-          <span class="energy-pass-mark">PDF</span>
+          <span class="energy-pass-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"></path>
+              <path d="M14 2v5h5"></path>
+              <path d="M8 13h8"></path>
+              <path d="M8 17h5"></path>
+            </svg>
+          </span>
           <div class="energy-pass-meta">
             <strong id="energyPassName"><%= energyPdfName %></strong>
             <small id="energyPassNote"><%= energyPdfUrl ? 'Saved on this listing' : '' %></small>
@@ -121,7 +135,7 @@
           <div class="energy-pass-actions">
             <a id="energyPassOpen" href="<%= energyPdfUrl %>" target="_blank" rel="noopener noreferrer" <%= energyPdfUrl ? '' : 'hidden' %>>Open</a>
             <button type="button" id="energyPassReplace">Replace</button>
-            <button type="button" id="energyPassRemove">Delete</button>
+            <button type="button" id="energyPassRemove">Remove</button>
           </div>
         </div>
       </div>
@@ -133,6 +147,117 @@
   #energyDetails[hidden] { display: none !important; }
   #energyCertificateSection .field-hint { display: block; margin-top: 6px; color: #6b7280; font-size: 12px; }
   #energyPass input[type="file"] { display: none !important; }
-  #energyPassDrop, #energyPassFile { display: flex; align-items: center; gap: 14px; width: 100%; box-sizing: border-box; }
-  #energyPassDrop[hidden], #energyPassFile[hidden] { display: none !important; }
+  #energyPassDrop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 156px;
+    margin: 0;
+    padding: 28px 24px;
+    box-sizing: border-box;
+    text-align: center;
+    appearance: none;
+    -webkit-appearance: none;
+    background: linear-gradient(180deg, #f7fcf9 0%, #ffffff 70%);
+    color: #111111;
+    border: 1.5px dashed #8ed4aa;
+    border-radius: 16px;
+    box-shadow: none;
+    cursor: pointer;
+    font-family: inherit;
+    line-height: 1.4;
+    transition: border-color .16s ease, background .16s ease, transform .16s ease;
+  }
+  #energyPassDrop:hover,
+  #energyPassDrop.is-dragover {
+    border-color: #2ea862;
+    background: #f3fbf6;
+    transform: translateY(-1px);
+  }
+  #energyPassFile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    background: #ffffff;
+    border: 1px solid #e6efe9;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(35, 128, 75, .06);
+  }
+  #energyPassDrop[hidden],
+  #energyPassFile[hidden],
+  #energyPassOpen[hidden] { display: none !important; }
+  #energyPass .energy-pass-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    flex: 0 0 auto;
+    border-radius: 14px;
+    background: #e8f7ee;
+    color: #2ea862;
+  }
+  #energyPassDrop .energy-pass-drop-copy,
+  #energyPass .energy-pass-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  #energyPass .energy-pass-meta { flex: 1; text-align: left; }
+  #energyPassDrop strong,
+  #energyPass .energy-pass-meta strong {
+    color: #111111;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  #energyPassDrop small,
+  #energyPass .energy-pass-meta small {
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 400;
+  }
+  #energyPass .energy-pass-meta strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  #energyPass .energy-pass-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+  }
+  #energyPass .energy-pass-actions a,
+  #energyPass .energy-pass-actions button {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(46, 168, 98, .28);
+    background: #ffffff;
+    color: #23804b;
+    box-shadow: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  #energyPass .energy-pass-actions a:hover,
+  #energyPass .energy-pass-actions button:hover { background: #f3fbf6; }
+  #energyPassRemove {
+    color: #b30024 !important;
+    border-color: #ffd0d8 !important;
+    background: #fff7f8 !important;
+  }
 </style>
