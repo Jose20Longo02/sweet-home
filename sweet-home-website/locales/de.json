@@ -329,6 +329,7 @@
       "energySources": "Wesentliche Energieträger",
       "energyYear": "Baujahr laut Energieausweis",
       "energyHeating": "Heizungsart",
+      "energyPdfOpen": "Energieausweis öffnen (PDF)",
       "description": "Beschreibung",
       "noDescription": "Keine Beschreibung für diese Immobilie verfügbar.",
       "features": "Ausstattung",

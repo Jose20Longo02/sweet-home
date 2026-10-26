@@ -90,6 +90,43 @@
       </div>
       <small class="field-hint">Select every source named on the certificate. No information clears the other sources.</small>
     </div>
+
+    <%
+      const energyPdfUrl = energy.energy_certificate_pdf || '';
+      let energyPdfName = '';
+      if (energyPdfUrl) {
+        const rawName = String(energyPdfUrl).split('?')[0].split('/').pop() || 'energy-certificate.pdf';
+        try { energyPdfName = decodeURIComponent(rawName).replace(/^\d+-/, ''); }
+        catch (e) { energyPdfName = rawName; }
+      }
+    %>
+    <div class="field energy-pass-field">
+      <label for="energy_certificate_pdf">Energy certificate PDF (Energieausweis PDF)</label>
+      <div class="energy-pass" id="energyPass" data-existing-url="<%= energyPdfUrl %>" data-existing-name="<%= energyPdfName %>">
+        <input id="energy_certificate_pdf" name="energy_certificate_pdf" type="file" accept="application/pdf,.pdf" />
+        <input type="hidden" id="remove_existing_energy_pdf" name="remove_existing_energy_pdf" value="false" />
+        <button type="button" class="energy-pass-drop" id="energyPassDrop" <%= energyPdfUrl ? 'hidden' : '' %>>
+          <span class="energy-pass-badge">PDF</span>
+          <span class="energy-pass-drop-copy">
+            <strong>Upload the energy pass</strong>
+            <small>PDF only, up to 20 MB. Drop the file here or click to choose it.</small>
+          </span>
+        </button>
+        <div class="energy-pass-file" id="energyPassFile" <%= energyPdfUrl ? '' : 'hidden' %>>
+          <span class="energy-pass-badge">PDF</span>
+          <div class="energy-pass-meta">
+            <strong id="energyPassName"><%= energyPdfName %></strong>
+            <small id="energyPassNote"><%= energyPdfUrl ? 'Saved on this listing' : '' %></small>
+          </div>
+          <div class="energy-pass-actions">
+            <a id="energyPassOpen" href="<%= energyPdfUrl %>" target="_blank" rel="noopener noreferrer" <%= energyPdfUrl ? '' : 'hidden' %>>Open</a>
+            <button type="button" id="energyPassReplace">Replace</button>
+            <button type="button" id="energyPassRemove">Delete</button>
+          </div>
+        </div>
+      </div>
+      <small class="field-hint" id="energyPassError" hidden></small>
+    </div>
   </div>
 </section>
 <style>

@@ -1397,3 +1397,20 @@
   color: var(--gray-800);
   font-weight: 600;
 }
+
+.energy-pdf {
+  margin: 1.25rem 0 0;
+}
+
+.energy-pdf a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.energy-pdf a:hover {
+  text-decoration: underline;
+}

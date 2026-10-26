@@ -315,6 +315,7 @@
           if (property.energy_certificate_type !== 'none' && property.energy_value != null && property.energy_value !== '') {
             energyBits.push(Number(property.energy_value).toLocaleString(energyLang === 'de' ? 'de-DE' : 'en-US', { maximumFractionDigits: 2 }) + ' kWh/(m²·a)');
           }
+          if (property.energy_certificate_pdf) energyBits.push('PDF');
         %>
         <div class="info-card">
           <h3><%= typeof t !== 'undefined' ? t('properties.detail.energyTitle', 'Energy certificate') : 'Energy certificate' %></h3>

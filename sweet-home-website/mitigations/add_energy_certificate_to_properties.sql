@@ -7,4 +7,5 @@ ALTER TABLE properties
   ADD COLUMN IF NOT EXISTS energy_efficiency_class VARCHAR(3),
   ADD COLUMN IF NOT EXISTS energy_sources TEXT[] NOT NULL DEFAULT '{}',
   ADD COLUMN IF NOT EXISTS energy_certificate_year INTEGER,
-  ADD COLUMN IF NOT EXISTS heating_type VARCHAR(40);
+  ADD COLUMN IF NOT EXISTS heating_type VARCHAR(40),
+  ADD COLUMN IF NOT EXISTS energy_certificate_pdf TEXT;

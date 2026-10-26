@@ -10,7 +10,7 @@ const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
   // Reject unexpected file fields immediately
-  const allowedFields = ['photos', 'video', 'floorplan', 'plan_photo'];
+  const allowedFields = ['photos', 'video', 'floorplan', 'plan_photo', 'energy_certificate_pdf'];
   if (!allowedFields.includes(file.fieldname)) {
     return cb(new Error(`Unexpected field: "${file.fieldname}". Allowed fields: ${allowedFields.join(', ')}`), false);
   }
@@ -21,7 +21,8 @@ const fileFilter = (req, file, cb) => {
   const isVideo = file.fieldname === 'video'  && /^video\/(mp4|quicktime|x-matroska)$/i.test(file.mimetype);
   const isFloor = file.fieldname === 'floorplan' && (/^image\/(jpeg|png|webp|heic|heif)$/i.test(mm) || ext === '.heic' || ext === '.heif');
   const isPlan  = file.fieldname === 'plan_photo' && (/^image\/(jpeg|png|webp|heic|heif)$/i.test(mm) || ext === '.heic' || ext === '.heif');
-  if (isImage || isVideo || isFloor || isPlan) return cb(null, true);
+  const isEnergyPdf = file.fieldname === 'energy_certificate_pdf' && (mm === 'application/pdf' || ext === '.pdf');
+  if (isImage || isVideo || isFloor || isPlan || isEnergyPdf) return cb(null, true);
   
   // Provide specific error message based on field type
   let errorMsg = `Invalid file type for "${file.fieldname}". `;
@@ -29,6 +30,8 @@ const fileFilter = (req, file, cb) => {
     errorMsg += 'Allowed formats: JPEG, PNG, WebP, HEIC/HEIF';
   } else if (file.fieldname === 'video') {
     errorMsg += 'Allowed formats: MP4, QuickTime (.mov), Matroska (.mkv)';
+  } else if (file.fieldname === 'energy_certificate_pdf') {
+    errorMsg += 'Upload a PDF file';
   }
   errorMsg += `. Received: ${file.mimetype || 'unknown'} (${ext || 'no extension'})`;
   return cb(new Error(errorMsg), false);
@@ -45,7 +48,8 @@ const uploader = multer({
   { name: 'photos', maxCount: 20 },
   { name: 'video',  maxCount: 1  },
   { name: 'floorplan', maxCount: 1 },
-  { name: 'plan_photo', maxCount: 1 }
+  { name: 'plan_photo', maxCount: 1 },
+  { name: 'energy_certificate_pdf', maxCount: 1 }
 ]);
 
 // Helper: upload to Spaces using putObject (core S3 API; upload() can be missing in some setups)
@@ -58,6 +62,9 @@ const uploadToSpaces = async (buffer, filename, mimetype, folder) => {
     ContentType: mimetype,
     ACL: 'public-read'
   };
+  if (mimetype === 'application/pdf') {
+    params.ContentDisposition = 'inline; filename="energy-certificate.pdf"';
+  }
 
   return new Promise((resolve, reject) => {
     s3.putObject(params, (err) => {
@@ -102,7 +109,11 @@ const processAndUploadFile = async (file, folder) => {
     mimetype = 'image/jpeg';
   }
 
-  // Resize images if needed (except videos)
+  if (path.extname(filename).toLowerCase() === '.pdf') {
+    mimetype = 'application/pdf';
+  }
+
+  // Resize images if needed (except videos and PDFs)
   if (mimetype.startsWith('image/') && buffer.length > 2 * 1024 * 1024) { // If larger than 2MB
     buffer = await sharp(buffer)
       .resize(1200, 800, { fit: 'inside', withoutEnlargement: true })
@@ -140,15 +151,17 @@ module.exports = async function uploadPropertyMedia(req, res, next) {
           // Check if it's a video file
           if (fieldName === 'video') {
             return next(new Error('File too large. Maximum file size is 20 MB. Please compress your video before uploading. You can use an online video compressor like https://www.veed.io/tools/video-compressor'));
+          } else if (fieldName === 'energy_certificate_pdf') {
+            return next(new Error('Energy certificate PDF is too large. Maximum file size is 20 MB.'));
           } else {
             // It's an image file (photos, floorplan, plan_photo)
             return next(new Error('File too large. Maximum file size is 20 MB. Please compress or resize your image before uploading. You can use an online compressor like https://www.iloveimg.com/compress-image'));
           }
         } else if (err.code === 'LIMIT_FILE_COUNT') {
-          return next(new Error('Too many files. Maximum allowed: 20 photos, 1 video, 1 floorplan, 1 plan photo.'));
+          return next(new Error('Too many files. Maximum allowed: 20 photos, 1 video, 1 floorplan, 1 plan photo, 1 energy certificate PDF.'));
         } else if (err.code === 'LIMIT_UNEXPECTED_FILE') {
           const fieldName = err.field || 'unknown';
-          return next(new Error(`Unexpected file field: "${fieldName}". Allowed fields: photos, video, floorplan, plan_photo. Please check your form field names.`));
+          return next(new Error(`Unexpected file field: "${fieldName}". Allowed fields: photos, video, floorplan, plan_photo, energy_certificate_pdf. Please check your form field names.`));
         }
       }
       // Handle invalid file type errors (unsupported formats)
@@ -189,6 +202,11 @@ module.exports = async function uploadPropertyMedia(req, res, next) {
       if (req.files?.plan_photo) {
         const processed = await processAndUploadFile(req.files.plan_photo[0], `${basePrefix}/plan`);
         if (processed) processedFiles.plan_photo = [processed];
+      }
+
+      if (req.files?.energy_certificate_pdf) {
+        const processed = await processAndUploadFile(req.files.energy_certificate_pdf[0], `${basePrefix}/energy-certificate`);
+        if (processed) processedFiles.energy_certificate_pdf = [processed];
       }
 
       // Replace req.files with processed files

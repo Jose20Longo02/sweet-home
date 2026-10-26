@@ -336,6 +336,7 @@
       "energySources": "Main energy sources",
       "energyYear": "Construction year according to the energy certificate",
       "energyHeating": "Heating type",
+      "energyPdfOpen": "View energy certificate (PDF)",
       "description": "Description",
       "noDescription": "No description available for this property.",
       "features": "Features & Amenities",
