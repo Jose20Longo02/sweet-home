@@ -78,20 +78,19 @@ input[type="file"]:hover::-webkit-file-upload-button{
   box-shadow:0 10px 24px rgba(0,0,0,.16);
 }
 
-.energy-pass{display:flex;flex-direction:column;gap:10px}
-.energy-pass input[type="file"]{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
-.energy-pass-drop,.energy-pass-file{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;border:1px dashed rgba(0,0,0,.22);border-radius:16px;padding:14px 16px;color:var(--color-primary)}
-.energy-pass-drop{cursor:pointer;transition:border-color .15s ease, background .15s ease, transform .15s ease}
-.energy-pass-drop:hover,.energy-pass-drop.is-dragover{border-color:var(--color-primary);background:rgba(0,0,0,.02);transform:translateY(-1px)}
+.energy-pass{display:block}
+.energy-pass input[type="file"]{display:none !important}
+.energy-pass-drop,.energy-pass-file{display:flex;align-items:center;gap:14px;width:100%;box-sizing:border-box;text-align:left;background:#fafafa;border:1px dashed rgba(0,0,0,.2);border-radius:14px;padding:16px 18px;color:var(--color-primary);font:inherit}
+.energy-pass-drop{appearance:none;-webkit-appearance:none;cursor:pointer;transition:border-color .15s ease, background .15s ease}
+.energy-pass-drop:hover,.energy-pass-drop.is-dragover{border-color:var(--color-primary);background:#fff}
 .energy-pass-drop[hidden],.energy-pass-file[hidden],.energy-pass-actions a[hidden]{display:none !important}
-.energy-pass-badge{flex:0 0 auto;width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--color-primary);color:#fff;font-size:12px;font-weight:700;letter-spacing:.04em}
-.energy-pass-drop-copy,.energy-pass-meta{display:flex;flex-direction:column;gap:2px;min-width:0}
-.energy-pass-drop-copy strong,.energy-pass-meta strong{font-size:14px}
-.energy-pass-drop-copy small,.energy-pass-meta small{color:#6b7280;font-size:12px}
+.energy-pass-mark{flex:0 0 auto;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--color-primary);background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:6px 8px}
+.energy-pass-drop-copy,.energy-pass-meta{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
+.energy-pass-drop-copy strong,.energy-pass-meta strong{font-size:14px;font-weight:600}
+.energy-pass-drop-copy small,.energy-pass-meta small{color:#6b7280;font-size:12px;line-height:1.4}
 .energy-pass-meta strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.energy-pass-file{border-style:solid}
-.energy-pass-actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
-.energy-pass-actions a,.energy-pass-actions button{border:1px solid rgba(0,0,0,.12);background:#fff;color:var(--color-primary);border-radius:999px;padding:8px 12px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none}
-.energy-pass-actions a:hover,.energy-pass-actions button:hover{border-color:var(--color-primary)}
+.energy-pass-file{border-style:solid;background:#fff}
+.energy-pass-actions{margin-left:auto;display:flex;align-items:center;gap:14px;flex:0 0 auto}
+.energy-pass-actions a,.energy-pass-actions button{background:none;border:0;padding:0;color:var(--color-primary);font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .energy-pass-actions #energyPassRemove{color:#b30024}
 

@@ -106,14 +106,14 @@
         <input id="energy_certificate_pdf" name="energy_certificate_pdf" type="file" accept="application/pdf,.pdf" />
         <input type="hidden" id="remove_existing_energy_pdf" name="remove_existing_energy_pdf" value="false" />
         <button type="button" class="energy-pass-drop" id="energyPassDrop" <%= energyPdfUrl ? 'hidden' : '' %>>
-          <span class="energy-pass-badge">PDF</span>
+          <span class="energy-pass-mark">PDF</span>
           <span class="energy-pass-drop-copy">
             <strong>Upload the energy pass</strong>
-            <small>PDF only, up to 20 MB. Drop the file here or click to choose it.</small>
+            <small>PDF only, up to 20 MB. Click here or drop the file.</small>
           </span>
         </button>
         <div class="energy-pass-file" id="energyPassFile" <%= energyPdfUrl ? '' : 'hidden' %>>
-          <span class="energy-pass-badge">PDF</span>
+          <span class="energy-pass-mark">PDF</span>
           <div class="energy-pass-meta">
             <strong id="energyPassName"><%= energyPdfName %></strong>
             <small id="energyPassNote"><%= energyPdfUrl ? 'Saved on this listing' : '' %></small>
@@ -132,4 +132,7 @@
 <style>
   #energyDetails[hidden] { display: none !important; }
   #energyCertificateSection .field-hint { display: block; margin-top: 6px; color: #6b7280; font-size: 12px; }
+  #energyPass input[type="file"] { display: none !important; }
+  #energyPassDrop, #energyPassFile { display: flex; align-items: center; gap: 14px; width: 100%; box-sizing: border-box; }
+  #energyPassDrop[hidden], #energyPassFile[hidden] { display: none !important; }
 </style>
