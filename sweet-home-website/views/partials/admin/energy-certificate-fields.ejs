@@ -11,48 +11,57 @@
 %>
 <section class="card" id="energyCertificateSection">
   <h2>Energy Certificate (Energieausweis)<span class="req">*</span></h2>
-  <div class="field">
-    <label for="energy_certificate_type">Energy Certificate Type (Energieausweistyp)<span class="req">*</span></label>
-    <select id="energy_certificate_type" name="energy_certificate_type" required>
-      <option value="">Select</option>
-      <% energyCertificate.CERTIFICATE_TYPES.forEach(function (row) { %>
-        <option value="<%= row.value %>" <%= energyType === row.value ? 'selected' : '' %>><%= bilingual(row) %></option>
-      <% }) %>
-    </select>
+  <p class="energy-lead">Start with the certificate type. Performance, heating, and the PDF open when the type is a demand or consumption certificate.</p>
+
+  <div class="energy-block">
+    <h3>Certificate type</h3>
+    <div class="field energy-type-field">
+      <label for="energy_certificate_type">Energy Certificate Type (Energieausweistyp)<span class="req">*</span></label>
+      <select id="energy_certificate_type" name="energy_certificate_type" required>
+        <option value="">Select</option>
+        <% energyCertificate.CERTIFICATE_TYPES.forEach(function (row) { %>
+          <option value="<%= row.value %>" <%= energyType === row.value ? 'selected' : '' %>><%= bilingual(row) %></option>
+        <% }) %>
+      </select>
+    </div>
   </div>
 
   <div id="energyDetails" <%= showDetails ? '' : 'hidden' %>>
-    <div class="grid-3">
-      <div class="field">
-        <label for="energy_value">
-          <span id="energyValueText"><%= energyType === 'consumption' ? 'Final energy consumption (Endenergieverbrauch)' : 'Final energy demand (Endenergiebedarf)' %></span>
-          <span class="req">*</span>
-        </label>
-        <input
-          id="energy_value"
-          name="energy_value"
-          type="number"
-          min="0"
-          max="999999.99"
-          step="0.01"
-          inputmode="decimal"
-          data-energy-required="1"
-          data-demand-label="Final energy demand (Endenergiebedarf)"
-          data-consumption-label="Final energy consumption (Endenergieverbrauch)"
-          value="<%= energy.energy_value != null && energy.energy_value !== '' ? energy.energy_value : '' %>"
-        />
-        <small class="field-hint">kWh/(m²·a)</small>
+    <div class="energy-block">
+      <h3>Performance</h3>
+      <p class="energy-block-note">The figures and the construction year printed on the certificate. This year is separate from Year Built.</p>
+      <div class="grid-2">
+        <div class="field">
+          <label for="energy_value">
+            <span id="energyValueText"><%= energyType === 'consumption' ? 'Final energy consumption (Endenergieverbrauch)' : 'Final energy demand (Endenergiebedarf)' %></span>
+            <span class="req">*</span>
+          </label>
+          <input
+            id="energy_value"
+            name="energy_value"
+            type="number"
+            min="0"
+            max="999999.99"
+            step="0.01"
+            inputmode="decimal"
+            data-energy-required="1"
+            data-demand-label="Final energy demand (Endenergiebedarf)"
+            data-consumption-label="Final energy consumption (Endenergieverbrauch)"
+            value="<%= energy.energy_value != null && energy.energy_value !== '' ? energy.energy_value : '' %>"
+          />
+          <small class="field-hint">kWh/(m²·a)</small>
+        </div>
+        <div class="field">
+          <label for="energy_efficiency_class">Energy efficiency class (Energieeffizienzklasse)<span class="req">*</span></label>
+          <select id="energy_efficiency_class" name="energy_efficiency_class" data-energy-required="1">
+            <option value="">Select</option>
+            <% energyCertificate.EFFICIENCY_CLASSES.forEach(function (klass) { %>
+              <option value="<%= klass %>" <%= String(energy.energy_efficiency_class || '') === klass ? 'selected' : '' %>><%= klass %></option>
+            <% }) %>
+          </select>
+        </div>
       </div>
-      <div class="field">
-        <label for="energy_efficiency_class">Energy efficiency class (Energieeffizienzklasse)<span class="req">*</span></label>
-        <select id="energy_efficiency_class" name="energy_efficiency_class" data-energy-required="1">
-          <option value="">Select</option>
-          <% energyCertificate.EFFICIENCY_CLASSES.forEach(function (klass) { %>
-            <option value="<%= klass %>" <%= String(energy.energy_efficiency_class || '') === klass ? 'selected' : '' %>><%= klass %></option>
-          <% }) %>
-        </select>
-      </div>
-      <div class="field">
+      <div class="field energy-year-field">
         <label for="energy_certificate_year">Construction year according to the energy certificate (Baujahr laut Energieausweis)<span class="req">*</span></label>
         <input
           id="energy_certificate_year"
@@ -64,31 +73,33 @@
           data-energy-required="1"
           value="<%= energy.energy_certificate_year || '' %>"
         />
-        <small class="field-hint">The year printed on the certificate. Year Built above stays the property year.</small>
       </div>
     </div>
 
-    <div class="field">
-      <label for="heating_type">Heating Type (Heizungsart)<span class="req">*</span></label>
-      <select id="heating_type" name="heating_type" data-energy-required="1">
-        <option value="">Select</option>
-        <% energyCertificate.HEATING_TYPES.forEach(function (row) { %>
-          <option value="<%= row.value %>" <%= String(energy.heating_type || '') === row.value ? 'selected' : '' %>><%= bilingual(row) %></option>
-        <% }) %>
-      </select>
-    </div>
-
-    <div class="field">
-      <label>Main energy sources (Wesentliche Energieträger)<span class="req">*</span></label>
-      <div class="chips" id="energySources">
-        <% energyCertificate.ENERGY_SOURCES.forEach(function (row) { %>
-          <label class="chip">
-            <input type="checkbox" name="energy_sources" value="<%= row.value %>" <%= selectedSources.indexOf(row.value) !== -1 ? 'checked' : '' %> />
-            <span><%= bilingual(row) %></span>
-          </label>
-        <% }) %>
+    <div class="energy-block">
+      <h3>Heating</h3>
+      <p class="energy-block-note">Heating type first, then every main energy source named on the certificate.</p>
+      <div class="field energy-type-field">
+        <label for="heating_type">Heating Type (Heizungsart)<span class="req">*</span></label>
+        <select id="heating_type" name="heating_type" data-energy-required="1">
+          <option value="">Select</option>
+          <% energyCertificate.HEATING_TYPES.forEach(function (row) { %>
+            <option value="<%= row.value %>" <%= String(energy.heating_type || '') === row.value ? 'selected' : '' %>><%= bilingual(row) %></option>
+          <% }) %>
+        </select>
       </div>
-      <small class="field-hint">Select every source named on the certificate. No information clears the other sources.</small>
+      <div class="field">
+        <label>Main energy sources (Wesentliche Energieträger)<span class="req">*</span></label>
+        <div class="chips" id="energySources">
+          <% energyCertificate.ENERGY_SOURCES.forEach(function (row) { %>
+            <label class="chip">
+              <input type="checkbox" name="energy_sources" value="<%= row.value %>" <%= selectedSources.indexOf(row.value) !== -1 ? 'checked' : '' %> />
+              <span><%= bilingual(row) %></span>
+            </label>
+          <% }) %>
+        </div>
+        <small class="field-hint">No information clears the other sources.</small>
+      </div>
     </div>
 
     <%
@@ -100,8 +111,10 @@
         catch (e) { energyPdfName = rawName; }
       }
     %>
-    <div class="field energy-pass-field">
-      <label for="energy_certificate_pdf">Energy certificate PDF (Energieausweis PDF)</label>
+    <div class="energy-block energy-pass-field">
+      <h3>Energy pass</h3>
+      <p class="energy-block-note">Optional PDF of the certificate. You can replace or remove it here.</p>
+      <label class="energy-pass-label" for="energy_certificate_pdf">Energy certificate PDF (Energieausweis PDF)</label>
       <div class="energy-pass" id="energyPass" data-existing-url="<%= energyPdfUrl %>" data-existing-name="<%= energyPdfName %>">
         <input id="energy_certificate_pdf" name="energy_certificate_pdf" type="file" accept="application/pdf,.pdf" />
         <input type="hidden" id="remove_existing_energy_pdf" name="remove_existing_energy_pdf" value="false" />
@@ -144,7 +157,57 @@
   </div>
 </section>
 <style>
+  #energyCertificateSection .energy-lead {
+    margin: -4px 0 16px;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  #energyDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 14px;
+  }
   #energyDetails[hidden] { display: none !important; }
+  #energyCertificateSection .energy-block {
+    padding: 16px 16px 18px;
+    background: #f8fbf9;
+    border: 1px solid #e6efe9;
+    border-radius: 16px;
+  }
+  #energyCertificateSection .energy-block h3 {
+    margin: 0 0 4px;
+    color: #23804b;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  #energyCertificateSection .energy-block h3::after { content: none; }
+  #energyCertificateSection .energy-block-note {
+    margin: 0 0 14px;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  #energyCertificateSection .energy-block .field + .field,
+  #energyCertificateSection .energy-block .grid-2 + .field,
+  #energyCertificateSection .energy-block .energy-type-field + .field {
+    margin-top: 14px;
+  }
+  #energyCertificateSection .energy-type-field,
+  #energyCertificateSection .energy-year-field { max-width: 520px; }
+  #energyCertificateSection .energy-pass-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
   #energyCertificateSection .field-hint { display: block; margin-top: 6px; color: #6b7280; font-size: 12px; }
   #energyPass input[type="file"] { display: none !important; }
   #energyPassDrop {
