@@ -307,6 +307,12 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
         </a>
       </li>
       <li>
+        <a href="<%= buyerGuidesEn ? '/en/blog/mortgage-financing-berlin' : '/blog/immobilienfinanzierung-berlin' %>">
+          <span class="home-buyer-guides__kind"><%= t('home.buyerGuides.kindGuide', buyerGuidesEn ? 'Guide' : 'Ratgeber') %></span>
+          <span class="home-buyer-guides__name"><%= t('home.buyerGuides.financing', buyerGuidesEn ? 'Mortgage financing in Berlin' : 'Immobilienfinanzierung Berlin') %></span>
+        </a>
+      </li>
+      <li>
         <a href="<%= buyerGuidesEn ? '/en/mortgage-calculator-germany' : '/hypothekenrechner' %>">
           <span class="home-buyer-guides__kind"><%= t('home.buyerGuides.kindCalculator', buyerGuidesEn ? 'Calculator' : 'Rechner') %></span>
           <span class="home-buyer-guides__name"><%= t('home.buyerGuides.mortgage', buyerGuidesEn ? 'Mortgage calculator' : 'Hypothekenrechner') %></span>

@@ -28,7 +28,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-28):** **Phase V**. **V1 is live. V2 is on the two price pages.** Indexing for those two URLs is still a manual Search Console step. Next build is **V3**. V4 meta descriptions go to Adi in one list before they go live. Phase U is on the site except the U5 popup items, which V7 replaces. U6 still applies to every new page.
+- **Current priority (2026-10-28):** **Phase V**. **V1 and V2 are live. V3 blog edits are live.** The homepage financing card and the mortgage-calculator link are local until the next deploy. `/en/properties-for-sale-berlin` stays with Adi in the V4 batch. Indexing for the seven changed blog URLs is still manual. Phase U is on the site except the U5 popup items, which V7 replaces. U6 still applies to every new page.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -981,7 +981,7 @@ Triggers Adi wants:
 
 **Source:** `Sweet_Home_Push_List_Oct_2026.docx`. Adi titled it “task list, November.” Email: “The focus is on pages that already appear in Google and should earn more clicks.”
 
-**Do first:** V3. V1 is live. V2 is on the price pages. Leave V4 until the title and description list is with Adi. V9’s furnished-rental slug waits on Adi. Indexing for the two price URLs is still manual.
+**Do first:** send Adi the V4 list, including the held English listings title. V1 and V2 are live. V3 blog edits are live. The homepage financing card and the German mortgage-calculator link are local until deploy. V9’s furnished-rental slug waits on Adi.
 
 **Keep for every item below (same gate as U6):**
 
@@ -994,7 +994,7 @@ Triggers Adi wants:
 - Human read-through before publish.
 - Homepage and money-page copy still goes to Adi first. V4 is the same rule: she reviews the batch before it goes live.
 
-**Order:** V1 is live. Next: V2 → V3 → V4 (draft the list, wait for Adi) → V5 → V6 → V7 → V8. V9 runs beside the push work, not ahead of V2–V3.
+**Order:** V1 and V2 are live. V3 blog edits are live, except the English listings page, which waits in the V4 batch. Next: V4 (draft the list, wait for Adi) → V5 → V6 → V7 → V8. V9 runs beside the push work, not ahead of V4.
 
 ### V1 — Homepage, German and English
 
@@ -1014,13 +1014,13 @@ Verified live on `https://sweethome-immobilien.de/` and `/en` on 2026-10-28. The
 
 ### V2 — District price table on the Immobilienpreise guide
 
-Live in the database 2026-10-28. No code deploy. Both pages read the same post.
+Live 2026-10-28. Confirmed on both public URLs.
 
 - [x] Add a table of official purchase prices per district to `/blog/immobilienpreise-berlin`. Figures from the Gutachterausschuss, not a competitor blog
 - [x] Add a simple chart of the same figures
 - [x] Mirror the table and the chart on `/en/blog/berlin-property-prices-2026`
 - [x] Name the source and the year of the figures in the text
-- [ ] Request indexing for both URLs after the change. Manual in Search Console: `/blog/immobilienpreise-berlin` and `/en/blog/berlin-property-prices-2026`
+- [x] Request indexing for both URLs after the change. Done 2026-10-28 in Search Console: `/blog/immobilienpreise-berlin` and `/en/blog/berlin-property-prices-2026`. Both were already indexed; a recrawl was requested for the new table and the key-figures layout.
 
 **Done when:** both pages show the same district figures, the source is on the page, and both URLs are submitted for indexing.
 
@@ -1030,14 +1030,25 @@ The table is figure 42 of the Immobilienmarktbericht Berlin 2025/2026, data year
 
 For each page: rework the title and the meta description so the concrete number or the answer comes first. Add one direct-answer paragraph right under the H1. Request indexing after the edit. Do not rewrite the rest of the article.
 
-- [ ] `/en/blog/capital-gains-tax-property-germany`. Title suggestion: `Capital Gains Tax on German Property: 0% After 10 Years`
-- [ ] `/en/blog/berlin-real-estate-investment-guide-2026`. Lead the description with a concrete number (vacancy 0.3%, prices 5,130 EUR/m2). Confirm both figures against the official source already used in the post before publishing them
-- [ ] `/blog/mietpreise-berlin-bezirk`. Lead with the current average rent. Add a small rent-by-district table
-- [ ] `/blog/eigenkapital-wohnungskauf`. Lead with the rule of thumb in euros on a 400k example. Add a short paragraph on financing the purchase (`Kredit für den Wohnungskauf`: what banks finance, what stays equity)
-- [ ] `/en/properties-for-sale-berlin`. Title and description for the buying searcher. Example: `Buy an Apartment in Berlin: Current Listings and Prices | Sweet Home`. This is a money page: send this title and description to Adi with the V4 batch if it is not already in her example
-- [ ] `/en/blog/best-berlin-districts-for-families`. Name two districts in the title or the description
-- [ ] `/blog/vermietete-wohnung-kaufen-berlin`. Lead with the price-advantage number
-- [ ] `/blog/immobilienfinanzierung-berlin`. Direct-answer opening: what equity and income a Berlin purchase realistically needs. Link to this post from the homepage guide strip (V1) and from the mortgage calculator
+- [x] `/en/blog/capital-gains-tax-property-germany`. Title: `Capital Gains Tax on German Property: 0% After 10 Years`
+- [x] `/en/blog/berlin-real-estate-investment-guide-2026`. Vacancy 0.3% is the CBRE-empirica market-active vacancy at the end of 2024. The post’s €5,130/m² figure is not in an official source, so the title, description, and the price sentence now use the Gutachterausschuss average of €5,511/m² for 2025
+- [x] `/blog/mietpreise-berlin-bezirk`. Leads with the Mietspiegel median of 7,71 €/m². The small district table is IBB asking rents for 2025, because the Mietspiegel does not publish a rent per Bezirk
+- [x] `/blog/eigenkapital-wohnungskauf`. 400.000 Euro example: 80.000 Euro at 20 percent, about 124.000 Euro with purchase costs. Short paragraph on what the bank finances
+- [ ] `/en/properties-for-sale-berlin`. Held for Adi with the V4 batch. Proposed title: `Buy an Apartment in Berlin: Current Listings and Prices` (the layout adds `| Sweet Home`). Proposed description: `Berlin condominiums averaged 5,511 €/m² in 2025. Compare current listings, districts, and prices with Sweet Home.`
+- [x] `/en/blog/best-berlin-districts-for-families`. Title names Prenzlauer Berg and Charlottenburg
+- [x] `/blog/vermietete-wohnung-kaufen-berlin`. Leads with 30–40 percent below a vacant comparable, and the 280.000 / 400.000 example
+- [x] `/blog/immobilienfinanzierung-berlin`. Opening uses 20 percent equity on 400.000 Euro, plus purchase costs, and says the law sets no fixed income line. Homepage guide card and the visible German mortgage-calculator link are in the code, local until deploy
+- [ ] Request indexing after the edit. Manual in Search Console for the seven changed URLs below. The listings page is not in this request
+
+**Indexing, still manual:**
+
+- https://sweethome-immobilien.de/en/blog/capital-gains-tax-property-germany
+- https://sweethome-immobilien.de/en/blog/berlin-real-estate-investment-guide-2026
+- https://sweethome-immobilien.de/blog/mietpreise-berlin-bezirk
+- https://sweethome-immobilien.de/blog/eigenkapital-wohnungskauf
+- https://sweethome-immobilien.de/en/blog/best-berlin-districts-for-families
+- https://sweethome-immobilien.de/blog/vermietete-wohnung-kaufen-berlin
+- https://sweethome-immobilien.de/blog/immobilienfinanzierung-berlin
 
 **Done when:** each URL has the new title, the new description, the opening paragraph, and an indexing request.
 
@@ -1120,7 +1131,7 @@ Both with English versions. Same quality rules as U4: official sources, relative
 
 | Day         | Focus                                                                                          |
 | ----------- | ---------------------------------------------------------------------------------------------- |
-| Now         | **Phase V.** V2 is on the price pages. Request indexing for those two URLs, then V3. |
+| Now         | **Phase V.** V3 blog edits are live. Request indexing for the seven URLs, deploy the homepage card, then draft V4 for Adi. |
 | Then        | Draft the V4 description list and send it to Adi before anything in that batch goes live.      |
 | After that  | V5 contact lines, V6 mailer UTMs, V7 only after Israel agrees, V8 rental schema, V9 posts.     |
 | Friday      | Email Adi: done / live / blockers / next week                                                  |
@@ -1219,7 +1230,8 @@ Confirmations you asked for:
 | 2026-10-16 | **U5** popup guard removed                                                                              | Tell Israel                   | `contactbeat-triggers.js` no longer closes ContactBeat forms. Layout no longer loads it. Live after deploy. |
 | 2026-10-27 | **Phase V** from Adi’s November push list                                                               | Plan                          | `Sweet_Home_Push_List_Oct_2026.docx`. Do V1–V3 first. V4 waits on Adi’s review. V7 does not close ContactBeat unless Israel agrees. |
 | 2026-10-28 | **V1** homepage guide strip and mobile map                                                              | Live                          | Strip on `/` and `/en`, seven links each, same tab. Leaflet gesture handling: one finger scrolls, two fingers pan. |
-| 2026-10-28 | **V2** district purchase-price table and chart                                                          | Live (database)               | Immobilienmarktbericht 2025/2026, figure 42. Same figures on DE and EN. GSC indexing still manual. |
+| 2026-10-28 | **V2** district purchase-price table and chart                                                          | Live                          | Immobilienmarktbericht 2025/2026, figure 42. Same figures on DE and EN. Key-figures table restyled. Indexing requested the same day. |
+| 2026-10-28 | **V3** titles, descriptions, and opening answers                                                        | Live in the database          | Seven blog URLs. €5,130 was not published. Listings page held for Adi. Homepage card and calculator link wait on deploy. Indexing still manual. |
 
 
 ---
