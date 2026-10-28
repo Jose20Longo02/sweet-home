@@ -224,6 +224,15 @@ function initializeMarketExplorer() {
   const map = Leaflet.map(mapElement, {
     zoomControl: true,
     scrollWheelZoom: false,
+    gestureHandling: true,
+    gestureHandlingOptions: {
+      text: {
+        touch: mapStrings.gestureTouch || 'Use two fingers to move the map',
+        scroll: mapStrings.gestureScroll || 'Use Ctrl + scroll to zoom the map',
+        scrollMac: mapStrings.gestureScrollMac || 'Use ⌘ + scroll to zoom the map'
+      },
+      duration: 1200
+    },
     minZoom: 2,
     maxZoom: 15,
     worldCopyJump: true

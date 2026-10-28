@@ -18,7 +18,8 @@
 | `Sweet_Home_Dev_Tasks_Next_2_Weeks.docx`    | Next-two-weeks tasks (N1–N11) — received 2026-08-10. **Closed** as previous cycle |
 | `Sweet_Home_Tasks_Sep_Cycle.docx`           | Phase S (S1–S10) — received 2026-09-18. Done except the popup, now in Phase T     |
 | `Sweet_Home_Fixes_Oct_2026.docx`            | Phase T (T1–T8) — received 2026-10-01. **Closed** on the site 2026-10-02            |
-| `Sweet_Home_Tasks_Oct_Cycle.docx`           | **ACTIVE** next two weeks (U0–U6) — received 2026-10-06                            |
+| `Sweet_Home_Tasks_Oct_Cycle.docx`           | Phase U (U0–U6) — received 2026-10-06. Live except the U5 popup items, now in V7   |
+| `Sweet_Home_Push_List_Oct_2026.docx`        | **ACTIVE** November push (V1–V9) — received 2026-10-27. Do V1–V3 first             |
 
 
 Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOOK.md)` (go-live / redirects / GSC).
@@ -27,7 +28,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-16):** **Phase U**. **U0** through **U4** are live. The U5 popup guard was removed the same day Israel reported it was closing ContactBeat forms. ContactBeat runs on its own again once that deploy is live. Next is **U6** on anything new before it goes live. Phase T is on the site.
+- **Current priority (2026-10-27):** **Phase V**. Adi’s November list is about pages that already appear in Google and should earn more clicks. **Do V1, V2, and V3 first.** V4 meta descriptions go to Adi in one list before they go live. Phase U is on the site except the U5 popup items, which V7 replaces. U6 still applies to every new page.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -814,7 +815,7 @@ Verified live 2026-10-02. Moabit and Neukölln, German and English, each show th
 
 ---
 
-# Phase U — Next two weeks (Adi 2026-10-06) — ACTIVE
+# Phase U — Next two weeks (Adi 2026-10-06) — previous cycle
 
 Source: `Sweet_Home_Tasks_Oct_Cycle.docx`. Adi says most Phase T fixes are in and the posts look good. Same working rule as the last batches: read the page as a reader before it goes live. Flowing text, images in long guides, no wall of links.
 
@@ -976,15 +977,149 @@ Triggers Adi wants:
 
 ---
 
+# Phase V — Push list (Adi, received 2026-10-27) — ACTIVE
+
+**Source:** `Sweet_Home_Push_List_Oct_2026.docx`. Adi titled it “task list, November.” Email: “The focus is on pages that already appear in Google and should earn more clicks.”
+
+**Do first:** V1, then V2, then V3. Leave V4 until the title and description list is with Adi. V9’s furnished-rental slug waits on Adi.
+
+**Keep for every item below (same gate as U6):**
+
+- No em dashes. A comma or a shorter sentence. Number ranges can stay as 5–12.
+- Internal links open in the same tab. External links open in a new tab.
+- English pages link only to `/en/` pages. The English calculators are live, so an English page links to the English calculator, not to the German tool with the anchor `calculator (German)`.
+- Links point at the final URL, not a URL that redirects.
+- One link per target per page. The link sits inside the sentence.
+- No Admin-Save for German or English blog bodies. Update `content_i18n` with a script. Official sources only. Cover and inline images use relative `/images/blog/` paths.
+- Human read-through before publish.
+- Homepage and money-page copy still goes to Adi first. V4 is the same rule: she reviews the batch before it goes live.
+
+**Order:** V1 → V2 → V3 → V4 (draft the list, wait for Adi) → V5 → V6 → V7 → V8. V9 runs beside the push work, not ahead of V1–V3.
+
+### V1 — Homepage, German and English
+
+Local preview 2026-10-28. Not deployed.
+
+- [x] Add a guide strip: `Ratgeber für Käufer` on `/` and `Guides for buyers` on `/en`
+- [x] The strip links these four guides and the three calculators. Plain links or small cards. The links are in the server HTML, not injected on click
+- [x] German targets: `/blog/immobilienpreise-berlin`, `/blog/mietpreise-berlin-bezirk`, `/blog/grunderwerbsteuer-berlin`, `/blog/kaufnebenkosten-berlin`, `/hypothekenrechner`, `/kaufnebenkosten-rechner`, `/mietrendite-rechner`
+- [x] English targets: `/en/blog/berlin-property-prices-2026`, `/en/blog/berlin-rents-by-district-2026`, `/en/blog/berlin-transfer-tax-grunderwerbsteuer`, `/en/blog/cost-of-buying-property-berlin`, `/en/mortgage-calculator-germany`, `/en/property-purchase-costs-calculator-germany`, `/en/rental-yield-calculator-germany`
+- [x] One link per target. Same tab. No URL that 301s
+- [x] Mobile map: scrolling over the map scrolls the page, it does not pan the map. One finger scrolls. Two fingers pan. Use Leaflet gesture handling
+- [x] Check the map on a phone-sized viewport on both homepages
+
+**Done when:** view-source of `/` and `/en` shows the seven links without clicking, and a one-finger drag over the map moves the page.
+
+Verified on `http://localhost:3084`. Each of the 14 targets returns 200 with no redirect. The strip is in the server HTML. One finger on the map leaves dragging off and `touch-action: pan-x pan-y`. Two fingers turn dragging on. A card click stays in the same tab (`/blog/immobilienpreise-berlin`, `/en/mortgage-calculator-germany`).
+
+### V2 — District price table on the Immobilienpreise guide
+
+- [ ] Add a table of official purchase prices per district to `/blog/immobilienpreise-berlin`. Figures from the Gutachterausschuss, not a competitor blog
+- [ ] Add a simple chart of the same figures
+- [ ] Mirror the table and the chart on `/en/blog/berlin-property-prices-2026`
+- [ ] Name the source and the year of the figures in the text
+- [ ] Request indexing for both URLs after the change
+
+**Done when:** both pages show the same district figures, the source is on the page, and both URLs are submitted for indexing.
+
+### V3 — Pages that rank and earn no clicks
+
+For each page: rework the title and the meta description so the concrete number or the answer comes first. Add one direct-answer paragraph right under the H1. Request indexing after the edit. Do not rewrite the rest of the article.
+
+- [ ] `/en/blog/capital-gains-tax-property-germany`. Title suggestion: `Capital Gains Tax on German Property: 0% After 10 Years`
+- [ ] `/en/blog/berlin-real-estate-investment-guide-2026`. Lead the description with a concrete number (vacancy 0.3%, prices 5,130 EUR/m2). Confirm both figures against the official source already used in the post before publishing them
+- [ ] `/blog/mietpreise-berlin-bezirk`. Lead with the current average rent. Add a small rent-by-district table
+- [ ] `/blog/eigenkapital-wohnungskauf`. Lead with the rule of thumb in euros on a 400k example. Add a short paragraph on financing the purchase (`Kredit für den Wohnungskauf`: what banks finance, what stays equity)
+- [ ] `/en/properties-for-sale-berlin`. Title and description for the buying searcher. Example: `Buy an Apartment in Berlin: Current Listings and Prices | Sweet Home`. This is a money page: send this title and description to Adi with the V4 batch if it is not already in her example
+- [ ] `/en/blog/best-berlin-districts-for-families`. Name two districts in the title or the description
+- [ ] `/blog/vermietete-wohnung-kaufen-berlin`. Lead with the price-advantage number
+- [ ] `/blog/immobilienfinanzierung-berlin`. Direct-answer opening: what equity and income a Berlin purchase realistically needs. Link to this post from the homepage guide strip (V1) and from the mortgage calculator
+
+**Done when:** each URL has the new title, the new description, the opening paragraph, and an indexing request.
+
+### V4 — Meta descriptions, round 2
+
+Number-first pattern. First sentence: the concrete number or the answer. Second sentence: why this page. **Send the whole batch in one list. Adi reviews it before it goes live.**
+
+- [ ] Draft the descriptions. Do not publish them
+- [ ] The 13 district pages, German and English (the S6 set)
+- [ ] `/wohnungen-berlin-kaufen` and `/en/properties-for-sale-berlin` (the English one may already be drafted in V3)
+- [ ] The six newest topics, German and English: Hausgeld, Prenzlauer Berg Ratgeber, Kreuzberg Ratgeber, Spekulationssteuer, Moabit Ratgeber, Neukölln Ratgeber
+- [ ] The three calculators, German and English: `/hypothekenrechner`, `/kaufnebenkosten-rechner`, `/mietrendite-rechner`, `/en/mortgage-calculator-germany`, `/en/property-purchase-costs-calculator-germany`, `/en/rental-yield-calculator-germany`
+- [ ] Email Adi the list
+- [ ] Apply only what she approves, then request indexing for the changed URLs
+
+**Done when:** the approved descriptions are live and the rest of the batch is still waiting on her notes.
+
+### V5 — Turn readers into enquiries
+
+The three guides are Immobilienpreise, Mietpreise, and Grunderwerbsteuer. German and English.
+
+- [ ] Mid-article contact block on `/blog/immobilienpreise-berlin` and `/en/blog/berlin-property-prices-2026`: one sentence plus a contact link or a short form, in the flow of the text, not a popup
+- [ ] Same block on `/blog/mietpreise-berlin-bezirk` and `/en/blog/berlin-rents-by-district-2026`
+- [ ] Same block on `/blog/grunderwerbsteuer-berlin` and `/en/blog/berlin-transfer-tax-grunderwerbsteuer`
+- [ ] Current-listing cards on those three guides where the block is not live yet. Reuse `loadBlogListingCards`. Skip a guide that already shows cards
+
+**Done when:** each of the six URLs has the contact line in the article, and each guide that was missing cards now shows them.
+
+### V6 — Calculator mailers: add tracking
+
+The three mailers are the BMBy calculator emails. Every link in each mailer gets UTM parameters so that mailer’s visits and enquiries show separately in Analytics.
+
+- [ ] Kaufnebenkosten mailer: `utm_source=bmby`, `utm_medium=email`, `utm_campaign=calculator-kaufnebenkosten`
+- [ ] Mortgage mailer: same source and medium, `utm_campaign=calculator-hypothekenrechner`
+- [ ] Yield mailer: same source and medium, `utm_campaign=calculator-mietrendite`
+- [ ] Confirm the campaign names with whoever owns the BMBy mailers before the emails go out
+- [ ] Check one opened link from each mailer lands on the matching calculator with the query string intact
+
+**Done when:** a visit from each mailer is distinguishable in Analytics.
+
+### V7 — One popup rule for every overlay
+
+Adi’s rule: a mobile visitor arriving from Google must be able to read the page without an overlay covering it. Desktop and returning-visitor behavior can stay as it is. She names ContactBeat and the Christmas popup.
+
+**Do not repeat the 2026-10-16 mistake.** Israel reported that `public/js/contactbeat-triggers.js` was closing ContactBeat forms and cutting leads. That script was removed. ContactBeat stays on its own loader. Do not ship a closer, a timer change, or a hide rule for ContactBeat until Israel and Adi have both agreed the change. The Christmas popup already follows desktop exit-intent, no mobile auto-open, and once per session, and it is off while `ICON_THEME` is `default`.
+
+- [ ] Write down what a phone visitor from Google sees today from ContactBeat (corner button, timed full-screen forms) before changing anything
+- [ ] Ask Israel before any ContactBeat change. The ask is only: no overlay covering the page for a mobile Google arrival. Desktop stays
+- [ ] Christmas popup: confirm a phone landing from Google never opens it. Leave it off while the theme is `default`
+- [ ] Test: phone, Google referrer, the article is readable, no overlay on top of it
+
+**Done when:** the phone test passes, and ContactBeat was not closed or retimed without Israel’s OK.
+
+### V8 — Furnished-rental section
+
+- [ ] Fix the invalid CAROUSEL structured data (`itemListElement`) on `/moeblierte-wohnung/` and `/en/furnished-apartment/` pages, once in the template
+- [ ] Every list item needs `@type` `ListItem`, `position`, and `url`. If that cannot be done cleanly, remove the carousel markup
+- [ ] Validate with the Rich Results Test
+- [ ] Same standard as the rest of the site: title pattern, number-first meta description, hreflang pairing between the German page and the English page
+- [ ] Catalogue URLs stay `/moeblierte-wohnungen-berlin` and `/en/furnished-apartments-berlin`. Apartment URLs stay `/moeblierte-wohnung/{slug}` and `/en/furnished-apartment/{slug}`
+
+**Done when:** the Rich Results Test no longer reports the carousel error, and each apartment page pairs with its English twin.
+
+### V9 — Two new posts, beside the push work
+
+Both with English versions. Same quality rules as U4: official sources, relative cover, author id 12, publish with a script, no Admin-Save, hreflang paired, one reciprocal link from the most related existing post.
+
+- [ ] `Kaufnebenkosten finanzieren: geht das?` Slug `/blog/kaufnebenkosten-finanzieren`. English slug `/en/blog/financing-purchase-costs-germany`. What banks finance, what must be equity, how buyers bridge the gap
+- [ ] Link that post both ways with the Kaufnebenkosten calculator, plus the Kaufnebenkosten, Eigenkapital, and Immobilienfinanzierung guides. English links use the English URLs
+- [ ] A guide for the furnished-rental section: furnished renting in Berlin, for tenants and for owners considering furnished letting
+- [ ] Wait for Adi’s main keyword and slug. She is choosing between `möblierte wohnung berlin` and `wohnung auf zeit berlin`. Do not invent the slug
+- [ ] That post links both ways with the furnished-listing pages, plus Mietpreise and Vermietete Wohnung where the sentence is natural
+
+**Done when:** both posts are live in German and English, the switcher uses the English slug, and the furnished post used Adi’s slug.
+
+---
+
 # Suggested weekly workflow
 
 
-| Day         | Focus                                                                   |
-| ----------- | ----------------------------------------------------------------------- |
-| Now         | **Phase U.** U5 popup guard is removed. Deploy so ContactBeat runs on its own. |
-| Then        | **U6** on the next page before it goes live. |
-| After that  | Prenzlauer Berg and Kreuzberg district cards now lead with the new guides. |
-| Friday      | Email Adi: done / live / blockers / next week                           |
+| Day         | Focus                                                                                          |
+| ----------- | ---------------------------------------------------------------------------------------------- |
+| Now         | **Phase V.** V1 homepage strip and map, then V2 price table, then V3 the eight no-click pages. |
+| Then        | Draft the V4 description list and send it to Adi before anything in that batch goes live.      |
+| After that  | V5 contact lines, V6 mailer UTMs, V7 only after Israel agrees, V8 rental schema, V9 posts.     |
+| Friday      | Email Adi: done / live / blockers / next week                                                  |
 
 
 ### Weekly status email template
@@ -1078,6 +1213,8 @@ Confirmations you asked for:
 | 2026-10-13 | **U4** Hausgeld, Prenzlauer Berg, and Kreuzberg guides                                                  | Live                          | Six URLs 200, hreflang paired, sitemap once each. Checkliste links to Hausgeld. District cards lead with the new guides. English adaptations restored after a machine translation on publish. |
 | 2026-10-13 | **U5** popup triggers                                                                                   | Live                          | ContactBeat `e73dec` is the lead popup. Christmas overlay is off. Timed forms close. Corner button and one desktop exit stay. Phone article stays readable. |
 | 2026-10-16 | **U5** popup guard removed                                                                              | Tell Israel                   | `contactbeat-triggers.js` no longer closes ContactBeat forms. Layout no longer loads it. Live after deploy. |
+| 2026-10-27 | **Phase V** from Adi’s November push list                                                               | Plan                          | `Sweet_Home_Push_List_Oct_2026.docx`. Do V1–V3 first. V4 waits on Adi’s review. V7 does not close ContactBeat unless Israel agrees. |
+| 2026-10-28 | **V1** homepage guide strip and mobile map                                                              | Local, not deployed           | Strip on `/` and `/en`, seven links each, same tab, all 200. Leaflet gesture handling: one finger scrolls, two fingers pan. |
 
 
 ---

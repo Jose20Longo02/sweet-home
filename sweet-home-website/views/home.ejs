@@ -2,9 +2,10 @@
 <% useMainContainer = false %>
 <% hideFooter = false %>
 <% headPartial = '../partials/seo/home-head' %>
-<link rel="stylesheet" href="/css/home.css?v=<%= assetVersion %>-district-cta-20260918" />
+<link rel="stylesheet" href="/css/home.css?v=<%= assetVersion %>-buyer-guides-20261028" />
 <link rel="stylesheet" href="/css/contact.css?v=<%= assetVersion %>" />
 <link rel="stylesheet" href="/css/libs/leaflet.min.css" />
+<link rel="stylesheet" href="/css/libs/leaflet-gesture-handling.min.css" />
 <% if (process.env.RECAPTCHA_SITE_KEY) { %>
   <script src="https://www.google.com/recaptcha/api.js?render=<%= process.env.RECAPTCHA_SITE_KEY %>"></script>
 <% } %>
@@ -36,7 +37,10 @@
     properties: t('home.marketMap.properties','properties'),
     property: t('home.marketMap.property','property'),
     view: t('home.marketMap.view','View properties'),
-    mapLabel: t('home.marketMap.mapLabel','Interactive property market map')
+    mapLabel: t('home.marketMap.mapLabel','Interactive property market map'),
+    gestureTouch: t('home.marketMap.gestureTouch','Use two fingers to move the map'),
+    gestureScroll: t('home.marketMap.gestureScroll','Use Ctrl + scroll to zoom the map'),
+    gestureScrollMac: t('home.marketMap.gestureScrollMac','Use ⌘ + scroll to zoom the map')
   },
   featured: { learnMore: t('common.learnMore','Learn more') },
   locations: (typeof locationsTranslations !== 'undefined' && locationsTranslations) ? locationsTranslations : { countries: {}, cities: {} }
@@ -62,7 +66,10 @@
     properties: t('home.marketMap.properties','properties'),
     property: t('home.marketMap.property','property'),
     view: t('home.marketMap.view','View properties'),
-    mapLabel: t('home.marketMap.mapLabel','Interactive property market map')
+    mapLabel: t('home.marketMap.mapLabel','Interactive property market map'),
+    gestureTouch: t('home.marketMap.gestureTouch','Use two fingers to move the map'),
+    gestureScroll: t('home.marketMap.gestureScroll','Use Ctrl + scroll to zoom the map'),
+    gestureScrollMac: t('home.marketMap.gestureScrollMac','Use ⌘ + scroll to zoom the map')
   },
   featured: { learnMore: t('common.learnMore','Learn more') },
   locations: (typeof locationsTranslations !== 'undefined' && locationsTranslations) ? locationsTranslations : { countries: {}, cities: {} }
@@ -267,6 +274,57 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
     <% } else { %>
       <p class="section-empty"><%= t('properties.list.noResults','No properties found.') %></p>
     <% } %>
+  </div>
+</section>
+
+<section class="section home-buyer-guides" aria-labelledby="home-buyer-guides-title">
+  <div class="container">
+    <% const buyerGuidesEn = (typeof lang !== 'undefined' && lang === 'en'); %>
+    <h2 class="section-title" id="home-buyer-guides-title"><%= t('home.buyerGuides.title', buyerGuidesEn ? 'Guides for buyers' : 'Ratgeber für Käufer') %></h2>
+    <ul class="home-buyer-guides__list">
+      <li>
+        <a href="<%= buyerGuidesEn ? '/en/blog/berlin-property-prices-2026' : '/blog/immobilienpreise-berlin' %>">
+          <span class="home-buyer-guides__kind"><%= t('home.buyerGuides.kindGuide', buyerGuidesEn ? 'Guide' : 'Ratgeber') %></span>
+          <span class="home-buyer-guides__name"><%= t('home.buyerGuides.prices', buyerGuidesEn ? 'Berlin property prices' : 'Immobilienpreise Berlin') %></span>
+        </a>
+      </li>
+      <li>
+        <a href="<%= buyerGuidesEn ? '/en/blog/berlin-rents-by-district-2026' : '/blog/mietpreise-berlin-bezirk' %>">
+          <span class="home-buyer-guides__kind"><%= t('home.buyerGuides.kindGuide', buyerGuidesEn ? 'Guide' : 'Ratgeber') %></span>
+          <span class="home-buyer-guides__name"><%= t('home.buyerGuides.rents', buyerGuidesEn ? 'Berlin rents by district' : 'Mietpreise Berlin') %></span>
+        </a>
+      </li>
+      <li>
+        <a href="<%= buyerGuidesEn ? '/en/blog/berlin-transfer-tax-grunderwerbsteuer' : '/blog/grunderwerbsteuer-berlin' %>">
+          <span class="home-buyer-guides__kind"><%= t('home.buyerGuides.kindGuide', buyerGuidesEn ? 'Guide' : 'Ratgeber') %></span>
+          <span class="home-buyer-guides__name"><%= t('home.buyerGuides.transferTax', buyerGuidesEn ? 'Berlin transfer tax' : 'Grunderwerbsteuer Berlin') %></span>
+        </a>
+      </li>
+      <li>
+        <a href="<%= buyerGuidesEn ? '/en/blog/cost-of-buying-property-berlin' : '/blog/kaufnebenkosten-berlin' %>">
+          <span class="home-buyer-guides__kind"><%= t('home.buyerGuides.kindGuide', buyerGuidesEn ? 'Guide' : 'Ratgeber') %></span>
+          <span class="home-buyer-guides__name"><%= t('home.buyerGuides.purchaseCosts', buyerGuidesEn ? 'Cost of buying in Berlin' : 'Kaufnebenkosten Berlin') %></span>
+        </a>
+      </li>
+      <li>
+        <a href="<%= buyerGuidesEn ? '/en/mortgage-calculator-germany' : '/hypothekenrechner' %>">
+          <span class="home-buyer-guides__kind"><%= t('home.buyerGuides.kindCalculator', buyerGuidesEn ? 'Calculator' : 'Rechner') %></span>
+          <span class="home-buyer-guides__name"><%= t('home.buyerGuides.mortgage', buyerGuidesEn ? 'Mortgage calculator' : 'Hypothekenrechner') %></span>
+        </a>
+      </li>
+      <li>
+        <a href="<%= buyerGuidesEn ? '/en/property-purchase-costs-calculator-germany' : '/kaufnebenkosten-rechner' %>">
+          <span class="home-buyer-guides__kind"><%= t('home.buyerGuides.kindCalculator', buyerGuidesEn ? 'Calculator' : 'Rechner') %></span>
+          <span class="home-buyer-guides__name"><%= t('home.buyerGuides.purchaseCalc', buyerGuidesEn ? 'Purchase costs calculator' : 'Kaufnebenkosten-Rechner') %></span>
+        </a>
+      </li>
+      <li>
+        <a href="<%= buyerGuidesEn ? '/en/rental-yield-calculator-germany' : '/mietrendite-rechner' %>">
+          <span class="home-buyer-guides__kind"><%= t('home.buyerGuides.kindCalculator', buyerGuidesEn ? 'Calculator' : 'Rechner') %></span>
+          <span class="home-buyer-guides__name"><%= t('home.buyerGuides.yield', buyerGuidesEn ? 'Rental yield calculator' : 'Mietrendite-Rechner') %></span>
+        </a>
+      </li>
+    </ul>
   </div>
 </section>
 
@@ -522,8 +580,9 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
 </div>
 
 <script src="/js/libs/leaflet.js"></script>
+<script src="/js/libs/leaflet-gesture-handling.min.js"></script>
 <script src="/js/market-map-data.js?v=<%= assetVersion %>"></script>
-<script src="/js/home.js?v=<%= assetVersion %>-mortgage-20261022"></script>
+<script src="/js/home.js?v=<%= assetVersion %>-v1-20261028"></script>
 <script src="/js/contact.js?v=20260830-thankyou" defer></script>
 <script>
 (function initHomeNeighborhoodGuides() {

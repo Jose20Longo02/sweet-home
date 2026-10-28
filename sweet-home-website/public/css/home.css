@@ -2763,3 +2763,86 @@ body[data-icon-theme="christmas"] .social-link img {
   }
   .home-hero-experience .market-explorer__summary h2 { font-size: 14px; }
 }
+
+.section.home-buyer-guides {
+  padding: 12px 0 64px;
+  background: #fff;
+}
+.home-buyer-guides .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+.home-buyer-guides .section-title {
+  margin-bottom: 22px;
+}
+.home-buyer-guides__list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.home-buyer-guides__list a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  min-height: 84px;
+  padding: 14px 16px;
+  border: 1px solid #e6efe9;
+  border-radius: 14px;
+  background: #f8fbf9;
+  color: #174b38;
+  text-decoration: none;
+}
+.home-buyer-guides__list a:hover,
+.home-buyer-guides__list a:focus-visible {
+  border-color: #2ea862;
+  background: #fff;
+  color: #174b38;
+}
+.home-buyer-guides__list a:focus-visible {
+  outline: 3px solid #91deb0;
+  outline-offset: 2px;
+}
+.home-buyer-guides__kind {
+  color: #23804b;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.home-buyer-guides__name {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.market-explorer .leaflet-container::after {
+  opacity: 0;
+  background: transparent;
+  color: #fff;
+  font-family: 'Lato', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.35;
+  text-align: center;
+}
+.market-explorer .leaflet-gesture-handling-touch-warning::after,
+.market-explorer .leaflet-gesture-handling-scroll-warning::after {
+  opacity: 1;
+  background: rgba(17, 17, 17, 0.55);
+}
+.market-explorer .leaflet-gesture-handling-touch-warning::after {
+  content: attr(data-gesture-handling-touch-content);
+}
+.market-explorer .leaflet-gesture-handling-scroll-warning::after {
+  content: attr(data-gesture-handling-scroll-content);
+}
+
+@media (max-width: 980px) {
+  .home-buyer-guides__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .home-buyer-guides__list { grid-template-columns: 1fr; }
+}

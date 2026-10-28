@@ -494,7 +494,22 @@
       "property": "Immobilie",
       "view": "Immobilien ansehen",
       "mapLabel": "Interaktive Karte unserer Immobilienmärkte",
-      "hint": "Karte und Suchfilter bleiben synchronisiert."
+      "hint": "Karte und Suchfilter bleiben synchronisiert.",
+      "gestureTouch": "Verschieben der Karte mit zwei Fingern",
+      "gestureScroll": "Verwende Strg + Scrollen zum Zoomen der Karte",
+      "gestureScrollMac": "Verwende ⌘ + Scrollen zum Zoomen der Karte"
+    },
+    "buyerGuides": {
+      "title": "Ratgeber für Käufer",
+      "kindGuide": "Ratgeber",
+      "kindCalculator": "Rechner",
+      "prices": "Immobilienpreise Berlin",
+      "rents": "Mietpreise Berlin",
+      "transferTax": "Grunderwerbsteuer Berlin",
+      "purchaseCosts": "Kaufnebenkosten Berlin",
+      "mortgage": "Hypothekenrechner",
+      "purchaseCalc": "Kaufnebenkosten-Rechner",
+      "yield": "Mietrendite-Rechner"
     },
     "featured": {
       "title": "Ausgewählte Immobilien",

@@ -506,7 +506,22 @@
       "property": "property",
       "view": "View properties",
       "mapLabel": "Interactive map of our property markets",
-      "hint": "Map and search filters stay synchronized."
+      "hint": "Map and search filters stay synchronized.",
+      "gestureTouch": "Use two fingers to move the map",
+      "gestureScroll": "Use Ctrl + scroll to zoom the map",
+      "gestureScrollMac": "Use ⌘ + scroll to zoom the map"
+    },
+    "buyerGuides": {
+      "title": "Guides for buyers",
+      "kindGuide": "Guide",
+      "kindCalculator": "Calculator",
+      "prices": "Berlin property prices",
+      "rents": "Berlin rents by district",
+      "transferTax": "Berlin transfer tax",
+      "purchaseCosts": "Cost of buying in Berlin",
+      "mortgage": "Mortgage calculator",
+      "purchaseCalc": "Purchase costs calculator",
+      "yield": "Rental yield calculator"
     },
     "featured": {
       "title": "Featured Properties",
