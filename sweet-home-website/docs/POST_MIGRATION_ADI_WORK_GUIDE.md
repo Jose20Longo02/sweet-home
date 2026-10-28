@@ -28,7 +28,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-27):** **Phase V**. Adi’s November list is about pages that already appear in Google and should earn more clicks. **Do V1, V2, and V3 first.** V4 meta descriptions go to Adi in one list before they go live. Phase U is on the site except the U5 popup items, which V7 replaces. U6 still applies to every new page.
+- **Current priority (2026-10-28):** **Phase V**. **V1 is live. V2 is on the two price pages.** Indexing for those two URLs is still a manual Search Console step. Next build is **V3**. V4 meta descriptions go to Adi in one list before they go live. Phase U is on the site except the U5 popup items, which V7 replaces. U6 still applies to every new page.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -981,7 +981,7 @@ Triggers Adi wants:
 
 **Source:** `Sweet_Home_Push_List_Oct_2026.docx`. Adi titled it “task list, November.” Email: “The focus is on pages that already appear in Google and should earn more clicks.”
 
-**Do first:** V1, then V2, then V3. Leave V4 until the title and description list is with Adi. V9’s furnished-rental slug waits on Adi.
+**Do first:** V3. V1 is live. V2 is on the price pages. Leave V4 until the title and description list is with Adi. V9’s furnished-rental slug waits on Adi. Indexing for the two price URLs is still manual.
 
 **Keep for every item below (same gate as U6):**
 
@@ -994,11 +994,11 @@ Triggers Adi wants:
 - Human read-through before publish.
 - Homepage and money-page copy still goes to Adi first. V4 is the same rule: she reviews the batch before it goes live.
 
-**Order:** V1 → V2 → V3 → V4 (draft the list, wait for Adi) → V5 → V6 → V7 → V8. V9 runs beside the push work, not ahead of V1–V3.
+**Order:** V1 is live. Next: V2 → V3 → V4 (draft the list, wait for Adi) → V5 → V6 → V7 → V8. V9 runs beside the push work, not ahead of V2–V3.
 
 ### V1 — Homepage, German and English
 
-Local preview 2026-10-28. Not deployed.
+Live 2026-10-28. No cache. `/` shows `Ratgeber für Käufer`. `/en` shows `Guides for buyers`. The gesture-handling script is on both homepages.
 
 - [x] Add a guide strip: `Ratgeber für Käufer` on `/` and `Guides for buyers` on `/en`
 - [x] The strip links these four guides and the three calculators. Plain links or small cards. The links are in the server HTML, not injected on click
@@ -1010,17 +1010,21 @@ Local preview 2026-10-28. Not deployed.
 
 **Done when:** view-source of `/` and `/en` shows the seven links without clicking, and a one-finger drag over the map moves the page.
 
-Verified on `http://localhost:3084`. Each of the 14 targets returns 200 with no redirect. The strip is in the server HTML. One finger on the map leaves dragging off and `touch-action: pan-x pan-y`. Two fingers turn dragging on. A card click stays in the same tab (`/blog/immobilienpreise-berlin`, `/en/mortgage-calculator-germany`).
+Verified live on `https://sweethome-immobilien.de/` and `/en` on 2026-10-28. The strip is in the server HTML, and the gesture-handling script is loaded.
 
 ### V2 — District price table on the Immobilienpreise guide
 
-- [ ] Add a table of official purchase prices per district to `/blog/immobilienpreise-berlin`. Figures from the Gutachterausschuss, not a competitor blog
-- [ ] Add a simple chart of the same figures
-- [ ] Mirror the table and the chart on `/en/blog/berlin-property-prices-2026`
-- [ ] Name the source and the year of the figures in the text
-- [ ] Request indexing for both URLs after the change
+Live in the database 2026-10-28. No code deploy. Both pages read the same post.
+
+- [x] Add a table of official purchase prices per district to `/blog/immobilienpreise-berlin`. Figures from the Gutachterausschuss, not a competitor blog
+- [x] Add a simple chart of the same figures
+- [x] Mirror the table and the chart on `/en/blog/berlin-property-prices-2026`
+- [x] Name the source and the year of the figures in the text
+- [ ] Request indexing for both URLs after the change. Manual in Search Console: `/blog/immobilienpreise-berlin` and `/en/blog/berlin-property-prices-2026`
 
 **Done when:** both pages show the same district figures, the source is on the page, and both URLs are submitted for indexing.
+
+The table is figure 42 of the Immobilienmarktbericht Berlin 2025/2026, data year 2025. The committee still publishes the former boroughs, not the 12 current ones. Means are after a 10 percent outlier trim, so Berlin in the table is 5.017 €/m². The untrimmed average of non-package sales stays 5.511 €/m², and the page says so. Köpenick is 7.134 €/m² with the micro-apartments, and 5.321 €/m² without them. Highest is Mitte at 9.374 €/m². Lowest former borough is Spandau at 3.235 €/m².
 
 ### V3 — Pages that rank and earn no clicks
 
@@ -1116,7 +1120,7 @@ Both with English versions. Same quality rules as U4: official sources, relative
 
 | Day         | Focus                                                                                          |
 | ----------- | ---------------------------------------------------------------------------------------------- |
-| Now         | **Phase V.** V1 homepage strip and map, then V2 price table, then V3 the eight no-click pages. |
+| Now         | **Phase V.** V2 is on the price pages. Request indexing for those two URLs, then V3. |
 | Then        | Draft the V4 description list and send it to Adi before anything in that batch goes live.      |
 | After that  | V5 contact lines, V6 mailer UTMs, V7 only after Israel agrees, V8 rental schema, V9 posts.     |
 | Friday      | Email Adi: done / live / blockers / next week                                                  |
@@ -1214,7 +1218,8 @@ Confirmations you asked for:
 | 2026-10-13 | **U5** popup triggers                                                                                   | Live                          | ContactBeat `e73dec` is the lead popup. Christmas overlay is off. Timed forms close. Corner button and one desktop exit stay. Phone article stays readable. |
 | 2026-10-16 | **U5** popup guard removed                                                                              | Tell Israel                   | `contactbeat-triggers.js` no longer closes ContactBeat forms. Layout no longer loads it. Live after deploy. |
 | 2026-10-27 | **Phase V** from Adi’s November push list                                                               | Plan                          | `Sweet_Home_Push_List_Oct_2026.docx`. Do V1–V3 first. V4 waits on Adi’s review. V7 does not close ContactBeat unless Israel agrees. |
-| 2026-10-28 | **V1** homepage guide strip and mobile map                                                              | Local, not deployed           | Strip on `/` and `/en`, seven links each, same tab, all 200. Leaflet gesture handling: one finger scrolls, two fingers pan. |
+| 2026-10-28 | **V1** homepage guide strip and mobile map                                                              | Live                          | Strip on `/` and `/en`, seven links each, same tab. Leaflet gesture handling: one finger scrolls, two fingers pan. |
+| 2026-10-28 | **V2** district purchase-price table and chart                                                          | Live (database)               | Immobilienmarktbericht 2025/2026, figure 42. Same figures on DE and EN. GSC indexing still manual. |
 
 
 ---
