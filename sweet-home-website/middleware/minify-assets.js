@@ -13,7 +13,7 @@ module.exports = function minifyAssetsMiddleware(req, res, next) {
   // Always serve the latest unminified blog editor script.
   // This avoids stale toolbar/editor behavior when .min.js is older logically
   // but still appears newer by filesystem mtime.
-  if (url === '/js/admin-blog.js' || url === '/js/property-list.js') return next();
+  if (url === '/js/admin-blog.js' || url === '/js/property-list.js' || url === '/css/home.css') return next();
   
   // Check if it's a JS or CSS file request (not already minified)
   if (url.match(/\.(js|css)$/) && !url.includes('.min.')) {
