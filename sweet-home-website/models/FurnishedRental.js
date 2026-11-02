@@ -54,6 +54,32 @@ class FurnishedRental {
     return res.rows[0] || null;
   }
 
+  static async publishedForHome(limit = 9) {
+    const res = await query(
+      `SELECT id, title, title_i18n, slug, slug_i18n, neighborhood, city,
+              monthly_rent, photos, size_sqm, rooms,
+              min_stay_months, max_stay_months, created_at,
+              (
+                SELECT COUNT(*)::int
+                  FROM analytics_events ae
+                 WHERE ae.event_type = 'page_view'
+                   AND ae.meta->>'path' IN (
+                     '/moeblierte-wohnung/' || furnished_rentals.slug,
+                     '/en/furnished-apartment/' || COALESCE(NULLIF(furnished_rentals.slug_i18n->>'en', ''), furnished_rentals.slug)
+                   )
+              ) AS views
+         FROM furnished_rentals
+        WHERE status = 'published'
+          AND slug IS NOT NULL
+          AND slug <> ''
+          AND city = 'Berlin'
+        ORDER BY views DESC, created_at DESC, id DESC
+        LIMIT $1`,
+      [limit]
+    );
+    return res.rows;
+  }
+
   static async publishedForSitemap() {
     const res = await query(
       `SELECT slug, slug_i18n, updated_at

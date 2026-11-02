@@ -534,7 +534,12 @@
     },
     "berlinProperties": {
       "intro": "Explore selected Berlin apartments for owner-occupation and investment, with local guidance from the first comparison through the purchase process.",
-      "viewAll": "View all apartments in Berlin"
+      "introRent": "Furnished apartments for rent in Berlin, with the monthly price, the neighborhood, and the length of stay.",
+      "viewAll": "View all apartments in Berlin",
+      "viewAllRent": "View all furnished apartments",
+      "switchLabel": "Buy or rent",
+      "perMonth": "per month",
+      "emptyRent": "No furnished apartment is published yet."
     },
     "international": {
       "title": "Other international property markets",

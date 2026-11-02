@@ -2,7 +2,7 @@
 <% useMainContainer = false %>
 <% hideFooter = false %>
 <% headPartial = '../partials/seo/home-head' %>
-<link rel="stylesheet" href="/css/home.css?v=<%= assetVersion %>-buyer-guides-20261028" />
+<link rel="stylesheet" href="/css/home.css?v=<%= assetVersion %>-offer-20261102" />
 <link rel="stylesheet" href="/css/contact.css?v=<%= assetVersion %>" />
 <link rel="stylesheet" href="/css/libs/leaflet.min.css" />
 <link rel="stylesheet" href="/css/libs/leaflet-gesture-handling.min.css" />
@@ -151,10 +151,14 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
 <!-- 3) Featured Properties – card carousel (3-up) -->
 <section class="section featured" id="berlin-properties">
   <h2 class="section-title"><%= t('berlin.featuredTitle','Apartments in Berlin') %></h2>
-  <p class="section-intro berlin-properties-intro"><%= t('home.berlinProperties.intro','Explore selected Berlin apartments for owner-occupation and investment, with local guidance from the first comparison through the purchase process.') %></p>
-  <div class="cards-carousel" id="featuredCarousel" aria-label="Featured properties">
+  <div class="offer-switch" role="tablist" aria-label="<%= t('home.berlinProperties.switchLabel','Buy or rent') %>">
+    <button type="button" class="offer-switch__btn" role="tab" id="offerBuy" data-offer="buy" aria-selected="true" aria-controls="featuredProperties"><%= t('forms.operations.buy','Buy') %></button>
+    <button type="button" class="offer-switch__btn" role="tab" id="offerRent" data-offer="rent" aria-selected="false" aria-controls="featuredRent" tabindex="-1"><%= t('forms.operations.rent','Rent') %></button>
+  </div>
+  <p class="section-intro berlin-properties-intro" id="berlinOfferIntro" data-buy="<%= t('home.berlinProperties.intro','Explore selected Berlin apartments for owner-occupation and investment, with local guidance from the first comparison through the purchase process.') %>" data-rent="<%= t('home.berlinProperties.introRent','Furnished apartments for rent in Berlin, with the monthly price, the neighborhood, and the length of stay.') %>"><%= t('home.berlinProperties.intro','Explore selected Berlin apartments for owner-occupation and investment, with local guidance from the first comparison through the purchase process.') %></p>
+  <div class="cards-carousel" id="featuredCarousel" aria-label="<%= t('berlin.featuredTitle','Apartments in Berlin') %>">
     <button class="carousel-nav prev" data-target="#featuredCarousel" aria-label="<%= t('common.previous','Previous') %>">&#8249;</button>
-    <div class="cards-track" id="featuredProperties">
+    <div class="cards-track" id="featuredProperties" data-offer-track="buy" role="tabpanel" aria-labelledby="offerBuy">
       <% if (typeof featuredProperties !== 'undefined' && featuredProperties && featuredProperties.length >= 1) { %>
         <% featuredProperties.forEach(property => { %>
           <% const locationText = (typeof property.locationDisplay !== 'undefined' && property.locationDisplay) ? property.locationDisplay : ((property.city || '') + ', ' + (property.country || '')); %>
@@ -198,10 +202,50 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
         <!-- fallback: populated by JS -->
       <% } %>
     </div>
+    <div class="cards-track" id="featuredRent" data-offer-track="rent" role="tabpanel" aria-labelledby="offerRent" hidden>
+      <% const rentals = (typeof featuredRentals !== 'undefined' && Array.isArray(featuredRentals)) ? featuredRentals : []; %>
+      <% if (rentals.length) { %>
+        <% rentals.forEach(function (rental) { %>
+          <article class="property-card">
+            <div class="img-wrap"<% if (rental.priceText) { %> data-price="<%= rental.priceText %>"<% } %>>
+              <img src="<%= rental.photo %>" alt="<%= rental.title %>" loading="lazy" onerror="this.src='/img/property-placeholder.jpg'">
+            </div>
+            <div class="meta">
+              <div class="title"><%= rental.title %></div>
+              <% if (rental.priceText) { %><div class="price"><%= rental.priceText %> <span class="price-period"><%= t('home.berlinProperties.perMonth','per month') %></span></div><% } %>
+              <div class="location">
+                <span class="icon icon-16 icon-inline icon-mask icon-location" style="color: currentColor;"></span>
+                <%= rental.location %>
+              </div>
+              <div class="features-row">
+                <% if (rental.size) { %>
+                <div class="feature">
+                  <span class="icon icon-16 icon-inline icon-mask icon-size"></span>
+                  <span><%= rental.size %> m²</span>
+                </div>
+                <% } %>
+                <% if (rental.rooms !== null && typeof rental.rooms !== 'undefined') { %>
+                <div class="feature">
+                  <span class="icon icon-16 icon-inline icon-mask icon-bed"></span>
+                  <span><%= rental.rooms %> <%= t('properties.list.meta.rooms','rooms') %></span>
+                </div>
+                <% } %>
+                <% if (rental.stayLabel) { %>
+                <div class="feature"><span><%= rental.stayLabel %></span></div>
+                <% } %>
+              </div>
+              <a class="learn-more" href="<%= rental.href %>"><%= (typeof learnMoreText !== 'undefined' ? learnMoreText : (typeof t === 'function' ? t('common.learnMore','Learn more') : 'Learn more')) %> →</a>
+            </div>
+          </article>
+        <% }); %>
+      <% } else { %>
+        <p class="offer-empty"><%= t('home.berlinProperties.emptyRent','No furnished apartment is published yet.') %></p>
+      <% } %>
+    </div>
     <button class="carousel-nav next" data-target="#featuredCarousel" aria-label="<%= t('common.next','Next') %>">&#8250;</button>
   </div>
   <div class="section-primary-cta">
-    <a class="btn btn-green" href="<%= berlinLandingPath %>"><%= t('home.berlinProperties.viewAll','View all apartments in Berlin') %></a>
+    <a class="btn btn-green" id="berlinOfferCta" href="<%= berlinLandingPath %>" data-buy-href="<%= berlinLandingPath %>" data-rent-href="<%= rentalCataloguePath %>" data-buy-label="<%= t('home.berlinProperties.viewAll','View all apartments in Berlin') %>" data-rent-label="<%= t('home.berlinProperties.viewAllRent','View all furnished apartments') %>"><%= t('home.berlinProperties.viewAll','View all apartments in Berlin') %></a>
   </div>
 </section>
 
@@ -588,7 +632,7 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
 <script src="/js/libs/leaflet.js"></script>
 <script src="/js/libs/leaflet-gesture-handling.min.js"></script>
 <script src="/js/market-map-data.js?v=<%= assetVersion %>"></script>
-<script src="/js/home.js?v=<%= assetVersion %>-v1-20261028"></script>
+<script src="/js/home.js?v=<%= assetVersion %>-offer-20261102"></script>
 <script src="/js/contact.js?v=20260830-thankyou" defer></script>
 <script>
 (function initHomeNeighborhoodGuides() {

@@ -491,7 +491,8 @@ async function loadFeaturedProperties() {
   const featuredCarousel = document.getElementById('featuredCarousel');
   if (!featuredContainer || !featuredSection) return;
   const existingCards = featuredContainer.querySelectorAll('.property-card:not(.loading-placeholder)');
-  if (existingCards.length >= 1) {
+  const rentCards = document.getElementById('featuredRent')?.querySelectorAll('.property-card').length || 0;
+  if (existingCards.length >= 1 || rentCards >= 1) {
     featuredSection.style.display = '';
     return;
   }
@@ -807,10 +808,13 @@ function calculateMortgage() {
 function initCardsCarousel(rootSelector) {
   const root = document.querySelector(rootSelector);
   if (!root) return;
-  const track = root.querySelector('.cards-track');
+  const getTrack = () => root.querySelector('.cards-track:not([hidden])') || root.querySelector('.cards-track');
   const prev = root.querySelector('.prev');
   const next = root.querySelector('.next');
-  const getCards = () => [...track.querySelectorAll('.property-card, .testimonial-card')];
+  const getCards = () => {
+    const track = getTrack();
+    return track ? [...track.querySelectorAll(':scope > .property-card, :scope > .testimonial-card')] : [];
+  };
   const isFeatured = root.id === 'featuredCarousel';
   let didInitialCenter = false;
   let scrollSyncRaf = 0;
@@ -826,8 +830,9 @@ function initCardsCarousel(rootSelector) {
   }
 
   function centerCardByIndex(i, behavior = 'smooth') {
+    const track = getTrack();
     const cards = getCards();
-    if (!cards.length) return;
+    if (!track || !cards.length) return;
     const idx = setCenterClassByIndex(i);
     if (idx < 0) return;
     const card = cards[idx];
@@ -849,8 +854,9 @@ function initCardsCarousel(rootSelector) {
   }
 
   function currentCenteredIndex() {
+    const track = getTrack();
     const cards = getCards();
-    if (!cards.length) return 0;
+    if (!track || !cards.length) return 0;
     const center = track.scrollLeft + track.clientWidth / 2;
     let min = Infinity, best = 0;
     cards.forEach((c, i) => {
@@ -868,7 +874,7 @@ function initCardsCarousel(rootSelector) {
 
   // Allow first/last card to be centered by adding dynamic side padding
   // Hide native scrollbar (visual only)
-  track.classList.add('no-scrollbar');
+  root.querySelectorAll('.cards-track').forEach((item) => item.classList.add('no-scrollbar'));
   if (!document.getElementById('no-scrollbar-style')) {
     const style = document.createElement('style');
     style.id = 'no-scrollbar-style';
@@ -878,9 +884,10 @@ function initCardsCarousel(rootSelector) {
 
   // Create spacer elements so first/last items can be centered without clipping
   function ensureSpacers() {
+    const track = getTrack();
     const cards = getCards();
     const first = cards[0];
-    if (!first) return;
+    if (!track || !first) return;
     let leftSpacer = track.querySelector('.edge-spacer.left');
     let rightSpacer = track.querySelector('.edge-spacer.right');
     if (!leftSpacer) {
@@ -918,7 +925,7 @@ function initCardsCarousel(rootSelector) {
       }
     });
   });
-  mo.observe(track, { childList: true });
+  root.querySelectorAll('.cards-track').forEach((item) => mo.observe(item, { childList: true }));
 
   prev?.addEventListener('click', () => {
     const i = currentCenteredIndex();
@@ -930,22 +937,69 @@ function initCardsCarousel(rootSelector) {
   });
 
   // Keep center highlight in sync while scrolling.
-  track?.addEventListener('scroll', () => {
-    if (isProgrammaticScroll) return;
-    if (scrollSyncRaf) return;
-    scrollSyncRaf = requestAnimationFrame(() => {
-      scrollSyncRaf = 0;
-      syncCenterWithViewport();
+  root.querySelectorAll('.cards-track').forEach((item) => {
+    item.addEventListener('scroll', () => {
+      if (item !== getTrack()) return;
+      if (isProgrammaticScroll) return;
+      if (scrollSyncRaf) return;
+      scrollSyncRaf = requestAnimationFrame(() => {
+        scrollSyncRaf = 0;
+        syncCenterWithViewport();
+      });
+    });
+    item.addEventListener('click', (e) => {
+      const card = e.target.closest('.property-card, .testimonial-card');
+      if (!card || !item.contains(card)) return;
+      const i = getCards().indexOf(card);
+      if (i >= 0) centerCardByIndex(i);
     });
   });
 
-  // Center card on click
-  track?.addEventListener('click', (e) => {
-    const card = e.target.closest('.property-card, .testimonial-card');
-    if (!card || !track.contains(card)) return;
-    const i = getCards().indexOf(card);
-    if (i >= 0) centerCardByIndex(i);
-  });
+  if (isFeatured) {
+    const switchRoot = document.querySelector('#berlin-properties .offer-switch');
+    const intro = document.getElementById('berlinOfferIntro');
+    const cta = document.getElementById('berlinOfferCta');
+    function applyOffer(offer) {
+      root.querySelectorAll('.cards-track').forEach((item) => {
+        item.hidden = item.getAttribute('data-offer-track') !== offer;
+      });
+      switchRoot?.querySelectorAll('[data-offer]').forEach((btn) => {
+        const on = btn.getAttribute('data-offer') === offer;
+        btn.setAttribute('aria-selected', on ? 'true' : 'false');
+        btn.tabIndex = on ? 0 : -1;
+      });
+      if (intro) {
+        const nextText = intro.getAttribute(offer === 'rent' ? 'data-rent' : 'data-buy');
+        if (nextText) intro.textContent = nextText;
+      }
+      if (cta) {
+        const href = cta.getAttribute(offer === 'rent' ? 'data-rent-href' : 'data-buy-href');
+        const label = cta.getAttribute(offer === 'rent' ? 'data-rent-label' : 'data-buy-label');
+        if (href) cta.setAttribute('href', href);
+        if (label) cta.textContent = label;
+      }
+      requestAnimationFrame(() => {
+        ensureSpacers();
+        const cards = getCards();
+        centerCardByIndex(cards.length >= 2 ? 1 : 0, 'auto');
+      });
+    }
+    switchRoot?.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-offer]');
+      if (!btn || btn.getAttribute('aria-selected') === 'true') return;
+      applyOffer(btn.getAttribute('data-offer'));
+    });
+    switchRoot?.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      const buttons = [...switchRoot.querySelectorAll('[data-offer]')];
+      const current = buttons.findIndex((btn) => btn.getAttribute('aria-selected') === 'true');
+      const step = e.key === 'ArrowRight' ? 1 : -1;
+      const nextIndex = (current + step + buttons.length) % buttons.length;
+      e.preventDefault();
+      buttons[nextIndex].focus();
+      applyOffer(buttons[nextIndex].getAttribute('data-offer'));
+    });
+  }
 
   setTimeout(() => {
     ensureSpacers();

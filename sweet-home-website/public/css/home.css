@@ -1098,6 +1098,54 @@ body { font-family: 'Lato', system-ui, -apple-system, Segoe UI, Roboto, sans-ser
 
 /* 3) Featured properties – cards carousel */
 .section.featured { padding: 72px 16px 48px; background: #fff; content-visibility: auto; contain-intrinsic-size: 600px; }
+.offer-switch {
+  display: flex;
+  justify-content: center;
+  margin: -8px auto 18px;
+}
+.offer-switch__btn {
+  appearance: none;
+  border: 1px solid #d7e3db;
+  background: #fff;
+  color: #174b38;
+  font: inherit;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+  min-width: 132px;
+  padding: 12px 28px;
+  cursor: pointer;
+}
+.offer-switch__btn + .offer-switch__btn { margin-left: -1px; }
+.offer-switch__btn:first-child {
+  border-radius: 999px 0 0 999px;
+}
+.offer-switch__btn:last-child {
+  border-radius: 0 999px 999px 0;
+}
+.offer-switch__btn[aria-selected="true"] {
+  background: #2ea862;
+  border-color: #2ea862;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(46, 168, 98, 0.28);
+}
+.offer-switch__btn:focus-visible {
+  outline: 2px solid #2ea862;
+  outline-offset: 3px;
+  z-index: 1;
+}
+.cards-track[hidden] { display: none !important; }
+.property-card .price-period {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-600, #475569);
+  margin-left: 4px;
+}
+.offer-empty {
+  margin: 24px auto;
+  text-align: center;
+  color: var(--gray-600, #475569);
+}
 .section-intro {
   max-width: 760px;
   margin: -8px auto 14px;

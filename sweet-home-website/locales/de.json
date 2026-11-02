@@ -522,7 +522,12 @@
     },
     "berlinProperties": {
       "intro": "Entdecken Sie ausgewählte Berliner Wohnungen für Eigennutzung und Investment – mit lokaler Begleitung vom ersten Vergleich bis zum Kauf.",
-      "viewAll": "Alle Wohnungen in Berlin ansehen"
+      "introRent": "Möblierte Wohnungen zur Miete in Berlin, mit monatlichem Preis, Lage und Mietdauer.",
+      "viewAll": "Alle Wohnungen in Berlin ansehen",
+      "viewAllRent": "Alle möblierten Wohnungen ansehen",
+      "switchLabel": "Kaufen oder mieten",
+      "perMonth": "pro Monat",
+      "emptyRent": "Aktuell ist keine möblierte Wohnung veröffentlicht."
     },
     "international": {
       "title": "Weitere internationale Immobilienmärkte",

@@ -1493,6 +1493,47 @@ async function renderHomePage(req, res, langPath, next) {
       }
     } catch (_) { /* non-fatal */ }
 
+    let featuredRentals = [];
+    try {
+      const FurnishedRental = require('./models/FurnishedRental');
+      const rentRows = await FurnishedRental.publishedForHome(9);
+      featuredRentals = (rentRows || []).map((rental) => {
+        const titleI18n = rental.title_i18n && typeof rental.title_i18n === 'object' ? rental.title_i18n : null;
+        const title = (titleI18n && (titleI18n[lang] || titleI18n.en)) || rental.title || '';
+        const photos = Array.isArray(rental.photos) ? rental.photos : (rental.photos ? [rental.photos] : []);
+        const slugI18n = rental.slug_i18n && typeof rental.slug_i18n === 'object' ? rental.slug_i18n : {};
+        const enSlug = slugI18n.en || '';
+        const href = lang === 'en'
+          ? (enSlug ? `/en/furnished-apartment/${enSlug}` : '')
+          : (rental.slug ? `/moeblierte-wohnung/${rental.slug}` : '');
+        const rent = Number(rental.monthly_rent);
+        const size = rental.size_sqm == null || rental.size_sqm === '' ? null : Number(rental.size_sqm);
+        const rooms = rental.rooms == null || rental.rooms === '' ? null : Number(rental.rooms);
+        const minStay = rental.min_stay_months == null ? null : Number(rental.min_stay_months);
+        const maxStay = rental.max_stay_months == null ? null : Number(rental.max_stay_months);
+        let stayLabel = '';
+        if (lang === 'en') {
+          if (minStay && maxStay) stayLabel = `${minStay}–${maxStay} months`;
+          else if (minStay) stayLabel = minStay === 1 ? 'From 1 month' : `From ${minStay} months`;
+          else if (maxStay) stayLabel = maxStay === 1 ? 'Up to 1 month' : `Up to ${maxStay} months`;
+        } else if (minStay && maxStay) stayLabel = `${minStay}–${maxStay} Monate`;
+        else if (minStay) stayLabel = minStay === 1 ? 'Ab 1 Monat' : `Ab ${minStay} Monaten`;
+        else if (maxStay) stayLabel = maxStay === 1 ? 'Bis 1 Monat' : `Bis ${maxStay} Monate`;
+        const place = rental.neighborhood || (lang === 'en' ? 'Berlin' : 'Berlin');
+        return {
+          id: rental.id,
+          title,
+          href,
+          photo: photos[0] || '/img/property-placeholder.jpg',
+          priceText: Number.isFinite(rent) && rent > 0 ? `€${rent.toLocaleString('en-US')}` : '',
+          location: rental.neighborhood ? `${rental.neighborhood}, Berlin` : place,
+          size: size == null || Number.isNaN(size) ? '' : String(size),
+          rooms: rooms == null || Number.isNaN(rooms) ? null : rooms,
+          stayLabel
+        };
+      }).filter((rental) => rental.href);
+    } catch (_) { /* non-fatal */ }
+
     const baseUrl = res.locals.baseUrl;
     const canonicalUrl = `${baseUrl}${langPath}`;
     const hreflangAlternates = {
@@ -1583,10 +1624,14 @@ async function renderHomePage(req, res, langPath, next) {
       newDevelopmentRows,
       homeNeighborhoodGuides,
       featuredProperties,
+      featuredRentals,
       learnMoreText,
       berlinLandingPath: lang === 'de'
         ? '/wohnungen-berlin-kaufen'
         : '/en/properties-for-sale-berlin',
+      rentalCataloguePath: lang === 'de'
+        ? '/moeblierte-wohnungen-berlin'
+        : '/en/furnished-apartments-berlin',
       canonicalUrl,
       hreflangAlternates,
       headPartial: '../partials/seo/home-head',
