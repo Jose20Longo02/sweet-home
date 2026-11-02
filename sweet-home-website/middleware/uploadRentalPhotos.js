@@ -77,13 +77,23 @@ async function prepare(file) {
   return { url };
 }
 
+function rejectUpload(req, res, next, message) {
+  if (req.get('X-Requested-With') === 'fetch') {
+    return res.status(400).json({ error: message });
+  }
+  return next(new Error(message));
+}
+
 module.exports = function uploadRentalPhotos(req, res, next) {
   uploader(req, res, async (err) => {
     if (err) {
       if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
-        return next(new Error('Each photo must be 20 MB or smaller.'));
+        return rejectUpload(req, res, next, 'Each photo must be 20 MB or smaller.');
       }
-      return next(err);
+      if (err instanceof multer.MulterError && (err.code === 'LIMIT_FILE_COUNT' || err.code === 'LIMIT_UNEXPECTED_FILE')) {
+        return rejectUpload(req, res, next, 'Only 20 photos are allowed');
+      }
+      return rejectUpload(req, res, next, err.message || 'The photos could not be uploaded.');
     }
     try {
       const files = Array.isArray(req.files) ? req.files : [];
@@ -94,7 +104,8 @@ module.exports = function uploadRentalPhotos(req, res, next) {
       req.files = { photos: uploaded };
       return next();
     } catch (error) {
-      return next(error);
+      console.error(error);
+      return rejectUpload(req, res, next, 'The photos could not be uploaded. Try fewer photos, or smaller ones.');
     }
   });
 };

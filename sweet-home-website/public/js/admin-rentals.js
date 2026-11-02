@@ -43,11 +43,13 @@ document.addEventListener('DOMContentLoaded', function () {
   var dragFrom = null;
 
   function syncFiles() {
-    var transfer = new DataTransfer();
-    items.forEach(function (item) {
-      if (item.kind === 'file') transfer.items.add(item.file);
-    });
-    input.files = transfer.files;
+    try {
+      var transfer = new DataTransfer();
+      items.forEach(function (item) {
+        if (item.kind === 'file') transfer.items.add(item.file);
+      });
+      input.files = transfer.files;
+    } catch (err) {}
   }
 
   function render() {
@@ -100,10 +102,20 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       preview.appendChild(el);
     });
+    input.required = items.length === 0;
+    var notice = document.getElementById('uploadError');
+    if (notice && notice.textContent === 'Only 20 photos are allowed' && items.length < maxPhotos) {
+      notice.hidden = true;
+    }
   }
 
   input.addEventListener('change', function () {
+    var blocked = false;
     Array.prototype.forEach.call(input.files || [], function (file) {
+      if (items.length >= maxPhotos) {
+        blocked = true;
+        return;
+      }
       var exists = items.some(function (item) {
         return item.kind === 'file'
           && item.file.name === file.name
@@ -114,15 +126,65 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     syncFiles();
     render();
+    if (blocked) showFormError('Only 20 photos are allowed');
   });
 
   var publishingLocked = false;
+  var maxPhotos = 20;
+  var maxFileBytes = 20 * 1024 * 1024;
+  var maxTotalBytes = 90 * 1024 * 1024;
+
+  function showFormError(message) {
+    var notice = document.getElementById('uploadError');
+    if (!notice) {
+      notice = document.createElement('p');
+      notice.id = 'uploadError';
+      notice.className = 'error';
+      form.insertBefore(notice, form.firstChild);
+    }
+    notice.hidden = false;
+    notice.textContent = message;
+  }
+
+  function hideFormError() {
+    var notice = document.getElementById('uploadError');
+    if (notice) notice.hidden = true;
+  }
+
+  function photoProblem() {
+    var files = items.filter(function (item) { return item.kind === 'file'; });
+    var total = files.reduce(function (sum, item) { return sum + (item.file.size || 0); }, 0);
+    if (items.length > maxPhotos) return 'Only 20 photos are allowed';
+    if (files.some(function (item) { return item.file.size > maxFileBytes; })) return 'Each photo must be 20 MB or smaller.';
+    if (total > maxTotalBytes) return 'These photos are too large to send together. Save with fewer photos, then add the rest from the edit page.';
+    if (!items.length) return 'Add at least one photo.';
+    return '';
+  }
+
+  function releaseSubmit(button) {
+    publishingLocked = false;
+    var overlay = document.getElementById('uploadOverlay');
+    if (overlay) {
+      overlay.hidden = true;
+      overlay.style.display = 'none';
+    }
+    if (button) {
+      button.disabled = false;
+      if (button.getAttribute('data-label')) button.textContent = button.getAttribute('data-label');
+    }
+  }
+
   form.addEventListener('submit', function (event) {
-    if (publishingLocked) {
-      event.preventDefault();
+    event.preventDefault();
+    if (publishingLocked) return;
+    hideFormError();
+    var problem = photoProblem();
+    if (problem) {
+      showFormError(problem);
       return;
     }
-    syncFiles();
+    if (!form.reportValidity()) return;
+
     mount.innerHTML = '';
     var managed = document.createElement('input');
     managed.type = 'hidden';
@@ -146,19 +208,59 @@ document.addEventListener('DOMContentLoaded', function () {
       mount.appendChild(hidden);
     });
 
-    var publishing = event.submitter && event.submitter.value === 'published';
-    if (!publishing) return;
-    publishingLocked = true;
-    var status = document.createElement('input');
-    status.type = 'hidden';
-    status.name = 'status';
-    status.value = 'published';
-    mount.appendChild(status);
-    Array.prototype.forEach.call(form.querySelectorAll('button[name="status"]'), function (button) {
-      button.removeAttribute('name');
-      if (button !== event.submitter) button.disabled = true;
+    var submitter = event.submitter;
+    var photoName = input.getAttribute('name');
+    input.removeAttribute('name');
+    var data = new FormData(form);
+    if (photoName) input.setAttribute('name', photoName);
+    items.forEach(function (item) {
+      if (item.kind === 'file') data.append('photos', item.file, item.file.name);
     });
-    showUploadOverlay(event.submitter);
+    if (submitter && submitter.name === 'status') data.append('status', submitter.value);
+
+    publishingLocked = true;
+    if (submitter && !submitter.getAttribute('data-label')) {
+      submitter.setAttribute('data-label', submitter.textContent);
+    }
+    showUploadOverlay(submitter);
+
+    fetch(form.action, {
+      method: 'POST',
+      body: data,
+      credentials: 'same-origin',
+      redirect: 'follow',
+      headers: { 'X-Requested-With': 'fetch' }
+    }).then(function (response) {
+      var type = response.headers.get('content-type') || '';
+      if (type.indexOf('application/json') !== -1) {
+        return response.json().then(function (payload) {
+          releaseSubmit(submitter);
+          showFormError((payload && payload.error) || 'The photos could not be uploaded.');
+        });
+      }
+      if (response.status === 413) {
+        releaseSubmit(submitter);
+        showFormError('These photos are too large to send together. Save with fewer photos, then add the rest from the edit page.');
+        return;
+      }
+      if (response.status === 502 || response.status === 504) {
+        releaseSubmit(submitter);
+        showFormError('The save did not finish. Try again.');
+        return;
+      }
+      if (response.redirected) {
+        window.location.href = response.url;
+        return;
+      }
+      return response.text().then(function (html) {
+        document.open();
+        document.write(html);
+        document.close();
+      });
+    }).catch(function () {
+      releaseSubmit(submitter);
+      showFormError('The photos did not go through. Try fewer photos, or smaller ones.');
+    });
   });
 
   render();

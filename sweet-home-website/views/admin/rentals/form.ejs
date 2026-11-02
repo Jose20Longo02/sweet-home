@@ -10,7 +10,7 @@
       <div class="admin-header">
         <div>
           <h1><%= rental ? 'Edit furnished apartment' : 'New furnished apartment' %></h1>
-          <p class="subtitle">Write the title and description in one language. Publish creates the other. A draft stays as you wrote it. This still does not put the apartment on the public site.</p>
+          <p class="subtitle">Write the title and description in one language. Publish creates the other language and puts the apartment on the rental catalogue. Save as draft keeps it off the public site.</p>
         </div>
         <div class="header-actions">
           <% if (rental) { %>
@@ -132,7 +132,7 @@
 
         <label for="photos">Photos</label>
         <input id="photos" type="file" name="photos" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple <%= photos.length ? '' : 'required' %>>
-        <small class="hint">Add one or more photos. Drag them into order. The first photo is the cover. Use × to remove one.</small>
+        <small class="hint">Up to 20 photos. Drag them into order. The first photo is the cover. Use × to remove one. If there are many, save once and add the rest from the edit page.</small>
         <% photos.forEach(function (url) { %>
           <input type="hidden" name="existing_photos" value="<%= url %>">
         <% }) %>
@@ -170,4 +170,4 @@
     @keyframes upload-spin { to { transform: rotate(360deg); } }
   </style>
 </div>
-<script src="/js/admin-rentals.js"></script>
+<script src="/js/admin-rentals.js?v=20261102-upload"></script>

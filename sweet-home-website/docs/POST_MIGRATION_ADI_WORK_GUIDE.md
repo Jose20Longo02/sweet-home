@@ -28,7 +28,7 @@ Related internal doc: `[DOMAIN_MIGRATION_PLAYBOOK.md](./DOMAIN_MIGRATION_PLAYBOO
 
 ## How to use this document
 
-- **Current priority (2026-10-28):** **Phase V**. **V1 and V2 are live. V3 blog edits are live.** The homepage financing card and the mortgage-calculator link are local until the next deploy. `/en/properties-for-sale-berlin` stays with Adi in the V4 batch. Indexing for the seven changed blog URLs is still manual. Phase U is on the site except the U5 popup items, which V7 replaces. U6 still applies to every new page.
+- **Current priority (2026-10-29):** **Phase V**. V4 descriptions are drafted and waiting for Adi. Nothing in that batch is live. The homepage financing card and the mortgage-calculator link are still local until the next deploy. Phase U is on the site except the U5 popup items, which V7 replaces. U6 still applies to every new page.
 - Check boxes as you go: `- [ ]` → `- [x]`.
 - Cyprus / Dubai content is **off-focus** — footer links stay; do not feature them on the homepage (S2).
 
@@ -981,7 +981,7 @@ Triggers Adi wants:
 
 **Source:** `Sweet_Home_Push_List_Oct_2026.docx`. Adi titled it “task list, November.” Email: “The focus is on pages that already appear in Google and should earn more clicks.”
 
-**Do first:** send Adi the V4 list, including the held English listings title. V1 and V2 are live. V3 blog edits are live. The homepage financing card and the German mortgage-calculator link are local until deploy. V9’s furnished-rental slug waits on Adi.
+**Do first:** email Adi the V4 list below. Do not publish it before she replies. V1 and V2 are live. V3 blog edits are live. The homepage financing card and the German mortgage-calculator link are local until deploy. V9’s furnished-rental slug waits on Adi.
 
 **Keep for every item below (same gate as U6):**
 
@@ -1038,9 +1038,9 @@ For each page: rework the title and the meta description so the concrete number 
 - [x] `/en/blog/best-berlin-districts-for-families`. Title names Prenzlauer Berg and Charlottenburg
 - [x] `/blog/vermietete-wohnung-kaufen-berlin`. Leads with 30–40 percent below a vacant comparable, and the 280.000 / 400.000 example
 - [x] `/blog/immobilienfinanzierung-berlin`. Opening uses 20 percent equity on 400.000 Euro, plus purchase costs, and says the law sets no fixed income line. Homepage guide card and the visible German mortgage-calculator link are in the code, local until deploy
-- [ ] Request indexing after the edit. Manual in Search Console for the seven changed URLs below. The listings page is not in this request
+- [x] Request indexing after the edit. Done 2026-10-28 in Search Console for the seven changed URLs below. The listings page was not included
 
-**Indexing, still manual:**
+**Indexing requested 2026-10-28:**
 
 - https://sweethome-immobilien.de/en/blog/capital-gains-tax-property-germany
 - https://sweethome-immobilien.de/en/blog/berlin-real-estate-investment-guide-2026
@@ -1056,13 +1056,85 @@ For each page: rework the title and the meta description so the concrete number 
 
 Number-first pattern. First sentence: the concrete number or the answer. Second sentence: why this page. **Send the whole batch in one list. Adi reviews it before it goes live.**
 
-- [ ] Draft the descriptions. Do not publish them
-- [ ] The 13 district pages, German and English (the S6 set)
-- [ ] `/wohnungen-berlin-kaufen` and `/en/properties-for-sale-berlin` (the English one may already be drafted in V3)
-- [ ] The six newest topics, German and English: Hausgeld, Prenzlauer Berg Ratgeber, Kreuzberg Ratgeber, Spekulationssteuer, Moabit Ratgeber, Neukölln Ratgeber
-- [ ] The three calculators, German and English: `/hypothekenrechner`, `/kaufnebenkosten-rechner`, `/mietrendite-rechner`, `/en/mortgage-calculator-germany`, `/en/property-purchase-costs-calculator-germany`, `/en/rental-yield-calculator-germany`
-- [ ] Email Adi the list
+- [x] Draft the descriptions. Do not publish them. Drafted 2026-10-29. Every line is under 155 characters
+- [x] The 13 district pages, German and English (the S6 set)
+- [x] `/wohnungen-berlin-kaufen` and `/en/properties-for-sale-berlin`
+- [x] The six newest topics, German and English: Hausgeld, Prenzlauer Berg Ratgeber, Kreuzberg Ratgeber, Spekulationssteuer, Moabit Ratgeber, Neukölln Ratgeber
+- [x] The three calculators, German and English
+- [ ] Email Adi the list. Review PDF: `docs/Sweet_Home_V4_Meta_Descriptions_for_Adi.pdf`
 - [ ] Apply only what she approves, then request indexing for the changed URLs
+
+District €/m² figures are Gutachterausschuss means for 2025 after the 10 percent outlier trim (Immobilienmarktbericht 2025/2026, figure 42). The citywide 5.511 €/m² is the untrimmed mean. Moabit has no row in that table. Hausgeld has no official Berlin average, so the description leads with the legal answer.
+
+**Money pages**
+
+| URL | Proposed description |
+| --- | --- |
+| `/wohnungen-berlin-kaufen` | 2025 lag der mittlere Kaufpreis bei 5.511 €/m², vor Ausreißerbereinigung. Vergleichen Sie aktuelle Wohnungen in Berlin. |
+| `/en/properties-for-sale-berlin` | Berlin condominiums averaged €5,511/m² in 2025, before outlier trimming. Compare current listings and districts. |
+
+Proposed English title, still not live: `Buy an Apartment in Berlin: Current Listings and Prices`. The layout adds `\| Sweet Home`.
+
+**District pages**
+
+| URL | Proposed description |
+| --- | --- |
+| `/wohnung-kaufen-charlottenburg` | Charlottenburg: 5.201 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen. |
+| `/en/properties-for-sale-charlottenburg` | Charlottenburg: €5,201/m² Gutachterausschuss mean for 2025. Compare current apartments here. |
+| `/wohnung-kaufen-moabit` | Für Moabit gibt es keinen eigenen amtlichen Mittelwert. Vergleichen Sie hier aktuelle Wohnungen im Ortsteil. |
+| `/en/properties-for-sale-moabit` | Moabit has no separate official price average. Compare current apartments in this locality. |
+| `/wohnung-kaufen-friedrichshain-kreuzberg` | Friedrichshain 5.887 €/m², Kreuzberg 5.647 €/m², Mittelwerte 2025. Vergleichen Sie Wohnungen im Bezirk. |
+| `/en/properties-for-sale-friedrichshain-kreuzberg` | Friedrichshain €5,887/m² and Kreuzberg €5,647/m², Gutachterausschuss means for 2025. Compare apartments in the borough. |
+| `/wohnung-kaufen-schoeneberg` | Schöneberg: 5.421 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen. |
+| `/en/properties-for-sale-schoeneberg` | Schöneberg: €5,421/m² Gutachterausschuss mean for 2025. Compare current apartments here. |
+| `/wohnung-kaufen-prenzlauer-berg` | Prenzlauer Berg: 6.300 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen. |
+| `/en/properties-for-sale-prenzlauer-berg` | Prenzlauer Berg: €6,300/m² Gutachterausschuss mean for 2025. Compare current apartments here. |
+| `/wohnung-kaufen-wedding` | Wedding: 4.197 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen. |
+| `/en/properties-for-sale-wedding` | Wedding: €4,197/m² Gutachterausschuss mean for 2025. Compare current apartments here. |
+| `/wohnung-kaufen-tempelhof` | Tempelhof: 4.011 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen. |
+| `/en/properties-for-sale-tempelhof` | Tempelhof: €4,011/m² Gutachterausschuss mean for 2025. Compare current apartments here. |
+| `/wohnung-kaufen-neukoelln` | Neukölln: 4.425 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen. |
+| `/en/properties-for-sale-neukoelln` | Neukölln: €4,425/m² Gutachterausschuss mean for 2025. Compare current apartments here. |
+| `/wohnung-kaufen-reinickendorf` | Reinickendorf: 3.755 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen. |
+| `/en/properties-for-sale-reinickendorf` | Reinickendorf: €3,755/m² Gutachterausschuss mean for 2025. Compare current apartments here. |
+| `/wohnung-kaufen-kreuzberg` | Kreuzberg: 5.647 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen. |
+| `/en/properties-for-sale-kreuzberg` | Kreuzberg: €5,647/m² Gutachterausschuss mean for 2025. Compare current apartments here. |
+| `/wohnung-kaufen-spandau` | Spandau: 3.235 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen. |
+| `/en/properties-for-sale-spandau` | Spandau: €3,235/m² Gutachterausschuss mean for 2025. Compare current apartments here. |
+| `/wohnung-kaufen-berlin-mitte` | Ortsteil Mitte: 9.374 €/m², der höchste Mittelwert 2025. Vergleichen Sie hier zentrale Wohnungen. |
+| `/en/properties-for-sale-mitte` | Ortsteil Mitte: €9,374/m², the highest Gutachterausschuss mean for 2025. Compare central apartments here. |
+| `/wohnung-kaufen-pankow` | Pankow ohne Prenzlauer Berg: 5.194 €/m² mittlere Kaufpreise 2025. Vergleichen Sie hier aktuelle Wohnungen. |
+| `/en/properties-for-sale-pankow` | Pankow without Prenzlauer Berg: €5,194/m² Gutachterausschuss mean for 2025. Compare current apartments here. |
+
+**Guides**
+
+| URL | Proposed description |
+| --- | --- |
+| `/blog/hausgeld-eigentumswohnung` | Hausgeld ist der beschlossene Vorschuss auf Kosten und Rücklage. Nur der Betriebskostenanteil kann auf den Mieter fallen. |
+| `/en/blog/hausgeld-service-charges-germany` | Hausgeld is the voted advance for costs and the reserve. Only the operating-cost share can pass to a tenant. |
+| `/blog/wohnung-kaufen-prenzlauer-berg-ratgeber` | Prenzlauer Berg: 6.300 €/m² mittlere Kaufpreise 2025. Der Ratgeber prüft Straße und Haus, nicht nur den Namen. |
+| `/en/blog/buying-apartment-prenzlauer-berg-guide` | Prenzlauer Berg: €6,300/m² mean purchase price in 2025. The guide checks the street and the building. |
+| `/blog/wohnung-kaufen-kreuzberg-ratgeber` | Kreuzberg: 5.647 €/m² mittlere Kaufpreise 2025. Der Ratgeber prüft Kiez, Lärm und das Haus. |
+| `/en/blog/buying-apartment-kreuzberg-guide` | Kreuzberg: €5,647/m² mean purchase price in 2025. The guide checks the pocket, the noise, and the building. |
+| `/blog/spekulationssteuer-immobilie` | Nach mehr als 10 Jahren fällt ein privater Verkauf nicht unter § 23. Die Seite erklärt Frist und Eigennutzung. |
+| `/en/blog/capital-gains-tax-property-germany` | After more than 10 years, a private sale falls outside section 23. This page explains the period and owner-occupation. |
+| `/blog/wohnung-kaufen-moabit-ratgeber` | Moabit hat keinen eigenen amtlichen €/m²-Mittelwert. Der Ratgeber trennt die Lagen im Ortsteil. |
+| `/en/blog/buying-apartment-moabit-guide` | Moabit has no separate official price average. The guide separates the pockets inside Mitte. |
+| `/blog/wohnung-kaufen-neukoelln-ratgeber` | Neukölln: 4.425 €/m² mittlere Kaufpreise 2025. Die fünf Ortsteile sind nicht derselbe Kauf. |
+| `/en/blog/buying-apartment-neukoelln-guide` | Neukölln: €4,425/m² mean purchase price in 2025. The five localities are not the same purchase. |
+
+The English capital-gains description already live from V3 can stay if Adi prefers it: `After more than 10 years, a private sale of German property falls outside section 23, so that gain is not taxed. Owner-occupation can exclude it sooner.`
+
+**Calculators**
+
+| URL | Proposed description |
+| --- | --- |
+| `/hypothekenrechner` | Im Beispiel: 350.000 Euro, 70.000 Euro Eigenkapital, 4,50 % und 30 Jahre, rund 1.419 Euro im Monat. Ohne Kaufnebenkosten. |
+| `/en/mortgage-calculator-germany` | Sample: €350,000 price, €70,000 down, 4.50% and 30 years, about €1,419 a month. Purchase costs are not included. |
+| `/kaufnebenkosten-rechner` | Berlin: 6 % Grunderwerbsteuer. Bei 400.000 Euro sind das 24.000 Euro, plus Notar und Grundbuch. |
+| `/en/property-purchase-costs-calculator-germany` | Berlin transfer tax is 6%. On €400,000 that is €24,000, before notary and land registry. |
+| `/mietrendite-rechner` | Im Beispiel werden aus 4,0 % brutto rund 2,9 % netto. Der Rechner nutzt Kaltmiete, Kaufpreis und Kaufnebenkosten. |
+| `/en/rental-yield-calculator-germany` | The sample turns 4.0% gross into about 2.9% net. It uses cold rent, price, and purchase costs. |
 
 **Done when:** the approved descriptions are live and the rest of the batch is still waiting on her notes.
 
@@ -1131,7 +1203,7 @@ Both with English versions. Same quality rules as U4: official sources, relative
 
 | Day         | Focus                                                                                          |
 | ----------- | ---------------------------------------------------------------------------------------------- |
-| Now         | **Phase V.** V3 blog edits are live. Request indexing for the seven URLs, deploy the homepage card, then draft V4 for Adi. |
+| Now         | **Phase V.** Email Adi the V4 list. Do not publish those descriptions before she replies. |
 | Then        | Draft the V4 description list and send it to Adi before anything in that batch goes live.      |
 | After that  | V5 contact lines, V6 mailer UTMs, V7 only after Israel agrees, V8 rental schema, V9 posts.     |
 | Friday      | Email Adi: done / live / blockers / next week                                                  |
@@ -1231,7 +1303,8 @@ Confirmations you asked for:
 | 2026-10-27 | **Phase V** from Adi’s November push list                                                               | Plan                          | `Sweet_Home_Push_List_Oct_2026.docx`. Do V1–V3 first. V4 waits on Adi’s review. V7 does not close ContactBeat unless Israel agrees. |
 | 2026-10-28 | **V1** homepage guide strip and mobile map                                                              | Live                          | Strip on `/` and `/en`, seven links each, same tab. Leaflet gesture handling: one finger scrolls, two fingers pan. |
 | 2026-10-28 | **V2** district purchase-price table and chart                                                          | Live                          | Immobilienmarktbericht 2025/2026, figure 42. Same figures on DE and EN. Key-figures table restyled. Indexing requested the same day. |
-| 2026-10-28 | **V3** titles, descriptions, and opening answers                                                        | Live in the database          | Seven blog URLs. €5,130 was not published. Listings page held for Adi. Homepage card and calculator link wait on deploy. Indexing still manual. |
+| 2026-10-28 | **V3** titles, descriptions, and opening answers                                                        | Live in the database          | Seven blog URLs. €5,130 was not published. Listings page held for Adi. Homepage card and calculator link wait on deploy. Indexing requested the same day. |
+| 2026-10-29 | **V4** number-first meta descriptions                                                                   | Draft, not live               | 13 district pairs, two money pages, six guide pairs, three calculator pairs. Waiting on Adi. |
 
 
 ---
