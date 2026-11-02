@@ -677,7 +677,7 @@ exports.catalogue = async (req, res, next) => {
       filterError,
       hasFilters,
       rentals,
-      useMainContainer: true,
+      useMainContainer: false,
       headPartial: '../partials/seo/rental-catalogue-head',
       canonicalUrl: `${base}${path}`,
       hreflangAlternates: {
