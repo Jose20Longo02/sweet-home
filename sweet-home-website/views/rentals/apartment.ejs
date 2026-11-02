@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/css/rentals-catalogue.css?v=20261019-apartment-sale-style" />
+<link rel="stylesheet" href="/css/rentals-catalogue.css?v=20261102-gallery" />
 <section class="catalogue apartment">
   <a class="apartment-back" href="<%= cataloguePath %>"><%= lang === 'en' ? 'All furnished apartments' : 'Alle möblierten Wohnungen' %></a>
   <div class="apartment-layout">
@@ -7,6 +7,18 @@
         <div class="apartment-hero">
           <% if (photos.length) { %>
             <img id="apartment-hero" src="<%= photos[0] %>" alt="<%= rental.title %>">
+          <% } %>
+          <% if (photos.length > 1) { %>
+            <button type="button" class="gallery-nav prev" id="apartmentPrev" aria-label="<%= lang === 'en' ? 'Previous photo' : 'Vorheriges Foto' %>">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <polyline points="15,18 9,12 15,6"></polyline>
+              </svg>
+            </button>
+            <button type="button" class="gallery-nav next" id="apartmentNext" aria-label="<%= lang === 'en' ? 'Next photo' : 'Nächstes Foto' %>">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <polyline points="9,18 15,12 9,6"></polyline>
+              </svg>
+            </button>
           <% } %>
         </div>
         <% if (photos.length > 1) { %>
@@ -109,12 +121,30 @@
 <script>
 (function () {
   var hero = document.getElementById('apartment-hero');
-  document.querySelectorAll('.apartment-thumbs button').forEach(function (button) {
-    button.addEventListener('click', function () {
-      if (hero) hero.src = button.getAttribute('data-photo');
-      document.querySelectorAll('.apartment-thumbs button').forEach(function (item) { item.classList.remove('is-active'); });
-      button.classList.add('is-active');
-    });
+  var thumbs = Array.prototype.slice.call(document.querySelectorAll('.apartment-thumbs button'));
+  var index = 0;
+  function showPhoto(nextIndex) {
+    if (!hero || !thumbs.length) return;
+    index = (nextIndex + thumbs.length) % thumbs.length;
+    hero.src = thumbs[index].getAttribute('data-photo');
+    thumbs.forEach(function (item, itemIndex) { item.classList.toggle('is-active', itemIndex === index); });
+    if (typeof thumbs[index].scrollIntoView === 'function') {
+      thumbs[index].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
+  }
+  thumbs.forEach(function (button, buttonIndex) {
+    button.addEventListener('click', function () { showPhoto(buttonIndex); });
+  });
+  var prev = document.getElementById('apartmentPrev');
+  var next = document.getElementById('apartmentNext');
+  if (prev) prev.addEventListener('click', function () { showPhoto(index - 1); });
+  if (next) next.addEventListener('click', function () { showPhoto(index + 1); });
+  document.addEventListener('keydown', function (event) {
+    if (!thumbs.length) return;
+    var tag = event.target && event.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    if (event.key === 'ArrowLeft') showPhoto(index - 1);
+    if (event.key === 'ArrowRight') showPhoto(index + 1);
   });
   var form = document.querySelector('.apartment-inquiry form');
   if (!form) return;
