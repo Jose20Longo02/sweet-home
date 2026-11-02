@@ -125,6 +125,19 @@ function updateCities() {
       citySelect.appendChild(option);
     });
     citySelect.disabled = false;
+    const presetCity = citySelect.getAttribute('data-selected');
+    if (presetCity && [...citySelect.options].some((opt) => opt.value === presetCity)) {
+      citySelect.value = presetCity;
+      updateNeighborhoods();
+      const presetNeighborhood = neighborhoodSelect && neighborhoodSelect.getAttribute('data-selected');
+      if (
+        neighborhoodSelect &&
+        presetNeighborhood &&
+        [...neighborhoodSelect.options].some((opt) => opt.value === presetNeighborhood)
+      ) {
+        neighborhoodSelect.value = presetNeighborhood;
+      }
+    }
     console.log(`✅ Populated ${cities.length} cities, city dropdown enabled`);
   } else {
     citySelect.disabled = true;
@@ -1059,6 +1072,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const citySelectEl = document.getElementById('filterCity');
   if (countrySelectEl) {
     countrySelectEl.addEventListener('change', function() {
+      const citySelect = document.getElementById('filterCity');
+      const neighborhoodSelect = document.getElementById('filterNeighborhood');
+      if (citySelect) citySelect.removeAttribute('data-selected');
+      if (neighborhoodSelect) neighborhoodSelect.removeAttribute('data-selected');
       updateCities();
     });
   }

@@ -402,6 +402,9 @@
       "apply": "Apply Filters",
       "found": "Properties Found",
       "browseAll": "Browse all available properties",
+      "summary": "{shown} of {total} results",
+      "for": "for",
+      "in": "in",
       "activeFilters": "Active filters:",
       "compare": {
         "title": "Properties to Compare",

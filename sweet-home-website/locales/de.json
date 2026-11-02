@@ -395,6 +395,9 @@
       "apply": "Filter anwenden",
       "found": "Immobilien gefunden",
       "browseAll": "Alle verfügbaren Immobilien anzeigen",
+      "summary": "{shown} von {total} Ergebnissen",
+      "for": "für",
+      "in": "in",
       "activeFilters": "Aktive Filter:",
       "compare": {
         "title": "Immobilien zum Vergleichen",
