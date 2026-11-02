@@ -15,7 +15,12 @@ class FurnishedRental {
     return res.rows;
   }
 
-  static async publishedForCatalogue({ neighborhood, minRent, maxRent, availableBy }) {
+  static async publishedForCatalogue({ neighborhood, minRent, maxRent, availableBy, sort }) {
+    const orderBy = sort === 'rent_high'
+      ? 'monthly_rent DESC, id DESC'
+      : sort === 'date_new'
+        ? 'created_at DESC, id DESC'
+        : 'monthly_rent ASC, id DESC';
     const res = await query(
       `SELECT id, title, title_i18n, slug, slug_i18n, description, description_i18n,
               neighborhood, city, monthly_rent, deposit, photos,
@@ -27,7 +32,7 @@ class FurnishedRental {
           AND ($2::numeric IS NULL OR monthly_rent >= $2)
           AND ($3::numeric IS NULL OR monthly_rent <= $3)
           AND ($4::date IS NULL OR available_from IS NULL OR available_from <= $4::date)
-        ORDER BY monthly_rent ASC, id DESC`,
+        ORDER BY ${orderBy}`,
       [neighborhood, minRent, maxRent, availableBy]
     );
     return res.rows;

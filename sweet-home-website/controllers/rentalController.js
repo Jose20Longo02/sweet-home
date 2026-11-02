@@ -620,6 +620,7 @@ function catalogueCard(rental, lang) {
     utilitiesValue: rental.utilities_included
       ? (lang === 'en' ? 'Included' : 'Inklusive')
       : (rental.utilities_amount != null && rental.utilities_amount !== '' ? euroPublic(rental.utilities_amount) : ''),
+    monthlyRent: Number(rental.monthly_rent),
     roomsValue: rooms == null || Number.isNaN(rooms) ? '' : String(rooms),
     floorValue: floor == null || Number.isNaN(floor)
       ? ''
@@ -638,6 +639,8 @@ exports.catalogue = async (req, res, next) => {
     const maxRent = numberOrNull(req.query.max_rent);
     const availableRaw = text(req.query.available_from);
     const availableBy = /^\d{4}-\d{2}-\d{2}$/.test(availableRaw) ? availableRaw : '';
+    const sortRaw = text(req.query.sort);
+    const sort = ['rent_low', 'rent_high', 'date_new'].includes(sortRaw) ? sortRaw : 'rent_low';
     const filters = {
       neighborhood,
       min_rent: minRent != null && !Number.isNaN(minRent) && minRent >= 0 ? String(minRent) : '',
@@ -656,7 +659,8 @@ exports.catalogue = async (req, res, next) => {
       neighborhood: filters.neighborhood || null,
       minRent: minValue,
       maxRent: maxValue,
-      availableBy: filters.available_from || null
+      availableBy: filters.available_from || null,
+      sort
     })).map((rental) => catalogueCard(rental, lang));
     const base = res.locals.baseUrl;
     const hasFilters = Boolean(filters.neighborhood || filters.min_rent || filters.max_rent || filters.available_from);
@@ -669,6 +673,7 @@ exports.catalogue = async (req, res, next) => {
       path,
       neighborhoods: BERLIN_NEIGHBORHOODS,
       filters,
+      sort,
       filterError,
       hasFilters,
       rentals,

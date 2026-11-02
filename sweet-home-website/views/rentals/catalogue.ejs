@@ -1,79 +1,227 @@
-<link rel="stylesheet" href="/css/rentals-catalogue.css?v=20261018-catalogue-card" />
-<section class="catalogue">
-  <header class="catalogue-intro">
-    <h1><%= lang === 'en' ? 'Furnished apartments in Berlin' : 'Möblierte Wohnungen in Berlin' %></h1>
-    <p><%= lang === 'en'
-      ? 'Selected furnished apartments in Berlin, with a monthly rent, a neighborhood, and a move-in date.'
-      : 'Ausgewählte möblierte Wohnungen in Berlin, mit monatlichem Mietpreis, Lage und Einzugsdatum.' %></p>
-  </header>
-
-  <form class="catalogue-filters" method="get" action="<%= path %>">
-    <label>
-      <%= lang === 'en' ? 'Location' : 'Lage' %>
-      <select name="neighborhood">
-        <option value=""><%= lang === 'en' ? 'All neighborhoods' : 'Alle Lagen' %></option>
-        <% neighborhoods.forEach(function (name) { %>
-          <option value="<%= name %>" <%= filters.neighborhood === name ? 'selected' : '' %>><%= name %></option>
-        <% }) %>
-      </select>
-    </label>
-    <label>
-      <%= lang === 'en' ? 'Minimum rent (€)' : 'Miete ab (€)' %>
-      <input type="number" name="min_rent" min="0" step="1" value="<%= filters.min_rent %>">
-    </label>
-    <label>
-      <%= lang === 'en' ? 'Maximum rent (€)' : 'Miete bis (€)' %>
-      <input type="number" name="max_rent" min="0" step="1" value="<%= filters.max_rent %>">
-    </label>
-    <label>
-      <%= lang === 'en' ? 'Move in by' : 'Einzug bis' %>
-      <input type="date" name="available_from" value="<%= filters.available_from %>">
-    </label>
-    <div class="catalogue-filter-actions">
-      <button type="submit" class="btn btn-primary"><%= lang === 'en' ? 'Search' : 'Suchen' %></button>
-      <% if (hasFilters) { %>
-        <a class="catalogue-reset" href="<%= path %>"><%= lang === 'en' ? 'Reset' : 'Zurücksetzen' %></a>
-      <% } %>
-    </div>
-  </form>
-
-  <% if (filterError) { %>
-    <p class="catalogue-error"><%= filterError %></p>
-  <% } %>
-
-  <% if (!rentals.length) { %>
-    <div class="catalogue-empty">
-      <h2><%= hasFilters
-        ? (lang === 'en' ? 'No apartment matches this search.' : 'Keine Wohnung passt zu dieser Suche.')
-        : (lang === 'en' ? 'No furnished apartment is published yet.' : 'Noch keine möblierte Wohnung veröffentlicht.') %></h2>
-    </div>
-  <% } else { %>
-    <div class="catalogue-grid">
-      <% rentals.forEach(function (rental) { %>
-        <article class="catalogue-card">
-          <div class="catalogue-media">
-            <% if (rental.cover) { %>
-              <img src="<%= rental.cover %>" alt="<%= rental.title %>">
-            <% } else { %>
-              <span class="catalogue-cover-empty"><%= lang === 'en' ? 'No photo' : 'Kein Foto' %></span>
-            <% } %>
-            <span class="catalogue-rent"><%= rental.rentLabel %><small><%= lang === 'en' ? '/ month' : '/ Monat' %></small></span>
+<link rel="stylesheet" href="/css/property-list.css?v=20261102-rentals" />
+<link rel="stylesheet" href="/css/rentals-catalogue.css?v=20261102-layout" />
+<%
+  const en = lang === 'en';
+  function keep(drop) {
+    const drops = Array.isArray(drop) ? drop : [drop];
+    const params = new URLSearchParams();
+    if (!drops.includes('neighborhood') && filters.neighborhood) params.set('neighborhood', filters.neighborhood);
+    if (!drops.includes('min_rent') && filters.min_rent) params.set('min_rent', filters.min_rent);
+    if (!drops.includes('max_rent') && filters.max_rent) params.set('max_rent', filters.max_rent);
+    if (!drops.includes('available_from') && filters.available_from) params.set('available_from', filters.available_from);
+    if (sort && sort !== 'rent_low') params.set('sort', sort);
+    const query = params.toString();
+    return query ? path + '?' + query : path;
+  }
+  function money(value) {
+    const num = Number(value);
+    if (!Number.isFinite(num)) return '';
+    return '€' + num.toLocaleString('en-US');
+  }
+  function moveInLabel(value) {
+    if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return '';
+    return value.slice(8, 10) + '.' + value.slice(5, 7) + '.' + value.slice(0, 4);
+  }
+  let rentChip = '';
+  if (filters.min_rent && filters.max_rent) rentChip = money(filters.min_rent) + '–' + money(filters.max_rent);
+  else if (filters.min_rent) rentChip = (en ? 'From ' : 'Ab ') + money(filters.min_rent);
+  else if (filters.max_rent) rentChip = (en ? 'Up to ' : 'Bis ') + money(filters.max_rent);
+%>
+<div class="property-search-page">
+  <div class="container-wide">
+    <h1 class="sr-only"><%= en ? 'Furnished apartments in Berlin' : 'Möblierte Wohnungen in Berlin' %></h1>
+    <div class="property-layout">
+      <aside class="filters-sidebar" id="filtersSidebar">
+        <div class="filters-header">
+          <h3><%= en ? 'Filters' : 'Filter' %></h3>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <a class="clear-filters" href="<%= path %>"><%= en ? 'Clear all' : 'Alle löschen' %></a>
+            <button type="button" class="filters-close" id="filtersClose" aria-label="<%= en ? 'Close' : 'Schließen' %>">×</button>
           </div>
-          <div class="catalogue-body">
-            <h2><%= rental.title %></h2>
-            <p class="catalogue-place"><%= rental.neighborhood || 'Berlin' %><% if (rental.neighborhood) { %>, Berlin<% } %></p>
-            <ul class="catalogue-facts">
-              <% if (rental.sizeLabel) { %><li><%= rental.sizeLabel %></li><% } %>
-              <% if (rental.roomsLabel) { %><li><%= rental.roomsLabel %></li><% } %>
-              <% if (rental.floorLabel) { %><li><%= rental.floorLabel %></li><% } %>
-              <% if (rental.stayLabel) { %><li><%= rental.stayLabel %></li><% } %>
-            </ul>
-            <% if (rental.href) { %>
-              <a class="btn btn-primary catalogue-cta" href="<%= rental.href %>#inquiry"><%= lang === 'en' ? 'Send inquiry' : 'Anfrage senden' %></a>
+        </div>
+        <form id="rentalFilters" class="filters-form" method="get" action="<%= path %>">
+          <div class="filter-group">
+            <h4><%= en ? 'Location' : 'Lage' %></h4>
+            <div class="form-group">
+              <label for="filterCountry"><%= en ? 'Country' : 'Land' %></label>
+              <select id="filterCountry" class="form-select" disabled>
+                <option selected><%= en ? 'Germany' : 'Deutschland' %></option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="filterCity"><%= en ? 'City' : 'Stadt' %></label>
+              <select id="filterCity" class="form-select" disabled>
+                <option selected>Berlin</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="filterNeighborhood"><%= en ? 'Neighborhood' : 'Stadtteil' %></label>
+              <select id="filterNeighborhood" name="neighborhood" class="form-select">
+                <option value=""><%= en ? 'Any neighborhood' : 'Beliebiger Stadtteil' %></option>
+                <% neighborhoods.forEach(function (name) { %>
+                  <option value="<%= name %>" <%= filters.neighborhood === name ? 'selected' : '' %>><%= name %></option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h4><%= en ? 'Monthly rent' : 'Monatsmiete' %></h4>
+            <div class="price-range">
+              <div class="form-group">
+                <label for="minRent"><%= en ? 'Minimum rent (€)' : 'Mindestmiete (€)' %></label>
+                <input type="number" id="minRent" name="min_rent" min="0" step="1" class="form-input" value="<%= filters.min_rent %>">
+              </div>
+              <div class="form-group">
+                <label for="maxRent"><%= en ? 'Maximum rent (€)' : 'Höchstmiete (€)' %></label>
+                <input type="number" id="maxRent" name="max_rent" min="0" step="1" class="form-input" value="<%= filters.max_rent %>">
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-group collapsible collapsed">
+            <h4><%= en ? 'More filters' : 'Weitere Filter' %></h4>
+            <div class="filter-content">
+              <div class="filter-group">
+                <h4><%= en ? 'Move in by' : 'Einzug bis' %></h4>
+                <div class="form-group">
+                  <label for="availableFrom"><%= en ? 'Available from' : 'Verfügbar ab' %></label>
+                  <input type="date" id="availableFrom" name="available_from" class="form-input" value="<%= filters.available_from %>">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block"><%= en ? 'Apply filters' : 'Filter anwenden' %></button>
+        </form>
+      </aside>
+
+      <div class="property-main">
+        <div class="results-header">
+          <div class="results-info">
+            <h2><%= rentals.length %> <%= en ? (rentals.length === 1 ? 'apartment found' : 'apartments found') : (rentals.length === 1 ? 'Wohnung gefunden' : 'Wohnungen gefunden') %></h2>
+            <p>
+              <% if (hasFilters) { %>
+                <%= en
+                  ? (rentals.length + (rentals.length === 1 ? ' result' : ' results') + (filters.neighborhood ? ' in ' + filters.neighborhood : ' in Berlin'))
+                  : (rentals.length + (rentals.length === 1 ? ' Ergebnis' : ' Ergebnisse') + (filters.neighborhood ? ' in ' + filters.neighborhood : ' in Berlin')) %>
+              <% } else { %>
+                <%= en ? 'Browse all available furnished apartments' : 'Alle verfügbaren möblierten Wohnungen anzeigen' %>
+              <% } %>
+            </p>
+            <% if (hasFilters) { %>
+              <div class="active-filters">
+                <span class="active-filters-label"><%= en ? 'Active filters:' : 'Aktive Filter:' %></span>
+                <% if (filters.neighborhood) { %>
+                  <span class="filter-tag">
+                    <%= filters.neighborhood %>
+                    <a class="filter-remove" href="<%= keep('neighborhood') %>" aria-label="<%= en ? 'Remove neighborhood' : 'Stadtteil entfernen' %>">&times;</a>
+                  </span>
+                <% } %>
+                <% if (rentChip) { %>
+                  <span class="filter-tag">
+                    <%= rentChip %>
+                    <a class="filter-remove" href="<%= keep(['min_rent', 'max_rent']) %>" aria-label="<%= en ? 'Remove rent' : 'Miete entfernen' %>">&times;</a>
+                  </span>
+                <% } %>
+                <% if (filters.available_from) { %>
+                  <span class="filter-tag">
+                    <%= en ? 'Move in by' : 'Einzug bis' %> <%= moveInLabel(filters.available_from) %>
+                    <a class="filter-remove" href="<%= keep('available_from') %>" aria-label="<%= en ? 'Remove move-in date' : 'Einzugsdatum entfernen' %>">&times;</a>
+                  </span>
+                <% } %>
+              </div>
             <% } %>
           </div>
-        </article>
-      <% }) %>
+          <div class="results-controls">
+            <div class="sort-controls">
+              <label for="sortBy"><%= en ? 'Sort by:' : 'Sortieren nach:' %></label>
+              <select id="sortBy" name="sort" form="rentalFilters" class="form-select">
+                <option value="rent_low" <%= sort === 'rent_low' ? 'selected' : '' %>><%= en ? 'Rent: low to high' : 'Miete: aufsteigend' %></option>
+                <option value="rent_high" <%= sort === 'rent_high' ? 'selected' : '' %>><%= en ? 'Rent: high to low' : 'Miete: absteigend' %></option>
+                <option value="date_new" <%= sort === 'date_new' ? 'selected' : '' %>><%= en ? 'Newest first' : 'Neueste zuerst' %></option>
+              </select>
+            </div>
+            <button type="button" class="mobile-filters-trigger" id="filtersOpen"><%= en ? 'Filters' : 'Filter' %></button>
+          </div>
+        </div>
+
+        <% if (filterError) { %>
+          <p class="catalogue-error"><%= filterError %></p>
+        <% } %>
+
+        <% if (!rentals.length) { %>
+          <div class="no-results">
+            <h3><%= hasFilters
+              ? (en ? 'No apartment matches this search.' : 'Keine Wohnung passt zu dieser Suche.')
+              : (en ? 'No furnished apartment is published yet.' : 'Noch keine möblierte Wohnung veröffentlicht.') %></h3>
+            <% if (hasFilters) { %>
+              <div class="no-results-actions">
+                <a class="btn btn-primary" href="<%= path %>"><%= en ? 'Browse all apartments' : 'Alle Wohnungen anzeigen' %></a>
+              </div>
+            <% } %>
+          </div>
+        <% } else { %>
+          <div class="properties-grid" id="rentalGrid">
+            <% rentals.forEach(function (rental) { %>
+              <article class="property-card country-germany" style="--country-color:#359C4B" data-href="<%= rental.href %>">
+                <div class="card-accent"></div>
+                <div class="property-image">
+                  <% if (rental.cover) { %>
+                    <img src="<%= rental.cover %>" alt="<%= rental.title %>" loading="lazy" decoding="async" onerror="this.src='/img/property-placeholder.jpg'">
+                  <% } else { %>
+                    <img src="/img/property-placeholder.jpg" alt="<%= rental.title %>" loading="lazy" decoding="async">
+                  <% } %>
+                  <div class="property-neighborhood-badge">
+                    <span class="badge badge-neighborhood"><%= rental.neighborhood || 'Berlin' %></span>
+                  </div>
+                </div>
+                <div class="property-content">
+                  <h3 class="property-title"><%= rental.title %></h3>
+                  <div class="property-location">
+                    <span class="icon icon-16 icon-inline icon-mask icon-location" style="color:#000;"></span>
+                    <%= rental.neighborhood || 'Berlin' %>, <%= en ? 'Germany' : 'Deutschland' %>
+                  </div>
+                  <div class="property-details">
+                    <% if (rental.sizeLabel) { %>
+                      <div class="detail-item">
+                        <span class="icon icon-16 icon-inline icon-mask icon-size" style="color:#000;"></span>
+                        <%= rental.sizeLabel %>
+                      </div>
+                    <% } %>
+                    <% if (rental.roomsLabel) { %>
+                      <div class="detail-item">
+                        <span class="icon icon-16 icon-inline icon-mask icon-bed" style="color:#000;"></span>
+                        <%= rental.roomsLabel %>
+                      </div>
+                    <% } %>
+                    <% if (rental.floorLabel) { %>
+                      <div class="detail-item"><%= rental.floorLabel %></div>
+                    <% } %>
+                  </div>
+                  <div class="property-price">
+                    <% if (Number.isFinite(rental.monthlyRent) && rental.monthlyRent > 0) { %>
+                      <span class="price-amount"><%= money(rental.monthlyRent) %></span>
+                      <span class="price-sep">|</span>
+                      <span class="rental-income-chip"><%= en ? 'per month' : 'pro Monat' %><% if (rental.stayLabel) { %> · <%= rental.stayLabel %><% } %></span>
+                    <% } else { %>
+                      <span class="price-amount"><%= en ? 'Rent on request' : 'Miete auf Anfrage' %></span>
+                    <% } %>
+                  </div>
+                  <div class="property-footer">
+                    <% if (rental.href) { %>
+                      <a class="btn btn-outline btn-sm btn-compare" href="<%= rental.href %>#inquiry"><%= en ? 'Send inquiry' : 'Anfrage senden' %></a>
+                      <a class="btn btn-outline btn-sm btn-view" href="<%= rental.href %>"><%= en ? 'View details' : 'Details ansehen' %></a>
+                    <% } %>
+                  </div>
+                </div>
+              </article>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+      <div id="filtersOverlay" class="filters-overlay"></div>
     </div>
-  <% } %>
-</section>
+  </div>
+</div>
+<script src="/js/rentals-catalogue.js?v=20261102-layout2"></script>
