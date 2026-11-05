@@ -714,6 +714,7 @@
       "authorNamePrefix": "Reviewed by",
       "currentListingsTitle": "Current apartments in {district}",
       "currentListingsIntro": "Current listings in {district}. This guide explains the area. The cards show homes.",
+      "currentListingsIntroBerlin": "Three apartments currently offered in Berlin.",
       "relatedLandingTitle": "Relevant pages",
       "relatedLandingIntro": "Explore these relevant pages to compare apartments for sale by city and neighborhood.",
       "faq": {

@@ -64,6 +64,19 @@
 .blog-article .content { line-height: 1.75; }
 .blog-article .content h2 { margin-top: var(--spacing-6); }
 
+.blog-article .content .blog-enquiry {
+  margin: 1.25rem 0 1.5rem;
+  padding: 0.9rem 1rem;
+  background: #f4f7f5;
+  border-left: 3px solid var(--primary-color, #2ea862);
+  border-radius: 0 10px 10px 0;
+  color: var(--gray-800, #1f2933);
+}
+.blog-article .content .blog-enquiry a {
+  color: var(--primary-color, #2ea862);
+  font-weight: 600;
+}
+
 .blog-detail .blog-listing-cards {
   margin-top: 28px;
 }

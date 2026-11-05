@@ -1142,12 +1142,14 @@ The English capital-gains description already live from V3 can stay if Adi prefe
 
 The three guides are Immobilienpreise, Mietpreise, and Grunderwerbsteuer. German and English.
 
-- [ ] Mid-article contact block on `/blog/immobilienpreise-berlin` and `/en/blog/berlin-property-prices-2026`: one sentence plus a contact link or a short form, in the flow of the text, not a popup
-- [ ] Same block on `/blog/mietpreise-berlin-bezirk` and `/en/blog/berlin-rents-by-district-2026`
-- [ ] Same block on `/blog/grunderwerbsteuer-berlin` and `/en/blog/berlin-transfer-tax-grunderwerbsteuer`
-- [ ] Current-listing cards on those three guides where the block is not live yet. Reuse `loadBlogListingCards`. Skip a guide that already shows cards
+- [x] Mid-article contact block on `/blog/immobilienpreise-berlin` and `/en/blog/berlin-property-prices-2026`: one sentence plus a contact link or a short form, in the flow of the text, not a popup
+- [x] Same block on `/blog/mietpreise-berlin-bezirk` and `/en/blog/berlin-rents-by-district-2026`
+- [x] Same block on `/blog/grunderwerbsteuer-berlin` and `/en/blog/berlin-transfer-tax-grunderwerbsteuer`
+- [x] Current-listing cards on those three guides where the block is not live yet. Reuse `loadBlogListingCards`. Skip a guide that already shows cards
 
 **Done when:** each of the six URLs has the contact line in the article, and each guide that was missing cards now shows them.
+
+Coded 2026-11-05. The sentence sits after the first figure in each article. German links to `/contact`, English to `/en/contact`, same tab. Three current Berlin apartments follow the article. Moabit and the other district guides are unchanged. This is in the code, local until deploy. The article text in the database was not edited.
 
 ### V6 — Calculator mailers: add tracking
 
@@ -1305,6 +1307,7 @@ Confirmations you asked for:
 | 2026-10-28 | **V2** district purchase-price table and chart                                                          | Live                          | Immobilienmarktbericht 2025/2026, figure 42. Same figures on DE and EN. Key-figures table restyled. Indexing requested the same day. |
 | 2026-10-28 | **V3** titles, descriptions, and opening answers                                                        | Live in the database          | Seven blog URLs. €5,130 was not published. Listings page held for Adi. Homepage card and calculator link wait on deploy. Indexing requested the same day. |
 | 2026-10-29 | **V4** number-first meta descriptions                                                                   | Draft, not live               | 13 district pairs, two money pages, six guide pairs, three calculator pairs. Waiting on Adi. |
+| 2026-11-05 | **V5** contact line and listing cards on the three guides                                               | Local until deploy            | Prices, rents, and transfer tax, DE and EN. Contact sentence after the first figure. Three Berlin apartments after the article. Database text unchanged. |
 
 
 ---

@@ -387,6 +387,24 @@ const BLOG_LISTING_CARDS = {
       )`,
     params: ['%kreuzberg%']
   },
+  'immobilienpreise-berlin': {
+    district: 'Berlin',
+    citywide: true,
+    where: `p.slug IS NOT NULL AND BTRIM(p.slug) <> '' AND p.type = 'Apartment'`,
+    params: []
+  },
+  'mietpreise-berlin-bezirk': {
+    district: 'Berlin',
+    citywide: true,
+    where: `p.slug IS NOT NULL AND BTRIM(p.slug) <> '' AND p.type = 'Apartment'`,
+    params: []
+  },
+  'grunderwerbsteuer-berlin': {
+    district: 'Berlin',
+    citywide: true,
+    where: `p.slug IS NOT NULL AND BTRIM(p.slug) <> '' AND p.type = 'Apartment'`,
+    params: []
+  },
   'wohnung-kaufen-neukoelln-ratgeber': {
     district: 'Neukölln',
     where: `(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2)
@@ -444,11 +462,43 @@ async function loadBlogListingCards(deSlug, lang) {
       photo: listingPhoto(row.photos),
       priceLabel: formatListingPrice(row.price)
     })).filter((card) => card.title && card.href);
-    return { district: spec.district, cards };
+    return { district: spec.district, citywide: !!spec.citywide, cards };
   } catch (err) {
     console.error('Blog listing cards failed', err);
-    return { district: spec.district, cards: [] };
+    return { district: spec.district, citywide: !!spec.citywide, cards: [] };
   }
+}
+
+const BLOG_ENQUIRY_LINES = {
+  'immobilienpreise-berlin': {
+    de: 'Wenn Sie einen Angebotspreis mit diesen Mittelwerten vergleichen, <a href="/contact">schreiben Sie uns kurz</a>.',
+    en: 'If you want to compare an asking price with these averages, <a href="/en/contact">send us a short note</a>.'
+  },
+  'mietpreise-berlin-bezirk': {
+    de: 'Wenn Sie eine Wohnung anhand dieser Mieten prüfen möchten, <a href="/contact">schreiben Sie uns kurz</a>.',
+    en: 'If you want to check an apartment against these rents, <a href="/en/contact">send us a short note</a>.'
+  },
+  'grunderwerbsteuer-berlin': {
+    de: 'Wenn Sie die Grunderwerbsteuer für eine konkrete Wohnung einordnen möchten, <a href="/contact">schreiben Sie uns kurz</a>.',
+    en: 'If you want to apply the transfer tax to a specific apartment, <a href="/en/contact">send us a short note</a>.'
+  }
+};
+
+function insertBlogEnquiry(html, deSlug, lang) {
+  const source = String(html || '');
+  const line = BLOG_ENQUIRY_LINES[String(deSlug || '').trim()];
+  const sentence = line && (line[lang] || line.de);
+  if (!sentence || source.includes('class="blog-enquiry"')) return source;
+  const block = `<p class="blog-enquiry">${sentence}</p>`;
+  const h2End = source.search(/<\/h2>/i);
+  if (h2End >= 0) {
+    const paragraphEnd = source.slice(h2End).search(/<\/p>/i);
+    if (paragraphEnd >= 0) {
+      const at = h2End + paragraphEnd + 4;
+      return source.slice(0, at) + block + source.slice(at);
+    }
+  }
+  return source + block;
 }
 
 function prefixCoverListingHref(href, lang) {
@@ -623,7 +673,9 @@ exports.showPublic = async (req, res, next) => {
       ...p,
       title: localizedBlogField(p, 'title', lang) || p.title
     }, lang));
-    const listingCards = await loadBlogListingCards(localizedPost.slugDe || post.slug, lang);
+    const enquirySlug = localizedPost.slugDe || post.slug;
+    localizedPost.content = insertBlogEnquiry(localizedPost.content, enquirySlug, lang);
+    const listingCards = await loadBlogListingCards(enquirySlug, lang);
     const languagePaths = blogLanguagePaths(localizedPost);
     const siteBase = String(res.locals.baseUrl || '').replace(/\/$/, '');
     res.locals.localeAlternatePaths = languagePaths;
@@ -638,6 +690,9 @@ exports.showPublic = async (req, res, next) => {
       recommendedPosts: recommendedPosts || [],
       postListings: listingCards.cards,
       postListingsDistrict: listingCards.district,
+      postListingsIntro: listingCards.citywide
+        ? (res.locals.t && res.locals.t('blog.detail.currentListingsIntroBerlin', 'Three apartments currently offered in Berlin.'))
+        : '',
       relatedLandingLinks: relatedLandingSet.links || [],
       relatedLandingMarket: relatedLandingSet.market || '',
       postTopicIds: inferredTopicIds,

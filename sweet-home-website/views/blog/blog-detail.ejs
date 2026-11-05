@@ -1,5 +1,5 @@
 <% if (typeof title === 'undefined' || !title) { title = post.title; } headPartial = '../partials/seo/blog-detail-head'; %>
-<link rel="stylesheet" href="/css/blog.css?v=20261002-cards" />
+<link rel="stylesheet" href="/css/blog.css?v=20261105-enquiry" />
 <style>
   .blog-detail .content .internal-landing-link {
     color: #1f7a45;
@@ -377,7 +377,7 @@
       <% if ((postListings || []).length > 0) { %>
         <section class="blog-listing-cards" aria-label="<%= t('blog.detail.currentListingsTitle', 'Current apartments in {district}', { district: postListingsDistrict || '' }) %>">
           <h2><%= t('blog.detail.currentListingsTitle', 'Current apartments in {district}', { district: postListingsDistrict || '' }) %></h2>
-          <p class="blog-listing-cards__intro"><%= t('blog.detail.currentListingsIntro', 'Three current listings in {district}.', { district: postListingsDistrict || '' }) %></p>
+          <p class="blog-listing-cards__intro"><%= postListingsIntro || t('blog.detail.currentListingsIntro', 'Three current listings in {district}.', { district: postListingsDistrict || '' }) %></p>
           <ul class="blog-listing-cards__list">
             <% postListings.forEach(function(item) { %>
               <li>
