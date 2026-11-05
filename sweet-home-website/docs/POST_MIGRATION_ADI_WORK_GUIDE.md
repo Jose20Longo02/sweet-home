@@ -1149,19 +1149,40 @@ The three guides are Immobilienpreise, Mietpreise, and Grunderwerbsteuer. German
 
 **Done when:** each of the six URLs has the contact line in the article, and each guide that was missing cards now shows them.
 
-Coded 2026-11-05. The sentence sits after the first figure in each article. German links to `/contact`, English to `/en/contact`, same tab. Three current Berlin apartments follow the article. Moabit and the other district guides are unchanged. This is in the code, local until deploy. The article text in the database was not edited.
+Live 2026-11-05. The sentence sits after the first figure in each article. German links to `/contact`, English to `/en/contact`, same tab. Three current Berlin apartments follow the article. Moabit and the other district guides are unchanged. The article text in the database was not edited. Recrawl requested 2026-11-05 for the six URLs below.
+
+**Recrawl requested 2026-11-05:**
+
+- https://sweethome-immobilien.de/blog/immobilienpreise-berlin
+- https://sweethome-immobilien.de/en/blog/berlin-property-prices-2026
+- https://sweethome-immobilien.de/blog/mietpreise-berlin-bezirk
+- https://sweethome-immobilien.de/en/blog/berlin-rents-by-district-2026
+- https://sweethome-immobilien.de/blog/grunderwerbsteuer-berlin
+- https://sweethome-immobilien.de/en/blog/berlin-transfer-tax-grunderwerbsteuer
 
 ### V6 — Calculator mailers: add tracking
 
 The three mailers are the BMBy calculator emails. Every link in each mailer gets UTM parameters so that mailer’s visits and enquiries show separately in Analytics.
 
-- [ ] Kaufnebenkosten mailer: `utm_source=bmby`, `utm_medium=email`, `utm_campaign=calculator-kaufnebenkosten`
-- [ ] Mortgage mailer: same source and medium, `utm_campaign=calculator-hypothekenrechner`
-- [ ] Yield mailer: same source and medium, `utm_campaign=calculator-mietrendite`
-- [ ] Confirm the campaign names with whoever owns the BMBy mailers before the emails go out
-- [ ] Check one opened link from each mailer lands on the matching calculator with the query string intact
+- [x] Kaufnebenkosten mailer: `utm_source=bmby`, `utm_medium=email`, `utm_campaign=calculator-kaufnebenkosten`
+- [x] Mortgage mailer: same source and medium, `utm_campaign=calculator-hypothekenrechner`
+- [x] Yield mailer: same source and medium, `utm_campaign=calculator-mietrendite`
+- [ ] Confirm the campaign names with whoever owns the BMBy mailers before the emails go out. The names below are the ones in Adi's list. The emails themselves are edited in BMBy, not in this site.
+- [x] Check one opened link from each mailer lands on the matching calculator with the query string intact. Checked 2026-11-05: each URL below returns 200 and keeps the query. No redirect strips it. GA4 reads the parameters from the address. The site's page view stores the same query. A later enquiry keeps the first visit through the existing attribution script.
 
-**Done when:** a visit from each mailer is distinguishable in Analytics.
+**Done when:** a visit from each mailer is distinguishable in Analytics. That starts once the BMBy emails use these addresses.
+
+German:
+
+- https://sweethome-immobilien.de/kaufnebenkosten-rechner?utm_source=bmby&utm_medium=email&utm_campaign=calculator-kaufnebenkosten
+- https://sweethome-immobilien.de/hypothekenrechner?utm_source=bmby&utm_medium=email&utm_campaign=calculator-hypothekenrechner
+- https://sweethome-immobilien.de/mietrendite-rechner?utm_source=bmby&utm_medium=email&utm_campaign=calculator-mietrendite
+
+English:
+
+- https://sweethome-immobilien.de/en/property-purchase-costs-calculator-germany?utm_source=bmby&utm_medium=email&utm_campaign=calculator-kaufnebenkosten
+- https://sweethome-immobilien.de/en/mortgage-calculator-germany?utm_source=bmby&utm_medium=email&utm_campaign=calculator-hypothekenrechner
+- https://sweethome-immobilien.de/en/rental-yield-calculator-germany?utm_source=bmby&utm_medium=email&utm_campaign=calculator-mietrendite
 
 ### V7 — One popup rule for every overlay
 
@@ -1307,7 +1328,8 @@ Confirmations you asked for:
 | 2026-10-28 | **V2** district purchase-price table and chart                                                          | Live                          | Immobilienmarktbericht 2025/2026, figure 42. Same figures on DE and EN. Key-figures table restyled. Indexing requested the same day. |
 | 2026-10-28 | **V3** titles, descriptions, and opening answers                                                        | Live in the database          | Seven blog URLs. €5,130 was not published. Listings page held for Adi. Homepage card and calculator link wait on deploy. Indexing requested the same day. |
 | 2026-10-29 | **V4** number-first meta descriptions                                                                   | Draft, not live               | 13 district pairs, two money pages, six guide pairs, three calculator pairs. Waiting on Adi. |
-| 2026-11-05 | **V5** contact line and listing cards on the three guides                                               | Local until deploy            | Prices, rents, and transfer tax, DE and EN. Contact sentence after the first figure. Three Berlin apartments after the article. Database text unchanged. |
+| 2026-11-05 | **V5** contact line and listing cards on the three guides                                               | Live                          | Prices, rents, and transfer tax, DE and EN. Contact sentence after the first figure. Three Berlin apartments after the article. Database text unchanged. Recrawl requested the same day for all six URLs. |
+| 2026-11-05 | **V6** calculator mailer URLs                                                                           | Links ready, BMBy still open  | Six calculator URLs keep `utm_source=bmby`, `utm_medium=email`, and one campaign per mailer. 200, query intact. Emails are edited in BMBy. |
 
 
 ---
