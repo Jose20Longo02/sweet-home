@@ -25,7 +25,7 @@
     }
   }
 %>
-<link rel="stylesheet" href="/css/property-detail.css?v=20261025-energy-pdf" />
+<link rel="stylesheet" href="/css/property-detail.css?v=20261105-energy-b" />
 <link rel="stylesheet" href="/css/libs/leaflet.min.css" />
 <link rel="stylesheet" href="/css/pdf-loading.min.css" />
 <% if (process.env.RECAPTCHA_SITE_KEY) { %>
@@ -486,24 +486,37 @@
         %>
         <section class="property-description energy-certificate">
           <h2><%= t('properties.detail.energyTitle','Energy certificate') %></h2>
+          <% const showEnergyScale = property.energy_certificate_type !== 'none' && energyCertificate.EFFICIENCY_CLASSES.indexOf(property.energy_efficiency_class) !== -1; %>
+          <% if (property.energy_certificate_type !== 'none' && (energyNumber || property.energy_efficiency_class)) { %>
+          <div class="energy-highlight">
+            <% if (property.energy_efficiency_class) { %>
+            <div class="energy-class" data-class="<%= property.energy_efficiency_class %>">
+              <span><%= t('properties.detail.energyClass','Energy efficiency class') %></span>
+              <strong><%= property.energy_efficiency_class %></strong>
+            </div>
+            <% } %>
+            <% if (energyNumber) { %>
+            <div class="energy-meter">
+              <span><%= property.energy_certificate_type === 'consumption' ? t('properties.detail.energyConsumption','Final energy consumption') : t('properties.detail.energyDemand','Final energy demand') %></span>
+              <strong><%= energyNumber %></strong>
+              <span class="energy-unit">kWh/(m²·a)</span>
+            </div>
+            <% } %>
+          </div>
+          <% } %>
+          <% if (showEnergyScale) { %>
+          <ol class="energy-scale" aria-label="<%= t('properties.detail.energyClass','Energy efficiency class') %>">
+            <% energyCertificate.EFFICIENCY_CLASSES.forEach(function (klass) { %>
+              <li data-class="<%= klass %>"<% if (klass === property.energy_efficiency_class) { %> class="is-current" aria-current="true"<% } %>><%= klass %></li>
+            <% }) %>
+          </ol>
+          <% } %>
           <dl class="energy-facts">
             <div>
               <dt><%= t('properties.detail.energyType','Energy certificate type') %></dt>
               <dd><%= energyName(energyCertificate.CERTIFICATE_TYPES, property.energy_certificate_type) %></dd>
             </div>
             <% if (property.energy_certificate_type !== 'none') { %>
-              <% if (energyNumber) { %>
-              <div>
-                <dt><%= property.energy_certificate_type === 'consumption' ? t('properties.detail.energyConsumption','Final energy consumption') : t('properties.detail.energyDemand','Final energy demand') %></dt>
-                <dd><%= energyNumber %> kWh/(m²·a)</dd>
-              </div>
-              <% } %>
-              <% if (property.energy_efficiency_class) { %>
-              <div>
-                <dt><%= t('properties.detail.energyClass','Energy efficiency class') %></dt>
-                <dd><%= property.energy_efficiency_class %></dd>
-              </div>
-              <% } %>
               <% if (energySourceList.length) { %>
               <div>
                 <dt><%= t('properties.detail.energySources','Main energy sources') %></dt>
@@ -526,7 +539,15 @@
           </dl>
           <% if (property.energy_certificate_pdf) { %>
           <p class="energy-pdf">
-            <a href="<%= property.energy_certificate_pdf %>" target="_blank" rel="noopener noreferrer"><%= t('properties.detail.energyPdfOpen','View energy certificate (PDF)') %></a>
+            <a href="<%= property.energy_certificate_pdf %>" target="_blank" rel="noopener noreferrer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="8" y1="13" x2="16" y2="13"></line>
+                <line x1="8" y1="17" x2="13" y2="17"></line>
+              </svg>
+              <%= t('properties.detail.energyPdfOpen','View energy certificate (PDF)') %>
+            </a>
           </p>
           <% } %>
         </section>

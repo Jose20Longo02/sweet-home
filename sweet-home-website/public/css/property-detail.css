@@ -1375,42 +1375,184 @@
   }
 }
 
+.energy-highlight {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+  margin-bottom: 1rem;
+}
+
+.energy-class,
+.energy-meter {
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+}
+
+.energy-class {
+  min-width: 148px;
+  background: #5c6b66;
+  color: #fff;
+}
+
+.energy-class span,
+.energy-meter span {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.energy-class strong {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 2.6rem;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.energy-meter {
+  flex: 1;
+  background: #f4f7f5;
+  color: var(--gray-800);
+}
+
+.energy-meter span {
+  color: var(--gray-600);
+}
+
+.energy-meter strong {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.energy-meter .energy-unit {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--gray-600);
+}
+
+.energy-class[data-class="A+"],
+.energy-scale li[data-class="A+"] { background: #0a8f3c; color: #fff; }
+.energy-class[data-class="A"],
+.energy-scale li[data-class="A"] { background: #4caf2a; color: #fff; }
+.energy-class[data-class="B"],
+.energy-scale li[data-class="B"] { background: #c3d600; color: #1f2933; }
+.energy-class[data-class="C"],
+.energy-scale li[data-class="C"] { background: #f4e400; color: #1f2933; }
+.energy-class[data-class="D"],
+.energy-scale li[data-class="D"] { background: #f5b400; color: #1f2933; }
+.energy-class[data-class="E"],
+.energy-scale li[data-class="E"] { background: #ef7d12; color: #fff; }
+.energy-class[data-class="F"],
+.energy-scale li[data-class="F"] { background: #e23b1a; color: #fff; }
+.energy-class[data-class="G"],
+.energy-scale li[data-class="G"] { background: #c4161c; color: #fff; }
+.energy-class[data-class="H"],
+.energy-scale li[data-class="H"] { background: #8d1218; color: #fff; }
+
+.energy-scale {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 4px;
+  list-style: none;
+  margin: 0 0 1.15rem;
+  padding: 0;
+}
+
+.energy-scale li {
+  margin: 0;
+  padding: 0.55rem 0;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.energy-scale li.is-current {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #24312c;
+}
+
 .energy-facts {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem 1.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
   margin: 0;
 }
 
 .energy-facts div {
   margin: 0;
+  padding: 0.85rem 1rem;
+  background: #f8f9fa;
+  border-radius: 10px;
 }
 
 .energy-facts dt {
+  margin: 0;
   color: var(--gray-600);
-  font-size: 0.85rem;
-  margin-bottom: 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .energy-facts dd {
-  margin: 0;
+  margin: 0.25rem 0 0;
   color: var(--gray-800);
+  font-size: 1rem;
   font-weight: 600;
+  line-height: 1.35;
 }
 
 .energy-pdf {
-  margin: 1.25rem 0 0;
+  margin: 1.15rem 0 0;
 }
 
 .energy-pdf a {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid var(--primary-color);
+  border-radius: 999px;
   color: var(--primary-color);
   font-weight: 600;
   text-decoration: none;
 }
 
 .energy-pdf a:hover {
-  text-decoration: underline;
+  background: var(--primary-color);
+  color: #fff;
+}
+
+@media (max-width: 640px) {
+  .energy-highlight,
+  .energy-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .energy-highlight {
+    flex-direction: column;
+  }
+
+  .energy-scale li {
+    font-size: 0.68rem;
+    padding: 0.45rem 0;
+  }
+
+  .energy-pdf a {
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+    text-align: center;
+  }
 }
