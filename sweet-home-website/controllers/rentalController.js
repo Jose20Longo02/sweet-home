@@ -563,6 +563,31 @@ function euroPublic(value) {
   return `${num.toLocaleString('de-DE')} €`;
 }
 
+function catalogueMetaDescription(count, lang) {
+  if (!count) {
+    return lang === 'en'
+      ? 'Furnished apartments for rent in Berlin. Monthly rent, neighborhood, and move-in date.'
+      : 'Möblierte Wohnungen zur Miete in Berlin. Monatliche Miete, Lage und Einzugsdatum.';
+  }
+  if (lang === 'en') {
+    const noun = count === 1 ? 'furnished apartment' : 'furnished apartments';
+    return `${count} ${noun} for rent in Berlin. Monthly rent, neighborhood, and move-in date.`;
+  }
+  const noun = count === 1 ? 'möblierte Wohnung' : 'möblierte Wohnungen';
+  return `${count} ${noun} zur Miete in Berlin. Monatliche Miete, Lage und Einzugsdatum.`;
+}
+
+function apartmentMetaDescription(card, lang) {
+  const facts = [];
+  if (card.rentLabel) facts.push(lang === 'en' ? `${card.rentLabel} per month` : `${card.rentLabel} pro Monat`);
+  if (card.sizeLabel) facts.push(card.sizeLabel);
+  if (card.neighborhood) facts.push(card.neighborhood);
+  const tail = lang === 'en'
+    ? 'Furnished apartment for rent in Berlin.'
+    : 'Möblierte Wohnung zur Miete in Berlin.';
+  return facts.length ? `${facts.join(', ')}. ${tail}` : tail;
+}
+
 function excerpt(value) {
   const clean = String(value || '').replace(/\s+/g, ' ').trim();
   if (clean.length <= 180) return clean;
@@ -609,6 +634,7 @@ function catalogueCard(rental, lang) {
     depositLabel: euroPublic(rental.deposit),
     sizeLabel: size == null || Number.isNaN(size) ? '' : `${size.toLocaleString('de-DE', { maximumFractionDigits: 2 })} m²`,
     roomsLabel: rooms == null || Number.isNaN(rooms) ? '' : (lang === 'en' ? (rooms === 1 ? '1 room' : `${rooms} rooms`) : `${rooms} Zimmer`),
+    sizeSqm: size == null || Number.isNaN(size) ? null : size,
     floorLabel,
     availableLabel: available ? `${available.slice(8, 10)}.${available.slice(5, 7)}.${available.slice(0, 4)}` : '',
     stayLabel: catalogueStay(rental, lang),
@@ -666,9 +692,7 @@ exports.catalogue = async (req, res, next) => {
     const hasFilters = Boolean(filters.neighborhood || filters.min_rent || filters.max_rent || filters.available_from);
     return res.render('rentals/catalogue', {
       title: lang === 'en' ? 'Furnished apartments in Berlin' : 'Möblierte Wohnungen in Berlin',
-      pageMetaDescription: lang === 'en'
-        ? 'Selected furnished apartments for rent in Berlin, with monthly rent, neighborhood, and move-in date.'
-        : 'Ausgewählte möblierte Wohnungen zur Miete in Berlin, mit monatlichem Mietpreis, Lage und Einzugsdatum.',
+      pageMetaDescription: catalogueMetaDescription(rentals.length, lang),
       lang,
       path,
       neighborhoods: BERLIN_NEIGHBORHOODS,
@@ -714,14 +738,13 @@ function renderApartment(req, res, resolved, extras) {
   const canonicalPath = paths[lang] || paths.de;
   return res.render('rentals/apartment', Object.assign({
     title: card.title,
-    pageMetaDescription: card.excerpt || (lang === 'en'
-      ? 'Furnished apartment for rent in Berlin.'
-      : 'Möblierte Wohnung zur Miete in Berlin.'),
+    pageMetaDescription: apartmentMetaDescription(card, lang),
     lang,
     rental: card,
     description,
     photos,
     cataloguePath: CATALOGUE_PATHS[lang],
+    headPartial: '../partials/seo/rental-apartment-head',
     useMainContainer: true,
     localeAlternatePaths: alternates,
     canonicalUrl: `${base}${canonicalPath}`,

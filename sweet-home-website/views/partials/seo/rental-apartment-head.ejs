@@ -1,0 +1,85 @@
+<%
+  const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : '').replace(/\/$/, '');
+  const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : '';
+  const pageTitle = (typeof rental !== 'undefined' && rental && rental.title) ? rental.title : ((typeof title !== 'undefined' && title) ? title : '');
+  const pageUrl = (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : siteBaseUrl;
+  const pageLang = (typeof lang !== 'undefined' && lang === 'en') ? 'en' : 'de';
+  const ogLocale = pageLang === 'de' ? 'de_DE' : 'en_US';
+  const photoList = (typeof photos !== 'undefined' && Array.isArray(photos)) ? photos.filter(Boolean) : [];
+  const images = photoList.map((photo) => (/^https?:\/\//.test(photo) ? photo : `${siteBaseUrl}${photo}`));
+  const cover = images[0] || '';
+  const rent = (typeof rental !== 'undefined' && rental) ? Number(rental.monthlyRent) : NaN;
+  const sizeSqm = (typeof rental !== 'undefined' && rental) ? Number(rental.sizeSqm) : NaN;
+  const rooms = (typeof rental !== 'undefined' && rental && rental.roomsValue) ? Number(rental.roomsValue) : NaN;
+  const catalogueHref = (typeof cataloguePath !== 'undefined' && cataloguePath)
+    ? (/^https?:\/\//.test(cataloguePath) ? cataloguePath : `${siteBaseUrl}${cataloguePath}`)
+    : '';
+  const place = {
+    '@type': 'Apartment',
+    name: pageTitle,
+    description: pageDesc,
+    url: pageUrl,
+    image: images.length ? images : undefined,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Berlin',
+      addressCountry: 'DE'
+    },
+    floorSize: Number.isFinite(sizeSqm) ? {
+      '@type': 'QuantitativeValue',
+      value: sizeSqm,
+      unitCode: 'MTK'
+    } : undefined,
+    numberOfRooms: Number.isFinite(rooms) ? rooms : undefined
+  };
+  const apartment = (Number.isFinite(rent) && rent > 0) ? {
+    '@context': 'https://schema.org',
+    '@type': 'Offer',
+    price: rent,
+    priceCurrency: 'EUR',
+    url: pageUrl,
+    itemOffered: place
+  } : Object.assign({ '@context': 'https://schema.org' }, place);
+  const breadcrumbs = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: pageLang === 'en' ? 'Home' : 'Startseite',
+        item: `${siteBaseUrl}${pageLang === 'en' ? '/en' : '/'}`
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: pageLang === 'en' ? 'Furnished apartments' : 'Möblierte Wohnungen',
+        item: catalogueHref
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: pageTitle,
+        item: pageUrl
+      }
+    ]
+  };
+%>
+<meta name="description" content="<%= pageDesc %>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="<%= pageTitle %> | Sweet Home">
+<meta property="og:description" content="<%= pageDesc %>">
+<meta property="og:url" content="<%= pageUrl %>">
+<% if (cover) { %>
+<meta property="og:image" content="<%= cover %>">
+<% } %>
+<meta property="og:site_name" content="Sweet Home">
+<meta property="og:locale" content="<%= ogLocale %>">
+<meta name="twitter:card" content="<%= cover ? 'summary_large_image' : 'summary' %>">
+<meta name="twitter:title" content="<%= pageTitle %> | Sweet Home">
+<meta name="twitter:description" content="<%= pageDesc %>">
+<% if (cover) { %>
+<meta name="twitter:image" content="<%= cover %>">
+<% } %>
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON(apartment) : JSON.stringify(apartment)) %></script>
+<script type="application/ld+json"><%- (typeof minifyJSON !== 'undefined' ? minifyJSON(breadcrumbs) : JSON.stringify(breadcrumbs)) %></script>

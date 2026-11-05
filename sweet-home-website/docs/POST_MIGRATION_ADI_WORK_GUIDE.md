@@ -1199,11 +1199,15 @@ Adi’s rule: a mobile visitor arriving from Google must be able to read the pag
 
 ### V8 — Furnished-rental section
 
-- [ ] Fix the invalid CAROUSEL structured data (`itemListElement`) on `/moeblierte-wohnung/` and `/en/furnished-apartment/` pages, once in the template
-- [ ] Every list item needs `@type` `ListItem`, `position`, and `url`. If that cannot be done cleanly, remove the carousel markup
-- [ ] Validate with the Rich Results Test
-- [ ] Same standard as the rest of the site: title pattern, number-first meta description, hreflang pairing between the German page and the English page
-- [ ] Catalogue URLs stay `/moeblierte-wohnungen-berlin` and `/en/furnished-apartments-berlin`. Apartment URLs stay `/moeblierte-wohnung/{slug}` and `/en/furnished-apartment/{slug}`
+Furnished apartments are not a Google carousel type (Recipe, Course, Restaurant, Movie), so the catalogue `ItemList` was the invalid carousel. It is removed. Apartment pages share one head partial.
+
+- [x] Fix the invalid CAROUSEL structured data (`itemListElement`) on `/moeblierte-wohnung/` and `/en/furnished-apartment/` pages, once in the template
+- [x] Every list item needs `@type` `ListItem`, `position`, and `url`. If that cannot be done cleanly, remove the carousel markup
+- [x] Validate with the Rich Results Test
+- [x] Same standard as the rest of the site: title pattern, number-first meta description, hreflang pairing between the German page and the English page
+- [x] Catalogue URLs stay `/moeblierte-wohnungen-berlin` and `/en/furnished-apartments-berlin`. Apartment URLs stay `/moeblierte-wohnung/{slug}` and `/en/furnished-apartment/{slug}`
+
+Local 2026-11-05. Catalogue pages no longer emit an `ItemList`. Each apartment page has a number-first description, the title pattern, and hreflang to its twin. Structured data is an `Offer` for the apartment plus a breadcrumb list. Schema.org validator: 0 errors. Rich Results Test on that markup: one valid breadcrumb, no carousel error. Live still has the old list until this deploy. After deploy, ask for a recrawl of the catalogue and a couple of apartment URLs.
 
 **Done when:** the Rich Results Test no longer reports the carousel error, and each apartment page pairs with its English twin.
 
@@ -1330,6 +1334,7 @@ Confirmations you asked for:
 | 2026-10-29 | **V4** number-first meta descriptions                                                                   | Draft, not live               | 13 district pairs, two money pages, six guide pairs, three calculator pairs. Waiting on Adi. |
 | 2026-11-05 | **V5** contact line and listing cards on the three guides                                               | Live                          | Prices, rents, and transfer tax, DE and EN. Contact sentence after the first figure. Three Berlin apartments after the article. Database text unchanged. Recrawl requested the same day for all six URLs. |
 | 2026-11-05 | **V6** calculator mailer URLs                                                                           | Links ready, BMBy still open  | Six calculator URLs keep `utm_source=bmby`, `utm_medium=email`, and one campaign per mailer. 200, query intact. Emails are edited in BMBy. |
+| 2026-11-05 | **V8** furnished apartment schema                                                                       | Local, waiting on deploy     | Catalogue carousel `ItemList` removed. Apartment pages share one head: number-first description, paired hreflang, offer plus breadcrumb. Rich Results Test: one valid breadcrumb, no carousel error. |
 
 
 ---
