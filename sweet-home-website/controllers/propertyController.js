@@ -3363,13 +3363,13 @@ exports.berlinPropertiesPage = async (req, res, next) => {
       'de': berlinUrls.de,
     };
     const titles = {
-      en: 'Apartments for Sale in Berlin',
+      en: 'Buy an Apartment in Berlin: Current Listings and Prices',
       de: 'Wohnungen in Berlin kaufen',
       es: 'Propiedades en venta en Berlín'
     };
     const metaDescriptions = {
-      en: 'Find apartments for sale in Berlin. Compare neighborhoods, prices, and property types to choose the right home with Sweet Home.',
-      de: 'Finden Sie Wohnungen in Berlin in gefragten Stadtteilen. Vergleichen Sie Lage, Preis und Zustand und entdecken Sie passende Angebote mit Sweet Home.',
+      en: 'Berlin condominiums averaged €5,511/m² in 2025, before outlier trimming. Compare current listings and districts.',
+      de: '2025 lag der mittlere Kaufpreis bei 5.511 €/m², vor Ausreißerbereinigung. Vergleichen Sie aktuelle Wohnungen in Berlin.',
       es: 'Encuentra propiedades en venta en Berlín, Alemania. Apartamentos, casas y villas. Asesoramiento inmobiliario de Sweet Home para compradores e inversores internacionales.'
     };
     const berlinPagePaths = {
@@ -4596,7 +4596,7 @@ exports.charlottenburgPropertiesPageDe = async (req, res, next) => {
       'en': charlottenburgUrls.en,
       'de': charlottenburgUrls.de,
     };
-    const pageMetaDescription = 'Wohnung kaufen Charlottenburg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.';
+    const pageMetaDescription = 'Charlottenburg: 5.201 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen.';
     const pageTitle = 'Wohnung kaufen Charlottenburg';
     const districtContent = {
       heroTitle: 'Wohnung kaufen Charlottenburg',
@@ -4772,7 +4772,7 @@ exports.moabitPropertiesPageDe = async (req, res, next) => {
       'en': districtUrls.en,
       'de': districtUrls.de,
     };
-    const pageMetaDescription = 'Wohnung kaufen Moabit: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.';
+    const pageMetaDescription = 'Für Moabit gibt es keinen eigenen amtlichen Mittelwert. Vergleichen Sie hier aktuelle Wohnungen im Ortsteil.';
     const pageTitle = 'Wohnung kaufen Moabit';
     const districtContent = {
       heroTitle: 'Wohnung kaufen Moabit',
@@ -4933,7 +4933,7 @@ exports.friedrichshainKreuzbergPropertiesPageDe = async (req, res, next) => {
       'en': districtUrls.en,
       'de': districtUrls.de,
     };
-    const pageMetaDescription = 'Wohnung kaufen Friedrichshain-Kreuzberg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.';
+    const pageMetaDescription = 'Friedrichshain 5.887 €/m², Kreuzberg 5.647 €/m², Mittelwerte 2025. Vergleichen Sie Wohnungen im Bezirk.';
     const pageTitle = 'Wohnung kaufen Friedrichshain-Kreuzberg';
     const districtContent = {
       heroTitle: 'Wohnung kaufen Friedrichshain-Kreuzberg',
@@ -5116,7 +5116,7 @@ exports.schoenebergPropertiesPageDe = async (req, res, next) => {
       headPartial: '../partials/seo/schoeneberg-properties-head',
       canonicalUrl: districtUrls.de,
       hreflangAlternates: { 'en': districtUrls.en, 'de': districtUrls.de },
-      pageMetaDescription: 'Wohnung kaufen Schöneberg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
+      pageMetaDescription: 'Schöneberg: 5.421 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen.',
       districtContent,
       locations,
       neighborhoodCounts,
@@ -5245,7 +5245,7 @@ exports.prenzlauerBergPropertiesPageDe = async (req, res, next) => {
       headPartial: '../partials/seo/prenzlauer-berg-properties-head',
       canonicalUrl: districtUrls.de,
       hreflangAlternates: { 'en': districtUrls.en, 'de': districtUrls.de },
-      pageMetaDescription: 'Wohnung kaufen Prenzlauer Berg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
+      pageMetaDescription: 'Prenzlauer Berg: 6.300 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen.',
       districtContent,
       locations,
       neighborhoodCounts,
@@ -5380,7 +5380,7 @@ exports.weddingPropertiesPageDe = async (req, res, next) => {
       headPartial: '../partials/seo/wedding-properties-head',
       canonicalUrl: districtUrls.de,
       hreflangAlternates: { 'en': districtUrls.en, 'de': districtUrls.de },
-      pageMetaDescription: 'Wohnung kaufen Wedding: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
+      pageMetaDescription: 'Wedding: 4.197 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen.',
       districtContent,
       locations,
       neighborhoodCounts,
@@ -5508,7 +5508,7 @@ exports.tempelhofPropertiesPageDe = async (req, res, next) => {
       headPartial: '../partials/seo/tempelhof-properties-head',
       canonicalUrl: districtUrls.de,
       hreflangAlternates: { 'en': districtUrls.en, 'de': districtUrls.de },
-      pageMetaDescription: 'Wohnung kaufen Tempelhof: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
+      pageMetaDescription: 'Tempelhof: 4.011 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen.',
       districtContent,
       locations,
       neighborhoodCounts,
@@ -5653,7 +5653,7 @@ exports.neukoellnPropertiesPageDe = async (req, res, next) => renderBerlinDistri
   defaultNeighborhood: 'Neukölln',
   heroImage: '/images/Neuk\u00f6lln.jpg',
   title: 'Wohnung kaufen Neukölln',
-  metaDescription: 'Wohnung kaufen Neukölln: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
+  metaDescription: 'Neukölln: 4.425 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen.',
   propertiesWhere: "(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2)",
   propertiesParams: ['%neukölln%', '%neukolln%'],
   projectsWhere: "(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2)",
@@ -5690,7 +5690,7 @@ exports.reinickendorfPropertiesPageDe = async (req, res, next) => renderBerlinDi
   defaultNeighborhood: 'Reinickendorf',
   heroImage: '/images/reinickendorf.webp',
   title: 'Wohnung kaufen Reinickendorf',
-  metaDescription: 'Wohnung kaufen Reinickendorf: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
+  metaDescription: 'Reinickendorf: 3.755 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen.',
   propertiesWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
   propertiesParams: ['%reinickendorf%'],
   projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
@@ -5729,7 +5729,7 @@ exports.kreuzbergPropertiesPageDe = async (req, res, next) => renderBerlinDistri
   defaultNeighborhood: 'Kreuzberg',
   heroImage: '/images/kreuzberg.jpg',
   title: 'Wohnung kaufen Kreuzberg',
-  metaDescription: 'Wohnung kaufen Kreuzberg: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
+  metaDescription: 'Kreuzberg: 5.647 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen.',
   propertiesWhere: "LOWER(COALESCE(p.neighborhood, '')) = $1",
   propertiesParams: ['kreuzberg'],
   projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) = $1",
@@ -5766,7 +5766,7 @@ exports.spandauPropertiesPageDe = async (req, res, next) => renderBerlinDistrict
   defaultNeighborhood: 'Spandau',
   heroImage: '/images/spandau.jpeg',
   title: 'Wohnung kaufen Spandau',
-  metaDescription: 'Wohnung kaufen Spandau: Ausgewählte Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
+  metaDescription: 'Spandau: 3.235 €/m² mittlere Kaufpreise 2025 (Gutachterausschuss). Vergleichen Sie hier aktuelle Wohnungen.',
   propertiesWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
   propertiesParams: ['%spandau%'],
   projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
@@ -5805,7 +5805,7 @@ exports.mittePropertiesPageDe = async (req, res, next) => renderBerlinDistrictPa
   defaultNeighborhood: 'Mitte',
   heroImage: '/images/berlin-hero.jpg',
   title: 'Wohnung kaufen Berlin Mitte',
-  metaDescription: 'Wohnung kaufen Berlin Mitte: zentrale Eigentumswohnungen vergleichen und mit Sweet Home die passende Immobilie finden.',
+  metaDescription: 'Ortsteil Mitte: 9.374 €/m², der höchste Mittelwert 2025. Vergleichen Sie hier zentrale Wohnungen.',
   propertiesWhere: "(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) = $2 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $3)",
   propertiesParams: ['%mitte%', 'mitte', '%berlin-mitte%'],
   projectsWhere: "(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) = $2 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $3)",
@@ -5842,7 +5842,7 @@ exports.pankowPropertiesPageDe = async (req, res, next) => renderBerlinDistrictP
   defaultNeighborhood: 'Pankow',
   heroImage: '/images/berlin-hero.jpg',
   title: 'Wohnung kaufen Pankow',
-  metaDescription: 'Wohnung kaufen Pankow: Eigentumswohnungen in Pankow und angrenzenden Lagen vergleichen – mit Sweet Home.',
+  metaDescription: 'Pankow ohne Prenzlauer Berg: 5.194 €/m² mittlere Kaufpreise 2025. Vergleichen Sie hier aktuelle Wohnungen.',
   propertiesWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
   propertiesParams: ['%pankow%'],
   projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",

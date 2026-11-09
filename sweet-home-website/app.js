@@ -1663,36 +1663,36 @@ const CALCULATOR_PAGES = {
     de: {
       path: '/hypothekenrechner',
       title: 'Hypothekenrechner: monatliche Rate',
-      description: 'Monatliche Rate aus Kaufpreis, Eigenkapital, Zinssatz und Laufzeit. Dieselbe Annuität wie auf der Startseite, ohne Grundsteuer und Versicherung.'
+      description: 'Im Beispiel: 350.000 Euro, 70.000 Euro Eigenkapital, 4,50 % und 30 Jahre, rund 1.419 Euro im Monat. Ohne Kaufnebenkosten.'
     },
     en: {
       path: '/en/mortgage-calculator-germany',
       title: 'Mortgage Calculator Germany: Monthly Payment and Costs',
-      description: 'Monthly mortgage payment in Germany from the purchase price, down payment, interest rate, and term, including a repayment rate and a fixed interest period.'
+      description: 'Sample: €350,000 price, €70,000 down, 4.50% and 30 years, about €1,419 a month. Purchase costs are not included.'
     }
   },
   costs: {
     de: {
       path: '/kaufnebenkosten-rechner',
       title: 'Kaufnebenkosten-Rechner',
-      description: 'Grunderwerbsteuer nach Bundesland, Schätzung für Notar und Grundbuch, optional der Käuferanteil der Maklerprovision. Berlin ist voreingestellt.'
+      description: 'Berlin: 6 % Grunderwerbsteuer. Bei 400.000 Euro sind das 24.000 Euro, plus Notar und Grundbuch.'
     },
     en: {
       path: '/en/property-purchase-costs-calculator-germany',
       title: 'Property Purchase Costs Calculator for Germany',
-      description: 'Closing costs when buying property in Germany: property transfer tax (Grunderwerbsteuer) by state, plus an estimate for notary and land registry fees.'
+      description: 'Berlin transfer tax is 6%. On €400,000 that is €24,000, before notary and land registry.'
     }
   },
   yield: {
     de: {
       path: '/mietrendite-rechner',
       title: 'Mietrendite-Rechner: brutto und netto',
-      description: 'Brutto- und Nettomietrendite aus Kaltmiete, Kaufpreis und Kaufnebenkosten. Dieselbe Formel wie im Beitrag Mietrendite berechnen.'
+      description: 'Im Beispiel werden aus 4,0 % brutto rund 2,9 % netto. Der Rechner nutzt Kaltmiete, Kaufpreis und Kaufnebenkosten.'
     },
     en: {
       path: '/en/rental-yield-calculator-germany',
       title: 'Rental Yield Calculator Germany: Gross and Net',
-      description: 'Gross rental yield and net rental yield for a property in Germany, with the price-to-rent multiple and non-recoverable costs.'
+      description: 'The sample turns 4.0% gross into about 2.9% net. It uses cold rent, price, and purchase costs.'
     }
   }
 };

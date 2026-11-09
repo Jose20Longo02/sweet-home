@@ -17,7 +17,7 @@ const BERLIN_DISTRICT_LANDINGS = [
     projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
     projectsParams: ['%charlottenburg%'],
     titleEn: 'Apartments for sale in Charlottenburg',
-    metaEn: 'Apartments for sale in Charlottenburg, Berlin: compare curated listings and buy with Sweet Home.',
+    metaEn: 'Charlottenburg: €5,201/m² Gutachterausschuss mean for 2025. Compare current apartments here.',
     contentEn: {
       heroTitle: 'Apartments for sale in Charlottenburg',
       heroDescription: 'Charlottenburg is an Ortsteil of Charlottenburg-Wilmersdorf, not the whole borough. Buying here means choosing among Savignyplatz, the Kurfürstendamm, Lietzensee, and the streets around Schloss Charlottenburg. Wilmersdorf is a different residential area.',
@@ -57,7 +57,7 @@ const BERLIN_DISTRICT_LANDINGS = [
     projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
     projectsParams: ['%moabit%'],
     titleEn: 'Apartments for sale in Moabit',
-    metaEn: 'Apartments for sale in Moabit, Berlin: compare curated listings and buy with Sweet Home.',
+    metaEn: 'Moabit has no separate official price average. Compare current apartments in this locality.',
     contentEn: {
       heroTitle: 'Apartments for sale in Moabit',
       heroDescription: 'Moabit sits between Mitte, Tiergarten, and Berlin Hauptbahnhof. Established neighbourhoods, waterfront pockets, and ongoing quarter upgrades keep demand high for both living and investing.',
@@ -95,7 +95,7 @@ const BERLIN_DISTRICT_LANDINGS = [
     projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
     projectsParams: ['%friedrichshain%'],
     titleEn: 'Apartments for sale in Friedrichshain-Kreuzberg',
-    metaEn: 'Apartments for sale in Friedrichshain-Kreuzberg, Berlin: compare curated listings and buy with Sweet Home.',
+    metaEn: 'Friedrichshain €5,887/m² and Kreuzberg €5,647/m², Gutachterausschuss means for 2025. Compare apartments in the borough.',
     contentEn: {
       heroTitle: 'Apartments for sale in Friedrichshain-Kreuzberg',
       heroDescription: 'Friedrichshain-Kreuzberg is one of Berlin’s densest, most dynamic districts. Strong rental demand, urban energy, and sharp micro-location differences define the purchase market here.',
@@ -133,7 +133,7 @@ const BERLIN_DISTRICT_LANDINGS = [
     projectsWhere: "(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2)",
     projectsParams: ['%schöneberg%', '%schoeneberg%'],
     titleEn: 'Apartments for sale in Schöneberg',
-    metaEn: 'Apartments for sale in Schöneberg, Berlin: compare curated listings and buy with Sweet Home.',
+    metaEn: 'Schöneberg: €5,421/m² Gutachterausschuss mean for 2025. Compare current apartments here.',
     contentEn: {
       heroTitle: 'Apartments for sale in Schöneberg',
       heroDescription: 'Schöneberg sits between central Berlin and calmer residential fabric. Good transport, mixed neighbourhoods, and less hype than the trendiest Kieze make it a practical buying district.',
@@ -171,7 +171,7 @@ const BERLIN_DISTRICT_LANDINGS = [
     projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
     projectsParams: ['%prenzlauer berg%'],
     titleEn: 'Apartments for sale in Prenzlauer Berg',
-    metaEn: 'Apartments for sale in Prenzlauer Berg, Berlin: compare curated listings and buy with Sweet Home.',
+    metaEn: 'Prenzlauer Berg: €6,300/m² Gutachterausschuss mean for 2025. Compare current apartments here.',
     contentEn: {
       heroTitle: 'Apartments for sale in Prenzlauer Berg',
       heroDescription: 'Prenzlauer Berg is an Ortsteil of Pankow, not the whole borough. Buying an apartment here means comparing Kieze inside that Ortsteil. Kollwitzplatz, Helmholtzplatz, the Winsviertel, and the Bötzowviertel are not the same street, even when the listing only says Prenzlauer Berg.',
@@ -211,7 +211,7 @@ const BERLIN_DISTRICT_LANDINGS = [
     projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
     projectsParams: ['%wedding%'],
     titleEn: 'Apartments for sale in Wedding',
-    metaEn: 'Apartments for sale in Wedding, Berlin: compare curated listings and buy with Sweet Home.',
+    metaEn: 'Wedding: €4,197/m² Gutachterausschuss mean for 2025. Compare current apartments here.',
     contentEn: {
       heroTitle: 'Apartments for sale in Wedding',
       heroDescription: 'Wedding offers a more accessible entry into central-north Berlin. Good transport, mixed neighbourhoods, and improving pockets attract both first-time buyers and yield-focused investors.',
@@ -249,7 +249,7 @@ const BERLIN_DISTRICT_LANDINGS = [
     projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
     projectsParams: ['%tempelhof%'],
     titleEn: 'Apartments for sale in Tempelhof',
-    metaEn: 'Apartments for sale in Tempelhof, Berlin: compare curated listings and buy with Sweet Home.',
+    metaEn: 'Tempelhof: €4,011/m² Gutachterausschuss mean for 2025. Compare current apartments here.',
     contentEn: {
       heroTitle: 'Apartments for sale in Tempelhof',
       heroDescription: 'Tempelhof is known for space, family-oriented living, and the open landscape of Tempelhofer Feld. Buyers often come here for everyday quality rather than nightlife.',
@@ -287,7 +287,7 @@ const BERLIN_DISTRICT_LANDINGS = [
     projectsWhere: "(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $2)",
     projectsParams: ['%neukölln%', '%neukolln%'],
     titleEn: 'Apartments for sale in Neukölln',
-    metaEn: 'Apartments for sale in Neukölln, Berlin: compare curated listings and buy with Sweet Home.',
+    metaEn: 'Neukölln: €4,425/m² Gutachterausschuss mean for 2025. Compare current apartments here.',
     contentEn: {
       heroTitle: 'Apartments for sale in Neukölln',
       heroDescription: 'Neukölln is a borough of five localities: Neukölln, Britz, Buckow, Rudow, and Gropiusstadt. The district office lists them that way. A flat in the Reuterkiez and a flat in Rudow share the borough name and are not the same purchase.',
@@ -327,7 +327,7 @@ const BERLIN_DISTRICT_LANDINGS = [
     projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
     projectsParams: ['%reinickendorf%'],
     titleEn: 'Apartments for sale in Reinickendorf',
-    metaEn: 'Apartments for sale in Reinickendorf, Berlin: compare curated listings and buy with Sweet Home.',
+    metaEn: 'Reinickendorf: €3,755/m² Gutachterausschuss mean for 2025. Compare current apartments here.',
     contentEn: {
       heroTitle: 'Apartments for sale in Reinickendorf',
       heroDescription: 'Reinickendorf is north Berlin: Lake Tegel, the Tegeler Forst, and localities from Tegel and Heiligensee to Hermsdorf, Frohnau, and Wittenau. Buying an apartment here means buying space and quiet — and naming the locality, not just the borough.',
@@ -367,7 +367,7 @@ const BERLIN_DISTRICT_LANDINGS = [
     projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
     projectsParams: ['%kreuzberg%'],
     titleEn: 'Apartments for sale in Kreuzberg',
-    metaEn: 'Apartments for sale in Kreuzberg, Berlin: compare curated listings and buy with Sweet Home.',
+    metaEn: 'Kreuzberg: €5,647/m² Gutachterausschuss mean for 2025. Compare current apartments here.',
     contentEn: {
       heroTitle: 'Apartments for sale in Kreuzberg',
       heroDescription: 'Kreuzberg is denser, more local, and often different street by street from neighbouring Friedrichshain. Buyers come for urban character and lasting demand.',
@@ -405,7 +405,7 @@ const BERLIN_DISTRICT_LANDINGS = [
     projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
     projectsParams: ['%spandau%'],
     titleEn: 'Apartments for sale in Spandau',
-    metaEn: 'Apartments for sale in Spandau, Berlin: compare curated listings and buy with Sweet Home.',
+    metaEn: 'Spandau: €3,235/m² Gutachterausschuss mean for 2025. Compare current apartments here.',
     contentEn: {
       heroTitle: 'Apartments for sale in Spandau',
       heroDescription: 'Spandau is west Berlin, between the Havel and the Spree. Buying an apartment here means comparing localities, not a single borough: the old town, Wilhelmstadt, Haselhorst, Siemensstadt, Kladow, and Gatow differ in transport, building stock, and price.',
@@ -445,7 +445,7 @@ const BERLIN_DISTRICT_LANDINGS = [
     projectsWhere: "(LOWER(COALESCE(p.neighborhood, '')) LIKE $1 OR LOWER(COALESCE(p.neighborhood, '')) = $2 OR LOWER(COALESCE(p.neighborhood, '')) LIKE $3)",
     projectsParams: ['%mitte%', 'mitte', '%berlin-mitte%'],
     titleEn: 'Apartments for sale in Berlin Mitte',
-    metaEn: 'Apartments for sale in Berlin Mitte: compare central listings and buy with Sweet Home.',
+    metaEn: 'Ortsteil Mitte: €9,374/m², the highest Gutachterausschuss mean for 2025. Compare central apartments here.',
     contentEn: {
       heroTitle: 'Apartments for sale in Berlin Mitte',
       heroDescription: 'This page is the central Ortsteil Mitte, not the whole borough. Moabit, Wedding, and Tiergarten have their own markets. Inside this Ortsteil, Hackescher Markt, the government quarter, Alexanderplatz, and the streets by Museum Island are different purchases.',
@@ -485,7 +485,7 @@ const BERLIN_DISTRICT_LANDINGS = [
     projectsWhere: "LOWER(COALESCE(p.neighborhood, '')) LIKE $1",
     projectsParams: ['%pankow%'],
     titleEn: 'Apartments for sale in Pankow',
-    metaEn: 'Apartments for sale in Pankow, Berlin: compare curated listings and buy with Sweet Home.',
+    metaEn: 'Pankow without Prenzlauer Berg: €5,194/m² Gutachterausschuss mean for 2025. Compare current apartments here.',
     contentEn: {
       heroTitle: 'Apartments for sale in Pankow',
       heroDescription: 'Pankow combines residential calm with strong family demand and access toward Prenzlauer Berg and the north-east. Buyers often shortlist it for livability and longer holds.',

@@ -994,7 +994,7 @@ Triggers Adi wants:
 - Human read-through before publish.
 - Homepage and money-page copy still goes to Adi first. V4 is the same rule: she reviews the batch before it goes live.
 
-**Order:** V1, V2, V5, and V8 are live. V3 blog edits are live, except the English listings page, which waits in the V4 batch. V4 stays a draft until Adi replies. V6 links are ready and the BMBy emails are still open. V7 waits. V9 runs beside the push work, not ahead of V4.
+**Order:** V1, V2, V5, and V8 are live. V3 blog edits are live. V4 is approved and applied: guide excerpts are in the database, and the other descriptions go live with the next deploy. V6 campaign names are confirmed; the BMBy emails still have to use them. V7 is written and waits on that same deploy, then a phone test. V9’s financing post is live. The furnished guide now has Adi’s slug and is not written yet.
 
 ### V1 — Homepage, German and English
 
@@ -1061,8 +1061,9 @@ Number-first pattern. First sentence: the concrete number or the answer. Second 
 - [x] `/wohnungen-berlin-kaufen` and `/en/properties-for-sale-berlin`
 - [x] The six newest topics, German and English: Hausgeld, Prenzlauer Berg Ratgeber, Kreuzberg Ratgeber, Spekulationssteuer, Moabit Ratgeber, Neukölln Ratgeber
 - [x] The three calculators, German and English
-- [ ] Email Adi the list. Review PDF: `docs/Sweet_Home_V4_Meta_Descriptions_for_Adi.pdf`
-- [ ] Apply only what she approves, then request indexing for the changed URLs
+- [x] Email Adi the list. Review PDF: `docs/Sweet_Home_V4_Meta_Descriptions_for_Adi.pdf`. Sent 2026-11-08 in the joint email to Adi and Israel. The PDF was the one from the previous email.
+- [x] Apply only what she approves. Approved 2026-11-09: the whole batch, with the shorter English capital-gains line. Guide excerpts are in the database. District, listings, and calculator descriptions are in the code and go live with the next deploy.
+- [ ] Request indexing after the deploy is live. The guide excerpts can be recrawled now. The district, listings, and calculator URLs wait until those descriptions are on the live site.
 
 District €/m² figures are Gutachterausschuss means for 2025 after the 10 percent outlier trim (Immobilienmarktbericht 2025/2026, figure 42). The citywide 5.511 €/m² is the untrimmed mean. Moabit has no row in that table. Hausgeld has no official Berlin average, so the description leads with the legal answer.
 
@@ -1123,7 +1124,7 @@ Proposed English title, still not live: `Buy an Apartment in Berlin: Current Lis
 | `/blog/wohnung-kaufen-neukoelln-ratgeber` | Neukölln: 4.425 €/m² mittlere Kaufpreise 2025. Die fünf Ortsteile sind nicht derselbe Kauf. |
 | `/en/blog/buying-apartment-neukoelln-guide` | Neukölln: €4,425/m² mean purchase price in 2025. The five localities are not the same purchase. |
 
-The English capital-gains description already live from V3 can stay if Adi prefers it: `After more than 10 years, a private sale of German property falls outside section 23, so that gain is not taxed. Owner-occupation can exclude it sooner.`
+Adi chose the shorter English capital-gains line above. The longer V3 line is replaced.
 
 **Calculators**
 
@@ -1136,7 +1137,7 @@ The English capital-gains description already live from V3 can stay if Adi prefe
 | `/mietrendite-rechner` | Im Beispiel werden aus 4,0 % brutto rund 2,9 % netto. Der Rechner nutzt Kaltmiete, Kaufpreis und Kaufnebenkosten. |
 | `/en/rental-yield-calculator-germany` | The sample turns 4.0% gross into about 2.9% net. It uses cold rent, price, and purchase costs. |
 
-**Done when:** the approved descriptions are live and the rest of the batch is still waiting on her notes.
+**Done when:** the approved descriptions are live. Guide excerpts are live in the database. The other pages in this batch go live with the next deploy.
 
 ### V5 — Turn readers into enquiries
 
@@ -1164,38 +1165,40 @@ Live 2026-11-05. The sentence sits after the first figure in each article. Germa
 
 The three mailers are the BMBy calculator emails. Every link in each mailer gets UTM parameters so that mailer’s visits and enquiries show separately in Analytics.
 
-- [x] Kaufnebenkosten mailer: `utm_source=bmby`, `utm_medium=email`, `utm_campaign=calculator-kaufnebenkosten`
-- [x] Mortgage mailer: same source and medium, `utm_campaign=calculator-hypothekenrechner`
-- [x] Yield mailer: same source and medium, `utm_campaign=calculator-mietrendite`
-- [ ] Confirm the campaign names with whoever owns the BMBy mailers before the emails go out. The names below are the ones in Adi's list. The emails themselves are edited in BMBy, not in this site.
+- [x] Kaufnebenkosten mailer: `utm_source=bmby`, `utm_medium=email`, `utm_campaign=kaufnebenkosten-rechner`
+- [x] Mortgage mailer: same source and medium, `utm_campaign=hypothekenrechner`
+- [x] Yield mailer: same source and medium, `utm_campaign=mietrendite-rechner`
+- [x] Confirm the campaign names with whoever owns the BMBy mailers before the emails go out. Adi confirmed the six names on 2026-11-09. The emails themselves are still edited in BMBy, not in this site.
 - [x] Check one opened link from each mailer lands on the matching calculator with the query string intact. Checked 2026-11-05: each URL below returns 200 and keeps the query. No redirect strips it. GA4 reads the parameters from the address. The site's page view stores the same query. A later enquiry keeps the first visit through the existing attribution script.
 
 **Done when:** a visit from each mailer is distinguishable in Analytics. That starts once the BMBy emails use these addresses.
 
 German:
 
-- https://sweethome-immobilien.de/kaufnebenkosten-rechner?utm_source=bmby&utm_medium=email&utm_campaign=calculator-kaufnebenkosten
-- https://sweethome-immobilien.de/hypothekenrechner?utm_source=bmby&utm_medium=email&utm_campaign=calculator-hypothekenrechner
-- https://sweethome-immobilien.de/mietrendite-rechner?utm_source=bmby&utm_medium=email&utm_campaign=calculator-mietrendite
+- https://sweethome-immobilien.de/kaufnebenkosten-rechner?utm_source=bmby&utm_medium=email&utm_campaign=kaufnebenkosten-rechner
+- https://sweethome-immobilien.de/hypothekenrechner?utm_source=bmby&utm_medium=email&utm_campaign=hypothekenrechner
+- https://sweethome-immobilien.de/mietrendite-rechner?utm_source=bmby&utm_medium=email&utm_campaign=mietrendite-rechner
 
 English:
 
-- https://sweethome-immobilien.de/en/property-purchase-costs-calculator-germany?utm_source=bmby&utm_medium=email&utm_campaign=calculator-kaufnebenkosten
-- https://sweethome-immobilien.de/en/mortgage-calculator-germany?utm_source=bmby&utm_medium=email&utm_campaign=calculator-hypothekenrechner
-- https://sweethome-immobilien.de/en/rental-yield-calculator-germany?utm_source=bmby&utm_medium=email&utm_campaign=calculator-mietrendite
+- https://sweethome-immobilien.de/en/property-purchase-costs-calculator-germany?utm_source=bmby&utm_medium=email&utm_campaign=en-purchase-costs
+- https://sweethome-immobilien.de/en/mortgage-calculator-germany?utm_source=bmby&utm_medium=email&utm_campaign=en-mortgage
+- https://sweethome-immobilien.de/en/rental-yield-calculator-germany?utm_source=bmby&utm_medium=email&utm_campaign=en-rental-yield
 
 ### V7 — One popup rule for every overlay
 
 Adi’s rule: a mobile visitor arriving from Google must be able to read the page without an overlay covering it. Desktop and returning-visitor behavior can stay as it is. She names ContactBeat and the Christmas popup.
 
-**Do not repeat the 2026-10-16 mistake.** Israel reported that `public/js/contactbeat-triggers.js` was closing ContactBeat forms and cutting leads. That script was removed. ContactBeat stays on its own loader. Do not ship a closer, a timer change, or a hide rule for ContactBeat until Israel and Adi have both agreed the change. The Christmas popup already follows desktop exit-intent, no mobile auto-open, and once per session, and it is off while `ICON_THEME` is `default`.
+**Do not repeat the 2026-10-16 mistake.** Israel reported that `public/js/contactbeat-triggers.js` was closing ContactBeat forms and cutting leads. That file stays empty and stays unloaded. ContactBeat stays on its own loader.
 
-- [ ] Write down what a phone visitor from Google sees today from ContactBeat (corner button, timed full-screen forms) before changing anything
-- [ ] Ask Israel before any ContactBeat change. The ask is only: no overlay covering the page for a mobile Google arrival. Desktop stays
-- [ ] Christmas popup: confirm a phone landing from Google never opens it. Leave it off while the theme is `default`
-- [ ] Test: phone, Google referrer, the article is readable, no overlay on top of it
+Adi and Israel both agreed on 2026-11-09. The only change is in `public/js/contactbeat-google-mobile.js`: on a first visit, on a phone, after an arrival from Google, an automatic full-screen form is closed so it does not cover the page. Desktop stays untouched. A later visit stays untouched. The corner button stays, and a form opened from that button is never closed. The Christmas popup already follows desktop exit-intent, no mobile auto-open, and once per session, and it is off while `ICON_THEME` is `default`. Checked live 2026-11-09: theme `default`, no Christmas popup in the page.
 
-**Done when:** the phone test passes, and ContactBeat was not closed or retimed without Israel’s OK.
+- [x] Write down what a phone visitor from Google sees today from ContactBeat (corner button, timed full-screen forms) before changing anything. In the 2026-11-08 email: corner button stays, full-screen form after 45 seconds, another after 35 seconds of inactivity, and one when the visitor leaves.
+- [x] Ask Israel before any ContactBeat change. Asked 2026-11-08. He replied on 2026-11-09: the change is OK. Adi replied the same day: go ahead, and keep ContactBeat fully on desktop, for returning visitors, and on the corner button.
+- [x] Christmas popup: confirm a phone landing from Google never opens it. Leave it off while the theme is `default`. Confirmed in the script and on the live homepage 2026-11-09.
+- [ ] Test: phone, Google referrer, the article is readable, no overlay on top of it. The script is local until the next deploy.
+
+**Done when:** the phone test passes on the live site after deploy. ContactBeat was not closed or retimed except for the case Adi and Israel approved.
 
 ### V8 — Furnished-rental section
 
@@ -1216,9 +1219,9 @@ Live 2026-11-05. Catalogue pages no longer emit an `ItemList`. Each apartment pa
 Both with English versions. Same quality rules as U4: official sources, relative cover, author id 12, publish with a script, no Admin-Save, hreflang paired, one reciprocal link from the most related existing post.
 
 - [x] `Kaufnebenkosten finanzieren: geht das?` Slug `/blog/kaufnebenkosten-finanzieren`. English slug `/en/blog/financing-purchase-costs-germany`. What banks finance, what must be equity, how buyers bridge the gap. Live 2026-11-08, post id 169. Author 12. Cover `/images/blog/immobilienfinanzierung-berlin.jpg`. Sources: Verbraucherzentrale, BelWertV § 3, Berlin finance FAQ, BGB §§ 656c and 656d, ErbStG § 16
-- [x] Link that post both ways with the Kaufnebenkosten calculator, plus the Kaufnebenkosten, Eigenkapital, and Immobilienfinanzierung guides. English links use the English URLs. Guide backlinks are in the database. The calculator sentence is in the page template and goes live with the next deploy
+- [x] Link that post both ways with the Kaufnebenkosten calculator, plus the Kaufnebenkosten, Eigenkapital, and Immobilienfinanzierung guides. English links use the English URLs. Guide backlinks are in the database. The calculator sentence is in the page template and goes live with the next deploy. Recrawl requested 2026-11-08 for the new pair and the three guide pairs.
 - [ ] A guide for the furnished-rental section: furnished renting in Berlin, for tenants and for owners considering furnished letting
-- [ ] Wait for Adi’s main keyword and slug. She is choosing between `möblierte wohnung berlin` and `wohnung auf zeit berlin`. Do not invent the slug
+- [x] Wait for Adi’s main keyword and slug. She chose `möblierte wohnung berlin` for the slug and the H1. `wohnung auf zeit berlin` is a secondary term, as an H2 and in the text. Slugs: `/blog/moeblierte-wohnung-berlin` and `/en/blog/furnished-apartments-berlin`. Answered 2026-11-09. The post is not written yet.
 - [ ] That post links both ways with the furnished-listing pages, plus Mietpreise and Vermietete Wohnung where the sentence is natural
 
 **Done when:** both posts are live in German and English, the switcher uses the English slug, and the furnished post used Adi’s slug.
@@ -1335,7 +1338,9 @@ Confirmations you asked for:
 | 2026-11-05 | **V5** contact line and listing cards on the three guides                                               | Live                          | Prices, rents, and transfer tax, DE and EN. Contact sentence after the first figure. Three Berlin apartments after the article. Database text unchanged. Recrawl requested the same day for all six URLs. |
 | 2026-11-05 | **V6** calculator mailer URLs                                                                           | Links ready, BMBy still open  | Six calculator URLs keep `utm_source=bmby`, `utm_medium=email`, and one campaign per mailer. 200, query intact. Emails are edited in BMBy. |
 | 2026-11-05 | **V8** furnished apartment schema                                                                       | Live                          | Catalogue carousel `ItemList` removed. Apartment pages share one head: number-first description, paired hreflang, offer plus breadcrumb. Rich Results Test: one valid breadcrumb, no carousel error. Recrawl requested the same day for both catalogues and the Tempelhof apartment pair. |
-| 2026-11-08 | **V9** financing the purchase costs                                                                       | Live in the database          | `/blog/kaufnebenkosten-finanzieren` and `/en/blog/financing-purchase-costs-germany`, id 169. Equity covers the costs. Backlinks from the three guides. Calculator sentence waits on deploy. Furnished guide still waits on Adi’s slug. |
+| 2026-11-08 | **V9** financing the purchase costs                                                                       | Live in the database          | `/blog/kaufnebenkosten-finanzieren` and `/en/blog/financing-purchase-costs-germany`, id 169. Equity covers the costs. Backlinks from the three guides. Recrawl requested the same day for those eight URLs. Calculator sentence waits on deploy. Furnished guide still waits on Adi’s slug. |
+| 2026-11-08 | Email to Adi and Israel                                                                                 | Sent                          | V4 descriptions (PDF from the previous email), furnished keyword, ContactBeat on a phone from Google, and the six BMBy calculator links. |
+| 2026-11-09 | Adi and Israel replies                                                                                  | Applied locally               | Whole V4 batch approved. Shorter capital-gains line. Furnished slug `moeblierte-wohnung-berlin`. ContactBeat phone-from-Google limit agreed. BMBy campaign names confirmed. Guide excerpts updated in the database. Page descriptions and the ContactBeat limit wait on deploy. Furnished post not written yet. |
 
 
 ---
