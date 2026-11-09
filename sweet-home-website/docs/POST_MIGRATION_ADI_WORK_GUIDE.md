@@ -994,7 +994,7 @@ Triggers Adi wants:
 - Human read-through before publish.
 - Homepage and money-page copy still goes to Adi first. V4 is the same rule: she reviews the batch before it goes live.
 
-**Order:** V1 and V2 are live. V3 blog edits are live, except the English listings page, which waits in the V4 batch. Next: V4 (draft the list, wait for Adi) → V5 → V6 → V7 → V8. V9 runs beside the push work, not ahead of V4.
+**Order:** V1, V2, V5, and V8 are live. V3 blog edits are live, except the English listings page, which waits in the V4 batch. V4 stays a draft until Adi replies. V6 links are ready and the BMBy emails are still open. V7 waits. V9 runs beside the push work, not ahead of V4.
 
 ### V1 — Homepage, German and English
 
@@ -1207,7 +1207,7 @@ Furnished apartments are not a Google carousel type (Recipe, Course, Restaurant,
 - [x] Same standard as the rest of the site: title pattern, number-first meta description, hreflang pairing between the German page and the English page
 - [x] Catalogue URLs stay `/moeblierte-wohnungen-berlin` and `/en/furnished-apartments-berlin`. Apartment URLs stay `/moeblierte-wohnung/{slug}` and `/en/furnished-apartment/{slug}`
 
-Local 2026-11-05. Catalogue pages no longer emit an `ItemList`. Each apartment page has a number-first description, the title pattern, and hreflang to its twin. Structured data is an `Offer` for the apartment plus a breadcrumb list. Schema.org validator: 0 errors. Rich Results Test on that markup: one valid breadcrumb, no carousel error. Live still has the old list until this deploy. After deploy, ask for a recrawl of the catalogue and a couple of apartment URLs.
+Live 2026-11-05. Catalogue pages no longer emit an `ItemList`. Each apartment page has a number-first description, the title pattern, and hreflang to its twin. Structured data is an `Offer` for the apartment plus a breadcrumb list. Schema.org validator: 0 errors. Rich Results Test: one valid breadcrumb, no carousel error. Recrawl requested the same day for both catalogues and the Tempelhof apartment pair.
 
 **Done when:** the Rich Results Test no longer reports the carousel error, and each apartment page pairs with its English twin.
 
@@ -1215,8 +1215,8 @@ Local 2026-11-05. Catalogue pages no longer emit an `ItemList`. Each apartment p
 
 Both with English versions. Same quality rules as U4: official sources, relative cover, author id 12, publish with a script, no Admin-Save, hreflang paired, one reciprocal link from the most related existing post.
 
-- [ ] `Kaufnebenkosten finanzieren: geht das?` Slug `/blog/kaufnebenkosten-finanzieren`. English slug `/en/blog/financing-purchase-costs-germany`. What banks finance, what must be equity, how buyers bridge the gap
-- [ ] Link that post both ways with the Kaufnebenkosten calculator, plus the Kaufnebenkosten, Eigenkapital, and Immobilienfinanzierung guides. English links use the English URLs
+- [x] `Kaufnebenkosten finanzieren: geht das?` Slug `/blog/kaufnebenkosten-finanzieren`. English slug `/en/blog/financing-purchase-costs-germany`. What banks finance, what must be equity, how buyers bridge the gap. Live 2026-11-08, post id 169. Author 12. Cover `/images/blog/immobilienfinanzierung-berlin.jpg`. Sources: Verbraucherzentrale, BelWertV § 3, Berlin finance FAQ, BGB §§ 656c and 656d, ErbStG § 16
+- [x] Link that post both ways with the Kaufnebenkosten calculator, plus the Kaufnebenkosten, Eigenkapital, and Immobilienfinanzierung guides. English links use the English URLs. Guide backlinks are in the database. The calculator sentence is in the page template and goes live with the next deploy
 - [ ] A guide for the furnished-rental section: furnished renting in Berlin, for tenants and for owners considering furnished letting
 - [ ] Wait for Adi’s main keyword and slug. She is choosing between `möblierte wohnung berlin` and `wohnung auf zeit berlin`. Do not invent the slug
 - [ ] That post links both ways with the furnished-listing pages, plus Mietpreise and Vermietete Wohnung where the sentence is natural
@@ -1232,7 +1232,7 @@ Both with English versions. Same quality rules as U4: official sources, relative
 | ----------- | ---------------------------------------------------------------------------------------------- |
 | Now         | **Phase V.** Email Adi the V4 list. Do not publish those descriptions before she replies. |
 | Then        | Draft the V4 description list and send it to Adi before anything in that batch goes live.      |
-| After that  | V5 contact lines, V6 mailer UTMs, V7 only after Israel agrees, V8 rental schema, V9 posts.     |
+| After that  | V6 mailer UTMs still open in BMBy. V7 only after Israel agrees. V9 posts. V5 and V8 are live. |
 | Friday      | Email Adi: done / live / blockers / next week                                                  |
 
 
@@ -1334,7 +1334,8 @@ Confirmations you asked for:
 | 2026-10-29 | **V4** number-first meta descriptions                                                                   | Draft, not live               | 13 district pairs, two money pages, six guide pairs, three calculator pairs. Waiting on Adi. |
 | 2026-11-05 | **V5** contact line and listing cards on the three guides                                               | Live                          | Prices, rents, and transfer tax, DE and EN. Contact sentence after the first figure. Three Berlin apartments after the article. Database text unchanged. Recrawl requested the same day for all six URLs. |
 | 2026-11-05 | **V6** calculator mailer URLs                                                                           | Links ready, BMBy still open  | Six calculator URLs keep `utm_source=bmby`, `utm_medium=email`, and one campaign per mailer. 200, query intact. Emails are edited in BMBy. |
-| 2026-11-05 | **V8** furnished apartment schema                                                                       | Local, waiting on deploy     | Catalogue carousel `ItemList` removed. Apartment pages share one head: number-first description, paired hreflang, offer plus breadcrumb. Rich Results Test: one valid breadcrumb, no carousel error. |
+| 2026-11-05 | **V8** furnished apartment schema                                                                       | Live                          | Catalogue carousel `ItemList` removed. Apartment pages share one head: number-first description, paired hreflang, offer plus breadcrumb. Rich Results Test: one valid breadcrumb, no carousel error. Recrawl requested the same day for both catalogues and the Tempelhof apartment pair. |
+| 2026-11-08 | **V9** financing the purchase costs                                                                       | Live in the database          | `/blog/kaufnebenkosten-finanzieren` and `/en/blog/financing-purchase-costs-germany`, id 169. Equity covers the costs. Backlinks from the three guides. Calculator sentence waits on deploy. Furnished guide still waits on Adi’s slug. |
 
 
 ---
