@@ -994,7 +994,7 @@ Triggers Adi wants:
 - Human read-through before publish.
 - Homepage and money-page copy still goes to Adi first. V4 is the same rule: she reviews the batch before it goes live.
 
-**Order:** V1, V2, V5, and V8 are live. V3 blog edits are live. V4 is approved and applied: guide excerpts are in the database, and the other descriptions go live with the next deploy. V6 campaign names are confirmed; the BMBy emails still have to use them. V7 is written and waits on that same deploy, then a phone test. V9’s financing post is live. The furnished guide now has Adi’s slug and is not written yet.
+**Order:** V1 through V5, V7, and V8 are live. V4 descriptions went live with the 2026-11-09 deploy. V6 campaign names are confirmed; the BMBy emails still have to use the six links. V9’s financing post is live. The furnished guide is drafted in `scripts/v9-publish-moeblierte-wohnung.js` and is not published.
 
 ### V1 — Homepage, German and English
 
@@ -1220,9 +1220,9 @@ Both with English versions. Same quality rules as U4: official sources, relative
 
 - [x] `Kaufnebenkosten finanzieren: geht das?` Slug `/blog/kaufnebenkosten-finanzieren`. English slug `/en/blog/financing-purchase-costs-germany`. What banks finance, what must be equity, how buyers bridge the gap. Live 2026-11-08, post id 169. Author 12. Cover `/images/blog/immobilienfinanzierung-berlin.jpg`. Sources: Verbraucherzentrale, BelWertV § 3, Berlin finance FAQ, BGB §§ 656c and 656d, ErbStG § 16
 - [x] Link that post both ways with the Kaufnebenkosten calculator, plus the Kaufnebenkosten, Eigenkapital, and Immobilienfinanzierung guides. English links use the English URLs. Guide backlinks are in the database. The calculator sentence is in the page template and goes live with the next deploy. Recrawl requested 2026-11-08 for the new pair and the three guide pairs.
-- [ ] A guide for the furnished-rental section: furnished renting in Berlin, for tenants and for owners considering furnished letting
-- [x] Wait for Adi’s main keyword and slug. She chose `möblierte wohnung berlin` for the slug and the H1. `wohnung auf zeit berlin` is a secondary term, as an H2 and in the text. Slugs: `/blog/moeblierte-wohnung-berlin` and `/en/blog/furnished-apartments-berlin`. Answered 2026-11-09. The post is not written yet.
-- [ ] That post links both ways with the furnished-listing pages, plus Mietpreise and Vermietete Wohnung where the sentence is natural
+- [ ] A guide for the furnished-rental section: furnished renting in Berlin, for tenants and for owners considering furnished letting. Drafted 2026-11-12 in `scripts/v9-publish-moeblierte-wohnung.js`. Not published. Sources: Senate Zweckentfremdung page, Steglitz-Zehlendorf Wohnungsamt, furniture-surcharge guideline, BGB §§ 549 and 575, Senate press release of 17 April 2026.
+- [x] Wait for Adi’s main keyword and slug. She chose `möblierte wohnung berlin` for the slug and the H1. `wohnung auf zeit berlin` is a secondary term, as an H2 and in the text. Slugs: `/blog/moeblierte-wohnung-berlin` and `/en/blog/furnished-apartments-berlin`. Answered 2026-11-09. The draft uses those slugs.
+- [ ] That post links both ways with the furnished-listing pages, plus Mietpreise and Vermietete Wohnung where the sentence is natural. The draft links out to the catalogue and both guides. The return links are in the script and run only with `PUBLISH=1`, so nothing points at a missing page.
 
 **Done when:** both posts are live in German and English, the switcher uses the English slug, and the furnished post used Adi’s slug.
 
@@ -1341,6 +1341,7 @@ Confirmations you asked for:
 | 2026-11-08 | **V9** financing the purchase costs                                                                       | Live in the database          | `/blog/kaufnebenkosten-finanzieren` and `/en/blog/financing-purchase-costs-germany`, id 169. Equity covers the costs. Backlinks from the three guides. Recrawl requested the same day for those eight URLs. Calculator sentence waits on deploy. Furnished guide still waits on Adi’s slug. |
 | 2026-11-08 | Email to Adi and Israel                                                                                 | Sent                          | V4 descriptions (PDF from the previous email), furnished keyword, ContactBeat on a phone from Google, and the six BMBy calculator links. |
 | 2026-11-09 | Adi and Israel replies                                                                                  | Applied locally               | Whole V4 batch approved. Shorter capital-gains line. Furnished slug `moeblierte-wohnung-berlin`. ContactBeat phone-from-Google limit agreed. BMBy campaign names confirmed. Guide excerpts updated in the database. Page descriptions and the ContactBeat limit wait on deploy. Furnished post not written yet. |
+| 2026-11-12 | **V9** furnished guide                                                                                  | Draft, not live               | `scripts/v9-publish-moeblierte-wohnung.js`. Slugs `moeblierte-wohnung-berlin` and `furnished-apartments-berlin`. Official sources only. Not inserted into the database. |
 
 
 ---
