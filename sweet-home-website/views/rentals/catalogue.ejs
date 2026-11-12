@@ -1,6 +1,6 @@
 <% useMainContainer = false %>
 <link rel="stylesheet" href="/css/property-list.css?v=20261102-rentals" />
-<link rel="stylesheet" href="/css/rentals-catalogue.css?v=20261112-available" />
+<link rel="stylesheet" href="/css/rentals-catalogue.css?v=20261112-guide" />
 <%
   const en = lang === 'en';
   function keep(drop) {
@@ -106,6 +106,7 @@
                 <%= en ? 'Browse all available furnished apartments' : 'Alle verfügbaren möblierten Wohnungen anzeigen' %>
               <% } %>
             </p>
+            <p class="catalogue-guide"><%= en ? 'What to check on the rent, the term, and a permit is in ' : 'Worauf bei Miete, Befristung und Genehmigung zu achten ist, steht im Beitrag ' %><a href="<%= en ? '/en/blog/furnished-apartments-berlin' : '/blog/moeblierte-wohnung-berlin' %>"><%= en ? 'furnished apartments in Berlin' : 'Möblierte Wohnung Berlin' %></a>.</p>
             <% if (hasFilters) { %>
               <div class="active-filters">
                 <span class="active-filters-label"><%= en ? 'Active filters:' : 'Aktive Filter:' %></span>

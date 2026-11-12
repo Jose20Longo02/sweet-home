@@ -27,7 +27,8 @@ const N10_BERLIN_POSTS = [
   { de: 'hausgeld-eigentumswohnung', en: 'hausgeld-service-charges-germany' },
   { de: 'wohnung-kaufen-prenzlauer-berg-ratgeber', en: 'buying-apartment-prenzlauer-berg-guide' },
   { de: 'wohnung-kaufen-kreuzberg-ratgeber', en: 'buying-apartment-kreuzberg-guide' },
-  { de: 'kaufnebenkosten-finanzieren', en: 'financing-purchase-costs-germany' }
+  { de: 'kaufnebenkosten-finanzieren', en: 'financing-purchase-costs-germany' },
+  { de: 'moeblierte-wohnung-berlin', en: 'furnished-apartments-berlin' }
 ];
 
 const DE_TO_EN_SLUG = Object.fromEntries(N10_BERLIN_POSTS.map((p) => [p.de, p.en]));

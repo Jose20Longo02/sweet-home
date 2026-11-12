@@ -13,6 +13,17 @@
 .catalogue-reset { color: var(--gray-700); text-decoration: none; font-weight: 600; }
 .catalogue-error { color: #b91c1c; font-weight: 600; }
 
+.property-search-page .catalogue-guide {
+  margin: 6px 0 0;
+  max-width: 42rem;
+  color: var(--gray-600);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.property-search-page .catalogue-guide a {
+  color: var(--primary-color);
+  font-weight: 600;
+}
 .property-search-page .filter-hint {
   margin: 6px 0 0;
   font-size: 0.8rem;
