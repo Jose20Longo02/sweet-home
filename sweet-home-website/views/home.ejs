@@ -2,7 +2,7 @@
 <% useMainContainer = false %>
 <% hideFooter = false %>
 <% headPartial = '../partials/seo/home-head' %>
-<link rel="stylesheet" href="/css/home.css?v=<%= assetVersion %>-offer-20261102b" />
+<link rel="stylesheet" href="/css/home.css?v=<%= assetVersion %>-rentdate-20261112" />
 <link rel="stylesheet" href="/css/contact.css?v=<%= assetVersion %>" />
 <link rel="stylesheet" href="/css/libs/leaflet.min.css" />
 <link rel="stylesheet" href="/css/libs/leaflet-gesture-handling.min.css" />
@@ -123,6 +123,10 @@
         <option><%= t('forms.types.villa','Villa') %></option>
         <option><%= t('forms.types.land','Land') %></option>
       </select>
+      <label class="hero-available" for="availableFrom">
+        <span><%= t('forms.moveInBy','Move in by') %></span>
+        <input type="date" id="availableFrom" name="available_from" disabled>
+      </label>
       <button type="submit"><%= t('home.search.cta','Search Properties') %></button>
     </div>
   </form>
@@ -632,7 +636,7 @@ window.__FEATURED_I18N__ = window.__FEATURED_I18N__ || {
 <script src="/js/libs/leaflet.js"></script>
 <script src="/js/libs/leaflet-gesture-handling.min.js"></script>
 <script src="/js/market-map-data.js?v=<%= assetVersion %>"></script>
-<script src="/js/home.js?v=<%= assetVersion %>-offer-20261102b"></script>
+<script src="/js/home.js?v=<%= assetVersion %>-rentdate-20261112"></script>
 <script src="/js/contact.js?v=20260830-thankyou" defer></script>
 <script>
 (function initHomeNeighborhoodGuides() {

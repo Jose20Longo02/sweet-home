@@ -936,6 +936,7 @@
     "anyType": "Any Type",
     "operation": "Operation",
     "anyOperation": "Any Operation",
+    "moveInBy": "Move in by",
     "operations": {
       "buy": "Buy",
       "rent": "Rent"

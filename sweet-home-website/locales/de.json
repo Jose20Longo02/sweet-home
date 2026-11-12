@@ -924,6 +924,7 @@
     "anyType": "Beliebiger Typ",
     "operation": "Vorgang",
     "anyOperation": "Beliebiger Vorgang",
+    "moveInBy": "Einzug bis",
     "operations": {
       "buy": "Kaufen",
       "rent": "Mieten"

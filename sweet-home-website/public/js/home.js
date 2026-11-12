@@ -14,17 +14,19 @@ function hGet(path, fallback) {
   } catch (_) { return fallback; }
 }
 
-function furnishedCatalogueUrl(prefix, country, city, neighborhood) {
+function furnishedCatalogueUrl(prefix, country, city, neighborhood, availableFrom) {
   const catalogue = prefix === '/en' ? '/en/furnished-apartments-berlin' : '/moeblierte-wohnungen-berlin';
   const countryValue = String(country || '').trim();
   const cityValue = String(city || '').trim();
   const area = String(neighborhood || '').trim();
   const countryOk = !countryValue || countryValue === 'Germany';
   const cityOk = !cityValue || cityValue === 'Berlin';
-  if (countryOk && cityOk && area) {
-    return `${catalogue}?neighborhood=${encodeURIComponent(area)}`;
-  }
-  return catalogue;
+  const params = new URLSearchParams();
+  if (countryOk && cityOk && area) params.set('neighborhood', area);
+  const date = String(availableFrom || '').trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(date)) params.set('available_from', date);
+  const query = params.toString();
+  return query ? `${catalogue}?${query}` : catalogue;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -643,6 +645,20 @@ function initializeSearchForm() {
   }
   
   console.log('🔍 Initializing search form...');
+
+  const operationSelect = searchForm.querySelector('#operation');
+  const availableFrom = searchForm.querySelector('#availableFrom');
+  function syncRentDate() {
+    const rent = operationSelect && operationSelect.value === 'rent';
+    searchForm.classList.toggle('is-rent', !!rent);
+    if (!availableFrom) return;
+    availableFrom.disabled = !rent;
+    if (!rent) availableFrom.value = '';
+  }
+  if (operationSelect) {
+    operationSelect.addEventListener('change', syncRentDate);
+    syncRentDate();
+  }
   
   searchForm.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -666,7 +682,8 @@ function initializeSearchForm() {
         prefix,
         formData.get('country'),
         formData.get('city'),
-        formData.get('neighborhood')
+        formData.get('neighborhood'),
+        formData.get('available_from')
       );
       console.log('🔍 Redirecting rental search to:', searchUrl);
       window.location.href = searchUrl;
