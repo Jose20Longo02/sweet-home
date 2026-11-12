@@ -1,6 +1,6 @@
 <% useMainContainer = false %>
 <link rel="stylesheet" href="/css/property-list.css?v=20261102-rentals" />
-<link rel="stylesheet" href="/css/rentals-catalogue.css?v=20261102-layout" />
+<link rel="stylesheet" href="/css/rentals-catalogue.css?v=20261112-available" />
 <%
   const en = lang === 'en';
   function keep(drop) {
@@ -80,16 +80,12 @@
             </div>
           </div>
 
-          <div class="filter-group collapsible collapsed">
-            <h4><%= en ? 'More filters' : 'Weitere Filter' %></h4>
-            <div class="filter-content">
-              <div class="filter-group">
-                <h4><%= en ? 'Move in by' : 'Einzug bis' %></h4>
-                <div class="form-group">
-                  <label for="availableFrom"><%= en ? 'Available from' : 'Verfügbar ab' %></label>
-                  <input type="date" id="availableFrom" name="available_from" class="form-input" value="<%= filters.available_from %>">
-                </div>
-              </div>
+          <div class="filter-group">
+            <h4><%= en ? 'Move-in date' : 'Einzugsdatum' %></h4>
+            <div class="form-group">
+              <label for="availableFrom"><%= en ? 'Move in by' : 'Einzug bis' %></label>
+              <input type="date" id="availableFrom" name="available_from" class="form-input" value="<%= filters.available_from %>">
+              <p class="filter-hint"><%= en ? 'Shows apartments that are free on this date or earlier.' : 'Zeigt Wohnungen, die an diesem Tag oder früher frei sind.' %></p>
             </div>
           </div>
 
@@ -135,6 +131,10 @@
             <% } %>
           </div>
           <div class="results-controls">
+            <div class="move-in-toolbar">
+              <label for="availableFromToolbar"><%= en ? 'Move in by' : 'Einzug bis' %></label>
+              <input type="date" id="availableFromToolbar" class="form-input" value="<%= filters.available_from %>" form="rentalFilters">
+            </div>
             <div class="sort-controls">
               <label for="sortBy"><%= en ? 'Sort by:' : 'Sortieren nach:' %></label>
               <select id="sortBy" name="sort" form="rentalFilters" class="form-select">
@@ -204,11 +204,14 @@
                     <% if (Number.isFinite(rental.monthlyRent) && rental.monthlyRent > 0) { %>
                       <span class="price-amount"><%= money(rental.monthlyRent) %></span>
                       <span class="price-sep">|</span>
-                      <span class="rental-income-chip"><%= en ? 'per month' : 'pro Monat' %><% if (rental.stayLabel) { %> · <%= rental.stayLabel %><% } %></span>
+                      <span class="rental-income-chip"><%= en ? 'per month' : 'pro Monat' %></span>
                     <% } else { %>
                       <span class="price-amount"><%= en ? 'Rent on request' : 'Miete auf Anfrage' %></span>
                     <% } %>
                   </div>
+                  <% if (rental.availableLabel) { %>
+                    <p class="rental-available"><%= en ? 'Available from' : 'Verfügbar ab' %>: <%= rental.availableLabel %></p>
+                  <% } %>
                   <div class="property-footer">
                     <% if (rental.href) { %>
                       <a class="btn btn-outline btn-sm btn-compare" href="<%= rental.href %>#inquiry"><%= en ? 'Send inquiry' : 'Anfrage senden' %></a>
@@ -225,4 +228,4 @@
     </div>
   </div>
 </div>
-<script src="/js/rentals-catalogue.js?v=20261102-layout2"></script>
+<script src="/js/rentals-catalogue.js?v=20261112-available"></script>

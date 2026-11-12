@@ -1062,8 +1062,8 @@ Number-first pattern. First sentence: the concrete number or the answer. Second 
 - [x] The six newest topics, German and English: Hausgeld, Prenzlauer Berg Ratgeber, Kreuzberg Ratgeber, Spekulationssteuer, Moabit Ratgeber, Neukölln Ratgeber
 - [x] The three calculators, German and English
 - [x] Email Adi the list. Review PDF: `docs/Sweet_Home_V4_Meta_Descriptions_for_Adi.pdf`. Sent 2026-11-08 in the joint email to Adi and Israel. The PDF was the one from the previous email.
-- [x] Apply only what she approves. Approved 2026-11-09: the whole batch, with the shorter English capital-gains line. Guide excerpts are in the database. District, listings, and calculator descriptions are in the code and go live with the next deploy.
-- [ ] Request indexing after the deploy is live. The guide excerpts can be recrawled now. The district, listings, and calculator URLs wait until those descriptions are on the live site.
+- [x] Apply only what she approves. Approved 2026-11-09: the whole batch, with the shorter English capital-gains line. Guide excerpts are in the database. District, listings, and calculator descriptions went live with the 2026-11-09 deploy.
+- [ ] Request indexing. The guide excerpts, the 13 district pairs, both listings pages, and the six calculators are live as of 2026-11-09. Waiting on Search Console.
 
 District €/m² figures are Gutachterausschuss means for 2025 after the 10 percent outlier trim (Immobilienmarktbericht 2025/2026, figure 42). The citywide 5.511 €/m² is the untrimmed mean. Moabit has no row in that table. Hausgeld has no official Berlin average, so the description leads with the legal answer.
 
@@ -1196,9 +1196,9 @@ Adi and Israel both agreed on 2026-11-09. The only change is in `public/js/conta
 - [x] Write down what a phone visitor from Google sees today from ContactBeat (corner button, timed full-screen forms) before changing anything. In the 2026-11-08 email: corner button stays, full-screen form after 45 seconds, another after 35 seconds of inactivity, and one when the visitor leaves.
 - [x] Ask Israel before any ContactBeat change. Asked 2026-11-08. He replied on 2026-11-09: the change is OK. Adi replied the same day: go ahead, and keep ContactBeat fully on desktop, for returning visitors, and on the corner button.
 - [x] Christmas popup: confirm a phone landing from Google never opens it. Leave it off while the theme is `default`. Confirmed in the script and on the live homepage 2026-11-09.
-- [ ] Test: phone, Google referrer, the article is readable, no overlay on top of it. The script is local until the next deploy.
+- [x] Test: phone, Google referrer, the article is readable, no overlay on top of it. Live 2026-11-09 on a 390px first visit with `utm_source=google`. An automatic full-screen form closed. A form opened from the corner button stayed. A returning visit left the form alone. Desktop was not touched.
 
-**Done when:** the phone test passes on the live site after deploy. ContactBeat was not closed or retimed except for the case Adi and Israel approved.
+**Done when:** the phone test passes on the live site after deploy. Passed 2026-11-09. ContactBeat was not closed or retimed except for the case Adi and Israel approved.
 
 ### V8 — Furnished-rental section
 
