@@ -55,12 +55,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!form) return;
     var selected = form.querySelector('input[name="video_source"]:checked');
     var source = selected ? selected.value : 'none';
-    var uploadWrap = document.getElementById('videoUploadWrap');
-    var linkWrap = document.getElementById('videoUrlWrap');
     var file = document.getElementById('video');
     var link = document.getElementById('video_url');
-    if (uploadWrap) uploadWrap.hidden = source !== 'upload';
-    if (linkWrap) linkWrap.hidden = source !== 'link';
     if (file) file.disabled = source !== 'upload';
     if (link) link.disabled = source !== 'link';
   }

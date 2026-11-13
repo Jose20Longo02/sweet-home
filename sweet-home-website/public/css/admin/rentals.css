@@ -205,6 +205,25 @@
 .rental-editor .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
 .rental-editor .field { display: flex; flex-direction: column; gap: 6px; margin-top: 14px; }
 .rental-editor .field[hidden] { display: none; }
+.rental-editor .video-section:has(#videoSrcNone:checked) .video-panel,
+.rental-editor .video-section:has(#videoSrcUpload:checked) #videoUrlWrap,
+.rental-editor .video-section:has(#videoSrcLink:checked) #videoUploadWrap { display: none !important; }
+.rental-editor .video-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.rental-editor .video-section h2 { margin: 0; font-size: 1.05rem; color: var(--color-primary, #2ea862); }
+.rental-editor .video-section-note { margin: 2px 0 0; color: var(--gray-500, #64748b); font-size: .8rem; line-height: 1.35; }
+.rental-editor .video-source { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; flex: 0 0 330px; width: 330px; height: 40px; padding: 3px; background: #f1f4f2; border: 1px solid rgba(20,40,30,.08); border-radius: 12px; }
+.rental-editor .video-source-option { position: relative; margin: 0; min-width: 0; height: 32px; cursor: pointer; }
+.rental-editor .video-source-option input { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+.rental-editor .video-source-option span { display: flex; align-items: center; justify-content: center; height: 32px; border-radius: 9px; color: #5d6b64; font-size: .85rem; font-weight: 700; line-height: 1; white-space: nowrap; transition: background .16s ease, color .16s ease; }
+.rental-editor .video-source-option:hover span { color: #24312b; background: rgba(255,255,255,.7); }
+.rental-editor .video-source-option input:checked + span { background: var(--color-primary, #2ea862); color: #fff; }
+.rental-editor .video-source-option input:focus-visible + span { outline: 2px solid var(--color-primary, #2ea862); outline-offset: 2px; }
+.rental-editor .video-section .video-panel { margin-top: 12px; gap: 4px; }
+.rental-editor .video-section .video-card { width: min(100%, 240px); box-shadow: none; }
+@media (max-width: 760px) {
+  .rental-editor .video-head { flex-direction: column; align-items: stretch; }
+  .rental-editor .video-source { width: 100%; flex-basis: auto; }
+}
 .rental-editor .field + .grid-2,
 .rental-editor .field + .grid-3 { margin-top: 14px; }
 .rental-editor .grid-2.is-note-only { grid-template-columns: 1fr; }

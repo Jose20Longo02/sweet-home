@@ -1,7 +1,7 @@
 <% title = rental ? 'Edit furnished apartment' : 'New furnished apartment' %>
 <link rel="stylesheet" href="/css/admin/blog-new.css" />
-<link rel="stylesheet" href="/css/admin/rentals.css?v=20261113-form4" />
-<link rel="stylesheet" href="/css/admin/video-preview.css?v=20261113-video-link" />
+<link rel="stylesheet" href="/css/admin/rentals.css?v=20261113-video-has2" />
+<link rel="stylesheet" href="/css/admin/video-preview.css?v=20261113-video-has" />
 <div class="admin-panel<%= showSuperadminSidebar ? ' with-sidebar' : '' %>">
   <div class="admin-body">
     <% if (showSuperadminSidebar) { %>
@@ -180,18 +180,19 @@
           </div>
         </section>
 
-        <section class="card">
-          <h2>Video</h2>
-          <div class="field">
-            <label>Video source</label>
-            <small>Optional. Upload one file, or paste a YouTube, Vimeo, or video-file link.</small>
-            <div class="chips">
-              <label class="chip"><input type="radio" name="video_source" value="none" <%= values.video_source !== 'upload' && values.video_source !== 'link' ? 'checked' : '' %>><span>No video</span></label>
-              <label class="chip"><input type="radio" name="video_source" value="upload" <%= values.video_source === 'upload' ? 'checked' : '' %>><span>Upload</span></label>
-              <label class="chip"><input type="radio" name="video_source" value="link" <%= values.video_source === 'link' ? 'checked' : '' %>><span>Link</span></label>
+        <section class="card video-section">
+          <div class="video-head">
+            <div>
+              <h2>Video</h2>
+              <p class="video-section-note">Optional. Upload one file, or paste a YouTube or Vimeo link.</p>
+            </div>
+            <div class="video-source video-source--three" role="radiogroup" aria-label="Video source">
+              <label class="video-source-option"><input type="radio" name="video_source" id="videoSrcNone" value="none" <%= values.video_source !== 'upload' && values.video_source !== 'link' ? 'checked' : '' %>><span>No video</span></label>
+              <label class="video-source-option"><input type="radio" name="video_source" id="videoSrcUpload" value="upload" <%= values.video_source === 'upload' ? 'checked' : '' %>><span>Upload file</span></label>
+              <label class="video-source-option"><input type="radio" name="video_source" id="videoSrcLink" value="link" <%= values.video_source === 'link' ? 'checked' : '' %>><span>Paste link</span></label>
             </div>
           </div>
-          <div class="field" id="videoUploadWrap" <%= values.video_source === 'upload' ? '' : 'hidden' %>>
+          <div class="field video-panel" id="videoUploadWrap">
             <label for="video">Video file</label>
             <input id="video" type="file" name="video" accept="video/mp4,video/quicktime,video/x-matroska,.mp4,.mov,.mkv">
             <small>MP4, MOV, or MKV. 20 MB maximum. A longer video should be a YouTube or Vimeo link.</small>
@@ -211,7 +212,7 @@
               <% } %>
             </div>
           </div>
-          <div class="field" id="videoUrlWrap" <%= values.video_source === 'link' ? '' : 'hidden' %>>
+          <div class="field video-panel" id="videoUrlWrap">
             <label for="video_url">Video link</label>
             <input id="video_url" name="video_url" type="url" maxlength="500" placeholder="https://www.youtube.com/watch?v=..." value="<%= values.video_source === 'link' ? values.video_url : '' %>">
             <small>YouTube, Vimeo, or a direct link to an MP4 file.</small>
@@ -248,4 +249,4 @@
   </style>
 </div>
 <script src="/js/admin-video-preview.js?v=20261113-video-link"></script>
-<script src="/js/admin-rentals.js?v=20261113-video-link"></script>
+<script src="/js/admin-rentals.js?v=20261113-video-has"></script>
