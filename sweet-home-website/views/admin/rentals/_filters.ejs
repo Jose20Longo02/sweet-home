@@ -1,0 +1,35 @@
+<form class="<%= formClass %>" method="get" action="<%= rentalBase %>">
+  <% if (showAgent) { %>
+    <select name="agent" aria-label="Agent">
+      <option value="">All agents</option>
+      <% (agents || []).forEach(function (agent) { %>
+        <option value="<%= agent.id %>" <%= filters.agent === String(agent.id) ? 'selected' : '' %>><%= agent.name || agent.email %></option>
+      <% }) %>
+    </select>
+  <% } %>
+  <select name="neighborhood" aria-label="Neighborhood">
+    <option value="">All neighborhoods</option>
+    <% (neighborhoods || []).forEach(function (name) { %>
+      <option value="<%= name %>" <%= filters.neighborhood === name ? 'selected' : '' %>><%= name %></option>
+    <% }) %>
+  </select>
+  <input type="text" name="full_address" placeholder="Address or title" value="<%= filters.full_address %>" title="Matches the address or the title.">
+  <select name="rooms" aria-label="Rooms">
+    <option value="">All rooms</option>
+    <option value="1" <%= filters.rooms === '1' ? 'selected' : '' %>>1 room</option>
+    <option value="2" <%= filters.rooms === '2' ? 'selected' : '' %>>2 rooms</option>
+    <option value="3" <%= filters.rooms === '3' ? 'selected' : '' %>>3 rooms</option>
+    <option value="4" <%= filters.rooms === '4' ? 'selected' : '' %>>4 or more</option>
+  </select>
+  <select name="status" aria-label="Status">
+    <option value="">All statuses</option>
+    <option value="published" <%= filters.status === 'published' ? 'selected' : '' %>>Published</option>
+    <option value="draft" <%= filters.status === 'draft' ? 'selected' : '' %>>Draft</option>
+  </select>
+  <input type="number" name="min_rent" min="0" step="1" placeholder="Min rent" value="<%= filters.min_rent %>">
+  <input type="number" name="max_rent" min="0" step="1" placeholder="Max rent" value="<%= filters.max_rent %>">
+  <input type="date" name="available_by" value="<%= filters.available_by %>" aria-label="Available by" title="Shows apartments that are free on this date or earlier.">
+  <button type="submit" class="btn-filter-apply">Apply</button>
+  <a href="<%= rentalBase %>" class="btn-filter-reset">Reset</a>
+</form>
+<% if (filterError) { %><p class="error"><%= filterError %></p><% } %>

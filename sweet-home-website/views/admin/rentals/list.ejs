@@ -1,5 +1,5 @@
 <% title = 'Furnished apartments' %>
-<link rel="stylesheet" href="/css/admin/rentals.css?v=20261113-cards" />
+<link rel="stylesheet" href="/css/admin/rentals.css?v=20261113-filters2" />
 <% if (showSuperadminSidebar) { %>
   <link rel="stylesheet" href="/css/superadmin/manage-properties.css" />
 <% } else { %>
@@ -18,11 +18,17 @@
             <a href="<%= rentalBase %>/new" class="btn btn-primary">New apartment</a>
           </div>
         </div>
+        <%- include('_filters', { formClass: 'properties-filters', showAgent: true }) %>
         <% if (!rentals.length) { %>
           <div class="rental-empty">
-            <h2>No apartments yet</h2>
-            <p>Add the first furnished apartment. It stays off the catalogue until it is published.</p>
-            <a href="<%= rentalBase %>/new" class="btn btn-primary">New apartment</a>
+            <% if (hasFilters || filterError) { %>
+              <h2>No apartments match</h2>
+              <p>Try another neighborhood, rent, or address. Reset clears every filter.</p>
+            <% } else { %>
+              <h2>No apartments yet</h2>
+              <p>Add the first furnished apartment. It stays off the catalogue until it is published.</p>
+              <a href="<%= rentalBase %>/new" class="btn btn-primary">New apartment</a>
+            <% } %>
           </div>
         <% } else { %>
           <div class="properties-grid rental-sale-grid">
@@ -83,9 +89,14 @@
       <a href="<%= rentalBase %>/new" class="btn btn-primary">New apartment</a>
     </div>
   </header>
+  <%- include('_filters', { formClass: 'filters', showAgent: false }) %>
   <% if (!rentals.length) { %>
     <div class="empty-state">
-      <p>No apartments yet. Click <a href="<%= rentalBase %>/new">New apartment</a> to add one.</p>
+      <% if (hasFilters || filterError) { %>
+        <p>No apartments match these filters. <a href="<%= rentalBase %>">Reset</a> to see all of them.</p>
+      <% } else { %>
+        <p>No apartments yet. Click <a href="<%= rentalBase %>/new">New apartment</a> to add one.</p>
+      <% } %>
     </div>
   <% } else { %>
     <div class="cards-grid rental-admin-grid">

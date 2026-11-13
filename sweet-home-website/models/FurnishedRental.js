@@ -1,7 +1,29 @@
 const { query } = require('../config/db');
 
 class FurnishedRental {
-  static async list() {
+  static async list(filters = {}) {
+    const where = [];
+    const params = [];
+    const add = (sql, value) => {
+      params.push(value);
+      where.push(sql.replace('$?', `$${params.length}`));
+    };
+    if (filters.agentId) add('r.agent_id = $?', filters.agentId);
+    if (filters.neighborhood) add('r.neighborhood = $?', filters.neighborhood);
+    if (filters.address) {
+      const term = `%${String(filters.address).replace(/[\\%_]/g, '\\$&')}%`;
+      params.push(term);
+      where.push(`(COALESCE(r.full_address, '') ILIKE $${params.length} ESCAPE '\\' OR COALESCE(r.title, '') ILIKE $${params.length} ESCAPE '\\')`);
+    }
+    if (filters.status) add('r.status = $?', filters.status);
+    if (filters.rooms) {
+      if (filters.rooms >= 4) add('r.rooms >= $?', filters.rooms);
+      else add('r.rooms = $?', filters.rooms);
+    }
+    if (filters.minRent != null) add('r.monthly_rent >= $?', filters.minRent);
+    if (filters.maxRent != null) add('r.monthly_rent <= $?', filters.maxRent);
+    if (filters.availableBy) add('(r.available_from IS NULL OR r.available_from <= $?::date)', filters.availableBy);
+    const clause = where.length ? `WHERE ${where.join(' AND ')}` : '';
     const res = await query(
       `SELECT r.id, r.title, r.slug, r.slug_i18n, r.neighborhood, r.city, r.monthly_rent, r.deposit,
               r.status, r.photos, r.video_url, r.updated_at, r.created_at, r.rooms, r.size_sqm, r.floor,
@@ -30,9 +52,21 @@ class FurnishedRental {
               ) AS inquiry_count
          FROM furnished_rentals r
          LEFT JOIN users u ON u.id = r.agent_id
-        ORDER BY r.updated_at DESC, r.id DESC`
+        ${clause}
+        ORDER BY r.updated_at DESC, r.id DESC`,
+      params
     );
     return res.rows;
+  }
+
+  static async neighborhoodNames() {
+    const res = await query(
+      `SELECT DISTINCT neighborhood
+         FROM furnished_rentals
+        WHERE COALESCE(neighborhood, '') <> ''
+        ORDER BY neighborhood`
+    );
+    return res.rows.map((row) => row.neighborhood);
   }
 
   static async publishedForCatalogue({ neighborhood, minRent, maxRent, availableBy, sort }) {

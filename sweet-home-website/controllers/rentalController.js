@@ -317,14 +317,67 @@ async function renderForm(req, res, { rental, values, photos, error, statusCode 
   });
 }
 
+function readListFilters(req, includeAgent) {
+  const neighborhoodRaw = text(req.query.neighborhood).slice(0, 80);
+  const neighborhood = /^[\p{L}\p{N} .()'’/-]{1,80}$/u.test(neighborhoodRaw) ? neighborhoodRaw : '';
+  const address = text(req.query.full_address).slice(0, 120);
+  const status = text(req.query.status) === 'published' || text(req.query.status) === 'draft' ? text(req.query.status) : '';
+  const roomsRaw = text(req.query.rooms);
+  const rooms = ['1', '2', '3', '4'].includes(roomsRaw) ? roomsRaw : '';
+  const minValue = numberOrNull(req.query.min_rent);
+  const maxValue = numberOrNull(req.query.max_rent);
+  const minRent = minValue != null && !Number.isNaN(minValue) && minValue >= 0 ? String(minValue) : '';
+  const maxRent = maxValue != null && !Number.isNaN(maxValue) && maxValue >= 0 ? String(maxValue) : '';
+  const availableRaw = text(req.query.available_by);
+  const availableBy = /^\d{4}-\d{2}-\d{2}$/.test(availableRaw) ? availableRaw : '';
+  const agentRaw = text(req.query.agent);
+  const agent = includeAgent && /^\d+$/.test(agentRaw) ? agentRaw : '';
+  const filters = {
+    neighborhood,
+    full_address: address,
+    status,
+    rooms,
+    min_rent: minRent,
+    max_rent: maxRent,
+    available_by: availableBy,
+    agent
+  };
+  const hasFilters = Object.values(filters).some(Boolean);
+  const filterError = minRent && maxRent && Number(minRent) > Number(maxRent)
+    ? 'Minimum rent cannot be higher than maximum rent.'
+    : '';
+  return { filters, hasFilters, filterError };
+}
+
 exports.list = async (req, res, next) => {
   try {
-    const rentals = (await FurnishedRental.list()).map(presentRental);
     const superadmin = showSuperadminSidebar(req);
+    const { filters, hasFilters, filterError } = readListFilters(req, superadmin);
+    const agents = superadmin ? await staffMembers() : [];
+    if (filters.agent && !agents.some((agent) => String(agent.id) === filters.agent)) filters.agent = '';
+    const rentals = filterError ? [] : (await FurnishedRental.list({
+      agentId: filters.agent ? Number(filters.agent) : null,
+      neighborhood: filters.neighborhood || null,
+      address: filters.full_address || null,
+      status: filters.status || null,
+      rooms: filters.rooms ? Number(filters.rooms) : null,
+      minRent: filters.min_rent === '' ? null : Number(filters.min_rent),
+      maxRent: filters.max_rent === '' ? null : Number(filters.max_rent),
+      availableBy: filters.available_by || null
+    })).map(presentRental);
+    const neighborhoods = BERLIN_NEIGHBORHOODS.slice();
+    (await FurnishedRental.neighborhoodNames()).forEach((name) => {
+      if (name && !neighborhoods.includes(name)) neighborhoods.push(name);
+    });
+    if (filters.neighborhood && !neighborhoods.includes(filters.neighborhood)) neighborhoods.push(filters.neighborhood);
     res.render('admin/rentals/list', {
       title: 'Furnished apartments',
       rentals,
-      agents: superadmin ? await staffMembers() : [],
+      agents,
+      filters,
+      hasFilters,
+      filterError,
+      neighborhoods,
       rentalBase: req.baseUrl,
       dashboardPath: dashboardPath(req),
       showSuperadminSidebar: superadmin,

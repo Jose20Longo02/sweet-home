@@ -1,13 +1,14 @@
 <% title = rental ? 'Edit furnished apartment' : 'New furnished apartment' %>
 <link rel="stylesheet" href="/css/admin/blog-new.css" />
-<link rel="stylesheet" href="/css/admin/rentals.css?v=20261113-video" />
+<link rel="stylesheet" href="/css/admin/rentals.css?v=20261113-form3" />
 <div class="admin-panel<%= showSuperadminSidebar ? ' with-sidebar' : '' %>">
   <div class="admin-body">
     <% if (showSuperadminSidebar) { %>
       <%- include('../../partials/superadmin-sidebar', { activePage: 'rentals', pendingCount: pendingCount || 0 }) %>
     <% } %>
     <main class="admin-content">
-      <div class="admin-header">
+      <div class="rental-editor">
+      <header class="admin-header">
         <div>
           <h1><%= rental ? 'Edit furnished apartment' : 'New furnished apartment' %></h1>
           <p class="subtitle">Write the title and description in one language. Publish creates the other language and puts the apartment on the rental catalogue. Save as draft keeps it off the public site.</p>
@@ -19,9 +20,9 @@
               <button type="submit" class="btn-link btn-link--danger">Delete</button>
             </form>
           <% } %>
-          <a href="<%= rentalBase %>" class="back-home">← All apartments</a>
+          <a href="<%= rentalBase %>" class="btn btn-light">All apartments</a>
         </div>
-      </div>
+      </header>
 
       <% if (error) { %>
         <p class="error"><%= error %></p>
@@ -30,150 +31,189 @@
       <form id="rentalForm" action="<%= rental ? (rentalBase + '/' + rental.id) : rentalBase %>?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data" data-stored-video="<%= storedVideo ? '1' : '0' %>">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
-        <label for="content_language">Content language</label>
-        <select id="content_language" name="content_language" required>
-          <option value="">Select language</option>
-          <option value="de" <%= values.content_language === 'de' ? 'selected' : '' %>>German</option>
-          <option value="en" <%= values.content_language === 'en' ? 'selected' : '' %>>English</option>
-        </select>
-        <small class="hint">Choose the language you are writing in. Publish translates the title, description, and utilities note into the other language.</small>
-
-        <label for="title">Title</label>
-        <input id="title" type="text" name="title" maxlength="255" required value="<%= values.title %>">
-
-        <label for="description">Description</label>
-        <textarea id="description" name="description" rows="8" required><%= values.description %></textarea>
-
-        <% if (translation) { %>
-          <section class="translation-preview">
-            <h2><%= translation.languageName %></h2>
-            <p><%= translation.title %></p>
-            <% if (translation.description) { %><p class="translation-body"><%= translation.description %></p><% } %>
-            <% if (translation.note) { %><p class="hint">Utilities: <%= translation.note %></p><% } %>
-          </section>
-        <% } %>
-
-        <div class="field-row">
-          <div>
-            <label for="neighborhood">Neighborhood</label>
-            <select id="neighborhood" name="neighborhood">
-              <option value="">Select neighborhood (optional)</option>
-              <% neighborhoods.forEach(function (name) { %>
-                <option value="<%= name %>" <%= values.neighborhood === name ? 'selected' : '' %>><%= name %></option>
-              <% }) %>
-            </select>
-            <small class="hint">This is the location the public page will show later. City is Berlin.</small>
-          </div>
-          <div>
-            <label for="full_address">Full address</label>
-            <input id="full_address" type="text" name="full_address" maxlength="500" value="<%= values.full_address %>">
-            <small class="hint">Staff only. It stays off the public page.</small>
-          </div>
-        </div>
-
-        <div class="field-row field-row-3">
-          <div>
-            <label for="size_sqm">Size (m²)</label>
-            <input id="size_sqm" type="number" name="size_sqm" min="1" step="0.01" value="<%= values.size_sqm %>">
-          </div>
-          <div>
-            <label for="rooms">Rooms</label>
-            <input id="rooms" type="number" name="rooms" min="0" step="1" value="<%= values.rooms %>">
-          </div>
-          <div>
-            <label for="floor">Floor</label>
-            <input id="floor" type="number" name="floor" step="1" value="<%= values.floor %>">
-          </div>
-        </div>
-
-        <div class="field-row">
-          <div>
-            <label for="monthly_rent">Monthly rent (€)</label>
-            <input id="monthly_rent" type="number" name="monthly_rent" min="1" step="0.01" required value="<%= values.monthly_rent %>">
-          </div>
-          <div>
-            <label for="deposit">Deposit (€)</label>
-            <input id="deposit" type="number" name="deposit" min="0" step="0.01" value="<%= values.deposit %>">
-          </div>
-        </div>
-
-        <fieldset class="utilities">
-          <legend>Utilities</legend>
-          <label class="check"><input type="radio" name="utilities_mode" value="included" <%= values.utilities_mode !== 'amount' ? 'checked' : '' %>> Included in the rent</label>
-          <label class="check"><input type="radio" name="utilities_mode" value="amount" <%= values.utilities_mode === 'amount' ? 'checked' : '' %>> Monthly amount</label>
-          <label for="utilities_amount">Utilities amount (€ / month)</label>
-          <input id="utilities_amount" type="number" name="utilities_amount" min="0" step="0.01" value="<%= values.utilities_amount %>">
-          <label for="utilities_note">Utilities note</label>
-          <input id="utilities_note" type="text" name="utilities_note" maxlength="300" value="<%= values.utilities_note %>">
-          <small class="hint">Same language as the title. Publish translates this note too.</small>
-        </fieldset>
-
-        <div class="field-row field-row-3">
-          <div>
-            <label for="available_from">Available from</label>
-            <input id="available_from" type="date" name="available_from" value="<%= values.available_from %>">
-          </div>
-          <div>
-            <label for="min_stay_months">Minimum stay (months)</label>
-            <input id="min_stay_months" type="number" name="min_stay_months" min="1" step="1" value="<%= values.min_stay_months %>">
-          </div>
-          <div>
-            <label for="max_stay_months">Maximum stay (months)</label>
-            <input id="max_stay_months" type="number" name="max_stay_months" min="1" step="1" value="<%= values.max_stay_months %>">
-          </div>
-        </div>
-
-        <label for="agent_id">Agent</label>
-        <select id="agent_id" name="agent_id" required>
-          <% agents.forEach(function (agent) { %>
-            <option value="<%= agent.id %>" <%= String(values.agent_id) === String(agent.id) ? 'selected' : '' %>><%= agent.name || agent.email %></option>
-          <% }) %>
-        </select>
-
-        <label for="photos">Photos</label>
-        <input id="photos" type="file" name="photos" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple <%= photos.length ? '' : 'required' %>>
-        <small class="hint">Up to 20 photos. Drag them into order. The first photo is the cover. Use × to remove one. If there are many, save once and add the rest from the edit page.</small>
-        <% photos.forEach(function (url) { %>
-          <input type="hidden" name="existing_photos" value="<%= url %>">
-        <% }) %>
-        <div class="preview-grid" id="photoPreview">
-          <% photos.forEach(function (url) { %>
-            <div class="item" data-url="<%= url %>">
-              <img class="thumb" src="<%= url %>" alt="">
+        <section class="card">
+          <h2>The listing</h2>
+          <div class="grid-2">
+            <div class="field">
+              <label for="content_language">Content language<span class="req">*</span></label>
+              <select id="content_language" name="content_language" required>
+                <option value="">Select language</option>
+                <option value="de" <%= values.content_language === 'de' ? 'selected' : '' %>>German</option>
+                <option value="en" <%= values.content_language === 'en' ? 'selected' : '' %>>English</option>
+              </select>
+              <small>Choose the language you are writing in. Publish translates the title, description, and utilities note.</small>
             </div>
-          <% }) %>
-        </div>
-        <div id="orderedPhotos"></div>
-
-        <fieldset class="utilities rental-video">
-          <legend>Video</legend>
-          <p class="hint">Optional. Upload one file, or paste a link from YouTube, Vimeo, or a video file. Leave this on “No video” if the apartment has none.</p>
-          <div class="video-choices">
-            <label><input type="radio" name="video_source" value="none" <%= values.video_source !== 'upload' && values.video_source !== 'link' ? 'checked' : '' %>> No video</label>
-            <label><input type="radio" name="video_source" value="upload" <%= values.video_source === 'upload' ? 'checked' : '' %>> Upload</label>
-            <label><input type="radio" name="video_source" value="link" <%= values.video_source === 'link' ? 'checked' : '' %>> Link</label>
+            <div class="field">
+              <label for="agent_id">Agent in charge<span class="req">*</span></label>
+              <select id="agent_id" name="agent_id" required>
+                <% agents.forEach(function (agent) { %>
+                  <option value="<%= agent.id %>" <%= String(values.agent_id) === String(agent.id) ? 'selected' : '' %>><%= agent.name || agent.email %></option>
+                <% }) %>
+              </select>
+            </div>
           </div>
-          <div id="videoUploadWrap" <%= values.video_source === 'upload' ? '' : 'hidden' %>>
+          <div class="field">
+            <label for="title">Title<span class="req">*</span></label>
+            <input id="title" type="text" name="title" maxlength="255" required value="<%= values.title %>">
+          </div>
+          <div class="field">
+            <label for="description">Description<span class="req">*</span></label>
+            <textarea id="description" name="description" rows="8" required><%= values.description %></textarea>
+          </div>
+          <% if (translation) { %>
+            <section class="translation-preview">
+              <h2><%= translation.languageName %></h2>
+              <p><%= translation.title %></p>
+              <% if (translation.description) { %><p class="translation-body"><%= translation.description %></p><% } %>
+              <% if (translation.note) { %><p class="hint">Utilities: <%= translation.note %></p><% } %>
+            </section>
+          <% } %>
+        </section>
+
+        <section class="card">
+          <h2>Location</h2>
+          <div class="grid-2">
+            <div class="field">
+              <label for="neighborhood">Neighborhood</label>
+              <select id="neighborhood" name="neighborhood">
+                <option value="">Select neighborhood (optional)</option>
+                <% neighborhoods.forEach(function (name) { %>
+                  <option value="<%= name %>" <%= values.neighborhood === name ? 'selected' : '' %>><%= name %></option>
+                <% }) %>
+              </select>
+              <small>This is the location the public page shows. The city is Berlin.</small>
+            </div>
+            <div class="field">
+              <label for="full_address">Full address</label>
+              <input id="full_address" type="text" name="full_address" maxlength="500" value="<%= values.full_address %>">
+              <small>Staff only. It stays off the public page.</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>The apartment</h2>
+          <div class="grid-3">
+            <div class="field">
+              <label for="size_sqm">Size (m²)</label>
+              <input id="size_sqm" type="number" name="size_sqm" min="1" step="0.01" value="<%= values.size_sqm %>">
+            </div>
+            <div class="field">
+              <label for="rooms">Rooms</label>
+              <input id="rooms" type="number" name="rooms" min="0" step="1" value="<%= values.rooms %>">
+            </div>
+            <div class="field">
+              <label for="floor">Floor</label>
+              <input id="floor" type="number" name="floor" step="1" value="<%= values.floor %>">
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Rent and utilities</h2>
+          <div class="grid-2">
+            <div class="field">
+              <label for="monthly_rent">Monthly rent (€)<span class="req">*</span></label>
+              <input id="monthly_rent" type="number" name="monthly_rent" min="1" step="0.01" required value="<%= values.monthly_rent %>">
+            </div>
+            <div class="field">
+              <label for="deposit">Deposit (€)</label>
+              <input id="deposit" type="number" name="deposit" min="0" step="0.01" value="<%= values.deposit %>">
+            </div>
+          </div>
+          <div class="field">
+            <label>Utilities</label>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="utilities_mode" value="included" <%= values.utilities_mode !== 'amount' ? 'checked' : '' %>><span>Included in the rent</span></label>
+              <label class="chip"><input type="radio" name="utilities_mode" value="amount" <%= values.utilities_mode === 'amount' ? 'checked' : '' %>><span>Monthly amount</span></label>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label for="utilities_amount">Utilities amount (€ / month)</label>
+              <input id="utilities_amount" type="number" name="utilities_amount" min="0" step="0.01" value="<%= values.utilities_amount %>">
+            </div>
+            <div class="field">
+              <label for="utilities_note">Utilities note</label>
+              <input id="utilities_note" type="text" name="utilities_note" maxlength="300" value="<%= values.utilities_note %>">
+              <small>Same language as the title. Publish translates this note too.</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Availability</h2>
+          <div class="grid-3">
+            <div class="field">
+              <label for="available_from">Available from</label>
+              <input id="available_from" type="date" name="available_from" value="<%= values.available_from %>">
+            </div>
+            <div class="field">
+              <label for="min_stay_months">Minimum stay (months)</label>
+              <input id="min_stay_months" type="number" name="min_stay_months" min="1" step="1" value="<%= values.min_stay_months %>">
+            </div>
+            <div class="field">
+              <label for="max_stay_months">Maximum stay (months)</label>
+              <input id="max_stay_months" type="number" name="max_stay_months" min="1" step="1" value="<%= values.max_stay_months %>">
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Photos</h2>
+          <div class="field">
+            <label for="photos">Photo files<% if (!photos.length) { %><span class="req">*</span><% } %></label>
+            <input id="photos" type="file" name="photos" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple <%= photos.length ? '' : 'required' %>>
+            <small>Up to 20 photos. Drag them into order. The first photo is the cover. Use × to remove one. If there are many, save once and add the rest from the edit page.</small>
+            <% photos.forEach(function (url) { %>
+              <input type="hidden" name="existing_photos" value="<%= url %>">
+            <% }) %>
+            <div class="preview-grid" id="photoPreview">
+              <% photos.forEach(function (url) { %>
+                <div class="item" data-url="<%= url %>">
+                  <img class="thumb" src="<%= url %>" alt="">
+                </div>
+              <% }) %>
+            </div>
+            <div id="orderedPhotos"></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Video</h2>
+          <div class="field">
+            <label>Video source</label>
+            <small>Optional. Upload one file, or paste a YouTube, Vimeo, or video-file link.</small>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="video_source" value="none" <%= values.video_source !== 'upload' && values.video_source !== 'link' ? 'checked' : '' %>><span>No video</span></label>
+              <label class="chip"><input type="radio" name="video_source" value="upload" <%= values.video_source === 'upload' ? 'checked' : '' %>><span>Upload</span></label>
+              <label class="chip"><input type="radio" name="video_source" value="link" <%= values.video_source === 'link' ? 'checked' : '' %>><span>Link</span></label>
+            </div>
+          </div>
+          <div class="field" id="videoUploadWrap" <%= values.video_source === 'upload' ? '' : 'hidden' %>>
             <label for="video">Video file</label>
             <input id="video" type="file" name="video" accept="video/mp4,video/quicktime,video/x-matroska,.mp4,.mov,.mkv">
-            <small class="hint">MP4, MOV, or MKV. 20 MB maximum. A longer video should be a YouTube or Vimeo link.</small>
+            <small>MP4, MOV, or MKV. 20 MB maximum. A longer video should be a YouTube or Vimeo link.</small>
             <% if (storedVideo && rental && rental.video_url) { %>
               <video class="rental-video-current" controls playsinline src="<%= rental.video_url %>"></video>
-              <small class="hint">This file stays until you upload a replacement or choose no video.</small>
+              <small>This file stays until you upload a replacement or choose no video.</small>
             <% } %>
           </div>
-          <div id="videoUrlWrap" <%= values.video_source === 'link' ? '' : 'hidden' %>>
+          <div class="field" id="videoUrlWrap" <%= values.video_source === 'link' ? '' : 'hidden' %>>
             <label for="video_url">Video link</label>
             <input id="video_url" name="video_url" type="url" maxlength="500" placeholder="https://www.youtube.com/watch?v=..." value="<%= values.video_source === 'link' ? values.video_url : '' %>">
-            <small class="hint">YouTube, Vimeo, or a direct link to an MP4 file.</small>
+            <small>YouTube, Vimeo, or a direct link to an MP4 file.</small>
           </div>
-        </fieldset>
+        </section>
 
-        <div class="form-actions">
-          <button type="submit" class="btn btn-secondary" name="status" value="draft">Save as draft</button>
-          <button type="submit" class="btn" name="status" value="published">Publish</button>
-        </div>
+        <section class="card">
+          <div class="form-actions">
+            <button type="submit" class="btn btn-light" name="status" value="draft">Save as draft</button>
+            <button type="submit" class="btn btn-primary" name="status" value="published">Publish</button>
+          </div>
+        </section>
       </form>
+      </div>
     </main>
   </div>
 </div>
