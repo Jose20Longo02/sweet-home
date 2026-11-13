@@ -20,6 +20,24 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  Array.prototype.forEach.call(document.querySelectorAll('form.reassign-form'), function (reassignForm) {
+    var select = reassignForm.querySelector('select[name="agent_id"]');
+    if (!select) return;
+    var previous = select.value;
+    select.addEventListener('change', function () {
+      if (select.value === previous || reassignForm.__submitting) return;
+      reassignForm.__submitting = true;
+      previous = select.value;
+      showUploadOverlay(null);
+      var title = document.querySelector('.upload-title');
+      var sub = document.querySelector('.upload-sub');
+      if (title) title.textContent = 'Saving...';
+      if (sub) sub.textContent = 'Updating the agent in charge.';
+      if (typeof reassignForm.requestSubmit === 'function') reassignForm.requestSubmit();
+      else reassignForm.submit();
+    });
+  });
+
   Array.prototype.forEach.call(document.querySelectorAll('form[action*="/status"]'), function (statusForm) {
     statusForm.addEventListener('submit', function (event) {
       var status = statusForm.querySelector('input[name="status"]');

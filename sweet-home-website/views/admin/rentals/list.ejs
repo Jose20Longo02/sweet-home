@@ -1,97 +1,160 @@
 <% title = 'Furnished apartments' %>
-<link rel="stylesheet" href="/css/admin/rentals.css?v=20261113-video" />
-<div class="admin-panel<%= showSuperadminSidebar ? ' with-sidebar' : '' %>">
+<link rel="stylesheet" href="/css/admin/rentals.css?v=20261113-cards" />
+<% if (showSuperadminSidebar) { %>
+  <link rel="stylesheet" href="/css/superadmin/manage-properties.css" />
+<% } else { %>
+  <link rel="stylesheet" href="/css/admin/my-properties.css" />
+<% } %>
+<% if (showSuperadminSidebar) { %>
+<div class="admin-panel">
   <div class="admin-body">
-    <% if (showSuperadminSidebar) { %>
-      <%- include('../../partials/superadmin-sidebar', { activePage: 'rentals', pendingCount: pendingCount || 0 }) %>
-    <% } %>
-    <main class="admin-content rental-board">
-      <div class="admin-header">
-        <div>
+    <%- include('../../partials/superadmin-sidebar', { activePage: 'rentals', pendingCount: pendingCount || 0 }) %>
+    <main class="admin-content">
+      <section class="properties-container">
+        <div class="properties-header">
           <h1>Furnished apartments</h1>
-          <p class="subtitle">Staff only. These apartments are not on the public site yet.</p>
+          <div>
+            <a href="<%= dashboardPath %>" class="btn btn-secondary">Dashboard</a>
+            <a href="<%= rentalBase %>/new" class="btn btn-primary">New apartment</a>
+          </div>
         </div>
-        <div class="header-actions">
-          <a href="<%= dashboardPath %>" class="back-home">← Dashboard</a>
-          <a href="<%= rentalBase %>/new" class="btn">New apartment</a>
-        </div>
-      </div>
-
-      <section class="rental-summary" aria-label="Apartment totals">
-        <div><strong><%= rentals.length %></strong><span>Apartments</span></div>
-        <div><strong><%= rentals.filter(function (rental) { return rental.status === 'published'; }).length %></strong><span>Published</span></div>
-        <div><strong><%= rentals.filter(function (rental) { return rental.status !== 'published'; }).length %></strong><span>Drafts</span></div>
-      </section>
-
-      <% if (!rentals.length) { %>
-        <div class="rental-empty">
-          <h2>No apartments yet</h2>
-          <p>Add the first furnished apartment. It stays off the public site until a catalogue is published.</p>
-          <a href="<%= rentalBase %>/new" class="btn">New apartment</a>
-        </div>
-      <% } else { %>
-        <div class="rental-grid">
-          <% rentals.forEach(function (rental) { %>
-            <article class="rental-card">
-              <a class="rental-media" href="<%= rentalBase %>/<%= rental.id %>/edit">
-                <% if (rental.cover) { %>
-                  <img src="<%= rental.cover %>" alt="<%= rental.title %>">
+        <% if (!rentals.length) { %>
+          <div class="rental-empty">
+            <h2>No apartments yet</h2>
+            <p>Add the first furnished apartment. It stays off the catalogue until it is published.</p>
+            <a href="<%= rentalBase %>/new" class="btn btn-primary">New apartment</a>
+          </div>
+        <% } else { %>
+          <div class="properties-grid rental-sale-grid">
+            <% rentals.forEach(function (rental) { %>
+              <div class="property-card">
+                <% if (!rental.agent_id) { %>
+                  <div class="unassigned-warning">Unassigned</div>
                 <% } else { %>
-                  <span class="rental-cover-empty">No photo</span>
+                  <span class="rental-status-chip is-<%= rental.status %>"><%= rental.statusLabel %></span>
                 <% } %>
-                <span class="rental-status is-<%= rental.status %>"><%= rental.statusLabel %></span>
-                <span class="rental-rent"><%= rental.rentLabel %><small>/ month</small></span>
-                <% if (rental.photos.length) { %>
-                  <span class="rental-count"><%= rental.photos.length === 1 ? '1 photo' : rental.photos.length + ' photos' %></span>
-                <% } %>
-              </a>
-              <% if (rental.thumbs.length) { %>
-                <div class="rental-thumbs">
-                  <% rental.thumbs.forEach(function (url) { %>
-                    <img src="<%= url %>" alt="">
-                  <% }) %>
-                  <% if (rental.extraCount) { %>
-                    <span class="rental-more">+<%= rental.extraCount %></span>
-                  <% } %>
+                <img src="<%= rental.agentPicture || '/img/default-avatar.png' %>" class="uploader-thumb" alt="<%= rental.agent_name || 'Agent' %>">
+                <div style="position:relative; width:100%;">
+                  <img src="<%= rental.cover || '/img/property-placeholder.png' %>" class="thumb" alt="<%= rental.title %>">
                 </div>
-              <% } %>
-              <div class="rental-body">
-                <h2><a href="<%= rentalBase %>/<%= rental.id %>/edit"><%= rental.title %></a></h2>
-                <p class="rental-place"><%= rental.neighborhood || 'Berlin' %><% if (rental.neighborhood) { %>, Berlin<% } %></p>
-                <ul class="rental-facts">
-                  <% if (rental.sizeLabel) { %><li><%= rental.sizeLabel %></li><% } %>
-                  <% if (rental.roomsLabel) { %><li><%= rental.roomsLabel %></li><% } %>
-                  <% if (rental.floorLabel) { %><li><%= rental.floorLabel %></li><% } %>
-                  <li><%= rental.languageLabel %></li>
-                </ul>
-                <ul class="rental-meta">
-                  <% if (rental.depositLabel) { %><li>Deposit <%= rental.depositLabel %></li><% } %>
-                  <% if (rental.availableLabel) { %><li>From <%= rental.availableLabel %></li><% } %>
-                  <% if (rental.stayLabel) { %><li><%= rental.stayLabel %></li><% } %>
-                  <% if (rental.utilitiesLabel) { %><li><%= rental.utilitiesLabel %></li><% } %>
-                  <% if (rental.video_url) { %><li>Video</li><% } %>
-                  <% if (rental.agent_name) { %><li><%= rental.agent_name %></li><% } %>
-                </ul>
+                <h3><%= rental.title %></h3>
+                <p><%= rental.neighborhood || 'Berlin' %><% if (rental.neighborhood) { %>, Berlin<% } %><% if (rental.rentLabel) { %> · <%= rental.rentLabel %>/month<% } %></p>
+                <div class="assign-agent">
+                  <label for="agent-<%= rental.id %>">Agent in charge:</label>
+                  <form action="<%= rentalBase %>/<%= rental.id %>/reassign" method="post" class="reassign-form">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <select id="agent-<%= rental.id %>" name="agent_id">
+                      <% (agents || []).forEach(function (agent) { %>
+                        <option value="<%= agent.id %>" <%= Number(rental.agent_id) === Number(agent.id) ? 'selected' : '' %>><%= agent.name || agent.email %></option>
+                      <% }) %>
+                    </select>
+                    <button type="submit" class="reassign-submit">Save</button>
+                  </form>
+                </div>
+                <div class="actions">
+                  <form action="<%= rentalBase %>/<%= rental.id %>/delete?_csrf=<%= csrfToken %>" method="post" onsubmit="return confirm('Delete this apartment, its photos, and its video? This cannot be undone.');">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                  </form>
+                  <a href="<%= rentalBase %>/<%= rental.id %>/edit" class="btn btn-secondary">Edit</a>
+                  <% if (rental.publicPath) { %>
+                    <a href="<%= rental.publicPath %>" class="btn btn-secondary">View</a>
+                  <% } %>
+                  <form action="<%= rentalBase %>/<%= rental.id %>/status" method="post">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <input type="hidden" name="status" value="<%= rental.status === 'published' ? 'draft' : 'published' %>">
+                    <button type="submit" class="btn btn-secondary"><%= rental.status === 'published' ? 'Unpublish' : 'Publish' %></button>
+                  </form>
+                </div>
               </div>
-              <div class="rental-actions">
-                <a href="<%= rentalBase %>/<%= rental.id %>/edit">Edit</a>
-                <form method="post" action="<%= rentalBase %>/<%= rental.id %>/status">
-                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                  <input type="hidden" name="status" value="<%= rental.status === 'published' ? 'draft' : 'published' %>">
-                  <button type="submit"><%= rental.status === 'published' ? 'Unpublish' : 'Publish' %></button>
-                </form>
-                <form method="post" action="<%= rentalBase %>/<%= rental.id %>/delete?_csrf=<%= csrfToken %>" onsubmit="return confirm('Delete this apartment, its photos, and its video? This cannot be undone.')">
-                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                  <button type="submit" class="danger">Delete</button>
-                </form>
-              </div>
-            </article>
-          <% }) %>
-        </div>
-      <% } %>
+            <% }) %>
+          </div>
+        <% } %>
+      </section>
     </main>
   </div>
 </div>
+<% } else { %>
+<div class="page-wrap">
+  <header class="section-header">
+    <h1>Furnished apartments</h1>
+    <div class="header-actions">
+      <a href="<%= dashboardPath %>" class="link-home">← Return to dashboard</a>
+      <a href="<%= rentalBase %>/new" class="btn btn-primary">New apartment</a>
+    </div>
+  </header>
+  <% if (!rentals.length) { %>
+    <div class="empty-state">
+      <p>No apartments yet. Click <a href="<%= rentalBase %>/new">New apartment</a> to add one.</p>
+    </div>
+  <% } else { %>
+    <div class="cards-grid rental-admin-grid">
+      <% rentals.forEach(function (rental) { %>
+        <article class="prop-card">
+          <div class="flip">
+            <div class="front">
+              <div class="media">
+                <img class="thumb" src="<%= rental.cover || '/img/property-placeholder.png' %>" alt="<%= rental.title %>">
+                <div class="badges">
+                  <span class="badge badge-status"><%= rental.statusLabel %></span>
+                  <% if (rental.video_url) { %><span class="badge badge-status">Video</span><% } %>
+                </div>
+                <div class="type-badge">Rent</div>
+                <div class="price-badge"><%= rental.rentLabel ? rental.rentLabel + ' / mo' : 'Rent on request' %></div>
+              </div>
+              <div class="content">
+                <h3 class="title" title="<%= rental.title %>"><%= rental.title %></h3>
+                <p class="meta">
+                  <span class="loc-city">Berlin</span>
+                  <% if (rental.neighborhood) { %>
+                    <span class="dot">•</span>
+                    <span class="loc-hood"><%= rental.neighborhood %></span>
+                  <% } %>
+                </p>
+                <div class="quick-specs">
+                  <span class="qs-item" title="Rooms">
+                    <span class="icon icon-16 icon-inline icon-mask icon-bed" style="color: var(--primary-color);"></span>
+                    <%= rental.rooms ?? 0 %>
+                  </span>
+                  <span class="qs-item" title="Size">
+                    <span class="icon icon-16 icon-inline icon-mask icon-size" style="color: var(--primary-color);"></span>
+                    <%= rental.sizeLabel || 'n/a' %>
+                  </span>
+                  <% if (rental.agent_name) { %>
+                    <span class="qs-item" title="Agent in charge"><%= rental.agent_name %></span>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+            <div class="back">
+              <div class="stat">
+                <span class="stat-num"><%= rental.viewsCount || 0 %></span>
+                <span class="stat-label">Views</span>
+              </div>
+              <div class="stat">
+                <span class="stat-num"><%= rental.inquiryCount || 0 %></span>
+                <span class="stat-label">Contacts</span>
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <form action="<%= rentalBase %>/<%= rental.id %>/delete?_csrf=<%= csrfToken %>" method="post" onsubmit="return confirm('Delete this apartment, its photos, and its video? This cannot be undone.');">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+            <a class="btn btn-secondary" href="<%= rentalBase %>/<%= rental.id %>/edit">Edit</a>
+            <form action="<%= rentalBase %>/<%= rental.id %>/status" method="post">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <input type="hidden" name="status" value="<%= rental.status === 'published' ? 'draft' : 'published' %>">
+              <button type="submit" class="btn btn-secondary"><%= rental.status === 'published' ? 'Unpublish' : 'Publish' %></button>
+            </form>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+<% } %>
 <div id="uploadOverlay" class="upload-overlay" hidden style="display:none;">
   <div class="upload-dialog">
     <div class="upload-spinner"></div>
@@ -109,4 +172,4 @@
     @keyframes upload-spin { to { transform: rotate(360deg); } }
   </style>
 </div>
-<script src="/js/admin-rentals.js"></script>
+<script src="/js/admin-rentals.js?v=20261113-cards"></script>

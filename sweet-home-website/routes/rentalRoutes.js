@@ -17,6 +17,7 @@ router.get('/new', rentalController.form);
 router.post('/', uploadRentalPhotos, rentalController.save);
 router.get('/:id/edit', rentalController.form);
 router.post('/:id/status', rentalController.setStatus);
+router.post('/:id/reassign', rentalController.reassign);
 router.post('/:id/delete', rentalController.remove);
 router.post('/:id', uploadRentalPhotos, rentalController.save);
 

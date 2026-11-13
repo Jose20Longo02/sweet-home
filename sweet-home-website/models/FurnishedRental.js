@@ -3,11 +3,31 @@ const { query } = require('../config/db');
 class FurnishedRental {
   static async list() {
     const res = await query(
-      `SELECT r.id, r.title, r.slug, r.neighborhood, r.city, r.monthly_rent, r.deposit,
+      `SELECT r.id, r.title, r.slug, r.slug_i18n, r.neighborhood, r.city, r.monthly_rent, r.deposit,
               r.status, r.photos, r.video_url, r.updated_at, r.created_at, r.rooms, r.size_sqm, r.floor,
               r.available_from, r.min_stay_months, r.max_stay_months,
-              r.utilities_included, r.utilities_amount, r.content_language,
-              u.name AS agent_name
+              r.utilities_included, r.utilities_amount, r.content_language, r.agent_id,
+              u.name AS agent_name, u.profile_picture AS agent_picture,
+              (
+                SELECT COUNT(*)::int
+                  FROM analytics_events ae
+                 WHERE ae.event_type = 'page_view'
+                   AND r.slug IS NOT NULL
+                   AND ae.meta->>'path' IN (
+                     '/moeblierte-wohnung/' || r.slug,
+                     '/en/furnished-apartment/' || COALESCE(NULLIF(r.slug_i18n->>'en', ''), r.slug)
+                   )
+              ) AS views_count,
+              (
+                SELECT COUNT(*)::int
+                  FROM leads l
+                 WHERE l.source = 'rental_inquiry'
+                   AND r.slug IS NOT NULL
+                   AND l.page_path IN (
+                     '/moeblierte-wohnung/' || r.slug,
+                     '/en/furnished-apartment/' || COALESCE(NULLIF(r.slug_i18n->>'en', ''), r.slug)
+                   )
+              ) AS inquiry_count
          FROM furnished_rentals r
          LEFT JOIN users u ON u.id = r.agent_id
         ORDER BY r.updated_at DESC, r.id DESC`
@@ -209,6 +229,17 @@ class FurnishedRental {
       [url]
     );
     return res.rows.length > 0;
+  }
+
+  static async setAgent(id, agentId) {
+    const res = await query(
+      `UPDATE furnished_rentals
+          SET agent_id = $2, updated_at = NOW()
+        WHERE id = $1
+        RETURNING id, agent_id, title`,
+      [id, agentId]
+    );
+    return res.rows[0] || null;
   }
 
   static async setStatus(id, status) {

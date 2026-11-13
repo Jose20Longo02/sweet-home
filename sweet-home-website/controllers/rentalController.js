@@ -1,5 +1,6 @@
 const slugify = require('slugify');
 const { query } = require('../config/db');
+const sendMail = require('../config/mailer');
 const { translateText } = require('../config/translator');
 const locations = require('../config/locations');
 const FurnishedRental = require('../models/FurnishedRental');
@@ -269,7 +270,11 @@ function presentRental(rental) {
     availableLabel,
     stayLabel,
     languageLabel: rental.content_language === 'en' ? 'EN' : 'DE',
-    statusLabel: rental.status === 'published' ? 'Published' : 'Draft'
+    statusLabel: rental.status === 'published' ? 'Published' : 'Draft',
+    viewsCount: Number(rental.views_count) || 0,
+    inquiryCount: Number(rental.inquiry_count) || 0,
+    agentPicture: rental.agent_picture || '',
+    publicPath: rental.status === 'published' && rental.slug ? `/moeblierte-wohnung/${rental.slug}` : ''
   };
 }
 
@@ -319,6 +324,7 @@ exports.list = async (req, res, next) => {
     res.render('admin/rentals/list', {
       title: 'Furnished apartments',
       rentals,
+      agents: superadmin ? await staffMembers() : [],
       rentalBase: req.baseUrl,
       dashboardPath: dashboardPath(req),
       showSuperadminSidebar: superadmin,
@@ -326,6 +332,50 @@ exports.list = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
+
+exports.reassign = async (req, res, next) => {
+  try {
+    if (!showSuperadminSidebar(req)) return res.status(403).send('Forbidden');
+    const rental = await FurnishedRental.findById(req.params.id);
+    if (!rental) return res.status(404).send('Apartment not found');
+    const requested = parseInt(req.body.agent_id, 10);
+    const agents = await staffMembers();
+    const nextAgent = agents.find((agent) => agent.id === requested);
+    if (!nextAgent) return res.redirect(req.baseUrl);
+    if (Number(rental.agent_id) === nextAgent.id) return res.redirect(req.baseUrl);
+
+    const previous = agents.find((agent) => agent.id === Number(rental.agent_id))
+      || (await query('SELECT id, name, email FROM users WHERE id = $1', [rental.agent_id])).rows[0];
+    await FurnishedRental.setAgent(rental.id, nextAgent.id);
+
+    const title = rental.title || 'Furnished apartment';
+    if (previous && previous.email && Number(previous.id) !== nextAgent.id) {
+      try {
+        await sendMail({
+          to: previous.email,
+          subject: 'Apartment unassigned',
+          html: `<p>Hi ${previous.name},</p><p>You have been unassigned from the furnished apartment "<strong>${title}</strong>".</p><p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>`,
+          text: `Hi ${previous.name},\n\nYou have been unassigned from the furnished apartment "${title}".\n\nBest regards,\nSweet Home Real Estate Investments' team`
+        });
+      } catch (error) {
+        console.error('Rental unassign mail failed:', error.message);
+      }
+    }
+    try {
+      await sendMail({
+        to: nextAgent.email,
+        subject: 'New apartment assignment',
+        html: `<p>Hi ${nextAgent.name},</p><p>You have been assigned to the furnished apartment "<strong>${title}</strong>".</p><p style="margin-top:16px;">Best regards,<br/>Sweet Home Real Estate Investments' team</p>`,
+        text: `Hi ${nextAgent.name},\n\nYou have been assigned to the furnished apartment "${title}".\n\nBest regards,\nSweet Home Real Estate Investments' team`
+      });
+    } catch (error) {
+      console.error('Rental assign mail failed:', error.message);
+    }
+    return res.redirect(req.get('referer') || req.baseUrl);
+  } catch (error) {
+    return next(error);
   }
 };
 
