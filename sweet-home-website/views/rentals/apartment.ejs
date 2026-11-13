@@ -1,14 +1,20 @@
-<link rel="stylesheet" href="/css/rentals-catalogue.css?v=20261113-video" />
+<link rel="stylesheet" href="/css/rentals-catalogue.css?v=20261113-video-stage" />
 <section class="catalogue apartment">
   <a class="apartment-back" href="<%= cataloguePath %>"><%= lang === 'en' ? 'All furnished apartments' : 'Alle möblierten Wohnungen' %></a>
   <div class="apartment-layout">
     <div>
-      <div class="apartment-gallery" data-title="<%= rental.title %>" data-watch="<%= lang === 'en' ? 'Watch the video' : 'Video ansehen' %>" data-video-label="<%= lang === 'en' ? 'Apartment video' : 'Video der Wohnung' %>">
+      <div class="apartment-gallery" data-title="<%= rental.title %>" data-watch="<%= lang === 'en' ? 'Watch the video' : 'Video ansehen' %>" data-play="<%= lang === 'en' ? 'Play video' : 'Video abspielen' %>" data-video-label="<%= lang === 'en' ? 'Apartment video' : 'Video der Wohnung' %>">
         <% const slideCount = (video ? 1 : 0) + photos.length; %>
         <div class="apartment-hero">
           <div class="apartment-stage" id="apartmentStage">
             <% if (video && video.kind === 'file') { %>
-              <video controls playsinline src="<%= video.url %>"></video>
+              <video id="apartmentVideo" controls playsinline src="<%= video.url %>"></video>
+              <button class="video-play-overlay" type="button" aria-label="<%= lang === 'en' ? 'Play video' : 'Video abspielen' %>">
+                <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
+                  <circle cx="32" cy="32" r="31" fill="rgba(0,0,0,0.6)" stroke="white" stroke-width="2" />
+                  <polygon points="26,20 26,44 46,32" fill="white" />
+                </svg>
+              </button>
             <% } else if (video && video.embed) { %>
               <iframe src="<%= video.embed %>" title="<%= lang === 'en' ? 'Apartment video' : 'Video der Wohnung' %>" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
             <% } else if (video) { %>
@@ -30,11 +36,17 @@
             </button>
           <% } %>
         </div>
-        <% if (slideCount > 1) { %>
+        <% if (video || photos.length > 1) { %>
           <div class="apartment-thumbs">
             <% if (video) { %>
               <button type="button" class="is-active is-video" data-kind="<%= video.kind %>" data-src="<%= video.embed || video.url %>" aria-label="<%= lang === 'en' ? 'Video' : 'Video' %>">
-                <span aria-hidden="true">▶</span>
+                <% if (photos.length) { %><img src="<%= photos[0] %>" alt=""><% } %>
+                <span class="play-badge" aria-hidden="true">
+                  <svg viewBox="0 0 36 36" width="28" height="28">
+                    <circle cx="18" cy="18" r="17" fill="rgba(0,0,0,0.55)" stroke="white" stroke-width="1.5" />
+                    <polygon points="14,10 14,26 26,18" fill="white" />
+                  </svg>
+                </span>
               </button>
             <% } %>
             <% photos.forEach(function (photo, index) { %>
@@ -140,7 +152,24 @@
   var index = 0;
   var title = gallery ? gallery.getAttribute('data-title') || '' : '';
   var watchLabel = gallery ? gallery.getAttribute('data-watch') || 'Watch the video' : 'Watch the video';
+  var playLabel = gallery ? gallery.getAttribute('data-play') || 'Play video' : 'Play video';
   var videoLabel = gallery ? gallery.getAttribute('data-video-label') || 'Apartment video' : 'Apartment video';
+  function playBadge() {
+    return '<svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="rgba(0,0,0,0.6)" stroke="white" stroke-width="2" /><polygon points="26,20 26,44 46,32" fill="white" /></svg>';
+  }
+  function bindPlayOverlay() {
+    if (!stage) return;
+    var media = stage.querySelector('video');
+    var overlay = stage.querySelector('.video-play-overlay');
+    if (!media || !overlay || overlay.dataset.bound === '1') return;
+    overlay.dataset.bound = '1';
+    var sync = function () { overlay.style.display = media.paused ? 'flex' : 'none'; };
+    sync();
+    media.addEventListener('play', sync);
+    media.addEventListener('pause', sync);
+    media.addEventListener('ended', sync);
+    overlay.addEventListener('click', function () { media.play(); });
+  }
   function showPhoto(nextIndex) {
     if (!stage || !thumbs.length) return;
     var next = (nextIndex + thumbs.length) % thumbs.length;
@@ -158,10 +187,17 @@
       stage.appendChild(img);
     } else if (kind === 'file') {
       var media = document.createElement('video');
+      media.id = 'apartmentVideo';
       media.controls = true;
       media.playsInline = true;
       media.src = src;
       stage.appendChild(media);
+      var overlay = document.createElement('button');
+      overlay.className = 'video-play-overlay';
+      overlay.type = 'button';
+      overlay.setAttribute('aria-label', playLabel);
+      overlay.innerHTML = playBadge();
+      stage.appendChild(overlay);
     } else if (kind === 'youtube' || kind === 'vimeo') {
       var frame = document.createElement('iframe');
       frame.src = src;
@@ -182,6 +218,7 @@
     if (typeof thumbs[index].scrollIntoView === 'function') {
       thumbs[index].scrollIntoView({ block: 'nearest', inline: 'nearest' });
     }
+    bindPlayOverlay();
   }
   thumbs.forEach(function (button, buttonIndex) {
     button.addEventListener('click', function () { showPhoto(buttonIndex); });
@@ -190,6 +227,7 @@
   var next = document.getElementById('apartmentNext');
   if (prev) prev.addEventListener('click', function () { showPhoto(index - 1); });
   if (next) next.addEventListener('click', function () { showPhoto(index + 1); });
+  bindPlayOverlay();
   document.addEventListener('keydown', function (event) {
     if (!thumbs.length) return;
     var tag = event.target && event.target.tagName;

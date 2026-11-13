@@ -207,6 +207,7 @@
 .rental-editor .field[hidden] { display: none; }
 .rental-editor .field + .grid-2,
 .rental-editor .field + .grid-3 { margin-top: 14px; }
+.rental-editor .grid-2.is-note-only { grid-template-columns: 1fr; }
 .rental-editor .grid-2 .field,
 .rental-editor .grid-3 .field { margin-top: 0; }
 .rental-editor .card > .field:first-of-type,

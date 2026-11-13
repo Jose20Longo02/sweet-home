@@ -64,11 +64,49 @@ document.addEventListener('DOMContentLoaded', function () {
     if (file) file.disabled = source !== 'upload';
     if (link) link.disabled = source !== 'link';
   }
+  function syncUtilitiesMode() {
+    if (!form) return;
+    var selected = form.querySelector('input[name="utilities_mode"]:checked');
+    var showAmount = selected && selected.value === 'amount';
+    var wrap = document.getElementById('utilitiesAmountWrap');
+    var amount = document.getElementById('utilities_amount');
+    var details = document.getElementById('utilitiesDetails');
+    if (wrap) wrap.hidden = !showAmount;
+    if (amount) amount.disabled = !showAmount;
+    if (details) details.classList.toggle('is-note-only', !showAmount);
+  }
   if (form) {
     Array.prototype.forEach.call(form.querySelectorAll('input[name="video_source"]'), function (choice) {
       choice.addEventListener('change', syncVideoSource);
     });
+    Array.prototype.forEach.call(form.querySelectorAll('input[name="utilities_mode"]'), function (choice) {
+      choice.addEventListener('change', syncUtilitiesMode);
+    });
     syncVideoSource();
+    syncUtilitiesMode();
+  }
+
+  var videoInput = document.getElementById('video');
+  var videoFilePreview = document.getElementById('videoFilePreview');
+  var storedVideoPreview = document.getElementById('storedVideoPreview');
+  var videoLinkInput = document.getElementById('video_url');
+  var videoLinkPreview = document.getElementById('videoLinkPreview');
+  if (videoInput && videoFilePreview && window.AdminVideoPreview) {
+    videoInput.addEventListener('change', function () {
+      var file = videoInput.files && videoInput.files[0];
+      if (storedVideoPreview) storedVideoPreview.hidden = Boolean(file);
+      window.AdminVideoPreview.showFile(videoFilePreview, file, function () {
+        videoInput.value = '';
+        if (storedVideoPreview) storedVideoPreview.hidden = false;
+      });
+    });
+  }
+  if (videoLinkInput && videoLinkPreview && window.AdminVideoPreview) {
+    var paintRentalLink = function () {
+      window.AdminVideoPreview.showLink(videoLinkPreview, videoLinkInput.value);
+    };
+    videoLinkInput.addEventListener('input', paintRentalLink);
+    paintRentalLink();
   }
   if (!input || !preview || !form || !mount) return;
 

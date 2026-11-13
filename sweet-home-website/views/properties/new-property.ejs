@@ -1,5 +1,6 @@
 <% title = 'New Property' %>
 <link rel="stylesheet" href="/css/admin/new-property.css?v=20261025-energy-pdf-2" />
+<link rel="stylesheet" href="/css/admin/video-preview.css?v=20261113-video-preview" />
 
 <div id="np-data"
      data-locations='<%- JSON.stringify(locations).replace(/'/g, '&#39;') %>'
@@ -211,6 +212,7 @@
         <div class="field" id="videoUrlWrap" hidden>
           <label for="video_url">Video URL</label>
           <input id="video_url" name="video_url" type="url" placeholder="https://..." value="<%= form.video_url||'' %>" />
+          <div id="videoLinkPreview" class="video-preview"></div>
         </div>
       </div>
     </section>
@@ -329,6 +331,7 @@
   </style>
 </div>
 
+<script src="/js/admin-video-preview.js?v=20261113-video-preview" defer></script>
 <script src="/js/admin-new-property.js" defer></script>
 <script src="/js/admin-energy-certificate.js" defer></script>
 

@@ -172,38 +172,32 @@ document.addEventListener('DOMContentLoaded', function () {
     if (useUpload) {
       if (videoUrlInput) { videoUrlInput.value = ''; videoUrlInput.disabled = true; }
       if (videoInput) { videoInput.disabled = false; }
+      const linkPreview = document.getElementById('videoLinkPreview');
+      if (linkPreview) linkPreview.innerHTML = '';
     } else {
       if (videoInput) { videoInput.value = ''; videoInput.disabled = true; }
       if (videoUrlInput) { videoUrlInput.disabled = false; }
+      if (videoPreview) videoPreview.innerHTML = '';
     }
   }
   if (videoSrcUpload) videoSrcUpload.addEventListener('change', updateVideoSource);
   if (videoSrcLink) videoSrcLink.addEventListener('change', updateVideoSource);
 
-  if (videoInput) {
+  if (videoInput && window.AdminVideoPreview) {
     videoInput.addEventListener('change', () => {
-      videoPreview.innerHTML = '';
-      if (videoInput.files && videoInput.files[0]) {
-        const url = URL.createObjectURL(videoInput.files[0]);
-        const container = document.createElement('div');
-        container.style.position = 'relative';
-        container.style.display = 'inline-block';
-        const vid = document.createElement('video');
-        vid.src = url; vid.controls = true; vid.playsInline = true; vid.style.maxWidth = '100%';
-        const remove = document.createElement('button');
-        remove.type = 'button'; remove.textContent = '×'; remove.setAttribute('aria-label','Remove video');
-        remove.style.position = 'absolute'; remove.style.right = '6px'; remove.style.top = '6px';
-        remove.style.width = '24px'; remove.style.height = '24px'; remove.style.borderRadius = '50%';
-        remove.style.border = 'none'; remove.style.background = 'rgba(0,0,0,0.6)'; remove.style.color = '#fff'; remove.style.cursor = 'pointer';
-        remove.addEventListener('click', function(){
-          videoInput.value = '';
-          videoPreview.innerHTML = '';
-        });
-        container.appendChild(vid);
-        container.appendChild(remove);
-        videoPreview.appendChild(container);
-      }
+      const file = videoInput.files && videoInput.files[0];
+      window.AdminVideoPreview.showFile(videoPreview, file, function () {
+        videoInput.value = '';
+      });
     });
+  }
+  if (videoUrlInput && window.AdminVideoPreview) {
+    const linkPreview = document.getElementById('videoLinkPreview');
+    const paintLink = function () {
+      window.AdminVideoPreview.showLink(linkPreview, videoUrlInput.value);
+    };
+    videoUrlInput.addEventListener('input', paintLink);
+    paintLink();
   }
 
   // Floorplan preview

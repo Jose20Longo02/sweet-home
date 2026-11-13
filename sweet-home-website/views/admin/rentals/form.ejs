@@ -1,6 +1,7 @@
 <% title = rental ? 'Edit furnished apartment' : 'New furnished apartment' %>
 <link rel="stylesheet" href="/css/admin/blog-new.css" />
-<link rel="stylesheet" href="/css/admin/rentals.css?v=20261113-form3" />
+<link rel="stylesheet" href="/css/admin/rentals.css?v=20261113-form4" />
+<link rel="stylesheet" href="/css/admin/video-preview.css?v=20261113-video-preview" />
 <div class="admin-panel<%= showSuperadminSidebar ? ' with-sidebar' : '' %>">
   <div class="admin-body">
     <% if (showSuperadminSidebar) { %>
@@ -128,10 +129,10 @@
               <label class="chip"><input type="radio" name="utilities_mode" value="amount" <%= values.utilities_mode === 'amount' ? 'checked' : '' %>><span>Monthly amount</span></label>
             </div>
           </div>
-          <div class="grid-2">
-            <div class="field">
+          <div class="grid-2" id="utilitiesDetails">
+            <div class="field" id="utilitiesAmountWrap" <%= values.utilities_mode === 'amount' ? '' : 'hidden' %>>
               <label for="utilities_amount">Utilities amount (€ / month)</label>
-              <input id="utilities_amount" type="number" name="utilities_amount" min="0" step="0.01" value="<%= values.utilities_amount %>">
+              <input id="utilities_amount" type="number" name="utilities_amount" min="0" step="0.01" value="<%= values.utilities_amount %>" <%= values.utilities_mode === 'amount' ? '' : 'disabled' %>>
             </div>
             <div class="field">
               <label for="utilities_note">Utilities note</label>
@@ -194,15 +195,27 @@
             <label for="video">Video file</label>
             <input id="video" type="file" name="video" accept="video/mp4,video/quicktime,video/x-matroska,.mp4,.mov,.mkv">
             <small>MP4, MOV, or MKV. 20 MB maximum. A longer video should be a YouTube or Vimeo link.</small>
-            <% if (storedVideo && rental && rental.video_url) { %>
-              <video class="rental-video-current" controls playsinline src="<%= rental.video_url %>"></video>
-              <small>This file stays until you upload a replacement or choose no video.</small>
-            <% } %>
+            <div id="videoFilePreview" class="video-preview"></div>
+            <div id="storedVideoPreview" class="video-preview">
+              <% if (storedVideo && rental && rental.video_url) { %>
+                <figure class="video-card">
+                  <div class="video-card-stage">
+                    <video controls playsinline preload="metadata" src="<%= rental.video_url %>"></video>
+                  </div>
+                  <figcaption>
+                    <strong>Current video</strong>
+                    <span>Saved file</span>
+                  </figcaption>
+                </figure>
+                <small>This file stays until you upload a replacement or choose no video.</small>
+              <% } %>
+            </div>
           </div>
           <div class="field" id="videoUrlWrap" <%= values.video_source === 'link' ? '' : 'hidden' %>>
             <label for="video_url">Video link</label>
             <input id="video_url" name="video_url" type="url" maxlength="500" placeholder="https://www.youtube.com/watch?v=..." value="<%= values.video_source === 'link' ? values.video_url : '' %>">
             <small>YouTube, Vimeo, or a direct link to an MP4 file.</small>
+            <div id="videoLinkPreview" class="video-preview"></div>
           </div>
         </section>
 
@@ -234,4 +247,5 @@
     @keyframes upload-spin { to { transform: rotate(360deg); } }
   </style>
 </div>
-<script src="/js/admin-rentals.js?v=20261113-video"></script>
+<script src="/js/admin-video-preview.js?v=20261113-video-preview"></script>
+<script src="/js/admin-rentals.js?v=20261113-video-preview"></script>

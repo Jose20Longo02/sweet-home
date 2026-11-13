@@ -1,5 +1,6 @@
 <% title = 'Edit Property' %>
 <link rel="stylesheet" href="/css/admin/new-property.css?v=20261025-energy-pdf-2" />
+<link rel="stylesheet" href="/css/admin/video-preview.css?v=20261113-video-preview" />
 
 <div id="np-data"
      data-locations='<%- JSON.stringify(locations).replace(/'/g, '&#39;') %>'
@@ -234,20 +235,14 @@
         <div class="field" id="videoUploadWrap">
           <label for="video">Upload new video</label>
           <input id="video" name="video" type="file" accept="video/*" />
-          <div id="videoPreview" class="video-preview">
-            <% if (property.video_url) { %>
-              <div style="position:relative;display:inline-block">
-                <video src="<%= property.video_url %>" controls playsinline style="max-width:100%; border-radius:8px;"></video>
-                <button type="button" class="remove-btn" data-remove-video="true" aria-label="Remove video" style="position:absolute;right:6px;top:6px;width:24px;height:24px;border-radius:50%;border:none;background:rgba(0,0,0,0.6);color:#fff;cursor:pointer">×</button>
-              </div>
-            <% } %>
-          </div>
+          <div id="videoPreview" class="video-preview" data-current-video="<%= property.video_url || '' %>"></div>
           <input type="hidden" id="remove_existing_video" name="remove_existing_video" value="false" />
           <input type="hidden" id="remove_existing_photos" name="remove_existing_photos" value="" />
         </div>
         <div class="field" id="videoUrlWrap" hidden>
           <label for="video_url">Video URL</label>
           <input id="video_url" name="video_url" type="url" placeholder="https://..." value="" />
+          <div id="videoLinkPreview" class="video-preview"></div>
           <% if (property.video_url) { %>
             <small>Current: <a href="<%= property.video_url %>" target="_blank">Open</a></small>
           <% } %>
@@ -385,6 +380,7 @@
   </style>
 </div>
 
+<script src="/js/admin-video-preview.js?v=20261113-video-preview" defer></script>
 <script src="/js/admin-edit-property.js" defer></script>
 <script src="/js/admin-energy-certificate.js" defer></script>
 
