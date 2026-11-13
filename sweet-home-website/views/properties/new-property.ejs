@@ -1,6 +1,6 @@
 <% title = 'New Property' %>
-<link rel="stylesheet" href="/css/admin/new-property.css?v=20261113-video-split" />
-<link rel="stylesheet" href="/css/admin/video-preview.css?v=20261113-video-preview" />
+<link rel="stylesheet" href="/css/admin/new-property.css?v=20261113-video-switch" />
+<link rel="stylesheet" href="/css/admin/video-preview.css?v=20261113-video-toggle2" />
 
 <div id="np-data"
      data-locations='<%- JSON.stringify(locations).replace(/'/g, '&#39;') %>'
@@ -198,12 +198,24 @@
       </div>
     </section>
 
-    <section class="card video-section">
+    <section class="card video-section <%= form.video_source === 'link' ? 'is-link' : 'is-upload' %>">
       <h2>Video</h2>
       <p class="video-section-note">Optional. Choose one. Upload a file, or paste a link.</p>
-      <div class="chips">
-        <label class="chip"><input type="radio" name="video_source" id="videoSrcUpload" value="upload" <%= form.video_source === 'link' ? '' : 'checked' %> /> <span>Upload</span></label>
-        <label class="chip"><input type="radio" name="video_source" id="videoSrcLink" value="link" <%= form.video_source === 'link' ? 'checked' : '' %> /> <span>Link</span></label>
+      <div class="video-source" role="radiogroup" aria-label="Video source">
+        <label class="video-source-option">
+          <input type="radio" name="video_source" id="videoSrcUpload" value="upload" <%= form.video_source === 'link' ? '' : 'checked' %> />
+          <span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V6m0 0 4 4M12 6 8 10M5 19h14"/></svg>
+            Upload
+          </span>
+        </label>
+        <label class="video-source-option">
+          <input type="radio" name="video_source" id="videoSrcLink" value="link" <%= form.video_source === 'link' ? 'checked' : '' %> />
+          <span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l2.12-2.12a5 5 0 0 0-7.07-7.07L11 6M14 11a5 5 0 0 0-7.54-.54L4.34 12.6a5 5 0 0 0 7.07 7.07L13 18"/></svg>
+            Link
+          </span>
+        </label>
       </div>
       <div class="field video-panel" id="videoUploadWrap" <%= form.video_source === 'link' ? 'hidden' : '' %>>
         <label for="video">Video file</label>
@@ -333,7 +345,7 @@
   </style>
 </div>
 
-<script src="/js/admin-video-preview.js?v=20261113-video-link" defer></script>
-<script src="/js/admin-new-property.js" defer></script>
+<script src="/js/admin-video-preview.js?v=20261113-video-toggle2" defer></script>
+<script src="/js/admin-new-property.js?v=20261113-video-toggle2" defer></script>
 <script src="/js/admin-energy-certificate.js" defer></script>
 

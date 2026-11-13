@@ -376,6 +376,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateVideoSource() {
       const useUpload = !!(videoSrcUpload && videoSrcUpload.checked);
+      const section = document.querySelector('.video-section');
+      if (section) {
+        section.classList.toggle('is-upload', useUpload);
+        section.classList.toggle('is-link', !useUpload);
+      }
       if (videoUploadWrap) {
         videoUploadWrap.hidden = !useUpload;
         videoUploadWrap.classList.toggle('is-hidden', !useUpload);
@@ -400,8 +405,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
     }
-    if (videoSrcUpload) videoSrcUpload.addEventListener('change', updateVideoSource);
-    if (videoSrcLink)   videoSrcLink.addEventListener('change', updateVideoSource);
+    if (videoSrcUpload) {
+      videoSrcUpload.addEventListener('change', updateVideoSource);
+      videoSrcUpload.addEventListener('click', updateVideoSource);
+    }
+    if (videoSrcLink) {
+      videoSrcLink.addEventListener('change', updateVideoSource);
+      videoSrcLink.addEventListener('click', updateVideoSource);
+    }
     updateVideoSource();
 
     function paintSavedVideo() {

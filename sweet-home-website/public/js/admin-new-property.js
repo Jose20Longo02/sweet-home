@@ -166,11 +166,20 @@ document.addEventListener('DOMContentLoaded', function () {
   const videoPreview   = document.getElementById('videoPreview');
 
   function updateVideoSource() {
-    const useUpload = videoSrcUpload.checked;
-    videoUploadWrap.hidden = !useUpload;
-    videoUrlWrap.hidden    = useUpload;
-    videoUploadWrap.classList.toggle('is-hidden', !useUpload);
-    videoUrlWrap.classList.toggle('is-hidden', useUpload);
+    const useUpload = !!(videoSrcUpload && videoSrcUpload.checked);
+    const section = document.querySelector('.video-section');
+    if (section) {
+      section.classList.toggle('is-upload', useUpload);
+      section.classList.toggle('is-link', !useUpload);
+    }
+    if (videoUploadWrap) {
+      videoUploadWrap.hidden = !useUpload;
+      videoUploadWrap.classList.toggle('is-hidden', !useUpload);
+    }
+    if (videoUrlWrap) {
+      videoUrlWrap.hidden = useUpload;
+      videoUrlWrap.classList.toggle('is-hidden', useUpload);
+    }
     if (useUpload) {
       if (videoUrlInput) videoUrlInput.disabled = true;
       if (videoInput) videoInput.disabled = false;
@@ -186,8 +195,15 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
   }
-  if (videoSrcUpload) videoSrcUpload.addEventListener('change', updateVideoSource);
-  if (videoSrcLink) videoSrcLink.addEventListener('change', updateVideoSource);
+  if (videoSrcUpload) {
+    videoSrcUpload.addEventListener('change', updateVideoSource);
+    videoSrcUpload.addEventListener('click', updateVideoSource);
+  }
+  if (videoSrcLink) {
+    videoSrcLink.addEventListener('change', updateVideoSource);
+    videoSrcLink.addEventListener('click', updateVideoSource);
+  }
+  if (videoSrcUpload || videoSrcLink) updateVideoSource();
 
   if (videoInput && window.AdminVideoPreview) {
     videoInput.addEventListener('change', () => {
