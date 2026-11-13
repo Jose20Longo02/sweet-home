@@ -1,5 +1,5 @@
 <% title = 'Edit Property' %>
-<link rel="stylesheet" href="/css/admin/new-property.css?v=20261113-video-switch" />
+<link rel="stylesheet" href="/css/admin/new-property.css?v=20261113-video-compact" />
 <link rel="stylesheet" href="/css/admin/video-preview.css?v=20261113-video-toggle2" />
 
 <div id="np-data"
@@ -229,23 +229,27 @@
     <% const storedSaleVideo = savedVideo.startsWith('/uploads/') || /\/properties\/(?:[^/]+\/)?videos\//.test(savedVideo); %>
     <% const useVideoLink = property.video_source === 'link' || (property.video_source !== 'upload' && savedVideo && !storedSaleVideo); %>
     <section class="card video-section <%= useVideoLink ? 'is-link' : 'is-upload' %>">
-      <h2>Video</h2>
-      <p class="video-section-note">Optional. Choose one. Upload a file, or paste a link. Use × on a saved video to remove it.</p>
-      <div class="video-source" role="radiogroup" aria-label="Video source">
-        <label class="video-source-option">
-          <input type="radio" name="video_source" id="videoSrcUpload" value="upload" <%= useVideoLink ? '' : 'checked' %> />
-          <span>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V6m0 0 4 4M12 6 8 10M5 19h14"/></svg>
-            Upload
-          </span>
-        </label>
-        <label class="video-source-option">
-          <input type="radio" name="video_source" id="videoSrcLink" value="link" <%= useVideoLink ? 'checked' : '' %> />
-          <span>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l2.12-2.12a5 5 0 0 0-7.07-7.07L11 6M14 11a5 5 0 0 0-7.54-.54L4.34 12.6a5 5 0 0 0 7.07 7.07L13 18"/></svg>
-            Link
-          </span>
-        </label>
+      <div class="video-head">
+        <div>
+          <h2>Video</h2>
+          <p class="video-section-note">Optional. One file up to 20 MB, or a link. Use × to remove a saved video.</p>
+        </div>
+        <div class="video-source" role="radiogroup" aria-label="Video source">
+          <label class="video-source-option">
+            <input type="radio" name="video_source" id="videoSrcUpload" value="upload" <%= useVideoLink ? '' : 'checked' %> />
+            <span>
+              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V6m0 0 4 4M12 6 8 10M5 19h14"/></svg>
+              Upload
+            </span>
+          </label>
+          <label class="video-source-option">
+            <input type="radio" name="video_source" id="videoSrcLink" value="link" <%= useVideoLink ? 'checked' : '' %> />
+            <span>
+              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l2.12-2.12a5 5 0 0 0-7.07-7.07L11 6M14 11a5 5 0 0 0-7.54-.54L4.34 12.6a5 5 0 0 0 7.07 7.07L13 18"/></svg>
+              Link
+            </span>
+          </label>
+        </div>
       </div>
       <div class="field video-panel" id="videoUploadWrap" <%= useVideoLink ? 'hidden' : '' %>>
         <label for="video">Video file</label>
