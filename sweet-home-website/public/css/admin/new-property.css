@@ -20,21 +20,18 @@ body{font-family:var(--font-sans)}
 @media (max-width:900px){.grid-4{grid-template-columns:1fr 1fr}}
 @media (max-width:700px){.grid-3,.grid-2,.grid-4{grid-template-columns:1fr}}
 .field{display:flex;flex-direction:column;gap:6px}
-.field[hidden],
-.video-panel[hidden],
-.video-panel.is-hidden,
-.video-section.is-upload #videoUrlWrap,
-.video-section.is-link #videoUploadWrap{display:none !important}
+.field[hidden]{display:none}
+.video-section:has(#videoSrcUpload:checked) #videoUrlWrap,
+.video-section:has(#videoSrcLink:checked) #videoUploadWrap{display:none !important}
 .video-section{display:flex;flex-direction:column;gap:10px;padding:14px 16px}
 .video-head{display:flex;align-items:center;justify-content:space-between;gap:16px}
 .video-section h2{margin:0;flex:0 0 auto}
 .video-section h2::after{display:none}
 .video-section-note{margin:2px 0 0;color:var(--color-tertiary);font-size:.8rem;line-height:1.35}
-.video-source{display:grid;grid-template-columns:1fr 1fr;gap:3px;width:220px;height:38px;flex:0 0 220px;padding:3px;background:#f1f4f2;border:1px solid rgba(20,40,30,.08);border-radius:12px;overflow:hidden}
+.video-source{display:grid;grid-template-columns:1fr 1fr;gap:3px;width:240px;height:40px;flex:0 0 240px;padding:3px;background:#f1f4f2;border:1px solid rgba(20,40,30,.08);border-radius:12px;overflow:hidden}
 .video-source-option{position:relative;margin:0;min-width:0;height:32px;cursor:pointer}
 .video-source-option input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;white-space:nowrap}
-.video-source-option span{display:flex;align-items:center;justify-content:center;gap:6px;height:32px;min-height:0;border-radius:9px;color:#5d6b64;font-size:.84rem;font-weight:700;line-height:1;transition:background .16s ease,color .16s ease}
-.video-source-option svg{width:16px;height:16px;flex:0 0 16px;display:block;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.video-source-option span{display:flex;align-items:center;justify-content:center;height:32px;border-radius:9px;color:#5d6b64;font-size:.85rem;font-weight:700;line-height:1;white-space:nowrap;transition:background .16s ease,color .16s ease}
 .video-source-option:hover span{color:#24312b;background:rgba(255,255,255,.7)}
 .video-source-option input:checked + span{background:var(--color-primary,#2ea862);color:#fff}
 .video-source-option input:focus-visible + span{outline:2px solid var(--color-primary,#2ea862);outline-offset:2px}

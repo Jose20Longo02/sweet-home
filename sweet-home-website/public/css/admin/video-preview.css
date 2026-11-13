@@ -1,12 +1,4 @@
 .video-preview { margin-top: 12px; }
-.video-section.is-upload #videoUrlWrap,
-.video-section.is-link #videoUploadWrap,
-#videoUploadWrap[hidden],
-#videoUrlWrap[hidden],
-#videoUploadWrap.is-hidden,
-#videoUrlWrap.is-hidden {
-  display: none !important;
-}
 .video-card {
   width: min(100%, 520px);
   margin: 0;

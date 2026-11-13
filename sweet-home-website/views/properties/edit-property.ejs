@@ -1,6 +1,6 @@
 <% title = 'Edit Property' %>
-<link rel="stylesheet" href="/css/admin/new-property.css?v=20261113-video-compact" />
-<link rel="stylesheet" href="/css/admin/video-preview.css?v=20261113-video-toggle2" />
+<link rel="stylesheet" href="/css/admin/new-property.css?v=20261113-video-has" />
+<link rel="stylesheet" href="/css/admin/video-preview.css?v=20261113-video-has" />
 
 <div id="np-data"
      data-locations='<%- JSON.stringify(locations).replace(/'/g, '&#39;') %>'
@@ -228,30 +228,24 @@
     <% const savedVideo = property.video_url || ''; %>
     <% const storedSaleVideo = savedVideo.startsWith('/uploads/') || /\/properties\/(?:[^/]+\/)?videos\//.test(savedVideo); %>
     <% const useVideoLink = property.video_source === 'link' || (property.video_source !== 'upload' && savedVideo && !storedSaleVideo); %>
-    <section class="card video-section <%= useVideoLink ? 'is-link' : 'is-upload' %>">
+    <section class="card video-section">
       <div class="video-head">
         <div>
           <h2>Video</h2>
-          <p class="video-section-note">Optional. One file up to 20 MB, or a link. Use × to remove a saved video.</p>
+          <p class="video-section-note">Optional. Upload one file, or paste a YouTube or Vimeo link.</p>
         </div>
         <div class="video-source" role="radiogroup" aria-label="Video source">
           <label class="video-source-option">
             <input type="radio" name="video_source" id="videoSrcUpload" value="upload" <%= useVideoLink ? '' : 'checked' %> />
-            <span>
-              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V6m0 0 4 4M12 6 8 10M5 19h14"/></svg>
-              Upload
-            </span>
+            <span>Upload file</span>
           </label>
           <label class="video-source-option">
             <input type="radio" name="video_source" id="videoSrcLink" value="link" <%= useVideoLink ? 'checked' : '' %> />
-            <span>
-              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l2.12-2.12a5 5 0 0 0-7.07-7.07L11 6M14 11a5 5 0 0 0-7.54-.54L4.34 12.6a5 5 0 0 0 7.07 7.07L13 18"/></svg>
-              Link
-            </span>
+            <span>Paste link</span>
           </label>
         </div>
       </div>
-      <div class="field video-panel" id="videoUploadWrap" <%= useVideoLink ? 'hidden' : '' %>>
+      <div class="field video-panel" id="videoUploadWrap">
         <label for="video">Video file</label>
         <input id="video" name="video" type="file" accept="video/mp4,video/quicktime,video/x-matroska,.mp4,.mov,.mkv" />
         <small>MP4, MOV, or MKV. 20 MB maximum. A longer video should be a YouTube or Vimeo link.</small>
@@ -259,7 +253,7 @@
         <input type="hidden" id="remove_existing_video" name="remove_existing_video" value="false" />
         <input type="hidden" id="remove_existing_photos" name="remove_existing_photos" value="" />
       </div>
-      <div class="field video-panel" id="videoUrlWrap" <%= useVideoLink ? '' : 'hidden' %>>
+      <div class="field video-panel" id="videoUrlWrap">
         <label for="video_url">Video link</label>
         <input id="video_url" name="video_url" type="url" placeholder="https://www.youtube.com/watch?v=..." value="<%= useVideoLink ? savedVideo : '' %>" />
         <small>YouTube, Vimeo, or a direct link to a video file.</small>
@@ -398,6 +392,6 @@
 </div>
 
 <script src="/js/admin-video-preview.js?v=20261113-video-toggle2" defer></script>
-<script src="/js/admin-edit-property.js?v=20261113-video-toggle2" defer></script>
+<script src="/js/admin-edit-property.js?v=20261113-video-has" defer></script>
 <script src="/js/admin-energy-certificate.js" defer></script>
 
