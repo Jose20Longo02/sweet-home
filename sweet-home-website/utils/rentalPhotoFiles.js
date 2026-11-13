@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const FurnishedRental = require('../models/FurnishedRental');
+const { videoFileName } = require('./rentalVideo');
 
 const PHOTO_DIR = path.resolve(process.cwd(), 'uploads', 'furnished-rentals', 'photos');
 const SPACES_PREFIX = 'furnished-rentals/photos/';
@@ -76,7 +77,58 @@ async function deleteUnusedRentalPhotos(urls) {
   }
 }
 
+const VIDEO_DIR = path.resolve(process.cwd(), 'uploads', 'furnished-rentals', 'videos');
+const VIDEO_PREFIX = 'furnished-rentals/videos/';
+
+function localVideoPath(name) {
+  const file = path.resolve(VIDEO_DIR, name);
+  if (file !== path.join(VIDEO_DIR, name)) return null;
+  return file;
+}
+
+function removeLocalVideo(name) {
+  const file = localVideoPath(name);
+  if (!file || !fs.existsSync(file)) return;
+  fs.unlinkSync(file);
+}
+
+function removeSpacesVideo(name) {
+  if (!process.env.DO_SPACES_BUCKET) return Promise.resolve();
+  const s3 = require('../config/spaces');
+  return new Promise((resolve, reject) => {
+    s3.deleteObject({
+      Bucket: process.env.DO_SPACES_BUCKET,
+      Key: `${VIDEO_PREFIX}${name}`
+    }, (err) => (err ? reject(err) : resolve()));
+  });
+}
+
+async function deleteStoredRentalVideo(url) {
+  const name = videoFileName(url);
+  if (!name) return;
+  const remote = String(url).startsWith('http://') || String(url).startsWith('https://');
+  if (remote) {
+    await removeSpacesVideo(name);
+    return;
+  }
+  removeLocalVideo(name);
+}
+
+async function deleteUnusedRentalVideos(urls) {
+  const unique = [...new Set((urls || []).map((url) => String(url || '').trim()).filter(Boolean))];
+  for (const url of unique) {
+    if (!videoFileName(url)) continue;
+    if (await FurnishedRental.videoReferenced(url)) continue;
+    try {
+      await deleteStoredRentalVideo(url);
+    } catch (error) {
+      console.error('Failed to delete rental video:', error.message);
+    }
+  }
+}
+
 module.exports = {
   rentalPhotoName,
-  deleteUnusedRentalPhotos
+  deleteUnusedRentalPhotos,
+  deleteUnusedRentalVideos
 };

@@ -37,4 +37,5 @@ CREATE UNIQUE INDEX IF NOT EXISTS furnished_rentals_slug_en_unique
 
 ALTER TABLE furnished_rentals
   ADD COLUMN IF NOT EXISTS content_language VARCHAR(2) NOT NULL DEFAULT 'de',
-  ADD COLUMN IF NOT EXISTS utilities_note_i18n JSONB NOT NULL DEFAULT '{}'::jsonb;
+  ADD COLUMN IF NOT EXISTS utilities_note_i18n JSONB NOT NULL DEFAULT '{}'::jsonb,
+  ADD COLUMN IF NOT EXISTS video_url TEXT;

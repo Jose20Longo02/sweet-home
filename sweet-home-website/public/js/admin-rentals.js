@@ -32,6 +32,26 @@ document.addEventListener('DOMContentLoaded', function () {
   var preview = document.getElementById('photoPreview');
   var form = document.getElementById('rentalForm');
   var mount = document.getElementById('orderedPhotos');
+
+  function syncVideoSource() {
+    if (!form) return;
+    var selected = form.querySelector('input[name="video_source"]:checked');
+    var source = selected ? selected.value : 'none';
+    var uploadWrap = document.getElementById('videoUploadWrap');
+    var linkWrap = document.getElementById('videoUrlWrap');
+    var file = document.getElementById('video');
+    var link = document.getElementById('video_url');
+    if (uploadWrap) uploadWrap.hidden = source !== 'upload';
+    if (linkWrap) linkWrap.hidden = source !== 'link';
+    if (file) file.disabled = source !== 'upload';
+    if (link) link.disabled = source !== 'link';
+  }
+  if (form) {
+    Array.prototype.forEach.call(form.querySelectorAll('input[name="video_source"]'), function (choice) {
+      choice.addEventListener('change', syncVideoSource);
+    });
+    syncVideoSource();
+  }
   if (!input || !preview || !form || !mount) return;
 
   var items = [];
@@ -161,6 +181,24 @@ document.addEventListener('DOMContentLoaded', function () {
     return '';
   }
 
+  function videoProblem() {
+    var selected = form.querySelector('input[name="video_source"]:checked');
+    var source = selected ? selected.value : 'none';
+    if (source === 'link') {
+      var link = document.getElementById('video_url');
+      var value = link ? link.value.trim() : '';
+      if (!value) return 'Paste a video link, or choose no video.';
+      if (!/^https?:\/\//i.test(value)) return 'The video link must start with https://.';
+      return '';
+    }
+    if (source !== 'upload') return '';
+    var file = document.getElementById('video');
+    var chosen = file && file.files && file.files[0];
+    if (chosen && chosen.size > maxFileBytes) return 'The video must be 20 MB or smaller. Compress it, or paste a YouTube or Vimeo link.';
+    if (!chosen && form.getAttribute('data-stored-video') !== '1') return 'Choose a video file, or paste a link instead.';
+    return '';
+  }
+
   function releaseSubmit(button) {
     publishingLocked = false;
     var overlay = document.getElementById('uploadOverlay');
@@ -178,7 +216,8 @@ document.addEventListener('DOMContentLoaded', function () {
     event.preventDefault();
     if (publishingLocked) return;
     hideFormError();
-    var problem = photoProblem();
+    syncVideoSource();
+    var problem = photoProblem() || videoProblem();
     if (problem) {
       showFormError(problem);
       return;

@@ -1,5 +1,5 @@
 <% title = 'Furnished apartments' %>
-<link rel="stylesheet" href="/css/admin/rentals.css?v=20261018-board" />
+<link rel="stylesheet" href="/css/admin/rentals.css?v=20261113-video" />
 <div class="admin-panel<%= showSuperadminSidebar ? ' with-sidebar' : '' %>">
   <div class="admin-body">
     <% if (showSuperadminSidebar) { %>
@@ -69,6 +69,7 @@
                   <% if (rental.availableLabel) { %><li>From <%= rental.availableLabel %></li><% } %>
                   <% if (rental.stayLabel) { %><li><%= rental.stayLabel %></li><% } %>
                   <% if (rental.utilitiesLabel) { %><li><%= rental.utilitiesLabel %></li><% } %>
+                  <% if (rental.video_url) { %><li>Video</li><% } %>
                   <% if (rental.agent_name) { %><li><%= rental.agent_name %></li><% } %>
                 </ul>
               </div>
@@ -79,7 +80,7 @@
                   <input type="hidden" name="status" value="<%= rental.status === 'published' ? 'draft' : 'published' %>">
                   <button type="submit"><%= rental.status === 'published' ? 'Unpublish' : 'Publish' %></button>
                 </form>
-                <form method="post" action="<%= rentalBase %>/<%= rental.id %>/delete?_csrf=<%= csrfToken %>" onsubmit="return confirm('Delete this apartment and its photos? This cannot be undone.')">
+                <form method="post" action="<%= rentalBase %>/<%= rental.id %>/delete?_csrf=<%= csrfToken %>" onsubmit="return confirm('Delete this apartment, its photos, and its video? This cannot be undone.')">
                   <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                   <button type="submit" class="danger">Delete</button>
                 </form>

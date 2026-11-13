@@ -4,7 +4,7 @@ class FurnishedRental {
   static async list() {
     const res = await query(
       `SELECT r.id, r.title, r.slug, r.neighborhood, r.city, r.monthly_rent, r.deposit,
-              r.status, r.photos, r.updated_at, r.created_at, r.rooms, r.size_sqm, r.floor,
+              r.status, r.photos, r.video_url, r.updated_at, r.created_at, r.rooms, r.size_sqm, r.floor,
               r.available_from, r.min_stay_months, r.max_stay_months,
               r.utilities_included, r.utilities_amount, r.content_language,
               u.name AS agent_name
@@ -44,7 +44,7 @@ class FurnishedRental {
               neighborhood, city, monthly_rent, deposit, photos,
               size_sqm, rooms, floor, available_from, min_stay_months, max_stay_months,
               utilities_included, utilities_amount, utilities_note, utilities_note_i18n,
-              agent_id
+              video_url, agent_id
          FROM furnished_rentals
         WHERE status = 'published'
           AND (slug = $1 OR slug_i18n->>'en' = $1)
@@ -120,12 +120,13 @@ class FurnishedRental {
          title, title_i18n, slug, slug_i18n, description, description_i18n,
          photos, city, neighborhood, full_address, size_sqm, rooms, floor,
          monthly_rent, deposit, utilities_included, utilities_amount, utilities_note, utilities_note_i18n,
-         available_from, min_stay_months, max_stay_months, furnished, status, agent_id, content_language
+         available_from, min_stay_months, max_stay_months, furnished, status, agent_id, content_language,
+         video_url
        ) VALUES (
          $1,$2::jsonb,$3,$4::jsonb,$5,$6::jsonb,
          $7,$8,$9,$10,$11,$12,$13,
          $14,$15,$16,$17,$18,$19::jsonb,
-         $20,$21,$22,true,$23,$24,$25
+         $20,$21,$22,true,$23,$24,$25,$26
        ) RETURNING *`,
       [
         data.title, JSON.stringify(data.title_i18n), data.slug, JSON.stringify(data.slug_i18n),
@@ -134,7 +135,7 @@ class FurnishedRental {
         data.monthly_rent, data.deposit, data.utilities_included, data.utilities_amount, data.utilities_note,
         JSON.stringify(data.utilities_note_i18n || {}),
         data.available_from, data.min_stay_months, data.max_stay_months, data.status, data.agent_id,
-        data.content_language
+        data.content_language, data.video_url || null
       ]
     );
     return res.rows[0];
@@ -169,8 +170,9 @@ class FurnishedRental {
          status = $23,
          agent_id = $24,
          content_language = $25,
+         video_url = $26,
          updated_at = NOW()
-       WHERE id = $26
+       WHERE id = $27
        RETURNING *`,
       [
         data.title, JSON.stringify(data.title_i18n), data.slug, JSON.stringify(data.slug_i18n),
@@ -179,7 +181,7 @@ class FurnishedRental {
         data.monthly_rent, data.deposit, data.utilities_included, data.utilities_amount, data.utilities_note,
         JSON.stringify(data.utilities_note_i18n || {}),
         data.available_from, data.min_stay_months, data.max_stay_months, data.status, data.agent_id,
-        data.content_language, id
+        data.content_language, data.video_url || null, id
       ]
     );
     return res.rows[0] || null;
@@ -187,10 +189,18 @@ class FurnishedRental {
 
   static async remove(id) {
     const res = await query(
-      'DELETE FROM furnished_rentals WHERE id = $1 RETURNING id, photos',
+      'DELETE FROM furnished_rentals WHERE id = $1 RETURNING id, photos, video_url',
       [id]
     );
     return res.rows[0] || null;
+  }
+
+  static async videoReferenced(url) {
+    const res = await query(
+      'SELECT id FROM furnished_rentals WHERE video_url = $1 LIMIT 1',
+      [url]
+    );
+    return res.rows.length > 0;
   }
 
   static async photoReferenced(url) {

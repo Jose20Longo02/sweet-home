@@ -3,7 +3,8 @@ const { query } = require('../config/db');
 const { translateText } = require('../config/translator');
 const locations = require('../config/locations');
 const FurnishedRental = require('../models/FurnishedRental');
-const { deleteUnusedRentalPhotos } = require('../utils/rentalPhotoFiles');
+const { deleteUnusedRentalPhotos, deleteUnusedRentalVideos } = require('../utils/rentalPhotoFiles');
+const { presentRentalVideo, resolveRentalVideo, videoSourceFor } = require('../utils/rentalVideo');
 const leadController = require('./leadController');
 
 function text(value) {
@@ -180,7 +181,8 @@ function emptyValues() {
     monthly_rent: '', deposit: '',
     utilities_mode: 'included', utilities_amount: '', utilities_note: '',
     available_from: '', min_stay_months: '', max_stay_months: '',
-    agent_id: '', status: 'draft'
+    agent_id: '', status: 'draft',
+    video_source: 'none', video_url: ''
   };
 }
 
@@ -206,7 +208,9 @@ function valuesFromRental(rental) {
     min_stay_months: rental.min_stay_months ?? '',
     max_stay_months: rental.max_stay_months ?? '',
     agent_id: rental.agent_id || '',
-    status: rental.status || 'draft'
+    status: rental.status || 'draft',
+    video_source: videoSourceFor(rental.video_url),
+    video_url: rental.video_url || ''
   };
 }
 
@@ -296,6 +300,7 @@ async function renderForm(req, res, { rental, values, photos, error, statusCode 
     values,
     translation: sourceMatches ? translationPreview(rental, values.content_language) : null,
     photos: photos || [],
+    storedVideo: Boolean(rental && videoSourceFor(rental.video_url) === 'upload'),
     neighborhoods: neighborhoodOptions(values.neighborhood),
     agents,
     error: error || null,
@@ -371,7 +376,9 @@ exports.save = async (req, res, next) => {
       min_stay_months: text(body.min_stay_months),
       max_stay_months: text(body.max_stay_months),
       agent_id: text(body.agent_id) || String(req.session.user.id),
-      status: text(body.status) === 'published' ? 'published' : 'draft'
+      status: text(body.status) === 'published' ? 'published' : 'draft',
+      video_source: ['upload', 'link'].includes(text(body.video_source)) ? text(body.video_source) : 'none',
+      video_url: text(body.video_url)
     };
 
     const errors = [];
@@ -412,12 +419,22 @@ exports.save = async (req, res, next) => {
     if (!agentOk) errors.push('Choose a staff member for this apartment.');
 
     uploaded = ((req.files && req.files.photos) || []).map((file) => file.url).filter(Boolean);
+    const uploadedVideo = ((req.files && req.files.video) || []).map((file) => file.url).filter(Boolean)[0] || '';
     const photos = collectPhotos(body, uploaded);
     const kept = photos.filter((url) => !uploaded.includes(url));
     if (!photos.length) errors.push('Add at least one photo.');
+    const videoResult = resolveRentalVideo({
+      source: values.video_source,
+      link: values.video_url,
+      uploadedUrl: uploadedVideo,
+      existingUrl: existing ? existing.video_url : ''
+    });
+    if (videoResult.error) errors.push(videoResult.error);
+    const videoUrl = videoResult.url || null;
 
     if (errors.length) {
       await deleteUnusedRentalPhotos(uploaded);
+      await deleteUnusedRentalVideos(uploadedVideo ? [uploadedVideo] : []);
       return renderForm(req, res, {
         rental: existing,
         values,
@@ -437,6 +454,7 @@ exports.save = async (req, res, next) => {
     });
     if (copy.error) {
       await deleteUnusedRentalPhotos(uploaded);
+      await deleteUnusedRentalVideos(uploadedVideo ? [uploadedVideo] : []);
       return renderForm(req, res, {
         rental: existing,
         values,
@@ -463,10 +481,12 @@ exports.save = async (req, res, next) => {
       min_stay_months: minStay,
       max_stay_months: maxStay,
       status: values.status,
-      agent_id: agentId
+      agent_id: agentId,
+      video_url: videoUrl
     };
 
     const previousPhotos = existing ? (existing.photos || []) : [];
+    const previousVideo = existing ? existing.video_url : '';
     const saved = existing
       ? await FurnishedRental.update(existing.id, record)
       : await FurnishedRental.create(record);
@@ -474,12 +494,22 @@ exports.save = async (req, res, next) => {
 
     const keptPhotos = new Set(saved.photos || []);
     await deleteUnusedRentalPhotos(previousPhotos.filter((url) => !keptPhotos.has(url)));
+    if (previousVideo && previousVideo !== saved.video_url) {
+      await deleteUnusedRentalVideos([previousVideo]);
+    }
+    if (uploadedVideo && uploadedVideo !== saved.video_url) {
+      await deleteUnusedRentalVideos([uploadedVideo]);
+    }
 
     if (saved.status === 'published') return res.redirect(req.baseUrl);
     return res.redirect(`${req.baseUrl}/${saved.id}/edit`);
   } catch (error) {
     if (!persisted) {
       try { await deleteUnusedRentalPhotos(uploaded); } catch (_) {}
+      try {
+        const leftover = ((req.files && req.files.video) || []).map((file) => file.url).filter(Boolean);
+        await deleteUnusedRentalVideos(leftover);
+      } catch (_) {}
     }
     return next(error);
   }
@@ -493,6 +523,7 @@ exports.remove = async (req, res, next) => {
     const removed = await FurnishedRental.remove(rental.id);
     if (!removed) return res.status(404).send('Apartment not found');
     await deleteUnusedRentalPhotos(photos);
+    await deleteUnusedRentalVideos([removed.video_url]);
     return res.redirect(req.baseUrl);
   } catch (error) {
     return next(error);
@@ -535,7 +566,8 @@ exports.setStatus = async (req, res, next) => {
       min_stay_months: rental.min_stay_months,
       max_stay_months: rental.max_stay_months,
       status: 'published',
-      agent_id: rental.agent_id
+      agent_id: rental.agent_id,
+      video_url: rental.video_url || null
     });
     return res.redirect(req.baseUrl);
   } catch (error) {
@@ -743,6 +775,7 @@ function renderApartment(req, res, resolved, extras) {
     rental: card,
     description,
     photos,
+    video: presentRentalVideo(rental.video_url),
     cataloguePath: CATALOGUE_PATHS[lang],
     headPartial: '../partials/seo/rental-apartment-head',
     useMainContainer: true,

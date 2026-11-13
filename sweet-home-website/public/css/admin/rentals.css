@@ -17,6 +17,9 @@ input[type="file"] {
 .field-row-3 { grid-template-columns: 1fr 1fr 1fr; }
 
 .utilities { border: 1px solid var(--gray-200); border-radius: 8px; margin-top: 16px; padding: 8px 12px 12px; }
+.video-choices { display: flex; flex-wrap: wrap; gap: 12px 18px; margin: 8px 0 12px; }
+.video-choices label { display: flex; gap: 8px; align-items: center; font-weight: 500; }
+.rental-video-current { display: block; width: min(100%, 420px); max-height: 240px; margin-top: 8px; background: #111; border-radius: 8px; }
 .utilities legend { font-weight: 600; padding: 0 6px; }
 .check { font-weight: 500; display: flex; gap: 8px; align-items: center; }
 

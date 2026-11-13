@@ -1,6 +1,6 @@
 <% title = rental ? 'Edit furnished apartment' : 'New furnished apartment' %>
 <link rel="stylesheet" href="/css/admin/blog-new.css" />
-<link rel="stylesheet" href="/css/admin/rentals.css?v=20261018-board" />
+<link rel="stylesheet" href="/css/admin/rentals.css?v=20261113-video" />
 <div class="admin-panel<%= showSuperadminSidebar ? ' with-sidebar' : '' %>">
   <div class="admin-body">
     <% if (showSuperadminSidebar) { %>
@@ -14,7 +14,7 @@
         </div>
         <div class="header-actions">
           <% if (rental) { %>
-            <form method="post" action="<%= rentalBase %>/<%= rental.id %>/delete?_csrf=<%= csrfToken %>" onsubmit="return confirm('Delete this apartment and its photos? This cannot be undone.')">
+            <form method="post" action="<%= rentalBase %>/<%= rental.id %>/delete?_csrf=<%= csrfToken %>" onsubmit="return confirm('Delete this apartment, its photos, and its video? This cannot be undone.')">
               <input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <button type="submit" class="btn-link btn-link--danger">Delete</button>
             </form>
@@ -27,7 +27,7 @@
         <p class="error"><%= error %></p>
       <% } %>
 
-      <form id="rentalForm" action="<%= rental ? (rentalBase + '/' + rental.id) : rentalBase %>?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data">
+      <form id="rentalForm" action="<%= rental ? (rentalBase + '/' + rental.id) : rentalBase %>?_csrf=<%= csrfToken %>" method="post" enctype="multipart/form-data" data-stored-video="<%= storedVideo ? '1' : '0' %>">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
         <label for="content_language">Content language</label>
@@ -145,6 +145,30 @@
         </div>
         <div id="orderedPhotos"></div>
 
+        <fieldset class="utilities rental-video">
+          <legend>Video</legend>
+          <p class="hint">Optional. Upload one file, or paste a link from YouTube, Vimeo, or a video file. Leave this on “No video” if the apartment has none.</p>
+          <div class="video-choices">
+            <label><input type="radio" name="video_source" value="none" <%= values.video_source !== 'upload' && values.video_source !== 'link' ? 'checked' : '' %>> No video</label>
+            <label><input type="radio" name="video_source" value="upload" <%= values.video_source === 'upload' ? 'checked' : '' %>> Upload</label>
+            <label><input type="radio" name="video_source" value="link" <%= values.video_source === 'link' ? 'checked' : '' %>> Link</label>
+          </div>
+          <div id="videoUploadWrap" <%= values.video_source === 'upload' ? '' : 'hidden' %>>
+            <label for="video">Video file</label>
+            <input id="video" type="file" name="video" accept="video/mp4,video/quicktime,video/x-matroska,.mp4,.mov,.mkv">
+            <small class="hint">MP4, MOV, or MKV. 20 MB maximum. A longer video should be a YouTube or Vimeo link.</small>
+            <% if (storedVideo && rental && rental.video_url) { %>
+              <video class="rental-video-current" controls playsinline src="<%= rental.video_url %>"></video>
+              <small class="hint">This file stays until you upload a replacement or choose no video.</small>
+            <% } %>
+          </div>
+          <div id="videoUrlWrap" <%= values.video_source === 'link' ? '' : 'hidden' %>>
+            <label for="video_url">Video link</label>
+            <input id="video_url" name="video_url" type="url" maxlength="500" placeholder="https://www.youtube.com/watch?v=..." value="<%= values.video_source === 'link' ? values.video_url : '' %>">
+            <small class="hint">YouTube, Vimeo, or a direct link to an MP4 file.</small>
+          </div>
+        </fieldset>
+
         <div class="form-actions">
           <button type="submit" class="btn btn-secondary" name="status" value="draft">Save as draft</button>
           <button type="submit" class="btn" name="status" value="published">Publish</button>
@@ -170,4 +194,4 @@
     @keyframes upload-spin { to { transform: rotate(360deg); } }
   </style>
 </div>
-<script src="/js/admin-rentals.js?v=20261102-upload"></script>
+<script src="/js/admin-rentals.js?v=20261113-video"></script>
