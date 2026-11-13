@@ -1,5 +1,5 @@
 <% title = 'New Property' %>
-<link rel="stylesheet" href="/css/admin/new-property.css?v=20261113-video-link" />
+<link rel="stylesheet" href="/css/admin/new-property.css?v=20261113-video-split" />
 <link rel="stylesheet" href="/css/admin/video-preview.css?v=20261113-video-preview" />
 
 <div id="np-data"
@@ -196,24 +196,26 @@
         <small>Upload 1–20 images. You can drag to reorder after upload.</small>
         <div id="photoPreview" class="preview-grid"></div>
       </div>
-      <div class="grid-3">
-        <div class="field">
-          <label>Video source</label>
-          <div class="chips">
-            <label class="chip"><input type="radio" name="video_source" id="videoSrcUpload" value="upload" <%= form.video_source === 'link' ? '' : 'checked' %> /> <span>Upload</span></label>
-            <label class="chip"><input type="radio" name="video_source" id="videoSrcLink" value="link" <%= form.video_source === 'link' ? 'checked' : '' %> /> <span>Link</span></label>
-          </div>
-        </div>
-        <div class="field" id="videoUploadWrap">
-          <label for="video">Upload video</label>
-          <input id="video" name="video" type="file" accept="video/*" />
-          <div id="videoPreview" class="video-preview"></div>
-        </div>
-        <div class="field" id="videoUrlWrap" hidden>
-          <label for="video_url">Video URL</label>
-          <input id="video_url" name="video_url" type="url" placeholder="https://..." value="<%= form.video_url||'' %>" />
-          <div id="videoLinkPreview" class="video-preview"></div>
-        </div>
+    </section>
+
+    <section class="card video-section">
+      <h2>Video</h2>
+      <p class="video-section-note">Optional. Choose one. Upload a file, or paste a link.</p>
+      <div class="chips">
+        <label class="chip"><input type="radio" name="video_source" id="videoSrcUpload" value="upload" <%= form.video_source === 'link' ? '' : 'checked' %> /> <span>Upload</span></label>
+        <label class="chip"><input type="radio" name="video_source" id="videoSrcLink" value="link" <%= form.video_source === 'link' ? 'checked' : '' %> /> <span>Link</span></label>
+      </div>
+      <div class="field video-panel" id="videoUploadWrap" <%= form.video_source === 'link' ? 'hidden' : '' %>>
+        <label for="video">Video file</label>
+        <input id="video" name="video" type="file" accept="video/mp4,video/quicktime,video/x-matroska,.mp4,.mov,.mkv" />
+        <small>MP4, MOV, or MKV. 20 MB maximum. A longer video should be a YouTube or Vimeo link.</small>
+        <div id="videoPreview" class="video-preview"></div>
+      </div>
+      <div class="field video-panel" id="videoUrlWrap" <%= form.video_source === 'link' ? '' : 'hidden' %>>
+        <label for="video_url">Video link</label>
+        <input id="video_url" name="video_url" type="url" placeholder="https://www.youtube.com/watch?v=..." value="<%= form.video_url||'' %>" />
+        <small>YouTube, Vimeo, or a direct link to a video file.</small>
+        <div id="videoLinkPreview" class="video-preview"></div>
       </div>
     </section>
 

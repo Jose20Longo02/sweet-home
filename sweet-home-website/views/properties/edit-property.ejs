@@ -1,5 +1,5 @@
 <% title = 'Edit Property' %>
-<link rel="stylesheet" href="/css/admin/new-property.css?v=20261113-video-link" />
+<link rel="stylesheet" href="/css/admin/new-property.css?v=20261113-video-split" />
 <link rel="stylesheet" href="/css/admin/video-preview.css?v=20261113-video-preview" />
 
 <div id="np-data"
@@ -223,31 +223,31 @@
         <!-- Ordered existing photos will be posted here -->
         <div id="orderedExistingPhotos"></div>
       </div>
+    </section>
 
-      <% const savedVideo = property.video_url || ''; %>
-      <% const storedSaleVideo = savedVideo.startsWith('/uploads/') || /\/properties\/(?:[^/]+\/)?videos\//.test(savedVideo); %>
-      <% const useVideoLink = property.video_source === 'link' || (property.video_source !== 'upload' && savedVideo && !storedSaleVideo); %>
-      <div class="grid-3">
-        <div class="field">
-          <label>Video source</label>
-          <div class="chips">
-            <label class="chip"><input type="radio" name="video_source" id="videoSrcUpload" value="upload" <%= useVideoLink ? '' : 'checked' %> /> <span>Upload</span></label>
-            <label class="chip"><input type="radio" name="video_source" id="videoSrcLink" value="link" <%= useVideoLink ? 'checked' : '' %> /> <span>Link</span></label>
-          </div>
-        </div>
-        <div class="field" id="videoUploadWrap" <%= useVideoLink ? 'hidden' : '' %>>
-          <label for="video">Upload new video</label>
-          <input id="video" name="video" type="file" accept="video/*" />
-          <div id="videoPreview" class="video-preview" data-current-video="<%= storedSaleVideo ? savedVideo : '' %>"></div>
-          <input type="hidden" id="remove_existing_video" name="remove_existing_video" value="false" />
-          <input type="hidden" id="remove_existing_photos" name="remove_existing_photos" value="" />
-        </div>
-        <div class="field" id="videoUrlWrap" <%= useVideoLink ? '' : 'hidden' %>>
-          <label for="video_url">Video URL</label>
-          <input id="video_url" name="video_url" type="url" placeholder="https://www.youtube.com/watch?v=..." value="<%= useVideoLink ? savedVideo : '' %>" />
-          <small>YouTube, Vimeo, or a direct link to a video file.</small>
-          <div id="videoLinkPreview" class="video-preview"></div>
-        </div>
+    <% const savedVideo = property.video_url || ''; %>
+    <% const storedSaleVideo = savedVideo.startsWith('/uploads/') || /\/properties\/(?:[^/]+\/)?videos\//.test(savedVideo); %>
+    <% const useVideoLink = property.video_source === 'link' || (property.video_source !== 'upload' && savedVideo && !storedSaleVideo); %>
+    <section class="card video-section">
+      <h2>Video</h2>
+      <p class="video-section-note">Optional. Choose one. Upload a file, or paste a link. Use × on a saved video to remove it.</p>
+      <div class="chips">
+        <label class="chip"><input type="radio" name="video_source" id="videoSrcUpload" value="upload" <%= useVideoLink ? '' : 'checked' %> /> <span>Upload</span></label>
+        <label class="chip"><input type="radio" name="video_source" id="videoSrcLink" value="link" <%= useVideoLink ? 'checked' : '' %> /> <span>Link</span></label>
+      </div>
+      <div class="field video-panel" id="videoUploadWrap" <%= useVideoLink ? 'hidden' : '' %>>
+        <label for="video">Video file</label>
+        <input id="video" name="video" type="file" accept="video/mp4,video/quicktime,video/x-matroska,.mp4,.mov,.mkv" />
+        <small>MP4, MOV, or MKV. 20 MB maximum. A longer video should be a YouTube or Vimeo link.</small>
+        <div id="videoPreview" class="video-preview" data-current-video="<%= storedSaleVideo ? savedVideo : '' %>"></div>
+        <input type="hidden" id="remove_existing_video" name="remove_existing_video" value="false" />
+        <input type="hidden" id="remove_existing_photos" name="remove_existing_photos" value="" />
+      </div>
+      <div class="field video-panel" id="videoUrlWrap" <%= useVideoLink ? '' : 'hidden' %>>
+        <label for="video_url">Video link</label>
+        <input id="video_url" name="video_url" type="url" placeholder="https://www.youtube.com/watch?v=..." value="<%= useVideoLink ? savedVideo : '' %>" />
+        <small>YouTube, Vimeo, or a direct link to a video file.</small>
+        <div id="videoLinkPreview" class="video-preview"></div>
       </div>
     </section>
 

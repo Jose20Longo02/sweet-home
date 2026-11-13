@@ -169,6 +169,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const useUpload = videoSrcUpload.checked;
     videoUploadWrap.hidden = !useUpload;
     videoUrlWrap.hidden    = useUpload;
+    videoUploadWrap.classList.toggle('is-hidden', !useUpload);
+    videoUrlWrap.classList.toggle('is-hidden', useUpload);
     if (useUpload) {
       if (videoUrlInput) videoUrlInput.disabled = true;
       if (videoInput) videoInput.disabled = false;

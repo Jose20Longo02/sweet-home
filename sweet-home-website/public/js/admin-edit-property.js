@@ -376,8 +376,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateVideoSource() {
       const useUpload = !!(videoSrcUpload && videoSrcUpload.checked);
-      if (videoUploadWrap) videoUploadWrap.hidden = !useUpload;
-      if (videoUrlWrap)    videoUrlWrap.hidden    = useUpload;
+      if (videoUploadWrap) {
+        videoUploadWrap.hidden = !useUpload;
+        videoUploadWrap.classList.toggle('is-hidden', !useUpload);
+      }
+      if (videoUrlWrap) {
+        videoUrlWrap.hidden = useUpload;
+        videoUrlWrap.classList.toggle('is-hidden', useUpload);
+      }
       if (useUpload) {
         if (videoUrlInput) videoUrlInput.disabled = true;
         if (videoInput)    videoInput.disabled = false;
