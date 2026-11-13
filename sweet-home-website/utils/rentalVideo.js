@@ -27,21 +27,21 @@ function isStoredRentalVideo(url) {
 function youtubeId(url) {
   const value = String(url || '');
   const match = value.match(/youtu\.be\/([\w-]+)/)
-    || value.match(/youtube\.com\/embed\/([\w-]+)/)
-    || value.match(/youtube\.com\/shorts\/([\w-]+)/)
+    || value.match(/youtube(?:-nocookie)?\.com\/(?:embed|shorts|live)\/([\w-]+)/)
     || value.match(/[?&]v=([\w-]+)/);
   return match ? match[1] : '';
 }
 
-function vimeoId(url) {
-  const match = String(url || '').match(/vimeo\.com\/(?:video\/)?(\d+)/);
-  return match ? match[1] : '';
+function vimeoParts(url) {
+  const match = String(url || '').match(/vimeo\.com\/(?:video\/)?(\d+)(?:\/([\w]+))?/);
+  if (!match) return null;
+  return { id: match[1], hash: match[2] || '' };
 }
 
 function presentRentalVideo(url) {
   const value = String(url || '').trim();
   if (!value) return null;
-  if (/youtu\.be|youtube\.com/i.test(value)) {
+  if (/youtu\.be|youtube(?:-nocookie)?\.com/i.test(value)) {
     const id = youtubeId(value);
     if (!id) return { kind: 'link', url: value, embed: '' };
     return {
@@ -51,12 +51,13 @@ function presentRentalVideo(url) {
     };
   }
   if (/vimeo\.com/i.test(value)) {
-    const id = vimeoId(value);
-    if (!id) return { kind: 'link', url: value, embed: '' };
+    const vimeo = vimeoParts(value);
+    if (!vimeo) return { kind: 'link', url: value, embed: '' };
+    const hash = vimeo.hash ? `&h=${vimeo.hash}` : '';
     return {
       kind: 'vimeo',
       url: value,
-      embed: `https://player.vimeo.com/video/${id}?playsinline=1`
+      embed: `https://player.vimeo.com/video/${vimeo.id}?playsinline=1${hash}`
     };
   }
   return { kind: 'file', url: value, embed: '' };

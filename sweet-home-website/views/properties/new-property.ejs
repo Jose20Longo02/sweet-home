@@ -1,5 +1,5 @@
 <% title = 'New Property' %>
-<link rel="stylesheet" href="/css/admin/new-property.css?v=20261025-energy-pdf-2" />
+<link rel="stylesheet" href="/css/admin/new-property.css?v=20261113-video-link" />
 <link rel="stylesheet" href="/css/admin/video-preview.css?v=20261113-video-preview" />
 
 <div id="np-data"
@@ -200,8 +200,8 @@
         <div class="field">
           <label>Video source</label>
           <div class="chips">
-            <label class="chip"><input type="radio" name="video_source" id="videoSrcUpload" value="upload" checked /> <span>Upload</span></label>
-            <label class="chip"><input type="radio" name="video_source" id="videoSrcLink" value="link" /> <span>Link</span></label>
+            <label class="chip"><input type="radio" name="video_source" id="videoSrcUpload" value="upload" <%= form.video_source === 'link' ? '' : 'checked' %> /> <span>Upload</span></label>
+            <label class="chip"><input type="radio" name="video_source" id="videoSrcLink" value="link" <%= form.video_source === 'link' ? 'checked' : '' %> /> <span>Link</span></label>
           </div>
         </div>
         <div class="field" id="videoUploadWrap">
@@ -331,7 +331,7 @@
   </style>
 </div>
 
-<script src="/js/admin-video-preview.js?v=20261113-video-preview" defer></script>
+<script src="/js/admin-video-preview.js?v=20261113-video-link" defer></script>
 <script src="/js/admin-new-property.js" defer></script>
 <script src="/js/admin-energy-certificate.js" defer></script>
 

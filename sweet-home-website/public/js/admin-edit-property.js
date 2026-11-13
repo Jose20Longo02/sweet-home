@@ -379,15 +379,19 @@ document.addEventListener('DOMContentLoaded', function () {
       if (videoUploadWrap) videoUploadWrap.hidden = !useUpload;
       if (videoUrlWrap)    videoUrlWrap.hidden    = useUpload;
       if (useUpload) {
-        if (videoUrlInput) { videoUrlInput.value = ''; videoUrlInput.disabled = true; }
-        if (videoInput)    { videoInput.disabled = false; }
+        if (videoUrlInput) videoUrlInput.disabled = true;
+        if (videoInput)    videoInput.disabled = false;
         const linkPreview = document.getElementById('videoLinkPreview');
         if (linkPreview) linkPreview.innerHTML = '';
         if (!videoInput || !videoInput.files || !videoInput.files[0]) paintSavedVideo();
       } else {
-        if (videoInput)    { videoInput.value = ''; videoInput.disabled = true; }
-        if (videoUrlInput) { videoUrlInput.disabled = false; }
-        if (videoPreview)  { videoPreview.innerHTML = ''; }
+        if (videoInput) { videoInput.value = ''; videoInput.disabled = true; }
+        if (videoUrlInput) videoUrlInput.disabled = false;
+        if (videoPreview) videoPreview.innerHTML = '';
+        const linkPreview = document.getElementById('videoLinkPreview');
+        if (linkPreview && videoUrlInput && window.AdminVideoPreview) {
+          window.AdminVideoPreview.showLink(linkPreview, videoUrlInput.value);
+        }
       }
     }
     if (videoSrcUpload) videoSrcUpload.addEventListener('change', updateVideoSource);

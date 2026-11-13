@@ -2,23 +2,23 @@
   function youtubeId(url) {
     var value = String(url || '');
     var match = value.match(/youtu\.be\/([\w-]+)/)
-      || value.match(/youtube\.com\/embed\/([\w-]+)/)
-      || value.match(/youtube\.com\/shorts\/([\w-]+)/)
+      || value.match(/youtube(?:-nocookie)?\.com\/(?:embed|shorts|live)\/([\w-]+)/)
       || value.match(/[?&]v=([\w-]+)/);
     return match ? match[1] : '';
   }
 
-  function vimeoId(url) {
-    var match = String(url || '').match(/vimeo\.com\/(?:video\/)?(\d+)/);
-    return match ? match[1] : '';
+  function vimeoParts(url) {
+    var match = String(url || '').match(/vimeo\.com\/(?:video\/)?(\d+)(?:\/([\w]+))?/);
+    if (!match) return null;
+    return { id: match[1], hash: match[2] || '' };
   }
 
   function embedFor(url) {
     var youtube = youtubeId(url);
     if (youtube) return 'https://www.youtube.com/embed/' + youtube + '?rel=0&modestbranding=1&playsinline=1';
-    var vimeo = vimeoId(url);
-    if (vimeo) return 'https://player.vimeo.com/video/' + vimeo + '?playsinline=1';
-    return '';
+    var vimeo = vimeoParts(url);
+    if (!vimeo) return '';
+    return 'https://player.vimeo.com/video/' + vimeo.id + '?playsinline=1' + (vimeo.hash ? '&h=' + vimeo.hash : '');
   }
 
   function fileSize(bytes) {

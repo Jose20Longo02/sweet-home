@@ -1055,7 +1055,19 @@ exports.createProperty = async (req, res, next) => {
 
     // Video: prefer URL, else uploaded file
     // Video: support either upload or URL depending on selected source
-    let videoUrl = (body.video_source === 'link' ? (body.video_url?.trim() || null) : null);
+    let videoUrl = null;
+    if (body.video_source === 'link') {
+      const linkUrl = (body.video_url || '').trim();
+      if (linkUrl) {
+        let parsedLink = null;
+        try { parsedLink = new URL(linkUrl); } catch (_) {}
+        if (!parsedLink || (parsedLink.protocol !== 'https:' && parsedLink.protocol !== 'http:')) {
+          errors.push('The video link must start with https://');
+        } else {
+          videoUrl = linkUrl;
+        }
+      }
+    }
     const uploadedVideoFile = (req.files && Array.isArray(req.files.video) && req.files.video[0]) ? req.files.video[0] : null;
     if (!uploadedVideoFile && String(body.remove_existing_video || 'false') === 'true') {
       // If explicitly removed and no replacement uploaded, ensure no video is saved
@@ -1734,15 +1746,21 @@ exports.updateProperty = async (req, res, next) => {
     // 4. Empty link (explicitly clearing video)
     // 5. Keep existing (default)
     let videoUrl = existing.video_url;
+    let videoLinkError = false;
     if (uploadedVideoFile) {
       // New video file uploaded - use it
       videoUrl = uploadedVideoFile.url || '/uploads/properties/' + uploadedVideoFile.filename;
     } else if (body.video_source === 'link') {
       // Video source is link - check if URL provided
-      const linkUrl = body.video_url?.trim() || null;
+      const linkUrl = (body.video_url || '').trim();
+      let parsedLink = null;
       if (linkUrl) {
-        // New URL provided - use it
-        videoUrl = linkUrl;
+        try { parsedLink = new URL(linkUrl); } catch (_) {}
+        if (!parsedLink || (parsedLink.protocol !== 'https:' && parsedLink.protocol !== 'http:')) {
+          videoLinkError = true;
+        } else {
+          videoUrl = linkUrl;
+        }
       } else if (removeExistingVideoFlag || body.video_url === '') {
         // Explicitly cleared (empty string) or removal flag set
         videoUrl = null;
@@ -1783,6 +1801,7 @@ exports.updateProperty = async (req, res, next) => {
 
     // Basic validation
     const errors = [];
+    if (videoLinkError) errors.push('The video link must start with https://');
     if (!required(title))        errors.push('Title is required');
     if (!required(description))  errors.push('Description is required');
     if (!['Apartment','House','Villa','Land'].includes(type || '')) errors.push('Type is required');
@@ -1821,6 +1840,8 @@ exports.updateProperty = async (req, res, next) => {
       ]);
       return res.status(400).render('properties/edit-property', {
         property: Object.assign({}, existing, {
+          video_url: body.video_source === 'link' ? (body.video_url || '') : existing.video_url,
+          video_source: body.video_source || '',
           energy_certificate_type: body.energy_certificate_type || '',
           energy_value: body.energy_value,
           energy_efficiency_class: body.energy_efficiency_class || '',
