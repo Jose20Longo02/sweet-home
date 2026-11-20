@@ -1,7 +1,8 @@
 <%
   const siteBaseUrl = ((typeof baseUrl !== 'undefined' && baseUrl) ? baseUrl : '').replace(/\/$/, '');
   const pageDesc = (typeof pageMetaDescription !== 'undefined' && pageMetaDescription) ? pageMetaDescription : '';
-  const pageTitle = (typeof rental !== 'undefined' && rental && rental.title) ? rental.title : ((typeof title !== 'undefined' && title) ? title : '');
+  const listingTitle = (typeof rental !== 'undefined' && rental && rental.title) ? rental.title : ((typeof title !== 'undefined' && title) ? title : '');
+  const pageTitle = (typeof seoTitle !== 'undefined' && seoTitle) ? seoTitle : listingTitle;
   const pageUrl = (typeof canonicalUrl !== 'undefined' && canonicalUrl) ? canonicalUrl : siteBaseUrl;
   const pageLang = (typeof lang !== 'undefined' && lang === 'en') ? 'en' : 'de';
   const ogLocale = pageLang === 'de' ? 'de_DE' : 'en_US';
@@ -16,7 +17,7 @@
     : '';
   const place = {
     '@type': 'Apartment',
-    name: pageTitle,
+    name: listingTitle,
     description: pageDesc,
     url: pageUrl,
     image: images.length ? images : undefined,
@@ -59,7 +60,7 @@
       {
         '@type': 'ListItem',
         position: 3,
-        name: pageTitle,
+        name: listingTitle,
         item: pageUrl
       }
     ]

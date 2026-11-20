@@ -95,7 +95,7 @@ class FurnishedRental {
   static async findPublishedBySlug(slug) {
     const res = await query(
       `SELECT id, title, title_i18n, slug, slug_i18n, description, description_i18n,
-              neighborhood, city, monthly_rent, deposit, photos,
+              neighborhood, city, full_address, monthly_rent, deposit, photos,
               size_sqm, rooms, floor, available_from, min_stay_months, max_stay_months,
               utilities_included, utilities_amount, utilities_note, utilities_note_i18n,
               video_url, agent_id
@@ -106,6 +106,15 @@ class FurnishedRental {
       [slug]
     );
     return res.rows[0] || null;
+  }
+
+  static async publishedSeoRows() {
+    const res = await query(
+      `SELECT id, title, title_i18n, full_address, size_sqm, monthly_rent
+         FROM furnished_rentals
+        WHERE status = 'published'`
+    );
+    return res.rows;
   }
 
   static async publishedForHome(limit = 9) {

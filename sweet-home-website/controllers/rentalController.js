@@ -712,15 +712,52 @@ function catalogueMetaDescription(count, lang) {
   return `${count} ${noun} zur Miete in Berlin. Monatliche Miete, Lage und Einzugsdatum.`;
 }
 
-function apartmentMetaDescription(card, lang) {
+function streetLabel(address) {
+  const first = String(address || '').split(',')[0].replace(/\s+/g, ' ').trim();
+  return first.replace(/^(\S+)\.\s+(\d+\w*)$/, '$1 $2');
+}
+
+function localizedTitle(row, lang) {
+  const stored = row && row.title_i18n ? row.title_i18n[lang] : '';
+  return String(stored || (row && row.title) || '').trim();
+}
+
+function uniqueApartmentTitle(card, rental, rows, lang) {
+  const mine = String(card.title || '').trim();
+  const group = (rows || []).filter((row) => localizedTitle(row, lang).toLowerCase() === mine.toLowerCase());
+  if (group.length < 2) return mine;
+  const mineStreet = streetLabel(rental.full_address);
+  const sameStreet = group.filter((row) => streetLabel(row.full_address).toLowerCase() === mineStreet.toLowerCase()).length;
+  if (mineStreet && sameStreet === 1 && !mine.toLowerCase().includes(mineStreet.toLowerCase())) {
+    return `${mine}, ${mineStreet}`;
+  }
+  const sizeKey = (row) => (row.size_sqm == null || row.size_sqm === '' ? '' : String(Number(row.size_sqm)));
+  if (card.sizeLabel && group.filter((row) => sizeKey(row) === sizeKey(rental)).length === 1 && !mine.includes(card.sizeLabel)) {
+    return `${mine}, ${card.sizeLabel}`;
+  }
+  if (card.rentLabel && group.filter((row) => Number(row.monthly_rent) === Number(rental.monthly_rent)).length === 1) {
+    return `${mine}, ${card.rentLabel}`;
+  }
+  return `${mine} (${rental.id})`;
+}
+
+function apartmentMetaDescription(card, lang, seoTitle) {
+  const name = String(seoTitle || card.title || '').trim();
   const facts = [];
   if (card.rentLabel) facts.push(lang === 'en' ? `${card.rentLabel} per month` : `${card.rentLabel} pro Monat`);
   if (card.sizeLabel) facts.push(card.sizeLabel);
-  if (card.neighborhood) facts.push(card.neighborhood);
+  const neighborhood = card.neighborhood && !name.toLowerCase().includes(String(card.neighborhood).toLowerCase())
+    ? card.neighborhood
+    : '';
+  if (neighborhood) facts.push(neighborhood);
+  const detail = facts.join(', ');
   const tail = lang === 'en'
     ? 'Furnished apartment for rent in Berlin.'
     : 'Möblierte Wohnung zur Miete in Berlin.';
-  return facts.length ? `${facts.join(', ')}. ${tail}` : tail;
+  const withTail = detail ? `${name}. ${detail}. ${tail}` : `${name}. ${tail}`;
+  if (withTail.length <= 170) return withTail;
+  const shorter = detail ? `${name}. ${detail}.` : `${name}. ${tail}`;
+  return shorter.length <= 170 ? shorter : name;
 }
 
 function excerpt(value) {
@@ -863,17 +900,20 @@ async function resolvePublishedApartment(req) {
   return { lang, rental, paths };
 }
 
-function renderApartment(req, res, resolved, extras) {
+async function renderApartment(req, res, resolved, extras) {
   const { lang, rental, paths } = resolved;
   const card = catalogueCard(rental, lang);
+  const rows = await FurnishedRental.publishedSeoRows();
+  const seoTitle = uniqueApartmentTitle(card, rental, rows, lang);
   const description = storedText(rental.description_i18n, lang) || rental.description || '';
   const photos = Array.isArray(rental.photos) ? rental.photos.filter(Boolean) : [];
   const base = res.locals.baseUrl;
   const alternates = apartmentAlternates(paths);
   const canonicalPath = paths[lang] || paths.de;
   return res.render('rentals/apartment', Object.assign({
-    title: card.title,
-    pageMetaDescription: apartmentMetaDescription(card, lang),
+    title: seoTitle,
+    seoTitle,
+    pageMetaDescription: apartmentMetaDescription(card, lang, seoTitle),
     lang,
     rental: card,
     description,
@@ -899,7 +939,7 @@ exports.apartment = async (req, res, next) => {
     if (resolved.missing) return res.status(410).render('errors/404');
     const expected = resolved.paths[resolved.lang];
     if (expected && req.path !== expected) return res.redirect(301, expected);
-    return renderApartment(req, res, resolved);
+    return await renderApartment(req, res, resolved);
   } catch (error) {
     return next(error);
   }
@@ -970,7 +1010,7 @@ exports.inquire = async (req, res, next) => {
       const message = lang === 'en'
         ? 'Please check the form. Name, email, phone, and a message of at least 10 characters are required.'
         : 'Bitte prüfen Sie das Formular. Name, E-Mail, Telefon und eine Nachricht mit mindestens 10 Zeichen sind nötig.';
-      return renderApartment(req, res, resolved, { form: details, formError: message });
+      return await renderApartment(req, res, resolved, { form: details, formError: message });
     }
     const card = catalogueCard(rental, lang);
     const apartmentPath = card.href || req.path;
